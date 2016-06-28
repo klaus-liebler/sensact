@@ -118,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="TestModelBuilder.cs" />
+    <None Include="TestModelBuilder.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

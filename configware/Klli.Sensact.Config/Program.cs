@@ -13,7 +13,7 @@ namespace Klli.Sensact.Config
 
             XmlConfigurator.Configure();
 
-            Model model = TestModelBuilder.BuildDemo();
+            Model model = Sattlerstrasse16.Build();
             if (SourceCodeGenerator.CheckAndPrepare(model))
             {
                 SourceCodeGenerator.GenerateAppIds_h(model);
