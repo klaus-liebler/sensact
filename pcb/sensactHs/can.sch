@@ -1,0 +1,262 @@
+EESchema Schematic File Version 2
+LIBS:multihutschiene03-rescue
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:stm32
+LIBS:kl_can
+LIBS:w_analog
+LIBS:w_connectors
+LIBS:w_opto
+LIBS:w_relay
+LIBS:ESD_Protection
+LIBS:multihutschiene03-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 14
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L SN65HVD230 U6
+U 1 1 55A95108
+P 2500 2650
+AR Path="/55A95108" Ref="U6"  Part="1" 
+AR Path="/55A94EE1/55A95108" Ref="U6"  Part="1" 
+F 0 "U6" H 2100 3000 60  0000 L CNN
+F 1 "SN65HVD230" H 2100 2900 50  0000 L CNN
+F 2 "kl_footprints:SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder" H 2500 2650 60  0001 C CNN
+F 3 "" H 2500 2650 60  0000 C CNN
+	1    2500 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L JUMPER JP3
+U 1 1 55A9510F
+P 5150 2850
+F 0 "JP3" H 5150 3000 50  0000 C CNN
+F 1 "CAN_TERM" H 5150 2770 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02" H 5150 2850 60  0001 C CNN
+F 3 "" H 5150 2850 60  0000 C CNN
+	1    5150 2850
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR0102
+U 1 1 55A9511A
+P 1450 2100
+F 0 "#PWR0102" H 1450 1850 60  0001 C CNN
+F 1 "GND" H 1450 1950 60  0000 C CNN
+F 2 "" H 1450 2100 60  0000 C CNN
+F 3 "" H 1450 2100 60  0000 C CNN
+	1    1450 2100
+	-1   0    0    1   
+$EndComp
+$Comp
+L +3V3 #PWR0103
+U 1 1 55A95120
+P 1300 2700
+F 0 "#PWR0103" H 1300 2550 60  0001 C CNN
+F 1 "+3V3" H 1300 2840 60  0000 C CNN
+F 2 "" H 1300 2700 60  0000 C CNN
+F 3 "" H 1300 2700 60  0000 C CNN
+	1    1300 2700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR0104
+U 1 1 55A95126
+P 1050 1700
+F 0 "#PWR0104" H 1050 1450 60  0001 C CNN
+F 1 "GND" H 1050 1550 60  0000 C CNN
+F 2 "" H 1050 1700 60  0000 C CNN
+F 3 "" H 1050 1700 60  0000 C CNN
+	1    1050 1700
+	1    0    0    -1  
+$EndComp
+Text Notes 2750 3100 0    60   ~ 0
+CAN-PHY
+$Comp
+L GND #PWR0105
+U 1 1 55A95130
+P 4150 3400
+F 0 "#PWR0105" H 4150 3150 60  0001 C CNN
+F 1 "GND" H 4150 3250 60  0000 C CNN
+F 2 "" H 4150 3400 60  0000 C CNN
+F 3 "" H 4150 3400 60  0000 C CNN
+	1    4150 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3V3 #PWR0106
+U 1 1 55A95136
+P 1050 1100
+F 0 "#PWR0106" H 1050 950 60  0001 C CNN
+F 1 "+3V3" H 1050 1240 60  0000 C CNN
+F 2 "" H 1050 1100 60  0000 C CNN
+F 3 "" H 1050 1100 60  0000 C CNN
+	1    1050 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X03 P9
+U 1 1 55A9513C
+P 3900 3250
+F 0 "P9" H 3900 3450 50  0000 C CNN
+F 1 "CAN_IN" V 4000 3250 50  0000 C CNN
+F 2 "kl_footprints:KF141R-3p" H 3900 3250 60  0001 C CNN
+F 3 "" H 3900 3250 60  0000 C CNN
+	1    3900 3250
+	-1   0    0    1   
+$EndComp
+$Comp
+L CONN_01X03 P10
+U 1 1 55A95143
+P 4250 2250
+F 0 "P10" H 4250 2450 50  0000 C CNN
+F 1 "CAN_OUT" V 4350 2250 50  0000 C CNN
+F 2 "kl_footprints:KF141R-3p" H 4250 2250 60  0001 C CNN
+F 3 "" H 4250 2250 60  0000 C CNN
+	1    4250 2250
+	-1   0    0    1   
+$EndComp
+$Comp
+L R R26
+U 1 1 55A9514B
+P 2400 2200
+F 0 "R26" V 2480 2200 50  0000 C CNN
+F 1 "10k" V 2400 2200 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 2330 2200 30  0001 C CNN
+F 3 "" H 2400 2200 30  0000 C CNN
+	1    2400 2200
+	0    1    1    0   
+$EndComp
+$Comp
+L R R27
+U 1 1 55A95152
+P 4750 3250
+F 0 "R27" V 4830 3250 50  0000 C CNN
+F 1 "120R" V 4750 3250 50  0000 C CNN
+F 2 "Resistors_SMD:R_1206_HandSoldering" V 4680 3250 30  0001 C CNN
+F 3 "" H 4750 3250 30  0000 C CNN
+	1    4750 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L C C38
+U 1 1 55A95178
+P 1050 1400
+F 0 "C38" H 1075 1500 50  0000 L CNN
+F 1 "100n" H 1075 1300 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 1088 1250 30  0001 C CNN
+F 3 "" H 1050 1400 60  0000 C CNN
+	1    1050 1400
+	1    0    0    -1  
+$EndComp
+Text HLabel 1550 4050 0    60   BiDi ~ 0
+PB[0..15]
+$Comp
+L GND #PWR0107
+U 1 1 55AA5E60
+P 4500 2100
+F 0 "#PWR0107" H 4500 1850 50  0001 C CNN
+F 1 "GND" H 4500 1950 50  0000 C CNN
+F 2 "" H 4500 2100 60  0000 C CNN
+F 3 "" H 4500 2100 60  0000 C CNN
+	1    4500 2100
+	-1   0    0    1   
+$EndComp
+Text Label 1600 2500 0    60   ~ 0
+PB13
+Text Label 1600 2800 0    60   ~ 0
+PB12
+NoConn ~ 3100 2800
+Connection ~ 1050 1700
+Wire Wire Line
+	1050 1100 1050 1250
+Wire Wire Line
+	1050 1550 1050 1700
+Wire Wire Line
+	4100 3350 4150 3350
+Wire Wire Line
+	4150 3350 4150 3400
+Wire Wire Line
+	4450 2150 4500 2150
+Wire Wire Line
+	4500 2150 4500 2100
+Wire Wire Line
+	4450 2350 4450 3250
+Wire Wire Line
+	4100 3250 4600 3250
+Wire Wire Line
+	4100 3150 4550 3150
+Wire Wire Line
+	4550 3150 4550 2250
+Wire Wire Line
+	4450 2250 5150 2250
+Connection ~ 4450 3250
+Wire Wire Line
+	4900 3250 5150 3250
+Wire Wire Line
+	5150 3250 5150 3150
+Wire Wire Line
+	5150 2250 5150 2550
+Connection ~ 4550 2250
+Wire Wire Line
+	1900 2500 1600 2500
+Wire Wire Line
+	1900 2800 1600 2800
+Wire Wire Line
+	3100 2700 4450 2700
+Connection ~ 4450 2700
+Wire Wire Line
+	3100 2600 4550 2600
+Connection ~ 4550 2600
+Wire Wire Line
+	1450 2600 1900 2600
+Wire Wire Line
+	3100 2500 3100 2200
+Wire Wire Line
+	1450 2100 1450 2600
+Wire Wire Line
+	1300 2700 1900 2700
+Connection ~ 1450 2200
+Wire Wire Line
+	3100 2200 2550 2200
+Wire Wire Line
+	2250 2200 1450 2200
+$EndSCHEMATC

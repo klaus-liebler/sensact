@@ -1,0 +1,95 @@
+Alternativ: Timereinsatz.
+
+Anforderung Hanrdware
+lqfp-48
+1wire-Schutz per Schutzdioden
+5V->3V3, 50mA
+2 Relais per Transistor
+i2c-Temperatur- und Feuchtesensor
+NC-Öffnungssensor, wird nur bei Bedarf mit Strom verorgt und abgefragt ("Stromversorgungspin" gibt Spannung auf PullUp-Widerstand; Sensorpin misst, ob nach low gezogen wird)
+Touchflächen für lokale Notbedienung??? :-)
+
+Anforderung:
+- Zu jedem Zeitpunkt muss ein Reset-Impuls erkannt werden, insbesondere auch während des Presense-Impulses.
+
+
+
+- GPIO-FF und SF bleibt beständig aktiv, auch dann wenn gerade ein Timer-Interrupt verarbeitet wird. Die beiden haben gleiche Priorität und unterbrechen sich deshalb nicht gegenseitig
+
+Wenn FF, dann Timer zurücksetzen und starten; zunächst mit Reset-Dauer
+
+Ausnahme: Presense-Impuls. Dessen Ver
+
+
+
+Vorsicht beim Presense-Impuls. Hier ist zu überlegen, ob der selbst initiierte Impuls auch dazu führen soll, dass der EXTI-Interrupt gefeuert wird
+
+Vorsicht, wenn Timer und GPIO-Interrupt gleichzeitig kommen. Immer anderen Interrupt ausschalten und Interrupt-Flag clearen
+
+
+Nach der Reset-Impuls-Erkennung startet das Presence-Impuls-Handling: Auch beim Presence-Impuls-Handling muss ein Reset-Impuls erkannt werden
+Gehe in Modus WAIT_FOR_OTHER_PRESENSE und aktiviere FF-Interrupt und lasse mich vom Timer nach der Regelzeit wecken
+
+Wenn FF-Interrupt feuert und wir uns in WAIT_FOR_OTHER_PRESENSE befinden -> lastFallingEdge merken und in status OTHER_PRESENCE_DETECTED
+
+Wenn der Timer dann feuert und wir uns im Status OTHER_PRESENCE_DETECTED befinden, hat ein anderer eben schon den Presence-Impuls gesender. FF-Interrupt deaktivieren und Flag löschen. lastFallingEdgeDt NICHT überschreiben und runterziehen, Status auf RELEASE_PRESENSE setzen und nach entsprechender Zeit wecken lassen
+
+Wenn der Timer feuert und wir und noch im Status WAIT_FOR_OTHER_PRESENSE befinden, gab es noch keinen other presense. FF-Interrupt deaktivieren und Flag löschen. lastFallingEdgeDt merken und runterziehen  Status auf RELEASE_PRESENSE setzen und nach entsprechender Zeit wecken lassen
+
+Timer::RELEASE_PRESENSE: PullDown lösen. SF aktivieren, wenn schon oben, dann wieder deaktivieren uns flag löschen und in Status PRESENSE_RELEASED gehen. Ansonsten in Status WAIT_FOR_PRESENCE_RELEASE gehen.
+
+Bitverarbeitung
+Variante 1: Vom Timer wecken lassen und Signal prüfen
+Variante 2: Vom SF wecken lassen, Signal prüfen und Zeit messen
+
+-> Anzahl der Befehle reduzieren --> Variante 1
+-> Aber: Reset-Erkennung mit Variante 1 besser
+
+Fallende Flanke: Gehe in Status "WAIT_FOR_BIT_RELEASE"; setze Timer auf minimale Reset-Zeit; aktiviere SF
+Wenn Timer feuert, bevor SF detektiert wird --> reset-impuls erkannt
+Wenn SF feuert, nd man sich noch im Status WAIT_FOR_BIT_RELEASE befindet: Abhängig von der abgelaufenen Zeit Bit 0 oder Bit 1 erkennen
+
+
+
+es gibt ein enum status uns ein uint substatus mit dem bit, das als nächstes verarbeitet wird
+in den Status werden stets nur Handlerfunktionen für diesen Status aufgerufen. Diese Funktionen können dann auch aus anderen status heraus aufgerufen werden
+
+Funktion PollForUp(eStatus normalNextStatus)
+wartet pollend, bis die Flanke nach oben geht (oder vielleicht auch schon oben ist). Wenn die Zeit kleiner ist als ein Reset-Impuls, wird in den normalNextStatus gewechselt, ansonsten liegt ja ein reset-impuls vor und es wird
+"ResetDetected aufgerufen". Liefert die Zeit des negativen Levels zurück oder -1, wenn ein Reset-Impuls detektiert wurde
+
+Funktion ResetDetected()
+//Besonderheit hier: Device muss ohne Zutun des Masters eigenständig ein PullDown durchführen
+//Achtung: Es dürfen sich bei dauerhaften Herunterziehen nicht PollForUp und ResetDetected zum StackOverflow führen. Deshalb hier Teilimplementierung der PollForUp-Funktion
+while(true)
+warten, sobald down erkannt wird, zeit merken!, nach eigener Wartezeit auch down ziehen, spätestens jetzt Zeit merken und down halten, jetzt lösen
+warten bis High-Pegel erkannt wird. Wenn die Zeit kurz genug war war, war dies ein gültiger Presence-Impuls ->break
+
+state=READ_COMMAND;
+ss=0;
+
+void ReadCommand()
+{
+//fallende Flanke wurde detektiert
+	PollForUp();
+	je nach Zeit, setze oder löse bit (und schiebe Pointer weiter) oder mache nichts (weil dann ein Reset-Impuls detektiert wurde)
+	wenn ss==8
+	entsprechend des Kommandos
+	ss=0;
+	state=SEARCH_ROM;
+}
+
+
+void SearchRom()
+
+Interrupt auf fallende Flanke, dann bis zur nächsten steigenden Flanke pollen (aka. im interrupt wird mindesten so langegeblieben, so lange pulldown)
+Zeit merken in lastFallingEdge
+Statusabfrage
+
+wenn WAIT_FOR_NEXT_TRANSACTION:
+PollForUp(WAIT_FOR_NEXT_TRANSACTION)
+
+wenn READ_COMMAND
+ReadCommand();
+
+wenn

@@ -1,0 +1,18 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LED
+D WS2812B
+K LED WS2812B RGB
+$ENDCMP
+#
+$CMP SWITCH
+D Switch
+K Switch Button
+$ENDCMP
+#
+$CMP WS2812B
+D WS2812B
+K LED WS2812B RGB
+$ENDCMP
+#
+#End Doc Library

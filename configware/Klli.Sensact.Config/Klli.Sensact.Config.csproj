@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B6A7A1A1-740B-445A-85FB-7D466C08ADE9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Klli.Sensact.Config</RootNamespace>
+    <AssemblyName>Klli.Sensact.Config</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationBuilder.cs" />
+    <Compile Include="ApplicationIds.cs" />
+    <Compile Include="Applications\BrightnessSensorApplication.cs" />
+    <Compile Include="Applications\PlaceholderApplication.cs" />
+    <Compile Include="Applications\RgbwApplication.cs" />
+    <Compile Include="Applications\SensactApplication.cs" />
+    <Compile Include="Applications\BlindApplication.cs" />
+    <Compile Include="Applications\MasterApplication.cs" />
+    <Compile Include="Applications\PoweritemApplication.cs" />
+    <Compile Include="Applications\PushButtonXApplication.cs" />
+    <Compile Include="Applications\PWMApplication.cs" />
+    <Compile Include="Applications\RotaryEncoderApplication.cs" />
+    <Compile Include="Applications\DoorbellApplication.cs" />
+    <Compile Include="Applications\StandbyController.cs" />
+    <Compile Include="CommandAndEventTypes.cs" />
+    <Compile Include="CompilerController.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Nodes\SensactUp01.cs" />
+    <Compile Include="Sattlerstrasse16.cs" />
+    <Compile Include="SensactFileCollector.cs" />
+    <Compile Include="Templates\APPLICATION_CPP.cs">
+      <DependentUpon>APPLICATION_CPP.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Templates\APPLICATION_H.cs">
+      <DependentUpon>APPLICATION_H.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Templates\LinkerScript.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LinkerScript.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model.cs" />
+    <Compile Include="Nodes\SensactUp02.cs" />
+    <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\SensactHs07.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SourceCodeGenerator.cs" />
+    <Compile Include="Templates\CommonFileHeader.cs">
+      <DependentUpon>CommonFileHeader.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Templates\HC_APPIDS_H.cs">
+      <DependentUpon>HC_APPIDS_H.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Templates\HC_COMMANDANDEVENTTYPES_H.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HC_COMMANDANDEVENTTYPES_H.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\HC_MODEL_CPP.cs">
+      <DependentUpon>HC_MODEL_CPP.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Templates\TemplateControllers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Compile Include="TestModelBuilder.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\CommonFileHeader.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CommonFileHeader.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\HC_APPIDS_H.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>HC_APPIDS_H.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\HC_MODEL_CPP.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>HC_MODEL_CPP.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\HC_COMMANDANDEVENTTYPES_H.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <SubType>Component</SubType>
+      <LastGenOutput>HC_COMMANDANDEVENTTYPES_H.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\APPLICATION_H.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>APPLICATION_H.cs</LastGenOutput>
+    </None>
+    <None Include="Templates\APPLICATION_CPP.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>APPLICATION_CPP.cs</LastGenOutput>
+    </None>
+    <Content Include="Templates\LinkerScript.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>LinkerScript.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

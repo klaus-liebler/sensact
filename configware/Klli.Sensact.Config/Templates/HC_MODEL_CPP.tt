@@ -1,0 +1,64 @@
+﻿<#@ template language="C#" inherits="CommonFileHeader" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<# RenderHeader("hc_model.cpp", "autogen", version, "The Home Model", "All params and details about the home model"); #>
+
+#include "common.h"
+#include "cModel.h"
+#include "cBlind.h"
+#include "cRotar.h"
+#include "cPoweritem.h"
+#include "cPushbutton.h"
+#include "cPwm.h"
+#include "cStandbycontroller.h"
+#include "cBrightnessSensor.h"
+#include "cBell.h"
+#include "cRgbw.h"
+#include <chrono>
+#include "date.h"
+#include "bh1750.h"
+
+using namespace std;
+
+namespace sensact {
+
+const char *MODEL::ApplicationNames[]={
+		<#=ApplicationNames#>
+	};
+
+
+<#
+       foreach (ModelCppItem i in Items)
+       {
+#>
+#ifdef NODE_<#=i.NodeId#>
+
+eNodeID NODE = eNodeID::<#=i.NodeId#>;
+
+const char MODEL::ModelString[] ="<#=i.ModelInfo#>";
+
+#include <cModel_base.inc>
+
+
+<#=i.StaticApplicationInitializers#>
+
+
+
+cApplication *MODEL::Glo2locCmd[] = {
+<#=i.Glo2LocPointers#>
+};
+
+
+
+cApplication *MODEL::Glo2locEvt[] = { };
+#endif
+
+<#
+           
+       }
+#>
+
+}
+
