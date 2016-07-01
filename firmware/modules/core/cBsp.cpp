@@ -841,14 +841,14 @@ void BSP::SetPoweredOutput(ePoweredOutput po, ePowerState state)
 			break;
 #endif
 #ifdef SENSACTHS07
-		case ePoweredOutput::O01: SetPWM(ePWMOutput::O1_01, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O02: SetPWM(ePWMOutput::O1_02, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O03: SetPWM(ePWMOutput::O1_03, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O04: SetPWM(ePWMOutput::O1_04, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O05: SetPWM(ePWMOutput::O1_05, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O06: SetPWM(ePWMOutput::O1_06, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O07: SetPWM(ePWMOutput::O1_07, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
-		case ePoweredOutput::O08: SetPWM(ePWMOutput::O1_08, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O01: SetPWM(ePWMOutput::OP01, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O02: SetPWM(ePWMOutput::OP02, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O03: SetPWM(ePWMOutput::OP03, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O04: SetPWM(ePWMOutput::OP04, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O05: SetPWM(ePWMOutput::OP05, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O06: SetPWM(ePWMOutput::OP06, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O07: SetPWM(ePWMOutput::OP07, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
+		case ePoweredOutput::O08: SetPWM(ePWMOutput::OP08, state == ePowerState::ACTIVE ? UINT16_MAX : 0); break;
 #endif
 		}
 	}
@@ -936,14 +936,14 @@ void BSP::SetPWM(ePWMOutput po, uint16_t val) {
 	{
 		switch(po)
 		{
-			case ePWMOutput::O1_01: TIM12->CCR1 = val; break;
-			case ePWMOutput::O1_02: TIM12->CCR2 = val; break;
-			case ePWMOutput::O1_03: TIM8->CCR1 = val; break;
-			case ePWMOutput::O1_04: TIM8->CCR2 = val; break;
-			case ePWMOutput::O1_05: TIM8->CCR4 = val; break;
-			case ePWMOutput::O1_06: TIM1->CCR1 = val; break;
-			case ePWMOutput::O1_07: TIM1->CCR2 = val; break;
-			case ePWMOutput::O1_08: TIM1->CCR3 = val; break;
+			case ePWMOutput::OP01: TIM12->CCR1 = val; break;
+			case ePWMOutput::OP02: TIM12->CCR2 = val; break;
+			case ePWMOutput::OP03: TIM8->CCR1 = val; break;
+			case ePWMOutput::OP04: TIM8->CCR2 = val; break;
+			case ePWMOutput::OP05: TIM8->CCR4 = val; break;
+			case ePWMOutput::OP06: TIM1->CCR1 = val; break;
+			case ePWMOutput::OP07: TIM1->CCR2 = val; break;
+			case ePWMOutput::OP08: TIM1->CCR3 = val; break;
 		}
 	}
 	else if(ipo<64)
