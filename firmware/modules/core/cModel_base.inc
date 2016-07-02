@@ -36,7 +36,7 @@
 
 
 #endif
-#ifdef NODE_TEST_HS07
+#ifdef NODE_SNSCT_L0_TECH_HS07
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 

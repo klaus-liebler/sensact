@@ -38,11 +38,12 @@ namespace Klli.Sensact.Config
             SNSAC_L0_TECH_HS07_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_WELL_S1), StandbyController = _(ID.STDBY_L0_24V), OutputRessources = new List<PwmPin> { PwmPin.P05 } }); //Dusche
             SNSAC_L0_TECH_HS07_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_WELL_S2), StandbyController = _(ID.STDBY_L0_24V), OutputRessources = new List<PwmPin> { PwmPin.P06 } }); //WC
             SNSAC_L0_TECH_HS07_1.Applications.AddToggleButton(ID.PUSHB_L0_WORK_B11, InputPin.I09, ID.POWIT_L0_WORK_C1);
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_WORK_C1), OutputRessource = OutputPin.O13 });
+            SNSAC_L0_TECH_HS07_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_WORK_C1), OutputRessource = OutputPin.O13 })
 
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.STDBY_L0_24V), OutputRessource = OutputPin.O14 });
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.STDBY_L0_48V), OutputRessource = OutputPin.O15 });
-            //L1.BATH
+
+            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L0_24V), OutputRessource = OutputPin.O14, WaittimeInMsec = 10000 });
+            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L0_48V), OutputRessource = OutputPin.O15, WaittimeInMsec = 10000 });
+
             SNSAC_L0_TECH_HS07_1.Applications.Add(
                 new PushButtonXApplication()
                 {
@@ -89,12 +90,7 @@ namespace Klli.Sensact.Config
             SNSAC_L0_TECH_HS07_1.Applications.AddBlindButtons(ID.PUSHB_L1_BATH_B12, ID.PUSHB_L1_BATH_B13, InputPin.I11, InputPin.I12, ID.BLIND_L1_BATH_J1);
             SNSAC_L0_TECH_HS07_1.Applications.Add(new BlindApplication {ApplicationId=_(ID.BLIND_L1_BATH_J1), OpenCloseTimeInSeconds=40, OutputRessourceUpOrPower=OutputPin.O16, OutputRessourceDown=OutputPin.O17, RelayMode=RelayMode.TWO_PHASES });
             SNSAC_L0_TECH_HS07_1.Applications.Add(new RgbwApplication { ApplicationId = _(ID.RGBW__L1_BATH_W1), StandbyController=_(ID.NO_APPLICATION), LowMeansLampOn = true, OutputR = PwmPin.OP01, OutputB = PwmPin.OP02, OutputG = PwmPin.OP03, OutputW = PwmPin.NONE });
-            //TODO: Dekolicht soll mit angehen, wenn der Taster gedrückt wird, dazu TOGGLE-Kommando implementieren und Standby implementieren
-
-
-            
-            
-            return model;
+	    return model;
         }
     }
 }

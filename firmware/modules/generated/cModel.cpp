@@ -2,7 +2,7 @@
 @file		hc_model.cpp
 @author		autogen
 @version	1.0
-@date		06/04/2016 00:08:11 (Rendered)
+@date		06/29/2016 21:00:59 (Rendered)
 @brief		The Home Model
 @details	All params and details about the home model
 @copyright	(c) 2015 mail at klaus - liebler . de === GNU GPL v3
@@ -30,83 +30,206 @@ namespace sensact {
 
 const char *MODEL::ApplicationNames[]={
 		    "MASTER",
-    "BELL__DOOR",
-    "STDBY_XX_XXX_1",
-    "PWM___XX_XXX_1",
-    "BLIND_XX_XXX_1",
-    "PUSHB_LX_FRO_1",
-    "PUSHB__XX_BLN__UP",
-    "PUSHB__XX_BLN__DOWN",
-    "PUSHB__XX_PUB_1",
-    "RGBW__YY_YYY_1",
-    "ROTAR_YY_YYY_1",
-    "POWIT_YY_YYY_01",
-    "PUSHB_YY_PUB_1",
+    "PUSHB_L0_CORR_B11",
+    "POWIT_L0_CORR_C1",
+    "PUSHB_L0_PRTY_B11",
+    "PUSHB_L0_PRTY_B12",
+    "PWM___L0_PRTY_S",
+    "PUSHB_L0_STO1_B11",
+    "POWIT_L0_STO1_C1",
+    "PUSHB_L0_TECH_B11",
+    "POWIT_L0_TECH_C1",
+    "PUSHB_L0_WELL_B11",
+    "PUSHB_L0_WELL_B21",
+    "PUSHB_L0_WELL_B22",
+    "POWIT_L0_WELL_C1",
+    "PWM___L0_WELL_S1",
+    "PWM___L0_WELL_S2",
+    "PUSHB_L0_WORK_B11",
+    "POWIT_L0_WORK_C1",
+    "STDBY_L0_24V",
+    "STDBY_L0_48V",
+    "PUSHB_L1_BATH_B11",
+    "PWM___L1_BATH_S",
+    "PUSHB_L1_BATH_B12",
+    "PUSHB_L1_BATH_B13",
+    "BLIND_L1_BATH_J1",
+    "RGBW__L1_BATH_W1",
 
 	};
 
 
-#ifdef NODE_TEST_HS07
+#ifdef NODE_SNSCT_L0_TECH_HS07
 
-eNodeID NODE = eNodeID::TEST_HS07;
+eNodeID NODE = eNodeID::SNSCT_L0_TECH_HS07;
 
-const char MODEL::ModelString[] ="NodeId TEST_HS07 created on 04.06.2016 00:08:11";
+const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS07 created on 29.06.2016 21:00:59";
 
 #include <cModel_base.inc>
 
 
-// DOORBELL BELL__DOOR
-sensact::cBell BELL__DOOR("BELL__DOOR", eApplicationID::BELL__DOOR, &MODEL::volumeSchedule);
+// PushButtonX PUSHB_L0_CORR_B11
+Command PUSHB_L0_CORR_B11_OnPressed[1]={{eApplicationID::POWIT_L0_CORR_C1, eCommandType::TOGGLE},};
+Command *PUSHB_L0_CORR_B11_OnReleased=0;
+Command *PUSHB_L0_CORR_B11_OnReleasedShort=0;
+Command *PUSHB_L0_CORR_B11_OnPressedShortAndHold=0;
+Command *PUSHB_L0_CORR_B11_OnReleasedLong=0;
+eEventType *PUSHB_L0_CORR_B11_LocalEvents=0;
+eEventType *PUSHB_L0_CORR_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_CORR_B11("PUSHB_L0_CORR_B11", eApplicationID::PUSHB_L0_CORR_B11, eInput::I01, PUSHB_L0_CORR_B11_LocalEvents, 0, PUSHB_L0_CORR_B11_BusEvents, 0, PUSHB_L0_CORR_B11_OnPressed, 1, PUSHB_L0_CORR_B11_OnReleased, 0, PUSHB_L0_CORR_B11_OnReleasedShort, 0, PUSHB_L0_CORR_B11_OnPressedShortAndHold, 0, PUSHB_L0_CORR_B11_OnReleasedLong, 0);
 
-// STDBY STDBY_XX_XXX_1
-sensact::cStandbyController STDBY_XX_XXX_1("STDBY_XX_XXX_1", eApplicationID::STDBY_XX_XXX_1, ePoweredOutput::O01, 10000);
+// POWIT POWIT_L0_CORR_C1
+sensact::cPoweritem POWIT_L0_CORR_C1("POWIT_L0_CORR_C1", eApplicationID::POWIT_L0_CORR_C1, ePoweredOutput::O09, 0);
 
-// PWM PWM___XX_XXX_1 (Dimmer )
-ePWMOutput PWM___XX_XXX_1_output[1]={ePWMOutput::P01,};
-sensact::cPWM PWM___XX_XXX_1("PWM___XX_XXX_1", eApplicationID::PWM___XX_XXX_1, PWM___XX_XXX_1_output, 1, 20, 255, false, eApplicationID::STDBY_XX_XXX_1);
+// PushButtonX PUSHB_L0_PRTY_B11
+Command *PUSHB_L0_PRTY_B11_OnPressed=0;
+Command *PUSHB_L0_PRTY_B11_OnReleased=0;
+Command PUSHB_L0_PRTY_B11_OnReleasedShort[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::TOGGLE},};
+Command PUSHB_L0_PRTY_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::UP},};
+Command PUSHB_L0_PRTY_B11_OnReleasedLong[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::STOP},};
+eEventType *PUSHB_L0_PRTY_B11_LocalEvents=0;
+eEventType *PUSHB_L0_PRTY_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_PRTY_B11("PUSHB_L0_PRTY_B11", eApplicationID::PUSHB_L0_PRTY_B11, eInput::I02, PUSHB_L0_PRTY_B11_LocalEvents, 0, PUSHB_L0_PRTY_B11_BusEvents, 0, PUSHB_L0_PRTY_B11_OnPressed, 0, PUSHB_L0_PRTY_B11_OnReleased, 0, PUSHB_L0_PRTY_B11_OnReleasedShort, 1, PUSHB_L0_PRTY_B11_OnPressedShortAndHold, 1, PUSHB_L0_PRTY_B11_OnReleasedLong, 1);
 
-// Blind BLIND_XX_XXX_1
-cBlind BLIND_XX_XXX_1("BLIND_XX_XXX_1", eApplicationID::BLIND_XX_XXX_1, ePoweredOutput::O03, ePoweredOutput::O02, eRelayMode::INTERLOCKED, 10);
+// PushButtonX PUSHB_L0_PRTY_B12
+Command *PUSHB_L0_PRTY_B12_OnPressed=0;
+Command *PUSHB_L0_PRTY_B12_OnReleased=0;
+Command PUSHB_L0_PRTY_B12_OnReleasedShort[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::TOGGLE},};
+Command PUSHB_L0_PRTY_B12_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::DOWN},};
+Command PUSHB_L0_PRTY_B12_OnReleasedLong[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::STOP},};
+eEventType *PUSHB_L0_PRTY_B12_LocalEvents=0;
+eEventType *PUSHB_L0_PRTY_B12_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_PRTY_B12("PUSHB_L0_PRTY_B12", eApplicationID::PUSHB_L0_PRTY_B12, eInput::I03, PUSHB_L0_PRTY_B12_LocalEvents, 0, PUSHB_L0_PRTY_B12_BusEvents, 0, PUSHB_L0_PRTY_B12_OnPressed, 0, PUSHB_L0_PRTY_B12_OnReleased, 0, PUSHB_L0_PRTY_B12_OnReleasedShort, 1, PUSHB_L0_PRTY_B12_OnPressedShortAndHold, 1, PUSHB_L0_PRTY_B12_OnReleasedLong, 1);
 
-// PushButtonX PUSHB_LX_FRO_1
-Command PUSHB_LX_FRO_1_OnPressed[1]={{eApplicationID::BELL__DOOR, eCommandType::START},};
-Command *PUSHB_LX_FRO_1_OnReleased=0;
-Command *PUSHB_LX_FRO_1_OnReleasedShort=0;
-Command *PUSHB_LX_FRO_1_OnPressedShortAndHold=0;
-Command *PUSHB_LX_FRO_1_OnReleasedLong=0;
-eEventType *PUSHB_LX_FRO_1_LocalEvents=0;
-eEventType *PUSHB_LX_FRO_1_BusEvents=0;
-sensact::cPushbuttonX PUSHB_LX_FRO_1("PUSHB_LX_FRO_1", eApplicationID::PUSHB_LX_FRO_1, eInput::I04, PUSHB_LX_FRO_1_LocalEvents, 0, PUSHB_LX_FRO_1_BusEvents, 0, PUSHB_LX_FRO_1_OnPressed, 1, PUSHB_LX_FRO_1_OnReleased, 0, PUSHB_LX_FRO_1_OnReleasedShort, 0, PUSHB_LX_FRO_1_OnPressedShortAndHold, 0, PUSHB_LX_FRO_1_OnReleasedLong, 0);
+// PWM PWM___L0_PRTY_S (Dimmer )
+ePWMOutput PWM___L0_PRTY_S_output[4]={ePWMOutput::P01,ePWMOutput::P02,ePWMOutput::P03,ePWMOutput::P04,};
+sensact::cPWM PWM___L0_PRTY_S("PWM___L0_PRTY_S", eApplicationID::PWM___L0_PRTY_S, PWM___L0_PRTY_S_output, 4, 1, 255, false, eApplicationID::STDBY_L0_48V);
 
-// PushButtonX PUSHB__XX_BLN__UP
-Command PUSHB__XX_BLN__UP_OnPressed[1]={{eApplicationID::BLIND_XX_XXX_1, eCommandType::UP},};
-Command *PUSHB__XX_BLN__UP_OnReleased=0;
-Command *PUSHB__XX_BLN__UP_OnReleasedShort=0;
-Command *PUSHB__XX_BLN__UP_OnPressedShortAndHold=0;
-Command PUSHB__XX_BLN__UP_OnReleasedLong[1]={{eApplicationID::BLIND_XX_XXX_1, eCommandType::STOP},};
-eEventType *PUSHB__XX_BLN__UP_LocalEvents=0;
-eEventType *PUSHB__XX_BLN__UP_BusEvents=0;
-sensact::cPushbuttonX PUSHB__XX_BLN__UP("PUSHB__XX_BLN__UP", eApplicationID::PUSHB__XX_BLN__UP, eInput::I01, PUSHB__XX_BLN__UP_LocalEvents, 0, PUSHB__XX_BLN__UP_BusEvents, 0, PUSHB__XX_BLN__UP_OnPressed, 1, PUSHB__XX_BLN__UP_OnReleased, 0, PUSHB__XX_BLN__UP_OnReleasedShort, 0, PUSHB__XX_BLN__UP_OnPressedShortAndHold, 0, PUSHB__XX_BLN__UP_OnReleasedLong, 1);
+// PushButtonX PUSHB_L0_STO1_B11
+Command PUSHB_L0_STO1_B11_OnPressed[1]={{eApplicationID::POWIT_L0_STO1_C1, eCommandType::TOGGLE},};
+Command *PUSHB_L0_STO1_B11_OnReleased=0;
+Command *PUSHB_L0_STO1_B11_OnReleasedShort=0;
+Command *PUSHB_L0_STO1_B11_OnPressedShortAndHold=0;
+Command *PUSHB_L0_STO1_B11_OnReleasedLong=0;
+eEventType *PUSHB_L0_STO1_B11_LocalEvents=0;
+eEventType *PUSHB_L0_STO1_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_STO1_B11("PUSHB_L0_STO1_B11", eApplicationID::PUSHB_L0_STO1_B11, eInput::I04, PUSHB_L0_STO1_B11_LocalEvents, 0, PUSHB_L0_STO1_B11_BusEvents, 0, PUSHB_L0_STO1_B11_OnPressed, 1, PUSHB_L0_STO1_B11_OnReleased, 0, PUSHB_L0_STO1_B11_OnReleasedShort, 0, PUSHB_L0_STO1_B11_OnPressedShortAndHold, 0, PUSHB_L0_STO1_B11_OnReleasedLong, 0);
 
-// PushButtonX PUSHB__XX_BLN__DOWN
-Command PUSHB__XX_BLN__DOWN_OnPressed[1]={{eApplicationID::BLIND_XX_XXX_1, eCommandType::DOWN},};
-Command *PUSHB__XX_BLN__DOWN_OnReleased=0;
-Command *PUSHB__XX_BLN__DOWN_OnReleasedShort=0;
-Command *PUSHB__XX_BLN__DOWN_OnPressedShortAndHold=0;
-Command PUSHB__XX_BLN__DOWN_OnReleasedLong[1]={{eApplicationID::BLIND_XX_XXX_1, eCommandType::STOP},};
-eEventType *PUSHB__XX_BLN__DOWN_LocalEvents=0;
-eEventType *PUSHB__XX_BLN__DOWN_BusEvents=0;
-sensact::cPushbuttonX PUSHB__XX_BLN__DOWN("PUSHB__XX_BLN__DOWN", eApplicationID::PUSHB__XX_BLN__DOWN, eInput::I02, PUSHB__XX_BLN__DOWN_LocalEvents, 0, PUSHB__XX_BLN__DOWN_BusEvents, 0, PUSHB__XX_BLN__DOWN_OnPressed, 1, PUSHB__XX_BLN__DOWN_OnReleased, 0, PUSHB__XX_BLN__DOWN_OnReleasedShort, 0, PUSHB__XX_BLN__DOWN_OnPressedShortAndHold, 0, PUSHB__XX_BLN__DOWN_OnReleasedLong, 1);
+// POWIT POWIT_L0_STO1_C1
+sensact::cPoweritem POWIT_L0_STO1_C1("POWIT_L0_STO1_C1", eApplicationID::POWIT_L0_STO1_C1, ePoweredOutput::O10, 0);
 
-// PushButtonX PUSHB__XX_PUB_1
-Command *PUSHB__XX_PUB_1_OnPressed=0;
-Command *PUSHB__XX_PUB_1_OnReleased=0;
-Command PUSHB__XX_PUB_1_OnReleasedShort[1]={{eApplicationID::PWM___XX_XXX_1, eCommandType::TOGGLE},};
-Command PUSHB__XX_PUB_1_OnPressedShortAndHold[1]={{eApplicationID::PWM___XX_XXX_1, eCommandType::START},};
-Command PUSHB__XX_PUB_1_OnReleasedLong[1]={{eApplicationID::PWM___XX_XXX_1, eCommandType::STOP},};
-eEventType *PUSHB__XX_PUB_1_LocalEvents=0;
-eEventType *PUSHB__XX_PUB_1_BusEvents=0;
-sensact::cPushbuttonX PUSHB__XX_PUB_1("PUSHB__XX_PUB_1", eApplicationID::PUSHB__XX_PUB_1, eInput::I03, PUSHB__XX_PUB_1_LocalEvents, 0, PUSHB__XX_PUB_1_BusEvents, 0, PUSHB__XX_PUB_1_OnPressed, 0, PUSHB__XX_PUB_1_OnReleased, 0, PUSHB__XX_PUB_1_OnReleasedShort, 1, PUSHB__XX_PUB_1_OnPressedShortAndHold, 1, PUSHB__XX_PUB_1_OnReleasedLong, 1);
+// PushButtonX PUSHB_L0_TECH_B11
+Command PUSHB_L0_TECH_B11_OnPressed[1]={{eApplicationID::POWIT_L0_TECH_C1, eCommandType::TOGGLE},};
+Command *PUSHB_L0_TECH_B11_OnReleased=0;
+Command *PUSHB_L0_TECH_B11_OnReleasedShort=0;
+Command *PUSHB_L0_TECH_B11_OnPressedShortAndHold=0;
+Command *PUSHB_L0_TECH_B11_OnReleasedLong=0;
+eEventType *PUSHB_L0_TECH_B11_LocalEvents=0;
+eEventType *PUSHB_L0_TECH_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_TECH_B11("PUSHB_L0_TECH_B11", eApplicationID::PUSHB_L0_TECH_B11, eInput::I05, PUSHB_L0_TECH_B11_LocalEvents, 0, PUSHB_L0_TECH_B11_BusEvents, 0, PUSHB_L0_TECH_B11_OnPressed, 1, PUSHB_L0_TECH_B11_OnReleased, 0, PUSHB_L0_TECH_B11_OnReleasedShort, 0, PUSHB_L0_TECH_B11_OnPressedShortAndHold, 0, PUSHB_L0_TECH_B11_OnReleasedLong, 0);
+
+// POWIT POWIT_L0_TECH_C1
+sensact::cPoweritem POWIT_L0_TECH_C1("POWIT_L0_TECH_C1", eApplicationID::POWIT_L0_TECH_C1, ePoweredOutput::O11, 0);
+
+// PushButtonX PUSHB_L0_WELL_B11
+Command PUSHB_L0_WELL_B11_OnPressed[1]={{eApplicationID::POWIT_L0_WELL_C1, eCommandType::TOGGLE},};
+Command *PUSHB_L0_WELL_B11_OnReleased=0;
+Command *PUSHB_L0_WELL_B11_OnReleasedShort=0;
+Command *PUSHB_L0_WELL_B11_OnPressedShortAndHold=0;
+Command *PUSHB_L0_WELL_B11_OnReleasedLong=0;
+eEventType *PUSHB_L0_WELL_B11_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_WELL_B11("PUSHB_L0_WELL_B11", eApplicationID::PUSHB_L0_WELL_B11, eInput::I06, PUSHB_L0_WELL_B11_LocalEvents, 0, PUSHB_L0_WELL_B11_BusEvents, 0, PUSHB_L0_WELL_B11_OnPressed, 1, PUSHB_L0_WELL_B11_OnReleased, 0, PUSHB_L0_WELL_B11_OnReleasedShort, 0, PUSHB_L0_WELL_B11_OnPressedShortAndHold, 0, PUSHB_L0_WELL_B11_OnReleasedLong, 0);
+
+// PushButtonX PUSHB_L0_WELL_B21
+Command *PUSHB_L0_WELL_B21_OnPressed=0;
+Command *PUSHB_L0_WELL_B21_OnReleased=0;
+Command PUSHB_L0_WELL_B21_OnReleasedShort[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::TOGGLE},};
+Command PUSHB_L0_WELL_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::START},};
+Command PUSHB_L0_WELL_B21_OnReleasedLong[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::STOP},};
+eEventType *PUSHB_L0_WELL_B21_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B21_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_WELL_B21("PUSHB_L0_WELL_B21", eApplicationID::PUSHB_L0_WELL_B21, eInput::I07, PUSHB_L0_WELL_B21_LocalEvents, 0, PUSHB_L0_WELL_B21_BusEvents, 0, PUSHB_L0_WELL_B21_OnPressed, 0, PUSHB_L0_WELL_B21_OnReleased, 0, PUSHB_L0_WELL_B21_OnReleasedShort, 1, PUSHB_L0_WELL_B21_OnPressedShortAndHold, 1, PUSHB_L0_WELL_B21_OnReleasedLong, 1);
+
+// PushButtonX PUSHB_L0_WELL_B22
+Command *PUSHB_L0_WELL_B22_OnPressed=0;
+Command *PUSHB_L0_WELL_B22_OnReleased=0;
+Command PUSHB_L0_WELL_B22_OnReleasedShort[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::TOGGLE},};
+Command PUSHB_L0_WELL_B22_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::START},};
+Command PUSHB_L0_WELL_B22_OnReleasedLong[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::STOP},};
+eEventType *PUSHB_L0_WELL_B22_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B22_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_WELL_B22("PUSHB_L0_WELL_B22", eApplicationID::PUSHB_L0_WELL_B22, eInput::I08, PUSHB_L0_WELL_B22_LocalEvents, 0, PUSHB_L0_WELL_B22_BusEvents, 0, PUSHB_L0_WELL_B22_OnPressed, 0, PUSHB_L0_WELL_B22_OnReleased, 0, PUSHB_L0_WELL_B22_OnReleasedShort, 1, PUSHB_L0_WELL_B22_OnPressedShortAndHold, 1, PUSHB_L0_WELL_B22_OnReleasedLong, 1);
+
+// POWIT POWIT_L0_WELL_C1
+sensact::cPoweritem POWIT_L0_WELL_C1("POWIT_L0_WELL_C1", eApplicationID::POWIT_L0_WELL_C1, ePoweredOutput::O12, 0);
+
+// PWM PWM___L0_WELL_S1 (Dimmer )
+ePWMOutput PWM___L0_WELL_S1_output[1]={ePWMOutput::P05,};
+sensact::cPWM PWM___L0_WELL_S1("PWM___L0_WELL_S1", eApplicationID::PWM___L0_WELL_S1, PWM___L0_WELL_S1_output, 1, 1, 255, false, eApplicationID::STDBY_L0_24V);
+
+// PWM PWM___L0_WELL_S2 (Dimmer )
+ePWMOutput PWM___L0_WELL_S2_output[1]={ePWMOutput::P06,};
+sensact::cPWM PWM___L0_WELL_S2("PWM___L0_WELL_S2", eApplicationID::PWM___L0_WELL_S2, PWM___L0_WELL_S2_output, 1, 1, 255, false, eApplicationID::STDBY_L0_24V);
+
+// PushButtonX PUSHB_L0_WORK_B11
+Command PUSHB_L0_WORK_B11_OnPressed[1]={{eApplicationID::POWIT_L0_WORK_C1, eCommandType::TOGGLE},};
+Command *PUSHB_L0_WORK_B11_OnReleased=0;
+Command *PUSHB_L0_WORK_B11_OnReleasedShort=0;
+Command *PUSHB_L0_WORK_B11_OnPressedShortAndHold=0;
+Command *PUSHB_L0_WORK_B11_OnReleasedLong=0;
+eEventType *PUSHB_L0_WORK_B11_LocalEvents=0;
+eEventType *PUSHB_L0_WORK_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L0_WORK_B11("PUSHB_L0_WORK_B11", eApplicationID::PUSHB_L0_WORK_B11, eInput::I09, PUSHB_L0_WORK_B11_LocalEvents, 0, PUSHB_L0_WORK_B11_BusEvents, 0, PUSHB_L0_WORK_B11_OnPressed, 1, PUSHB_L0_WORK_B11_OnReleased, 0, PUSHB_L0_WORK_B11_OnReleasedShort, 0, PUSHB_L0_WORK_B11_OnPressedShortAndHold, 0, PUSHB_L0_WORK_B11_OnReleasedLong, 0);
+
+// POWIT POWIT_L0_WORK_C1
+sensact::cPoweritem POWIT_L0_WORK_C1("POWIT_L0_WORK_C1", eApplicationID::POWIT_L0_WORK_C1, ePoweredOutput::O13, 0);
+
+// STDBY STDBY_L0_24V
+sensact::cStandbyController STDBY_L0_24V("STDBY_L0_24V", eApplicationID::STDBY_L0_24V, ePoweredOutput::O14, 10000);
+
+// STDBY STDBY_L0_48V
+sensact::cStandbyController STDBY_L0_48V("STDBY_L0_48V", eApplicationID::STDBY_L0_48V, ePoweredOutput::O15, 10000);
+
+// PushButtonX PUSHB_L1_BATH_B11
+Command *PUSHB_L1_BATH_B11_OnPressed=0;
+Command PUSHB_L1_BATH_B11_OnReleased[1]={{eApplicationID::RGBW__L1_BATH_W1, eCommandType::TOGGLE},};
+Command PUSHB_L1_BATH_B11_OnReleasedShort[1]={{eApplicationID::PWM___L1_BATH_S, eCommandType::TOGGLE},};
+Command PUSHB_L1_BATH_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_BATH_S, eCommandType::START},};
+Command PUSHB_L1_BATH_B11_OnReleasedLong[1]={{eApplicationID::PWM___L1_BATH_S, eCommandType::STOP},};
+eEventType *PUSHB_L1_BATH_B11_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B11_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L1_BATH_B11("PUSHB_L1_BATH_B11", eApplicationID::PUSHB_L1_BATH_B11, eInput::I10, PUSHB_L1_BATH_B11_LocalEvents, 0, PUSHB_L1_BATH_B11_BusEvents, 0, PUSHB_L1_BATH_B11_OnPressed, 0, PUSHB_L1_BATH_B11_OnReleased, 1, PUSHB_L1_BATH_B11_OnReleasedShort, 1, PUSHB_L1_BATH_B11_OnPressedShortAndHold, 1, PUSHB_L1_BATH_B11_OnReleasedLong, 1);
+
+// PWM PWM___L1_BATH_S (Dimmer )
+ePWMOutput PWM___L1_BATH_S_output[1]={ePWMOutput::P07,};
+sensact::cPWM PWM___L1_BATH_S("PWM___L1_BATH_S", eApplicationID::PWM___L1_BATH_S, PWM___L1_BATH_S_output, 1, 1, 255, false, eApplicationID::STDBY_L0_48V);
+
+// PushButtonX PUSHB_L1_BATH_B12
+Command PUSHB_L1_BATH_B12_OnPressed[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::UP},};
+Command *PUSHB_L1_BATH_B12_OnReleased=0;
+Command *PUSHB_L1_BATH_B12_OnReleasedShort=0;
+Command *PUSHB_L1_BATH_B12_OnPressedShortAndHold=0;
+Command PUSHB_L1_BATH_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::STOP},};
+eEventType *PUSHB_L1_BATH_B12_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B12_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L1_BATH_B12("PUSHB_L1_BATH_B12", eApplicationID::PUSHB_L1_BATH_B12, eInput::I11, PUSHB_L1_BATH_B12_LocalEvents, 0, PUSHB_L1_BATH_B12_BusEvents, 0, PUSHB_L1_BATH_B12_OnPressed, 1, PUSHB_L1_BATH_B12_OnReleased, 0, PUSHB_L1_BATH_B12_OnReleasedShort, 0, PUSHB_L1_BATH_B12_OnPressedShortAndHold, 0, PUSHB_L1_BATH_B12_OnReleasedLong, 1);
+
+// PushButtonX PUSHB_L1_BATH_B13
+Command PUSHB_L1_BATH_B13_OnPressed[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::DOWN},};
+Command *PUSHB_L1_BATH_B13_OnReleased=0;
+Command *PUSHB_L1_BATH_B13_OnReleasedShort=0;
+Command *PUSHB_L1_BATH_B13_OnPressedShortAndHold=0;
+Command PUSHB_L1_BATH_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::STOP},};
+eEventType *PUSHB_L1_BATH_B13_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B13_BusEvents=0;
+sensact::cPushbuttonX PUSHB_L1_BATH_B13("PUSHB_L1_BATH_B13", eApplicationID::PUSHB_L1_BATH_B13, eInput::I12, PUSHB_L1_BATH_B13_LocalEvents, 0, PUSHB_L1_BATH_B13_BusEvents, 0, PUSHB_L1_BATH_B13_OnPressed, 1, PUSHB_L1_BATH_B13_OnReleased, 0, PUSHB_L1_BATH_B13_OnReleasedShort, 0, PUSHB_L1_BATH_B13_OnPressedShortAndHold, 0, PUSHB_L1_BATH_B13_OnReleasedLong, 1);
+
+// Blind BLIND_L1_BATH_J1
+cBlind BLIND_L1_BATH_J1("BLIND_L1_BATH_J1", eApplicationID::BLIND_L1_BATH_J1, ePoweredOutput::O16, ePoweredOutput::O16, eRelayMode::TWO_PHASES, 40);
+
+// RGBW RGBW__L1_BATH_W1 (Full Color Light)
+sensact::cRgbw RGBW__L1_BATH_W1("RGBW__L1_BATH_W1", eApplicationID::RGBW__L1_BATH_W1, ePWMOutput::OP01, ePWMOutput::OP03, ePWMOutput::OP02, ePWMOutput::NONE, true, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::NO_APPLICATION);
 
 
 
@@ -114,78 +237,31 @@ sensact::cPushbuttonX PUSHB__XX_PUB_1("PUSHB__XX_PUB_1", eApplicationID::PUSHB__
 
 cApplication *MODEL::Glo2locCmd[] = {
     0,
-    &BELL__DOOR,
-    &STDBY_XX_XXX_1,
-    &PWM___XX_XXX_1,
-    &BLIND_XX_XXX_1,
-    &PUSHB_LX_FRO_1,
-    &PUSHB__XX_BLN__UP,
-    &PUSHB__XX_BLN__DOWN,
-    &PUSHB__XX_PUB_1,
-    0,
-    0,
-    0,
-    0,
-
-};
-
-
-
-cApplication *MODEL::Glo2locEvt[] = { };
-#endif
-
-#ifdef NODE_TEST_UP02
-
-eNodeID NODE = eNodeID::TEST_UP02;
-
-const char MODEL::ModelString[] ="NodeId TEST_UP02 created on 04.06.2016 00:08:11";
-
-#include <cModel_base.inc>
-
-
-// RGBW RGBW__YY_YYY_1 (Full Color Light)
-sensact::cRgbw RGBW__YY_YYY_1("RGBW__YY_YYY_1", eApplicationID::RGBW__YY_YYY_1, ePWMOutput::P01, ePWMOutput::P03, ePWMOutput::P05, ePWMOutput::P07, false, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::NO_APPLICATION);
-
-// RotaryEncoder ROTAR_YY_YYY_1
-Command ROTAR_YY_YYY_1_OnPressed[1]={{eApplicationID::PWM___XX_XXX_1, eCommandType::TOGGLE},};
-Command *ROTAR_YY_YYY_1_OnShortReleased=0;
-Command *ROTAR_YY_YYY_1_OnLongReleased=0;
-Command ROTAR_YY_YYY_1_OnTurned[1]={{eApplicationID::PWM___XX_XXX_1, eCommandType::STEP_VERTICAL},};
-eEventType *ROTAR_YY_YYY_1_LocalEvents=0;
-eEventType *ROTAR_YY_YYY_1_BusEvents=0;
-sensact::cROTAR ROTAR_YY_YYY_1("ROTAR_YY_YYY_1", eApplicationID::ROTAR_YY_YYY_1, eRotaryEncoder::ROTARYENCODER_1, eInput::ROTAR_PUSH_1, ROTAR_YY_YYY_1_LocalEvents, 0, ROTAR_YY_YYY_1_BusEvents, 0, ROTAR_YY_YYY_1_OnPressed, 1, ROTAR_YY_YYY_1_OnShortReleased, 0, ROTAR_YY_YYY_1_OnLongReleased, 0, ROTAR_YY_YYY_1_OnTurned, 1 );
-
-// POWIT POWIT_YY_YYY_01
-sensact::cPoweritem POWIT_YY_YYY_01("POWIT_YY_YYY_01", eApplicationID::POWIT_YY_YYY_01, ePoweredOutput::O_LED, 3000);
-
-// PushButtonX PUSHB_YY_PUB_1
-Command PUSHB_YY_PUB_1_OnPressed[1]={{eApplicationID::POWIT_YY_YYY_01, eCommandType::ON},};
-Command *PUSHB_YY_PUB_1_OnReleased=0;
-Command *PUSHB_YY_PUB_1_OnReleasedShort=0;
-Command *PUSHB_YY_PUB_1_OnPressedShortAndHold=0;
-Command *PUSHB_YY_PUB_1_OnReleasedLong=0;
-eEventType *PUSHB_YY_PUB_1_LocalEvents=0;
-eEventType *PUSHB_YY_PUB_1_BusEvents=0;
-sensact::cPushbuttonX PUSHB_YY_PUB_1("PUSHB_YY_PUB_1", eApplicationID::PUSHB_YY_PUB_1, eInput::I01, PUSHB_YY_PUB_1_LocalEvents, 0, PUSHB_YY_PUB_1_BusEvents, 0, PUSHB_YY_PUB_1_OnPressed, 1, PUSHB_YY_PUB_1_OnReleased, 0, PUSHB_YY_PUB_1_OnReleasedShort, 0, PUSHB_YY_PUB_1_OnPressedShortAndHold, 0, PUSHB_YY_PUB_1_OnReleasedLong, 0);
-
-
-
-
-
-cApplication *MODEL::Glo2locCmd[] = {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    &RGBW__YY_YYY_1,
-    &ROTAR_YY_YYY_1,
-    &POWIT_YY_YYY_01,
-    &PUSHB_YY_PUB_1,
+    &PUSHB_L0_CORR_B11,
+    &POWIT_L0_CORR_C1,
+    &PUSHB_L0_PRTY_B11,
+    &PUSHB_L0_PRTY_B12,
+    &PWM___L0_PRTY_S,
+    &PUSHB_L0_STO1_B11,
+    &POWIT_L0_STO1_C1,
+    &PUSHB_L0_TECH_B11,
+    &POWIT_L0_TECH_C1,
+    &PUSHB_L0_WELL_B11,
+    &PUSHB_L0_WELL_B21,
+    &PUSHB_L0_WELL_B22,
+    &POWIT_L0_WELL_C1,
+    &PWM___L0_WELL_S1,
+    &PWM___L0_WELL_S2,
+    &PUSHB_L0_WORK_B11,
+    &POWIT_L0_WORK_C1,
+    &STDBY_L0_24V,
+    &STDBY_L0_48V,
+    &PUSHB_L1_BATH_B11,
+    &PWM___L1_BATH_S,
+    &PUSHB_L1_BATH_B12,
+    &PUSHB_L1_BATH_B13,
+    &BLIND_L1_BATH_J1,
+    &RGBW__L1_BATH_W1,
 
 };
 
