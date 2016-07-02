@@ -11,7 +11,6 @@ namespace Klli.Sensact.Config.Applications
     {
         public MasterApplication()
         {
-            this.Index = 0;
             this.ApplicationId = "MASTER";
         }
 
@@ -23,7 +22,7 @@ namespace Klli.Sensact.Config.Applications
             }
         }
 
-        public override string GenerateInitializer(Model m)
+        public override string GenerateInitializer(ModelContainer m)
         {
             return string.Empty;
         }

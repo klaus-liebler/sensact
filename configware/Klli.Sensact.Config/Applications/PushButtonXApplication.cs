@@ -38,7 +38,7 @@ namespace Klli.Sensact.Config.Applications
             }
         }
 
-        public override string GenerateInitializer(Model m)
+        public override string GenerateInitializer(ModelContainer m)
         {
 
             //Command op_a1[1] = {{eApplicationID::POWIT_EG_WOZ_L1, eCommandType::BACKWARD }};

@@ -8,20 +8,23 @@ using System.Xml.Serialization;
 
 namespace Klli.Sensact.Config
 {
+    public class SensactApplicationContainer
+    {
+        public Node Node;
+        public int Index;
+        public SensactApplication Application;
+
+    }
     public abstract class SensactApplication
     {
-        public const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|XX)_(LVNG|KTCH|KID1|KID2|BATH|WORK|BEDR|STRS|XXX)_.*";
+        public const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|XXX)_.*";
 
-        public string ApplicationId; //TODO: Prüfung per Regex, ob der Name dem Namensschema entspricht
-
-        [XmlIgnore]
-        public Node Node;
+        public string ApplicationId;
+        
 
         [XmlIgnore]
         internal abstract Regex AppIdRegex { get; }
 
-        [XmlIgnore]
-        public int Index;
 
 
         public static SensactApplication MergeInHigherPrioVal(SensactApplication higherPrio, SensactApplication lowerPrio)
@@ -40,7 +43,7 @@ namespace Klli.Sensact.Config
 
         internal bool HasValidAppId()
         {
-            return this.AppIdRegex.IsMatch(this.ApplicationId);
+            return this.AppIdRegex.IsMatch(this.ApplicationId.ToString());
         }
 
         public HashSet<Event> IReactOnTheseEvents()
@@ -94,7 +97,7 @@ namespace Klli.Sensact.Config
             return ret;
         }
 
-        protected string CommandInitializer(string collectionName, ICollection<Command> cmds, Model m)
+        protected string CommandInitializer(string collectionName, ICollection<Command> cmds, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Command {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
@@ -116,7 +119,7 @@ namespace Klli.Sensact.Config
             return sb.ToString();
         }
 
-        protected string ResourcesInitializer(string collectionName, ICollection<PwmPin> cmds, Model m)
+        protected string ResourcesInitializer(string collectionName, ICollection<PwmPin> cmds, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("ePWMOutput {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
@@ -137,7 +140,7 @@ namespace Klli.Sensact.Config
             return sb.ToString();
         }
 
-        protected string EventInitializer(string prefix, ICollection<EventType> evts, Model m)
+        protected string EventInitializer(string prefix, ICollection<EventType> evts, ModelContainer m)
         {
             //eEventType PUSHB_EG_WOZ_G0S0_BusEvent[2] = {eEventType::PRESSED, eEventType::RELEASED, eEventType::END_OF_EVENTS};
             StringBuilder sb = new StringBuilder();
@@ -168,7 +171,7 @@ namespace Klli.Sensact.Config
 
         public abstract HashSet<EventType> ICanSendTheseEvents();
 
-        public abstract string GenerateInitializer(Model m);
+        public abstract string GenerateInitializer(ModelContainer m);
     }
 
     

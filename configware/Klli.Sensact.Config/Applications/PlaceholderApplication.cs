@@ -25,7 +25,7 @@ namespace Klli.Sensact.Config.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateInitializer(Model m)
+        public override string GenerateInitializer(ModelContainer m)
         {
             return string.Empty;
         }

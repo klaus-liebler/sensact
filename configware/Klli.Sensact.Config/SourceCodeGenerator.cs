@@ -15,45 +15,26 @@ namespace Klli.Sensact.Config
 
         
 
-        public static bool CheckAndPrepare(Model m)
+        public static bool CheckAndPrepare(ModelContainer mc)
         {
-            Dictionary<string, SensactApplication> appId2rootApp = new Dictionary<string,SensactApplication>();
-
-            foreach(SensactApplication app in m.Applications)
+            HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
+            Dictionary<string, int> predef_id2index = new Dictionary<string, int>();
+            foreach(ID id in Enum.GetValues(typeof(ID)))
             {
-                if(appId2rootApp.ContainsKey(app.ApplicationId))
-                {
-                    LOG.ErrorFormat("AppId {0} is defined at least two times in root applications", app.ApplicationId);
-                    return false;
-                }
-                appId2rootApp[app.ApplicationId]=app;
+                predef_id2index[id.ToString()] = (int)id;
             }
-            
-            HashSet<string> definedAppIds = new HashSet<string>();
+            int nextFreeIndex = (int)ID.CNT;
 
 
             //Merge the Root-Part of Applications and the NodePart of Applications
-            SensactApplication masterApp = new Applications.MasterApplication();
-            m.Applications.Add(masterApp);
-            int index = 1;
-            foreach (Node n in m.Nodes)
-            {
-                foreach (SensactApplication app in n.Applications)
-                {
-                    app.Index = index;
-                    index++;
-                }
-            }
-            m.index2app = new SensactApplication[index];
-            m.id2app[masterApp.ApplicationId] = masterApp;
-            m.id2index[masterApp.ApplicationId] = masterApp.Index;
-            m.index2app[masterApp.Index] = masterApp;
-            foreach (Node n in m.Nodes)
+            SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = 0, Node = null };
+            mc.id2app[masterApp.Application.ApplicationId] = masterApp;
+            mc.index2app[0] = masterApp;
+            foreach (Node n in mc.Model.Nodes)
             {
                 foreach(SensactApplication app in n.Applications)
                 {
-                    app.Node = n;
-                    if(definedAppIds.Contains(app.ApplicationId))
+                    if(alreadyDefinedAppIds.Contains(app.ApplicationId))
                     {
                         LOG.ErrorFormat("AppId {0} is defined at least two times in node applications", app.ApplicationId);
                         return false;
@@ -62,64 +43,69 @@ namespace Klli.Sensact.Config
                     {
                         LOG.WarnFormat("AppId {0} does not fulfill the recommendations for application name. This is ok, but maybe it is an error...", app.ApplicationId, n.Id);
                     }
-                    definedAppIds.Add(app.ApplicationId);
-                    SensactApplication rootApp;
-                    if(!appId2rootApp.TryGetValue(app.ApplicationId, out rootApp))
+                    alreadyDefinedAppIds.Add(app.ApplicationId);
+                    int myIndex = nextFreeIndex;
+
+                    if (!predef_id2index.TryGetValue(app.ApplicationId, out myIndex))
                     {
-                        LOG.WarnFormat("AppId {0} exists in node {1}, but not in root applications. This is ok, but maybe it is an error...", app.ApplicationId, n.Id);
-                    }else
-                    {
-                        SensactApplication.MergeInHigherPrioVal(app, rootApp);
+                        nextFreeIndex++;
                     }
-                    m.id2app[app.ApplicationId] = app;
-                    m.id2index[app.ApplicationId] = index;
-                    m.index2app[app.Index] = app;
+                    SensactApplicationContainer cont = new SensactApplicationContainer
+                    {
+                        Application = app,
+                        Index = myIndex,
+                        Node = n,
+                    };
+
+
+                    mc.id2app[cont.Application.ApplicationId] = cont;
+                    mc.index2app[cont.Index] = cont;
                 }
-                
             }
 
             //Find out which events should be fired by each application because there is a listener for the event
             //distinguish between local events and bus events
-            foreach (Node n in m.Nodes)
+            foreach (Node n in mc.Model.Nodes)
             {
                 foreach (SensactApplication app in n.Applications)
                 {
                     HashSet<Event> evts = app.IReactOnTheseEvents();
+                    SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     foreach (Event evt in evts)
                     {
                         //Kann die SourceApp dieses Event überhaupt erzeugen?
-                        SensactApplication source;
-                        if(!m.id2app.TryGetValue(evt.SourceAppId, out source))
+                        SensactApplicationContainer source;
+                        if (!mc.id2app.TryGetValue(evt.SourceAppId, out source))
                         {
                             LOG.ErrorFormat("AppId {0} listens to event from AppId {1}, but this app does not exist.", app.ApplicationId, evt.SourceAppId);
                             return false;
                         }
                         else
                         {
-                            if(!source.ICanSendTheseEvents().Contains(evt.EventType))
+                            if(!source.Application.ICanSendTheseEvents().Contains(evt.EventType))
                             {
                                 LOG.ErrorFormat("AppId {0} listens to event {1} from AppId {2}, but this app cannot produce such events.", app.ApplicationId, evt.EventType, evt.SourceAppId);
                                 return false;
                             }
                         }
-                        if (app.Node == m.id2app[evt.SourceAppId].Node)
+                        if (appCont.Node == source.Node)
                         {
                             //source und destination leben in der selben node
                             HashSet<EventType> set = null;
-                            if (!m.id2localEvents.TryGetValue(evt.SourceAppId, out set))
+                            if (!mc.id2localEvents.TryGetValue(evt.SourceAppId, out set))
                             {
                                 set = new HashSet<EventType>();
-                                m.id2localEvents[evt.SourceAppId] = set;
+                                mc.id2localEvents[evt.SourceAppId] = set;
                             }
                             set.Add(evt.EventType);
                         }
                         else
                         {
                             HashSet<EventType> set = null;
-                            if (!m.id2busEvents.TryGetValue(evt.SourceAppId, out set))
+                            if (!mc.id2busEvents.TryGetValue(evt.SourceAppId, out set))
                             {
                                 set = new HashSet<EventType>();
-                                m.id2busEvents[evt.SourceAppId] = set;
+                                mc.id2busEvents[evt.SourceAppId] = set;
                             }
                             set.Add(evt.EventType);
                         }
@@ -127,15 +113,15 @@ namespace Klli.Sensact.Config
                     HashSet<Command> cmds = app.ISendTheseCommands();
                     foreach(Command cmd in cmds)
                     {
-                        SensactApplication target;
-                        if (!m.id2app.TryGetValue(cmd.TargetAppId, out target))
+                        SensactApplicationContainer target;
+                        if (!mc.id2app.TryGetValue(cmd.TargetAppId, out target))
                         {
                             LOG.ErrorFormat("AppId {0} sends command to AppId {1}, but this app does not exist.", app.ApplicationId, cmd.TargetAppId);
                             return false;
                         }
                         else
                         {
-                            if (!target.ICanReactOnTheseCommands().Contains(cmd.CommandType))
+                            if (!target.Application.ICanReactOnTheseCommands().Contains(cmd.CommandType))
                             {
                                 LOG.ErrorFormat("AppId {0} sends command {1} to AppId {2}, but this app cannot react on this command.", app.ApplicationId, cmd.CommandType, cmd.TargetAppId);
                                 return false;
@@ -145,6 +131,7 @@ namespace Klli.Sensact.Config
 
                 }
             }
+            
             return true;
         }
 
@@ -159,17 +146,17 @@ namespace Klli.Sensact.Config
             }
         }
 
-        internal static void GenerateAppIds_h(Model model)
+        internal static void GenerateAppIds_h(ModelContainer model)
         {
             HC_APPIDS_H page = new HC_APPIDS_H()
             {
                 version="1.0"
             };
-            model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
+            model.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             
-            for(int i=0;i<model.index2app.Length;i++)
+            foreach(ID id in Enum.GetValues(typeof(ID)))
             {
-                page.AppIds.Add(model.index2app[i].ApplicationId);
+                page.AppIds.Add(id.ToString());
             }
             String pageContent = page.TransformText();
             File.WriteAllText(GetGeneratedPathForFile("appids.h"), pageContent);
@@ -177,18 +164,18 @@ namespace Klli.Sensact.Config
             return;
         }
 
-        internal static void GenerateModel_cpp(Model m)
+        internal static void GenerateModel_cpp(ModelContainer mc)
         {
             HC_MODEL_CPP file = new HC_MODEL_CPP()
             {
                 version = "1.0",  
             };
-            for (int i = 0; i < m.index2app.Length; i++)
+            for (int i = 0; i < mc.index2app.Count; i++)
             {
-                SensactApplication app = m.index2app[i];
-                file.ApplicationNames.AppendLine("    \"" + app.ApplicationId + "\",");
+                SensactApplicationContainer app = mc.index2app[i];
+                file.ApplicationNames.AppendLine("    \"" + app.Application.ApplicationId + "\",");
             }
-            foreach (Node node in m.Nodes)
+            foreach (Node node in mc.Model.Nodes)
             {
                 ModelCppItem item = new ModelCppItem()
                 {
@@ -197,7 +184,7 @@ namespace Klli.Sensact.Config
                     ModelInfo="NodeId "+node.Id+" created on "+DateTime.Now,
                 };
                 
-                string[] Glo2LocPointers = new string[m.id2index.Count];
+                string[] Glo2LocPointers = new string[mc.index2app.Count];
                 for (int i = 0; i < Glo2LocPointers.Length; i++)
                 {
                     Glo2LocPointers[i] = "    0,";
@@ -205,8 +192,9 @@ namespace Klli.Sensact.Config
                 //Static initializers
                 foreach (SensactApplication app in node.Applications)
                 {
-                    item.StaticApplicationInitializers.Append(app.GenerateInitializer(m));
-                    Glo2LocPointers[app.Index] = "    &" + app.ApplicationId+",";
+                    item.StaticApplicationInitializers.Append(app.GenerateInitializer(mc));
+                    SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
+                    Glo2LocPointers[appCont.Index] = "    &" + app.ApplicationId+",";
                 }
                 for (int i = 0; i < Glo2LocPointers.Length; i++)
                 {
@@ -228,7 +216,7 @@ namespace Klli.Sensact.Config
             return Path.Combine(Properties.Settings.Default.SensactDirectory, "firmware", "modules", "generated", filename);
         }
 
-        internal static void GenerateCommandAndEventTypes_h(Model model)
+        internal static void GenerateCommandAndEventTypes_h(ModelContainer model)
         {
             HC_COMMANDANDEVENTTYPES_H page = new HC_COMMANDANDEVENTTYPES_H()
             {
@@ -242,13 +230,13 @@ namespace Klli.Sensact.Config
             {
                 page.CommandTypes.Add(s);
             }
-            String pageContent = page.TransformText();
-            System.IO.File.WriteAllText(GetGeneratedPathForFile("commandAndEventTypes.h"), pageContent);
+            string pageContent = page.TransformText();
+            File.WriteAllText(GetGeneratedPathForFile("commandAndEventTypes.h"), pageContent);
             LOG.InfoFormat("Successfully created commandAndEventTypes.h");
             return;
         }
 
-        internal static void GenerateApplicationHandCPP(Model model)
+        internal static void GenerateApplicationHandCPP(ModelContainer model)
         {
             APPLICATION_H h = new APPLICATION_H()
             {

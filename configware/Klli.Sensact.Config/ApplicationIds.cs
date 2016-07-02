@@ -2,7 +2,7 @@
 {
     public enum ID
     {
-        NO_APPLICATION,
+        MASTER,
         //Keller
         PUSHB_L0_CORR_B11, //alle drei Taster parallel
         POWIT_L0_CORR_C1,
@@ -383,7 +383,7 @@
         STDBY_L2_24V,
         STDBY_L3_24V,
         STDBY_L3_48V,
-
+        NO_APPLICATION,
         CNT,
     }
 }

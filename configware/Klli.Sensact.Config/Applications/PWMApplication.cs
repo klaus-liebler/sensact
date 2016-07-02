@@ -35,7 +35,7 @@ namespace Klli.Sensact.Config.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateInitializer(Model m)
+        public override string GenerateInitializer(ModelContainer m)
         {
             if(MinimalOnLevel<1)
             {
@@ -52,8 +52,7 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// PWM {0} (Dimmer )" + Environment.NewLine, ApplicationId);
             sb.Append(ResourcesInitializer("output", this.OutputRessources, m));
-            sb.AppendFormat("sensact::cPWM {0}(\"{0}\", eApplicationID::{0}, {0}_output, {1}, {2}, {3}, {4}, eApplicationID::{5});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessources.Count, MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),
-                StandbyController!=null?StandbyController:"NO_APPLICATION");
+            sb.AppendFormat("sensact::cPWM {0}(\"{0}\", eApplicationID::{0}, {0}_output, {1}, {2}, {3}, {4}, eApplicationID::{5});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessources.Count, MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),StandbyController);
             return sb.ToString();
         }
 
@@ -62,7 +61,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("PWM"+REGEX_FLOOR_ROOM_SUFFIX);
+                return new Regex("PWM__"+REGEX_FLOOR_ROOM_SUFFIX);
             }
         }
     }

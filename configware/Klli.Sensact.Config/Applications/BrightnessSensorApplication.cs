@@ -26,7 +26,7 @@ namespace Klli.Sensact.Config.Applications
             return new HashSet<EventType>() { EventType.STATUS };
         }
 
-        public override string GenerateInitializer(Model m)
+        public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// BrightnessSensor {0}" + Environment.NewLine, ApplicationId);

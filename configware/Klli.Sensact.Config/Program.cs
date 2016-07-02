@@ -14,12 +14,16 @@ namespace Klli.Sensact.Config
             XmlConfigurator.Configure();
 
             Model model = Sattlerstrasse16.Build();
-            if (SourceCodeGenerator.CheckAndPrepare(model))
+            ModelContainer mc = new ModelContainer()
             {
-                SourceCodeGenerator.GenerateAppIds_h(model);
-                SourceCodeGenerator.GenerateModel_cpp(model);
-                SourceCodeGenerator.GenerateCommandAndEventTypes_h(model);
-                SourceCodeGenerator.GenerateApplicationHandCPP(model);
+                Model = model
+            };
+            if (SourceCodeGenerator.CheckAndPrepare(mc))
+            {
+                SourceCodeGenerator.GenerateAppIds_h(mc);
+                SourceCodeGenerator.GenerateModel_cpp(mc);
+                SourceCodeGenerator.GenerateCommandAndEventTypes_h(mc);
+                SourceCodeGenerator.GenerateApplicationHandCPP(mc);
                 foreach (Node n in model.Nodes)
                 {
                     SensactFileCollector p = new SensactFileCollector();
