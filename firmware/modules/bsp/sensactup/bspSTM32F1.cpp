@@ -82,7 +82,28 @@ void BSP::Init(void) {
 	InitAndTestUSART();
 
 
-	InitI2C_2();
+	//I2C
+	/*
+		 PB10     ------> I2C2_SCL
+		 PB11     ------> I2C2_SDA
+	 */
+	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	HAL_GPIO_Init(GPIOB, &gi);
+
+	BSP::i2c2.Instance = I2C2;
+	BSP::i2c2.Init.ClockSpeed = 100000;
+	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	BSP::i2c2.Init.OwnAddress1 = 0;
+	BSP::i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	BSP::i2c2.Init.OwnAddress2 = 0;
+	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	HAL_I2C_Init(&BSP::i2c2);
+	LOGI(SUCCESSFUL_STRING, "I2C2");
 
 	if(pca9685_ext.Setup())
 	{

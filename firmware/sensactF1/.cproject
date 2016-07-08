@@ -83,8 +83,8 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
 									<listOptionValue builtIn="false" value="HAS_EXT_PWM"/>
+									<listOptionValue builtIn="false" value="NODE_SNSAC_L1_KTCH_UP02_1"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.959137802" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -111,8 +111,8 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
 									<listOptionValue builtIn="false" value="HAS_EXT_PWM"/>
+									<listOptionValue builtIn="false" value="NODE_SNSAC_L1_KTCH_UP02_1"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1081618201" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -146,9 +146,9 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
 									<listOptionValue builtIn="false" value="HAS_EXT_PWM"/>
 									<listOptionValue builtIn="false" value="SENSACTUP_EXT_BH1750"/>
+									<listOptionValue builtIn="false" value="NODE_SNSAC_L1_KTCH_UP02_1"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.2050159930" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

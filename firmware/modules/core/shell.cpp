@@ -95,7 +95,7 @@ static eShellError cmdCs(shell_cmd_args *args) {
 	}
 	int cmdNameLength = cShell::strlen(args->args[0].val);
 	uint16_t i;
-	for (i = 1; i < (uint16_t) eApplicationID::COUNT; i++) {
+	for (i = 1; i < (uint16_t) eApplicationID::CNT; i++) {
 		int testCmdNameLength = cShell::strlen(MODEL::ApplicationNames[i]);
 		if(cShell::strcmp(args->args[0].val, MODEL::ApplicationNames[i], cmdNameLength, testCmdNameLength)==0)
 		{

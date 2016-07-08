@@ -34,7 +34,7 @@ void cMaster::Run(void) {
 	uint16_t i = 0;
 	uint16_t appCnt=0;
 	//hier bei "1" beginnen, weil "0" der lokale/globale (?) Master ist; ggf zuk�nftig auch mit eigenem "Init"
-	for (i = 1; i < (uint16_t) eApplicationID::COUNT; i++) {
+	for (i = 1; i < (uint16_t) eApplicationID::CNT; i++) {
 		cApplication *ap = MODEL::Glo2locCmd[i];
 		if (ap) {
 			if(ap->Setup())
@@ -67,7 +67,7 @@ void cMaster::Run(void) {
 			}
 			UART_buffer_pointer=0;
 		}
-		for (i = 0; i < (uint16_t) eApplicationID::COUNT; i++) {
+		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
 			cApplication *ap = MODEL::Glo2locCmd[i];
 			if (ap) {
 				ap->DoEachCycle(now);

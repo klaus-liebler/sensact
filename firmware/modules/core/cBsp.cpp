@@ -83,7 +83,7 @@ I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 SPI_HandleTypeDef BSP::spi;
 UART_HandleTypeDef BSP::BELL;
-static uint8_t INPUT[] = { P(C, 13)};
+static uint8_t INPUT[] = { P(C, 13), P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
 
 drivers::cPCA9555 BSP::pca9555_U18(&i2c1, drivers::ePCA9555Device::Dev3, GPIOC, GPIO_PIN_0);
 drivers::cPCA9555 BSP::pca9555_U19(&i2c1, drivers::ePCA9555Device::Dev7, GPIOC, GPIO_PIN_1);
@@ -105,8 +105,8 @@ int16_t BSP::temperatures[64];
 uint32_t BSP::pwmRequests[] = {0xFFFFFF00, UINT32_MAX, 0, UINT32_MAX};
 //OBO: die unteren 8 im ULN2008, dann 24 über DRV8860, keine über i2c, 1wire werden zur Laufzeit freigeschaltet (sensactWindow!)
 uint32_t BSP::poweredOutputRequests[] = {0xFFFFFF00, 0xFF000000, UINT32_MAX, UINT32_MAX};
-//OBO: genau einen für den RotaryEncoder, keinen per SPI, 32 per i2c, 1wire wird zur Laufzeit freigeschaltet
-uint32_t BSP::inputRequests[] = {0xFFFFFFFE, UINT32_MAX, 0, UINT32_MAX};
+//OBO: sieben für den RotaryEncoder und 6 Lichtschranken, keinen per SPI, 32 per i2c, 1wire wird zur Laufzeit freigeschaltet
+uint32_t BSP::inputRequests[] = {0xFFFFFF80, UINT32_MAX, 0, UINT32_MAX};
 
 #endif
 
@@ -553,9 +553,23 @@ ePushState BSP::GetDigitalInput(eInput i)
 	uint8_t ii = (uint8_t)i;
 	if(ii < 32)
 	{
+#ifdef SENSACTHS07
+		if(i==eInput::ROTAR_PUSH_1)
+		{
+			#pragma GCC diagnostic ignored "-Wconversion"
+			return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;
+			#pragma GCC diagnostic warning "-Wconversion"
+		}
+		else
+		{
+			return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_SET?ePushState::PRESSED : ePushState::RELEASED;
+		}
+#else
 		#pragma GCC diagnostic ignored "-Wconversion"
-				return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;
+		return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;
 		#pragma GCC diagnostic warning "-Wconversion"
+#endif
+
 
 	}
 	else if(ii < 64)

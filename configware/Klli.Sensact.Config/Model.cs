@@ -25,5 +25,6 @@ namespace Klli.Sensact.Config
         public Dictionary<string, HashSet<EventType>> id2localEvents = new Dictionary<string, HashSet<EventType>>();
         public Dictionary<string, HashSet<EventType>> id2busEvents = new Dictionary<string, HashSet<EventType>>();
         public Model Model;
+        public int NextFreeIndex;
     }
 }

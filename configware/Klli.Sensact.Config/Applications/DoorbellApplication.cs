@@ -35,7 +35,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("BELL.*");
+                return new Regex("DEVCE"+REGEX_FLOOR_ROOM_SUFFIX);
             }
         }
     }

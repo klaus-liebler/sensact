@@ -12,8 +12,6 @@ enum struct eApplicationID:uint16_t{
 	<# foreach (string s in AppIds){ #>
     <#= s #>,
     <# } #>
-	COUNT,
-	NO_APPLICATION
 };
 
 enum struct eNodeID

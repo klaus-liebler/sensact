@@ -18,7 +18,7 @@ public:
 	static cApplication *Glo2locEvt[];
 	static cApplication *Glo2locCmd[];
 	static const char ModelString[];
-	static const char *ApplicationNames[];
+	static const char * const ApplicationNames[];
 	static cWs281x RGBLED;
 	static const uint8_t sensactWi_RelayAddresses[][6];
 	static const uint8_t sensactWi_RelayAddressesCnt;

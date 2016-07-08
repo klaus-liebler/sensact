@@ -7,6 +7,7 @@ namespace Klli.Sensact.Config
     public static class AB
     {
 
+
         public static void AddToggleButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
         {
             list.Add(new PushButtonXApplication()
@@ -23,7 +24,18 @@ namespace Klli.Sensact.Config
                 },
             });
         }
-       
+
+
+        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, int autoOffInterval=0)
+        {
+            list.Add(new PoweritemApplication()
+            {
+                ApplicationId = appId.ToString(),
+                OutputRessource = outputRessource,
+                AutoOffInterval= autoOffInterval,
+            });
+        }
+
         public static void AddRotaryEncoder(this List<SensactApplication> list, ID appId, RotaryEncoder rotEnc, InputPin inputRessource, ID targetAppId)
         {
             list.Add(BuildRotaryEncoder(appId, rotEnc, inputRessource, targetAppId));
@@ -53,7 +65,7 @@ namespace Klli.Sensact.Config
                 }
             };
         }
-        public static void AddOnePushbuttonDimmer(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
+        public static void AddOneDimButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
         {
             list.Add(BuildOnePushbuttonDimmer(appId, inputRessource, targetAppId));
         }

@@ -20,7 +20,7 @@
 
 	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{40, 40, 40, 40},{255, 0, 0, 0,}};
 	const uint8_t MODEL::wellKnownRGBWColorsCnt = 2;
-#ifdef NODE_TEST_UP02
+#ifdef NODE_SNSAC_L1_KTCH_UP02_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{0xB4, 0x17, 0x77, 0xC0, 0x03, 0x10,}};
@@ -36,7 +36,7 @@
 
 
 #endif
-#ifdef NODE_SNSCT_L0_TECH_HS07
+#ifdef NODE_SNSAC_L0_TECH_HS07_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 

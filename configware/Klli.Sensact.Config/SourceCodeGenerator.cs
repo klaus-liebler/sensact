@@ -23,10 +23,9 @@ namespace Klli.Sensact.Config
             {
                 predef_id2index[id.ToString()] = (int)id;
             }
-            int nextFreeIndex = (int)ID.CNT;
+            mc.NextFreeIndex = (int)ID.CNT;
 
 
-            //Merge the Root-Part of Applications and the NodePart of Applications
             SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = 0, Node = null };
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
             mc.index2app[0] = masterApp;
@@ -42,13 +41,14 @@ namespace Klli.Sensact.Config
                     if(!app.HasValidAppId())
                     {
                         LOG.WarnFormat("AppId {0} does not fulfill the recommendations for application name. This is ok, but maybe it is an error...", app.ApplicationId, n.Id);
+                        app.HasValidAppId();
                     }
                     alreadyDefinedAppIds.Add(app.ApplicationId);
-                    int myIndex = nextFreeIndex;
+                    int myIndex = mc.NextFreeIndex;
 
                     if (!predef_id2index.TryGetValue(app.ApplicationId, out myIndex))
                     {
-                        nextFreeIndex++;
+                        mc.NextFreeIndex++;
                     }
                     SensactApplicationContainer cont = new SensactApplicationContainer
                     {
@@ -170,10 +170,18 @@ namespace Klli.Sensact.Config
             {
                 version = "1.0",  
             };
-            for (int i = 0; i < mc.index2app.Count; i++)
+            for (int i = 0; i < mc.NextFreeIndex; i++)
             {
-                SensactApplicationContainer app = mc.index2app[i];
-                file.ApplicationNames.AppendLine("    \"" + app.Application.ApplicationId + "\",");
+                SensactApplicationContainer app;
+                if(mc.index2app.TryGetValue(i, out app))
+                {
+                    file.ApplicationNames.AppendLine("    \"" + app.Application.ApplicationId + "\",");
+                }
+                else
+                {
+                    file.ApplicationNames.AppendLine("    \"\",");
+                }
+                
             }
             foreach (Node node in mc.Model.Nodes)
             {
@@ -184,7 +192,7 @@ namespace Klli.Sensact.Config
                     ModelInfo="NodeId "+node.Id+" created on "+DateTime.Now,
                 };
                 
-                string[] Glo2LocPointers = new string[mc.index2app.Count];
+                string[] Glo2LocPointers = new string[mc.NextFreeIndex];
                 for (int i = 0; i < Glo2LocPointers.Length; i++)
                 {
                     Glo2LocPointers[i] = "    0,";

@@ -24,7 +24,7 @@ using namespace std;
 
 namespace sensact {
 
-const char *MODEL::ApplicationNames[]={
+const char * const MODEL::ApplicationNames[]={
 		<#=ApplicationNames#>
 	};
 

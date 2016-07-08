@@ -4,7 +4,7 @@
     {
         MASTER,
         //Keller
-        PUSHB_L0_CORR_B11, //alle drei Taster parallel
+        PUSHB_L0_CORR_B11, //STRS.W1
         POWIT_L0_CORR_C1,
         SCLIM_L0_CORR_AIR,
         PUSHB_L0_PRTY_B11, //up
@@ -56,15 +56,15 @@
 
         DEVCE_L1_CORR_Audio, //auch gleichzeitig DEVCE_L1_CORR_Audio
         PUSHB_L1_CORR_B11, //für Spots
-        PUSHB_L1_CORR_B21, //für Spots
-        PUSHB_L1_CORR_B22, // Außenlicht
+        PUSHB_L1_CORR_B21, //S
+        PUSHB_L1_CORR_B22, //W1
         PUSHB_L1_CORR_B23, //Coming Home
         PUSHB_L1_CORR_B24, //leaving home
-        PUSHB_L1_CORR_B25, //Reserve
-        PUSHB_L1_CORR_B26, //Reserve
-        PWM___L1_CORR_S1,
-        PWM___L1_CORR_S2,
-        PWM___L1_CORR_S3,
+        PUSHB_L1_CORR_B25, //FRON.W1
+        PUSHB_L1_CORR_B26, //LEFT.W1
+        POWIT_L1_CORR_P1,
+        POWIT_L1_CORR_P2,
+        PWM___L1_CORR_S,
         POWIT_L1_CORR_W1,
         PWM___L1_CORR_W1,
         SCLIM_L1_CORR_AIR,
@@ -73,7 +73,8 @@
         VALVE_L1_CORR,
 
 
-        PUSHB_L1_KTCH_B11, //Außenbeleuchtung
+        PUSHB_L1_KTCH_B11, //C1
+        PUSHB_L1_KTCH_B12, //Außenbeleuchtung W1
         ROTAR_L1_KTCH_B21, //Spots 1...4 dimmen
         ROTAR_L1_KTCH_B22, //Spot 5 dimmen
         PUSHB_L1_KTCH_B23, //Deckenleuchte
@@ -89,11 +90,8 @@
         BLIND_L1_KTCH_J2,
         BLIND_L1_KTCH_P1,
         BLIND_L1_KTCH_P2,
-        PWM___L1_KTCH_S1,
-        PWM___L1_KTCH_S2,
-        PWM___L1_KTCH_S3,
-        PWM___L1_KTCH_S4,
-        PWM___L1_KTCH_S5,
+        PWM___L1_KTCH_S1, //die ersten vier Spots
+        PWM___L1_KTCH_S2, //über Spüle
         POWIT_L1_KTCH_W1,
         PWM___L1_KTCH_W1,
         SCLIM_L1_KTCH_AIR,
@@ -128,24 +126,14 @@
 
         POWIT_L1_LVNG_C1,
         PWM___L1_LVNG_C1,
-        PWM___L1_LVNG_J1,
-        PWM___L1_LVNG_J2,
-        PWM___L1_LVNG_J3,
-        PWM___L1_LVNG_P1,
-        PWM___L1_LVNG_P2,
-        PWM___L1_LVNG_S01,
-        PWM___L1_LVNG_S02,
-        PWM___L1_LVNG_S03,
-        PWM___L1_LVNG_S04,
-        PWM___L1_LVNG_S05,
-        PWM___L1_LVNG_S06,
-        PWM___L1_LVNG_S07,
-        PWM___L1_LVNG_S08,
-        PWM___L1_LVNG_S09,
-        PWM___L1_LVNG_S10,
-        PWM___L1_LVNG_S11,
-        PWM___L1_LVNG_S12,
-        PWM___L1_LVNG_S13,
+        BLIND_L1_LVNG_J1,
+        BLIND_L1_LVNG_J2,
+        BLIND_L1_LVNG_J3,
+        POWIT_L1_LVNG_P1,
+        POWIT_L1_LVNG_P2,
+        POWIT_L1_LVNG_P4,
+        POWIT_L1_LVNG_P5,
+        PWM___L1_LVNG_S,
         POWIT_L1_LVNG_W1, //Wandleuchten
         PWM___L1_LVNG_W1, //Wandleuchten
         RGBW__L1_LVNG_W3, //Effekleuchte (Reserve)
@@ -194,9 +182,10 @@
         VALVE_L1_WORK,
 
         BLIND_LX_BACK_J1,
-        POWIT_LX_BACK_P1,
-        POWIT_LX_BACK_P2,
+        POWIT_LX_BACK_P1, //Außensteckdosen
+        POWIT_LX_BACK_P2, //drei Phasen des Gartenkabels
         POWIT_LX_BACK_P3,
+        POWIT_LX_BACK_P4,
         POWIT_LX_BACK_W1, //Garagenwand
         POWIT_LX_BACK_W2, //Flachdachausbau
         POWIT_LX_BACK_W3, //Wonhzimmerterrasse
@@ -211,20 +200,21 @@
         POWIT_LX_GARA_P2,
         BLIND_LX_GARA_J1, //Garagentor
         POWIT_LX_LEFT_W1,
-        POWIT_LX_RGHR_W1,
+        POWIT_LX_RGHT_W1,
 
         ROTAR_L2_BATH_B11,
         ROTAR_L2_BATH_B12,
         PUSHB_L2_BATH_B13, //hoch
         PUSHB_L2_BATH_B14,//runter
-        PWM___L2_BATH_S1,
-        PWM___L2_BATH_S2,
+        BLIND_L2_BATH_J1,
+        PWM___L2_BATH_S,
         POWIT_L2_BATH_P1,
         POWIT_L2_BATH_P2,
-        RGBW__L2_BATH_W1, //oben auf T-Wand
-        RGBW__L2_BATH_W2, //Deko in den Wandfächern
-        RGBW__L2_BATH_W3, // Dekostrahler im Boden
-        RGBW__L2_BATH_W4, //Reserve; für Sternenhimmel
+        RGBW__L2_BATH_W,
+        //RGBW__L2_BATH_W1, //oben auf T-Wand
+        //RGBW__L2_BATH_W2, //Deko in den Wandfächern
+        //RGBW__L2_BATH_W3, // Dekostrahler im Boden
+        //RGBW__L2_BATH_W4, //Reserve; für Sternenhimmel
         SCLIM_L2_BATH_AIR,
         STEMP_L2_BATH_FLOOR,
         SWIND_L2_BATH,
@@ -250,8 +240,9 @@
         POWIT_L2_BEDR_P1, //Nachttischlampe linkes Bett
         POWIT_L2_BEDR_P2, //Nachttischlampe rechtes Bett
         POWIT_L2_BEDR_P3, //Netzfreischaltung
-        PWM___L2_BEDR_S1, //näher an Dachschräge
-        PWM___L2_BEDR_S2, //näher an Schrank
+        PWM___L2_BEDR_S,
+        //PWM___L2_BEDR_S1, //näher an Dachschräge
+        //PWM___L2_BEDR_S2, //näher an Schrank
         SCLIM_L2_BEDR_AIR,
         STEMP_L2_BEDR_FLOOR,
         SWIND_L2_BEDR,
@@ -267,9 +258,10 @@
         BLIND_L2_CORR_J1,
         POWIT_L2_CORR_P1,
         POWIT_L2_CORR_P2,
-        PWM___L2_CORR_S1,
-        PWM___L2_CORR_S2,
-        PWM___L2_CORR_S3,
+        PWM___L2_CORR_S,
+        //PWM___L2_CORR_S1,
+        //PWM___L2_CORR_S2,
+        //PWM___L2_CORR_S3,
         SCLIM_L2_CORR_AIR,
         STEMP_L2_CORR_FLOOR,
         SWIND_L2_CORR,
@@ -306,8 +298,10 @@
         PUSHB_L2_WORK_B11, //C1
         PUSHB_L2_WORK_B12, //J1
         PUSHB_L2_WORK_B13,
-        PWM___L2_WORK_S1,
-        PWM___L2_WORK_S2,
+        BLIND_L2_WORK_J1,
+        PWM___L2_WORK_S,
+        //PWM___L2_WORK_S1,
+        //PWM___L2_WORK_S2,
         SCLIM_L2_WORK_AIR,
         STEMP_L2_WORK_FLOOR,
         SWIND_L2_WORK,
@@ -321,8 +315,15 @@
         BLIND_L3_BEDR_J1,
         SCLIM_L3_BEDR_AIR,
         STEMP_L3_BEDR_FLOOR,
+        POWIT_L3_BEDR_P1,
+        POWIT_L3_BEDR_P2,
         SWIND_L3_BEDR,
         VALVE_L3_BEDR,
+
+        PUSHB_L3_TECH_B11,
+        POWIT_L3_TECH_C1,
+
+        
 
         ROTAR_L3_WORK_B11, //S*
         PUSHB_L3_WORK_B12, //J1
@@ -333,12 +334,13 @@
         BLIND_L3_WORK_J2,
         POWIT_L3_WORK_P1,
         POWIT_L3_WORK_P2,
-        PWM___L3_WORK_S1,
-        PWM___L3_WORK_S2,
-        PWM___L3_WORK_S3,
-        PWM___L3_WORK_S4,
-        PWM___L3_WORK_S5,
-        PWM___L3_WORK_S6,
+        PWM___L3_WORK_S,
+        //PWM___L3_WORK_S1,
+        //PWM___L3_WORK_S2,
+        //PWM___L3_WORK_S3,
+        //PWM___L3_WORK_S4,
+        //PWM___L3_WORK_S5,
+        //PWM___L3_WORK_S6,
         SCLIM_L3_WORK_AIR,
         STEMP_L3_WORK_FLOOR,
         SWIND_L3_WORK_W1,
@@ -346,23 +348,36 @@
         VALVE_L3_WORK,
 
         //Treppenhaus
-        PUSHB_LS_STRS_B11, //W3
-        PUSHB_LS_STRS_B12,
-        PUSHB_LS_STRS_B13, //W1
-        PUSHB_LS_STRS_B21, //LS nach unten, W2
-        PUSHB_LS_STRS_B22, //LS nach oben, W4
-        PUSHB_LS_STRS_B31, //W5
-        PUSHB_LS_STRS_B32,
-        PUSHB_LS_STRS_B33, //W3
-        PUSHB_LS_STRS_B41, //LS nach unten, W4
-        PUSHB_LS_STRS_B42, //LS nach oben, W6
-        PUSHB_LS_STRS_B51, //W5 (Schalter oben im Spitzbodenflur)
-        PUSHB_LS_STRS_B52,
-        PUSHB_LS_STRS_B61, //LS nach unten
+        PUSHB_LS_STRS_B11, //W2
+
+        PUSHB_LS_STRS_B21, //W3
+        PUSHB_LS_STRS_B22, //S*
+        PUSHB_LS_STRS_B23, //W1
+
+        PUSHB_LS_STRS_B31, //W2
+        PUSHB_LS_STRS_B32, //W4
+
+        PUSHB_LS_STRS_B41, //W5
+        PUSHB_LS_STRS_B42, //S*
+        PUSHB_LS_STRS_B43, //W3
+
+        PUSHB_LS_STRS_B51, //W4
+        PUSHB_LS_STRS_B52, //W6
+
+        PUSHB_LS_STRS_B61, //S+W5
+        PUSHB_LS_STRS_B62, //S+W5
+
+        PUSHB_LS_STRS_B71, //W6
+
+        POWIT_LS_STRS_W1,
+        PWM___LS_STRS_W2,
+        POWIT_LS_STRS_W3,
+        PWM___LS_STRS_W4,
+        POWIT_LS_STRS_W5,
+        PWM___LS_STRS_W6,
+        PWM___LS_STRS_S,
 
 
-
-  
 
         STEMP_LX_ROOF, //Außentemperatur (ggf. Sensor der Heizung mitnutzen?)
         SBRGH_LX_ROOF, //Helligkeitssensor
@@ -378,11 +393,11 @@
         SMOKE_L3_BEDR,
         SMOKE_L3_CORR,
 
-        STDBY_L0_24V,
-        STDBY_L0_48V,
-        STDBY_L2_24V,
-        STDBY_L3_24V,
-        STDBY_L3_48V,
+        STDBY_L0_TECH_24V,
+        STDBY_L0_TECH_48V,
+        STDBY_L2_CORR_24V,
+        STDBY_L3_TECH_48V,
+        STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
         NO_APPLICATION,
         CNT,
     }

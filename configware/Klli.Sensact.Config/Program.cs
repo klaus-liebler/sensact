@@ -10,6 +10,7 @@ namespace Klli.Sensact.Config
     {
         static void Main(string[] args)
         {
+            int w = (30 + 1 - 2) % 3;
 
             XmlConfigurator.Configure();
 
