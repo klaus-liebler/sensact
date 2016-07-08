@@ -7,6 +7,7 @@
 #define LOGNAME "BRDSP"
 #include <cLog.h>
 #include <console.h>
+#include <cRCSwitch.h>
 
 ADC_HandleTypeDef    AdcHandle;
 
@@ -37,9 +38,14 @@ void BSP::Init(void) {
 	HAL_GPIO_Init(GPIOC, &gi);
 	InitAndTestUSART();
 
-
-
-
+	if(InitDWTCounter())
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "DWTCounter");
+	}
+	else
+	{
+		LOGE(NOT_SUCCESSFUL_STRING, "DWTCounter");
+	}
 
 #ifdef SENSACTHS07
 	//Enable LEDs
@@ -140,7 +146,7 @@ void BSP::Init(void) {
 	tmp = pca9555_U19.GetInput();
 	inputState[WORD_I2C] = (inputState[WORD_I2C] & 0x0000FFFF) + (tmp << 16);
 
-
+	rcSwitch.enableReceive();
 
 	/*
 	 PB10     ------> I2C2_SCL

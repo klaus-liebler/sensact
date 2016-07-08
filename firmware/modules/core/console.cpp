@@ -19,7 +19,7 @@ void Console::outDgt(char dgt) {
 	zs = 1;
 }
 
-void Console::divOut(uint16_t div) {
+void Console::divOut(uint32_t div) {
 	unsigned char dgt = 0;
 	//num &= 0xffff; // just for testing the code  with 32 bit ints
 	while (num >= div) {
@@ -80,6 +80,9 @@ void Console::Write(const char *fmt, va_list va) {
 					num = -(int) num;
 					out('-');
 				}
+				divOut(10000000L);
+				divOut(1000000L);
+				divOut(100000L);
 				divOut(10000);
 				divOut(1000);
 				divOut(100);

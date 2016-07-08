@@ -36,5 +36,6 @@ public:
 	static Time_t Date2unixtimeMillis(uint16_t jahr, uint8_t monat, uint8_t tag, uint8_t stunde, uint8_t minute, uint8_t sekunde);
 	static std::chrono::hours cet_offset_utc(std::chrono::system_clock::time_point tp);
 	static std::chrono::hours utc_offset_cet(std::chrono::system_clock::time_point tp);
+
 };
 }

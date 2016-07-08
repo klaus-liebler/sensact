@@ -81,7 +81,7 @@ private:
 	static void putcharX(char c);
 	static void out(char c);
 	static void outDgt(char dgt);
-	static void divOut(uint16_t div);
+	static void divOut(uint32_t div);
 
 public:
 	static void Writeln(const char *fmt, ...);

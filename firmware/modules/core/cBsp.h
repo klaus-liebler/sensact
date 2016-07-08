@@ -41,6 +41,7 @@
 #include "PCA9555.h"
 #include "PCA9685.h"
 #include "ds2482.h"
+#include "cRCSwitch.h"
 #endif
 
 
@@ -101,17 +102,20 @@ private:
 
 #endif
 #ifdef SENSACTHS07
+	static uint32_t rcSwitchQueue;
 	static I2C_HandleTypeDef i2c1;
 	static drivers::cPCA9555 pca9555_U18;
 	static drivers::cPCA9555 pca9555_U19;
 	static drivers::cPCA9685 pca9685_U7;
 	static drivers::cPCA9685 pca9685_U9;
 	static SPI_HandleTypeDef spi;
+	static drivers::cRCSwitch rcSwitch;
 
 #endif
 	static void Init1wire();
 	static void InitAndTestUSART();
 	static void InitCAN();
+	static bool InitDWTCounter(void);
 
 public:
 	static const uint8_t T0H_WS2812B=29; //28,8
@@ -134,6 +138,7 @@ public:
 
 	static uint16_t GetRotaryEncoderValue(const eRotaryEncoder re);
 	static ePushState GetDigitalInput(eInput i);
+	static bool HasRCEventOccured(uint32_t);
 	static char* GetTimestamp();
 	static uint64_t GetTime();
 	static void WaitAtLeastSinceLastCycle(uint32_t ms);
@@ -147,6 +152,10 @@ public:
 	static uint8_t SampleDCF77Pin();
 	static UART_HandleTypeDef BELL;
 	static I2C_HandleTypeDef i2c2;
+
+	static void DelayUs(uint32_t us);
+	static uint32_t GetCycCnt();
+	static uint32_t GetUsSinceCycCnt(uint32_t cyccnt);
 };
 
 }

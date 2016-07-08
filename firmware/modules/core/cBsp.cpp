@@ -98,6 +98,8 @@ drivers::cPCA9685 BSP::pca9685_U9(&i2c1, drivers::ePCA9685Device::Dev31,
 		drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
 		drivers::ePCA9685_Frequency::Frequency_100Hz);
 
+drivers::cRCSwitch BSP::rcSwitch = drivers::cRCSwitch();
+uint32_t BSP::rcSwitchQueue=0;
 drivers::cDS2482 BSP::ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
 int16_t BSP::temperatures[64];
 
@@ -177,6 +179,60 @@ void BSP::InitAndTestUSART()
 	Console::Writeln(BSP::LicenseString);
 	Console::Writeln(BSP::SystemString);
 	Console::Writeln(MODEL::ModelString);
+}
+
+bool BSP::InitDWTCounter(void) {
+	uint32_t c;
+
+    /* Enable TRC */
+    CoreDebug->DEMCR &= ~0x01000000;
+    CoreDebug->DEMCR |=  0x01000000;
+
+    /* Enable counter */
+    DWT->CTRL &= ~0x00000001;
+    DWT->CTRL |=  0x00000001;
+
+    /* Reset counter */
+    DWT->CYCCNT = 0;
+
+	/* Check if DWT has started */
+	c = DWT->CYCCNT;
+
+	/* 2 dummys */
+	__ASM volatile ("NOP");
+	__ASM volatile ("NOP");
+
+	/* Return difference, if result is zero, DWT has not started */
+	return (DWT->CYCCNT - c)>0;
+}
+
+void BSP::DelayUs(__IO uint32_t micros)
+{
+	#if !defined(STM32F0xx)
+		uint32_t start = DWT->CYCCNT;
+
+		/* Go to number of cycles for system */
+		micros *= (SystemCoreClock / 1000000);
+
+		/* Delay till end */
+		while ((DWT->CYCCNT - start) < micros);
+	#else
+		/* Go to clock cycles */
+		micros *= (SystemCoreClock / 1000000) / 5;
+
+		/* Wait till done */
+		while (micros--);
+	#endif
+}
+
+uint32_t BSP::GetCycCnt()
+{
+	return DWT->CYCCNT;
+}
+
+uint32_t BSP::GetUsSinceCycCnt(uint32_t cyccnt)
+{
+	return (DWT->CYCCNT - cyccnt) / (SystemCoreClock / 1000000);
 }
 
 void BSP::InitCAN()
@@ -357,6 +413,15 @@ uint8_t BSP::SampleDCF77Pin()
 #endif
 }
 
+bool BSP::HasRCEventOccured(uint32_t eventNumber)
+{
+#ifdef SENSACTHS07
+	return rcSwitchQueue==eventNumber;
+#else
+	return false;
+#endif
+}
+
 void BSP::DoEachCycle(Time_t now) {
 #if (defined(SENSACTHS07) || defined(SENSACTUP02))
 	//modus: convert-command, nur inputs abfragen, wechselweise inputs und temp abfragen
@@ -476,6 +541,19 @@ void BSP::DoEachCycle(Time_t now) {
 			lastCommittedPoweredOutputState[WORD_SPI] = poweredOutputState[WORD_SPI];
 		}
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+	}
+	if(rcSwitch.available())
+	{
+		uint32_t val=rcSwitch.getReceivedValue();
+		if(rcSwitchQueue==0)
+		{
+			rcSwitchQueue=val;
+		}
+		else
+		{
+			LOGE("RCSwitch buffer overflow!!!");
+		}
+		rcSwitch.resetAvailable();
 	}
 #endif
 #ifdef SENSACTHS04

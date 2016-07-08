@@ -56,6 +56,7 @@ namespace sensact {
 		BELL,
 		MLTLC,
 		RGBW,
+		RCEVT,
 
 	};
 

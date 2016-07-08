@@ -27,8 +27,6 @@ namespace sensact {
 CANMessage cMaster::rcvMessage;
 const uint32_t cMaster::CMD_EVT_OFFSET=0x400;
 
-
-
 void cMaster::Run(void) {
 	BSP::Init();
 	uint16_t i = 0;
