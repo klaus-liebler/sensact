@@ -2,6 +2,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_it.h"
 #include "dcf77.h"
+#include "cRCSwitch.h"
 #include "cBsp.h"
 
 extern volatile uint8_t UART_buffer_pointer;
@@ -39,6 +40,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 void DMA2_Stream0_IRQHandler(void)
 {
   //HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5) != RESET)
+	{
+		__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_5);
+		drivers::cRCSwitch::handleInterrupt();
+	}
 }
 
 void USART3_IRQHandler(void)

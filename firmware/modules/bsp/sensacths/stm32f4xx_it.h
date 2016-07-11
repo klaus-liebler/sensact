@@ -51,6 +51,8 @@ void USART3_IRQHandler(void);
 void DMA2_Stream0_IRQHandler(void);
 void ADC_IRQHandler(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
+void EXTI9_5_IRQHandler(void);
+
 
 #ifdef __cplusplus
 }
