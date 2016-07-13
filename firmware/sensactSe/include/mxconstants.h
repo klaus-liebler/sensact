@@ -40,6 +40,7 @@
 
 #define OneWire_Pin GPIO_PIN_0
 #define OneWire_GPIO_Port GPIOF
+#define OneWire_EXTILine LL_EXTI_LINE_0
 #define IO1_Pin GPIO_PIN_1
 #define IO1_GPIO_Port GPIOF
 #define REL2_Pin GPIO_PIN_0

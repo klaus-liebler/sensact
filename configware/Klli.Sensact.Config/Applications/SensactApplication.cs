@@ -100,7 +100,7 @@ namespace Klli.Sensact.Config
         protected string CommandInitializer(string collectionName, ICollection<Command> cmds, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Command {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
+            sb.AppendFormat("const Command {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*const " : "", ApplicationId, collectionName);
             if (cmds != null && cmds.Count > 0)
             {
                 sb.Append("[" + cmds.Count + "]={");

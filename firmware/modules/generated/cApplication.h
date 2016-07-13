@@ -2,7 +2,7 @@
 @file		Application.h
 @author		autogen
 @version	1.0
-@date		06/29/2016 21:00:59 (Rendered)
+@date		07/08/2016 23:20:54 (Rendered)
 @brief		Short
 @details	Details
 @copyright	(c) 2015 mail at klaus - liebler . de === GNU GPL v3
@@ -51,7 +51,7 @@ public:
 			uint8_t payloadLength, Time_t now);
 	virtual void OnEvent(eApplicationID sender, eEventType evt,
 			uint8_t *payload, uint8_t payloadLength, Time_t now);
-	cApplication(const char* name, eApplicationID id, eAppType appType) :
+	cApplication(const char* name, const eApplicationID id, const eAppType appType) :
 			Name(name), AppType(appType), Id(id) {
 	}
 	virtual ~cApplication() {

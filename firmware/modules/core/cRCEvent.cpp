@@ -11,27 +11,27 @@ namespace sensact {
 
 cRCEvent::cRCEvent(
 			const char* name,
-			eApplicationID id,
-			uint32_t eventNumber,
-			Command *pressedCommands, uint8_t pressedCommandsLength,
-			Command *releasedCommands, uint8_t releasedCommandsLength,
-			Command *releasedShortCommands, uint8_t releasedShortCommandsLength,
-			Command *pressedShortAndHoldCommands, uint8_t pressedShortAndHoldCommandsLength,
-			Command *releasedLongCommands, uint8_t releasedLongCommandsLength) :
+			const eApplicationID id,
+			const uint32_t eventCode,
+			const Command *const pressedCommands, const uint8_t pressedCommandsLength,
+			const Command *const releasedCommands, const uint8_t releasedCommandsLength,
+			const Command *const releasedShortCommands, const uint8_t releasedShortCommandsLength,
+			const Command *const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
+			const Command *const releasedLongCommands, const uint8_t releasedLongCommandsLength) :
 			cApplication(name, id, eAppType::RCEVT),
 			pressedCommands(pressedCommands), pressedCommandsLength(pressedCommandsLength),
 			releasedCommands(releasedCommands), releasedCommandsLength(releasedCommandsLength),
 			releasedShortCommands(releasedShortCommands), releasedShortCommandsLength(releasedShortCommandsLength),
 			pressedShortAndHoldCommands(pressedShortAndHoldCommands), pressedShortAndHoldCommandsLength(pressedShortAndHoldCommandsLength),
 			releasedLongCommands(releasedLongCommands), releasedLongCommandsLength(releasedLongCommandsLength),
-			eventNumber(eventNumber),
+			eventCode(eventCode),
 			eventStart(TIME_MAX),
 			lastEvent(0),
 			eventRemainedLongerSent(false) {
 	}
 
 void cRCEvent::OnPressed(Time_t now) {
-	LOGD("%s OnPressed %d with %d commands", Name, this->eventNumber, this->pressedCommandsLength);
+	LOGD("%s OnPressed %d with %d commands", Name, this->eventCode, this->pressedCommandsLength);
 	for(uint8_t i=0;i<this->pressedCommandsLength;i++)
 	{
 		Command c = pressedCommands[i];
@@ -40,7 +40,7 @@ void cRCEvent::OnPressed(Time_t now) {
 }
 
 void cRCEvent::OnReleased(Time_t now) {
-	LOGD("%s OnReleased %d with %d commands", Name, this->eventNumber, this->releasedCommandsLength);
+	LOGD("%s OnReleased %d with %d commands", Name, this->eventCode, this->releasedCommandsLength);
 	for(uint8_t i=0;i<this->releasedCommandsLength;i++)
 	{
 		Command c = releasedCommands[i];
@@ -49,7 +49,7 @@ void cRCEvent::OnReleased(Time_t now) {
 }
 
 void cRCEvent::OnReleasedShort(Time_t now) {
-	LOGD("%s OnReleasedShort %d with %d commands", Name, this->eventNumber, this->releasedShortCommandsLength);
+	LOGD("%s OnReleasedShort %d with %d commands", Name, this->eventCode, this->releasedShortCommandsLength);
 	for(uint8_t i=0;i<this->releasedShortCommandsLength;i++)
 	{
 		Command c = releasedShortCommands[i];
@@ -58,7 +58,7 @@ void cRCEvent::OnReleasedShort(Time_t now) {
 }
 
 void cRCEvent::OnReleasedLong(Time_t now) {
-	LOGD("%s OnReleasedLong %d  with %d commands", Name, this->eventNumber, this->releasedLongCommandsLength);
+	LOGD("%s OnReleasedLong %d  with %d commands", Name, this->eventCode, this->releasedLongCommandsLength);
 	for(uint8_t i=0;i<this->releasedLongCommandsLength;i++)
 	{
 		Command c = releasedLongCommands[i];
@@ -67,7 +67,7 @@ void cRCEvent::OnReleasedLong(Time_t now) {
 }
 
 void cRCEvent::OnPressedShortAndHold(Time_t now) {
-	LOGD("%s OnPressedShortAndHold %d with %d commands", Name, this->eventNumber, this->pressedShortAndHoldCommandsLength);
+	LOGD("%s OnPressedShortAndHold %d with %d commands", Name, this->eventCode, this->pressedShortAndHoldCommandsLength);
 	for(uint8_t i=0;i<this->pressedShortAndHoldCommandsLength;i++)
 	{
 		Command c = pressedShortAndHoldCommands[i];
@@ -75,13 +75,14 @@ void cRCEvent::OnPressedShortAndHold(Time_t now) {
 	}
 }
 
-bool cRCEvent::Setup() {
-
+bool cRCEvent::Setup()
+{
+	return true;
 }
 
 
 void cRCEvent::DoEachCycle(Time_t now) {
-	if(BSP::HasRCEventOccured(eventNumber))
+	if(BSP::HasRCEventOccured(eventCode))
 	{
 		lastEvent=now;
 		if(eventStart==TIME_MAX)

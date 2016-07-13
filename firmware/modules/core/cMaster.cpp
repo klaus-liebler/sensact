@@ -103,7 +103,7 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 
 
 
-void cMaster::SendEvent(Time_t now, eApplicationID sourceApp, eEventType evt, eEventType *localEvts, uint8_t localEvtsLength, eEventType *busEvts, uint8_t busEvtsLength, uint8_t *payload, uint8_t payloadLength)
+void cMaster::SendEvent(Time_t now, const eApplicationID sourceApp, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t * payload, uint8_t payloadLength)
 {
 	uint8_t i;
 	if ((uint16_t) sourceApp < CMD_EVT_OFFSET) {

@@ -19,6 +19,7 @@
 #include <chrono>
 #include "date.h"
 #include "bh1750.h"
+#include "cRCEvent.h"
 
 using namespace std;
 

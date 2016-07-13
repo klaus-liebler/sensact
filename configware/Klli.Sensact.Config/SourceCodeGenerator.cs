@@ -18,12 +18,8 @@ namespace Klli.Sensact.Config
         public static bool CheckAndPrepare(ModelContainer mc)
         {
             HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
-            Dictionary<string, int> predef_id2index = new Dictionary<string, int>();
-            foreach(ID id in Enum.GetValues(typeof(ID)))
-            {
-                predef_id2index[id.ToString()] = (int)id;
-            }
-            mc.NextFreeIndex = (int)ID.CNT;
+      
+            mc.NextFreeIndex = 1; //0 has specific meaning
 
 
             SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = 0, Node = null };
@@ -44,19 +40,13 @@ namespace Klli.Sensact.Config
                         app.HasValidAppId();
                     }
                     alreadyDefinedAppIds.Add(app.ApplicationId);
-                    int myIndex = mc.NextFreeIndex;
-
-                    if (!predef_id2index.TryGetValue(app.ApplicationId, out myIndex))
-                    {
-                        mc.NextFreeIndex++;
-                    }
                     SensactApplicationContainer cont = new SensactApplicationContainer
                     {
                         Application = app,
-                        Index = myIndex,
+                        Index = mc.NextFreeIndex,
                         Node = n,
                     };
-
+                    mc.NextFreeIndex++;
 
                     mc.id2app[cont.Application.ApplicationId] = cont;
                     mc.index2app[cont.Index] = cont;
@@ -146,18 +136,23 @@ namespace Klli.Sensact.Config
             }
         }
 
-        internal static void GenerateAppIds_h(ModelContainer model)
+        internal static void GenerateAppIds_h(ModelContainer mc)
         {
             HC_APPIDS_H page = new HC_APPIDS_H()
             {
                 version="1.0"
             };
-            model.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
-            
-            foreach(ID id in Enum.GetValues(typeof(ID)))
+            mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
+            page.Nodes.Add("CNT");
+
+            page.AppIds.Add("MASTER");
+            for (int i = 1; i < mc.NextFreeIndex; i++)
             {
-                page.AppIds.Add(id.ToString());
+                SensactApplicationContainer app = mc.index2app[i];
+                page.AppIds.Add(app.Application.ApplicationId);
             }
+            page.AppIds.Add("NO_APPLICATION");
+            page.AppIds.Add("CNT");
             String pageContent = page.TransformText();
             File.WriteAllText(GetGeneratedPathForFile("appids.h"), pageContent);
             LOG.InfoFormat("Successfully created appids.h");

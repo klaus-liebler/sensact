@@ -42,7 +42,7 @@ void cStandbyController::OnHEARTBEATCommand(uint8_t *payload, uint8_t payloadLen
 
 void cStandbyController::DoEachCycle(Time_t now)
 {
-	if(now-lastHeartbeat > waitTime && this->state == ePowerState::ACTIVE)
+	if(now-lastHeartbeat > waitTimeMsecs && this->state == ePowerState::ACTIVE)
 	{
 		BSP::SetPoweredOutput(relay, ePowerState::INACTIVE);
 		this->state=ePowerState::INACTIVE;

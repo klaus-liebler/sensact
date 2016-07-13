@@ -51,6 +51,7 @@
     <Compile Include="ApplicationIds.cs" />
     <Compile Include="Applications\BrightnessSensorApplication.cs" />
     <Compile Include="Applications\PlaceholderApplication.cs" />
+    <Compile Include="Applications\RCEventApplication.cs" />
     <Compile Include="Applications\RgbwApplication.cs" />
     <Compile Include="Applications\SensactApplication.cs" />
     <Compile Include="Applications\BlindApplication.cs" />
@@ -118,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="TestModelBuilder.cs" />
+    <Compile Include="TestModelBuilder.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

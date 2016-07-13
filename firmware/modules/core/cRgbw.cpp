@@ -9,7 +9,7 @@ namespace sensact {
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cRgbw::cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR, const ePWMOutput outputG, const ePWMOutput outputB, const ePWMOutput outputW, const bool lowMeansLampOn, const uint8_t* WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
+cRgbw::cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR, const ePWMOutput outputG, const ePWMOutput outputB, const ePWMOutput outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
 		cApplication(name, id, eAppType::RGBW),
 		outputR(outputR),
 		outputG(outputG),
@@ -38,7 +38,7 @@ void cRgbw::OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time
 }
 
 
-void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
 {
 	UNUSED(payload);
 	UNUSED(payloadLength);
@@ -54,7 +54,7 @@ void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 	}
 }
 
-void cRgbw::OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cRgbw::OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
 {
 	UNUSED(payloadLength);
 	UNUSED(now);
@@ -69,7 +69,7 @@ void cRgbw::OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, Time_t no
 
 }
 
-void cRgbw::OnSET_SIGNALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cRgbw::OnSET_SIGNALCommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
 {
 	UNUSED(payloadLength);
 	lastColor = (10*WellKnownColorsLength+ParseInt16(payload, 0))%WellKnownColorsLength;

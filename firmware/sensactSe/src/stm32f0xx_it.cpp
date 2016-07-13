@@ -1,7 +1,7 @@
+#include <onewire.h>
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx.h"
 #include "stm32f0xx_it.h"
-#include "application.h"
 #include "shell.h"
 
 extern TIM_HandleTypeDef htim16;
@@ -21,7 +21,7 @@ void SysTick_Handler(void) {
 void EXTI0_1_IRQHandler(void) {
 	if (__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0) != RESET) {
 		__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
-		sensact::cApplication::OnOneWireInterrupt();
+		sensact::cOneWire::OnOneWireInterrupt();
 	}
 }
 
@@ -33,7 +33,7 @@ void TIM16_IRQHandler(void) {
 	if (__HAL_TIM_GET_FLAG(&htim16, TIM_FLAG_UPDATE) != RESET) {
 		if (__HAL_TIM_GET_IT_SOURCE(&htim16, TIM_IT_UPDATE) != RESET) {
 			__HAL_TIM_CLEAR_IT(&htim16, TIM_IT_UPDATE);
-			sensact::cApplication::OnTimerInterrupt();
+			sensact::cOneWire::OnTimerInterrupt();
 		}
 	}
 }

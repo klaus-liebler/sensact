@@ -19,18 +19,18 @@ namespace sensact {
 
 class cRCEvent: public cApplication {
 private:
-	Command *pressedCommands;
-	uint8_t pressedCommandsLength;
-	Command *releasedCommands;
-	uint8_t releasedCommandsLength;
-	Command *releasedShortCommands;
-	uint8_t releasedShortCommandsLength;
-	Command *pressedShortAndHoldCommands;
-	uint8_t pressedShortAndHoldCommandsLength;
-	Command *releasedLongCommands;
-	uint8_t releasedLongCommandsLength;
+	const Command *const pressedCommands;
+	const uint8_t pressedCommandsLength;
+	const Command *const releasedCommands;
+	const uint8_t releasedCommandsLength;
+	const Command *const releasedShortCommands;
+	const uint8_t releasedShortCommandsLength;
+	const Command *const pressedShortAndHoldCommands;
+	const uint8_t pressedShortAndHoldCommandsLength;
+	const Command *const releasedLongCommands;
+	const uint8_t releasedLongCommandsLength;
 protected:
-	uint32_t eventNumber;
+	const uint32_t eventCode;
 public:
 	Time_t eventStart;
 	Time_t lastEvent;
@@ -42,13 +42,13 @@ public:
 
 	cRCEvent(
 			const char* name,
-			eApplicationID id,
-			uint32_t eventNumber,
-			Command *pressedCommands, uint8_t pressedCommandsLength,
-			Command *releasedCommands, uint8_t releasedCommandsLength,
-			Command *releasedShortCommands, uint8_t releasedShortCommandsLength,
-			Command *pressedShortAndHoldCommands, uint8_t pressedShortAndHoldCommandsLength,
-			Command *releasedLongCommands, uint8_t releasedLongCommandsLength);
+			const eApplicationID id,
+			const uint32_t eventCoder,
+			const Command *const pressedCommands, const uint8_t pressedCommandsLength,
+			const Command *const releasedCommands, const uint8_t releasedCommandsLength,
+			const Command *const releasedShortCommands, const uint8_t releasedShortCommandsLength,
+			const Command *const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
+			const Command *const releasedLongCommands, const uint8_t releasedLongCommandsLength);
 	void OnPressed(Time_t now);
 	void OnReleased(Time_t now);
 	void OnReleasedShort(Time_t now);

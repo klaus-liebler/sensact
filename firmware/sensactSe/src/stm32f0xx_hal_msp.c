@@ -58,6 +58,13 @@ void HAL_MspInit(void)
   /* USER CODE END MspInit 1 */
 }
 
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
+{
+	__TIM16_CLK_ENABLE();
+    HAL_NVIC_SetPriority(TIM16_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM16_IRQn);
+}
+
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
 

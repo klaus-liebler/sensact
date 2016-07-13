@@ -20,9 +20,9 @@ namespace sensact{
 	private:
 
 		ePowerState state;
-		ePoweredOutput relay;
+		const ePoweredOutput relay;
 		Time_t lastHeartbeat;
-		uint32_t waitTime;
+		const uint32_t waitTimeMsecs;
 	public:
 		bool Setup() override;
 		void DoEachCycle(Time_t time) override;
@@ -32,8 +32,8 @@ namespace sensact{
 		 */
 		void RaiseEvent(eEventType evt);
 
-		cStandbyController(const char* name, eApplicationID id, ePoweredOutput relay, uint32_t waitTime) :
-					cApplication(name, id, eAppType::STNDBY), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTime(waitTime){
+		cStandbyController(const char* name, const eApplicationID id, const ePoweredOutput relay, const uint32_t waitTimeMsecs) :
+					cApplication(name, id, eAppType::STNDBY), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs){
 				}
 	};
 

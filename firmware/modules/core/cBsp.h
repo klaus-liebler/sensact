@@ -138,7 +138,7 @@ public:
 
 	static uint16_t GetRotaryEncoderValue(const eRotaryEncoder re);
 	static ePushState GetDigitalInput(eInput i);
-	static bool HasRCEventOccured(uint32_t);
+	static bool HasRCEventOccured(const uint32_t);
 	static char* GetTimestamp();
 	static uint64_t GetTime();
 	static void WaitAtLeastSinceLastCycle(uint32_t ms);

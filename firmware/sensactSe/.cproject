@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="${cross_rm} -rf" description="" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.177925520" name="Debug" parent="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="${cross_rm} -rf" description="" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.177925520" name="Debug" parent="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug" postbuildStep="arm-none-eabi-nm --demangle --print-size --radix=d --size-sort  C:\sensact\firmware\sensactSe\Debug\sensactSe.elf">
 					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.177925520." name="/" resourcePath="">
 						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug.741490612" name="Cross ARM GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug">
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.1059369987" name="Optimization Level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level" value="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.debug" valueType="enumerated"/>
@@ -52,8 +52,8 @@
 									<listOptionValue builtIn="false" value="&quot;../include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.164454034" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -70,8 +70,8 @@
 									<listOptionValue builtIn="false" value="&quot;../include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1109630910" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -88,8 +88,8 @@
 									<listOptionValue builtIn="false" value="&quot;../include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../system/include/cmsis&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.5.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F0_V1.6.0\Drivers\STM32F0xx_HAL_Driver\Inc&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.84997713" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.787236267" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>

@@ -13,7 +13,7 @@ static uint32_t counter = 0;
 
 
 
-cBrightnessSensor::cBrightnessSensor(const char* name, eApplicationID id, drivers::cBH1750 *sensor, eApplicationID toggleTarget, uint16_t limitForPassingToggle):cApplication(name, id, eAppType::BSENS), sensor(sensor), previousValue(0), toggleTarget(toggleTarget), limitForPassingToggle(limitForPassingToggle)
+cBrightnessSensor::cBrightnessSensor(const char* name, const eApplicationID id, drivers::cBH1750 *sensor, const eApplicationID toggleTarget, const uint16_t limitForPassingToggle):cApplication(name, id, eAppType::BSENS), sensor(sensor), previousValue(0), toggleTarget(toggleTarget), limitForPassingToggle(limitForPassingToggle)
 {
 
 }

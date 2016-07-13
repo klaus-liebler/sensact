@@ -18,7 +18,7 @@ static const int DIM_TO_TARGET_STEP=5;
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cPWM::cPWM(const char* name, eApplicationID id, ePWMOutput *output, uint8_t outputLength, uint8_t minimalLevel, uint8_t initialStoredTargetLevel,  bool lowMeansLampOn, eApplicationID standbyController) :
+cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController) :
 		cApplication(name, id, eAppType::PWM),
 		output(output),
 		outputLength(outputLength),

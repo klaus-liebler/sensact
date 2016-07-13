@@ -19,11 +19,11 @@ namespace sensact {
 
 class cPushbutton: public cApplication {
 protected:
-	eInput input;
-	eEventType *localEvents;
-	uint8_t localEventsLength;
-	eEventType *busEvents;
-	uint8_t busEventsLength;
+	const eInput input;
+	const eEventType *const localEvents;
+	const uint8_t localEventsLength;
+	const eEventType *const busEvents;
+	const uint8_t busEventsLength;
 public:
 	Time_t lastChange;
 	ePushState state;
@@ -62,40 +62,39 @@ public:
 		return;
 	}
 
-	cPushbutton(const char* name, eApplicationID id, eInput input,
-			eEventType *localEvents, uint8_t localEventsLength,
-			eEventType *busEvents, uint8_t busEventsLength) :
-			cApplication(name, id, eAppType::PUSHB), input(input), localEvents(
+	cPushbutton(const char* name, const eApplicationID id, const eInput input,
+			const eEventType * const localEvents, const uint8_t localEventsLength,
+			const eEventType * const busEvents, const uint8_t busEventsLength) :
+				cApplication(name, id, eAppType::PUSHB), input(input), localEvents(
 					localEvents), localEventsLength(localEventsLength), busEvents(
 					busEvents), busEventsLength(busEventsLength), lastChange(0), state(
-					ePushState::RELEASED), holdShortSent(false), holdMediumSent(
-					false) {
+					ePushState::RELEASED), holdShortSent(false), holdMediumSent(false) {
 	}
 };
 
 class cPushbuttonX: public cPushbutton {
 private:
-	Command *pressedCommands;
-	uint8_t pressedCommandsLength;
-	Command *releasedCommands;
-	uint8_t releasedCommandsLength;
-	Command *releasedShortCommands;
-	uint8_t releasedShortCommandsLength;
-	Command *pressedShortAndHoldCommands;
-	uint8_t pressedShortAndHoldCommandsLength;
-	Command *releasedLongCommands;
-	uint8_t releasedLongCommandsLength;
+	const Command *const pressedCommands;
+	const uint8_t pressedCommandsLength;
+	const Command * const releasedCommands;
+	const uint8_t releasedCommandsLength;
+	const Command * const releasedShortCommands;
+	const uint8_t releasedShortCommandsLength;
+	const Command * const pressedShortAndHoldCommands;
+	const uint8_t pressedShortAndHoldCommandsLength;
+	const Command * const releasedLongCommands;
+	const uint8_t releasedLongCommandsLength;
 
 public:
 
-	cPushbuttonX(const char* name, eApplicationID id, eInput input,
-			eEventType *localEvents, uint8_t localEventsLength,
-			eEventType *busEvents, uint8_t busEventsLength,
-			Command *pressedCommands, uint8_t pressedCommandsLength,
-			Command *releasedCommands, uint8_t releasedCommandsLength,
-			Command *releasedShortCommands, uint8_t releasedShortCommandsLength,
-			Command *pressedShortAndHoldCommands, uint8_t pressedShortAndHoldCommandsLength,
-			Command *releasedLongCommands, uint8_t releasedLongCommandsLength) :
+	cPushbuttonX(const char* name, const eApplicationID id, const eInput input,
+			const eEventType *const localEvents, const uint8_t localEventsLength,
+			const eEventType * const  busEvents, const uint8_t busEventsLength,
+			const Command * const pressedCommands, const uint8_t pressedCommandsLength,
+			const Command * const releasedCommands, const uint8_t releasedCommandsLength,
+			const Command * const releasedShortCommands, const uint8_t releasedShortCommandsLength,
+			const Command * const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
+			const Command * const releasedLongCommands, const uint8_t releasedLongCommandsLength) :
 			cPushbutton(name, id, input, localEvents, localEventsLength, busEvents,
 					busEventsLength),
 					pressedCommands(pressedCommands), pressedCommandsLength(pressedCommandsLength),

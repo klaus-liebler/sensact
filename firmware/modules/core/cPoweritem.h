@@ -20,11 +20,11 @@ namespace sensact{
 	private:
 
 		ePowerState state;
-		ePoweredOutput output;
+		const ePoweredOutput output;
 		/**
 		 * Zeit bis automatisch ausgeschaltet wird. "0" schaltet die Funktion aus
 		 */
-		Time_t autoOffInterval;
+		const Time_t autoOffIntervalMsecs;
 
 		Time_t autoOffTime;
 	public:
@@ -36,8 +36,8 @@ namespace sensact{
 
 		void RaiseEvent(eEventType evt);
 
-		cPoweritem(const char* name, eApplicationID id, ePoweredOutput relay, Time_t autoOffInterval) :
-					cApplication(name, id, eAppType::PWRIT), state(ePowerState::INACTIVE), output(relay), autoOffInterval(autoOffInterval), autoOffTime(TIME_MAX) {
+		cPoweritem(const char* name, eApplicationID id, ePoweredOutput relay, Time_t autoOffIntervalMsecs) :
+					cApplication(name, id, eAppType::PWRIT), state(ePowerState::INACTIVE), output(relay), autoOffIntervalMsecs(autoOffIntervalMsecs), autoOffTime(TIME_MAX) {
 				}
 	};
 

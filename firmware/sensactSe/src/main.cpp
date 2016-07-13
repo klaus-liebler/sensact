@@ -31,10 +31,10 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
+#include <onewire.h>
 #include "stm32f0xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-#include "application.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -87,7 +87,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   SET_BIT(USART1->CR1, USART_CR1_RXNEIE);
-  sensact::cApplication::Run();
+  sensact::cOneWire::Run();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -167,15 +167,12 @@ void MX_TIM16_Init(void)
 {
 
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 0;
+  htim16.Init.Prescaler = 48;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 0;
+  htim16.Init.Period = 10000;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   HAL_TIM_Base_Init(&htim16);
-
-  HAL_TIM_OnePulse_Init(&htim16, TIM_OPMODE_SINGLE);
-
 }
 
 /* USART1 init function */
@@ -220,7 +217,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin : OneWire_Pin */
   GPIO_InitStruct.Pin = OneWire_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(OneWire_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : IO1_Pin */

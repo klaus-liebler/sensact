@@ -29,9 +29,9 @@ void cPoweritem::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t
 	UNUSED(payloadLength);
 	if(this->state == ePowerState::INACTIVE)
 	{
-		if(autoOffInterval!=0)
+		if(autoOffIntervalMsecs!=0)
 		{
-			autoOffTime=now+autoOffInterval;
+			autoOffTime=now+autoOffIntervalMsecs;
 		}
 		BSP::SetPoweredOutput(output, ePowerState::ACTIVE);
 		this->state=ePowerState::ACTIVE;
@@ -47,9 +47,9 @@ void cPoweritem::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now
 {
 	UNUSED(payload);
 	UNUSED(payloadLength);
-	if(autoOffInterval!=0)
+	if(autoOffIntervalMsecs!=0)
 	{
-		autoOffTime=now+autoOffInterval;
+		autoOffTime=now+autoOffIntervalMsecs;
 	}
 	BSP::SetPoweredOutput(output, ePowerState::ACTIVE);
 	this->state=ePowerState::ACTIVE;
@@ -62,7 +62,7 @@ void cPoweritem::OnTOGGLE_SPECIALCommand(uint8_t *payload, uint8_t payloadLength
 	UNUSED(now);
 	if(this->state == ePowerState::INACTIVE)
 	{
-		if(autoOffInterval!=0)
+		if(autoOffIntervalMsecs!=0)
 		{
 			autoOffTime=TIME_MAX;
 		}
@@ -79,7 +79,7 @@ void cPoweritem::OnTOGGLE_SPECIALCommand(uint8_t *payload, uint8_t payloadLength
 
 void cPoweritem::DoEachCycle(Time_t now)
 {
-	if(autoOffInterval!=0 && autoOffTime<now && state == ePowerState::ACTIVE)
+	if(autoOffIntervalMsecs!=0 && autoOffTime<now && state == ePowerState::ACTIVE)
 	{
 		BSP::SetPoweredOutput(output, ePowerState::INACTIVE);
 		this->state=ePowerState::INACTIVE;

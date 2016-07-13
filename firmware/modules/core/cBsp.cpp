@@ -413,10 +413,15 @@ uint8_t BSP::SampleDCF77Pin()
 #endif
 }
 
-bool BSP::HasRCEventOccured(uint32_t eventNumber)
+bool BSP::HasRCEventOccured(const uint32_t eventNumber)
 {
 #ifdef SENSACTHS07
-	return rcSwitchQueue==eventNumber;
+	if(rcSwitchQueue==eventNumber)
+	{
+		rcSwitchQueue=0;
+		return true;
+	}
+	return false;
 #else
 	return false;
 #endif
@@ -545,14 +550,7 @@ void BSP::DoEachCycle(Time_t now) {
 	if(rcSwitch.available())
 	{
 		uint32_t val=rcSwitch.getReceivedValue();
-		if(rcSwitchQueue==0)
-		{
-			rcSwitchQueue=val;
-		}
-		else
-		{
-			LOGE("RCSwitch buffer overflow!!!");
-		}
+		rcSwitchQueue=val;
 		rcSwitch.resetAvailable();
 	}
 #endif

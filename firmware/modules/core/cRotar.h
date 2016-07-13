@@ -18,20 +18,20 @@ namespace sensact {
 
 class cROTAR: public cApplication {
 private:
-	eRotaryEncoder inputRotary;
-	eInput inputPush;
-	eEventType *localEvents;
-	uint8_t localEventsLength;
-	eEventType *busEvents;
-	uint8_t busEventsLength;
-	Command *pressedCommands;
-	uint8_t pressedCommandsLength;
-	Command *releasedShortCommands;
-	uint8_t releasedShortCommandsLength;
-	Command *releasedLongCommands;
-	uint8_t releasedLongCommandsLength;
-	Command *turnedCommands;
-	uint8_t turnedCommandsLength;
+	const eRotaryEncoder inputRotary;
+	const eInput inputPush;
+	const eEventType *const localEvents;
+	const uint8_t localEventsLength;
+	const eEventType *const busEvents;
+	const uint8_t busEventsLength;
+	const Command *const pressedCommands;
+	const uint8_t pressedCommandsLength;
+	const Command *const releasedShortCommands;
+	const uint8_t releasedShortCommandsLength;
+	const Command *const releasedLongCommands;
+	const uint8_t releasedLongCommandsLength;
+	const Command *const turnedCommands;
+	const uint8_t turnedCommandsLength;
 	Time_t lastChange;
 	uint16_t rotaryState;
 	ePushState pushState;
@@ -46,21 +46,21 @@ public:
 
 	cROTAR(
 			const char* name,
-			eApplicationID id,
-			eRotaryEncoder inputRotary,
-			eInput inputPush,
-			eEventType *localEvents,
-			uint8_t localEventsLength,
-			eEventType *busEvents,
-			uint8_t busEventsLength,
-			Command *pressedCommands,
-			uint8_t pressedCommandsLength,
-			Command *releasedShortCommands,
-			uint8_t releasedShortCommandsLength,
-			Command *releasedLongCommands,
-			uint8_t releasedLongCommandsLength,
-			Command *turnedCommands,
-			uint8_t turnedCommandsLength
+			const eApplicationID id,
+			const eRotaryEncoder inputRotary,
+			const eInput inputPush,
+			const eEventType *const localEvents,
+			const uint8_t localEventsLength,
+			const eEventType *const busEvents,
+			const uint8_t busEventsLength,
+			const Command *const pressedCommands,
+			const uint8_t pressedCommandsLength,
+			const Command *const releasedShortCommands,
+			const uint8_t releasedShortCommandsLength,
+			const Command *const releasedLongCommands,
+			const uint8_t releasedLongCommandsLength,
+			const Command *const turnedCommands,
+			const uint8_t turnedCommandsLength
 			) :
 			cApplication(name, id, eAppType::ROTAR),
 				inputRotary(inputRotary),

@@ -21,8 +21,6 @@ enum struct eNodeID
 	<# foreach (string s in Nodes){ #>
     <#= s #>,
     <# } #>
-	COUNT
-	
 };
 }
 

@@ -28,12 +28,12 @@
 		<link>
 			<name>STM32F0xx_HAL_Driver</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.5.0/Drivers/STM32F0xx_HAL_Driver</location>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.6.0/Drivers/STM32F0xx_HAL_Driver</location>
 		</link>
 		<link>
 			<name>src/system_stm32f0xx.c</name>
 			<type>1</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.5.0/Drivers/CMSIS/Device/ST/STM32F0xx/Source/Templates/system_stm32f0xx.c</location>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.6.0/Drivers/CMSIS/Device/ST/STM32F0xx/Source/Templates/system_stm32f0xx.c</location>
 		</link>
 	</linkedResources>
 </projectDescription>

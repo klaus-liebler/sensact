@@ -12,11 +12,11 @@ class cPWM: public cApplication
 {
 	private:
 
-		ePWMOutput *output;
-		uint8_t outputLength;
-		uint8_t minimalOnLevel;
-		bool lowMeansLampOn;
-		eApplicationID standbyController;
+		const ePWMOutput *const output;
+		const uint8_t outputLength;
+		const uint8_t minimalOnLevel;
+		const bool lowMeansLampOn;
+		const eApplicationID standbyController;
 
 		uint8_t currentLevel; //aktuelle Helligkeit
 		uint8_t storedTargetLevel; //Helligkeit der Lampe, als diese zuletzt eingeschaltet war (quasi als targetLevel das letzte Mal > 0 war)
@@ -45,6 +45,6 @@ class cPWM: public cApplication
 		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		bool Setup() override;
 			void DoEachCycle(Time_t time) override;
-			cPWM(const char* name, eApplicationID id, ePWMOutput *output, uint8_t outputLength, uint8_t minimalLevel, uint8_t initialStoredTargetLevel,  bool lowMeansLampOn, eApplicationID standbyController);
+			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController);
 	};
 }

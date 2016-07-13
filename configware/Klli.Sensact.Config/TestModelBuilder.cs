@@ -189,18 +189,18 @@ namespace Klli.Sensact.Config
                     }
                 }
             };
-            model.Applications = new List<SensactApplication>();
+           
             return model;
         }
         #endregion
-        public static Model Build1()
+        public static Model BuildRCDemo()
         {
 
             Model model = new Model();
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {
-                Id = "TEST_HS07",
+                Id = "SNSAC_L0_TECH_HS07_1",
                 Applications = new List<SensactApplication>()
                     {
                         new PWMApplication
@@ -208,7 +208,7 @@ namespace Klli.Sensact.Config
                             ApplicationId="PWM_XX_XXX_1",
                             LowMeansLampOn=true,
                             MinimalOnLevel=10,
-                            InitialStoredTargetLevel=100,
+                            InitialStoredTargetLevel=255,
                             StandbyController="STDBY_XX_XXX_1",
                             OutputRessources=new List<PwmPin>() { PwmPin.P01 },
                         },
@@ -219,33 +219,15 @@ namespace Klli.Sensact.Config
                             OutputRessource=OutputPin.O16,
                             WaittimeInMsec=10000,
                         },
-                        new PushButtonXApplication
+                        new RCEventApplication
                         {
                             ApplicationId="PUSHB_XX_XXX_PWM1BP",
-                            InputRessource=InputPin.I01,
-                            CommandsOnReleasedShort = new List<Command>()
+                            EventCode=13694625,
+                            CommandsOnPressed= new List<Command>()
                             {
                                 new Command()
                                 {
                                     CommandType=CommandType.TOGGLE,
-                                    TargetAppId="PWM_XX_XXX_1",
-                                },
-                            },
-
-                            CommandsOnPressedShortAndHold = new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.START,
-                                    TargetAppId="PWM_XX_XXX_1",
-                                },
-                            },
-
-                            CommandsOnReleasedLong = new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.STOP,
                                     TargetAppId="PWM_XX_XXX_1",
                                 },
                             },
@@ -258,7 +240,6 @@ namespace Klli.Sensact.Config
                 TEST_HS07,
 
             };
-            model.Applications = new List<SensactApplication>();
             return model;
         }
         private static SensactApplication BuildInput(int i)
@@ -371,8 +352,8 @@ namespace Klli.Sensact.Config
                       }
                 }
             };
-            TEST_HS07.Applications.AddBlindButtons("_XX_BLN_", InputPin.I01, InputPin.I02, "XX_XXX_1");
-            TEST_HS07.Applications.AddOnePushbuttonDimmer("_XX_PUB_1", InputPin.I03, "PWM___XX_XXX_1");
+            //TEST_HS07.Applications.AddBlindButtons("_XX_BLN_", InputPin.I01, InputPin.I02, "XX_XXX_1");
+            //TEST_HS07.Applications.AddOnePushbuttonDimmer("_XX_PUB_1", InputPin.I03, "PWM___XX_XXX_1");
 
 
 
@@ -448,7 +429,6 @@ namespace Klli.Sensact.Config
                 TEST_UP02
 
             };
-            model.Applications = new List<SensactApplication>();
             return model;
         }
 
@@ -539,15 +519,6 @@ namespace Klli.Sensact.Config
                 },
                 
             };
-            //TEST_UP02.Applications.AddOnePushbuttonDimmer("YY_YYY_01", InputPin.I01, "PWM___YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_01", InputPin.I01, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_02", InputPin.I02, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_03", InputPin.I03, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_04", InputPin.I04, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_05", InputPin.I05, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_06", InputPin.I06, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_07", InputPin.I07, "POWIT_YY_YYY_01");
-            TEST_UP02.Applications.AddToggleButton("YY_YYY_08", InputPin.I08, "POWIT_YY_YYY_01");
 
             model.Nodes = new List<Node>(){
                 TEST_HS07,
@@ -560,7 +531,6 @@ namespace Klli.Sensact.Config
                 TEST_HS07.Applications.Add(BuildOutput(i));
                 TEST_HS07.Applications.Add(BuildPWMOutput(i));
             }
-            model.Applications = new List<SensactApplication>();
             return model;
         }
     }
