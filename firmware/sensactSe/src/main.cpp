@@ -31,6 +31,7 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
+#include "common.h"
 #include <onewire.h>
 #include "stm32f0xx_hal.h"
 
@@ -87,7 +88,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   SET_BIT(USART1->CR1, USART_CR1_RXNEIE);
-  sensact::cOneWire::Run();
+  sensact::cOneWireApplication testApp;
+  sensact::cOneWire::Run(&testApp);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -204,49 +206,68 @@ void MX_GPIO_Init(void)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
+  SET_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOFEN);
+  SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SYSCFGEN);
+  READ_BIT(RCC->AHBENR, 1); //Delay
 
-  __GPIOF_CLK_ENABLE();
-  __GPIOA_CLK_ENABLE();
-  __GPIOB_CLK_ENABLE();
+  OUT1(OneWire_GPIO_Port, OneWire_Pin);
+  OUT0(IO1_GPIO_Port, IO1_Pin);
+  OUT0(IO2_GPIO_Port, IO2_Pin);
+  OUT0(REL1_GPIO_Port, REL1_Pin);
+  OUT0(REL2_GPIO_Port, REL2_Pin);
+  OUT0(P1_GPIO_Port, P1_Pin);
+  OUT0(P2_GPIO_Port, P2_Pin);
 
-  HAL_GPIO_WritePin(IO1_GPIO_Port, IO1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(IO2_GPIO_Port, IO2_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, REL2_Pin|REL1_Pin|P1_Pin|P2_Pin, GPIO_PIN_RESET);
-
-
+  //GPIOF->AFR[0] = GPIOF->AFR[1]=0;
+  GPIOF->MODER = GPIO_MODER_MODER0_0;
+  //GPIOF->OSPEEDR=GPIO_SPEED_LOW;
+  GPIOF->OTYPER=GPIO_OTYPER_OT_0; //0=PuPu, 1=OpenDrain
+  //GPIOF->PUPDR = GPIO_PUPDR_PUPDR0_0; //00=no, 01=Up, 10=downPullup wird zentral gemacht
+  SYSCFG->EXTICR[0]=SYSCFG_EXTICR1_EXTI0_PF;
+  EXTI->IMR=EXTI_IMR_MR0;
+  EXTI->RTSR=EXTI_RTSR_TR0;
+  EXTI->FTSR=EXTI_FTSR_TR0;
   /*Configure GPIO pin : OneWire_Pin */
+  //GPIOx->AFR[position >> 3] = temp;
+  //GPIOx->MODER = temp; /I, O, AF,
+  //GPIOx->OSPEEDR = temp; //Speed
+  //OTYPER //Output OpenDrain oder PushPull
+  //GPIOx->PUPDR = temp; //Pullup / PullDown
+   //Falls EXTI:  __HAL_RCC_SYSCFG_CLK_ENABLE();
+  //SYSCFG->EXTICR[position >> 2] = temp; //Welcher Port gehört zu EXTI0.1.2.3...
+  //EXTI->IMR Pin-Bit löschen und wieder setzen
+  //EXTI->RTSR = temp; Pinbit für Rising Edge
+  //EXTI->FTSR = temp; Pinbit für Falling Edge
+/*
   GPIO_InitStruct.Pin = OneWire_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(OneWire_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : IO1_Pin */
+
   GPIO_InitStruct.Pin = IO1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(IO1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : REL2_Pin REL1_Pin P1_Pin P2_Pin */
   GPIO_InitStruct.Pin = REL2_Pin|REL1_Pin|P1_Pin|P2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : I1_Pin I2_Pin */
   GPIO_InitStruct.Pin = I1_Pin|I2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : IO2_Pin */
   GPIO_InitStruct.Pin = IO2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(IO2_GPIO_Port, &GPIO_InitStruct);
-
+*/
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);

@@ -19,7 +19,8 @@ enum struct e1WireFamilyCode :uint8_t
 	DS2413 = 0x3A,
 	DS18B20 = 0x28,
 	DS2406=0x12,
-	_3A2100H=0x85
+	_3A2100H=0x85,
+	SENSACTSE = 0xCE,
 };
 
 enum struct e1WireCommand :uint8_t

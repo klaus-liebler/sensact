@@ -86,7 +86,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF1_USART1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* Peripheral interrupt init*/
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);

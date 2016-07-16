@@ -43,13 +43,14 @@
 #define OneWire_EXTILine LL_EXTI_LINE_0
 #define IO1_Pin GPIO_PIN_1
 #define IO1_GPIO_Port GPIOF
+
 #define REL2_Pin GPIO_PIN_0
 #define REL2_GPIO_Port GPIOA
 #define REL1_Pin GPIO_PIN_1
 #define REL1_GPIO_Port GPIOA
-#define TX_Pin GPIO_PIN_9
+#define TX_Pin GPIO_PIN_2
 #define TX_GPIO_Port GPIOA
-#define RX_Pin GPIO_PIN_10
+#define RX_Pin GPIO_PIN_3
 #define RX_GPIO_Port GPIOA
 #define P1_Pin GPIO_PIN_4
 #define P1_GPIO_Port GPIOA
@@ -59,16 +60,21 @@
 #define I1_GPIO_Port GPIOA
 #define I2_Pin GPIO_PIN_7
 #define I2_GPIO_Port GPIOA
-#define IO2_Pin GPIO_PIN_1
-#define IO2_GPIO_Port GPIOB
+
 #define SCL_Pin GPIO_PIN_9
 #define SCL_GPIO_Port GPIOA
 #define SDA_Pin GPIO_PIN_10
 #define SDA_GPIO_Port GPIOA
+
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
+
+#define IO2_Pin GPIO_PIN_1
+#define IO2_GPIO_Port GPIOB
+
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

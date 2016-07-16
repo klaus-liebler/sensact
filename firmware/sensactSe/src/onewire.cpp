@@ -4,41 +4,19 @@
 #include "stm32f0xx_hal_uart.h"
 #include "stm32f0xx_ll_exti.h"
 #include <algorithm>
-
-//jede negative flanke (also auch selbst erzeugte) starten einen Timer, der nach 480us ein Update erzeugt und damit einen Reset-Impuls erkennt
-//jede positive flanke stoppt diesen timer
-
-//Reset detektiert
-//Flankenerkennung deaktivieren
-//mode=RESET_DETECTED
-//TIMER(30)
-
-
-extern TIM_HandleTypeDef htim16;
+#include "common.h"
 
 #define TIMER TIM16
 #define TIMER_IRQn TIM16_IRQn
 
-
-
 static const uint16_t MINIMUM_RESET_TIME = 400;
 static const uint16_t PRESENCE_WAIT_DURATION = 30;
 static const uint16_t PRESENCE_DURATION = 100;
-static const uint16_t READ_BIT_SAMPLING_TIME = 25;
 static const uint16_t LIMIT_DURATION = 35;
 static const uint16_t WRITE_PULLDOWN_DURATION = 35;
 
-static const uint64_t ONE_WIRE_ID = 0x1234567812345678L;
-static volatile uint8_t scratchpad_[8] ={0};
+static const uint8_t ONE_WIRE_ID[8] = {0xCE,0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x67};
 
-
-volatile static int counter = 0;
-
-static void ResetCycleDetected()
-{
-	//reset all state variables zeroing arrays
-	//prepare
-}
 
 
 
@@ -80,7 +58,7 @@ static inline void OWIOff()
 
 static void OWIOn()
 {
-	LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_0);
+	LL_EXTI_EnableIT_0_31(OneWire_EXTILine);
 	__HAL_GPIO_EXTI_CLEAR_IT(OneWire_Pin);
 }
 static uint32_t GetTimerVal()
@@ -117,13 +95,15 @@ void Console::putcharX(char c) {
 }
 
 volatile eState cOneWire::state=eState::UNINITIALIZED;
-volatile uint32_t cOneWire::time = 0;
+volatile uint32_t cOneWire::tmp = 0;
 volatile uint8_t cOneWire::bit=0;
 volatile uint8_t cOneWire::buffer=0;
+cOneWireApplication *cOneWire::Application=0;
+volatile e1WireRomCommand cOneWire::currentRomCommand=e1WireRomCommand::UNKNOWN;
 
-
-void cOneWire::Run()
+void cOneWire::Run(cOneWireApplication *app)
 {
+	Application=app;
 	Console::Writeln("Application started");
 	//warte, bin gerade kein pulldown erfolgt
 	while(!HAL_GPIO_ReadPin(OneWire_GPIO_Port, OneWire_Pin));
@@ -135,8 +115,18 @@ void cOneWire::Run()
 	//HAL_NVIC_SetPriority(TIMER_IRQn, 0, 0); DONE in MSP
 	//HAL_NVIC_EnableIRQ(TIMER_IRQn); Done in MSP
 	state=eState::WAIT_FOR_RESET;
+	tmp=0;
 
+
+	/*
 	//Test
+	 * while(1)
+		{
+			OUT0(OneWire_GPIO_Port, OneWire_Pin);
+			HAL_Delay(200);
+			OUT1(OneWire_GPIO_Port, OneWire_Pin);
+			HAL_Delay(200);
+		}
 	volatile uint32_t time = HAL_GetTick();
 	FireTimerIn(20000);
 	while(counter!=1);
@@ -166,6 +156,7 @@ void cOneWire::Run()
 		while(1);
 	}
 	Console::Write("Success");
+	*/
 }
 
 
@@ -203,7 +194,7 @@ void cOneWire::OnOneWireInterrupt()
 			else
 			{
 				state=eState::WAIT_FOR_PRESENCE_START;
-				time=0;
+				tmp=0;
 				FireTimerIn(PRESENCE_WAIT_DURATION);
 			}
 			break;
@@ -216,7 +207,7 @@ void cOneWire::OnOneWireInterrupt()
 			}
 			else
 			{
-				time=std::min<uint32_t>(PRESENCE_WAIT_DURATION, PRESENCE_WAIT_DURATION-GetTimerVal());
+				tmp=std::min<uint32_t>(PRESENCE_WAIT_DURATION, PRESENCE_WAIT_DURATION-GetTimerVal());
 			}
 			break;
 		case eState::WAIT_FOR_PRESENCE_END:
@@ -232,57 +223,6 @@ void cOneWire::OnOneWireInterrupt()
 			}
 			//eine positive Flanke ist ok!
 			break;
-		case eState::WAIT_FOR_START_OF_BIT_COMMAND:
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_START_OF_BIT_COMMAND");
-			}
-			else
-			{
-				state=eState::WAIT_FOR_END_OF_BIT_COMMAND;
-				FireTimerIn(MINIMUM_RESET_TIME);
-			}
-			break;
-		case eState::WAIT_FOR_END_OF_BIT_COMMAND:
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
-			}
-			else
-			{
-				if(GetTimerVal()>LIMIT_DURATION)
-				{
-					SET_BIT(buffer, 1);
-				}
-				buffer<<=1;
-				bit++;
-				TimerOff();
-				if(bit==8)
-				{
-					eNextAction na = eNextAction::WRITE_BYTE;
-					bit=0;
-					Application.CommandCb((eOWCommand)buffer, &na, &buffer);
-					if(na==eNextAction::READ_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_READ;
-					}
-					else if(na==eNextAction::WRITE_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_WRITE;
-					}
-					else
-					{
-						state=eState::WAIT_FOR_RESET;
-					}
-				}
-				else
-				{
-					state=eState::WAIT_FOR_START_OF_BIT_COMMAND;
-				}
-
-
-			}
-			break;
 		case eState::WAIT_FOR_START_OF_BIT_READ:
 			if(pinstate)
 			{
@@ -297,44 +237,28 @@ void cOneWire::OnOneWireInterrupt()
 		case eState::WAIT_FOR_END_OF_BIT_READ:
 			if(!pinstate)
 			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_READ");
+				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
 			}
 			else
 			{
-				if(GetTimerVal()>LIMIT_DURATION)
+				if(GetTimerVal()<LIMIT_DURATION)
 				{
-					SET_BIT(buffer, 1);
+					SBN(buffer, bit);
 				}
-				buffer<<=1;
-				bit++;
 				TimerOff();
+				bit++;
 				if(bit==8)
 				{
-					eNextAction na = eNextAction::READ_BYTE;
 					bit=0;
-					Application.ActionCb(&na, &buffer);
-					if(na==eNextAction::READ_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_READ;
-					}
-					else if(na==eNextAction::WRITE_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_WRITE;
-					}
-					else
-					{
-						state=eState::WAIT_FOR_RESET;
-					}
+					OnByteRead();
+					tmp++;
 				}
 				else
 				{
-					state=eState::WAIT_FOR_START_OF_BIT_COMMAND;
+					state=eState::WAIT_FOR_START_OF_BIT_READ;
 				}
-
-
 			}
 			break;
-
 		case eState::WAIT_FOR_START_OF_BIT_WRITE:
 			if(pinstate)
 			{
@@ -342,12 +266,18 @@ void cOneWire::OnOneWireInterrupt()
 			}
 			else
 			{
-				if(READ_BIT(buffer, 1))
+				if(!RBN(buffer, bit))
 				{
 					PullDown();
+					state=eState::WAIT_FOR_RELEASE_OF_BIT_WRITE;
+					FireTimerIn(WRITE_PULLDOWN_DURATION);
 				}
-				state=eState::WAIT_FOR_RELEASE_OF_BIT_WRITE;
-				FireTimerIn(WRITE_PULLDOWN_DURATION);
+				else
+				{
+					state=eState::WAIT_FOR_END_OF_BIT_WRITE;
+					FireTimerIn(MINIMUM_RESET_TIME);
+				}
+
 			}
 			break;
 		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
@@ -356,47 +286,216 @@ void cOneWire::OnOneWireInterrupt()
 		case eState::WAIT_FOR_END_OF_BIT_WRITE:
 			if(!pinstate)
 			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_READ");
+				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_WRITE");
 			}
 			else
 			{
-				if(GetTimerVal()>LIMIT_DURATION)
-				{
-					SET_BIT(buffer, 1);
-				}
-				buffer<<=1;
 				bit++;
 				TimerOff();
 				if(bit==8)
 				{
-					eNextAction na = eNextAction::WRITE_BYTE;
 					bit=0;
-					Application.ActionCb(&na, &buffer);
-					if(na==eNextAction::READ_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_READ;
-					}
-					else if(na==eNextAction::WRITE_BYTE)
-					{
-						state=eState::WAIT_FOR_START_OF_BIT_WRITE;
-					}
-					else
-					{
-						state=eState::WAIT_FOR_RESET;
-					}
+					OnByteWritten();
+					tmp++;
 				}
 				else
 				{
-					state=eState::WAIT_FOR_START_OF_BIT_COMMAND;
+					state=eState::WAIT_FOR_START_OF_BIT_WRITE;
 				}
+			}
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI1:
+			if(pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI1");
+			}
+			else
+			{
+				//"positive" Logik
+				if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
+				{
+					state=eState::WAIT_FOR_END_OF_BIT_TRI1;
+					FireTimerIn(MINIMUM_RESET_TIME);
+				}
+				else
+				{
+					//bei einer "0" muss aktiv pulldown betrieben werden
+					if(Probe())
+					{
+						while(1) Console::Writeln("WIEDER POS");
+					}
+					PullDown();
+					if(Probe())
+					{
+						while(1) Console::Writeln("TROTZDEM POS");
+					}
+					state=eState::WAIT_FOR_REL_OF_BIT_TRI1;
+					FireTimerIn(WRITE_PULLDOWN_DURATION);
 
+				}
+			}
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
+			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI1");
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI1:
+			if(!pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI1");
+			}
+			else
+			{
+				TimerOff();
+				state=eState::WAIT_FOR_STA_OF_BIT_TRI2;
+			}
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI2:
+			if(pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI2");
+			}
+			else
+			{
+				//"negative" Logik (vgl oben)
+				if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
+				{
+					PullDown();
+					state=eState::WAIT_FOR_REL_OF_BIT_TRI2;
+					FireTimerIn(WRITE_PULLDOWN_DURATION);
+				}
+				else
+				{
+					state=eState::WAIT_FOR_END_OF_BIT_TRI2;
+					FireTimerIn(MINIMUM_RESET_TIME);
+				}
+			}
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
+			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI2");
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI2:
+			if(!pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI2");
+			}
+			else
+			{
+				TimerOff();
+				state=eState::WAIT_FOR_STA_OF_BIT_TRI3;
+			}
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI3:
+			if(pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI3");
+			}
+			else
+			{
+				state=eState::WAIT_FOR_END_OF_BIT_TRI3;
+				FireTimerIn(MINIMUM_RESET_TIME);
+			}
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI3:
+			if(!pinstate)
+			{
+				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
+			}
+			else
+			{
+				bool desiredBit = false;
+				if(GetTimerVal()<LIMIT_DURATION)
+				{
+					desiredBit=true;
+				}
+				bool myBit = (RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))>0;
+				TimerOff();
+				bit++;
 
+				if(desiredBit !=  myBit)
+				{
+					bit=0;
+					state=eState::WAIT_FOR_RESET;
+				}
+				else if(bit==64 )
+				{
+					bit=0;
+					state=eState::WAIT_FOR_RESET;
+				}
+				else
+				{
+					state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
+				}
 			}
 			break;
 		default:
 			break;
 	}
 	return;
+}
+
+void cOneWire::OnByteWritten()
+{
+	if(currentRomCommand == e1WireRomCommand::Read_ROM)
+	{
+		if(tmp<8)
+		{
+			//1.byte + 7 Bytes --> Lade das n‰chste
+			buffer = ONE_WIRE_ID[tmp-1];
+		}
+		else
+		{
+			//jetzt ist Schluss
+			state=eState::WAIT_FOR_RESET;
+		}
+	}
+	else
+	{
+		eNextAction na = eNextAction::IDLE;
+		Application->OnByteWritten(&na, &buffer);
+		state=(eState)na;
+	}
+}
+
+void cOneWire::OnByteRead()
+{
+	if(currentRomCommand== e1WireRomCommand::UNKNOWN)
+	{
+		currentRomCommand = (e1WireRomCommand)buffer;
+		eNextAction na = eNextAction::IDLE;
+		switch (currentRomCommand)
+		{
+			case e1WireRomCommand::Search_ROM:
+				state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
+				break;
+			case e1WireRomCommand::Match_ROM:
+				state=eState::WAIT_FOR_START_OF_BIT_READ;
+				break;
+			case e1WireRomCommand::Read_ROM:
+				state=eState::WAIT_FOR_START_OF_BIT_WRITE;
+				break;
+			case e1WireRomCommand::Skip_ROM:
+				Application->OnTransactionStarted(&na, &buffer);
+				state=(eState)na;
+				break;
+			default:
+				state=eState::WAIT_FOR_RESET;
+				break;
+		}
+	}
+	else if(currentRomCommand== e1WireRomCommand::Match_ROM && tmp < (1 + 8))
+	{
+		if(buffer != ONE_WIRE_ID[tmp-1])
+		{
+			state=eState::WAIT_FOR_RESET;
+		}
+	}
+	else
+	{
+		eNextAction na = eNextAction::IDLE;
+		Application->OnByteRead(&na, &buffer);
+		state=(eState)na;
+	}
+
 }
 
 void cOneWire::OnTimerInterrupt()
@@ -424,27 +523,44 @@ void cOneWire::OnTimerInterrupt()
 			Release();
 			OWIOn();
 			state=eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE;
-			FireTimerIn(MINIMUM_RESET_TIME - PRESENCE_DURATION - PRESENCE_WAIT_DURATION - time);
+			FireTimerIn(MINIMUM_RESET_TIME - PRESENCE_DURATION - PRESENCE_WAIT_DURATION - tmp);
 			break;
 		case eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE:
-			state=eState::WAIT_FOR_START_OF_BIT_COMMAND;
+			tmp=0; //bisher: Vorlaufzeit des anderen Reset-Impulses, ab jetzt: Byte-Nummer ab Start der transaktion (einschlieﬂlich rom command)
+			bit=0;
+			currentRomCommand=e1WireRomCommand::UNKNOWN;
+			state=eState::WAIT_FOR_START_OF_BIT_READ;
 			break;
-		case eState::WAIT_FOR_START_OF_BIT_COMMAND:
 		case eState::WAIT_FOR_START_OF_BIT_READ:
 		case eState::WAIT_FOR_START_OF_BIT_WRITE:
-		case eState::WAIT_FOR_START_OF_BIT_TRI:
-			while(1) Console::Writeln("tint in WAIT_FOR_START_OF_BIT_COMMAND");
+		case eState::WAIT_FOR_STA_OF_BIT_TRI1:
+		case eState::WAIT_FOR_STA_OF_BIT_TRI2:
+		case eState::WAIT_FOR_STA_OF_BIT_TRI3:
+			while(1) Console::Writeln("tint in WAIT_FOR_STA");
 			break;
-		case eState::WAIT_FOR_END_OF_BIT_COMMAND:
 		case eState::WAIT_FOR_END_OF_BIT_READ:
 		case eState::WAIT_FOR_END_OF_BIT_WRITE:
-		case eState::WAIT_FOR_END_OF_BIT_TRI:
+		case eState::WAIT_FOR_END_OF_BIT_TRI1:
+		case eState::WAIT_FOR_END_OF_BIT_TRI2:
+		case eState::WAIT_FOR_END_OF_BIT_TRI3:
 			//Wenn der Timer abgelaufen ist und zwischenzeitlich kein owi gekommen ist, dann war es ein Reset-Impuls
 			state=eState::MINIMUM_RESET_DURATION_IS_OVER;
 			break;
 		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
-			Release();
 			state=eState::WAIT_FOR_END_OF_BIT_WRITE;
+			Release();
+			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
+			state=eState::WAIT_FOR_END_OF_BIT_TRI1;
+			Release();
+			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
+			state=eState::WAIT_FOR_END_OF_BIT_TRI2;
+			Release();
+			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
+			break;
 	}
 
 	return;

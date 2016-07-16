@@ -318,16 +318,19 @@ void BSP::Init1wire()
 			//print device found
 			switch ((drivers::e1WireFamilyCode)ds2482.ROM_NO[0]) {
 				case drivers::e1WireFamilyCode::DS18B20:
-					Console::Write("DS18B20 ");
+					Console::Write("DS18B20   ");
 					break;
 				case drivers::e1WireFamilyCode::DS2413:
-					Console::Write("DS2413  ");
+					Console::Write("DS2413    ");
 					break;
 				case drivers::e1WireFamilyCode::DS2406:
-					Console::Write("DS2406  ");
+					Console::Write("DS2406    ");
 					break;
 				case drivers::e1WireFamilyCode::_3A2100H:
-					Console::Write("3A2100H ");
+					Console::Write("3A2100H   ");
+					break;
+				case drivers::e1WireFamilyCode::SENSACTSE:
+					Console::Write("SENSACTSE ");
 					break;
 				default:
 					Console::Write("?? 0x%02X ", ds2482.ROM_NO[0]);
