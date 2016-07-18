@@ -305,13 +305,15 @@ void BSP::Init1wire()
 	}
 
 	// find ALL devices
-
+	bool rslt;
+	uint32_t cnt;
 	while(true)
 	{
 		LOGI("Searching devices on 1wire bus");
-		int rslt,cnt;
+
 		cnt = 0;
 		rslt = ds2482.OWFirst();
+
 		while (rslt)
 		{
 			cnt++;
@@ -349,6 +351,25 @@ void BSP::Init1wire()
 		break;
 #endif
 	}
+	rslt = ds2482.OWFirst();
+
+	while (rslt)
+	{
+		if(((drivers::e1WireFamilyCode)ds2482.ROM_NO[0])==drivers::e1WireFamilyCode::SENSACTSE)
+		{
+			uint8_t buffer[8];
+			ds2482.OWReadScratchpad(drivers::e1WireFamilyCode::SENSACTSE, &ds2482.ROM_NO[1], buffer, 8);
+			Console::Write("Scratchpad: ");
+			for (i = 0; i < 8; i++)
+			{
+				Console::Write("0x%02X, ", buffer[i]);
+			}
+			Console::Writeln("");
+
+		}
+		rslt = ds2482.OWNext();
+	}
+
 	for(i=0;i<MODEL::sensactWi_InputAddressesCnt;i++)
 	{
 		const uint8_t *ROM = MODEL::sensactWi_InputAddresses[i];

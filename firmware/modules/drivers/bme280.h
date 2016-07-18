@@ -1,6 +1,9 @@
 #pragma once
 
 #include <inttypes.h>
+#ifdef STM32F0
+	#include "stm32f0xx_hal.h"
+#endif
 #ifdef STM32F1
 	#include "stm32f1xx_hal.h"
 #endif

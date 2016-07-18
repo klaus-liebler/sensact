@@ -1,12 +1,5 @@
 #include "common.h"
-#ifdef STM32F4
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_i2c.h"
-#endif
-#ifdef STM32F1
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_i2c.h"
-#endif
+
 #include "ds2482.h"
 
 #define ADDR				(uint16_t)(this->DEVICE_ADDRESS_BASE+(uint16_t)this->device)
@@ -509,9 +502,25 @@ bool cDS2482::OWWriteDS2413(const e1WireFamilyCode family, const uint8_t *addres
 	return true;
 }
 
+bool cDS2482::OWReadScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt)
+{
+	BeginTransaction(family, address, e1WireCommand::READ_SCRATCHPAD);
+	uint8_t crc8=0;
+	for(uint8_t i = 0;i<cnt;i++)
+	{
+		buffer[i]=OWReadByte();
+		calcCrc8(buffer[i], &crc8);
+	}
+	if(crc8 != OWReadByte())
+	{
+		return false;
+	}
+	return true;
+}
+
 bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, const uint8_t *address, uint8_t bitPosToSetOrClear, uint32_t *inputState)
 {
-	BeginTransaction(family, address, e1WireCommand::PIO_Access_Read);
+	BeginTransaction(family, address, e1WireCommand::READ_SCRATCHPAD);
 	uint8_t read= OWReadByte();
 	//die unteren vier maskieren, negieren und nach oben schieben
 	//und dann mit den unteren 4 verodern

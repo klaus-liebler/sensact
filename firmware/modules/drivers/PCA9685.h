@@ -10,9 +10,14 @@
 #include "common.h"
 #ifdef STM32F4
 #include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_i2c.h"
 #endif
 #ifdef STM32F1
 #include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_i2c.h"
+#endif
+#ifdef STM32F0
+#include <stm32f0xx_hal.h>
 #endif
 
 namespace drivers {

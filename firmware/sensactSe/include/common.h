@@ -20,5 +20,6 @@
 #define CBN(REG, BIT)   ((REG) &= ~(1<<(BIT)))
 #define RBN(REG, BIT)    ((REG) & (1<<(BIT)))
 
-#define OUT1(PORT, PIN) PORT->BSRR = (uint32_t)PIN
-#define OUT0(PORT, PIN) PORT->BRR = (uint32_t)PIN
+#define OUT1(PORT, PIN) (PORT->BSRR = (uint32_t)PIN)
+#define OUT0(PORT, PIN) (PORT->BRR = (uint32_t)PIN)
+#define IN(PORT, PIN) (PORT->IDR & PIN)

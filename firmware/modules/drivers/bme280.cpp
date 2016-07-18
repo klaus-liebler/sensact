@@ -17,7 +17,8 @@ enum class eDataOrder
 
 // Returns temperature in DegC, resolution is 0.01 DegC. Output value of “5123” equals 51.23 DegC.
 // t_fine carries fine temperature as global value
-BME280_S32_t t_fine;
+
+
 BME280_S32_t cBME280::BME280_compensate_T_int32(BME280_S32_t adc_T)
 {
 	BME280_S32_t var1, var2, T;
@@ -165,7 +166,7 @@ void cBME280::SetOversamplingHumidity(eOversampling os) {
 }
 
 cBME280::cBME280(I2C_HandleTypeDef *i2c) :
-				i2c(i2c) {
+				i2c(i2c), adc_h(0), adc_p(0), adc_t(0), t_fine(0) {
 
 }
 

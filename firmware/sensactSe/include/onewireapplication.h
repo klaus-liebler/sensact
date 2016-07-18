@@ -1,5 +1,6 @@
 #pragma once
-#include <inttypes.h>
+#include <onewire.h>
+#include <stm32f0xx_hal.h>
 
 namespace sensact
 {
@@ -32,6 +33,7 @@ public:
 	void OnTransactionStarted(eNextAction *nextAction, volatile uint8_t *buffer);
 	void OnByteRead(eNextAction *nextAction, volatile uint8_t *buffer);
 	void OnByteWritten(eNextAction *nextAction, volatile uint8_t *buffer);
+	void Run(I2C_HandleTypeDef* i2c);
 };
 
 }

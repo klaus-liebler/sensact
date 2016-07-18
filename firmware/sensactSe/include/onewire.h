@@ -71,8 +71,10 @@ private:
 	static void OnByteRead();
 	static void OnByteWritten();
 public:
+	static uint8_t crc8(const uint8_t* data, uint16_t numBytes);
+	static void crc8inc(const uint8_t data, uint8_t *crc);
 	static void OnOneWireInterrupt();
 	static void OnTimerInterrupt();
-	static void Run(cOneWireApplication *app);
+	static void Start(cOneWireApplication *app);
 };
 }

@@ -34,6 +34,7 @@
 #include "common.h"
 #include <onewire.h>
 #include "stm32f0xx_hal.h"
+#include "si7021.h"
 
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -83,25 +84,15 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_I2C1_Init();
+  MX_I2C1_Init();
   MX_TIM16_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   SET_BIT(USART1->CR1, USART_CR1_RXNEIE);
   sensact::cOneWireApplication testApp;
-  sensact::cOneWire::Run(&testApp);
-  /* USER CODE END 2 */
+  sensact::cOneWire::Start(&testApp);
+  testApp.Run(&hi2c1);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
-
-  }
-  /* USER CODE END 3 */
 
 }
 

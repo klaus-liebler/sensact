@@ -15,25 +15,8 @@ static const uint16_t PRESENCE_DURATION = 100;
 static const uint16_t LIMIT_DURATION = 35;
 static const uint16_t WRITE_PULLDOWN_DURATION = 35;
 
-static const uint8_t ONE_WIRE_ID[8] = {0xCE,0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x67};
+static const uint8_t ONE_WIRE_ID[8] = {0xCE,0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0x9D};
 
-
-
-
-static inline void Release()
-{
-	HAL_GPIO_WritePin(OneWire_GPIO_Port, OneWire_Pin, GPIO_PIN_SET);
-}
-
-static inline void PullDown()
-{
-	HAL_GPIO_WritePin(OneWire_GPIO_Port, OneWire_Pin, GPIO_PIN_RESET);
-}
-
-static inline bool Probe()
-{
-	return HAL_GPIO_ReadPin(OneWire_GPIO_Port, OneWire_Pin)==GPIO_PIN_SET;
-}
 
 static void TimerOff()
 {
@@ -66,7 +49,12 @@ static uint32_t GetTimerVal()
 	return TIMER->CNT;
 }
 
-uint8_t crc8(const uint8_t* data, uint16_t numBytes)
+
+
+namespace sensact
+{
+
+uint8_t cOneWire::crc8(const uint8_t* data, uint16_t numBytes)
 {
 	uint8_t crc = 0;
 
@@ -82,10 +70,17 @@ uint8_t crc8(const uint8_t* data, uint16_t numBytes)
 	return crc;
 }
 
-namespace sensact
-{
-
-
+void cOneWire::crc8inc(const uint8_t data, uint8_t *crc) {
+	// See Application Note 27
+	*crc = *crc ^ data;
+	for (uint8_t i = 0; i < 8; ++i) {
+		if (*crc & 1)
+			*crc = (*crc >> 1) ^ 0x8c;
+		else
+			*crc = (*crc >> 1);
+	}
+	return;
+}
 
 void Console::putcharX(char c) {
 
@@ -101,7 +96,7 @@ volatile uint8_t cOneWire::buffer=0;
 cOneWireApplication *cOneWire::Application=0;
 volatile e1WireRomCommand cOneWire::currentRomCommand=e1WireRomCommand::UNKNOWN;
 
-void cOneWire::Run(cOneWireApplication *app)
+void cOneWire::Start(cOneWireApplication *app)
 {
 	Application=app;
 	Console::Writeln("Application started");
@@ -163,7 +158,7 @@ void cOneWire::Run(cOneWireApplication *app)
 
 void cOneWire::OnOneWireInterrupt()
 {
-	bool pinstate = Probe();
+	bool pinstate = IN(OneWire_GPIO_Port, OneWire_Pin);
 	switch (state) {
 		case eState::UNINITIALIZED:
 			return;
@@ -238,6 +233,7 @@ void cOneWire::OnOneWireInterrupt()
 			if(!pinstate)
 			{
 				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
+				break;
 			}
 			else
 			{
@@ -268,7 +264,7 @@ void cOneWire::OnOneWireInterrupt()
 			{
 				if(!RBN(buffer, bit))
 				{
-					PullDown();
+					OUT0(OneWire_GPIO_Port, OneWire_Pin);
 					state=eState::WAIT_FOR_RELEASE_OF_BIT_WRITE;
 					FireTimerIn(WRITE_PULLDOWN_DURATION);
 				}
@@ -320,12 +316,12 @@ void cOneWire::OnOneWireInterrupt()
 				else
 				{
 					//bei einer "0" muss aktiv pulldown betrieben werden
-					if(Probe())
+					if(IN(OneWire_GPIO_Port, OneWire_Pin))
 					{
 						while(1) Console::Writeln("WIEDER POS");
 					}
-					PullDown();
-					if(Probe())
+					OUT0(OneWire_GPIO_Port, OneWire_Pin);
+					if(IN(OneWire_GPIO_Port, OneWire_Pin))
 					{
 						while(1) Console::Writeln("TROTZDEM POS");
 					}
@@ -359,7 +355,7 @@ void cOneWire::OnOneWireInterrupt()
 				//"negative" Logik (vgl oben)
 				if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
 				{
-					PullDown();
+					OUT0(OneWire_GPIO_Port, OneWire_Pin);
 					state=eState::WAIT_FOR_REL_OF_BIT_TRI2;
 					FireTimerIn(WRITE_PULLDOWN_DURATION);
 				}
@@ -430,6 +426,14 @@ void cOneWire::OnOneWireInterrupt()
 		default:
 			break;
 	}
+	if(pinstate != IN(OneWire_GPIO_Port, OneWire_Pin))
+	{
+		while(1) Console::Writeln("TOO SLOW 1");
+	}
+	if (__HAL_GPIO_EXTI_GET_IT(OneWire_Pin) != RESET)
+	{
+		while(1) Console::Writeln("TOO SLOW 2");
+	}
 	return;
 }
 
@@ -458,10 +462,11 @@ void cOneWire::OnByteWritten()
 
 void cOneWire::OnByteRead()
 {
+	eNextAction na = eNextAction::IDLE;
 	if(currentRomCommand== e1WireRomCommand::UNKNOWN)
 	{
 		currentRomCommand = (e1WireRomCommand)buffer;
-		eNextAction na = eNextAction::IDLE;
+
 		switch (currentRomCommand)
 		{
 			case e1WireRomCommand::Search_ROM:
@@ -481,13 +486,29 @@ void cOneWire::OnByteRead()
 				state=eState::WAIT_FOR_RESET;
 				break;
 		}
+		buffer=0;
 	}
 	else if(currentRomCommand== e1WireRomCommand::Match_ROM && tmp < (1 + 8))
 	{
 		if(buffer != ONE_WIRE_ID[tmp-1])
 		{
 			state=eState::WAIT_FOR_RESET;
+			buffer=0;
 		}
+		else
+		{
+			if(tmp==8)
+			{
+				Application->OnTransactionStarted(&na, &buffer);
+				state=(eState)na;
+			}
+			else
+			{
+				buffer=0;
+				state=eState::WAIT_FOR_START_OF_BIT_READ;
+			}
+		}
+
 	}
 	else
 	{
@@ -515,12 +536,12 @@ void cOneWire::OnTimerInterrupt()
 			break;
 		case eState::WAIT_FOR_PRESENCE_START:
 			OWIOff();
-			PullDown();
+			OUT0(OneWire_GPIO_Port, OneWire_Pin);
 			state=eState::WAIT_FOR_PRESENCE_END;
 			FireTimerIn(PRESENCE_DURATION);
 			break;
 		case eState::WAIT_FOR_PRESENCE_END:
-			Release();
+			OUT1(OneWire_GPIO_Port, OneWire_Pin);
 			OWIOn();
 			state=eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE;
 			FireTimerIn(MINIMUM_RESET_TIME - PRESENCE_DURATION - PRESENCE_WAIT_DURATION - tmp);
@@ -528,6 +549,7 @@ void cOneWire::OnTimerInterrupt()
 		case eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE:
 			tmp=0; //bisher: Vorlaufzeit des anderen Reset-Impulses, ab jetzt: Byte-Nummer ab Start der transaktion (einschlieﬂlich rom command)
 			bit=0;
+			buffer=0;
 			currentRomCommand=e1WireRomCommand::UNKNOWN;
 			state=eState::WAIT_FOR_START_OF_BIT_READ;
 			break;
@@ -548,17 +570,17 @@ void cOneWire::OnTimerInterrupt()
 			break;
 		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
 			state=eState::WAIT_FOR_END_OF_BIT_WRITE;
-			Release();
+			OUT1(OneWire_GPIO_Port, OneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
 			state=eState::WAIT_FOR_END_OF_BIT_TRI1;
-			Release();
+			OUT1(OneWire_GPIO_Port, OneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
 			state=eState::WAIT_FOR_END_OF_BIT_TRI2;
-			Release();
+			OUT1(OneWire_GPIO_Port, OneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 	}

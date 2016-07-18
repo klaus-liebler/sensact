@@ -1,4 +1,15 @@
 #pragma once
+#ifdef STM32F4
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_i2c.h"
+#endif
+#ifdef STM32F1
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_i2c.h"
+#endif
+#ifdef STM32F0
+#include <stm32f0xx_hal.h>
+#endif
 namespace drivers {
 
 // API mode bit flags
@@ -88,6 +99,7 @@ public:
 	bool OWWriteDS2413(const e1WireFamilyCode family, const uint8_t *address, bool outputA, bool outputB);
 	bool OWWriteDS2406(const uint8_t *address, bool outputA, bool outputB);
 	bool OWReadDS18B20Temp(const uint8_t *address, int16_t *temp);
+	bool OWReadScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt);
 
 	bool BeginTransaction(e1WireFamilyCode family, const uint8_t *address, e1WireCommand cmd);
 	bool BeginTransactionForAll(e1WireCommand cmd);
