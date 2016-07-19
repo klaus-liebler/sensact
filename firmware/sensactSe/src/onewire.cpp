@@ -101,7 +101,7 @@ void cOneWire::Start(cOneWireApplication *app)
 	Application=app;
 	Console::Writeln("Application started");
 	//warte, bin gerade kein pulldown erfolgt
-	while(!HAL_GPIO_ReadPin(OneWire_GPIO_Port, OneWire_Pin));
+	while(!IN(OneWire_GPIO_Port, OneWire_Pin));
 	//Preload disabled - das Setzen von ARR wird unmittelbar berücksichtigt
 	CLEAR_BIT(TIMER->CR1, TIM_CR1_ARPE); //TIMx_ARR register is not buffered!,
 	SET_BIT(TIMER->CR1, TIM_CR1_OPM);//Timer is stopped after Update event

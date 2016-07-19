@@ -101,10 +101,12 @@ int main(void)
 void SystemClock_Config(void)
 {
 
-  RCC_OscInitTypeDef RCC_OscInitStruct;
+
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
+  /*
+  RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = 16;
@@ -113,6 +115,13 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
   RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
+  */
+  __HAL_RCC_HSI_CALIBRATIONVALUE_ADJUST(16);
+  __HAL_RCC_PLL_DISABLE();
+   while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY)  != RESET);
+   __HAL_RCC_PLL_CONFIG(RCC_PLLSOURCE_HSI, RCC_PREDIV_DIV1, RCC_PLL_MUL12);
+   __HAL_RCC_PLL_ENABLE();
+   while(__HAL_RCC_GET_FLAG(RCC_FLAG_PLLRDY)  == RESET);
 
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
