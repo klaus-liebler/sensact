@@ -6,7 +6,13 @@ namespace Klli.Sensact.Config
 {
     public static class AB
     {
-
+        public static void AddPlaceholder(this List<SensactApplication> list, ID appId)
+        {
+            list.Add(new PlaceholderApplication()
+            {
+                ApplicationId = appId.ToString(),
+            });
+        }
 
         public static void AddToggleButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
         {
@@ -25,14 +31,31 @@ namespace Klli.Sensact.Config
             });
         }
 
+        public static void AddOnIfDarkButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
+        {
+            list.Add(new PushButtonXApplication()
+            {
+                ApplicationId = appId.ToString(),
+                InputRessource = inputRessource,
+                CommandsOnPressed = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.TOGGLE,
+                        TargetAppId=targetAppId.ToString(),
+                    },
+                },
+            });
+        }
 
-        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, int autoOffInterval=0)
+
+        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, int autoOffIntervalMsecs = 0)
         {
             list.Add(new PoweritemApplication()
             {
                 ApplicationId = appId.ToString(),
                 OutputRessource = outputRessource,
-                AutoOffInterval= autoOffInterval,
+                AutoOffIntervalMsecs= autoOffIntervalMsecs,
             });
         }
 

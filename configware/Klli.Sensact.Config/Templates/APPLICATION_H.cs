@@ -42,14 +42,16 @@ namespace sensact {
 class cApplication {
 protected:
 	int16_t ParseInt16(uint8_t *message, uint32_t offset);
-	void WriteInt16(uint16_t value, uint8_t *message, uint32_t offset);
+	void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
+	uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
+	void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
 public:
 	const char* Name;
 	eAppType AppType;
 	eApplicationID Id;
 ");
             
-            #line 20 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
+            #line 22 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
 foreach(CommandType ct in Commands){
 	string s = Convert.ToString(ct); 
             
@@ -57,14 +59,14 @@ foreach(CommandType ct in Commands){
             #line hidden
             this.Write("\tvirtual void On");
             
-            #line 22 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
+            #line 24 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(s));
             
             #line default
             #line hidden
             this.Write("Command(uint8_t *payload, uint8_t payloadLength, Time_t now);\r\n");
             
-            #line 23 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
+            #line 25 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
 }
             
             #line default

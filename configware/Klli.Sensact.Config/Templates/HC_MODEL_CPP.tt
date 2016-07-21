@@ -7,19 +7,6 @@
 
 #include "common.h"
 #include "cModel.h"
-#include "cBlind.h"
-#include "cRotar.h"
-#include "cPoweritem.h"
-#include "cPushbutton.h"
-#include "cPwm.h"
-#include "cStandbycontroller.h"
-#include "cBrightnessSensor.h"
-#include "cBell.h"
-#include "cRgbw.h"
-#include <chrono>
-#include "date.h"
-#include "bh1750.h"
-#include "cRCEvent.h"
 
 using namespace std;
 
@@ -39,9 +26,9 @@ const char * const MODEL::ApplicationNames[]={
 eNodeID NODE = eNodeID::<#=i.NodeId#>;
 
 const char MODEL::ModelString[] ="<#=i.ModelInfo#>";
-
+}//end namespace
 #include <cModel_base.inc>
-
+namespace sensact{
 
 <#=i.StaticApplicationInitializers#>
 

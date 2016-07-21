@@ -106,8 +106,11 @@ namespace Klli.Sensact.Config
                         SensactApplicationContainer target;
                         if (!mc.id2app.TryGetValue(cmd.TargetAppId, out target))
                         {
-                            LOG.ErrorFormat("AppId {0} sends command to AppId {1}, but this app does not exist.", app.ApplicationId, cmd.TargetAppId);
-                            return false;
+                            if(cmd.TargetAppId != ID.NO_APPLICATION.ToString())
+                            {
+                                LOG.ErrorFormat("AppId {0} sends command to AppId {1}, but this app does not exist.", app.ApplicationId, cmd.TargetAppId);
+                                return false;
+                            }
                         }
                         else
                         {
@@ -151,8 +154,8 @@ namespace Klli.Sensact.Config
                 SensactApplicationContainer app = mc.index2app[i];
                 page.AppIds.Add(app.Application.ApplicationId);
             }
-            page.AppIds.Add("NO_APPLICATION");
             page.AppIds.Add("CNT");
+            page.AppIds.Add("NO_APPLICATION");
             String pageContent = page.TransformText();
             File.WriteAllText(GetGeneratedPathForFile("appids.h"), pageContent);
             LOG.InfoFormat("Successfully created appids.h");

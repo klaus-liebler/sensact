@@ -94,36 +94,7 @@ foreach(CommandType ct in Commands){
             
             #line default
             #line hidden
-            this.Write(@"
-void cApplication::OnEvent(eApplicationID sender, eEventType evt,
-			uint8_t *payload, uint8_t payloadLength, Time_t now) {
-		(void) sender;
-		(void) evt;
-		(void) payload;
-		(void) payloadLength;
-		(void) now;
-		return;
-	}
-int16_t cApplication::ParseInt16(uint8_t *message, uint32_t offset)
-{
-	int16_t step;
-	uint8_t* ptr1=(uint8_t*)&step;
-	uint8_t* ptr2 = ptr1+1;
-	*ptr1 = *(message+offset);
-	*ptr2 = *(message+offset+1);
-	return step;
-}
-
-void cApplication::WriteInt16(uint16_t value, uint8_t *message, uint32_t offset)
-{
-	uint8_t* ptr1=(uint8_t*)&value;
-	uint8_t* ptr2 = ptr1+1;
-	*(message+offset) = *ptr1;
-	*(message+offset+1) = *ptr2;
-}
-
-} /* namespace sensact */
-");
+            this.Write("\r\n} /* namespace sensact */\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

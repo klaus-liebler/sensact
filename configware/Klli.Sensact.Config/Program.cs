@@ -11,8 +11,9 @@ namespace Klli.Sensact.Config
         static void Main(string[] args)
         {
             XmlConfigurator.Configure();
-            //Model model = TestModelBuilder.BuildRCDemo();
-            Model model = Sattlerstrasse16.Build();
+            //Model model = TestModelBuilder.BuildRGBWDemo();
+            Model model = TestModelBuilder.BuildLIBARDemo();
+            //Model model = Sattlerstrasse16.Build();
             ModelContainer mc = new ModelContainer()
             {
                 Model = model

@@ -12,7 +12,9 @@ namespace sensact {
 class cApplication {
 protected:
 	int16_t ParseInt16(uint8_t *message, uint32_t offset);
-	void WriteInt16(uint16_t value, uint8_t *message, uint32_t offset);
+	void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
+	uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
+	void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
 public:
 	const char* Name;
 	eAppType AppType;

@@ -13,6 +13,7 @@ namespace Klli.Sensact.Config.Applications
         public int InitialStoredTargetLevel;
         public bool LowMeansLampOn;
         public string StandbyController;
+        public int AutoOffIntervalMsecs;
 
         public override HashSet<CommandType> ICanReactOnTheseCommands()
         {
@@ -26,6 +27,7 @@ namespace Klli.Sensact.Config.Applications
                 CommandType.TOGGLE_SPECIAL, //beim Loslassen-Kurz
                 CommandType.TOGGLE,
                 CommandType.STEP_VERTICAL,
+                CommandType.ON,
             };
             return ret;
         }
@@ -49,10 +51,11 @@ namespace Klli.Sensact.Config.Applications
             {
                 InitialStoredTargetLevel = Byte.MaxValue;
             }
+            AutoOffIntervalMsecs = Math.Max(0, AutoOffIntervalMsecs);
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// PWM {0} (Dimmer )" + Environment.NewLine, ApplicationId);
             sb.Append(ResourcesInitializer("output", this.OutputRessources, m));
-            sb.AppendFormat("sensact::cPWM {0}(\"{0}\", eApplicationID::{0}, {0}_output, {1}, {2}, {3}, {4}, eApplicationID::{5});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessources.Count, MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),StandbyController);
+            sb.AppendFormat("sensact::cPWM {0}(\"{0}\", eApplicationID::{0}, {0}_output, {1}, {2}, {3}, {4}, eApplicationID::{5}, {6});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessources.Count, MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),StandbyController, AutoOffIntervalMsecs);
             return sb.ToString();
         }
 

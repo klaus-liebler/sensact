@@ -9,7 +9,7 @@ namespace Klli.Sensact.Config.Applications
     public class PoweritemApplication : ActorApplication
     {
         public OutputPin OutputRessource;
-        public long AutoOffInterval; 
+        public long AutoOffIntervalMsecs; 
         public List<Event> ToggleEvents;
         public List<Event> OffEvents;
         public List<Event> OnEvents;
@@ -34,7 +34,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// POWIT {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cPoweritem {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffInterval);
+            sb.AppendFormat("sensact::cPoweritem {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffIntervalMsecs);
             return sb.ToString();
         }
 

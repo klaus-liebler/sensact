@@ -34,38 +34,17 @@ namespace Klli.Sensact.Config.Templates
             
             #line default
             #line hidden
-            this.Write(@"
-#include ""common.h""
-#include ""cModel.h""
-#include ""cBlind.h""
-#include ""cRotar.h""
-#include ""cPoweritem.h""
-#include ""cPushbutton.h""
-#include ""cPwm.h""
-#include ""cStandbycontroller.h""
-#include ""cBrightnessSensor.h""
-#include ""cBell.h""
-#include ""cRgbw.h""
-#include <chrono>
-#include ""date.h""
-#include ""bh1750.h""
-#include ""cRCEvent.h""
-
-using namespace std;
-
-namespace sensact {
-
-const char * const MODEL::ApplicationNames[]={
-		");
+            this.Write("\r\n#include \"common.h\"\r\n#include \"cModel.h\"\r\n\r\nusing namespace std;\r\n\r\nnamespace s" +
+                    "ensact {\r\n\r\nconst char * const MODEL::ApplicationNames[]={\r\n\t\t");
             
-            #line 29 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 16 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ApplicationNames));
             
             #line default
             #line hidden
             this.Write("\r\n\t};\r\n\r\n\r\n");
             
-            #line 33 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 20 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
        foreach (ModelCppItem i in Items)
        {
@@ -75,42 +54,42 @@ const char * const MODEL::ApplicationNames[]={
             #line hidden
             this.Write("#ifdef NODE_");
             
-            #line 37 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 24 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
             
             #line default
             #line hidden
             this.Write("\r\n\r\neNodeID NODE = eNodeID::");
             
-            #line 39 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 26 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
             
             #line default
             #line hidden
             this.Write(";\r\n\r\nconst char MODEL::ModelString[] =\"");
             
-            #line 41 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 28 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.ModelInfo));
             
             #line default
             #line hidden
-            this.Write("\";\r\n\r\n#include <cModel_base.inc>\r\n\r\n\r\n");
+            this.Write("\";\r\n}//end namespace\r\n#include <cModel_base.inc>\r\nnamespace sensact{\r\n\r\n");
             
-            #line 46 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 33 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.StaticApplicationInitializers));
             
             #line default
             #line hidden
             this.Write("\r\n\r\n\r\n\r\ncApplication *MODEL::Glo2locCmd[] = {\r\n");
             
-            #line 51 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 38 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocPointers));
             
             #line default
             #line hidden
             this.Write("\r\n};\r\n\r\n\r\n\r\ncApplication *MODEL::Glo2locEvt[] = { };\r\n#endif\r\n\r\n");
             
-            #line 59 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 46 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
            
        }

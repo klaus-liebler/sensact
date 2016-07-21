@@ -5,6 +5,8 @@
         MASTER,
         //Keller
         PUSHB_L0_CORR_B11, //STRS.W1
+        PUSHB_L0_CORR_B21,
+        PUSHB_L0_CORR_B31,
         POWIT_L0_CORR_C1,
         SCLIM_L0_CORR_AIR,
         PUSHB_L0_PRTY_B11, //up
@@ -21,7 +23,7 @@
         PUSHB_L0_TECH_B11,
         POWIT_L0_TECH_C1,
         DEVCE_L0_TECH_Gastherme,
-        DEVCE_L0_TECH_Hebeanlage,
+        DEVCE_L0_TECH_PUMP,
         POWIT_L0_TECH_P1,
         POWIT_L0_TECH_P2,
         SCLIM_L0_TECH_AIR,
@@ -54,7 +56,7 @@
         SWIND_L1_BATH_W1,
         VALVE_L1_BATH,
 
-        DEVCE_L1_CORR_Audio, //auch gleichzeitig DEVCE_L1_CORR_Audio
+        DEVCE_L0_TECH_AUDIO, //auch gleichzeitig DEVCE_L1_CORR_Audio
         PUSHB_L1_CORR_B11, //für Spots
         PUSHB_L1_CORR_B21, //S
         PUSHB_L1_CORR_B22, //W1
@@ -341,6 +343,7 @@
         //PWM___L3_WORK_S4,
         //PWM___L3_WORK_S5,
         //PWM___L3_WORK_S6,
+        BSENS_L3_TECH,
         SCLIM_L3_WORK_AIR,
         STEMP_L3_WORK_FLOOR,
         SWIND_L3_WORK_W1,
@@ -348,26 +351,26 @@
         VALVE_L3_WORK,
 
         //Treppenhaus
-        PUSHB_LS_STRS_B11, //W2
+        LIBAR_LS_STRS_B11, //W2
 
         PUSHB_LS_STRS_B21, //W3
         PUSHB_LS_STRS_B22, //S*
         PUSHB_LS_STRS_B23, //W1
 
-        PUSHB_LS_STRS_B31, //W2
-        PUSHB_LS_STRS_B32, //W4
+        LIBAR_LS_STRS_B31, //W2
+        LIBAR_LS_STRS_B32, //W4
 
         PUSHB_LS_STRS_B41, //W5
         PUSHB_LS_STRS_B42, //S*
         PUSHB_LS_STRS_B43, //W3
 
-        PUSHB_LS_STRS_B51, //W4
-        PUSHB_LS_STRS_B52, //W6
+        LIBAR_LS_STRS_B51, //W4
+        LIBAR_LS_STRS_B52, //W6
 
         PUSHB_LS_STRS_B61, //S+W5
         PUSHB_LS_STRS_B62, //S+W5
 
-        PUSHB_LS_STRS_B71, //W6
+        LIBAR_LS_STRS_B71, //W6
 
         POWIT_LS_STRS_W1,
         PWM___LS_STRS_W2,
@@ -393,12 +396,12 @@
         SMOKE_L3_BEDR,
         SMOKE_L3_CORR,
 
-        STDBY_L0_TECH_24V,
         STDBY_L0_TECH_48V,
         STDBY_L2_CORR_24V,
         STDBY_L3_TECH_48V,
         STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
         NO_APPLICATION,
         CNT,
+        
     }
 }
