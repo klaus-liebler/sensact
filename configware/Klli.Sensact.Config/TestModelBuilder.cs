@@ -301,7 +301,141 @@ namespace Klli.Sensact.Config
             };
         }
 
-        public static Model BuildDemo()//Demo for Scharmann
+        public static Model BuildLIBARDemo()
+        {
+            Model model = new Model();
+
+            Node TEST_HS07 = new Nodes.SensactHs07()
+            {
+                Id = "TEST_HS07",
+                Applications = new List<SensactApplication>()
+                {
+                    new LightbarrierApplication
+                    {
+                        ApplicationId = "LIBAR_XX_XXX",
+                        ActiveSignalLevel = true,
+                        BrightnessSensor = _(ID.NO_APPLICATION),
+                        FinalTarget = "PWM___XX_XXX",
+                        InputRessource = InputPin.II01,
+                    },
+                    new PWMApplication
+                    {
+                        ApplicationId="PWM___XX_XXX",
+                        InitialStoredTargetLevel=255,
+                        LowMeansLampOn=true,
+                        MinimalOnLevel=20,
+                        OutputRessources=new List<PwmPin>() { PwmPin.P01 },
+                        StandbyController=_(ID.NO_APPLICATION),
+                        AutoOffIntervalMsecs=5000,
+                    }
+                }
+            };
+            model.Nodes.Add(TEST_HS07);
+            return model;
+        }
+
+        public static Model BuildRGBWDemo()
+        {
+            Model model = new Model();
+
+            Node TEST_HS07 = new Nodes.SensactHs07()
+            {
+                Id = "TEST_HS07",
+                Applications = new List<SensactApplication>()
+                {
+                    
+                      new PushButtonXApplication
+                      {
+                          ApplicationId="PUSHB_XX_XXX_1",
+                          InputRessource=InputPin.I01,
+                          CommandsOnPressed=new List<Command>
+                          {
+                              new Command
+                              {
+                                  CommandType=CommandType.TOGGLE,
+                                  TargetAppId="RGBW__XX_XXX_1",
+                              }
+                          }
+                      },
+                      new PushButtonXApplication
+                      {
+                          ApplicationId="PUSHB_XX_XXX_2",
+                          InputRessource=InputPin.I02,
+                          CommandsOnPressed=new List<Command>
+                          {
+                              new Command
+                              {
+                                  CommandType=CommandType.STEP_VERTICAL,
+                                  TargetAppId="RGBW__XX_XXX_1",
+                              }
+                          }
+                      },
+                    new RgbwApplication
+                    {
+                        ApplicationId="RGBW__XX_XXX_1",
+                        OutputR=PwmPin.OP01,
+                        OutputG=PwmPin.OP02,
+                        OutputB=PwmPin.OP03,
+                        OutputW=PwmPin.OP04,
+                        StandbyController=_(ID.NO_APPLICATION),
+                        LowMeansLampOn=true,
+                    },
+                }
+            };
+            
+
+
+
+            Node TEST_UP02 = new Nodes.SensactUp02
+            {
+                Id = "TEST_UP02",
+                Applications = new List<SensactApplication>
+                {
+                    new RotaryEncoderApplication
+                    {
+                        ApplicationId="ROTAR_YY_YYY_1",
+                        InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
+                        InputPushRessource=InputPin.ROTAR_PUSH_1,
+                        CommandsOnPressed=new List<Command>
+                        {
+                            new Command
+                            {
+                                TargetAppId="RGBW__YY_YYY_1",
+                                CommandType=CommandType.TOGGLE,
+                            }
+                        },
+                        CommandsOnTurned=new List<Command>
+                        {
+                            new Command
+                            {
+                                TargetAppId="RGBW__YY_YYY_1",
+                                CommandType=CommandType.STEP_VERTICAL,
+                            }
+                        }
+                    },
+                   new RgbwApplication
+                    {
+                        ApplicationId="RGBW__YY_YYY_1",
+                        OutputR=PwmPin.P01,
+                        OutputG=PwmPin.P03,
+                        OutputB=PwmPin.P05,
+                        OutputW=PwmPin.P07,
+                        StandbyController=_(ID.NO_APPLICATION),
+                        LowMeansLampOn=true,
+                    },
+
+                },
+
+            };
+            model.Nodes = new List<Node>(){
+                TEST_HS07,
+                TEST_UP02
+
+            };
+            return model;
+        }
+
+        public static Model BuildScharmannDemo()
         {
             Model model = new Model();
 
@@ -405,7 +539,7 @@ namespace Klli.Sensact.Config
                     {
                         ApplicationId="POWIT_YY_YYY_01",
                         OutputRessource=OutputPin.O_LED,
-                        AutoOffInterval=3000,
+                        AutoOffIntervalMsecs=3000,
                     },
                     new PushButtonXApplication
                     {
