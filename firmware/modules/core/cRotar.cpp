@@ -77,7 +77,7 @@ void cROTAR::DoEachCycle(Time_t now) {
 		this->pushState = ePushState::RELEASED;
 		this->lastChange = now;
 	}
-	uint16_t currentRotaryState = BSP::GetRotaryEncoderValue(this->inputRotary);
+	uint16_t currentRotaryState = BSP::GetRotaryEncoderValue(this->inputRotary)/2;
 	if(currentRotaryState!=this->rotaryState)
 	{
 		int16_t change =  currentRotaryState-this->rotaryState;

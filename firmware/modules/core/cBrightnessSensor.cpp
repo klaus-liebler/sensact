@@ -13,7 +13,7 @@ static uint32_t counter = 0;
 
 
 
-cBrightnessSensor::cBrightnessSensor(const char* name, const eApplicationID id, drivers::cBH1750 *sensor, const eApplicationID toggleTarget, const uint16_t limitForPassingToggle):cApplication(name, id, eAppType::BSENS), sensor(sensor), previousValue(0), toggleTarget(toggleTarget), limitForPassingToggle(limitForPassingToggle)
+cBrightnessSensor::cBrightnessSensor(const char* name, const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle):cApplication(name, id, eAppType::BSENS), sensor(sensor), previousValue(0), limitForPassingToggle(limitForPassingToggle)
 {
 
 }
@@ -25,6 +25,7 @@ bool cBrightnessSensor::Setup() {
 void cBrightnessSensor::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 {
 	uint16_t raw = this->sensor->GetRawSensorValue();
+	eApplicationID toggleTarget = (eApplicationID)ParseInt16(payload, 0);
 	if(raw<=limitForPassingToggle)
 	{
 		cMaster::SendCommandToMessageBus(now, toggleTarget, eCommandType::TOGGLE, payload, payloadLength);
@@ -33,6 +34,7 @@ void cBrightnessSensor::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength,
 void cBrightnessSensor::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 {
 	uint16_t raw = this->sensor->GetRawSensorValue();
+	eApplicationID toggleTarget = (eApplicationID)ParseInt16(payload, 0);
 	if(raw<=limitForPassingToggle)
 	{
 		cMaster::SendCommandToMessageBus(now, toggleTarget, eCommandType::ON, payload, payloadLength);

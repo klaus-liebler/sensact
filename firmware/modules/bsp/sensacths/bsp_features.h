@@ -220,7 +220,7 @@ enum struct eInput
 	II11=11,
 	II12=12,
 	II13=13,
-	CNT = 33,
+	CNT = 46,
 };
 #endif
 

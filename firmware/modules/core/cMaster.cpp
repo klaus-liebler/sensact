@@ -78,6 +78,10 @@ void cMaster::Run(void) {
 
 bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd,
 		uint8_t *payload, uint8_t payloadLength) {
+	if(destinationApp==eApplicationID::NO_APPLICATION)
+	{
+		return true;
+	}
 	if ((uint16_t) destinationApp < CMD_EVT_OFFSET) {
 		cApplication *app = MODEL::Glo2locCmd[(uint16_t) destinationApp];
 		if (app != NULL) {

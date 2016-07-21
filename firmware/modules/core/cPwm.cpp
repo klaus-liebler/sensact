@@ -18,20 +18,22 @@ static const int DIM_TO_TARGET_STEP=5;
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController) :
+cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
 		cApplication(name, id, eAppType::PWM),
 		output(output),
 		outputLength(outputLength),
 		minimalOnLevel(minimalLevel),
 		lowMeansLampOn(lowMeansLampOn),
 		standbyController(standbyController),
+		autoOffIntervalMsecs(autoOffIntervalMsecs),
 		currentLevel(0),
 		storedTargetLevel(initialStoredTargetLevel),
 		lastUserSignal(0),
 		OneButtonDimDirection(eDirection::UP),
 		autoDimDirection(eDirection::STOP),
 		targetLevel(0),
-		lastHeartbeatToStandbycontroller(0)
+		lastHeartbeatToStandbycontroller(0),
+		autoOffTime(TIME_MAX)
 {
 
 }
@@ -144,6 +146,17 @@ void cPWM::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) 
 	}
 }
 
+void cPWM::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
+	UNUSED(payload);
+	UNUSED(payloadLength);
+	UNUSED(now);
+	targetLevel=UINT8_MAX;
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
+}
+
 
 
 void cPWM::OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
@@ -153,53 +166,61 @@ void cPWM::OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
 }
 
 void cPWM::DoEachCycle(volatile Time_t now) {
-		switch (autoDimDirection) {
-			case eDirection::STOP:
-				break;
-			case eDirection::UP:
-				if(targetLevel<MAXIMUM_LEVEL)
-				{
-					targetLevel++;
-				}
-				break;
-			case eDirection::DOWN:
-				if(targetLevel>minimalOnLevel)
-				{
-					targetLevel--;
-				}
-				break;
-		}
-		if(targetLevel>currentLevel)
-		{
-			if(currentLevel+DIM_TO_TARGET_STEP>targetLevel)
-			{
-				currentLevel=targetLevel;
-			}
-			else
-			{
-				currentLevel+=DIM_TO_TARGET_STEP;
-			}
-			SetDimLevel(currentLevel);
-		}
-		else if(targetLevel<currentLevel)
-		{
-			if(currentLevel-DIM_TO_TARGET_STEP<targetLevel)
-			{
-				currentLevel=targetLevel;
-			}
-			else
-			{
-				currentLevel-=DIM_TO_TARGET_STEP;
-			}
-			SetDimLevel(currentLevel);
-		}
+	if(autoOffIntervalMsecs!=0 && autoOffTime<now && targetLevel>0)
+	{
+		targetLevel=0;
+		autoOffTime =TIME_MAX;
+	}
 
-		if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>10000)
+	switch (autoDimDirection) {
+		case eDirection::STOP:
+			break;
+		case eDirection::UP:
+			if(targetLevel<MAXIMUM_LEVEL)
+			{
+				targetLevel++;
+			}
+			break;
+		case eDirection::DOWN:
+			if(targetLevel>minimalOnLevel)
+			{
+				targetLevel--;
+			}
+			break;
+		default:
+			break;
+	}
+	if(targetLevel>currentLevel)
+	{
+		if(currentLevel+DIM_TO_TARGET_STEP>targetLevel)
 		{
-			cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
-			lastHeartbeatToStandbycontroller=now;
+			currentLevel=targetLevel;
 		}
-		return;
+		else
+		{
+			currentLevel+=DIM_TO_TARGET_STEP;
+		}
+		SetDimLevel(currentLevel);
+	}
+	else if(targetLevel<currentLevel)
+	{
+		if(currentLevel-DIM_TO_TARGET_STEP<targetLevel)
+		{
+			currentLevel=targetLevel;
+		}
+		else
+		{
+			currentLevel-=DIM_TO_TARGET_STEP;
+		}
+		SetDimLevel(currentLevel);
+	}
+
+	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>10000)
+	{
+		cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
+		lastHeartbeatToStandbycontroller=now;
+	}
+	return;
 }
 
 void cPWM::SetDimLevel(uint8_t level) {

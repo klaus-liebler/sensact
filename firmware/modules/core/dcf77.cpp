@@ -9,7 +9,7 @@
 extern uint64_t epochtimer;
 
 namespace sensact{
-
+/*
 static uint8_t SignalConditioning()
 {
     // http://en.wikipedia.org/wiki/Low-pass_filter#Continuous-time_low-pass_filters
@@ -42,6 +42,7 @@ static uint8_t SignalConditioning()
 
     return square_wave_output;
 }
+*/
 static const int8_t SEARCH_SYNC_SECOND=59;
 void cDCF77::CallEveryMillisecond(uint32_t tick)
 {

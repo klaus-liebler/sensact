@@ -22,7 +22,10 @@ class cRgbw: public cApplication
 		Time_t lastHeartbeatToStandbycontroller;
 		uint8_t lastColor;
 		ePowerState state;
-		uint8_t allOff[4];
+
+		void showColorOfIndex(uint8_t);
+		void showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W);
+		void switchOff();
 
 
 	public:

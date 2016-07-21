@@ -1,4 +1,20 @@
-	static const sensact::sScheduleEntry schedule[]
+#include "cBlind.h"
+#include "cRotar.h"
+#include "cPoweritem.h"
+#include "cPushbutton.h"
+#include "cPwm.h"
+#include "cStandbycontroller.h"
+#include "cBrightnessSensor.h"
+#include "cBell.h"
+#include "cRgbw.h"
+#include <chrono>
+#include "date.h"
+#include "bh1750.h"
+#include "cRCEvent.h"
+#include "cLightbarrier.h"
+namespace sensact{
+
+static const sensact::sScheduleEntry schedule[]
 												  {
 														  {days(0)+hours(7), 30},
 														  {days(0)+hours(22), 30},
@@ -20,6 +36,17 @@
 
 	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{40, 40, 40, 40},{255, 0, 0, 0,}};
 	const uint8_t MODEL::wellKnownRGBWColorsCnt = 2;
+
+#if defined(NODE_TEST_HS07) || defined(NODE_TEST_UP02)
+	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{}};
+	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
+
+	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
+#endif
 #ifdef NODE_SNSAC_L1_KTCH_UP02_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
@@ -45,10 +72,26 @@
 
 	const uint8_t MODEL::ds18b20_Addresses[][6]={{0x4B, 0x51, 0xC9, 0x04, 0x00, 0x00,}};
 	const uint8_t MODEL::ds18b20_AddressesCnt=1;
+	//die Doorbell-Applikation ist als template verfügbar
+	//sensact::cBell DEVCE_L0_TECH_AUDIO("DEVCE_L0_TECH_AUDIO", eApplicationID::DEVCE_L0_TECH_AUDIO, schedule);
+
+#endif
+#ifdef NODE_SNSAC_L3_TECH_HS07_2
+	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{}};
+	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
+
+	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
+
+	drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
+	sensact::cBrightnessSensor BSENS_L3_TECH("BSENS_L3_TECH", eApplicationID::BSENS_L3_TECH, &bh1750, 300);
 
 #endif
 
-
+}
 
 /*
 DS18B20:

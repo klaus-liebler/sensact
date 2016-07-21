@@ -451,8 +451,9 @@ void cRCSwitch::send(unsigned long code, unsigned int length) {
  * Transmit a single high-low pulse.
  */
 void cRCSwitch::transmit(HighLow pulses) {
-  uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? false : true;
-  uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? true : false;
+	UNUSED(pulses);
+	//uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? false : true;
+	//uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? true : false;
 
   //TODO
   //digitalWrite(this->nTransmitterPin, firstLogicLevel);

@@ -83,7 +83,7 @@ I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 SPI_HandleTypeDef BSP::spi;
 UART_HandleTypeDef BSP::BELL;
-static uint8_t INPUT[] = { P(C, 13), P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
+static uint8_t INPUT[] = { /*Rotar Push*/P(C, 13), /*14pin output*/P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
 
 drivers::cPCA9555 BSP::pca9555_U18(&i2c1, drivers::ePCA9555Device::Dev3, GPIOC, GPIO_PIN_0);
 drivers::cPCA9555 BSP::pca9555_U19(&i2c1, drivers::ePCA9555Device::Dev7, GPIOC, GPIO_PIN_1);
@@ -523,22 +523,30 @@ void BSP::DoEachCycle(Time_t now) {
 			}
 			else
 			{
-				//fetch temperature data
-				ds2482.OWReadDS18B20Temp(MODEL::ds18b20_Addresses[tempId], &temperatures[tempId]);
-				LOGD("MODE_MIX temp %d", tempId);
-				tempId++;
-				if(tempId==MODEL::ds18b20_AddressesCnt)
+				if(MODEL::ds18b20_AddressesCnt>tempId)
 				{
-/*
-					#if LOGLEVEL == LEVEL_INFO
-					LOGI("Got the following temperatures");
-					uint8_t tc=0;
-					for(tc=0;tc<16;tc++)
+					//fetch temperature data
+					ds2482.OWReadDS18B20Temp(MODEL::ds18b20_Addresses[tempId], &temperatures[tempId]);
+					LOGD("MODE_MIX temp %d", tempId);
+					tempId++;
+					if(tempId==MODEL::ds18b20_AddressesCnt)
 					{
-						Console::Writeln("Sensor %d: %d and %d/16", tc, temperatures[tc]/16, temperatures[tc]%16);
+	/*
+						#if LOGLEVEL == LEVEL_INFO
+						LOGI("Got the following temperatures");
+						uint8_t tc=0;
+						for(tc=0;tc<16;tc++)
+						{
+							Console::Writeln("Sensor %d: %d and %d/16", tc, temperatures[tc]/16, temperatures[tc]%16);
+						}
+	#endif
+	*/
+						tempId=0;
+						mode=MODE_CONV_COMMAND;
 					}
-#endif
-*/
+				}
+				else
+				{
 					tempId=0;
 					mode=MODE_CONV_COMMAND;
 				}

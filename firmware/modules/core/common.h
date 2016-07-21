@@ -45,7 +45,7 @@ namespace sensact {
 		{
 			UNDEFINED,
 		BLIND,
-		PWRIT,
+		POWIT,
 		PWM,
 		PUSHB,
 		ROTAR,
@@ -57,6 +57,7 @@ namespace sensact {
 		MLTLC,
 		RGBW,
 		RCEVT,
+		LIBAR,
 
 	};
 

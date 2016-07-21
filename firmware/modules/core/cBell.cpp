@@ -20,14 +20,8 @@
 namespace sensact {
 
 static uint8_t send_buf[10] = {0x7E, 0xFF,0x06,0,0,0,0,0,0,0xEF};
-static uint8_t recv_buf[10];
-static bool is_reply = false;
+//static bool is_reply = false;
 
-static void mp3_set_reply (bool state)
-{
-	is_reply = state;
-	send_buf[4] = is_reply;
-}
 
 //
 static void fill_uint16_bigend (uint8_t *thebuf, uint16_t data)
@@ -72,6 +66,22 @@ static void mp3_send_cmd (uint8_t cmd, uint16_t arg)
 }
 
 
+
+
+
+//play mp3 file in mp3 folder in your tf card
+static void mp3_play (uint16_t num) {
+	mp3_send_cmd (0x12, num);
+}
+
+
+
+static void mp3_set_volume (uint16_t volume)
+{
+	mp3_send_cmd (0x06, volume);
+}
+
+/*
 static void mp3_send_cmd (uint8_t cmd)
 {
 	send_buf[3] = cmd;
@@ -79,12 +89,12 @@ static void mp3_send_cmd (uint8_t cmd)
 	mp3_fill_checksum ();
 	send_func();
 }
-
-
-//play mp3 file in mp3 folder in your tf card
-static void mp3_play (uint16_t num) {
-	mp3_send_cmd (0x12, num);
+static void mp3_set_reply (bool state)
+{
+	is_reply = state;
+	send_buf[4] = is_reply;
 }
+
 
 static void mp3_play ()
 {
@@ -95,13 +105,6 @@ static void mp3_play_physical (uint16_t num)
 {
 	mp3_send_cmd (0x03, num);
 }
-
-static void mp3_set_volume (uint16_t volume)
-{
-	mp3_send_cmd (0x06, volume);
-}
-
-/*
 //
 static void mp3_play_physical ()
 {

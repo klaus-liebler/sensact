@@ -21,36 +21,65 @@ cRgbw::cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR
 		standbyController(standbyController),
 		lastHeartbeatToStandbycontroller(0),
 		lastColor(0),
-		state(ePowerState::INACTIVE),
-		allOff {0,0,0,0}
+		state(ePowerState::INACTIVE)
 {
 
+}
+void cRgbw::showColorOfIndex(uint8_t index)
+{
+	index%=WellKnownColorsLength;
+	uint8_t* ptr = (uint8_t*)(this->WellKnownColors+4*index);
+	lastColor=index;
+	LOGD("Showing Color ID %d", lastColor);
+	showColorOfRGBW(ptr[0], ptr[1], ptr[2], ptr[3]);
+}
+void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
+{
+	if(R==0 && G==0 && B==0 && W==0 )
+	{
+		this->state = ePowerState::INACTIVE;
+	}
+	else
+	{
+		this->state = ePowerState::ACTIVE;
+	}
+	BSP::SetPWM(this->outputR, R<<8);
+	BSP::SetPWM(this->outputG, G<<8);
+	BSP::SetPWM(this->outputB, B<<8);
+	if(this->outputB!=ePWMOutput::NONE)
+	{
+		BSP::SetPWM(this->outputW, W);
+	}
+}
+void cRgbw::switchOff()
+{
+	showColorOfRGBW(0,0,0,0);
 }
 
 void cRgbw::OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 {
+	UNUSED(now);
+	UNUSED(payload);
 	UNUSED(payloadLength);
 	int16_t step = ParseInt16(payload, 0);
-	lastColor= (10*WellKnownColorsLength +lastColor+step) % WellKnownColorsLength;
-	LOGD("Showing Color ID %d", lastColor);
-	uint8_t* ptr = (uint8_t*)(this->WellKnownColors+4*lastColor);
-	OnSET_SIGNALCommand(ptr, 4, now);
+	if(step==0) step=1;
+	uint8_t index = ((int)(100 + lastColor + step)) % WellKnownColorsLength;//+100 um ausreichend im Positiven zu sein auch bei negativen steps
+	showColorOfIndex(index);
 }
 
 
 void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
 {
+	UNUSED(now);
 	UNUSED(payload);
 	UNUSED(payloadLength);
 	if(this->state == ePowerState::INACTIVE)
 	{
-		OnSET_SIGNALCommand(payload, payloadLength, now);
-		this->state=ePowerState::ACTIVE;
+		showColorOfIndex(lastColor);
 	}
 	else
 	{
-		OnSET_SIGNALCommand(allOff, 4, now);
-		this->state=ePowerState::INACTIVE;
+		switchOff();
 	}
 }
 
@@ -58,25 +87,17 @@ void cRgbw::OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, const Tim
 {
 	UNUSED(payloadLength);
 	UNUSED(now);
-	state=ePowerState::ACTIVE;
-	BSP::SetPWM(this->outputR, payload[0]);
-	BSP::SetPWM(this->outputG, payload[1]);
-	BSP::SetPWM(this->outputB, payload[2]);
-	if(this->outputB!=ePWMOutput::NONE)
-	{
-		BSP::SetPWM(this->outputW, payload[3]);
-	}
+	showColorOfRGBW(payload[0], payload[1], payload[2], payload[3]);
+
 
 }
-
+//Payload enthält 16bit wellKnownColorIndex
 void cRgbw::OnSET_SIGNALCommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
 {
+	UNUSED(now);
 	UNUSED(payloadLength);
-	lastColor = (10*WellKnownColorsLength+ParseInt16(payload, 0))%WellKnownColorsLength;
-	state=ePowerState::ACTIVE;
-	uint8_t* ptr = (uint8_t*)(this->WellKnownColors+4*lastColor);
-	OnSET_RGBWCommand(ptr, 4, now);
-
+	uint8_t index = ParseUInt16(payload, 0)%WellKnownColorsLength;
+	showColorOfIndex(index);
 }
 
 
@@ -102,7 +123,7 @@ bool cRgbw::Setup() {
 	{
 		return false;
 	}
-	OnSET_RGBWCommand(allOff, 4, 0);
+	switchOff();
 	return true;
 }
 }

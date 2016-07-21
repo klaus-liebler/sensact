@@ -17,6 +17,7 @@ class cPWM: public cApplication
 		const uint8_t minimalOnLevel;
 		const bool lowMeansLampOn;
 		const eApplicationID standbyController;
+		const Time_t autoOffIntervalMsecs;
 
 		uint8_t currentLevel; //aktuelle Helligkeit
 		uint8_t storedTargetLevel; //Helligkeit der Lampe, als diese zuletzt eingeschaltet war (quasi als targetLevel das letzte Mal > 0 war)
@@ -25,7 +26,7 @@ class cPWM: public cApplication
 		eDirection autoDimDirection;
 		uint8_t targetLevel; //Zielhelligkeit, nur diese wird gesetzt durch die Helper-Funktionen
 		Time_t lastHeartbeatToStandbycontroller;
-
+		Time_t autoOffTime;
 		void SetTargetAbsolute(uint8_t, Time_t);
 		void SetTargetRelative(int, Time_t);
 		void MoveInDirection(eDirection, Time_t);
@@ -43,8 +44,9 @@ class cPWM: public cApplication
 		void OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		void OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+		void OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		bool Setup() override;
 			void DoEachCycle(Time_t time) override;
-			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController);
+			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }
