@@ -18,7 +18,7 @@ namespace Klli.Sensact.Config.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+    #line 1 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class HC_COMMANDANDEVENTTYPES_H : CommonFileHeader
     {
@@ -29,7 +29,7 @@ namespace Klli.Sensact.Config.Templates
         public override string TransformText()
         {
             
-            #line 6 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            #line 6 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
  RenderHeader("CommandAndEventTypes", "autogen", version, "Short", "Details"); 
             
             #line default
@@ -37,42 +37,56 @@ namespace Klli.Sensact.Config.Templates
             this.Write("#pragma once\r\n#include <inttypes.h>\r\nnamespace sensact{\r\nenum struct eCommandType" +
                     ":uint8_t{\r\n\t");
             
-            #line 11 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
- foreach (string s in CommandTypes){ 
+            #line 11 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+ foreach(CommandType ct in Enum.GetValues(typeof(CommandType))){ 
             
             #line default
             #line hidden
             this.Write("    ");
             
-            #line 12 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(s));
+            #line 12 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ct.ToString()));
             
             #line default
             #line hidden
-            this.Write(",\r\n    ");
+            this.Write("=");
             
-            #line 13 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            #line 12 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture((int)ct));
+            
+            #line default
+            #line hidden
+            this.Write(" ,\r\n    ");
+            
+            #line 13 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
  } 
             
             #line default
             #line hidden
             this.Write("    CNT\r\n};\r\n\r\nenum struct eEventType:uint8_t{\r\n\t");
             
-            #line 18 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
- foreach (string s in EventTypes){ 
+            #line 18 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+ foreach(EventType et in Enum.GetValues(typeof(EventType))){ 
             
             #line default
             #line hidden
             this.Write("    ");
             
-            #line 19 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(s));
+            #line 19 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(et.ToString()));
             
             #line default
             #line hidden
-            this.Write(",\r\n    ");
+            this.Write("=");
             
-            #line 20 "C:\Users\klaus\OneDrive\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            #line 19 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture((int)et));
+            
+            #line default
+            #line hidden
+            this.Write(" ,\r\n    ");
+            
+            #line 20 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_COMMANDANDEVENTTYPES_H.tt"
  } 
             
             #line default

@@ -43,12 +43,19 @@ void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
 	{
 		this->state = ePowerState::ACTIVE;
 	}
-	BSP::SetPWM(this->outputR, R<<8);
-	BSP::SetPWM(this->outputG, G<<8);
-	BSP::SetPWM(this->outputB, B<<8);
+	if(!lowMeansLampOn)
+	{
+		R=UINT8_MAX-R;
+		B=UINT8_MAX-B;
+		G=UINT8_MAX-G;
+		W=UINT8_MAX-W;
+	}
+	BSP::SetPWM(this->outputR, R==255?UINT16_MAX:R<<8);
+	BSP::SetPWM(this->outputG, G==255?UINT16_MAX:G<<8);
+	BSP::SetPWM(this->outputB, B==255?UINT16_MAX:B<<8);
 	if(this->outputB!=ePWMOutput::NONE)
 	{
-		BSP::SetPWM(this->outputW, W);
+		BSP::SetPWM(this->outputW, W==255?UINT16_MAX:W<<8);
 	}
 }
 void cRgbw::switchOff()

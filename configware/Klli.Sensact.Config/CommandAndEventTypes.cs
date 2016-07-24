@@ -2,6 +2,7 @@
 {
     public enum CommandType
     {
+        NOP,
         RESET,
         START,
         STOP,

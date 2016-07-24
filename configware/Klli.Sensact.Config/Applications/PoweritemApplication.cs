@@ -25,6 +25,24 @@ namespace Klli.Sensact.Config.Applications
             return ret;
         }
 
+        [SensactCommandMethod]
+        public void TOGGLE()
+        {
+
+        }
+
+        [SensactCommandMethod]
+        public void TOGGLE_SPECIAL()
+        {
+
+        }
+
+        [SensactCommandMethod]
+        public void ON(int autoOffMsecs)
+        {
+
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

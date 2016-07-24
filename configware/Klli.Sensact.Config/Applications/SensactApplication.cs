@@ -196,15 +196,21 @@ namespace Klli.Sensact.Config
 
     }
 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited =true)]
+    public class SensactCommandMethod : Attribute
+    {
+        // . . .
+    }
 
 
-    
 
-   
 
-    
 
-   
 
-    
+
+
+
+
+
+
 }

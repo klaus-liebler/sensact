@@ -43,8 +43,6 @@ namespace Klli.Sensact.Config.Templates
 
     partial class HC_COMMANDANDEVENTTYPES_H
     {
-        public List<string> CommandTypes = new List<string>();
-        public List<string> EventTypes = new List<string>();
         public string version;
     }
 

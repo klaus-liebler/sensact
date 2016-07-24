@@ -8,15 +8,15 @@
 #include <inttypes.h>
 namespace sensact{
 enum struct eCommandType:uint8_t{
-	<# foreach (string s in CommandTypes){ #>
-    <#= s #>,
+	<# foreach(CommandType ct in Enum.GetValues(typeof(CommandType))){ #>
+    <#= ct.ToString() #>=<#= (int)ct #> ,
     <# } #>
     CNT
 };
 
 enum struct eEventType:uint8_t{
-	<# foreach (string s in EventTypes){ #>
-    <#= s #>,
+	<# foreach(EventType et in Enum.GetValues(typeof(EventType))){ #>
+    <#= et.ToString() #>=<#= (int)et #> ,
     <# } #>
     CNT
 };

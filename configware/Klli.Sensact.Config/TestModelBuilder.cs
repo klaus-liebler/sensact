@@ -373,12 +373,12 @@ namespace Klli.Sensact.Config
                     new RgbwApplication
                     {
                         ApplicationId="RGBW__XX_XXX_1",
-                        OutputR=PwmPin.OP01,
-                        OutputG=PwmPin.OP02,
-                        OutputB=PwmPin.OP03,
-                        OutputW=PwmPin.OP04,
+                        OutputR=PwmPin.P01,
+                        OutputG=PwmPin.P02,
+                        OutputB=PwmPin.P03,
+                        OutputW=PwmPin.P04,
                         StandbyController=_(ID.NO_APPLICATION),
-                        LowMeansLampOn=true,
+                        LowMeansLampOn=false,
                     },
                 }
             };

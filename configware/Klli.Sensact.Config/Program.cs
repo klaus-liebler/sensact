@@ -6,25 +6,42 @@ using Klli.Sensact.Config.Nodes;
 
 namespace Klli.Sensact.Config
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private static Model GetModel()
         {
-            XmlConfigurator.Configure();
-            //Model model = TestModelBuilder.BuildRGBWDemo();
-            Model model = TestModelBuilder.BuildLIBARDemo();
+            return TestModelBuilder.BuildRGBWDemo();
+            //Model model = TestModelBuilder.BuildLIBARDemo();
             //Model model = Sattlerstrasse16.Build();
+        }
+
+        public static ModelContainer CreateAndCheckModelContainer()
+        {
+            Model model = GetModel();
             ModelContainer mc = new ModelContainer()
             {
                 Model = model
             };
             if (SourceCodeGenerator.CheckAndPrepare(mc))
             {
+                return mc;
+            }
+            return null;
+        }
+
+
+
+        static void Main(string[] args)
+        {
+            XmlConfigurator.Configure();
+            ModelContainer mc = CreateAndCheckModelContainer();
+            if(mc!= null)
+            {
                 SourceCodeGenerator.GenerateAppIds_h(mc);
                 SourceCodeGenerator.GenerateModel_cpp(mc);
                 SourceCodeGenerator.GenerateCommandAndEventTypes_h(mc);
-                SourceCodeGenerator.GenerateApplicationHandCPP(mc);
-                foreach (Node n in model.Nodes)
+                SourceCodeGenerator.GenerateApplication_H_and_CPP(mc);
+                foreach (Node n in mc.Model.Nodes)
                 {
                     SensactFileCollector p = new SensactFileCollector();
                     CompileOptions o = p.BuildCompileOptions(n);

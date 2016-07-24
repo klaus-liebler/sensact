@@ -148,11 +148,11 @@ namespace Klli.Sensact.Config
             mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             page.Nodes.Add("CNT");
 
-            page.AppIds.Add("MASTER");
+            page.AppIds.Add("MASTER=0");
             for (int i = 1; i < mc.NextFreeIndex; i++)
             {
-                SensactApplicationContainer app = mc.index2app[i];
-                page.AppIds.Add(app.Application.ApplicationId);
+                SensactApplicationContainer appCont = mc.index2app[i];
+                page.AppIds.Add(appCont.Application.ApplicationId+"="+appCont.Index);
             }
             page.AppIds.Add("CNT");
             page.AppIds.Add("NO_APPLICATION");
@@ -228,21 +228,13 @@ namespace Klli.Sensact.Config
             {
                 version = "1.0"
             };
-            foreach (string s in Enum.GetNames(typeof(EventType)))
-            {
-                page.EventTypes.Add(s);
-            }
-            foreach (string s in Enum.GetNames(typeof(CommandType)))
-            {
-                page.CommandTypes.Add(s);
-            }
             string pageContent = page.TransformText();
             File.WriteAllText(GetGeneratedPathForFile("commandAndEventTypes.h"), pageContent);
             LOG.InfoFormat("Successfully created commandAndEventTypes.h");
             return;
         }
 
-        internal static void GenerateApplicationHandCPP(ModelContainer model)
+        internal static void GenerateApplication_H_and_CPP(ModelContainer model)
         {
             APPLICATION_H h = new APPLICATION_H()
             {

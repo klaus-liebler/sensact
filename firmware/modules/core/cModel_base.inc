@@ -34,8 +34,8 @@ static const sensact::sScheduleEntry schedule[]
 												  };
 	cWeeklySchedule MODEL::volumeSchedule(0, schedule, 14);
 
-	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{40, 40, 40, 40},{255, 0, 0, 0,}};
-	const uint8_t MODEL::wellKnownRGBWColorsCnt = 2;
+	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
+	const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
 
 #if defined(NODE_TEST_HS07) || defined(NODE_TEST_UP02)
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
