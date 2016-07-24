@@ -322,8 +322,7 @@ namespace Klli.Sensact.Config
             SNSAC_L0_TECH_HS07_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_LVNG_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O23, OutputRessourceDown = OutputPin.O24, RelayMode = RelayMode.INTERLOCKED });
             SNSAC_L0_TECH_HS07_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_LVNG_J2), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O25, OutputRessourceDown = OutputPin.O26, RelayMode = RelayMode.INTERLOCKED });
             SNSAC_L0_TECH_HS07_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_LVNG_J3), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O27, OutputRessourceDown = OutputPin.O28, RelayMode = RelayMode.INTERLOCKED });
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_LX_BACK_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O27, OutputRessourceDown = OutputPin.O28, RelayMode = RelayMode.INTERLOCKED });
-
+           
             SNSAC_L0_TECH_HS07_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_C1, OutputPin.O29);
             SNSAC_L0_TECH_HS07_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_W1, OutputPin.O30);
             //W2 ist parallel zu W1 geschaltet
