@@ -1010,23 +1010,12 @@ F 1 "LED" H 3500 1450 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" H 3500 1550 50  0001 C CNN
 F 3 "" H 3500 1550 50  0000 C CNN
 	1    3500 1550
-	0    -1   -1   0   
+	0    1    1    0   
 $EndComp
 Wire Wire Line
 	3500 2050 3500 1750
 Wire Wire Line
 	3500 1300 3500 1350
-$Comp
-L +3V3 #PWR034
-U 1 1 57838958
-P 3500 950
-F 0 "#PWR034" H 3500 800 50  0001 C CNN
-F 1 "+3V3" H 3500 1090 50  0000 C CNN
-F 2 "" H 3500 950 50  0000 C CNN
-F 3 "" H 3500 950 50  0000 C CNN
-	1    3500 950 
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3500 1000 3500 950 
 $Comp
@@ -1048,4 +1037,15 @@ Text Label 9100 2850 0    60   ~ 0
 1W
 Text Label 9100 3150 0    60   ~ 0
 1Wr
+$Comp
+L GND #PWR?
+U 1 1 57922B0D
+P 3500 950
+F 0 "#PWR?" H 3500 700 50  0001 C CNN
+F 1 "GND" H 3500 800 50  0000 C CNN
+F 2 "" H 3500 950 50  0000 C CNN
+F 3 "" H 3500 950 50  0000 C CNN
+	1    3500 950 
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC
