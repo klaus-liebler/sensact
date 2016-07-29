@@ -22,7 +22,7 @@
         SCLIM_L0_STO1_AIR,
         PUSHB_L0_TECH_B11,
         POWIT_L0_TECH_C1,
-        DEVCE_L0_TECH_Gastherme,
+        DEVCE_L0_TECH_HEAT,
         DEVCE_L0_TECH_PUMP,
         POWIT_L0_TECH_P1,
         POWIT_L0_TECH_P2,
@@ -324,6 +324,7 @@
 
         PUSHB_L3_TECH_B11,
         POWIT_L3_TECH_C1,
+        DEVCE_L3_TECH_VENT,
 
         
 
@@ -343,7 +344,6 @@
         //PWM___L3_WORK_S4,
         //PWM___L3_WORK_S5,
         //PWM___L3_WORK_S6,
-        BSENS_L3_TECH,
         SCLIM_L3_WORK_AIR,
         STEMP_L3_WORK_FLOOR,
         SWIND_L3_WORK_W1,

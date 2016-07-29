@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using log4net.Config;
 using Klli.Sensact.Config.Nodes;
 
@@ -10,9 +8,10 @@ namespace Klli.Sensact.Config
     {
         private static Model GetModel()
         {
-            return TestModelBuilder.BuildRGBWDemo();
+            //return TestModelBuilder.BuildRGBWDemo();
+            //return TestModelBuilder.BuildModelToTestAllPins();
             //Model model = TestModelBuilder.BuildLIBARDemo();
-            //Model model = Sattlerstrasse16.Build();
+            return Sattlerstrasse16.Build();
         }
 
         public static ModelContainer CreateAndCheckModelContainer()

@@ -12,6 +12,23 @@ namespace Klli.Sensact.Config
         //Zählreihenfolge beim EIB-Kabel: rot, schwarz, weiß, gelb
         public static Model Build()
         {
+            #region Floor sensors
+            /*
+            L1.BATH 10
+            L1.KTCH 1
+            L1.UTIL 7
+            L1.LVNG 4
+            L1.CORR 8
+            L1.WORK 9
+            L2.CORR 20
+            L2.KID1 6
+            L2.KID2 11
+            L2.WORK 16
+            L2.BEDR 19
+            L2.BATH 17
+            */
+
+            #endregion
             #region Nodes
             //Spezialitäten oben
             //5V-Versorgung der Lichtschranken
@@ -191,7 +208,7 @@ namespace Klli.Sensact.Config
                 ApplicationId = _(ID.PUSHB_LX_FRON_B2),
                 InputRessource = InputPin.I01,
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.POWIT_LX_FRON_W1),
             });
             SNSAC_L0_TECH_HS07_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, OutputPin.O07);
@@ -424,7 +441,7 @@ namespace Klli.Sensact.Config
             //TECH
             SNSAC_L3_TECH_HS07_2.Applications.AddToggleButton(ID.PUSHB_L3_TECH_B11, InputPin.I06, ID.POWIT_L3_TECH_C1);
             SNSAC_L3_TECH_HS07_2.Applications.AddPowIt(ID.POWIT_L3_TECH_C1, OutputPin.O06);
-            SNSAC_L3_TECH_HS07_2.Applications.AddPlaceholder(ID.BSENS_L3_TECH);
+            SNSAC_L3_TECH_HS07_2.Applications.AddPlaceholder(ID.SBRGH_LX_ROOF);
             SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L3_TECH_48V), OutputRessource = OutputPin.O21, WaittimeInMsec = 10000 });
             SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L3_ROOF_48V), OutputRessource = OutputPin.O21, WaittimeInMsec = 10000 });
 
@@ -444,7 +461,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId= _(ID.LIBAR_LS_STRS_B11),
                 ActiveSignalLevel=true,
-                BrightnessSensor=_(ID.BSENS_L3_TECH),
+                BrightnessSensor=_(ID.SBRGH_LX_ROOF),
                 FinalTarget=_(ID.PWM___LS_STRS_W2),
                 InputRessource= InputPin.II01, 
              });
@@ -473,7 +490,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B31),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W2),
                 InputRessource = InputPin.II02,
             });
@@ -481,7 +498,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B32),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W4),
                 InputRessource = InputPin.II03,
             });
@@ -494,7 +511,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B51),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W4),
                 InputRessource = InputPin.II04,
             });
@@ -502,7 +519,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B52),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W6),
                 InputRessource = InputPin.II05,
             });
@@ -551,7 +568,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B71),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.BSENS_L3_TECH),
+                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W6),
                 InputRessource = InputPin.II06,
             });
