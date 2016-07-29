@@ -38,7 +38,7 @@ namespace Klli.Sensact.Config.Applications
         }
 
         [SensactCommandMethod]
-        public void ON(int autoOffMsecs)
+        public void ON()
         {
 
         }

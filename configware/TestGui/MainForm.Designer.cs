@@ -29,75 +29,86 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.btnUpdateCOM = new System.Windows.Forms.Button();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.cboSelectCOM = new System.Windows.Forms.ComboBox();
+            this.btnOpenCOM = new System.Windows.Forms.Button();
+            this.pnlMaster = new System.Windows.Forms.Panel();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
-            // button1
+            // btnUpdateCOM
             // 
-            this.button1.Location = new System.Drawing.Point(13, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(111, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(169, 15);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 3;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(306, 13);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 4;
+            this.btnUpdateCOM.Location = new System.Drawing.Point(12, 12);
+            this.btnUpdateCOM.Name = "btnUpdateCOM";
+            this.btnUpdateCOM.Size = new System.Drawing.Size(92, 23);
+            this.btnUpdateCOM.TabIndex = 0;
+            this.btnUpdateCOM.Text = "Update COM";
+            this.btnUpdateCOM.UseVisualStyleBackColor = true;
+            this.btnUpdateCOM.Click += new System.EventHandler(this.btnUpdateCOM_Click);
             // 
             // serialPort
             // 
             this.serialPort.BaudRate = 115200;
             // 
+            // cboSelectCOM
+            // 
+            this.cboSelectCOM.FormattingEnabled = true;
+            this.cboSelectCOM.Location = new System.Drawing.Point(110, 14);
+            this.cboSelectCOM.Name = "cboSelectCOM";
+            this.cboSelectCOM.Size = new System.Drawing.Size(121, 21);
+            this.cboSelectCOM.TabIndex = 1;
+            // 
+            // btnOpenCOM
+            // 
+            this.btnOpenCOM.Location = new System.Drawing.Point(237, 12);
+            this.btnOpenCOM.Name = "btnOpenCOM";
+            this.btnOpenCOM.Size = new System.Drawing.Size(75, 23);
+            this.btnOpenCOM.TabIndex = 2;
+            this.btnOpenCOM.Text = "Open Port";
+            this.btnOpenCOM.UseVisualStyleBackColor = true;
+            this.btnOpenCOM.Click += new System.EventHandler(this.btnOpenCOM_Click);
+            // 
+            // pnlMaster
+            // 
+            this.pnlMaster.Location = new System.Drawing.Point(299, 41);
+            this.pnlMaster.Name = "pnlMaster";
+            this.pnlMaster.Size = new System.Drawing.Size(673, 408);
+            this.pnlMaster.TabIndex = 3;
+            this.pnlMaster.BackColor = System.Drawing.Color.DarkMagenta;
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(12, 41);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(281, 408);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(841, 261);
-            this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(984, 461);
+            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.pnlMaster);
+            this.Controls.Add(this.btnOpenCOM);
+            this.Controls.Add(this.cboSelectCOM);
+            this.Controls.Add(this.btnUpdateCOM);
             this.Name = "MainForm";
             this.Text = "Sensact Command Invoker";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Button btnUpdateCOM;
         private System.IO.Ports.SerialPort serialPort;
+        private System.Windows.Forms.ComboBox cboSelectCOM;
+        private System.Windows.Forms.Button btnOpenCOM;
+        private System.Windows.Forms.Control pnlMaster;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

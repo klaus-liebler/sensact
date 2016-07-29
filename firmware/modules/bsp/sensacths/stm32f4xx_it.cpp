@@ -60,7 +60,7 @@ void USART3_IRQHandler(void)
 {
 	if(READ_BIT(USART3->SR, USART_SR_RXNE))
 	{
-		uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
+		volatile uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
 		if(binaryMode && epochtimer-lastReceivedUARTChar > 1000)
 		{
 			//reset binary mode after some time without data
@@ -88,7 +88,7 @@ void USART3_IRQHandler(void)
 			{
 				UART_cmdBuffer[UART_buffer_pointer-2]=chartoreceive;
 				UART_buffer_pointer++;
-				if(UART_buffer_pointer>binaryMessageSize)
+				if(UART_buffer_pointer>=binaryMessageSize)
 				{
 					uint16_t appId = *((uint16_t*)UART_cmdBuffer);
 					uint8_t commandId = UART_cmdBuffer[2];

@@ -2,93 +2,131 @@
 using MiscUtil.Conversion;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Klli.Sensact.TestGui
 {
+
+
     public partial class MainForm : Form
     {
-        private TableLayoutPanel masterTlp;
+        private class TreeHelper
+        {
+            public string Name; //internal
+            public string Text; //GUI
+            public Dictionary<string, TreeHelper> Children = new Dictionary<string, TreeHelper>();
+
+            public void Append(string fullName, string remainingName, char separator)
+            {
+                int pos = remainingName.IndexOf(separator);
+                if (pos!=-1)
+                {
+                    string childsName = remainingName.Substring(0, pos);
+                    string nextName = remainingName.Substring(pos + 1);
+                    TreeHelper child;
+                    if(!Children.TryGetValue(childsName, out child))
+                    {
+                        child = new TreeHelper{ Text = childsName };
+                        Children.Add(childsName, child);
+                    }
+                    child.Append(fullName, nextName, separator);
+                }
+                else
+                {
+                    string childsName = remainingName;
+                    TreeHelper child=new TreeHelper { Text = childsName, Name=fullName };
+                    Children.Add(childsName, child);
+                }
+            }
+
+            public TreeNode CreateTreeNodeHierarchy()
+            {
+                TreeNode[] childrenArr = new TreeNode[this.Children.Count];
+                int i = 0;
+                foreach(var child in Children.Values)
+                {
+                    childrenArr[i] = child.CreateTreeNodeHierarchy();
+                    i++;
+                }
+                TreeNode tn = new TreeNode(Text, childrenArr);
+                tn.Name = Name;
+                return tn;
+            }
+        }
+
         private Dictionary<string, CommandSpecification> name2cmdSpec = new Dictionary<string, CommandSpecification>();
+        private ModelContainer mc;
         public MainForm()
         {
             InitializeComponent();
 
-            this.serialPort.PortName = Properties.Settings.Default.SerialPort;
-            //serialPort.Open();
+            this.serialPort.PortName = "COM5";// Properties.Settings.Default.SerialPort;
+            serialPort.Open();
 
-            this.SuspendLayout();
-            masterTlp = new TableLayoutPanel
+         
+            mc = Config.Program.CreateAndCheckModelContainer();
+            if(mc!=null)
             {
-                AutoSize = true,
-                AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink,
-                GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddRows,
-                Location = new System.Drawing.Point(13, 42),
-                MaximumSize = new Size(1000, 400),
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.OutsetDouble,
-                AutoScroll = true,
-            };
-           
-            int row = 0;
-            ModelContainer m = Config.Program.CreateAndCheckModelContainer();
-            if(m!=null)
-            {
-                
-                foreach (var app in m.id2app.Values)
+                TreeHelper root = new TreeHelper { Text = "Sattlerstraße 16" };
+                foreach (var app in mc.id2app.Values)
                 {
-                    Label appIdLabel = new Label
-                    {
-                        Text = app.Application.ApplicationId,
-                    };
-                    masterTlp.Controls.Add(appIdLabel, 0, row++);
-                    CreateCommandsTable(app, ref row);
+                    root.Append(app.Application.ApplicationId, app.Application.ApplicationId, '_');
                 }
+                treeView1.Nodes.Add(root.CreateTreeNodeHierarchy());
+
             }
-            this.Controls.Add(masterTlp);
-            this.ResumeLayout();
 
         }
 
-        private void CreateCommandsTable(SensactApplicationContainer sac, ref int row)
+        private Control CreateCommandsTable(SensactApplicationContainer sac)
         {
+            
             Type t = sac.Application.GetType();
-
-            TableLayoutPanel commandsTable=null;
-            int functionTableRow = 0;
-            foreach(MethodInfo m in t.GetMethods())
+            int row = 0;
+            foreach (MethodInfo m in t.GetMethods())
             {
-                if(m.GetCustomAttribute<SensactCommandMethod>()!=null)
+                if (m.GetCustomAttribute<SensactCommandMethod>() != null)
                 {
-                    if(functionTableRow==0)
-                    {
-                        commandsTable = new TableLayoutPanel
-                        {
-                            AutoSize = true,
-                            //AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink,
-                            //GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddRows,
-                            //CellBorderStyle=TableLayoutPanelCellBorderStyle.OutsetDouble,
-                        };
-                    }
-                    CreateControlsForOneCommandMethod(sac, m, commandsTable, functionTableRow);
-                    functionTableRow++;
+
+                    row++;
                 }
             }
-            if(commandsTable!=null)
+            if(row==0)
             {
-                this.masterTlp.Controls.Add(commandsTable, 0, row++);
+                return new Label
+                {
+                    Text = "NO COMMANDS DEFINED",
+                    Location = new Point(299, 41),
+                    Name = "pnlMaster",
+                    Size = new Size(673, 408),
+                };
             }
-            else
+            TableLayoutPanel commandsTable = new TableLayoutPanel
             {
-                masterTlp.Controls.Add(CreateLabel("No commands found"), 0, row++);
+                RowCount = row,
+                ColumnCount = 2,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
+                AutoSize=true,
+                AutoSizeMode=AutoSizeMode.GrowAndShrink,
+                AutoScroll = true,
+                Location = new Point(299, 41),
+                Name = "pnlMaster",
+                Size = new Size(673, 408),
+            };
+            commandsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
+            commandsTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            row = 0;
+            foreach (MethodInfo m in t.GetMethods())
+            {
+                if (m.GetCustomAttribute<SensactCommandMethod>() != null)
+                {
+                    CreateOneRow(sac, m, commandsTable, row);
+                    row++;
+                }
             }
-            
+            return commandsTable;
         }
 
         public static bool IsDecimalType(Type t)
@@ -111,11 +149,10 @@ namespace Klli.Sensact.TestGui
             }
         }
 
-        private void CreateControlsForOneCommandMethod(SensactApplicationContainer sac, MethodInfo mi, TableLayoutPanel functionTable, int functionTableRow)
+        private void CreateOneRow(SensactApplicationContainer sac, MethodInfo mi, TableLayoutPanel functionTable, int functionTableRow)
         {
-            int column = 0;
             Button btn = CreateCommandButton(sac, mi);
-            functionTable.Controls.Add(btn, column++, functionTableRow);
+            functionTable.Controls.Add(btn, 0, functionTableRow);
             Config.CommandType ct = Config.CommandType.NOP;
             if(!Enum.TryParse<Config.CommandType>(mi.Name, out ct))
             {
@@ -127,10 +164,14 @@ namespace Klli.Sensact.TestGui
                 applicationIdAsUshort = (ushort)sac.Index,
                 CommandIdAsInt = (byte)ct,
             };
-            
-            foreach(ParameterInfo p in mi.GetParameters())
+            FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel
             {
-                functionTable.Controls.Add(CreateLabel(p.Name), column++, functionTableRow);
+                FlowDirection = FlowDirection.LeftToRight
+            };
+            
+            foreach (ParameterInfo p in mi.GetParameters())
+            {
+                flowLayoutPanel.Controls.Add(CreateParamNameLabel(p.Name));
                 Control inp = null;
                 if (IsDecimalType(p.ParameterType))
                 {
@@ -140,10 +181,11 @@ namespace Klli.Sensact.TestGui
                 {
                     throw new NotSupportedException("Only decimal parameter types are supported");
                 }
-                functionTable.Controls.Add(inp, column++, functionTableRow);
+                flowLayoutPanel.Controls.Add(inp);
                 cmdSpec.C2Ps.Add(new Control2Parameter { TheControl = inp, TheParameter = p });
             }
             name2cmdSpec[btn.Name] = cmdSpec;
+            functionTable.Controls.Add(flowLayoutPanel, 1, functionTableRow);
         }
 
         private Control CreateDecimalParamInput(ParameterInfo p)
@@ -190,8 +232,9 @@ namespace Klli.Sensact.TestGui
             };
         }
 
-        private readonly Size BTN_SIZE = new Size(75, 23);
-        private readonly Size LBL_SIZE = new Size(75, 23);
+        private readonly Size BTN_SIZE = new Size(100, 23);
+        private readonly Size LBL_SIZE_APP_NAME = new Size(150, 23);
+        private readonly Size LBL_SIZE_PARAM = new Size(50, 23);
 
         private Button CreateCommandButton(SensactApplicationContainer sac, MethodInfo mi)
         {
@@ -204,24 +247,37 @@ namespace Klli.Sensact.TestGui
             return button;
         }
 
-        private Label CreateLabel(string appName)
+        private Label CreateAppNameLabel(string appName)
         {
             return new Label
             {
-                AutoSize = false,
+                AutoSize = true,
                 Name = "lbl" + appName,
-                Size = LBL_SIZE,
+                Size = LBL_SIZE_APP_NAME,
                 Text = appName,
             };
         }
+
+        private Label CreateParamNameLabel(string appName)
+        {
+            return new Label
+            {
+                AutoSize = true,
+                Name = "lbl" + appName,
+                Size = LBL_SIZE_PARAM,
+                Text = appName,
+            };
+        }
+
+        
 
         private void cmdButton_Click(object sender, EventArgs e)
         {
             CommandSpecification cmdSpec = name2cmdSpec[(sender as Control).Name];
             byte[] buffer = new byte[100];
-            byte pos = 1;
+            byte pos = 0;
             buffer[pos] = 0x01; //0x01==START_OF_HEADING
-            pos += 1;
+            pos += 2;
             EndianBitConverter.Little.CopyBytes(cmdSpec.applicationIdAsUshort, buffer, pos);
             pos += 2;
             buffer[pos] = cmdSpec.CommandIdAsInt;
@@ -230,8 +286,8 @@ namespace Klli.Sensact.TestGui
             {
                 AddParam(buffer, cmd, ref pos);
             }
-            buffer[0] = pos;
-            serialPort.Write(buffer, 0, pos-1);
+            buffer[1] = pos;
+            serialPort.Write(buffer, 0, pos);
             return;
 
         }
@@ -276,9 +332,34 @@ namespace Klli.Sensact.TestGui
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void btnUpdateCOM_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnOpenCOM_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+            SensactApplicationContainer sac;
+            if(!mc.id2app.TryGetValue(e.Node.Name, out sac))
+            {
+                return;
+            }
+            this.Controls.Remove(pnlMaster);
+            this.pnlMaster.Dispose();
+            this.pnlMaster = CreateCommandsTable(sac);
+            this.Controls.Add(pnlMaster);
+            Invalidate();
+            this.Update();
+            this.Refresh();
+
+
+            return;
         }
     }
 }

@@ -26,6 +26,22 @@ namespace Klli.Sensact.Config.Applications
             return ret;
         }
 
+        [SensactCommandMethod]
+        public void UP()
+        {
+
+        }
+        [SensactCommandMethod]
+        public void DOWN()
+        {
+
+        }
+        [SensactCommandMethod]
+        public void STOP()
+        {
+
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

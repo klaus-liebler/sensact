@@ -12,7 +12,7 @@ namespace Klli.Sensact.Config.Applications
         public int MinimalOnLevel;
         public int InitialStoredTargetLevel;
         public bool LowMeansLampOn;
-        public string StandbyController;
+        public string StandbyController = "NO_APPLICATION";
         public int AutoOffIntervalMsecs;
 
         public override HashSet<CommandType> ICanReactOnTheseCommands()
@@ -28,8 +28,15 @@ namespace Klli.Sensact.Config.Applications
                 CommandType.TOGGLE,
                 CommandType.STEP_VERTICAL,
                 CommandType.ON,
+                CommandType.SET_VERTICAL_TARGET
             };
             return ret;
+        }
+
+        [SensactCommandMethod]
+        public void SET_VERTICAL_TARGET(byte dimValue)
+        {
+
         }
 
         public override HashSet<EventType> ICanSendTheseEvents()
