@@ -99,7 +99,7 @@ void BSP::Init(void) {
 	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
 	HAL_I2C_Init(&BSP::i2c1);
 	LOGI("I2C1 configured for input buttons and pwm");
-
+	SearchI2C("I2C1", &i2c2);
 
 	if(pca9685_U7.Setup())//n婥r an CPU, alle A-Pins an GND b01
 	{
@@ -178,6 +178,7 @@ void BSP::Init(void) {
 	{
 		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
 	}
+	SearchI2C("I2C2", &i2c2);
 	Init1wire();
 
 	//Enable Rotary Encoder Switch Input

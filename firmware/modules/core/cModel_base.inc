@@ -87,7 +87,7 @@ static const sensact::sScheduleEntry schedule[]
 	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 
 	drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
-	sensact::cBrightnessSensor BSENS_L3_TECH("BSENS_L3_TECH", eApplicationID::BSENS_L3_TECH, &bh1750, 300);
+	sensact::cBrightnessSensor SBRGH_LX_ROOF("SBRGH_LX_ROOF", eApplicationID::SBRGH_LX_ROOF, &bh1750, 300);
 
 #endif
 

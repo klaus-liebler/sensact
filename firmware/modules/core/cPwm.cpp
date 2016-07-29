@@ -146,6 +146,13 @@ void cPWM::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) 
 	}
 }
 
+void cPWM::OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+{
+	UNUSED(payloadLength);
+	UNUSED(now);
+	targetLevel = *payload;
+}
+
 void cPWM::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
 	UNUSED(payload);
 	UNUSED(payloadLength);

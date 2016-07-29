@@ -1,6 +1,6 @@
 #include <cBsp.h>
 #include <cModel.h>
-#define LOGLEVEL LEVEL_DEBUG
+#define LOGLEVEL LEVEL_INFO
 #define LOGNAME "BRDSP"
 #include <cLog.h>
 #include "console.h"
@@ -414,6 +414,22 @@ void BSP::Init1wire()
 	}
 #endif
 	return;
+}
+
+
+void BSP::SearchI2C(const char* i2cName, I2C_HandleTypeDef *i2c)
+{
+	LOGI("Searching i2c bus %s for devices", i2cName);
+	uint8_t cnt=0;
+	for(uint8_t i=0;i<128;i++)
+	{
+		if(HAL_I2C_IsDeviceReady(i2c, i*2, 1, 1)==HAL_OK)
+		{
+			LOGI("Found device on address %d (%d)" , i, i*2);
+			cnt++;
+		}
+	}
+	LOGI("%d devices found on i2c bus '%s'", cnt, i2cName);
 }
 
 
