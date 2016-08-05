@@ -66,6 +66,7 @@
     <Compile Include="CommandAndEventTypes.cs" />
     <Compile Include="CompilerController.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="Nodes\SensactHs04.cs" />
     <Compile Include="Nodes\SensactUp01.cs" />
     <Compile Include="Sattlerstrasse16.cs" />
     <Compile Include="SensactFileCollector.cs" />

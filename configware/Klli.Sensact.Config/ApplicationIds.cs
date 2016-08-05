@@ -322,6 +322,10 @@
         SWIND_L3_BEDR,
         VALVE_L3_BEDR,
 
+        PUSHB_L3_CORR_B11, //S+STRS.W5
+        PUSHB_L3_CORR_B21, //S+STRS.W5
+        PWM___L3_CORR_S,
+
         PUSHB_L3_TECH_B11,
         POWIT_L3_TECH_C1,
         DEVCE_L3_TECH_VENT,
@@ -367,9 +371,6 @@
         LIBAR_LS_STRS_B51, //W4
         LIBAR_LS_STRS_B52, //W6
 
-        PUSHB_LS_STRS_B61, //S+W5
-        PUSHB_LS_STRS_B62, //S+W5
-
         LIBAR_LS_STRS_B71, //W6
 
         POWIT_LS_STRS_W1,
@@ -378,7 +379,7 @@
         PWM___LS_STRS_W4,
         POWIT_LS_STRS_W5,
         PWM___LS_STRS_W6,
-        PWM___LS_STRS_S,
+        
 
 
 

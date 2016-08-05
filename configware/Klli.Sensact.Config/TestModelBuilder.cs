@@ -298,6 +298,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = "PWM_XX_XXX_" + i,
                 OutputRessources = new List<PwmPin>() { Node.index2pwm[i] },
+                LowMeansLampOn = true,
             };
         }
 
