@@ -12,6 +12,7 @@ enum struct e1WireRomCommand :uint8_t
 	Match_ROM = 0x55,
 	Search_ROM = 0xF0,
 	Skip_ROM =0xCC,
+	AlarmSearch_ROM=0xEC,
 	Resume =0xA5,
 	Overdrive_Skip = 0x3C,
 	Overdrive_Match=0x69,

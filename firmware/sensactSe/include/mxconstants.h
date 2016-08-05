@@ -31,7 +31,6 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
-
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -41,25 +40,16 @@
 #define OneWire_Pin GPIO_PIN_0
 #define OneWire_GPIO_Port GPIOF
 #define OneWire_EXTILine LL_EXTI_LINE_0
-#define IO1_Pin GPIO_PIN_1
-#define IO1_GPIO_Port GPIOF
 
-#define REL2_Pin GPIO_PIN_0
-#define REL2_GPIO_Port GPIOA
-#define REL1_Pin GPIO_PIN_1
-#define REL1_GPIO_Port GPIOA
+
+
+
 #define TX_Pin GPIO_PIN_2
 #define TX_GPIO_Port GPIOA
 #define RX_Pin GPIO_PIN_3
 #define RX_GPIO_Port GPIOA
-#define P1_Pin GPIO_PIN_4
-#define P1_GPIO_Port GPIOA
-#define P2_Pin GPIO_PIN_5
-#define P2_GPIO_Port GPIOA
-#define I1_Pin GPIO_PIN_6
-#define I1_GPIO_Port GPIOA
-#define I2_Pin GPIO_PIN_7
-#define I2_GPIO_Port GPIOA
+
+
 
 #define SCL_Pin GPIO_PIN_9
 #define SCL_GPIO_Port GPIOA
@@ -81,10 +71,10 @@
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

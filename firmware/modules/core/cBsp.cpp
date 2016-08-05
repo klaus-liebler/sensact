@@ -366,6 +366,16 @@ void BSP::Init1wire()
 			}
 			Console::Writeln("");
 
+			for(uint8_t i=0;i<6;i++)
+			{
+				buffer[0]=0x00;
+				ds2482.OWWriteScratchpad(drivers::e1WireFamilyCode::SENSACTSE, &ds2482.ROM_NO[1], buffer, 1);
+				HAL_Delay(200);
+				buffer[0]=0xFF;
+				ds2482.OWWriteScratchpad(drivers::e1WireFamilyCode::SENSACTSE, &ds2482.ROM_NO[1], buffer, 1);
+				HAL_Delay(200);
+			}
+
 		}
 		rslt = ds2482.OWNext();
 	}
@@ -693,8 +703,6 @@ ePushState BSP::GetDigitalInput(eInput i)
 		return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;
 		#pragma GCC diagnostic warning "-Wconversion"
 #endif
-
-
 	}
 	else if(ii < 64)
 	{

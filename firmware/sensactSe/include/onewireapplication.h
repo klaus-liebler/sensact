@@ -34,6 +34,7 @@ public:
 	void OnByteRead(eNextAction *nextAction, volatile uint8_t *buffer);
 	void OnByteWritten(eNextAction *nextAction, volatile uint8_t *buffer);
 	void Run(I2C_HandleTypeDef* i2c);
+	bool HasAlarmCondition();
 };
 
 }

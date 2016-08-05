@@ -5,7 +5,7 @@
  *      Author: klaus
  */
 
-
+#include "common.h"
 #include "onewire.h"
 #include "onewireapplication.h"
 #include "bme280.h"
@@ -48,14 +48,15 @@ namespace sensact{
 	static uint8_t *scratchpad = (uint8_t*)scratchpad32;
 	static e1WireFunctionCommand lastFcmd=e1WireFunctionCommand::NOP;
 
-
+	static uint8_t readScratch=0;
 
 	void cOneWireApplication::Run(I2C_HandleTypeDef *i2cHandle)
 	{
+		/*
 		i2c=i2cHandle;
-		/* The variable used to read uncompensated temperature*/
+		// The variable used to read uncompensated temperature
 		s32 v_data_uncomp_temp_s32 = BME280_INIT_VALUE;
-		/* The variable used to read compensated temperature*/
+		// The variable used to read compensated temperature
 		s32 v_comp_temp_s32 = BME280_INIT_VALUE;
 
 		s32 com_rslt = ERROR;
@@ -81,14 +82,25 @@ namespace sensact{
 		{
 			while(1) Console::Writeln("!BME280SUCCESS");
 		}
+		*/
 		while(true)
 		{
-			com_rslt += bme280_read_uncomp_temperature(&v_data_uncomp_temp_s32);
-			v_comp_temp_s32 = bme280_compensate_temperature_int32(v_data_uncomp_temp_s32);
-			scratchpad32[0]=v_comp_temp_s32;
-			Console::Writeln("%d", v_comp_temp_s32);
-			HAL_Delay(1000);
+			//com_rslt += bme280_read_uncomp_temperature(&v_data_uncomp_temp_s32);
+			//v_comp_temp_s32 = bme280_compensate_temperature_int32(v_data_uncomp_temp_s32);
+			//scratchpad32[0]=v_comp_temp_s32;
+			//Console::Writeln("%d", v_comp_temp_s32);
+			OUT1(P_GPIO_Port, P_Pin);
+			HAL_Delay(10);
+			scratchpad32[1] = (IN(I1_GPIO_Port, I1_Pin)?1:0) | (IN(I2_GPIO_Port, I2_Pin)?2:0);
+			OUT0(P_GPIO_Port, P_Pin);
+			HAL_Delay(990);
 		}
+	}
+
+	bool cOneWireApplication::HasAlarmCondition()
+	{
+		return scratchpad32[1]!=3;
+
 	}
 
 
@@ -103,17 +115,53 @@ namespace sensact{
 	}
 	void cOneWireApplication::OnByteRead(eNextAction *nextAction, volatile uint8_t *buffer)
 	{
-		if(bytes==0 && *buffer == (uint8_t)e1WireFunctionCommand::READ_SCRATCHPAD)
+		if(bytes==0)
+			{
+			if(*buffer == (uint8_t)e1WireFunctionCommand::READ_SCRATCHPAD)
+			{
+				lastFcmd=e1WireFunctionCommand::READ_SCRATCHPAD;
+				*buffer=scratchpad[0];
+				*nextAction=eNextAction::WRITE_BYTE;
+			}
+			else if(*buffer == (uint8_t)e1WireFunctionCommand::WRITE_SCRATCHPAD)
+			{
+				lastFcmd=e1WireFunctionCommand::WRITE_SCRATCHPAD;
+				*buffer=0;
+				*nextAction=eNextAction::READ_BYTE;
+			}
+		}
+		else if(bytes==1 && lastFcmd==e1WireFunctionCommand::WRITE_SCRATCHPAD)
 		{
-			lastFcmd=e1WireFunctionCommand::READ_SCRATCHPAD;
-			*buffer=scratchpad[0];
-			*nextAction=eNextAction::WRITE_BYTE;
+			uint8_t data = *buffer;
+			readScratch=data;
+			cOneWire::crc8inc(data, &crc8);
+			*nextAction=eNextAction::READ_BYTE;
+		}
+		else if(bytes==2 && lastFcmd==e1WireFunctionCommand::WRITE_SCRATCHPAD)
+		{
+			uint8_t data = *buffer;
+			if(true)
+			{
+				if(RBN(readScratch, 0))
+				{
+					OUT0(IO1_GPIO_Port, IO1_Pin);
+				}
+				else
+				{
+					OUT1(IO1_GPIO_Port, IO1_Pin);
+				}
+			}
+			else
+			{
+				*nextAction=eNextAction::IDLE;
+			}
 		}
 		else
 		{
 			*nextAction=eNextAction::IDLE;
 		}
 		bytes++;
+
 	}
 	void cOneWireApplication::OnByteWritten(eNextAction *nextAction, volatile uint8_t *buffer)
 	{

@@ -17,6 +17,7 @@ static const uint16_t WRITE_PULLDOWN_DURATION = 35;
 
 static const uint8_t ONE_WIRE_ID[8] = {0xCE,0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0x9D};
 
+static const ePin XOneWire_Pin=ePin::P0;
 
 static void TimerOff()
 {
@@ -101,7 +102,7 @@ void cOneWire::Start(cOneWireApplication *app)
 	Application=app;
 	Console::Writeln("Application started");
 	//warte, bin gerade kein pulldown erfolgt
-	while(!IN(OneWire_GPIO_Port, OneWire_Pin));
+	while(!IN(OneWire_GPIO_Port, XOneWire_Pin));
 	//Preload disabled - das Setzen von ARR wird unmittelbar berücksichtigt
 	CLEAR_BIT(TIMER->CR1, TIM_CR1_ARPE); //TIMx_ARR register is not buffered!,
 	SET_BIT(TIMER->CR1, TIM_CR1_OPM);//Timer is stopped after Update event
@@ -158,7 +159,9 @@ void cOneWire::Start(cOneWireApplication *app)
 
 void cOneWire::OnOneWireInterrupt()
 {
-	bool pinstate = IN(OneWire_GPIO_Port, OneWire_Pin);
+	bool pinstate = IN(OneWire_GPIO_Port, XOneWire_Pin);
+	bool desiredBit;
+	bool myBit;
 	switch (state) {
 		case eState::UNINITIALIZED:
 			return;
@@ -171,43 +174,33 @@ void cOneWire::OnOneWireInterrupt()
 			break;
 		case eState::MINIMUM_RESET_DURATION_IS_NOT_OVER:
 			TimerOff();
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("MINIMUM_RESET_DURATION_IS_NOT_OVER");
-			}
-			else
-			{
-				state=eState::WAIT_FOR_RESET;
-			}
+#ifdef FULL_ASSERT
+			if(!pinstate) while(1) Console::Writeln("MINIMUM_RESET_DURATION_IS_NOT_OVER");
+#endif
+			state=eState::WAIT_FOR_RESET;
 			break;
 		case eState::MINIMUM_RESET_DURATION_IS_OVER:
+#ifdef FULL_ASSERT
 			//TimerOff(); ist bereits von selbst passiert
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("MINIMUM_RESET_DURATION_IS_OVER");
-			}
-			else
-			{
-				state=eState::WAIT_FOR_PRESENCE_START;
-				tmp=0;
-				FireTimerIn(PRESENCE_WAIT_DURATION);
-			}
+			if(!pinstate) while(1) Console::Writeln("MINIMUM_RESET_DURATION_IS_OVER");
+#endif
+			state=eState::WAIT_FOR_PRESENCE_START;
+			tmp=0;
+			FireTimerIn(PRESENCE_WAIT_DURATION);
 			break;
 		case eState::WAIT_FOR_PRESENCE_START:
 			//Wenn EXTI feuert und wir uns in WAIT_FOR_APPLY_PRESENSE befinden, dass hat ein anderer Slave vor uns einen pulldown gemacht -> lastFallingEdge merken und in status OTHER_PRESENCE_DETECTED
 			//TimerOff(); darf hier nicht aufgerufen werden
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_OTHER_PRESENSE");
-			}
-			else
-			{
-				tmp=std::min<uint32_t>(PRESENCE_WAIT_DURATION, PRESENCE_WAIT_DURATION-GetTimerVal());
-			}
+#ifdef FULL_ASSERT
+			if(pinstate) while(1) Console::Writeln("WAIT_FOR_OTHER_PRESENSE");
+#endif
+			tmp=std::min<uint32_t>(PRESENCE_WAIT_DURATION, PRESENCE_WAIT_DURATION-GetTimerVal());
 			break;
 		case eState::WAIT_FOR_PRESENCE_END:
+#ifdef FULL_ASSERT
 			//Interrupts sind deaktiviert; hier darf also nichts kommen
 			while(1) Console::Writeln("WAIT_FOR_PRESENCE_END");
+#endif
 			break;
 		case eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE:
 			if(!pinstate)
@@ -219,214 +212,182 @@ void cOneWire::OnOneWireInterrupt()
 			//eine positive Flanke ist ok!
 			break;
 		case eState::WAIT_FOR_START_OF_BIT_READ:
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_START_OF_BIT_READ");
-			}
-			else
-			{
-				state=eState::WAIT_FOR_END_OF_BIT_READ;
-				FireTimerIn(MINIMUM_RESET_TIME);
-			}
+#ifdef FULL_ASSERT
+			if(pinstate) while(1) Console::Writeln("WAIT_FOR_START_OF_BIT_READ");
+#endif
+			state=eState::WAIT_FOR_END_OF_BIT_READ;
+			FireTimerIn(MINIMUM_RESET_TIME);
 			break;
 		case eState::WAIT_FOR_END_OF_BIT_READ:
-			if(!pinstate)
+#ifdef FULL_ASSERT
+			if(!pinstate)while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
+#endif
+			if(GetTimerVal()<LIMIT_DURATION)
 			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
-				break;
+				SBN(buffer, bit);
+			}
+			TimerOff();
+			bit++;
+			if(bit==8)
+			{
+				bit=0;
+				OnByteRead();
+				tmp++;
 			}
 			else
 			{
-				if(GetTimerVal()<LIMIT_DURATION)
-				{
-					SBN(buffer, bit);
-				}
-				TimerOff();
-				bit++;
-				if(bit==8)
-				{
-					bit=0;
-					OnByteRead();
-					tmp++;
-				}
-				else
-				{
-					state=eState::WAIT_FOR_START_OF_BIT_READ;
-				}
+				state=eState::WAIT_FOR_START_OF_BIT_READ;
 			}
 			break;
 		case eState::WAIT_FOR_START_OF_BIT_WRITE:
-			if(pinstate)
+#ifdef FULL_ASSERT
+			if(pinstate)while(1) Console::Writeln("WAIT_FOR_START_OF_BIT_READ");
+#endif
+			if(!RBN(buffer, bit))
 			{
-				while(1) Console::Writeln("WAIT_FOR_START_OF_BIT_READ");
+				OUT0(OneWire_GPIO_Port, XOneWire_Pin);
+				state=eState::WAIT_FOR_RELEASE_OF_BIT_WRITE;
+				FireTimerIn(WRITE_PULLDOWN_DURATION);
 			}
 			else
 			{
-				if(!RBN(buffer, bit))
-				{
-					OUT0(OneWire_GPIO_Port, OneWire_Pin);
-					state=eState::WAIT_FOR_RELEASE_OF_BIT_WRITE;
-					FireTimerIn(WRITE_PULLDOWN_DURATION);
-				}
-				else
-				{
-					state=eState::WAIT_FOR_END_OF_BIT_WRITE;
-					FireTimerIn(MINIMUM_RESET_TIME);
-				}
-
-			}
-			break;
-		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
-			while(1) Console::Writeln("WAIT_FOR_RELEASE_OF_BIT_WRITE");
-			break;
-		case eState::WAIT_FOR_END_OF_BIT_WRITE:
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_WRITE");
-			}
-			else
-			{
-				bit++;
-				TimerOff();
-				if(bit==8)
-				{
-					bit=0;
-					OnByteWritten();
-					tmp++;
-				}
-				else
-				{
-					state=eState::WAIT_FOR_START_OF_BIT_WRITE;
-				}
-			}
-			break;
-		case eState::WAIT_FOR_STA_OF_BIT_TRI1:
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI1");
-			}
-			else
-			{
-				//"positive" Logik
-				if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
-				{
-					state=eState::WAIT_FOR_END_OF_BIT_TRI1;
-					FireTimerIn(MINIMUM_RESET_TIME);
-				}
-				else
-				{
-					//bei einer "0" muss aktiv pulldown betrieben werden
-					if(IN(OneWire_GPIO_Port, OneWire_Pin))
-					{
-						while(1) Console::Writeln("WIEDER POS");
-					}
-					OUT0(OneWire_GPIO_Port, OneWire_Pin);
-					if(IN(OneWire_GPIO_Port, OneWire_Pin))
-					{
-						while(1) Console::Writeln("TROTZDEM POS");
-					}
-					state=eState::WAIT_FOR_REL_OF_BIT_TRI1;
-					FireTimerIn(WRITE_PULLDOWN_DURATION);
-
-				}
-			}
-			break;
-		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
-			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI1");
-			break;
-		case eState::WAIT_FOR_END_OF_BIT_TRI1:
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI1");
-			}
-			else
-			{
-				TimerOff();
-				state=eState::WAIT_FOR_STA_OF_BIT_TRI2;
-			}
-			break;
-		case eState::WAIT_FOR_STA_OF_BIT_TRI2:
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI2");
-			}
-			else
-			{
-				//"negative" Logik (vgl oben)
-				if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
-				{
-					OUT0(OneWire_GPIO_Port, OneWire_Pin);
-					state=eState::WAIT_FOR_REL_OF_BIT_TRI2;
-					FireTimerIn(WRITE_PULLDOWN_DURATION);
-				}
-				else
-				{
-					state=eState::WAIT_FOR_END_OF_BIT_TRI2;
-					FireTimerIn(MINIMUM_RESET_TIME);
-				}
-			}
-			break;
-		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
-			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI2");
-			break;
-		case eState::WAIT_FOR_END_OF_BIT_TRI2:
-			if(!pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI2");
-			}
-			else
-			{
-				TimerOff();
-				state=eState::WAIT_FOR_STA_OF_BIT_TRI3;
-			}
-			break;
-		case eState::WAIT_FOR_STA_OF_BIT_TRI3:
-			if(pinstate)
-			{
-				while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI3");
-			}
-			else
-			{
-				state=eState::WAIT_FOR_END_OF_BIT_TRI3;
+				state=eState::WAIT_FOR_END_OF_BIT_WRITE;
 				FireTimerIn(MINIMUM_RESET_TIME);
 			}
 			break;
-		case eState::WAIT_FOR_END_OF_BIT_TRI3:
-			if(!pinstate)
+		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
+#ifdef FULL_ASSERT
+			while(1) Console::Writeln("WAIT_FOR_RELEASE_OF_BIT_WRITE");
+#endif
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_WRITE:
+#ifdef FULL_ASSERT
+			if(!pinstate)while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_WRITE");
+#endif
+			bit++;
+			TimerOff();
+			if(bit==8)
 			{
-				while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
+				bit=0;
+				OnByteWritten();
+				tmp++;
 			}
 			else
 			{
-				bool desiredBit = false;
-				if(GetTimerVal()<LIMIT_DURATION)
-				{
-					desiredBit=true;
-				}
-				bool myBit = (RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))>0;
-				TimerOff();
-				bit++;
+				state=eState::WAIT_FOR_START_OF_BIT_WRITE;
+			}
 
-				if(desiredBit !=  myBit)
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI1:
+#ifdef FULL_ASSERT
+			if(pinstate)while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI1");
+#endif
+			//"positive" Logik
+			if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
+			{
+				state=eState::WAIT_FOR_END_OF_BIT_TRI1;
+				FireTimerIn(MINIMUM_RESET_TIME);
+			}
+			else
+			{
+				//bei einer "0" muss aktiv pulldown betrieben werden
+				if(IN(OneWire_GPIO_Port, XOneWire_Pin))
 				{
-					bit=0;
-					state=eState::WAIT_FOR_RESET;
+					while(1) Console::Writeln("WIEDER POS");
 				}
-				else if(bit==64 )
+				OUT0(OneWire_GPIO_Port, XOneWire_Pin);
+				if(IN(OneWire_GPIO_Port, XOneWire_Pin))
 				{
-					bit=0;
-					state=eState::WAIT_FOR_RESET;
+					while(1) Console::Writeln("TROTZDEM POS");
 				}
-				else
-				{
-					state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
-				}
+				state=eState::WAIT_FOR_REL_OF_BIT_TRI1;
+				FireTimerIn(WRITE_PULLDOWN_DURATION);
+
+			}
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
+#ifdef FULL_ASSERT
+			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI1");
+#endif
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI1:
+#ifdef FULL_ASSERT
+			if(!pinstate)while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI1");
+#endif
+			TimerOff();
+			state=eState::WAIT_FOR_STA_OF_BIT_TRI2;
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI2:
+#ifdef FULL_ASSERT
+			if(pinstate) while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI2");
+#endif
+			//"negative" Logik (vgl oben)
+			if(RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))
+			{
+				OUT0(OneWire_GPIO_Port, XOneWire_Pin);
+				state=eState::WAIT_FOR_REL_OF_BIT_TRI2;
+				FireTimerIn(WRITE_PULLDOWN_DURATION);
+			}
+			else
+			{
+				state=eState::WAIT_FOR_END_OF_BIT_TRI2;
+				FireTimerIn(MINIMUM_RESET_TIME);
+			}
+
+			break;
+		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
+#ifdef FULL_ASSERT
+			while(1) Console::Writeln("WAIT_FOR_REL_OF_BIT_TRI2");
+#endif
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI2:
+#ifdef FULL_ASSERT
+			if(!pinstate)while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_TRI2");
+#endif
+			TimerOff();
+			state=eState::WAIT_FOR_STA_OF_BIT_TRI3;
+
+			break;
+		case eState::WAIT_FOR_STA_OF_BIT_TRI3:
+#ifdef FULL_ASSERT
+			if(pinstate) while(1) Console::Writeln("WAIT_FOR_STA_OF_BIT_TRI3");
+#endif
+			state=eState::WAIT_FOR_END_OF_BIT_TRI3;
+			FireTimerIn(MINIMUM_RESET_TIME);
+			break;
+		case eState::WAIT_FOR_END_OF_BIT_TRI3:
+#ifdef FULL_ASSERT
+			if(!pinstate) while(1) Console::Writeln("WAIT_FOR_END_OF_BIT_COMMAND");
+#endif
+			desiredBit = false;
+			if(GetTimerVal()<LIMIT_DURATION)
+			{
+				desiredBit=true;
+			}
+			myBit = (RBN(ONE_WIRE_ID[bit >> 3], bit & 0x07))>0;
+			TimerOff();
+			bit++;
+
+			if(desiredBit !=  myBit)
+			{
+				bit=0;
+				state=eState::WAIT_FOR_RESET;
+			}
+			else if(bit==64 )
+			{
+				bit=0;
+				state=eState::WAIT_FOR_RESET;
+			}
+			else
+			{
+				state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
 			}
 			break;
 		default:
 			break;
 	}
-	if(pinstate != IN(OneWire_GPIO_Port, OneWire_Pin))
+#ifdef FULL_ASSERT
+	if(pinstate != IN(OneWire_GPIO_Port, XOneWire_Pin))
 	{
 		while(1) Console::Writeln("TOO SLOW 1");
 	}
@@ -434,6 +395,7 @@ void cOneWire::OnOneWireInterrupt()
 	{
 		while(1) Console::Writeln("TOO SLOW 2");
 	}
+#endif
 	return;
 }
 
@@ -471,6 +433,16 @@ void cOneWire::OnByteRead()
 		{
 			case e1WireRomCommand::Search_ROM:
 				state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
+				break;
+			case e1WireRomCommand::AlarmSearch_ROM:
+				if(Application->HasAlarmCondition())
+				{
+					state=eState::WAIT_FOR_STA_OF_BIT_TRI1;
+				}
+				else
+				{
+					state=eState::WAIT_FOR_RESET;
+				}
 				break;
 			case e1WireRomCommand::Match_ROM:
 				state=eState::WAIT_FOR_START_OF_BIT_READ;
@@ -523,25 +495,31 @@ void cOneWire::OnTimerInterrupt()
 {
 	switch (state) {
 		case eState::UNINITIALIZED:
+#ifdef FULL_ASSERT
 			while(1) Console::Writeln("tint in UNINITIALIZED");
+#endif
 			break;
 		case eState::WAIT_FOR_RESET:
+#ifdef FULL_ASSERT
 			while(1) Console::Writeln("tint in WAIT_FOR_RESET");
+#endif
 			break;
 		case eState::MINIMUM_RESET_DURATION_IS_NOT_OVER:
 			state=eState::MINIMUM_RESET_DURATION_IS_OVER;
 			break;
 		case eState::MINIMUM_RESET_DURATION_IS_OVER:
+#ifdef FULL_ASSERT
 			while(1) Console::Writeln("tint in MINIMUM_RESET_DURATION_IS_OVER");
+#endif
 			break;
 		case eState::WAIT_FOR_PRESENCE_START:
 			OWIOff();
-			OUT0(OneWire_GPIO_Port, OneWire_Pin);
+			OUT0(OneWire_GPIO_Port, XOneWire_Pin);
 			state=eState::WAIT_FOR_PRESENCE_END;
 			FireTimerIn(PRESENCE_DURATION);
 			break;
 		case eState::WAIT_FOR_PRESENCE_END:
-			OUT1(OneWire_GPIO_Port, OneWire_Pin);
+			OUT1(OneWire_GPIO_Port, XOneWire_Pin);
 			OWIOn();
 			state=eState::WAIT_FOR_DEADTIME_AFTER_PRESENCE;
 			FireTimerIn(MINIMUM_RESET_TIME - PRESENCE_DURATION - PRESENCE_WAIT_DURATION - tmp);
@@ -558,7 +536,9 @@ void cOneWire::OnTimerInterrupt()
 		case eState::WAIT_FOR_STA_OF_BIT_TRI1:
 		case eState::WAIT_FOR_STA_OF_BIT_TRI2:
 		case eState::WAIT_FOR_STA_OF_BIT_TRI3:
+#ifdef FULL_ASSERT
 			while(1) Console::Writeln("tint in WAIT_FOR_STA");
+#endif
 			break;
 		case eState::WAIT_FOR_END_OF_BIT_READ:
 		case eState::WAIT_FOR_END_OF_BIT_WRITE:
@@ -570,17 +550,17 @@ void cOneWire::OnTimerInterrupt()
 			break;
 		case eState::WAIT_FOR_RELEASE_OF_BIT_WRITE:
 			state=eState::WAIT_FOR_END_OF_BIT_WRITE;
-			OUT1(OneWire_GPIO_Port, OneWire_Pin);
+			OUT1(OneWire_GPIO_Port, XOneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 		case eState::WAIT_FOR_REL_OF_BIT_TRI1:
 			state=eState::WAIT_FOR_END_OF_BIT_TRI1;
-			OUT1(OneWire_GPIO_Port, OneWire_Pin);
+			OUT1(OneWire_GPIO_Port, XOneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 		case eState::WAIT_FOR_REL_OF_BIT_TRI2:
 			state=eState::WAIT_FOR_END_OF_BIT_TRI2;
-			OUT1(OneWire_GPIO_Port, OneWire_Pin);
+			OUT1(OneWire_GPIO_Port, XOneWire_Pin);
 			FireTimerIn(MINIMUM_RESET_TIME-WRITE_PULLDOWN_DURATION);
 			break;
 	}

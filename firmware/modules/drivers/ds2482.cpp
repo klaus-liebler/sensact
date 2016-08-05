@@ -518,6 +518,20 @@ bool cDS2482::OWReadScratchpad(const e1WireFamilyCode family, const uint8_t *add
 	return true;
 }
 
+bool cDS2482::OWWriteScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt)
+{
+	BeginTransaction(family, address, e1WireCommand::WRITE_SCRATCHPAD);
+	uint8_t crc8=0;
+	for(uint8_t i = 0;i<cnt;i++)
+	{
+		OWWriteByte(buffer[i]);
+		calcCrc8(buffer[i], &crc8);
+	}
+	OWWriteByte(crc8);
+
+	return true;
+}
+
 bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, const uint8_t *address, uint8_t bitPosToSetOrClear, uint32_t *inputState)
 {
 	BeginTransaction(family, address, e1WireCommand::READ_SCRATCHPAD);
