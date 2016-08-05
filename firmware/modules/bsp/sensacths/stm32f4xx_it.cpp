@@ -92,7 +92,7 @@ void USART3_IRQHandler(void)
 				{
 					uint16_t appId = *((uint16_t*)UART_cmdBuffer);
 					uint8_t commandId = UART_cmdBuffer[2];
-					sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&UART_cmdBuffer[3], (uint8_t)(binaryMessageSize-3));
+					sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&UART_cmdBuffer[3], (uint8_t)(binaryMessageSize-5));
 					binaryMode=false;
 					UART_buffer_pointer=0;
 				}
