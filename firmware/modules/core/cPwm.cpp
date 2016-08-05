@@ -40,8 +40,11 @@ cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const ou
 
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 {
-	UNUSED(payloadLength);
-	uint8_t level=ParseInt16(payload, 0);
+	if(payloadLength!=1)
+	{
+		return;
+	}
+	uint8_t level=*payload;
 	SetTargetAbsolute(level, now);
 }
 
@@ -144,13 +147,6 @@ void cPWM::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) 
 		storedTargetLevel=targetLevel;
 		targetLevel=0;
 	}
-}
-
-void cPWM::OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
-{
-	UNUSED(payloadLength);
-	UNUSED(now);
-	targetLevel = *payload;
 }
 
 void cPWM::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {

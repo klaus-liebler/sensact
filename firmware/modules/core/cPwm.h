@@ -45,7 +45,6 @@ class cPWM: public cApplication
 		void OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		void OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
 		bool Setup() override;
 			void DoEachCycle(Time_t time) override;
 			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
