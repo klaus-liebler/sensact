@@ -277,9 +277,7 @@ static int arg_parser(const char *cmd_line, int len, shell_cmd_args *args) {
 
 static eShellError cmdSEND_CAN(uint8_t *cmdBuffer, const uint16_t size)
 {
-		#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-		uint16_t appId = *((uint16_t*)cmdBuffer[3]);
-		#pragma GCC diagnostic warning "-Wint-to-pointer-cast"
+		uint16_t appId = *((uint16_t*)&cmdBuffer[3]);
 		uint8_t commandId = cmdBuffer[5];
 		sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[6], (uint8_t)(size-6));
 }
