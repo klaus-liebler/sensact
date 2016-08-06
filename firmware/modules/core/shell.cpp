@@ -23,6 +23,7 @@
 #include "cMaster.h"
 #include <cmath>
 #include "date.h"
+#include "cBsp.h"
 
 extern uint64_t epochtimer;
 
@@ -42,6 +43,8 @@ static eShellError cmdHelp(shell_cmd_args *args);
 static eShellError cmdArgt(shell_cmd_args *args);
 static eShellError cmdCs(shell_cmd_args *args);
 static eShellError cmdSettime(shell_cmd_args *args);
+static eShellError cmdOWS(shell_cmd_args *args);
+static eShellError cmdOWAS(shell_cmd_args *args);
 
 static const shell_cmd  myCmds[] = {
 		{
@@ -64,9 +67,19 @@ static const shell_cmd  myCmds[] = {
 				"sets the time as second from epoch",
 				cmdSettime,
 		},
+		{
+				"ows",
+				"searches and displays all devices on the 1Wire bus",
+				cmdOWS,
+		},
+		{
+				"owas",
+				"searches and displays all devices with active alarm condition on the 1Wire bus",
+				cmdOWAS,
+		},
 };
 
-static const shell_cmds ShellCmds1 = { 4, myCmds, };
+static const shell_cmds ShellCmds1 = { 6, myCmds, };
 
 //The example below shows the definition of the two shell commands "h" and "argt":
 
@@ -125,6 +138,16 @@ static eShellError cmdSettime(shell_cmd_args *args) {
 		epochtimer = (uint64_t)time;
 		sensact::Console::Writeln("Set the clock to a new value");
 	}
+	return eShellError::PROCESS_OK;
+}
+
+static eShellError cmdOWS(shell_cmd_args *args) {
+	BSP::Search1Wire(false);
+	return eShellError::PROCESS_OK;
+}
+
+static eShellError cmdOWAS(shell_cmd_args *args) {
+	BSP::Search1Wire(true);
 	return eShellError::PROCESS_OK;
 }
 
@@ -290,13 +313,12 @@ eShellError cShell::processTextCmd(const char *cmd_line, const uint16_t size)
 	int i;
 	int ret;
 	int cmd_len;
-	int cmd_line_len;
+	int cmd_line_len = strlen(cmd_line);
 
 	const shell_cmds *const cmds = &ShellCmds1;
 	shell_cmd_args args;
-
 	for (i = 0; i < cmds->count; i++) {
-        cmd_line_len 	= strlen(cmd_line);
+
         cmd_len 		= strlen((char *)(cmds->cmds[i].cmd));
 
 		if (strcmp((const char *) (cmds->cmds[i].cmd), cmd_line, cmd_len,

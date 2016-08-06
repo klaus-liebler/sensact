@@ -77,16 +77,17 @@ void USART3_IRQHandler(void)
 		{
 			binaryMode = chartoreceive==0x01;
 		}
-		if(UART_buffer_pointer<UART_BUFFER_SIZE)
-		{
-			UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
-			UART_buffer_pointer++;
-		}
+
 		if(binaryMode)
 		{
 			//Binary Format: (Multibyte: little endian!)
 			//1 byte Binary Sign = "0x01"
 			//1 byte Message Length
+			if(UART_buffer_pointer<UART_BUFFER_SIZE)
+			{
+				UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
+				UART_buffer_pointer++;
+			}
 			if(UART_buffer_pointer>1 && UART_buffer_pointer==UART_cmdBuffer[1])
 			{
 				BufferHasMessage=true;
@@ -94,9 +95,18 @@ void USART3_IRQHandler(void)
 		}
 		else
 		{
-			if(chartoreceive == '\n')
+			if(chartoreceive =='\r')
+			{
+				//do nothing
+			}
+			else if(chartoreceive == '\n')
 			{
 				BufferHasMessage=true;
+			}
+			else if(UART_buffer_pointer<UART_BUFFER_SIZE)
+			{
+				UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
+				UART_buffer_pointer++;
 			}
 		}
 	}

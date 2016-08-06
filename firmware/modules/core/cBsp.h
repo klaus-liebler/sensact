@@ -117,7 +117,7 @@ private:
 	static void InitCAN();
 	static bool InitDWTCounter(void);
 	static void SearchI2C(const char* i2cName, I2C_HandleTypeDef *i2c);
-	static void Search1Wire(bool alarmOnly);
+
 
 public:
 	static const uint8_t T0H_WS2812B=29; //28,8
@@ -137,7 +137,7 @@ public:
 	static void SetRgbLed(volatile uint8_t *framebuffer, uint16_t sizeIncludingZero);
 
 	static void DoEachCycle(Time_t now);
-
+	static void Search1Wire(bool alarmOnly);
 	static uint16_t GetRotaryEncoderValue(const eRotaryEncoder re);
 	static ePushState GetDigitalInput(eInput i);
 	static bool HasRCEventOccured(const uint32_t);
