@@ -117,6 +117,7 @@ private:
 	static void InitCAN();
 	static bool InitDWTCounter(void);
 	static void SearchI2C(const char* i2cName, I2C_HandleTypeDef *i2c);
+	static void Search1Wire(bool alarmOnly);
 
 public:
 	static const uint8_t T0H_WS2812B=29; //28,8

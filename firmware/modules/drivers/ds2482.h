@@ -67,8 +67,8 @@ private:
 	bool LastDeviceFlag;
 	int32_t LastDiscrepancy;
 	int32_t LastFamilyDiscrepancy;
+	bool alarmOnly;
 	bool short_detected;
-
 	bool reset();
 	bool writeConfig(uint8_t config);
 	bool channelSelect(uint8_t channel);
@@ -76,7 +76,7 @@ private:
 	uint8_t searchTriplet(uint8_t search_direction);
 	static void calcCrc8(uint8_t data, uint8_t *crc);
 	void fillRomAddressBuffer(e1WireFamilyCode familiy, const uint8_t *address);
-
+	bool OWSearch();
 
 
 public:
@@ -90,7 +90,7 @@ public:
 	uint8_t OWReadByte(void);
 	uint8_t OWTouchByte(uint8_t sendbyte);
 	void OWBlock(uint8_t *tran_buf, uint32_t tran_len);
-	bool OWFirst();
+	bool OWFirst(bool alarmOnly);
 	bool OWNext();
 	bool OWVerify();
 	bool OWVerifyPresence(e1WireFamilyCode family, const uint8_t * romAddressWithoutCRC);
@@ -106,14 +106,14 @@ public:
 
 	void OWTargetSetup(e1WireFamilyCode family_code);
 	void OWFamilySkipSetup();
-	bool OWSearch(bool alarmOnly);
+
 	uint8_t OWSpeed(uint8_t new_speed);
 	uint8_t OWLevel(uint8_t new_level);
 	bool OWWriteBytePower(uint8_t sendbyte);
 	bool OWReadBitPower(bool applyPowerResponse);
 
 
-	cDS2482(I2C_HandleTypeDef *i2c, eDS2482Device device):i2c(i2c), device(device), cAPU(0), c1WS(0), cSPU(0), cPPM(0), LastDeviceFlag(false), LastDiscrepancy(0), LastFamilyDiscrepancy(0), short_detected(0)
+	cDS2482(I2C_HandleTypeDef *i2c, eDS2482Device device):i2c(i2c), device(device), cAPU(0), c1WS(0), cSPU(0), cPPM(0), LastDeviceFlag(false), LastDiscrepancy(0), LastFamilyDiscrepancy(0),alarmOnly(false), short_detected(0)
 	{
 	}
 

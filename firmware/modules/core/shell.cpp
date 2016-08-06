@@ -31,6 +31,13 @@ using namespace std::chrono;
 
 namespace sensact{
 
+enum struct eBinCmd
+{
+	SEND_CAN,
+	SEND_I2C,
+	SEND_1WI,
+};
+
 static eShellError cmdHelp(shell_cmd_args *args);
 static eShellError cmdArgt(shell_cmd_args *args);
 static eShellError cmdCs(shell_cmd_args *args);
@@ -245,7 +252,41 @@ static int arg_parser(const char *cmd_line, int len, shell_cmd_args *args) {
 	return 0;
 }
 
-eShellError cShell::processCmds(const char *cmd_line) {
+static eShellError cmdSEND_CAN(uint8_t *cmdBuffer, const uint16_t size)
+{
+		#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+		uint16_t appId = *((uint16_t*)cmdBuffer[3]);
+		#pragma GCC diagnostic warning "-Wint-to-pointer-cast"
+		uint8_t commandId = cmdBuffer[5];
+		sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[6], (uint8_t)(size-6));
+}
+
+eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, const uint16_t size)
+{
+	eBinCmd cmd = (eBinCmd)cmdBuffer[2];
+	switch (cmd) {
+	case eBinCmd::SEND_CAN:
+		cmdSEND_CAN(cmdBuffer, size);
+		break;
+	default:
+		return eShellError::PROCESS_ERR_CMD_UNKN;
+	}
+	return eShellError::PROCESS_OK;
+}
+
+eShellError cShell::processCmds(uint8_t * buffer, const uint16_t size) {
+	if(buffer[0]==0x01)
+	{
+		return processBinaryCmd(buffer, size);
+	}
+	else
+	{
+		return processTextCmd((const char*)buffer, size);
+	}
+}
+
+eShellError cShell::processTextCmd(const char *cmd_line, const uint16_t size)
+{
 	int i;
 	int ret;
 	int cmd_len;

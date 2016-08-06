@@ -137,7 +137,9 @@ public:
 	 * 			SHELL_PROCESS_ERR_ARGS_LEN if an argument string was too long,
 	 * 			SHELL_PROCESS_ERR_CMD_UNK if the command was unknown
 	 */
-	static eShellError processCmds(const char *cmd_line);
+	static eShellError processCmds(uint8_t * cmd_line, const uint16_t size);
+	static eShellError processBinaryCmd(uint8_t * cmdBuffer, const uint16_t size);
+	static eShellError processTextCmd(const char * cmd_line, const uint16_t size);
 };
 }
 

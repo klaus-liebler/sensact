@@ -287,6 +287,48 @@ void BSP::InitCAN()
 	LOGI(SUCCESSFUL_STRING, "CAN filter");
 }
 
+void BSP::Search1Wire(bool alarmOnly)
+{
+	bool rslt;
+	uint32_t cnt;
+	LOGI("Searching devices on 1wire bus %s", alarmOnly?"with alarmOnly":"");
+	cnt = 0;
+	rslt = ds2482.OWFirst(alarmOnly);
+
+	while (rslt)
+	{
+		cnt++;
+		//print device found
+		switch ((drivers::e1WireFamilyCode)ds2482.ROM_NO[0]) {
+			case drivers::e1WireFamilyCode::DS18B20:
+				Console::Write("DS18B20   ");
+				break;
+			case drivers::e1WireFamilyCode::DS2413:
+				Console::Write("DS2413    ");
+				break;
+			case drivers::e1WireFamilyCode::DS2406:
+				Console::Write("DS2406    ");
+				break;
+			case drivers::e1WireFamilyCode::_3A2100H:
+				Console::Write("3A2100H   ");
+				break;
+			case drivers::e1WireFamilyCode::SENSACTSE:
+				Console::Write("SENSACTSE ");
+				break;
+			default:
+				Console::Write("?? 0x%02X ", ds2482.ROM_NO[0]);
+				break;
+		}
+		for (uint8_t i = 1; i < 7; i++)
+		{
+			Console::Write("0x%02X, ", ds2482.ROM_NO[i]);
+		}
+		Console::Writeln("");
+		rslt = ds2482.OWNext();
+	}
+	LOGI("%d found on 1wire bus", cnt);
+}
+
 void BSP::Init1wire()
 {
 #if (defined(SENSACTHS07) || defined(SENSACTUP02))
@@ -305,53 +347,13 @@ void BSP::Init1wire()
 	}
 
 	// find ALL devices
-	bool rslt;
-	uint32_t cnt;
+#ifdef PERMANENT_1WIRE_SEARCH
 	while(true)
-	{
-		LOGI("Searching devices on 1wire bus");
-
-		cnt = 0;
-		rslt = ds2482.OWFirst();
-
-		while (rslt)
-		{
-			cnt++;
-			//print device found
-			switch ((drivers::e1WireFamilyCode)ds2482.ROM_NO[0]) {
-				case drivers::e1WireFamilyCode::DS18B20:
-					Console::Write("DS18B20   ");
-					break;
-				case drivers::e1WireFamilyCode::DS2413:
-					Console::Write("DS2413    ");
-					break;
-				case drivers::e1WireFamilyCode::DS2406:
-					Console::Write("DS2406    ");
-					break;
-				case drivers::e1WireFamilyCode::_3A2100H:
-					Console::Write("3A2100H   ");
-					break;
-				case drivers::e1WireFamilyCode::SENSACTSE:
-					Console::Write("SENSACTSE ");
-					break;
-				default:
-					Console::Write("?? 0x%02X ", ds2482.ROM_NO[0]);
-					break;
-			}
-			for (i = 1; i < 7; i++)
-			{
-				Console::Write("0x%02X, ", ds2482.ROM_NO[i]);
-			}
-			Console::Writeln("");
-			rslt = ds2482.OWNext();
-
-		}
-		LOGI("%d found on 1wire bus", cnt);
-#ifndef PERMANENT_1WIRE_SEARCH
-		break;
 #endif
-	}
-	rslt = ds2482.OWFirst();
+	Search1Wire(false);
+
+	Search1Wire(true);
+	bool rslt = ds2482.OWFirst(false);
 
 	while (rslt)
 	{

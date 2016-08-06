@@ -374,13 +374,13 @@ void cDS2482::OWBlock(uint8_t *tran_buf, uint32_t tran_len) {
 // Return TRUE  : device found, ROM number in ROM_NO buffer
 //        FALSE : no device present
 //
-bool cDS2482::OWFirst() {
+bool cDS2482::OWFirst(bool alarmOnly) {
 	// reset the search state
 	LastDiscrepancy = 0;
 	LastDeviceFlag = false;
 	LastFamilyDiscrepancy = 0;
-
-	return OWSearch(false);
+	this->alarmOnly=alarmOnly;
+	return OWSearch();
 }
 
 //--------------------------------------------------------------------------
@@ -390,7 +390,7 @@ bool cDS2482::OWFirst() {
 //
 bool cDS2482::OWNext() {
 	// leave the search state alone
-	return OWSearch(false);
+	return OWSearch();
 }
 
 bool cDS2482::BeginTransactionForAll(e1WireCommand cmd)
@@ -574,6 +574,7 @@ bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, const uint8_t *address
 bool cDS2482::OWVerify() {
 	uint8_t rom_backup[8];
 	int i, rslt, ld_backup, ldf_backup, lfd_backup;
+	bool alarmOnly_backup;
 
 	// keep a backup copy of the current state
 	for (i = 0; i < 8; i++)
@@ -581,12 +582,14 @@ bool cDS2482::OWVerify() {
 	ld_backup = LastDiscrepancy;
 	ldf_backup = LastDeviceFlag;
 	lfd_backup = LastFamilyDiscrepancy;
+	alarmOnly_backup=alarmOnly;
 
 	// set search to find the same device
 	LastDiscrepancy = 64;
 	LastDeviceFlag = false;
+	alarmOnly=false;
 
-	if (OWSearch(false)) {
+	if (OWSearch()) {
 		// check if same device found
 		rslt = true;
 		for (i = 0; i < 8; i++) {
@@ -604,6 +607,7 @@ bool cDS2482::OWVerify() {
 	LastDiscrepancy = ld_backup;
 	LastDeviceFlag = ldf_backup;
 	LastFamilyDiscrepancy = lfd_backup;
+	alarmOnly=alarmOnly_backup;
 
 	// return the result of the verify
 	return rslt;
@@ -657,7 +661,7 @@ void cDS2482::OWFamilySkipSetup() {
 //                       last search was the last device or there
 //                       are no devices on the 1-Wire Net.
 //
-bool cDS2482::OWSearch(bool alarmOnly) {
+bool cDS2482::OWSearch() {
 	int id_bit_number;
 	int last_zero, rom_byte_number, search_result;
 	int id_bit, cmp_id_bit;

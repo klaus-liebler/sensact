@@ -18,6 +18,7 @@
 
 volatile uint8_t UART_buffer_pointer=0;
 volatile uint8_t UART_cmdBuffer[100];
+volatile bool BufferHasMessage=false;
 
 using namespace date;
 using namespace std::chrono;
@@ -54,16 +55,16 @@ void cMaster::Run(void) {
 			//Process CAN Message
 			ReceiveFromMessageBus();
 		}
-		if(UART_buffer_pointer == UART_BUFFER_SIZE)
+		if(BufferHasMessage)
 		{
-			cShell::processCmds((const char*)UART_cmdBuffer);
+			cShell::processCmds((uint8_t*)UART_cmdBuffer, UART_buffer_pointer);
 			uint16_t i = 0;
-			while(UART_cmdBuffer[i]!='\0')
+			for(uint16_t i=0;i<UART_buffer_pointer;i++)
 			{
 				UART_cmdBuffer[i]='\0';
-				i++;
 			}
 			UART_buffer_pointer=0;
+			BufferHasMessage=false;
 		}
 		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
 			cApplication *ap = MODEL::Glo2locCmd[i];

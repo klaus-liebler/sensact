@@ -278,6 +278,8 @@ namespace Klli.Sensact.TestGui
             byte pos = 0;
             buffer[pos] = 0x01; //0x01==START_OF_HEADING
             pos += 2;
+            buffer[pos] = 0x00; //WRITE_CAN
+            pos++;
             EndianBitConverter.Little.CopyBytes(cmdSpec.applicationIdAsUshort, buffer, pos);
             pos += 2;
             buffer[pos] = cmdSpec.CommandIdAsInt;

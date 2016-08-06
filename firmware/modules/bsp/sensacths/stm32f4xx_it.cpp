@@ -5,13 +5,14 @@
 #include "cRCSwitch.h"
 #include "cBsp.h"
 #include "cMaster.h"
+#include "console.h"
 
 extern volatile uint8_t UART_buffer_pointer;
 extern volatile uint8_t UART_cmdBuffer[100];
+extern volatile bool BufferHasMessage;
 
 static uint64_t lastReceivedUARTChar=0;
 static bool binaryMode=false;
-static uint8_t binaryMessageSize;
 
 extern uint64_t epochtimer;
 //extern ADC_HandleTypeDef    AdcHandle;
@@ -60,6 +61,10 @@ void USART3_IRQHandler(void)
 {
 	if(READ_BIT(USART3->SR, USART_SR_RXNE))
 	{
+		if(BufferHasMessage)
+		{
+			sensact::Console::Writeln("Buffer not yet processed!!!");
+		}
 		volatile uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
 		if(binaryMode && epochtimer-lastReceivedUARTChar > 1000)
 		{
@@ -67,54 +72,33 @@ void USART3_IRQHandler(void)
 			binaryMode=false;
 			UART_buffer_pointer=0;
 		}
-
-		if(chartoreceive==0x01)
+		lastReceivedUARTChar=epochtimer;
+		if(UART_buffer_pointer==0)
 		{
-			binaryMode=true;
-			UART_buffer_pointer=0;
+			binaryMode = chartoreceive==0x01;
+		}
+		if(UART_buffer_pointer<UART_BUFFER_SIZE)
+		{
+			UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
+			UART_buffer_pointer++;
 		}
 		if(binaryMode)
 		{
-			if(UART_buffer_pointer==0)
+			//Binary Format: (Multibyte: little endian!)
+			//1 byte Binary Sign = "0x01"
+			//1 byte Message Length
+			if(UART_buffer_pointer>1 && UART_buffer_pointer==UART_cmdBuffer[1])
 			{
-				UART_buffer_pointer++;
-			}
-			else if(UART_buffer_pointer==1)
-			{
-				binaryMessageSize=chartoreceive;
-				UART_buffer_pointer++;
-			}
-			else
-			{
-				UART_cmdBuffer[UART_buffer_pointer-2]=chartoreceive;
-				UART_buffer_pointer++;
-				if(UART_buffer_pointer>=binaryMessageSize)
-				{
-					uint16_t appId = *((uint16_t*)UART_cmdBuffer);
-					uint8_t commandId = UART_cmdBuffer[2];
-					sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&UART_cmdBuffer[3], (uint8_t)(binaryMessageSize-5));
-					binaryMode=false;
-					UART_buffer_pointer=0;
-				}
+				BufferHasMessage=true;
 			}
 		}
 		else
 		{
-			if(chartoreceive == '\r')
+			if(chartoreceive == '\n')
 			{
-				return;
-			}
-			else if(chartoreceive == '\n')
-			{
-				UART_buffer_pointer = UART_BUFFER_SIZE;
-			}
-			else if(UART_buffer_pointer<UART_BUFFER_SIZE)
-			{
-				UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
-				UART_buffer_pointer++;
+				BufferHasMessage=true;
 			}
 		}
-
 	}
 	//USART1->ICR = UINT32_MAX;//clear all flags
 }
