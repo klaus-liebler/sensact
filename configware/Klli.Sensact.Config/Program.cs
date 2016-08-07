@@ -40,6 +40,7 @@ namespace Klli.Sensact.Config
                 SourceCodeGenerator.GenerateModel_cpp(mc);
                 SourceCodeGenerator.GenerateCommandAndEventTypes_h(mc);
                 SourceCodeGenerator.GenerateApplication_H_and_CPP(mc);
+                SourceCodeGenerator.GenerateHeaderIncludesForApplications(mc);
                 foreach (Node n in mc.Model.Nodes)
                 {
                     SensactFileCollector p = new SensactFileCollector();

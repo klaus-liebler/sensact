@@ -10,193 +10,11 @@ namespace Klli.Sensact.Config
         {
             return id.ToString();
         }
-        #region Model for test all Inputs
-        public static Model BuildOld()
-        {
-            var cmdList = new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.TOGGLE,
-                                    TargetAppId=_(ID.BLIND_L1_BATH_J1),// "POWIT_XX_XXX_1"
-                                }
-                            };
-
-            Model model = new Model();
-            model.Nodes = new List<Node>(){
-                new SensactHs07()
-                {
-                    Id="EG2",
-                    Applications=new List<SensactApplication>()
-                    {
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I15_XXX",
-                            InputRessource=InputPin.I15,
-                            CommandsOnPressed=cmdList
-                        },
-                    }
-                },
-                new SensactHs07()
-                {
-                    Id="EG1",
-                    Applications=new List<SensactApplication>()
-                    {
-
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I15",
-                            InputRessource=InputPin.I15,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I13",
-                            InputRessource=InputPin.I13,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I12",
-                            InputRessource=InputPin.I12,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I11",
-                            InputRessource=InputPin.I11,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I10",
-                            InputRessource=InputPin.I10,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I09",
-                            InputRessource=InputPin.I09,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I08",
-                            InputRessource=InputPin.I08,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I07",
-                            InputRessource=InputPin.I07,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I06",
-                            InputRessource=InputPin.I06,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I03",
-                            InputRessource=InputPin.I03,
-                            CommandsOnPressed=cmdList
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I02",
-                            InputRessource=InputPin.I02,
-                            CommandsOnPressed=new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.UP,
-                                    TargetAppId="BLIND_XX_XXX"
-                                }
-                            },
-                            CommandsOnReleasedLong = new List<Command>()
-                            {
-                                 new Command()
-                                {
-                                    CommandType=CommandType.STOP,
-                                    TargetAppId="BLIND_XX_XXX"
-                                }
-                            }
-                        },
-                        new PushButtonXApplication()
-                        {
-                            ApplicationId="PUSHB_XX_XXX_I01",
-                            InputRessource=InputPin.I01,
-                            CommandsOnPressed=new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.DOWN,
-                                    TargetAppId="BLIND_XX_XXX"
-                                }
-                            },
-                            CommandsOnReleasedLong = new List<Command>()
-                            {
-                                 new Command()
-                                {
-                                    CommandType=CommandType.STOP,
-                                    TargetAppId="BLIND_XX_XXX"
-                                }
-                            }
-                        },
-                        new RotaryEncoderApplication()
-                        {
-                            ApplicationId="ROTAR_XX_XXX_1",
-                            InputPushRessource=InputPin.I14,
-                            InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                            CommandsOnPressed=new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.TOGGLE,
-                                    TargetAppId="PWMTU_XX_XXX"
-                                }
-                            },
-                            CommandsOnTurned=new List<Command>()
-                            {
-                                new Command()
-                                {
-                                    CommandType=CommandType.STEP_VERTICAL,
-                                    TargetAppId="PWMTU_XX_XXX"
-                                }
-                            }
-                        },
-                        new PoweritemApplication()
-                        {
-                            ApplicationId="POWIT_XX_XXX_1",
-                            OutputRessource=OutputPin.O01
-                        },
-                        new PWMApplication()
-                        {
-                            ApplicationId="PWM_XX_XXX",
-                            OutputRessources=new List<PwmPin>() {PwmPin.P12 },
-                            MinimalOnLevel=20,
-                            LowMeansLampOn=true
-                        },
-                        new BlindApplication()
-                        {
-                            ApplicationId="BLIND_XX_XXX",
-                            OpenCloseTimeInSeconds=10,
-                            OutputRessourceDown=OutputPin.O11,
-                            OutputRessourceUpOrPower=OutputPin.O12
-                        }
-                    }
-                }
-            };
-           
-            return model;
-        }
-        #endregion
+        
         public static Model BuildRCDemo()
         {
 
-            Model model = new Model();
+            Model model = new Model("RCDemo");
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {
@@ -213,7 +31,7 @@ namespace Klli.Sensact.Config
                             OutputRessources=new List<PwmPin>() { PwmPin.P01 },
                         },
                         
-                        new StandbyController
+                        new StandbyControllerApplication
                         {
                             ApplicationId="STDBY_XX_XXX_1",
                             OutputRessource=OutputPin.O16,
@@ -304,7 +122,7 @@ namespace Klli.Sensact.Config
 
         public static Model BuildLIBARDemo()
         {
-            Model model = new Model();
+            Model model = new Model("LIBARDemo");
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {
@@ -337,7 +155,7 @@ namespace Klli.Sensact.Config
 
         public static Model BuildRGBWDemo()
         {
-            Model model = new Model();
+            Model model = new Model("RGBWDemo");
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {
@@ -436,9 +254,9 @@ namespace Klli.Sensact.Config
             return model;
         }
 
-        public static Model BuildScharmannDemo()
+        public static Model BuildCANCommunicationDemo()
         {
-            Model model = new Model();
+            Model model = new Model("CANCommunicationDemo");
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {
@@ -449,7 +267,7 @@ namespace Klli.Sensact.Config
                     {
                         ApplicationId="BELL__DOOR"
                     },
-                    new StandbyController
+                    new StandbyControllerApplication
                       {
                           ApplicationId="STDBY_XX_XXX_1",
                           OutputRessource=OutputPin.O01,
@@ -571,7 +389,7 @@ namespace Klli.Sensact.Config
         public static Model BuildModelToTestAllPins()
         {
 
-            Model model = new Model();
+            Model model = new Model("TestAllPins");
 
             Node TEST_HS07 = new Nodes.SensactHs07()
             {

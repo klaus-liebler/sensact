@@ -10,6 +10,11 @@ namespace Klli.Sensact.Config
         [XmlElement(typeof(SensactHs07))]
         [XmlElement(typeof(SensactUp02))]
         public List<Node> Nodes = new List<Node>();
+        public Model(string name)
+        {
+            Name = name;
+        }
+        public string Name { get; private set; }
     }
 
     public class ModelContainer

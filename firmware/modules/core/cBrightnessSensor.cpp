@@ -22,29 +22,27 @@ bool cBrightnessSensor::Setup() {
 	return this->sensor->Setup();
 }
 
-void cBrightnessSensor::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBrightnessSensor::OnTOGGLE_FILTERCommand(uint16_t targetApplicationId, Time_t now)
 {
 	uint16_t raw = this->sensor->GetRawSensorValue();
-	eApplicationID toggleTarget = (eApplicationID)ParseInt16(payload, 0);
+	eApplicationID toggleTarget = (eApplicationID)targetApplicationId;
 	if(raw<=limitForPassingToggle)
 	{
-		cMaster::SendCommandToMessageBus(now, toggleTarget, eCommandType::TOGGLE, payload, payloadLength);
+		SendTOGGLECommand(toggleTarget, now);
 	}
 }
-void cBrightnessSensor::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBrightnessSensor::OnON_FILTERCommand(uint16_t targetApplicationId, uint32_t autoReturnToOffMsecs, Time_t now)
 {
 	uint16_t raw = this->sensor->GetRawSensorValue();
-	eApplicationID toggleTarget = (eApplicationID)ParseInt16(payload, 0);
+	eApplicationID toggleTarget = (eApplicationID)targetApplicationId;
 	if(raw<=limitForPassingToggle)
 	{
-		cMaster::SendCommandToMessageBus(now, toggleTarget, eCommandType::ON, payload, payloadLength);
+		SendONCommand(toggleTarget, autoReturnToOffMsecs, now);
 	}
 }
 
-void cBrightnessSensor::OnSEND_STATUSCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBrightnessSensor::OnSEND_STATUSCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	uint16_t raw = this->sensor->GetRawSensorValue();
 	uint8_t buffer[2];
 	LOGD("%s Acquired raw sensor value is %d", Name, raw);

@@ -38,21 +38,16 @@ cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const ou
 
 }
 
-void cPWM::OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
-	if(payloadLength!=1)
-	{
-		return;
-	}
-	uint8_t level=*payload;
-	SetTargetAbsolute(level, now);
+	SetTargetAbsolute(target, now);
 }
 
 void cPWM::SetTargetAbsolute(uint8_t level, Time_t now)
 {
 	lastUserSignal=now;
-		level = max(level, minimalOnLevel);
-		this->targetLevel = level;
+	level = max(level, minimalOnLevel);
+	this->targetLevel = level;
 }
 
 void cPWM::SetTargetRelative(int step, Time_t now)
@@ -85,9 +80,8 @@ void cPWM::StopMove(Time_t now)
 }
 
 //gesendet vom Inkrementalgeber
-void cPWM::OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
-	UNUSED(payloadLength);
-	int16_t step = ParseInt16(payload, 0);
+void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
+
 	if(targetLevel==0)
 	{
 		if(step>0)
@@ -103,10 +97,8 @@ void cPWM::OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_
 }
 
 //gesendet vom 1BP
-void cPWM::OnSTARTCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPWM::OnSTARTCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	if(now-this->lastUserSignal> TIME_TO_FORGET_DIM_DIRECTION)
 	{
 		this->OneButtonDimDirection=eDirection::UP;
@@ -120,25 +112,20 @@ void cPWM::OnSTARTCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 }
 
 //gesendet vom 1PB
-void cPWM::OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPWM::OnSTOPCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	StopMove(now);
 }
 
-void cPWM::OnUPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPWM::OnUPCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	MoveInDirection(eDirection::UP, now);
 }
 
 
-void cPWM::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
-	UNUSED(payload);
-	UNUSED(payloadLength);
-	UNUSED(now);
+void cPWM::OnTOGGLECommand(Time_t now)
+{
+
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
 	}
@@ -149,9 +136,8 @@ void cPWM::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) 
 	}
 }
 
-void cPWM::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
-	UNUSED(payload);
-	UNUSED(payloadLength);
+void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
+	UNUSED(autoReturnToOffMsecs);
 	UNUSED(now);
 	targetLevel=UINT8_MAX;
 	if(autoOffIntervalMsecs!=0)
@@ -162,9 +148,7 @@ void cPWM::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
 
 
 
-void cPWM::OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
-	(void)(payload);
-	(void)(payloadLength);
+void cPWM::OnDOWNCommand(Time_t now) {
 	MoveInDirection(eDirection::DOWN, now);
 }
 

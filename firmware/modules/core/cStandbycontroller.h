@@ -26,7 +26,7 @@ namespace sensact{
 	public:
 		bool Setup() override;
 		void DoEachCycle(Time_t time) override;
-		void OnHEARTBEATCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+		#include <StandbyControllerApplication.hinc>
 		/**
 		 * @param evt
 		 */

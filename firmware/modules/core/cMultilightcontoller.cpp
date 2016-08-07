@@ -14,9 +14,7 @@
 namespace sensact {
 
 
-void cMultilightController::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) {
-	UNUSED(payload);
-	UNUSED(payloadLength);
+void cMultilightController::OnTOGGLECommand(Time_t now) {
 	if (currentLevel == 0) {
 		currentLevel=storedLevel;
 	}

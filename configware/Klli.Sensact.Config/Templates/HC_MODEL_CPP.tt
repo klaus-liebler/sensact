@@ -3,7 +3,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-<# RenderHeader("hc_model.cpp", "autogen", version, "The Home Model", "All params and details about the home model"); #>
+<# RenderHeader("hc_model.cpp", "autogen", version, ModelReference, "All params and details about the home model"); #>
 
 #include "common.h"
 #include "cModel.h"

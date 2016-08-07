@@ -23,8 +23,6 @@ namespace Klli.Sensact.Config.Applications
                 CommandType.START, //Beim Drücken der Taste
                 CommandType.UP, //beim Hoch-Drück
                 CommandType.DOWN, //beim Runter-Drück
-                CommandType.STOP, //beim Loslassen-Lang
-                CommandType.TOGGLE_SPECIAL, //beim Loslassen-Kurz
                 CommandType.TOGGLE,
                 CommandType.STEP_VERTICAL,
                 CommandType.ON,
@@ -33,11 +31,47 @@ namespace Klli.Sensact.Config.Applications
             return ret;
         }
 
-        [SensactCommandMethod]
-        public void SET_VERTICAL_TARGET(byte dimValue)
+        public override void OnSTOPCommand()
         {
-
+            base.OnSTOPCommand();
         }
+
+        public override void OnSTARTCommand()
+        {
+            base.OnSTARTCommand();
+        }
+
+        public override void OnUPCommand()
+        {
+            base.OnUPCommand();
+        }
+
+        public override void OnDOWNCommand()
+        {
+            base.OnDOWNCommand();
+        }
+
+        public override void OnSTEP_VERTICALCommand(short step)
+        {
+            base.OnSTEP_VERTICALCommand(step);
+        }
+
+        public override void OnSET_VERTICAL_TARGETCommand(ushort target)
+        {
+            base.OnSET_VERTICAL_TARGETCommand(target);
+        }
+
+        public override void OnONCommand(uint autoReturnToOffMsecs)
+        {
+            base.OnONCommand(autoReturnToOffMsecs);
+        }
+
+        public override void OnTOGGLECommand()
+        {
+            base.OnTOGGLECommand();
+        }
+
+
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {

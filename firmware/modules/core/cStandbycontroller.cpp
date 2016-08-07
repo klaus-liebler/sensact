@@ -27,10 +27,8 @@ bool cStandbyController::Setup() {
 
 
 
-void cStandbyController::OnHEARTBEATCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cStandbyController::OnHEARTBEATCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	lastHeartbeat=now;
 	if(this->state == ePowerState::INACTIVE)
 	{

@@ -6,10 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config.Applications
 {
-    public class StandbyController : ActorApplication
+    public class StandbyControllerApplication : ActorApplication
     {
         public OutputPin OutputRessource;
         public long WaittimeInMsec;
+
+        [SensactCommandMethod]
+        public override void OnHEARTBEATCommand()
+        {
+            base.OnHEARTBEATCommand();
+        }
 
         public override HashSet<CommandType> ICanReactOnTheseCommands()
         {

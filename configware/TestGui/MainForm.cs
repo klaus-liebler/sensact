@@ -3,6 +3,7 @@ using MiscUtil.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Ports;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -61,15 +62,14 @@ namespace Klli.Sensact.TestGui
         public MainForm()
         {
             InitializeComponent();
-
-            this.serialPort.PortName = "COM5";// Properties.Settings.Default.SerialPort;
-            serialPort.Open();
+            cboSelectCOM.DataSource = SerialPort.GetPortNames();
+            
 
          
             mc = Config.Program.CreateAndCheckModelContainer();
             if(mc!=null)
             {
-                TreeHelper root = new TreeHelper { Text = "Sattlerstraße 16" };
+                TreeHelper root = new TreeHelper { Text = mc.Model.Name };
                 foreach (var app in mc.id2app.Values)
                 {
                     root.Append(app.Application.ApplicationId, app.Application.ApplicationId, '_');
@@ -89,7 +89,6 @@ namespace Klli.Sensact.TestGui
             {
                 if (m.GetCustomAttribute<SensactCommandMethod>() != null)
                 {
-
                     row++;
                 }
             }
@@ -154,7 +153,7 @@ namespace Klli.Sensact.TestGui
             Button btn = CreateCommandButton(sac, mi);
             functionTable.Controls.Add(btn, 0, functionTableRow);
             Config.CommandType ct = Config.CommandType.NOP;
-            if(!Enum.TryParse<Config.CommandType>(mi.Name, out ct))
+            if(!Enum.TryParse<Config.CommandType>(SourceCodeGenerator.ExtractCmdName(mi), out ct))
             {
                 throw new Exception("Method name " + mi.Name + " that ist marked as SensactCommand cannot be parsed into a CommandType");
             }
@@ -240,7 +239,7 @@ namespace Klli.Sensact.TestGui
         {
             Button button=new Button();
             button.Size = BTN_SIZE;
-            button.Text = mi.Name;
+            button.Text = SourceCodeGenerator.ExtractCmdName(mi);
             button.Name = sac.Application.ApplicationId+"_"+mi.Name;
             button.UseVisualStyleBackColor = true;
             button.Click += new System.EventHandler(cmdButton_Click);
@@ -336,12 +335,18 @@ namespace Klli.Sensact.TestGui
 
         private void btnUpdateCOM_Click(object sender, EventArgs e)
         {
-
+            cboSelectCOM.DataSource = SerialPort.GetPortNames();
         }
 
         private void btnOpenCOM_Click(object sender, EventArgs e)
         {
-
+            if(serialPort.IsOpen)
+            {
+                serialPort.Close();
+            }
+            string port = cboSelectCOM.Text;
+            serialPort.PortName = port;
+            serialPort.Open();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)

@@ -41,37 +41,27 @@ namespace sensact {
 
 class cApplication {
 protected:
-	int16_t ParseInt16(uint8_t *message, uint32_t offset);
-	void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
-	uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
-	void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
+	static int16_t ParseInt16(uint8_t *message, uint32_t offset);
+	static void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
+	static uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
+	static void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
+	static uint32_t ParseUInt32(uint8_t *message, uint32_t offset);
+	static void WriteUInt32(uint32_t value, uint8_t *message, uint32_t offset);
 public:
 	const char* Name;
 	eAppType AppType;
 	eApplicationID Id;
+
 ");
             
-            #line 22 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
-foreach(CommandType ct in Commands){
-	string s = Convert.ToString(ct); 
-            
-            #line default
-            #line hidden
-            this.Write("\tvirtual void On");
-            
-            #line 24 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(s));
-            
-            #line default
-            #line hidden
-            this.Write("Command(uint8_t *payload, uint8_t payloadLength, Time_t now);\r\n");
-            
             #line 25 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
-}
+            this.Write(this.ToStringHelper.ToStringWithCulture(CommandHeaders));
             
             #line default
             #line hidden
-            this.Write(@"	virtual bool Setup()=0;
+            this.Write(@"
+
+	virtual bool Setup()=0;
 	virtual void DoEachCycle(Time_t time)=0; //Muss vom Master alle 20ms aufgerufen werden
 	void OnCommand(eCommandType cmd, uint8_t *payload,
 			uint8_t payloadLength, Time_t now);

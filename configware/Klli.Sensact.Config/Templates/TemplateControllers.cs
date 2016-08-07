@@ -7,13 +7,16 @@ namespace Klli.Sensact.Config.Templates
     
     partial class APPLICATION_H
     {
-        public IEnumerable<CommandType> Commands = new List<CommandType>();
+        public string CommandHeaders;
         public string version;
     }
 
     partial class APPLICATION_CPP
     {
-        public IEnumerable<CommandType> Commands = new List<CommandType>();
+        public string CommandParseImplementation;
+        public string CommandEmptyHandlerImplementation=string.Empty;
+        public string CommandCreateImplementation = string.Empty;
+
         public string version;
     }
     partial class HC_APPIDS_H
@@ -27,6 +30,7 @@ namespace Klli.Sensact.Config.Templates
     {
         public List<ModelCppItem> Items = new List<ModelCppItem>();
         public string version;
+        public string ModelReference;
         public StringBuilder ApplicationNames = new StringBuilder();
 
     }

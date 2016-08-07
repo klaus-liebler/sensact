@@ -690,16 +690,17 @@ ePushState BSP::GetDigitalInput(eInput i)
 	if(ii < 32)
 	{
 #ifdef SENSACTHS07
+#pragma GCC diagnostic ignored "-Wconversion"
 		if(i==eInput::ROTAR_PUSH_1)
 		{
-			#pragma GCC diagnostic ignored "-Wconversion"
+
 			return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;
-			#pragma GCC diagnostic warning "-Wconversion"
 		}
 		else
 		{
 			return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_SET?ePushState::PRESSED : ePushState::RELEASED;
 		}
+#pragma GCC diagnostic warning "-Wconversion"
 #else
 		#pragma GCC diagnostic ignored "-Wconversion"
 		return HAL_GPIO_ReadPin(GPIOxFromMap(ii), PINxFromMap(ii))==GPIO_PIN_RESET?ePushState::PRESSED : ePushState::RELEASED;

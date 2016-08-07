@@ -23,10 +23,9 @@ bool cPoweritem::Setup() {
 	return BSP::RequestPoweredOutput(this->output);
 }
 
-void cPoweritem::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPoweritem::OnTOGGLECommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
+
 	if(this->state == ePowerState::INACTIVE)
 	{
 		if(autoOffIntervalMsecs!=0)
@@ -43,10 +42,8 @@ void cPoweritem::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t
 	}
 }
 
-void cPoweritem::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	if(autoOffIntervalMsecs!=0)
 	{
 		autoOffTime=now+autoOffIntervalMsecs;
@@ -55,10 +52,8 @@ void cPoweritem::OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now
 	this->state=ePowerState::ACTIVE;
 }
 
-void cPoweritem::OnTOGGLE_SPECIALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cPoweritem::OnTOGGLE_SPECIALCommand(Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	UNUSED(now);
 	if(this->state == ePowerState::INACTIVE)
 	{

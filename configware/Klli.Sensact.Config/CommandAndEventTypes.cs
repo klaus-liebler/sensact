@@ -13,8 +13,10 @@
         LEFT,
         RIGHT,
         ON,
+        ON_FILTER,
         OFF,
         TOGGLE,
+        TOGGLE_FILTER,
         TOGGLE_SPECIAL,
         SET_PARAM,
         SET_HORIZONTAL_TARGET, //Param: the target as u16

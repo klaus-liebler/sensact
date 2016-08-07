@@ -7,36 +7,38 @@
 namespace drivers {
 
 // misc constants
-#define POLL_LIMIT  200
-#define POLL_TIMEOUT UINT8_MAX
-#define TIMEOUT 100
+const uint8_t POLL_LIMIT =200;
+const uint8_t POLL_TIMEOUT=UINT8_MAX;
+const uint8_t TIMEOUT=100;
 
-// DS2482 commands
-#define CMD_DRST   0xF0
-#define CMD_WCFG   0xD2
-#define CMD_CHSL   0xC3
-#define CMD_SRP    0xE1
-#define CMD_1WRS   0xB4
-#define CMD_1WWB   0xA5
-#define CMD_1WRB   0x96
-#define CMD_1WSB   0x87
-#define CMD_1WT    0x78
 
-// DS2482 config bits
-#define CONFIG_APU  0x01
-#define CONFIG_PPM  0x02
-#define CONFIG_SPU  0x04
-#define CONFIG_1WS  0x08
+const uint8_t CMD_DRST=0xF0;
+const uint8_t CMD_WCFG=0xD2;
+const uint8_t CMD_CHSL=0xC3;
+const uint8_t CMD_SRP=0xE1;
+const uint8_t CMD_1WRS=0xB4;
+const uint8_t CMD_1WWB=0xA5;
+const uint8_t CMD_1WRB=0x96;
+const uint8_t CMD_1WSB=0x87;
+const uint8_t CMD_1WT=0x78;
 
-// DS2482 status bits
-#define STATUS_1WB  0x01
-#define STATUS_PPD  0x02
-#define STATUS_SD   0x04
-#define STATUS_LL   0x08
-#define STATUS_RST  0x10
-#define STATUS_SBR  0x20
-#define STATUS_TSB  0x40
-#define STATUS_DIR  0x80
+
+const uint8_t CONFIG_APU  =0x01;
+const uint8_t CONFIG_PPM  =0x02;
+const uint8_t CONFIG_SPU  =0x04;
+const uint8_t CONFIG_1WS  =0x08;
+
+
+const uint8_t STATUS_1WB  =0x01;
+const uint8_t STATUS_PPD  =0x02;
+const uint8_t STATUS_SD   =0x04;
+const uint8_t STATUS_LL   =0x08;
+const uint8_t STATUS_RST  =0x10;
+const uint8_t STATUS_SBR  =0x20;
+const uint8_t STATUS_TSB  =0x40;
+const uint8_t STATUS_DIR  =0x80;
+
+
 
 
 
@@ -63,13 +65,13 @@ bool cDS2482::Setup() {
 		return false;
 
 	// default configuration
-	c1WS = 0;
-	cSPU = 0;
-	cPPM = 0;
-	cAPU = CONFIG_APU;
+	CLEAR_BIT(currCfg, CONFIG_1WS);
+	CLEAR_BIT(currCfg, CONFIG_SPU);
+	CLEAR_BIT(currCfg, CONFIG_PPM);
+	SET_BIT(currCfg, CONFIG_APU);
 
 	// write the default configuration setup
-	if (!writeConfig(c1WS | cSPU | cPPM | cAPU))
+	if (!writeConfig())
 		return false;
 
 	return true;
@@ -104,19 +106,19 @@ bool cDS2482::reset() {
 // Returns:  TRUE: config written and response correct
 //           FALSE: response incorrect
 //
-bool cDS2482::writeConfig(uint8_t config) {
+bool cDS2482::writeConfig() {
 	uint8_t read_config;
 
 	// Write configuration (Case A)
 	//   S AD,0 [A] WCFG [A] CF [A] Sr AD,1 [A] [CF] A\ P
 	//  [] indicates from slave
 	//  CF configuration byte to write
-	uint16_t pseudoAddress = (CMD_WCFG << 8) | (((~config << 4) | config) & 0xFF);
+	uint16_t pseudoAddress = (CMD_WCFG << 8) | (((~currCfg << 4) | currCfg) & 0xFF);
 	HAL_I2C_Mem_Read(i2c, ADDR, pseudoAddress, I2C_MEMADD_SIZE_16BIT,
 			&read_config, 1, TIMEOUT);
 
 	// check for failure due to incorrect read back
-	if (config != read_config) {
+	if (currCfg != read_config) {
 		// handle error
 		// ...
 		reset();
@@ -662,18 +664,16 @@ void cDS2482::OWFamilySkipSetup() {
 //                       are no devices on the 1-Wire Net.
 //
 bool cDS2482::OWSearch() {
-	int id_bit_number;
-	int last_zero, rom_byte_number, search_result;
-	int id_bit, cmp_id_bit;
-	uint8_t rom_byte_mask, search_direction, status;
-
-	// initialize for search
-	id_bit_number = 1;
-	last_zero = 0;
-	rom_byte_number = 0;
-	rom_byte_mask = 1;
-	search_result = false;
+	uint8_t id_bit_number=1;
+	uint8_t last_zero=0;
+	uint8_t rom_byte_number=0;
+	uint8_t rom_byte_mask=1;
+	bool search_result=false;
 	uint8_t crc8 = 0;
+
+	uint8_t id_bit, cmp_id_bit;
+	uint8_t search_direction, status;
+
 
 	// if the last call was not the last one
 	if (!LastDeviceFlag) {
@@ -835,15 +835,15 @@ void cDS2482::calcCrc8(uint8_t data, uint8_t *crc) {
 //
 // Returns:  current 1-Wire Net speed
 //
-uint8_t cDS2482::OWSpeed(uint8_t new_speed) {
+e1WireSpeed cDS2482::OWSpeed(e1WireSpeed new_speed) {
 	// set the speed
-	if (new_speed == MODE_OVERDRIVE)
-		c1WS = CONFIG_1WS;
+	if (new_speed == e1WireSpeed::OVERDRIVE)
+		SET_BIT(currCfg, CONFIG_1WS);
 	else
-		c1WS = false;
+		CLEAR_BIT(currCfg, CONFIG_1WS);
 
 	// write the new config
-	writeConfig(c1WS | cSPU | cPPM | cAPU);
+	writeConfig();
 
 	return new_speed;
 }
@@ -859,18 +859,18 @@ uint8_t cDS2482::OWSpeed(uint8_t new_speed) {
 //
 // Returns:  current 1-Wire Net level
 //
-uint8_t cDS2482::OWLevel(uint8_t new_level) {
+e1WirePullup cDS2482::OWTrySetPullup(e1WirePullup new_level) {
 	// function only will turn back to non-strong pull-up
-	if (new_level != MODE_STANDARD)
-		return MODE_STRONG;
+	if (new_level != e1WirePullup::STANDARD)
+		return e1WirePullup::STRONG;
 
 	// clear the strong pull-up bit in the global config state
-	cSPU = false;
+	CLEAR_BIT(currCfg, CONFIG_SPU);
 
 	// write the new config
-	writeConfig(c1WS | cSPU | cPPM | cAPU);
+	writeConfig();
 
-	return MODE_STANDARD;
+	return e1WirePullup::STANDARD;
 }
 
 //--------------------------------------------------------------------------
@@ -886,10 +886,10 @@ uint8_t cDS2482::OWLevel(uint8_t new_level) {
 //
 bool cDS2482::OWWriteBytePower(uint8_t sendbyte) {
 	// set strong pull-up enable
-	cSPU = CONFIG_SPU;
+	SET_BIT(currCfg, CONFIG_SPU);
 
 	// write the new config
-	if (!writeConfig(c1WS | cSPU | cPPM | cAPU))
+	if (!writeConfig())
 		return false;
 
 	// perform write byte
@@ -914,18 +914,18 @@ bool cDS2482::OWReadBitPower(bool applyPowerResponse) {
 	unsigned char rdbit;
 
 	// set strong pull-up enable
-	cSPU = CONFIG_SPU;
+	SET_BIT(currCfg, CONFIG_SPU);
 
-	// write the new config
-	if (!writeConfig(c1WS | cSPU | cPPM | cAPU))
-		return false;
+		// write the new config
+		if (!writeConfig())
+			return false;
 
 	// perform read bit
 	rdbit = OWReadBit();
 
 	// check if response was correct, if not then turn off strong pull-up
 	if (rdbit != applyPowerResponse) {
-		OWLevel(MODE_STANDARD);
+		OWTrySetPullup(e1WirePullup::STANDARD);
 		return false;
 	}
 

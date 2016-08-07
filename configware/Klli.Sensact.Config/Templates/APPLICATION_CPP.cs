@@ -34,67 +34,30 @@ namespace Klli.Sensact.Config.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n#include <cApplication.h>\r\n#include <cLog.h>\r\n#include <cModel.h>\r\n\r\nnamespace " +
-                    "sensact {\r\nvoid cApplication::OnCommand(eCommandType cmd, uint8_t *payload,\r\n\t\tu" +
-                    "int8_t payloadLength, Time_t now) {\r\n\tswitch(cmd)\r\n\t{\r\n");
-            
-            #line 17 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-foreach(CommandType ct in Commands){ 
-            
-            #line default
-            #line hidden
-            this.Write("\t\tcase eCommandType::");
+            this.Write("\r\n#include <cApplication.h>\r\n#include <cLog.h>\r\n#include <cModel.h>\r\n#include <cM" +
+                    "aster.h>\r\n\r\nnamespace sensact {\r\nvoid cApplication::OnCommand(eCommandType cmd, " +
+                    "uint8_t *payload,\r\n\t\tuint8_t payloadLength, Time_t now) {\r\n\tswitch(cmd)\r\n\t{\r\n");
             
             #line 18 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Convert.ToString(ct)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(CommandParseImplementation));
             
             #line default
             #line hidden
-            this.Write(": On");
-            
-            #line 18 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Convert.ToString(ct)));
-            
-            #line default
-            #line hidden
-            this.Write("Command(payload, payloadLength, now); break;\r\n");
-            
-            #line 19 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-}
-            
-            #line default
-            #line hidden
-            this.Write("\t\tcase eCommandType::CNT:break;\r\n\t}\r\n\treturn;\r\n}\r\n");
+            this.Write("\r\n\t\tdefault:break;\r\n\t}\r\n\treturn;\r\n}\r\n\r\n");
             
             #line 24 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-foreach(CommandType ct in Commands){ 
+            this.Write(this.ToStringHelper.ToStringWithCulture(CommandCreateImplementation));
             
             #line default
             #line hidden
-            this.Write("void cApplication::On");
+            this.Write("\r\n\r\n");
             
-            #line 25 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Convert.ToString(ct)));
-            
-            #line default
-            #line hidden
-            this.Write("Command(uint8_t *payload,\r\n\t\tuint8_t payloadLength, Time_t now)\r\n{\r\n\t(void)(paylo" +
-                    "ad);\r\n\t(void)(payloadLength);\r\n\t(void)(now);\r\n\tLOGE(\"Application %s does not sup" +
-                    "port Command ");
-            
-            #line 31 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Convert.ToString(ct)));
+            #line 26 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CommandEmptyHandlerImplementation));
             
             #line default
             #line hidden
-            this.Write("\", Name);\r\n}\r\n");
-            
-            #line 33 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
-}
-            
-            #line default
-            #line hidden
-            this.Write("\r\n} /* namespace sensact */\r\n");
+            this.Write("\r\n\r\n} /* namespace sensact */\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

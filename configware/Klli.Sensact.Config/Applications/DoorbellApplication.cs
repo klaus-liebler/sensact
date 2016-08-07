@@ -1,5 +1,4 @@
-﻿using Klli.Sensact.Config.Nodes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,9 +11,14 @@ namespace Klli.Sensact.Config.Applications
         {
             HashSet<CommandType> ret = new HashSet<CommandType>()
             {
-                CommandType.START,
+                CommandType.SET_SIGNAL,
             };
             return ret;
+        }
+
+        public override void OnSET_SIGNALCommand(ushort signal)
+        {
+            base.OnSET_SIGNALCommand(signal);
         }
 
         public override HashSet<EventType> ICanSendTheseEvents()

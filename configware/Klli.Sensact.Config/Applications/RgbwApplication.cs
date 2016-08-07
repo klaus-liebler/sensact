@@ -34,16 +34,24 @@ namespace Klli.Sensact.Config.Applications
             };
             return ret;
         }
-        [SensactCommandMethod]
-        public void SET_RGBW(byte R, byte G, byte B, byte W)
+        public override void OnSET_RGBWCommand(byte R, byte G, byte B, byte W)
         {
-
+            Console.Write("");
         }
 
-        [SensactCommandMethod]
-        public void STEP_VERTICAL(short step)
+        public override void OnSET_SIGNALCommand(ushort signal)
         {
+            base.OnSET_SIGNALCommand(signal);
+        }
 
+        public override void OnTOGGLECommand()
+        {
+            base.OnTOGGLECommand();
+        }
+
+        public override void OnSTEP_VERTICALCommand(short step)
+        {
+            Console.Write("");
         }
 
         public override HashSet<EventType> ICanSendTheseEvents()

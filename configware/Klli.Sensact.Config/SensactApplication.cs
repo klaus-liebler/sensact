@@ -172,6 +172,61 @@ namespace Klli.Sensact.Config
         public abstract HashSet<EventType> ICanSendTheseEvents();
 
         public abstract string GenerateInitializer(ModelContainer m);
+
+        [SensactCommandMethod]
+        public virtual void OnNOPCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnRESETCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSTARTCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSTOPCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnUPCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnDOWNCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnFORWARDCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnBACKWARDCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnLEFTCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnRIGHTCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnONCommand(uint autoReturnToOffMsecs) { }
+        [SensactCommandMethod]
+        public virtual void OnON_FILTERCommand(ushort targetApplicationId, uint autoReturnToOffMsecs) { }
+        [SensactCommandMethod]
+        public virtual void OnOFFCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnTOGGLECommand() { }
+        [SensactCommandMethod]
+        public virtual void OnTOGGLE_FILTERCommand(ushort targetApplicationId) { }
+        [SensactCommandMethod]
+        public virtual void OnTOGGLE_SPECIALCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSET_PARAMCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSET_HORIZONTAL_TARGETCommand(ushort target) { } //Param: the target as u16
+        [SensactCommandMethod]
+        public virtual void OnSTEP_HORIZONTALCommand(short step) { } //Param: the step size as i16
+        [SensactCommandMethod]
+        public virtual void OnSET_VERTICAL_TARGETCommand(ushort target) { }
+        [SensactCommandMethod]
+        public virtual void OnSTEP_VERTICALCommand(short step) { }
+        [SensactCommandMethod]
+        public virtual void OnSET_LATERAL_TARGETCommand(ushort target) { }
+        [SensactCommandMethod]
+        public virtual void OnSTEP_LATERALCommand(short step) { }
+        [SensactCommandMethod]
+        public virtual void OnHEARTBEATCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSEND_STATUSCommand() { }
+        [SensactCommandMethod]
+        public virtual void OnSET_RGBWCommand(byte R, byte G, byte B, byte W) { } //Params as u8
+        [SensactCommandMethod]
+        public virtual void OnSET_SIGNALCommand(ushort signal) { } //Param as u16 (mp3 song, well known color, light sequence)
     }
 
     

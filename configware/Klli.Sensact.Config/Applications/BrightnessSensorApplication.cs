@@ -16,10 +16,27 @@ namespace Klli.Sensact.Config.Applications
         {
             HashSet<CommandType> ret = new HashSet<CommandType>()
             {
-                CommandType.TOGGLE, CommandType.SEND_STATUS, CommandType.ON
+                CommandType.TOGGLE_FILTER, CommandType.SEND_STATUS, CommandType.ON_FILTER
             };
             return ret;
         }
+
+        public override void OnTOGGLE_FILTERCommand(ushort targetApplicationId)
+        {
+            base.OnTOGGLE_FILTERCommand(targetApplicationId);
+        }
+      
+
+        public override void OnSEND_STATUSCommand()
+        {
+            base.OnSEND_STATUSCommand();
+        }
+
+        public override void OnON_FILTERCommand(ushort targetApplicationId, uint autoReturnToOffMsecs)
+        {
+            base.OnON_FILTERCommand(targetApplicationId, autoReturnToOffMsecs);
+        }
+        
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {

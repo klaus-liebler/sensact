@@ -108,10 +108,8 @@ void cBlind::stopForReverse(Time_t now, uint16_t currPos){
 }
 
 
-void cBlind::OnUPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBlind::OnUPCommand(Time_t now)
 {
-	(void)(payload);
-	(void)(payloadLength);
 	if(state==eDirection::STOP)
 	{
 		LOGD("%s goes up to targetLevel=FULLY_CLOSED_INT", Name);
@@ -124,10 +122,8 @@ void cBlind::OnUPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 	}
 }
 
-void cBlind::OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBlind::OnSTOPCommand(Time_t now)
 {
-	(void)(payload);
-	(void)(payloadLength);
 	//Wenn ein Release nach langer Zeit: f�hrt immer zu einem Motorstop (auch wenn der Motor bereits gestoppt ist)
 	LOGD("%s: OnStopCalled", Name);
 	this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
@@ -135,10 +131,8 @@ void cBlind::OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 
 //Events: Pr�fen State und setzen target
 //20ms-Handler: Setzen State und treiben Motore an
-void cBlind::OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBlind::OnDOWNCommand(Time_t now)
 {
-	(void)(payload);
-	(void)(payloadLength);
 	LOGD("%s: OnDown called", Name);
 	if(state==eDirection::STOP)
 	{
@@ -150,8 +144,6 @@ void cBlind::OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
 		LOGD("s%: this->targetLevel = calculatePosition(now)", Name);
 		this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
 	}
-
-
 }
 
 uint16_t cBlind::calculatePosition(Time_t now)

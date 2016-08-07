@@ -40,7 +40,7 @@ namespace Klli.Sensact.Config
             //Ansteuerung des MP3-Moduls (seriell)
             //12V-Versorgung der RGBW-Spots im L1.BATH
             //LED für Außensteckdosen im Tastermodul am Terassenausgang
-            Model model = new Model();
+            Model model = new Model("Sattlerstraße 16");
             Node SNSAC_L0_TECH_HS07_1 = new SensactHs07()
             {
                 Id = "SNSAC_L0_TECH_HS07_1",
@@ -169,8 +169,8 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
             });
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = OutputPin.O08, WaittimeInMsec = 10000 });
-            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = OutputPin.O09, WaittimeInMsec = 10000 });
+            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = OutputPin.O08, WaittimeInMsec = 10000 });
+            SNSAC_L0_TECH_HS07_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = OutputPin.O09, WaittimeInMsec = 10000 });
             //MISSING:Heizungsanlage
 
             //WELL
@@ -487,8 +487,8 @@ namespace Klli.Sensact.Config
             SNSAC_L3_TECH_HS07_2.Applications.AddToggleButton(ID.PUSHB_L3_TECH_B11, InputPin.I11, ID.POWIT_L3_TECH_C1);
             SNSAC_L3_TECH_HS07_2.Applications.AddPowIt(ID.POWIT_L3_TECH_C1, OutputPin.O10);
             SNSAC_L3_TECH_HS07_2.Applications.AddPlaceholder(ID.SBRGH_LX_ROOF);
-            SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L3_TECH_48V), OutputRessource = OutputPin.O09, WaittimeInMsec = 10000 });
-            SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyController { ApplicationId = _(ID.STDBY_L3_ROOF_48V), OutputRessource = OutputPin.O08, WaittimeInMsec = 10000 });
+            SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L3_TECH_48V), OutputRessource = OutputPin.O09, WaittimeInMsec = 10000 });
+            SNSAC_L3_TECH_HS07_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L3_ROOF_48V), OutputRessource = OutputPin.O08, WaittimeInMsec = 10000 });
 
 
             //WORK

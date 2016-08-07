@@ -27,17 +27,19 @@ namespace Klli.Sensact.Config.Applications
         }
 
         [SensactCommandMethod]
-        public void UP()
+        public override void OnUPCommand()
         {
 
         }
+         
         [SensactCommandMethod]
-        public void DOWN()
+        public override void OnDOWNCommand()
         {
 
         }
+
         [SensactCommandMethod]
-        public void STOP()
+        public override void OnSTOPCommand()
         {
 
         }

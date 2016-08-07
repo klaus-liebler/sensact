@@ -26,19 +26,19 @@ namespace Klli.Sensact.Config.Applications
         }
 
         [SensactCommandMethod]
-        public void TOGGLE()
+        public override void OnTOGGLECommand()
         {
 
         }
 
         [SensactCommandMethod]
-        public void TOGGLE_SPECIAL()
+        public override void OnTOGGLE_SPECIALCommand()
         {
 
         }
 
         [SensactCommandMethod]
-        public void ON()
+        public override void OnONCommand(uint autoReturnToOffMsecs)
         {
 
         }

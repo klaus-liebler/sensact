@@ -29,10 +29,7 @@ class cRgbw: public cApplication
 
 
 	public:
-		void OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSET_SIGNALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+		#include <RgbwApplication.hinc>
 		bool Setup() override;
 		void DoEachCycle(Time_t time) override;
 		cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR, const ePWMOutput outputG, const ePWMOutput outputB, const ePWMOutput outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController);

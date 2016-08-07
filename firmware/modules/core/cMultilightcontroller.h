@@ -34,7 +34,7 @@ class cMultilightController: public cApplication
 	public:
 			bool Setup() override;
 			void DoEachCycle(Time_t time) override; //slowly dim to target level
-			void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+			void OnTOGGLECommand(Time_t now) override;
 
 			cMultilightController(const char* name, eApplicationID id, ePWMOutput *output, uint8_t outputLength, uint8_t minimalLevel, bool lowMeansLampOn, eApplicationID standbyController) :
 								cApplication(name, id, eAppType::MLTLC), output(output), outputLength(outputLength), minimalLevel(minimalLevel), lowMeansLampOn(lowMeansLampOn), standbyController(standbyController), currentLevel(0), storedLevel(minimalLevel), lastHeartbeatToStandbycontroller(0)

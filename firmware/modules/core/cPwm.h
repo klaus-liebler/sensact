@@ -37,15 +37,8 @@ class cPWM: public cApplication
 		void SetDimLevel(uint8_t);
 
 	public:
-		void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSTARTCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnUPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSET_VERTICAL_TARGETCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		bool Setup() override;
+#include <PwmApplication.hinc>
+	bool Setup() override;
 			void DoEachCycle(Time_t time) override;
 			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};

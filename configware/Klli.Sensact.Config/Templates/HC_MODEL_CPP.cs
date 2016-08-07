@@ -30,7 +30,7 @@ namespace Klli.Sensact.Config.Templates
         {
             
             #line 6 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
- RenderHeader("hc_model.cpp", "autogen", version, "The Home Model", "All params and details about the home model"); 
+ RenderHeader("hc_model.cpp", "autogen", version, ModelReference, "All params and details about the home model"); 
             
             #line default
             #line hidden

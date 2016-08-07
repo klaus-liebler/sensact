@@ -54,7 +54,7 @@
     <Compile Include="Applications\LightbarrierApplication.cs" />
     <Compile Include="Applications\RCEventApplication.cs" />
     <Compile Include="Applications\RgbwApplication.cs" />
-    <Compile Include="Applications\SensactApplication.cs" />
+    <Compile Include="SensactApplication.cs" />
     <Compile Include="Applications\BlindApplication.cs" />
     <Compile Include="Applications\MasterApplication.cs" />
     <Compile Include="Applications\PoweritemApplication.cs" />
@@ -62,10 +62,11 @@
     <Compile Include="Applications\PWMApplication.cs" />
     <Compile Include="Applications\RotaryEncoderApplication.cs" />
     <Compile Include="Applications\DoorbellApplication.cs" />
-    <Compile Include="Applications\StandbyController.cs" />
+    <Compile Include="Applications\StandbyControllerApplication.cs" />
     <Compile Include="CommandAndEventTypes.cs" />
     <Compile Include="CompilerController.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="GeneratedConstants.cs" />
     <Compile Include="Nodes\SensactHs04.cs" />
     <Compile Include="Nodes\SensactUp01.cs" />
     <Compile Include="Sattlerstrasse16.cs" />
@@ -171,6 +172,11 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>cd $(ProjectDir)
+"c:\Program Files\Git\bin\git" rev-parse HEAD &gt; configgitkey.txt
+$(SolutionDir)\Klli.Tool.GitRevToFile\bin\Debug\Klli.Tool.GitRevToFile.exe $(ProjectDir)\configgitkey.txt $(ProjectDir)\GeneratedConstants.cs</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

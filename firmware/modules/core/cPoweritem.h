@@ -29,9 +29,7 @@ namespace sensact{
 		Time_t autoOffTime;
 	public:
 		bool Setup() override;
-		void OnONCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnTOGGLE_SPECIALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+#include <PoweritemApplication.hinc>
 		void DoEachCycle(Time_t time) override;
 
 		void RaiseEvent(eEventType evt);

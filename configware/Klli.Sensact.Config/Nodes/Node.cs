@@ -106,7 +106,7 @@ namespace Klli.Sensact.Config.Nodes
         [XmlArrayItem(typeof(PWMApplication))]
         [XmlArrayItem(typeof(RgbwApplication))]
         [XmlArrayItem(typeof(RotaryEncoderApplication))]
-        [XmlArrayItem(typeof(StandbyController))]
+        [XmlArrayItem(typeof(StandbyControllerApplication))]
         public List<SensactApplication> Applications;
 
     }

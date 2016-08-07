@@ -12,7 +12,15 @@
 #endif
 namespace drivers {
 
-// API mode bit flags
+enum struct e1WireSpeed:uint8_t{
+	STANDARD,
+	OVERDRIVE,
+};
+
+enum struct e1WirePullup:uint8_t{
+	STANDARD,
+	STRONG,
+};
 #define MODE_STANDARD                  0x00
 #define MODE_OVERDRIVE                 0x01
 #define MODE_STRONG                    0x02
@@ -60,17 +68,14 @@ private:
 	static const uint8_t DEVICE_ADDRESS_BASE= 0x30;
 	I2C_HandleTypeDef *i2c;
 	eDS2482Device device;
-	uint8_t cAPU;
-	uint8_t c1WS;
-	uint8_t cSPU;
-	uint8_t cPPM;
+	uint8_t currCfg;
 	bool LastDeviceFlag;
 	int32_t LastDiscrepancy;
 	int32_t LastFamilyDiscrepancy;
 	bool alarmOnly;
 	bool short_detected;
 	bool reset();
-	bool writeConfig(uint8_t config);
+	bool writeConfig();
 	bool channelSelect(uint8_t channel);
 	uint8_t pollStatus();
 	uint8_t searchTriplet(uint8_t search_direction);
@@ -107,13 +112,13 @@ public:
 	void OWTargetSetup(e1WireFamilyCode family_code);
 	void OWFamilySkipSetup();
 
-	uint8_t OWSpeed(uint8_t new_speed);
-	uint8_t OWLevel(uint8_t new_level);
+	e1WireSpeed OWSpeed(e1WireSpeed new_speed);
+	e1WirePullup OWTrySetPullup(e1WirePullup new_level);
 	bool OWWriteBytePower(uint8_t sendbyte);
 	bool OWReadBitPower(bool applyPowerResponse);
 
 
-	cDS2482(I2C_HandleTypeDef *i2c, eDS2482Device device):i2c(i2c), device(device), cAPU(0), c1WS(0), cSPU(0), cPPM(0), LastDeviceFlag(false), LastDiscrepancy(0), LastFamilyDiscrepancy(0),alarmOnly(false), short_detected(0)
+	cDS2482(I2C_HandleTypeDef *i2c, eDS2482Device device):i2c(i2c), device(device), currCfg(0), LastDeviceFlag(false), LastDiscrepancy(0), LastFamilyDiscrepancy(0),alarmOnly(false), short_detected(0)
 	{
 	}
 

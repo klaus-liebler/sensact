@@ -6,10 +6,11 @@ using log4net;
 using Klli.Sensact.Config.Nodes;
 using Klli.Sensact.Config.Templates;
 using System.Linq;
+using System.Text;
 
 namespace Klli.Sensact.Config
 {
-    public class SourceCodeGenerator
+    public static class SourceCodeGenerator
     {
         static ILog LOG = LogManager.GetLogger(typeof(SourceCodeGenerator));
 
@@ -162,11 +163,274 @@ namespace Klli.Sensact.Config
             return;
         }
 
+        private static Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
+        {
+            return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
+        }
+
+        public static bool IsOverride(this MethodInfo m)
+        {
+            return m.GetBaseDefinition().DeclaringType != m.DeclaringType;
+        }
+
+        public static string ExtractCmdName(MethodInfo mi)
+        {
+            return mi.Name.Substring(2, mi.Name.IndexOf("Command") - 2);
+        }
+
+        private static string ImplementationForCmdParse()
+        {
+            //case eCommandType::SET_SIGNAL: OnSET_SIGNALCommand(ParseUInt16(payload, 0), now); break;
+            StringBuilder sb = new StringBuilder();
+            foreach (MethodInfo mi in typeof(SensactApplication).GetMethods())
+            {
+
+                if (mi.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                sb.AppendFormat("\tcase eCommandType::{0}: {1}(", ExtractCmdName(mi), mi.Name);
+                int offset = 0;
+                foreach (ParameterInfo pi in mi.GetParameters())
+                {
+                    sb.Append(CS2CPPParser(pi.ParameterType, ref offset));
+                    sb.Append(", ");
+                }
+                sb.AppendLine("now); break;");
+            }
+            return sb.ToString();
+        }
+
+        private static string ImplementationForCmdSend()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (MethodInfo mi in typeof(SensactApplication).GetMethods())
+            {
+
+                if (mi.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                sb.AppendFormat("\tbool cApplication::Send{0}Command(eApplicationID destinationApp, ", ExtractCmdName(mi));
+                foreach (ParameterInfo pi in mi.GetParameters())
+                {
+                    sb.Append(CS2CPPType(pi.ParameterType));
+                    sb.Append(" " + pi.Name + ", ");
+                }
+                sb.AppendLine("Time_t now)");
+                sb.AppendLine("\t{");
+                sb.AppendLine("\t\tuint8_t buffer[8];");
+                int offset = 0;
+                foreach (ParameterInfo pi in mi.GetParameters())
+                {
+                    sb.AppendLine("\t\t"+CS2CPPWriter(pi, ref offset));
+                    
+                }
+                sb.AppendFormat("\t\treturn cMaster::SendCommandToMessageBus(now, destinationApp, eCommandType::{0}, buffer, {1});", ExtractCmdName(mi), offset);
+                sb.AppendLine();
+                sb.AppendLine("\t}");
+            }
+            return sb.ToString();
+        }
+        private static string EmptyImplementationForCmdHandler()
+        {
+            //case eCommandType::SET_SIGNAL: OnSET_SIGNALCommand(ParseUInt16(payload, 0), now); break;
+            StringBuilder sb = new StringBuilder();
+            foreach (MethodInfo mi in typeof(SensactApplication).GetMethods())
+            {
+                if (mi.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                sb.AppendFormat("\tvoid cApplication::{0}(", mi.Name);
+                foreach (ParameterInfo pi in mi.GetParameters())
+                {
+                    sb.Append(CS2CPPType(pi.ParameterType));
+                    sb.Append(" "+pi.Name+", ");
+                }
+                sb.AppendLine("Time_t now)");
+                sb.AppendLine("\t{");
+                foreach (ParameterInfo pi in mi.GetParameters())
+                {
+                    sb.AppendLine("\t\t(void)("+pi.Name+");");
+                }
+                sb.AppendLine("\t\t(void)(now);");
+                sb.AppendLine("\t\tLOGE(\"Application %s does not support Command " + ExtractCmdName(mi) + "\", Name);");
+                sb.AppendLine("\t}");
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        
+
+        //	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, Time_t now);
+        //static bool CreateSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, uint8_t buffer, uint8_t* lenght);
+
+        private static string HeaderForCommands()
+        {
+            StringBuilder sb = new StringBuilder();
+            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+            foreach (MethodInfo m in typeof(SensactApplication).GetMethods())
+            {
+
+                if (m.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                sb.Append("\tvirtual void " + m.Name + "(");
+                foreach (ParameterInfo pi in m.GetParameters())
+                {
+                    sb.Append(CS2CPPType(pi.ParameterType));
+                    sb.Append(" " + pi.Name + ", ");
+                }
+                sb.Append("Time_t now)");
+                sb.AppendLine(";");
+                sb.AppendFormat("\tstatic bool Send{0}Command(eApplicationID destinationApp, ", ExtractCmdName(m));
+                foreach (ParameterInfo pi in m.GetParameters())
+                {
+                    sb.Append(CS2CPPType(pi.ParameterType));
+                    sb.Append(" " + pi.Name + ", ");
+                }
+                sb.AppendLine("Time_t now);");
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        private static string HeaderForCommandsOfType(Type t)
+        {
+            StringBuilder sb = new StringBuilder();
+            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+            foreach (MethodInfo m in t.GetMethods())
+            {
+
+                if (m.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                if (m.IsOverride())
+                {
+                    sb.Append("\tvoid " + m.Name + "(");
+                    foreach (ParameterInfo pi in m.GetParameters())
+                    {
+                        sb.Append(CS2CPPType(pi.ParameterType));
+                        sb.Append(" " + pi.Name + ", ");
+                    }
+                    sb.AppendLine("Time_t now) override;");
+                   
+                }
+            }
+            return sb.ToString();
+        }
+
+        internal static void GenerateHeaderIncludesForApplications(ModelContainer mc)
+        {
+            Type[] applications = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Klli.Sensact.Config.Applications");
+            foreach (Type t in applications)
+            {
+                string filename = t.Name+".hinc";
+                File.WriteAllText(GetGeneratedPathForFile(filename), HeaderForCommandsOfType(t));
+            }
+        }
+
+        private static string CS2CPPType(Type t)
+        {
+            if (t == typeof(int)) return "int32_t";
+            else if (t == typeof(uint)) return "uint32_t";
+            else if (t == typeof(short)) return "int16_t";
+            else if (t == typeof(ushort)) return "uint16_t";
+            else if (t == typeof(sbyte)) return "int8_t";
+            else if (t == typeof(byte)) return "uint8_t";
+            else throw new ArgumentException("Type "+t+" is unknown");
+        }
+
+        private static string CS2CPPParser(Type t, ref int offset)
+        {
+            string ret;
+            if (t == typeof(int))
+            {
+                ret = "ParseInt32(payload, " + offset + ")";
+                offset += 4;
+            }
+            else if (t == typeof(uint))
+            {
+                ret = "ParseUInt32(payload, " + offset + ")";
+                offset += 4;
+            }
+            else if (t == typeof(short))
+            {
+                ret = "ParseInt16(payload, " + offset + ")";
+                offset += 2;
+            }
+            else if (t == typeof(ushort))
+            {
+                ret = "ParseUInt16(payload, " + offset + ")";
+                offset += 2;
+            }
+            else if (t == typeof(sbyte))
+            {
+                ret = "(int8_t)payload[" + offset + "]";
+                offset += 1;
+            }
+            else if (t == typeof(byte))
+            {
+                {
+                    ret = "payload[" + offset + "]";
+                    offset += 1;
+                }
+            }
+            else throw new ArgumentException("Type " + t + " is unknown");
+            return ret;
+        }
+
+
+        private static string CS2CPPWriter(ParameterInfo pi, ref int offset)
+        {
+            string ret;
+            if (pi.ParameterType == typeof(int))
+            {
+                ret = "WriteInt32("+ pi.Name + ", buffer, " + offset + ");";
+                offset += 4;
+            }
+            else if (pi.ParameterType == typeof(uint))
+            {
+                ret = "WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
+                offset += 4;
+            }
+            else if (pi.ParameterType == typeof(short))
+            {
+                ret = "WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
+                offset += 2;
+            }
+            else if (pi.ParameterType == typeof(ushort))
+            {
+                ret = "WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
+                offset += 2;
+            }
+            else if (pi.ParameterType == typeof(sbyte))
+            {
+                ret = "buffer[" + offset + "]=(int8_t)" + pi.Name + ";";
+                offset += 1;
+            }
+            else if (pi.ParameterType == typeof(byte))
+            {
+                {
+                    ret = "buffer[" + offset + "]="+ pi.Name + ";";
+                    offset += 1;
+                }
+            }
+            else throw new ArgumentException("Type " + pi.ParameterType + " is unknown");
+            return ret;
+        }
+
+
         internal static void GenerateModel_cpp(ModelContainer mc)
         {
             HC_MODEL_CPP file = new HC_MODEL_CPP()
             {
-                version = "1.0",  
+                version = "1.0",
+                ModelReference = mc.Model.Name +" created from GIT Head SHA "+GeneratedConstants.ConfigSHA, 
             };
             for (int i = 0; i < mc.NextFreeIndex; i++)
             {
@@ -187,7 +451,7 @@ namespace Klli.Sensact.Config
                 {
                     version = "1.0",
                     NodeId = node.Id,
-                    ModelInfo="NodeId "+node.Id+" created on "+DateTime.Now,
+                    ModelInfo="NodeId "+node.Id+" created on "+DateTime.Now + " using model "+mc.Model.Name +" from git hash "+GeneratedConstants.ConfigSHA,
                 };
                 
                 string[] Glo2LocPointers = new string[mc.NextFreeIndex];
@@ -239,21 +503,23 @@ namespace Klli.Sensact.Config
             APPLICATION_H h = new APPLICATION_H()
             {
                 version = "1.0",
-                Commands = (CommandType[])Enum.GetValues(typeof(CommandType)),
+                CommandHeaders = HeaderForCommands(),
                 
             };
             APPLICATION_CPP cpp = new APPLICATION_CPP()
             {
                 version = "1.0",
-                Commands = (CommandType[])Enum.GetValues(typeof(CommandType)),
+                CommandParseImplementation = ImplementationForCmdParse(),
+                CommandEmptyHandlerImplementation = EmptyImplementationForCmdHandler(),
+                CommandCreateImplementation = ImplementationForCmdSend(),
 
             };
-           
-            String pageContent = h.TransformText();
-            System.IO.File.WriteAllText(GetGeneratedPathForFile("cApplication.h"), pageContent);
+
+            string pageContent = h.TransformText();
+            File.WriteAllText(GetGeneratedPathForFile("cApplication.h"), pageContent);
             LOG.InfoFormat("Successfully created cApplication.h");
             pageContent = cpp.TransformText();
-            System.IO.File.WriteAllText(GetGeneratedPathForFile("cApplication.cpp"), pageContent);
+            File.WriteAllText(GetGeneratedPathForFile("cApplication.cpp"), pageContent);
             LOG.InfoFormat("Successfully created cApplication.cpp");
             return;
         }

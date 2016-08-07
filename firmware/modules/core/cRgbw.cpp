@@ -63,23 +63,18 @@ void cRgbw::switchOff()
 	showColorOfRGBW(0,0,0,0);
 }
 
-void cRgbw::OnSTEP_VERTICALCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cRgbw::OnSTEP_VERTICALCommand(int16_t step, Time_t now)
 {
 	UNUSED(now);
-	UNUSED(payload);
-	UNUSED(payloadLength);
-	int16_t step = ParseInt16(payload, 0);
 	if(step==0) step=1;
 	uint8_t index = ((int)(100 + lastColor + step)) % WellKnownColorsLength;//+100 um ausreichend im Positiven zu sein auch bei negativen steps
 	showColorOfIndex(index);
 }
 
 
-void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
+void cRgbw::OnTOGGLECommand(Time_t now)
 {
 	UNUSED(now);
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	if(this->state == ePowerState::INACTIVE)
 	{
 		showColorOfIndex(lastColor);
@@ -90,20 +85,18 @@ void cRgbw::OnTOGGLECommand(uint8_t *payload, uint8_t payloadLength, const Time_
 	}
 }
 
-void cRgbw::OnSET_RGBWCommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
+void cRgbw::OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, Time_t now)
 {
-	UNUSED(payloadLength);
 	UNUSED(now);
-	showColorOfRGBW(payload[0], payload[1], payload[2], payload[3]);
+	showColorOfRGBW(R, G, B, W);
 
 
 }
 //Payload enthält 16bit wellKnownColorIndex
-void cRgbw::OnSET_SIGNALCommand(uint8_t *payload, uint8_t payloadLength, const Time_t now)
+void cRgbw::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	UNUSED(now);
-	UNUSED(payloadLength);
-	uint8_t index = ParseUInt16(payload, 0)%WellKnownColorsLength;
+	uint8_t index = signal%WellKnownColorsLength;
 	showColorOfIndex(index);
 }
 

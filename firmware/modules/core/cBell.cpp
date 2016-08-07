@@ -236,10 +236,8 @@ bool cBell::Setup() {
 	return true;
 }
 
-void cBell::OnSTARTCommand(uint8_t *payload, uint8_t payloadLength, Time_t now)
+void cBell::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
-	UNUSED(payload);
-	UNUSED(payloadLength);
 	UNUSED(now);
 	//mp3_stop();
 	volumeSchedule->DoEachCycle(std::chrono::system_clock::now());

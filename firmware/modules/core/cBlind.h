@@ -47,9 +47,7 @@ namespace sensact{
 	public:
 		bool Setup() override;
 		void DoEachCycle(Time_t now) override; //Muss vom Master alle 20ms aufgerufen werden
-		void OnUPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnDOWNCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
-		void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+#include <BlindApplication.hinc>
 
 		/**
 		 * Sendet ein Event auf den CAN-Bus; ApplicationID ist die EmpfangsID + 1 oder +512 ?!?!
