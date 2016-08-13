@@ -1,4 +1,5 @@
-﻿using Klli.Sensact.Config;
+﻿using Klli.Sensact.Common;
+using Klli.Sensact.Config;
 using MiscUtil.Conversion;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace Klli.Sensact.TestGui
             int row = 0;
             foreach (MethodInfo m in t.GetMethods())
             {
-                if (m.GetCustomAttribute<SensactCommandMethod>() != null)
+                if (m.GetCustomAttribute<SensactCommandMethod>() != null && m.IsOverride())
                 {
                     row++;
                 }
@@ -119,7 +120,7 @@ namespace Klli.Sensact.TestGui
             row = 0;
             foreach (MethodInfo m in t.GetMethods())
             {
-                if (m.GetCustomAttribute<SensactCommandMethod>() != null)
+                if (m.GetCustomAttribute<SensactCommandMethod>() != null && m.IsOverride())
                 {
                     CreateOneRow(sac, m, commandsTable, row);
                     row++;
@@ -148,12 +149,15 @@ namespace Klli.Sensact.TestGui
             }
         }
 
+        static RowStyle rs = new RowStyle(SizeType.Absolute, 40);
+
         private void CreateOneRow(SensactApplicationContainer sac, MethodInfo mi, TableLayoutPanel functionTable, int functionTableRow)
         {
             Button btn = CreateCommandButton(sac, mi);
             functionTable.Controls.Add(btn, 0, functionTableRow);
+            functionTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
             Config.CommandType ct = Config.CommandType.NOP;
-            if(!Enum.TryParse<Config.CommandType>(SourceCodeGenerator.ExtractCmdName(mi), out ct))
+            if(!Enum.TryParse<Config.CommandType>(SensactApplication.ExtractCmdName(mi), out ct))
             {
                 throw new Exception("Method name " + mi.Name + " that ist marked as SensactCommand cannot be parsed into a CommandType");
             }
@@ -231,7 +235,7 @@ namespace Klli.Sensact.TestGui
             };
         }
 
-        private readonly Size BTN_SIZE = new Size(100, 23);
+        private readonly Size BTN_SIZE = new Size(180, 23);
         private readonly Size LBL_SIZE_APP_NAME = new Size(150, 23);
         private readonly Size LBL_SIZE_PARAM = new Size(50, 23);
 
@@ -239,7 +243,7 @@ namespace Klli.Sensact.TestGui
         {
             Button button=new Button();
             button.Size = BTN_SIZE;
-            button.Text = SourceCodeGenerator.ExtractCmdName(mi);
+            button.Text = SensactApplication.ExtractCmdName(mi);
             button.Name = sac.Application.ApplicationId+"_"+mi.Name;
             button.UseVisualStyleBackColor = true;
             button.Click += new System.EventHandler(cmdButton_Click);

@@ -5,13 +5,14 @@
 #include "cPwm.h"
 #include "cStandbycontroller.h"
 #include "cBrightnessSensor.h"
-#include "cBell.h"
+#include "cSound.h"
 #include "cRgbw.h"
 #include <chrono>
 #include "date.h"
 #include "bh1750.h"
 #include "cRCEvent.h"
 #include "cLightbarrier.h"
+#include "cSensactNode.h"
 namespace sensact{
 
 static const sensact::sScheduleEntry schedule[]
@@ -46,6 +47,10 @@ static const sensact::sScheduleEntry schedule[]
 
 	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
 	const uint8_t MODEL::ds18b20_AddressesCnt=0;
+
+	const bool MODEL::TRACE_COMMANDS=true;
+	const bool MODEL::TRACE_EVENTS=true;
+
 #endif
 #ifdef NODE_SNSAC_L1_KTCH_UP02_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
@@ -59,11 +64,12 @@ static const sensact::sScheduleEntry schedule[]
 	const uint8_t MODEL::ds18b20_AddressesCnt=4;
 
 	//drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
-
+	const bool MODEL::TRACE_COMMANDS=false;
+	const bool MODEL::TRACE_EVENTS=false;
 
 
 #endif
-#ifdef NODE_SNSAC_L0_TECH_HS07_1
+#ifdef NODE_SNSCT_L0_TECH_HS_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 
@@ -74,9 +80,12 @@ static const sensact::sScheduleEntry schedule[]
 	const uint8_t MODEL::ds18b20_AddressesCnt=1;
 	//die Doorbell-Applikation ist als template verfügbar
 	//sensact::cBell DEVCE_L0_TECH_AUDIO("DEVCE_L0_TECH_AUDIO", eApplicationID::DEVCE_L0_TECH_AUDIO, schedule);
+	const bool MODEL::TRACE_COMMANDS=false;
+	const bool MODEL::TRACE_EVENTS=false;
+
 
 #endif
-#ifdef NODE_SNSAC_L3_TECH_HS07_2
+#ifdef NODE_SNSCT_L0_TECH_HS_2
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 
@@ -88,6 +97,10 @@ static const sensact::sScheduleEntry schedule[]
 
 	drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
 	sensact::cBrightnessSensor SBRGH_LX_ROOF("SBRGH_LX_ROOF", eApplicationID::SBRGH_LX_ROOF, &bh1750, 300);
+
+	const bool MODEL::TRACE_COMMANDS=false;
+	const bool MODEL::TRACE_EVENTS=false;
+
 
 #endif
 

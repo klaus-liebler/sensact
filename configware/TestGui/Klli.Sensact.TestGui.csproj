@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Klli.Sensact.TestGui</RootNamespace>
     <AssemblyName>TestGui</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,6 +88,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Klli.Sensact.Common\Klli.Sensact.Common.csproj">
+      <Project>{a943c467-78a8-4078-b200-ce5052684216}</Project>
+      <Name>Klli.Sensact.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Klli.Sensact.Config\Klli.Sensact.Config.csproj">
       <Project>{b6a7a1a1-740b-445a-85fb-7d466c08ade9}</Project>
       <Name>Klli.Sensact.Config</Name>

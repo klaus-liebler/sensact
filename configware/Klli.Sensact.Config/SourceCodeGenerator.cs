@@ -5,8 +5,10 @@ using System.Reflection;
 using log4net;
 using Klli.Sensact.Config.Nodes;
 using Klli.Sensact.Config.Templates;
+using Klli.Sensact.Common;
 using System.Linq;
 using System.Text;
+using Klli.Sensact.Config.Applications;
 
 namespace Klli.Sensact.Config
 {
@@ -28,7 +30,11 @@ namespace Klli.Sensact.Config
             mc.index2app[0] = masterApp;
             foreach (Node n in mc.Model.Nodes)
             {
-                foreach(SensactApplication app in n.Applications)
+                n.Applications.Add(new SensactNodeApplication
+                {
+                    ApplicationId = n.Id,
+                });
+                foreach (SensactApplication app in n.Applications)
                 {
                     if(alreadyDefinedAppIds.Contains(app.ApplicationId))
                     {
@@ -168,15 +174,8 @@ namespace Klli.Sensact.Config
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
 
-        public static bool IsOverride(this MethodInfo m)
-        {
-            return m.GetBaseDefinition().DeclaringType != m.DeclaringType;
-        }
 
-        public static string ExtractCmdName(MethodInfo mi)
-        {
-            return mi.Name.Substring(2, mi.Name.IndexOf("Command") - 2);
-        }
+        
 
         private static string ImplementationForCmdParse()
         {
@@ -189,7 +188,7 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.AppendFormat("\tcase eCommandType::{0}: {1}(", ExtractCmdName(mi), mi.Name);
+                sb.AppendFormat("\tcase eCommandType::{0}: {1}(", SensactApplication.ExtractCmdName(mi), mi.Name);
                 int offset = 0;
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
@@ -211,7 +210,7 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.AppendFormat("\tbool cApplication::Send{0}Command(eApplicationID destinationApp, ", ExtractCmdName(mi));
+                sb.AppendFormat("\tbool cApplication::Send{0}Command(eApplicationID destinationApp, ", SensactApplication.ExtractCmdName(mi));
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
                     sb.Append(CS2CPPType(pi.ParameterType));
@@ -226,7 +225,7 @@ namespace Klli.Sensact.Config
                     sb.AppendLine("\t\t"+CS2CPPWriter(pi, ref offset));
                     
                 }
-                sb.AppendFormat("\t\treturn cMaster::SendCommandToMessageBus(now, destinationApp, eCommandType::{0}, buffer, {1});", ExtractCmdName(mi), offset);
+                sb.AppendFormat("\t\treturn cMaster::SendCommandToMessageBus(now, destinationApp, eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset);
                 sb.AppendLine();
                 sb.AppendLine("\t}");
             }
@@ -255,7 +254,7 @@ namespace Klli.Sensact.Config
                     sb.AppendLine("\t\t(void)("+pi.Name+");");
                 }
                 sb.AppendLine("\t\t(void)(now);");
-                sb.AppendLine("\t\tLOGE(\"Application %s does not support Command " + ExtractCmdName(mi) + "\", Name);");
+                sb.AppendLine("\t\tLOGE(\"Application %s does not support Command " + SensactApplication.ExtractCmdName(mi) + "\", Name);");
                 sb.AppendLine("\t}");
                 sb.AppendLine();
             }
@@ -286,7 +285,7 @@ namespace Klli.Sensact.Config
                 }
                 sb.Append("Time_t now)");
                 sb.AppendLine(";");
-                sb.AppendFormat("\tstatic bool Send{0}Command(eApplicationID destinationApp, ", ExtractCmdName(m));
+                sb.AppendFormat("\tstatic bool Send{0}Command(eApplicationID destinationApp, ", SensactApplication.ExtractCmdName(m));
                 foreach (ParameterInfo pi in m.GetParameters())
                 {
                     sb.Append(CS2CPPType(pi.ParameterType));
@@ -470,11 +469,21 @@ namespace Klli.Sensact.Config
                 {
                     item.Glo2LocPointers.AppendLine(Glo2LocPointers[i]);
                 }
+                string[] Glo2LocEvents = new string[mc.NextFreeIndex];
+                for (int i = 0; i < Glo2LocEvents.Length; i++)
+                {
+                    Glo2LocEvents[i] = "    0,";
+                }
+                for (int i = 0; i < Glo2LocPointers.Length; i++)
+                {
+                    item.Glo2LocEvents.AppendLine(Glo2LocEvents[i]);
+                }
+
                 file.Items.Add(item);
             }
 
 
-            String pageContent = file.TransformText();
+            string pageContent = file.TransformText();
             string filename = "cModel.cpp";
             File.WriteAllText(GetGeneratedPathForFile(filename), pageContent);
             LOG.InfoFormat("Successfully created {0}", filename);

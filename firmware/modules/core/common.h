@@ -53,11 +53,12 @@ namespace sensact {
 		BSENS,
 		RGBLED,
 		STNDBY,
-		BELL,
+		SOUND,
 		MLTLC,
 		RGBW,
 		RCEVT,
 		LIBAR,
+		SNSCT
 
 	};
 

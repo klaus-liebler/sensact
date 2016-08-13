@@ -15,22 +15,6 @@ namespace Klli.Sensact.Config.Applications
         public string StandbyController = "NO_APPLICATION";
         public int AutoOffIntervalMsecs;
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.STOP, //beim Loslassen der Taste
-                CommandType.START, //Beim Drücken der Taste
-                CommandType.UP, //beim Hoch-Drück
-                CommandType.DOWN, //beim Runter-Drück
-                CommandType.TOGGLE,
-                CommandType.STEP_VERTICAL,
-                CommandType.ON,
-                CommandType.SET_VERTICAL_TARGET
-            };
-            return ret;
-        }
-
         public override void OnSTOPCommand()
         {
             base.OnSTOPCommand();

@@ -17,15 +17,6 @@ namespace Klli.Sensact.Config.Applications
             base.OnHEARTBEATCommand();
         }
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.HEARTBEAT,
-            };
-            return ret;
-        }
-
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

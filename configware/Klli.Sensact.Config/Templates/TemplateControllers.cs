@@ -40,7 +40,7 @@ namespace Klli.Sensact.Config.Templates
         public string NodeId;
         public StringBuilder StaticApplicationInitializers = new StringBuilder();
         public StringBuilder Glo2LocPointers = new StringBuilder();
-        
+        public StringBuilder Glo2LocEvents = new StringBuilder();
         public string version;
         public string ModelInfo;
     }

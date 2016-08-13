@@ -12,15 +12,6 @@ namespace Klli.Sensact.Config.Applications
         public string ToggleTarget;
         public int LimitForPassingToggle;
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.TOGGLE_FILTER, CommandType.SEND_STATUS, CommandType.ON_FILTER
-            };
-            return ret;
-        }
-
         public override void OnTOGGLE_FILTERCommand(ushort targetApplicationId)
         {
             base.OnTOGGLE_FILTERCommand(targetApplicationId);

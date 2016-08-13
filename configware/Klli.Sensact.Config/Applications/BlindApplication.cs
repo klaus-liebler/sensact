@@ -15,17 +15,6 @@ namespace Klli.Sensact.Config.Applications
         public List<Event> FullyOpenEvents;
         public long OpenCloseTimeInSeconds;
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.UP,
-                CommandType.DOWN,
-                CommandType.STOP
-            };
-            return ret;
-        }
-
         [SensactCommandMethod]
         public override void OnUPCommand()
         {

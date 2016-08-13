@@ -23,17 +23,6 @@ namespace Klli.Sensact.Config.Applications
         public bool LowMeansLampOn;
         public string StandbyController="NO_APPLICATION";
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.SET_RGBW, 
-                CommandType.SET_SIGNAL,
-                CommandType.TOGGLE,
-                CommandType.STEP_VERTICAL,
-            };
-            return ret;
-        }
         public override void OnSET_RGBWCommand(byte R, byte G, byte B, byte W)
         {
             Console.Write("");

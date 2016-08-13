@@ -14,17 +14,6 @@ namespace Klli.Sensact.Config.Applications
         public List<Event> OffEvents;
         public List<Event> OnEvents;
 
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.ON,
-                CommandType.TOGGLE,
-                CommandType.TOGGLE_SPECIAL,
-            };
-            return ret;
-        }
-
         [SensactCommandMethod]
         public override void OnTOGGLECommand()
         {

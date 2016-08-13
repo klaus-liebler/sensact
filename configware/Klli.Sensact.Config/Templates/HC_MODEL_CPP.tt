@@ -34,13 +34,15 @@ namespace sensact{
 
 
 
-cApplication *MODEL::Glo2locCmd[] = {
+cApplication *const MODEL::Glo2locCmd[] = {
 <#=i.Glo2LocPointers#>
 };
 
 
 
-cApplication *MODEL::Glo2locEvt[] = { };
+cApplication *const MODEL::Glo2locEvt[] = {
+<#=i.Glo2LocEvents#>
+};
 #endif
 
 <#

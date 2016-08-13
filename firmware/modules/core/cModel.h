@@ -15,8 +15,14 @@ namespace sensact {
 
 class MODEL{
 public:
-	static cApplication *Glo2locEvt[];
-	static cApplication *Glo2locCmd[];
+	/*
+	 * Index is source appId
+	 */
+	static cApplication * const Glo2locEvt[];
+	/*
+	 * Index is destination appId
+	 */
+	static cApplication * const Glo2locCmd[];
 	static const char ModelString[];
 	static const char * const ApplicationNames[];
 	static cWs281x RGBLED;
@@ -30,6 +36,9 @@ public:
 	static const uint8_t wellKnownRGBWColors[][4];
 	static const uint8_t wellKnownRGBWColorsCnt;
 	static cWeeklySchedule volumeSchedule;
+
+	static const bool TRACE_COMMANDS;
+	static const bool TRACE_EVENTS;
 };
 
 

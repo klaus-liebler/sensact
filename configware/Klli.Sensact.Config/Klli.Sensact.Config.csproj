@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Klli.Sensact.Config</RootNamespace>
     <AssemblyName>Klli.Sensact.Config</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,7 +63,7 @@
     <Compile Include="Applications\PushButtonXApplication.cs" />
     <Compile Include="Applications\PWMApplication.cs" />
     <Compile Include="Applications\RotaryEncoderApplication.cs" />
-    <Compile Include="Applications\DoorbellApplication.cs" />
+    <Compile Include="Applications\SoundApplication.cs" />
     <Compile Include="Applications\StandbyControllerApplication.cs" />
     <Compile Include="CommandAndEventTypes.cs" />
     <Compile Include="CompilerController.cs" />
@@ -171,6 +172,12 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>LinkerScript.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Klli.Sensact.Common\Klli.Sensact.Common.csproj">
+      <Project>{a943c467-78a8-4078-b200-ce5052684216}</Project>
+      <Name>Klli.Sensact.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

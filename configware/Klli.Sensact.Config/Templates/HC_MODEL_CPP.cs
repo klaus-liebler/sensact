@@ -80,16 +80,23 @@ namespace Klli.Sensact.Config.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n\r\n\r\n\r\ncApplication *MODEL::Glo2locCmd[] = {\r\n");
+            this.Write("\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locCmd[] = {\r\n");
             
             #line 38 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocPointers));
             
             #line default
             #line hidden
-            this.Write("\r\n};\r\n\r\n\r\n\r\ncApplication *MODEL::Glo2locEvt[] = { };\r\n#endif\r\n\r\n");
+            this.Write("\r\n};\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locEvt[] = {\r\n");
             
-            #line 46 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 44 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocEvents));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n};\r\n#endif\r\n\r\n");
+            
+            #line 48 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
            
        }

@@ -258,7 +258,7 @@ namespace Klli.Sensact.Config
             {
                 Applications = new List<SensactApplication>()
                 {
-                    new DoorbellApplication
+                    new SoundApplication
                     {
                         ApplicationId="BELL__DOOR"
                     },

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Klli.Sensact.Common;
 
 namespace Klli.Sensact.Config
 {
@@ -69,10 +70,33 @@ namespace Klli.Sensact.Config
             }
             return ret;
         }
-        public virtual HashSet<CommandType> ICanReactOnTheseCommands()
+
+        public HashSet<CommandType> ICanReactOnTheseCommands()
         {
-            return new HashSet<CommandType>();
+
+            HashSet<CommandType> ret = new HashSet<CommandType>();
+            foreach (MethodInfo m in GetType().GetMethods())
+            {
+                if (m.GetCustomAttribute<SensactCommandMethod>() == null)
+                    continue;
+                if (!m.IsOverride())
+                    continue;
+                ret.Add(MethodInfo2CommandType(m));
+            }
+            return ret;
         }
+
+        public static string ExtractCmdName(MethodInfo mi)
+        {
+            return mi.Name.Substring(2, mi.Name.IndexOf("Command") - 2);
+        }
+
+        public static CommandType MethodInfo2CommandType(MethodInfo mi)
+        {
+            string cmdName = ExtractCmdName(mi);
+            return (CommandType)Enum.Parse(typeof(CommandType), cmdName);
+        }
+
         public HashSet<Command> ISendTheseCommands()
         {
             HashSet<Command> ret = new HashSet<Command>();

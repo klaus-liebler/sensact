@@ -117,7 +117,7 @@ namespace Klli.Sensact.Config.Nodes
         /// </summary>
         [XmlArrayItem(typeof(BlindApplication))]
         [XmlArrayItem(typeof(BrightnessSensorApplication))]
-        [XmlArrayItem(typeof(DoorbellApplication))]
+        [XmlArrayItem(typeof(SoundApplication))]
         [XmlArrayItem(typeof(PoweritemApplication))]
         [XmlArrayItem(typeof(PushButtonXApplication))]
         [XmlArrayItem(typeof(PWMApplication))]

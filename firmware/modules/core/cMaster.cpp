@@ -34,7 +34,7 @@ void cMaster::Run(void) {
 	uint16_t appCnt=0;
 	//hier bei "1" beginnen, weil "0" der lokale/globale (?) Master ist; ggf zuk�nftig auch mit eigenem "Init"
 	for (i = 1; i < (uint16_t) eApplicationID::CNT; i++) {
-		cApplication *ap = MODEL::Glo2locCmd[i];
+		cApplication * const ap = MODEL::Glo2locCmd[i];
 		if (ap) {
 			if(ap->Setup())
 			{
@@ -58,7 +58,6 @@ void cMaster::Run(void) {
 		if(BufferHasMessage)
 		{
 			cShell::processCmds((uint8_t*)UART_cmdBuffer, UART_buffer_pointer);
-			uint16_t i = 0;
 			for(uint16_t i=0;i<UART_buffer_pointer;i++)
 			{
 				UART_cmdBuffer[i]='\0';
@@ -67,7 +66,7 @@ void cMaster::Run(void) {
 			BufferHasMessage=false;
 		}
 		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
-			cApplication *ap = MODEL::Glo2locCmd[i];
+			cApplication * const ap = MODEL::Glo2locCmd[i];
 			if (ap) {
 				ap->DoEachCycle(now);
 			}
@@ -84,7 +83,7 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 		return true;
 	}
 	if ((uint16_t) destinationApp < CMD_EVT_OFFSET) {
-		cApplication *app = MODEL::Glo2locCmd[(uint16_t) destinationApp];
+		cApplication * const app = MODEL::Glo2locCmd[(uint16_t) destinationApp];
 		if (app != NULL) {
 			//only in this case, the message can be processed local; no need to send it to can
 			app->OnCommand(cmd, payload, payloadLength, now);
@@ -106,7 +105,23 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 	return false;
 }
 
+void cMaster::SendEventDirect(Time_t now, const eApplicationID sourceApp, const eEventType evt, uint8_t * payload, uint8_t payloadLength)
+{
 
+	cApplication * const app = MODEL::Glo2locEvt[(uint16_t)sourceApp];
+	if (app != NULL) {
+		app->OnEvent(sourceApp, evt, payload, payloadLength, now);
+	}
+	CANMessage m;
+	m.Id = (uint16_t) sourceApp + CMD_EVT_OFFSET;
+	m.Length = payloadLength+1;
+	m.Data[0] = (uint8_t)evt;
+	int i = 0;
+	for (i = 0; i < payloadLength; i++) {
+		m.Data[i+1] = payload[i];
+	}
+	BSP::SendCANMessage(&m);
+}
 
 void cMaster::SendEvent(Time_t now, const eApplicationID sourceApp, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t * payload, uint8_t payloadLength)
 {
@@ -154,11 +169,31 @@ void cMaster::ReceiveFromMessageBus() {
 	Time_t now = BSP::GetTime();
 
 	if (rcvMessage.Id < CMD_EVT_OFFSET) {
+		//appId is the id of the target app
+		if(MODEL::TRACE_COMMANDS)
+		{
+			LOGX("Command to id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
+			for (int i = 0; i < rcvMessage.Length; i++)
+			{
+				Console::Write("0x%02X, ", rcvMessage.Data[i]);
+			}
+			Console::Writeln("");
+		}
 		cApplication *app = MODEL::Glo2locCmd[appId];
 		if (app != NULL) {
 			app->OnCommand((eCommandType)rcvMessage.Data[0], &(rcvMessage.Data[1]), rcvMessage.Length, now);
 		}
 	} else {
+		//appId is the id of the source app
+		if(MODEL::TRACE_EVENTS)
+		{
+			LOGX("Event from id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
+			for (int i = 0; i < rcvMessage.Length; i++)
+			{
+				Console::Write("0x%02X, ", rcvMessage.Data[i]);
+			}
+			Console::Writeln("");
+		}
 		cApplication *app = MODEL::Glo2locEvt[appId];
 		if (app != NULL) {
 			app->OnEvent((eApplicationID) appId, (eEventType)rcvMessage.Data[0],  &(rcvMessage.Data[1]), rcvMessage.Length, now);

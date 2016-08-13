@@ -137,7 +137,7 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L0_TECH_B11, InputPin.I07, ID.POWIT_L0_TECH_C1);
             SNSCT_L0_TECH_HS_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_TECH_C1), OutputRessource = OutputPin.O07 });
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I08, ID.NO_APPLICATION);
-            SNSCT_L0_TECH_HS_1.Applications.Add(new DoorbellApplication
+            SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
             });

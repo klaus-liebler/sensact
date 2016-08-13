@@ -7,13 +7,13 @@
  *     Licence: none
  */
 
-#include <cBell.h>
 #include <cMaster.h>
 #include <cModel.h>
+#include <cSound.h>
 #include <chrono>
 
 #define LOGLEVEL LEVEL_DEBUG
-#define LOGNAME "BELL "
+#define LOGNAME "SOUND"
 #include <cLog.h>
 
 
@@ -232,11 +232,11 @@ static void mp3_random_play () {
 	mp3_send_cmd (0x18);
 }
 */
-bool cBell::Setup() {
+bool cSound::Setup() {
 	return true;
 }
 
-void cBell::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
+void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	UNUSED(now);
 	//mp3_stop();
@@ -247,7 +247,12 @@ void cBell::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 	mp3_play(1);
 }
 
-void cBell::DoEachCycle(Time_t now)
+void cSound::OnSTARTCommand(Time_t now)
+{
+	OnSET_SIGNALCommand(0, now);
+}
+
+void cSound::DoEachCycle(Time_t now)
 {
 	UNUSED(now);
 }

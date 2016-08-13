@@ -21,6 +21,7 @@ using namespace std;
 	#define LOGNAME "NONAME"
 #endif
 #define LOG sensact::CLogger::getLogger()
+#define LOGX(x, ...)    do { if (true)LOG->Info(x, LOGNAME, ##__VA_ARGS__); } while (0)
 #if LOGLEVEL ==  LEVEL_ALL
 	#define LOGT(x, ...)    do { if (true)LOG->Trace(x, LOGNAME, ##__VA_ARGS__); } while (0)
 	#define LOGD(x, ...)    do { if (true)LOG->Debug(x, LOGNAME, ##__VA_ARGS__); } while (0)

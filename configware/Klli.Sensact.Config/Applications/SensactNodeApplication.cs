@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config.Applications
@@ -15,18 +17,16 @@ namespace Klli.Sensact.Config.Applications
 
         public override string GenerateInitializer(ModelContainer m)
         {
-
-            return string.Empty;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("// Sensact node management application {0} " + Environment.NewLine, ApplicationId);
+            //sb.AppendFormat("//is already hardcoded");
+            sb.AppendFormat("sensact::cSensactNode {0}(\"{0}\", eApplicationID::{0});" + Environment.NewLine + Environment.NewLine, ApplicationId);
+            return sb.ToString();
         }
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType> { EventType.PONG };
-        }
-
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            return new HashSet<CommandType> { CommandType.PING };
         }
 
         [SensactCommandMethod]

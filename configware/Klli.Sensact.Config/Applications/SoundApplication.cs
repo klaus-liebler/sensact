@@ -5,20 +5,17 @@ using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config.Applications
 {
-    public class DoorbellApplication : ActorApplication
+    public class SoundApplication : ActorApplication
     {
-        public override HashSet<CommandType> ICanReactOnTheseCommands()
-        {
-            HashSet<CommandType> ret = new HashSet<CommandType>()
-            {
-                CommandType.SET_SIGNAL,
-            };
-            return ret;
-        }
-
+        
         public override void OnSET_SIGNALCommand(ushort signal)
         {
             base.OnSET_SIGNALCommand(signal);
+        }
+
+        public override void OnSTARTCommand()
+        {
+            base.OnSTARTCommand();
         }
 
         public override HashSet<EventType> ICanSendTheseEvents()
@@ -29,9 +26,9 @@ namespace Klli.Sensact.Config.Applications
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// DOORBELL {0}" + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("// SOUND {0}" + Environment.NewLine, ApplicationId);
             //cBell DOORBELL("DOORBELL", eApplicationID::DOORBELL, &MODEL::volumeSchedule);
-            sb.AppendFormat("sensact::cBell {0}(\"{0}\", eApplicationID::{0}, &MODEL::volumeSchedule);"+Environment.NewLine + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("sensact::cSound {0}(\"{0}\", eApplicationID::{0}, &MODEL::volumeSchedule);"+Environment.NewLine + Environment.NewLine, ApplicationId);
             return sb.ToString();
         }
 
