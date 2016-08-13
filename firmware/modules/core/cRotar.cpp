@@ -77,7 +77,7 @@ void cROTAR::DoEachCycle(Time_t now) {
 		this->pushState = ePushState::RELEASED;
 		this->lastChange = now;
 	}
-	uint16_t currentRotaryState = BSP::GetRotaryEncoderValue(this->inputRotary)/2;
+	uint16_t currentRotaryState = BSP::GetRotaryEncoderValue(this->inputRotary);
 	if(currentRotaryState!=this->rotaryState)
 	{
 		int16_t change =  currentRotaryState-this->rotaryState;
@@ -95,7 +95,8 @@ void cROTAR::OnTurned(Time_t now, int16_t change)
 	for(i=0;i<this->turnedCommandsLength;i++)
 	{
 		Command c = turnedCommands[i];
-		cMaster::SendCommandToMessageBus(now, c.target, c.command, (uint8_t*)&change, 2);
+		SendSTEP_VERTICALCommand(c.target, change/2, now);
+		//cMaster::SendCommandToMessageBus(now, c.target, c.command, (uint8_t*)&change, 2);
 	}
 }
 

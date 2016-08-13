@@ -877,9 +877,9 @@ uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 #endif
 #ifdef SENSACTUP02
 	if (re == eRotaryEncoder::ROTARYENCODER_1) {
-		return (uint16_t) TIM2->CNT;
+		return (uint16_t) (TIM2->CNT & 0xFFFE);
 	} else if (re == eRotaryEncoder::ROTARYENCODER_2) {
-		return (uint16_t)TIM3->CNT;
+		return (uint16_t)(TIM3->CNT & 0xfffe);
 	}
 	else
 	{

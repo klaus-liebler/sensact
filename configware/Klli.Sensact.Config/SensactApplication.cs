@@ -227,9 +227,17 @@ namespace Klli.Sensact.Config
         public virtual void OnSET_RGBWCommand(byte R, byte G, byte B, byte W) { } //Params as u8
         [SensactCommandMethod]
         public virtual void OnSET_SIGNALCommand(ushort signal) { } //Param as u16 (mp3 song, well known color, light sequence)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="payload">just an ubiquitary payload that is used as payload for the PONG</param>
+        [SensactCommandMethod]
+        public virtual void OnPINGCommand(uint payload) { }
+
+
     }
 
-    
+
 
     public class Command
     {

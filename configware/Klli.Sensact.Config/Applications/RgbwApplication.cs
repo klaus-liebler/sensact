@@ -21,7 +21,7 @@ namespace Klli.Sensact.Config.Applications
         public PwmPin OutputB;
         public PwmPin OutputW;
         public bool LowMeansLampOn;
-        public string StandbyController;
+        public string StandbyController="NO_APPLICATION";
 
         public override HashSet<CommandType> ICanReactOnTheseCommands()
         {

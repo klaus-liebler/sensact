@@ -308,6 +308,7 @@ eShellError cShell::processCmds(uint8_t * buffer, const uint16_t size) {
 
 eShellError cShell::processTextCmd(const char *cmd_line, const uint16_t size)
 {
+	(void)size;
 	int i;
 	int ret;
 	int cmd_len;
