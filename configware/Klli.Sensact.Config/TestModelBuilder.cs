@@ -16,9 +16,8 @@ namespace Klli.Sensact.Config
 
             Model model = new Model("RCDemo");
 
-            Node TEST_HS07 = new Nodes.SensactHs07()
+            Node TEST_HS07 = new Nodes.SensactHs07("SNSAC_L0_TECH_HS07_1")
             {
-                Id = "SNSAC_L0_TECH_HS07_1",
                 Applications = new List<SensactApplication>()
                     {
                         new PWMApplication
@@ -124,9 +123,8 @@ namespace Klli.Sensact.Config
         {
             Model model = new Model("LIBARDemo");
 
-            Node TEST_HS07 = new Nodes.SensactHs07()
-            {
-                Id = "TEST_HS07",
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07")
+            { 
                 Applications = new List<SensactApplication>()
                 {
                     new LightbarrierApplication
@@ -157,9 +155,8 @@ namespace Klli.Sensact.Config
         {
             Model model = new Model("RGBWDemo");
 
-            Node TEST_HS07 = new Nodes.SensactHs07()
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07")
             {
-                Id = "TEST_HS07",
                 Applications = new List<SensactApplication>()
                 {
                     
@@ -205,9 +202,8 @@ namespace Klli.Sensact.Config
 
 
 
-            Node TEST_UP02 = new Nodes.SensactUp02
+            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
             {
-                Id = "TEST_UP02",
                 Applications = new List<SensactApplication>
                 {
                     new RotaryEncoderApplication
@@ -258,9 +254,8 @@ namespace Klli.Sensact.Config
         {
             Model model = new Model("CANCommunicationDemo");
 
-            Node TEST_HS07 = new Nodes.SensactHs07()
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07")
             {
-                Id = "TEST_HS07",
                 Applications = new List<SensactApplication>()
                 {
                     new DoorbellApplication
@@ -298,7 +293,7 @@ namespace Klli.Sensact.Config
                           {
                               new Command
                               {
-                                  CommandType=CommandType.START,
+                                  CommandType=CommandType.SET_SIGNAL,
                                   TargetAppId="BELL__DOOR",
                               }
                           }
@@ -310,9 +305,8 @@ namespace Klli.Sensact.Config
 
 
 
-            Node TEST_UP02 = new Nodes.SensactUp02
+            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
             {
-                Id = "TEST_UP02",
                 Applications = new List<SensactApplication>
                 {
                     /*
@@ -391,9 +385,8 @@ namespace Klli.Sensact.Config
 
             Model model = new Model("TestAllPins");
 
-            Node TEST_HS07 = new Nodes.SensactHs07()
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07")
             {
-                Id = "TEST_HS07",
                 Applications = new List<SensactApplication>()
                     {
                         new RotaryEncoderApplication
@@ -421,9 +414,8 @@ namespace Klli.Sensact.Config
                     }
             };
 
-            Node TEST_UP02 = new Nodes.SensactUp02
+            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
             {
-                Id = "TEST_UP02",
                 Applications = new List<SensactApplication>
                 {
                     new RotaryEncoderApplication
