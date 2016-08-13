@@ -3,6 +3,7 @@
     public enum CommandType
     {
         NOP,
+        PING, //geht an die "Master"-Applikation, die sich in jedem Sensact befindet
         RESET,
         START,
         STOP,
@@ -33,6 +34,8 @@
 
     public enum EventType
     {
+        NOE, //no event
+        PONG, //as response to ping, just to test communication
         PRESSED,
         RELEASED,
         PRESSED_SHORT_AND_HOLD,

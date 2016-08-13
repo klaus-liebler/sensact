@@ -54,6 +54,7 @@
     <Compile Include="Applications\LightbarrierApplication.cs" />
     <Compile Include="Applications\RCEventApplication.cs" />
     <Compile Include="Applications\RgbwApplication.cs" />
+    <Compile Include="Applications\SensactNodeApplication.cs" />
     <Compile Include="SensactApplication.cs" />
     <Compile Include="Applications\BlindApplication.cs" />
     <Compile Include="Applications\MasterApplication.cs" />

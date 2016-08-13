@@ -7,6 +7,23 @@ namespace Klli.Sensact.Config.Nodes
 
     public abstract class Node
     {
+
+        public Node(ID appId):this(appId.ToString())
+        {
+           
+        }
+
+        public Node(string appId)
+        {
+            this.Id = appId;
+            this.Applications = new List<SensactApplication>();
+        }
+
+        public Node()
+        {
+            
+        }
+
         public string Id;
 
 

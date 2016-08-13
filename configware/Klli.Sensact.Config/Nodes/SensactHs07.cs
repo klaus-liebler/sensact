@@ -5,10 +5,16 @@ namespace Klli.Sensact.Config.Nodes
 {
     public class SensactHs07 : Node
     {
-        public SensactHs07()
+        public SensactHs07(ID appId) : base(appId)
         {
 
         }
+
+        public SensactHs07(string appId) : base(appId)
+        {
+
+        }
+
 
         public override int VersionMajor
         {

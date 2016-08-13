@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Klli.Sensact.Config.Applications
 {
-    public class MasterApplication : SensactApplication
+    public class MasterApplication : SensactNodeApplication
     {
         public MasterApplication()
         {

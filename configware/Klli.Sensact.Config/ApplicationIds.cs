@@ -3,6 +3,16 @@
     public enum ID
     {
         MASTER,
+        //Sensact-Geräte
+        SNSCT_L0_TECH_HS_1,
+        SNSCT_L0_TECH_HS_2,
+        SNSCT_L3_TECH_HS_1,
+        SNSCT_L3_TECH_HS_2,
+
+        SNSCT_L1_LVNG_UP,
+        SNSCT_L1_KTCH_UP,
+        SNSCT_L2_BATH_UP,
+
         //Keller
         PUSHB_L0_CORR_B11, //STRS.W1
         PUSHB_L0_CORR_B21,

@@ -4,6 +4,11 @@ namespace Klli.Sensact.Config.Nodes
 {
     class SensactUp01 : Node
     {
+        public SensactUp01(ID appId) : base(appId)
+        {
+
+        }
+
         public override STM32Chip Chip
         {
             get
