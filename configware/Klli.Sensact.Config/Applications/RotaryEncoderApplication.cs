@@ -16,6 +16,22 @@ namespace Klli.Sensact.Config.Applications
         public InputPin InputPushRessource;
 
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            if (usedPins.Contains(InputPushRessource.ToString()))
+            {
+                return "InputPushRessource";
+            }
+            if (usedPins.Contains(InputRotaryRessource.ToString()))
+            {
+                return "InputRotaryRessource";
+            }
+
+            usedPins.Add(InputPushRessource.ToString());
+            usedPins.Add(InputRotaryRessource.ToString());
+            return null;
+        }
+
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {

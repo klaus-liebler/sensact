@@ -27,7 +27,12 @@ namespace Klli.Sensact.Config.Applications
         {
             base.OnON_FILTERCommand(targetApplicationId, autoReturnToOffMsecs);
         }
-        
+
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            return null;
+        }
+
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {

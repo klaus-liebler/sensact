@@ -20,6 +20,22 @@ namespace Klli.Sensact.Config.Applications
             base.OnSTOPCommand();
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            foreach(PwmPin pwm in OutputRessources)
+            {
+                if (usedPins.Contains(pwm.ToString()))
+                {
+                    return pwm.ToString();
+                }
+            }
+            foreach (PwmPin pwm in OutputRessources)
+            {
+                usedPins.Add(pwm.ToString());
+            }
+            return null;
+        }
+
         public override void OnSTARTCommand()
         {
             base.OnSTARTCommand();

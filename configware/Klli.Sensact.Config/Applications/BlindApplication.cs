@@ -38,6 +38,22 @@ namespace Klli.Sensact.Config.Applications
             return new HashSet<EventType>();
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            if (usedPins.Contains(OutputRessourceDown.ToString()))
+            {
+                return "OutputRessourceDown";
+            }
+            if (usedPins.Contains(OutputRessourceUpOrPower.ToString()))
+            {
+                return "OutputRessourceUpOrPower";
+            }
+            
+            usedPins.Add(OutputRessourceDown.ToString());
+            usedPins.Add(OutputRessourceUpOrPower.ToString());
+            return null;
+        }
+
         public override string GenerateInitializer(ModelContainer m)
         {
             if (FullyCloseEvents != null || FullyOpenEvents != null)

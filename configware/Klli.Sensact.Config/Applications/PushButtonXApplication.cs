@@ -38,6 +38,17 @@ namespace Klli.Sensact.Config.Applications
             }
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            if (usedPins.Contains(InputRessource.ToString()))
+            {
+                return "InputRessource";
+            }
+
+            usedPins.Add(InputRessource.ToString());
+            return null;
+        }
+
         public override string GenerateInitializer(ModelContainer m)
         {
 

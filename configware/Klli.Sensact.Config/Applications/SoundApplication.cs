@@ -32,6 +32,11 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            return null;
+        }
+
         internal override Regex AppIdRegex
         {
             get

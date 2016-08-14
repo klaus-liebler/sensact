@@ -17,6 +17,17 @@ namespace Klli.Sensact.Config.Applications
             base.OnHEARTBEATCommand();
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            if (usedPins.Contains(OutputRessource.ToString()))
+            {
+                return "OutputRessource";
+            }
+
+            usedPins.Add(OutputRessource.ToString());
+            return null;
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

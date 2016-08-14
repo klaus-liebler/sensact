@@ -189,10 +189,10 @@ namespace Klli.Sensact.Config
                     new RgbwApplication
                     {
                         ApplicationId="RGBW__XX_XXX_1",
-                        OutputR=PwmPin.P01,
-                        OutputG=PwmPin.P02,
-                        OutputB=PwmPin.P03,
-                        OutputW=PwmPin.P04,
+                        OutputRessourceR=PwmPin.P01,
+                        OutputRessourceG=PwmPin.P02,
+                        OutputRessourceB=PwmPin.P03,
+                        OutputRessourceW=PwmPin.P04,
                         StandbyController=_(ID.NO_APPLICATION),
                         LowMeansLampOn=false,
                     },
@@ -231,10 +231,10 @@ namespace Klli.Sensact.Config
                    new RgbwApplication
                     {
                         ApplicationId="RGBW__YY_YYY_1",
-                        OutputR=PwmPin.P01,
-                        OutputG=PwmPin.P03,
-                        OutputB=PwmPin.P05,
-                        OutputW=PwmPin.P07,
+                        OutputRessourceR=PwmPin.P01,
+                        OutputRessourceG=PwmPin.P03,
+                        OutputRessourceB=PwmPin.P05,
+                        OutputRessourceW=PwmPin.P07,
                         StandbyController=_(ID.NO_APPLICATION),
                         LowMeansLampOn=true,
                     },
@@ -321,10 +321,10 @@ namespace Klli.Sensact.Config
                     new RgbwApplication
                     {
                         ApplicationId="RGBW__YY_YYY_1",
-                        OutputR=PwmPin.P01,
-                        OutputG=PwmPin.P03,
-                        OutputB=PwmPin.P05,
-                        OutputW=PwmPin.P07,
+                        OutputRessourceR=PwmPin.P01,
+                        OutputRessourceG=PwmPin.P03,
+                        OutputRessourceB=PwmPin.P05,
+                        OutputRessourceW=PwmPin.P07,
                     },
                     new RotaryEncoderApplication
                     {

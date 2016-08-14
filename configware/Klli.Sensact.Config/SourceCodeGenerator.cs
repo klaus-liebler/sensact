@@ -21,6 +21,7 @@ namespace Klli.Sensact.Config
         public static bool CheckAndPrepare(ModelContainer mc)
         {
             HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
+
       
             mc.NextFreeIndex = 1; //0 has specific meaning
 
@@ -34,6 +35,7 @@ namespace Klli.Sensact.Config
                 {
                     ApplicationId = n.Id,
                 });
+                HashSet<string> usedPins = new HashSet<string>();
                 foreach (SensactApplication app in n.Applications)
                 {
                     if(alreadyDefinedAppIds.Contains(app.ApplicationId))
@@ -45,6 +47,12 @@ namespace Klli.Sensact.Config
                     {
                         LOG.WarnFormat("AppId {0} does not fulfill the recommendations for application name. This is ok, but maybe it is an error...", app.ApplicationId, n.Id);
                         app.HasValidAppId();
+                    }
+                    string errorMessage = app.CheckAndAddUsedPins(usedPins);
+                    if (errorMessage!=null)
+                    {
+                        LOG.ErrorFormat("AppId {0} uses pins that have been reserved by another app:\n{1}", app.ApplicationId, errorMessage);
+                        return false;
                     }
                     alreadyDefinedAppIds.Add(app.ApplicationId);
                     SensactApplicationContainer cont = new SensactApplicationContainer

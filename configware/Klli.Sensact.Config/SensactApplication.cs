@@ -71,6 +71,8 @@ namespace Klli.Sensact.Config
             return ret;
         }
 
+        internal abstract string CheckAndAddUsedPins(HashSet<string> usedPins);
+
         public HashSet<CommandType> ICanReactOnTheseCommands()
         {
 

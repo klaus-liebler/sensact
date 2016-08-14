@@ -20,6 +20,17 @@ namespace Klli.Sensact.Config.Applications
 
         }
 
+        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        {
+            if (usedPins.Contains(OutputRessource.ToString()))
+            {
+                return "OutputRessource";
+            }
+
+            usedPins.Add(OutputRessource.ToString());
+            return null;
+        }
+
         [SensactCommandMethod]
         public override void OnTOGGLE_SPECIALCommand()
         {
