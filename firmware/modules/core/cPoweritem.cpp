@@ -44,7 +44,11 @@ void cPoweritem::OnTOGGLECommand(Time_t now)
 
 void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
 {
-	if(autoOffIntervalMsecs!=0)
+	if(autoOffMsecs!=0)
+	{
+		autoOffTime=now+autoOffMsecs;
+	}
+	else if(autoOffIntervalMsecs!=0)
 	{
 		autoOffTime=now+autoOffIntervalMsecs;
 	}
@@ -78,7 +82,7 @@ void cPoweritem::DoEachCycle(Time_t now)
 	{
 		BSP::SetPoweredOutput(output, ePowerState::INACTIVE);
 		this->state=ePowerState::INACTIVE;
-		autoOffTime =TIME_MAX;
+		autoOffTime = TIME_MAX;
 	}
 }
 

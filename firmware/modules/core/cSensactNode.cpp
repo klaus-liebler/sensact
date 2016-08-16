@@ -26,7 +26,8 @@ void cSensactNode::OnPINGCommand(uint32_t payload, Time_t now)
 
 void cSensactNode::DoEachCycle(Time_t now)
 {
-
+	UNUSED(now);
+	return;
 }
 
 }

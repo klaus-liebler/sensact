@@ -21,10 +21,7 @@ public:
 	void DoEachCycle(Time_t time) override;
 
 
-	cLightbarrier(const char* name, const eApplicationID id, const eInput input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget) :
-				cApplication(name, id, eAppType::LIBAR), input(input), activeSignalLevel(activeSignalLevel), brightnessSensor(brightnessSensor), finalTarget(finalTarget), lastChange(0), state(
-					ePushState::RELEASED) {
-	}
+	cLightbarrier(const char* name, const eApplicationID id, const eInput input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);
 };
 
 }

@@ -151,6 +151,17 @@ namespace Klli.Sensact.Config
             return model;
         }
 
+
+        public static Model BuildBLINDDemo()
+        {
+            Model model = new Model("BLINDDemo");
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07");
+            model.Nodes.Add(TEST_HS07);
+            TEST_HS07.Applications.AddBlindButtons("PUSHB_XX_XXX_UP", "PUSHB_XX_XXX_DO", InputPin.I01, InputPin.I02, "BLIND_XX_XXX_1");
+            TEST_HS07.Applications.Add(new BlindApplication { ApplicationId = "BLIND_XX_XXX_1", OpenCloseTimeInSeconds = 10, OutputRessourceUpOrPower = OutputPin.O01, OutputRessourceDown = OutputPin.O02, RelayMode = RelayMode.INTERLOCKED });
+            return model;
+        }
+
         public static Model BuildRGBWDemo()
         {
             Model model = new Model("RGBWDemo");

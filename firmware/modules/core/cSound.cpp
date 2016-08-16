@@ -240,16 +240,16 @@ void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	UNUSED(now);
 	//mp3_stop();
-	volumeSchedule->DoEachCycle(std::chrono::system_clock::now());
-	uint32_t vol = volumeSchedule->GetCurrentValue();
+	//volumeSchedule->DoEachCycle(std::chrono::system_clock::now());
+	//uint32_t vol = volumeSchedule->GetCurrentValue();
 	mp3_set_volume(15);
 	HAL_Delay(20);
-	mp3_play(1);
+	mp3_play(signal);
 }
 
 void cSound::OnSTARTCommand(Time_t now)
 {
-	OnSET_SIGNALCommand(0, now);
+	OnSET_SIGNALCommand(1, now);
 }
 
 void cSound::DoEachCycle(Time_t now)

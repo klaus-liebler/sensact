@@ -125,7 +125,7 @@ void cPWM::OnUPCommand(Time_t now)
 
 void cPWM::OnTOGGLECommand(Time_t now)
 {
-
+	UNUSED(now);
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
 	}

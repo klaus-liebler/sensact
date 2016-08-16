@@ -24,6 +24,11 @@ bool cLightbarrier::Setup() {
 	return BSP::RequestDigitalInput(this->input);
 }
 
+cLightbarrier::cLightbarrier(const char* name, const eApplicationID id, const eInput input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget) :
+				cApplication(name, id, eAppType::LIBAR), input(input), activeSignalLevel(activeSignalLevel), brightnessSensor(brightnessSensor), finalTarget(finalTarget), lastChange(0), state(
+					ePushState::RELEASED) {
+	}
+
 
 void cLightbarrier::DoEachCycle(Time_t now) {
 	ePushState currentState = BSP::GetDigitalInput(this->input);
@@ -35,13 +40,11 @@ void cLightbarrier::DoEachCycle(Time_t now) {
 		this->lastChange = now;
 		if(brightnessSensor==eApplicationID::NO_APPLICATION)
 		{
-			cMaster::SendCommandToMessageBus(now, finalTarget, eCommandType::ON, 0, 0);
+			SendONCommand(finalTarget, 0, now);
 		}
 		else
 		{
-			uint16_t ft = (uint16_t)finalTarget;
-			uint8_t *ptr = (uint8_t *)&ft;
-			cMaster::SendCommandToMessageBus(now, brightnessSensor, eCommandType::ON, ptr, 2);
+			SendON_FILTERCommand(brightnessSensor, (uint16_t)finalTarget, 0, now);
 		}
 	} else if (this->state == ePushState::PRESSED
 			&& currentState == ePushState::RELEASED) {

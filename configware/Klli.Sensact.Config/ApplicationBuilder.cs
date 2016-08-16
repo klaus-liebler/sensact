@@ -195,19 +195,23 @@ namespace Klli.Sensact.Config
             list.Add(up);
             list.Add(down);
         }
-
         public static void AddBlindButtons(this List<SensactApplication> list, ID appIdUp, ID appIdDown, InputPin inputPinUp, InputPin inputPinDown, ID targetAppId)
+        {
+            list.AddBlindButtons(appIdUp.ToString(), appIdDown.ToString(), inputPinUp, inputPinDown, targetAppId.ToString());
+        }
+
+        public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, string appIdDown, InputPin inputPinUp, InputPin inputPinDown, string targetAppId)
         {
             PushButtonXApplication up = new PushButtonXApplication
             {
-                ApplicationId = appIdUp.ToString(),
+                ApplicationId = appIdUp,
                 InputRessource = inputPinUp,
                 CommandsOnPressed = new List<Command>()
                 {
                     new Command()
                     {
                         CommandType=CommandType.UP,
-                        TargetAppId=targetAppId.ToString(),
+                        TargetAppId=targetAppId,
                     },
                 },
 
@@ -216,20 +220,20 @@ namespace Klli.Sensact.Config
                     new Command()
                     {
                         CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId.ToString(),
+                        TargetAppId=targetAppId,
                     },
                 },
             };
             PushButtonXApplication down = new PushButtonXApplication
             {
-                ApplicationId = appIdDown.ToString(),
+                ApplicationId = appIdDown,
                 InputRessource = inputPinDown,
                 CommandsOnPressed = new List<Command>()
                 {
                     new Command()
                     {
                         CommandType=CommandType.DOWN,
-                        TargetAppId=targetAppId.ToString(),
+                        TargetAppId=targetAppId,
                     },
                 },
 
@@ -238,7 +242,7 @@ namespace Klli.Sensact.Config
                     new Command()
                     {
                         CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId.ToString(),
+                        TargetAppId=targetAppId,
                     },
                 },
             };

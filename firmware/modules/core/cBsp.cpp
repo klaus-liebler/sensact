@@ -475,6 +475,7 @@ bool BSP::HasRCEventOccured(const uint32_t eventNumber)
 	}
 	return false;
 #else
+	UNUSED(eventNumber);
 	return false;
 #endif
 }

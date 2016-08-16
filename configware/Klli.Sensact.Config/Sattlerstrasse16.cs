@@ -34,11 +34,13 @@ namespace Klli.Sensact.Config
             //5V-Versorgung der Lichtschranken
             //Input der Lichtschranken (FT-Eingänge)
             //12V-Versorgung der RGBW-Spots im L2.BATH
+            //5V-Versorgung des OneWire
             //ggf LEDs für "diverses" im Tastermodul an den Betten, ein beleuchteter Rahmen könnte hier auch als Nachtlicht verwendet werden?
 
             //Spezialitäten unten
-            //Ansteuerung des MP3-Moduls (seriell)
+            //Ansteuerung des MP3-Moduls + Verstärker (seriell)
             //12V-Versorgung der RGBW-Spots im L1.BATH
+            //5V-Versorgung des OneWire
             //LED für Außensteckdosen im Tastermodul am Terassenausgang
             Model model = new Model("Sattlerstraße 16");
             Node SNSCT_L0_TECH_HS_1 = new SensactHs07(ID.SNSCT_L0_TECH_HS_1);
@@ -183,7 +185,7 @@ namespace Klli.Sensact.Config
                 ApplicationId = _(ID.PUSHB_LX_FRON_B2),
                 InputRessource = InputPin.I14,
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.POWIT_LX_FRON_W1),
             });
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, OutputPin.O18);
@@ -478,8 +480,8 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId= _(ID.LIBAR_LS_STRS_B11),
                 ActiveSignalLevel=true,
-                BrightnessSensor=_(ID.SBRGH_LX_ROOF),
-                FinalTarget=_(ID.PWM___LS_STRS_W2),
+                BrightnessSensor= _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
+                FinalTarget =_(ID.PWM___LS_STRS_W2),
                 InputRessource= InputPin.II01, 
              });
             SNSCT_L3_TECH_HS_2.Applications.AddToggleButton(ID.PUSHB_LS_STRS_B21, InputPin.I06, ID.POWIT_LS_STRS_W3);
@@ -507,7 +509,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B31),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),// _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W2),
                 InputRessource = InputPin.II02,
             });
@@ -515,7 +517,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B32),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W4),
                 InputRessource = InputPin.II03,
             });
@@ -528,7 +530,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B51),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W4),
                 InputRessource = InputPin.II04,
             });
@@ -536,7 +538,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B52),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W6),
                 InputRessource = InputPin.II05,
             });
@@ -547,7 +549,7 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LS_STRS_B71),
                 ActiveSignalLevel = true,
-                BrightnessSensor = _(ID.SBRGH_LX_ROOF),
+                BrightnessSensor = _(ID.NO_APPLICATION),// _(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.PWM___LS_STRS_W6),
                 InputRessource = InputPin.II06,
             });

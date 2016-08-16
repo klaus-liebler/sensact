@@ -131,9 +131,6 @@ struct si7021_thc cSI7021::getTempAndRH()
 
 
 bool cSI7021::Setup(void) {
-	uint8_t data[22];
-	uint8_t i = 0;
-
 	/* Initialize I2C */
 	if(HAL_I2C_IsDeviceReady(i2c, I2C_ADDRESS, 3, 100)!=HAL_OK)
 	{

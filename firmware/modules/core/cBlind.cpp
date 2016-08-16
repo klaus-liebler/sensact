@@ -28,20 +28,21 @@ void cBlind::up(Time_t now)
 	LOGD("%s goes up!", Name);
 	this->state=eDirection::UP;
 	this->lastChanged=now;
-	if(relayMode==eRelayMode::TWO_PHASES)
-	{
+	//NO DIFFERENCE BETWEEN MODES
+	//if(relayMode==eRelayMode::TWO_PHASES)
+	//{
 		BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
 		BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
-	}
-	else
-	{
-		BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
-		BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
-	}
+	//}
+	//else
+	//{
+	//	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
+	//	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+	//}
 }
 void cBlind::prepareUp(Time_t now)
 {
-	LOGD("%s prepares for up!", Name);
+	LOGD("%s: prepares for up!", Name);
 	this->state=eDirection::PREPAREUP;
 	this->lastChanged=now;
 	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
@@ -49,7 +50,7 @@ void cBlind::prepareUp(Time_t now)
 
 void cBlind::prepareDown(Time_t now)
 {
-	LOGD("%s prepares for down!", Name);
+	LOGD("%s: prepares for down!", Name);
 	this->state=eDirection::PREPAREDOWN;
 	this->lastChanged=now;
 	BSP::SetPoweredOutput(relayDown, ePowerState::ACTIVE);
@@ -84,7 +85,7 @@ void cBlind::stop(Time_t now, uint16_t currPos){
 		this->wellKnownLevel=currPos;
 	}
 	this->targetLevel=this->wellKnownLevel;
-	LOGD("%s stops at pos %d", Name, this->targetLevel);
+	LOGD("%s: stops at pos %d", Name, this->targetLevel);
 	this->state=eDirection::STOP;
 	this->lastChanged=now;
 	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
@@ -112,12 +113,12 @@ void cBlind::OnUPCommand(Time_t now)
 {
 	if(state==eDirection::STOP)
 	{
-		LOGD("%s goes up to targetLevel=FULLY_CLOSED_INT", Name);
+		LOGD("%s: goes up to targetLevel=FULLY_CLOSED_INT", Name);
 		this->targetLevel=FULLY_CLOSED_INT;
 	}
 	else
 	{
-		LOGD("%s goes up to targetLevel = calculatePosition(now)", Name);
+		LOGD("%s: goes up to targetLevel = calculatePosition(now)", Name);
 		this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
 	}
 }
@@ -136,7 +137,7 @@ void cBlind::OnDOWNCommand(Time_t now)
 	LOGD("%s: OnDown called", Name);
 	if(state==eDirection::STOP)
 	{
-		LOGD("s%: this->targetLevel=FULLY_OPEN_INT", Name);
+		LOGD("%s: this->targetLevel=FULLY_OPEN_INT", Name);
 		this->targetLevel=FULLY_OPEN_INT;
 	}
 	else

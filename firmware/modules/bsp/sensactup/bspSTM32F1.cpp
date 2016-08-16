@@ -176,68 +176,68 @@ void BSP::Init(void) {
 	//v02: PA8, T1.1
 
 	__HAL_RCC_TIM1_CLK_ENABLE();
-	  /* DMA controller clock enable */
-	  __HAL_RCC_DMA1_CLK_ENABLE();
+	/* DMA controller clock enable */
+	__HAL_RCC_DMA1_CLK_ENABLE();
 
-	  /* DMA interrupt init */
-	  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
-	  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+	/* DMA interrupt init */
+	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 
-    /**TIM1 GPIO Configuration
+	/**TIM1 GPIO Configuration
     PA8     ------> TIM1_CH1
-    */
-    gi.Pin = GPIO_PIN_8;
-    gi.Mode = GPIO_MODE_AF_PP;
-    gi.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOA, &gi);
+	 */
+	gi.Pin = GPIO_PIN_8;
+	gi.Mode = GPIO_MODE_AF_PP;
+	gi.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(GPIOA, &gi);
 
-    /* Peripheral DMA init*/
+	/* Peripheral DMA init*/
 
-    hdma_tim1_ch1.Instance = DMA1_Channel2;
-    hdma_tim1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
-    hdma_tim1_ch1.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_tim1_ch1.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_tim1_ch1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-    hdma_tim1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_tim1_ch1.Init.Mode = DMA_NORMAL;
-    hdma_tim1_ch1.Init.Priority = DMA_PRIORITY_MEDIUM;
-    HAL_DMA_Init(&hdma_tim1_ch1);
+	hdma_tim1_ch1.Instance = DMA1_Channel2;
+	hdma_tim1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
+	hdma_tim1_ch1.Init.PeriphInc = DMA_PINC_DISABLE;
+	hdma_tim1_ch1.Init.MemInc = DMA_MINC_ENABLE;
+	hdma_tim1_ch1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+	hdma_tim1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+	hdma_tim1_ch1.Init.Mode = DMA_NORMAL;
+	hdma_tim1_ch1.Init.Priority = DMA_PRIORITY_MEDIUM;
+	HAL_DMA_Init(&hdma_tim1_ch1);
 
-    __HAL_LINKDMA(&htim_pwm,hdma[TIM_DMA_ID_CC1],hdma_tim1_ch1);
+	__HAL_LINKDMA(&htim_pwm,hdma[TIM_DMA_ID_CC1],hdma_tim1_ch1);
 
-    TIM_MasterConfigTypeDef sMasterConfig;
-     TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
-     TIM_OC_InitTypeDef sConfigOC;
+	TIM_MasterConfigTypeDef sMasterConfig;
+	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig;
+	TIM_OC_InitTypeDef sConfigOC;
 
-     htim_pwm.Instance = TIM1;
-     htim_pwm.Init.Prescaler = 0;
-     htim_pwm.Init.CounterMode = TIM_COUNTERMODE_UP;
-     htim_pwm.Init.Period = 89;//89 (=90) for 72Mhz/90=800kHz
-     htim_pwm.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-     htim_pwm.Init.RepetitionCounter = 0;
-     HAL_TIM_OC_Init(&htim_pwm);
+	htim_pwm.Instance = TIM1;
+	htim_pwm.Init.Prescaler = 0;
+	htim_pwm.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim_pwm.Init.Period = 89;//89 (=90) for 72Mhz/90=800kHz
+	htim_pwm.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim_pwm.Init.RepetitionCounter = 0;
+	HAL_TIM_OC_Init(&htim_pwm);
 
-     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-     sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-     HAL_TIMEx_MasterConfigSynchronization(&htim_pwm, &sMasterConfig);
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_TIMEx_MasterConfigSynchronization(&htim_pwm, &sMasterConfig);
 
-     sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-     sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-     sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-     sBreakDeadTimeConfig.DeadTime = 0;
-     sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-     sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-     sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-     HAL_TIMEx_ConfigBreakDeadTime(&htim_pwm, &sBreakDeadTimeConfig);
+	sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+	sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+	sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+	sBreakDeadTimeConfig.DeadTime = 0;
+	sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+	sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+	sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+	HAL_TIMEx_ConfigBreakDeadTime(&htim_pwm, &sBreakDeadTimeConfig);
 
-     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-     sConfigOC.Pulse = 0;
-     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-     sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-     sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-     sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-     HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_1);
+	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = 0;
+	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+	sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+	HAL_TIM_PWM_ConfigChannel(&htim_pwm, &sConfigOC, TIM_CHANNEL_1);
 #endif
 
 #ifdef SENSACTUP_EXT_BME280
@@ -274,33 +274,18 @@ void BSP::Init(void) {
 	{
 		x.SetAllPixelRGB(cWs281x::Palette[cnt]);
 		x.Commit();
- 		HAL_Delay(500);
- 		cnt++;
- 		if(cnt==16) cnt=0;
+		HAL_Delay(500);
+		cnt++;
+		if(cnt==16) cnt=0;
 	}
 #endif
-	return;
+return;
 }
-
-
 
 void BSP::SetRgbLed(volatile uint8_t *framebuffer, uint16_t sizeIncludingZero) {
 	HAL_StatusTypeDef ret = HAL_TIM_PWM_Start_DMA(&htim_pwm, TIM_CHANNEL_1,
 			(uint32_t*) framebuffer, sizeIncludingZero);
-
-	if (ret != HAL_OK) {
-		while (1) {
-		}
-	}
+	if (ret != HAL_OK) while (1);
 }
-
-
-
-
-
-
-
-
-
 
 }

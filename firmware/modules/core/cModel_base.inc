@@ -52,40 +52,58 @@ static const sensact::sScheduleEntry schedule[]
 	const bool MODEL::TRACE_EVENTS=true;
 
 #endif
-#ifdef NODE_SNSAC_L1_KTCH_UP02_1
+
+#if defined SNSCT_L1_KTCH_UP or defined SNSCT_L1_LVNG_UP or defined SNSCT_L2_BATH_UP
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{0xB4, 0x17, 0x77, 0xC0, 0x03, 0x10,}};
-	const uint8_t MODEL::sensactWi_InputAddressesCnt=1;
-	const uint8_t MODEL::ds18b20_Addresses[][6]={{0xFF, 0xDD, 0x7E, 0x47, 0x16, 0x03,},
-			{0xFF, 0x93, 0xA7, 0x47, 0x16, 0x03,},
-			{0xFF, 0x60, 0x16, 0x47, 0x16, 0x03,},
-			{0xFF, 0x65, 0xA7, 0x47, 0x16, 0x03,}};
-	const uint8_t MODEL::ds18b20_AddressesCnt=4;
-
-	//drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
+	const uint8_t MODEL::ds18b20_Addresses[][6]={}};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
-
-
 #endif
+
 #ifdef NODE_SNSCT_L0_TECH_HS_1
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{}};
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
 
-	const uint8_t MODEL::ds18b20_Addresses[][6]={{0x4B, 0x51, 0xC9, 0x04, 0x00, 0x00,}};
-	const uint8_t MODEL::ds18b20_AddressesCnt=1;
-	//die Doorbell-Applikation ist als template verfügbar
-	//sensact::cBell DEVCE_L0_TECH_AUDIO("DEVCE_L0_TECH_AUDIO", eApplicationID::DEVCE_L0_TECH_AUDIO, schedule);
+	const uint8_t MODEL::ds18b20_Addresses[][6]={};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
+	const bool MODEL::TRACE_COMMANDS=true;
+	const bool MODEL::TRACE_EVENTS=true;
+#endif
+
+#ifdef NODE_SNSCT_L0_TECH_HS_2
+	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
+
+	const uint8_t MODEL::ds18b20_Addresses[][6]={};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
-
-
 #endif
-#ifdef NODE_SNSCT_L0_TECH_HS_2
+
+#ifdef NODE_SNSCT_L3_TECH_HS_1
+	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+
+	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
+	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
+
+	const uint8_t MODEL::ds18b20_Addresses[][6]={};
+	const uint8_t MODEL::ds18b20_AddressesCnt=0;
+	const bool MODEL::TRACE_COMMANDS=false;
+	const bool MODEL::TRACE_EVENTS=false;
+#endif
+
+#ifdef NODE_SNSCT_L3_TECH_HS_2
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 
@@ -100,8 +118,6 @@ static const sensact::sScheduleEntry schedule[]
 
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
-
-
 #endif
 
 }
