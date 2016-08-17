@@ -58,15 +58,27 @@ namespace Klli.Sensact.TestGui
             }
         }
 
+        private class Line
+        {
+            public string Str;
+            public Color ForeColor;
+
+            public Line(string str, Color color)
+            {
+                Str = str;
+                ForeColor = color;
+            }
+        };
         private Dictionary<string, CommandSpecification> name2cmdSpec = new Dictionary<string, CommandSpecification>();
         private ModelContainer mc;
+        private CommPort commPort;
         public MainForm()
         {
             InitializeComponent();
+            lisTerminal.DrawMode = DrawMode.OwnerDrawFixed;
+            lisTerminal.DrawItem += new DrawItemEventHandler(lisTerminal_DrawItem);
             cboSelectCOM.DataSource = SerialPort.GetPortNames();
-            
-
-         
+            commPort = new CommPort();
             mc = Config.Program.CreateAndCheckModelContainer();
             if(mc!=null)
             {
@@ -79,6 +91,26 @@ namespace Klli.Sensact.TestGui
 
             }
 
+        }
+
+        void lisTerminal_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            if (e.Index >= 0 && e.Index < lisTerminal.Items.Count)
+            {
+                Line line = (Line)lisTerminal.Items[e.Index];
+
+                // if selected, make the text color readable
+                Color color = line.ForeColor;
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                {
+                    color = Color.Black;    // make it readable
+                }
+
+                e.Graphics.DrawString(line.Str, e.Font, new SolidBrush(color),
+                    e.Bounds, StringFormat.GenericDefault);
+            }
+            e.DrawFocusRectangle();
         }
 
         private Control CreateCommandsTable(SensactApplicationContainer sac)
@@ -292,7 +324,7 @@ namespace Klli.Sensact.TestGui
                 AddParam(buffer, cmd, ref pos);
             }
             buffer[1] = pos;
-            serialPort.Write(buffer, 0, pos);
+            commPort.Write(buffer, 0, pos);
             return;
 
         }
@@ -344,14 +376,51 @@ namespace Klli.Sensact.TestGui
 
         private void btnOpenCOM_Click(object sender, EventArgs e)
         {
-            if(serialPort.IsOpen)
+            if(commPort.IsOpen)
             {
-                serialPort.Close();
+                commPort.Close();
             }
             string port = cboSelectCOM.Text;
-            serialPort.PortName = port;
-            serialPort.Open();
+            commPort.PortName = port;
+            commPort.Open();
+            commPort.DataReceived += OnDataReceived;
         }
+        internal delegate void StringDelegate(string data);
+        private List<Line> lines = new List<Line>();
+
+        public void OnDataReceived(string dataIn)
+        {
+            //Handle multi-threading
+            if (InvokeRequired)
+            {
+                Invoke(new StringDelegate(OnDataReceived), new object[] { dataIn });
+                return;
+            }
+            Line line = new Line(dataIn, GetColorOfLine(dataIn));
+            lines.Add(line);
+            lisTerminal.Items.Add(line);
+            outputList_Scroll();
+        }
+
+        void outputList_Scroll()
+        {
+            
+            int itemsPerPage = (int)(lisTerminal.Height / lisTerminal.ItemHeight);
+            lisTerminal.TopIndex = lisTerminal.Items.Count - itemsPerPage;
+        }
+
+        private Color GetColorOfLine(string s)
+        {
+            switch (s[0])
+            {
+                case 'I': return Color.Green;
+                case 'D': return Color.DarkGray;
+                case 'W': return Color.Yellow;
+                case 'E': return Color.Red;
+                default: return Color.Black;
+            }
+        }
+
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -361,10 +430,10 @@ namespace Klli.Sensact.TestGui
             {
                 return;
             }
-            this.Controls.Remove(pnlMaster);
-            this.pnlMaster.Dispose();
-            this.pnlMaster = CreateCommandsTable(sac);
-            this.Controls.Add(pnlMaster);
+            this.Controls.Remove(cntrlMaster);
+            this.cntrlMaster.Dispose();
+            this.cntrlMaster = CreateCommandsTable(sac);
+            this.Controls.Add(cntrlMaster);
             Invalidate();
             this.Update();
             this.Refresh();

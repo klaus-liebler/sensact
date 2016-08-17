@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.btnUpdateCOM = new System.Windows.Forms.Button();
-            this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.cboSelectCOM = new System.Windows.Forms.ComboBox();
             this.btnOpenCOM = new System.Windows.Forms.Button();
-            this.pnlMaster = new System.Windows.Forms.Panel();
+            this.cntrlMaster = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.lisTerminal = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // btnUpdateCOM
@@ -46,10 +45,6 @@
             this.btnUpdateCOM.Text = "Update COM";
             this.btnUpdateCOM.UseVisualStyleBackColor = true;
             this.btnUpdateCOM.Click += new System.EventHandler(this.btnUpdateCOM_Click);
-            // 
-            // serialPort
-            // 
-            this.serialPort.BaudRate = 115200;
             // 
             // cboSelectCOM
             // 
@@ -69,13 +64,13 @@
             this.btnOpenCOM.UseVisualStyleBackColor = true;
             this.btnOpenCOM.Click += new System.EventHandler(this.btnOpenCOM_Click);
             // 
-            // pnlMaster
+            // cntrlMaster
             // 
-            this.pnlMaster.Location = new System.Drawing.Point(299, 41);
-            this.pnlMaster.Name = "pnlMaster";
-            this.pnlMaster.Size = new System.Drawing.Size(673, 408);
-            this.pnlMaster.TabIndex = 3;
-            this.pnlMaster.BackColor = System.Drawing.Color.DarkMagenta;
+            this.cntrlMaster.BackColor = System.Drawing.Color.DarkMagenta;
+            this.cntrlMaster.Location = new System.Drawing.Point(299, 41);
+            this.cntrlMaster.Name = "cntrlMaster";
+            this.cntrlMaster.Size = new System.Drawing.Size(673, 408);
+            this.cntrlMaster.TabIndex = 3;
             // 
             // treeView1
             // 
@@ -85,13 +80,24 @@
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
+            // lisTerminal
+            // 
+            this.lisTerminal.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lisTerminal.FormattingEnabled = true;
+            this.lisTerminal.Location = new System.Drawing.Point(12, 455);
+            this.lisTerminal.Name = "lisTerminal";
+            this.lisTerminal.ScrollAlwaysVisible = true;
+            this.lisTerminal.Size = new System.Drawing.Size(960, 173);
+            this.lisTerminal.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 461);
+            this.ClientSize = new System.Drawing.Size(984, 641);
+            this.Controls.Add(this.lisTerminal);
             this.Controls.Add(this.treeView1);
-            this.Controls.Add(this.pnlMaster);
+            this.Controls.Add(this.cntrlMaster);
             this.Controls.Add(this.btnOpenCOM);
             this.Controls.Add(this.cboSelectCOM);
             this.Controls.Add(this.btnUpdateCOM);
@@ -104,11 +110,11 @@
         #endregion
 
         private System.Windows.Forms.Button btnUpdateCOM;
-        private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.ComboBox cboSelectCOM;
         private System.Windows.Forms.Button btnOpenCOM;
-        private System.Windows.Forms.Control pnlMaster;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.ListBox lisTerminal;
+        private System.Windows.Forms.Control cntrlMaster;
     }
 }
 
