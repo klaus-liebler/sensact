@@ -57,7 +57,7 @@ void cBlind::prepareDown(Time_t now)
 }
 void cBlind::down(Time_t now)
 {
-	LOGD("%s goes down!", Name);
+	LOGD("%s: goes down!", Name);
 	this->state=eDirection::DOWN;
 	this->lastChanged=now;
 	if(relayMode==eRelayMode::TWO_PHASES)
@@ -142,8 +142,8 @@ void cBlind::OnDOWNCommand(Time_t now)
 	}
 	else
 	{
-		LOGD("s%: this->targetLevel = calculatePosition(now)", Name);
-		this->targetLevel = calculatePosition(now); //->fï¿½hrt zu einem Motorstop
+		LOGD("%s: this->targetLevel = calculatePosition(now)", Name);
+		this->targetLevel = calculatePosition(now); //->führt zu einem Motorstop
 	}
 }
 
