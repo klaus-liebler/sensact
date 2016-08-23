@@ -357,22 +357,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (t == typeof(int))
             {
-                ret = "ParseInt32(payload, " + offset + ")";
+                ret = "Common::ParseInt32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(uint))
             {
-                ret = "ParseUInt32(payload, " + offset + ")";
+                ret = "Common::ParseUInt32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(short))
             {
-                ret = "ParseInt16(payload, " + offset + ")";
+                ret = "Common::ParseInt16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(ushort))
             {
-                ret = "ParseUInt16(payload, " + offset + ")";
+                ret = "Common::ParseUInt16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(sbyte))
@@ -397,22 +397,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (pi.ParameterType == typeof(int))
             {
-                ret = "WriteInt32("+ pi.Name + ", buffer, " + offset + ");";
+                ret = "Common::WriteInt32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(uint))
             {
-                ret = "WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "Common::WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(short))
             {
-                ret = "WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "Common::WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(ushort))
             {
-                ret = "WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "Common::WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(sbyte))

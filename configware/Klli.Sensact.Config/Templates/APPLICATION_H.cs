@@ -34,27 +34,10 @@ namespace Klli.Sensact.Config.Templates
             
             #line default
             #line hidden
-            this.Write(@"#pragma once
-#include ""common.h""
-
-namespace sensact {
-
-class cApplication {
-protected:
-	static int16_t ParseInt16(uint8_t *message, uint32_t offset);
-	static void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
-	static uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
-	static void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
-	static uint32_t ParseUInt32(uint8_t *message, uint32_t offset);
-	static void WriteUInt32(uint32_t value, uint8_t *message, uint32_t offset);
-public:
-	const char* Name;
-	eAppType AppType;
-	eApplicationID Id;
-
-");
+            this.Write("#pragma once\r\n#include \"common.h\"\r\n\r\nnamespace sensact {\r\n\r\nclass cApplication {\r" +
+                    "\npublic:\r\n\tconst char* Name;\r\n\teAppType AppType;\r\n\teApplicationID Id;\r\n\r\n");
             
-            #line 25 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
+            #line 18 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_H.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CommandHeaders));
             
             #line default

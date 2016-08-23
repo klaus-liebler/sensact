@@ -304,19 +304,41 @@ namespace Klli.Sensact.TestGui
             };
         }
 
-        
+
+        private void btnSetTime_Click(object sender, EventArgs e)
+        {
+            TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            ulong secondsSinceEpoch = (ulong)t.TotalSeconds;
+            byte[] buffer = new byte[100];
+            buffer[0] = 0x01; //0x01==START_OF_HEADING
+            buffer[1] = 12; 
+            EndianBitConverter.Little.CopyBytes((ushort)0x03, buffer, 2); //SET_TIME
+            EndianBitConverter.Little.CopyBytes(secondsSinceEpoch, buffer, 4);
+            commPort.Write(buffer, 0, 12);
+        }
+
+        private void btnGetTime_Click(object sender, EventArgs e)
+        {
+            TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            ulong secondsSinceEpoch = (ulong)t.TotalSeconds;
+            byte[] buffer = new byte[100];
+            buffer[0] = 0x01; //0x01==START_OF_HEADING
+            buffer[1] = 4;
+            EndianBitConverter.Little.CopyBytes((ushort)0x04, buffer, 2); //SET_TIME
+            commPort.Write(buffer, 0,4);
+        }
+
+
 
         private void cmdButton_Click(object sender, EventArgs e)
         {
             CommandSpecification cmdSpec = name2cmdSpec[(sender as Control).Name];
             byte[] buffer = new byte[100];
-            byte pos = 0;
-            buffer[pos] = 0x01; //0x01==START_OF_HEADING
-            pos += 2;
-            buffer[pos] = 0x00; //WRITE_CAN
-            pos++;
-            EndianBitConverter.Little.CopyBytes(cmdSpec.applicationIdAsUshort, buffer, pos);
-            pos += 2;
+            buffer[0] = 0x01; //0x01==START_OF_HEADING
+            buffer[1] = 0x00; // Length
+            EndianBitConverter.Little.CopyBytes((ushort)0x00, buffer, 2); //WRITE_CAN
+            EndianBitConverter.Little.CopyBytes(cmdSpec.applicationIdAsUshort, buffer, 4);
+            byte pos = 6;
             buffer[pos] = cmdSpec.CommandIdAsInt;
             pos += 1;
             foreach (var cmd in cmdSpec.C2Ps)
@@ -441,5 +463,7 @@ namespace Klli.Sensact.TestGui
 
             return;
         }
+
+        
     }
 }

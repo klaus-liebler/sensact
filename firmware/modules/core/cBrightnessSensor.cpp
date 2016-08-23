@@ -46,7 +46,7 @@ void cBrightnessSensor::OnSEND_STATUSCommand(Time_t now)
 	uint16_t raw = this->sensor->GetRawSensorValue();
 	uint8_t buffer[2];
 	LOGD("%s Acquired raw sensor value is %d", Name, raw);
-	WriteInt16(raw, buffer, 0);
+	Common::WriteInt16(raw, buffer, 0);
 	cMaster::SendEvent(now, this->Id, eEventType::STATUS, evts, 1, evts, 1, buffer, 2);
 }
 
@@ -58,7 +58,7 @@ void cBrightnessSensor::DoEachCycle(Time_t now)
 		uint16_t raw = this->sensor->GetRawSensorValue();
 		LOGD("%s Cyclic Event: Raw sensor value is %d", Name, raw);
 		uint8_t buffer[2]={0,0};
-		WriteInt16(raw, buffer, 0);
+		Common::WriteInt16(raw, buffer, 0);
 		cMaster::SendEvent(now, this->Id, eEventType::STATUS, evts, 1, evts, 1, buffer, 2);
 	}
 	counter++;

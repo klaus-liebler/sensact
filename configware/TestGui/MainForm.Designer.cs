@@ -34,6 +34,8 @@
             this.cntrlMaster = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.lisTerminal = new System.Windows.Forms.ListBox();
+            this.btnSetTime = new System.Windows.Forms.Button();
+            this.btnGetTime = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnUpdateCOM
@@ -90,11 +92,33 @@
             this.lisTerminal.Size = new System.Drawing.Size(960, 173);
             this.lisTerminal.TabIndex = 4;
             // 
+            // btnSetTime
+            // 
+            this.btnSetTime.Location = new System.Drawing.Point(318, 12);
+            this.btnSetTime.Name = "btnSetTime";
+            this.btnSetTime.Size = new System.Drawing.Size(75, 23);
+            this.btnSetTime.TabIndex = 5;
+            this.btnSetTime.Text = "Set Time";
+            this.btnSetTime.UseVisualStyleBackColor = true;
+            this.btnSetTime.Click += new System.EventHandler(this.btnSetTime_Click);
+            // 
+            // btnGetTime
+            // 
+            this.btnGetTime.Location = new System.Drawing.Point(399, 12);
+            this.btnGetTime.Name = "btnGetTime";
+            this.btnGetTime.Size = new System.Drawing.Size(75, 23);
+            this.btnGetTime.TabIndex = 6;
+            this.btnGetTime.Text = "GetTime";
+            this.btnGetTime.UseVisualStyleBackColor = true;
+            this.btnGetTime.Click += new System.EventHandler(this.btnGetTime_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 641);
+            this.Controls.Add(this.btnGetTime);
+            this.Controls.Add(this.btnSetTime);
             this.Controls.Add(this.lisTerminal);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.cntrlMaster);
@@ -114,6 +138,8 @@
         private System.Windows.Forms.Button btnOpenCOM;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ListBox lisTerminal;
+        private System.Windows.Forms.Button btnSetTime;
+        private System.Windows.Forms.Button btnGetTime;
         private System.Windows.Forms.Control cntrlMaster;
     }
 }

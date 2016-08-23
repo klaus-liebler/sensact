@@ -17,7 +17,8 @@
 #include "date.h"
 
 volatile uint8_t UART_buffer_pointer=0;
-volatile uint8_t UART_cmdBuffer[100];
+volatile uint64_t UART_cmdBuffer64[16];
+volatile uint8_t *UART_cmdBuffer = (uint8_t *)UART_cmdBuffer64;
 volatile bool BufferHasMessage=false;
 
 using namespace date;

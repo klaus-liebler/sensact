@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "common.h"
 #include "shell.h"
 #include "console.h"
 #include "cModel.h"
@@ -24,6 +25,7 @@
 #include <cmath>
 #include "date.h"
 #include "cBsp.h"
+#include "cApplication.h"
 
 extern uint64_t epochtimer;
 
@@ -32,11 +34,13 @@ using namespace std::chrono;
 
 namespace sensact{
 
-enum struct eBinCmd
+enum struct eBinCmd:uint16_t
 {
-	SEND_CAN,
-	SEND_I2C,
-	SEND_1WI,
+	SEND_CAN=0,
+	SEND_I2C=1,
+	SEND_1WI=2,
+	SET_RTC=3,
+	GET_RTC=4,
 };
 
 static eShellError cmdHelp(shell_cmd_args *args);
@@ -279,26 +283,49 @@ static int arg_parser(const char *cmd_line, int len, shell_cmd_args *args) {
 
 static eShellError cmdSEND_CAN(uint8_t *cmdBuffer, const uint16_t size)
 {
-		uint16_t appId = *((uint16_t*)&cmdBuffer[3]);
-		uint8_t commandId = cmdBuffer[5];
-		sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[6], (uint8_t)(size-6));
+		uint16_t appId = cmdBuffer[1] << 8 + cmdBuffer[0];
+		uint8_t commandId = cmdBuffer[2];
+		sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[3], (uint8_t)(size-3));
 		return eShellError::PROCESS_OK;
 }
 
-eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, const uint16_t size)
+static eShellError cmdSET_RTC(uint8_t *cmdBuffer, uint8_t size)
 {
-	eBinCmd cmd = (eBinCmd)cmdBuffer[2];
-	switch (cmd) {
-	case eBinCmd::SEND_CAN:
-		cmdSEND_CAN(cmdBuffer, size);
-		break;
-	default:
-		return eShellError::PROCESS_ERR_CMD_UNKN;
-	}
+	epochtimer = Common::ParseUInt64(cmdBuffer, 0);
 	return eShellError::PROCESS_OK;
 }
 
-eShellError cShell::processCmds(uint8_t * buffer, const uint16_t size) {
+static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
+{
+	//std::chrono::system_clock::time_point tp = std::chrono::system_clock::now(); // tp is a C::system_clock::time_point
+	//std::chrono::system_clock::time_point dp = date::floor<date::days>(tp);
+	//date::time_of_day<std::chrono::seconds> time = date::make_time(std::chrono::duration_cast<std::chrono::seconds>(tp-dp));
+	Console::Writeln("Not yet implemented");
+}
+
+eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, uint8_t size)
+{
+	//Byte 0: 0x01
+	//Byte 1: Total length of message including heading "0x01"
+	//Byte 2+3: Command
+	//Byte 4..N: Payload
+	eBinCmd cmd =  (eBinCmd)Common::ParseUInt16(cmdBuffer, 2);
+	size-=4;
+	cmdBuffer = &cmdBuffer[4];
+	switch (cmd) {
+	case eBinCmd::SEND_CAN:
+		return cmdSEND_CAN(cmdBuffer, size);
+	case eBinCmd::SET_RTC:
+		return cmdSET_RTC(cmdBuffer, size);
+	case eBinCmd::GET_RTC:
+		return cmdGET_RTC(cmdBuffer, size);
+	default:
+		return eShellError::PROCESS_ERR_CMD_UNKN;
+	}
+
+}
+
+eShellError cShell::processCmds(uint8_t * buffer, uint8_t size) {
 	if(buffer[0]==0x01)
 	{
 		return processBinaryCmd(buffer, size);
@@ -309,7 +336,7 @@ eShellError cShell::processCmds(uint8_t * buffer, const uint16_t size) {
 	}
 }
 
-eShellError cShell::processTextCmd(const char *cmd_line, const uint16_t size)
+eShellError cShell::processTextCmd(const char *cmd_line, uint8_t size)
 {
 	(void)size;
 	int i;

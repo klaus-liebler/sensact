@@ -27,8 +27,19 @@
 
 
 namespace sensact {
+class Common
+{
+public:
+	static int16_t ParseInt16(uint8_t *message, uint32_t offset);
+	static void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
+	static uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
+	static void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
+	static uint32_t ParseUInt32(uint8_t *message, uint32_t offset);
+	static void WriteUInt32(uint32_t value, uint8_t *message, uint32_t offset);
+	static uint64_t ParseUInt64(uint8_t *message, uint32_t offset);
+};
 
-	enum struct ePushState
+enum struct ePushState
 		: uint8_t {RELEASED = 0, PRESSED = 1
 	};
 	enum struct ePowerState

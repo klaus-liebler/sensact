@@ -8,7 +8,7 @@
 #include "console.h"
 
 extern volatile uint8_t UART_buffer_pointer;
-extern volatile uint8_t UART_cmdBuffer[100];
+extern volatile uint8_t *UART_cmdBuffer;
 extern volatile bool BufferHasMessage;
 
 static uint64_t lastReceivedUARTChar=0;
@@ -66,7 +66,7 @@ void USART3_IRQHandler(void)
 			sensact::Console::Writeln("Buffer not yet processed!!!");
 		}
 		volatile uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
-		if(binaryMode && epochtimer-lastReceivedUARTChar > 1000)
+		if(binaryMode && epochtimer-lastReceivedUARTChar > 10)
 		{
 			//reset binary mode after some time without data
 			binaryMode=false;
