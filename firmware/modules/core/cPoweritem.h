@@ -34,9 +34,7 @@ namespace sensact{
 
 		void RaiseEvent(eEventType evt);
 
-		cPoweritem(const char* name, eApplicationID id, ePoweredOutput relay, Time_t autoOffIntervalMsecs) :
-					cApplication(name, id, eAppType::POWIT), state(ePowerState::INACTIVE), output(relay), autoOffIntervalMsecs(autoOffIntervalMsecs), autoOffTime(TIME_MAX) {
-				}
+		cPoweritem(const char* name, eApplicationID id, ePoweredOutput relay, Time_t autoOffIntervalMsecs);
 	};
 
 

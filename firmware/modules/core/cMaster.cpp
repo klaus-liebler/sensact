@@ -52,9 +52,11 @@ void cMaster::Run(void) {
 
 	while (true) {
 		Time_t now = BSP::GetTime();
-		while (BSP::ReceiveCANMessage(&rcvMessage)) {
-			//Process CAN Message
-			ReceiveFromMessageBus();
+		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
+			cApplication * const ap = MODEL::Glo2locCmd[i];
+			if (ap) {
+				ap->DoEachCycle(now);
+			}
 		}
 		if(BufferHasMessage)
 		{
@@ -66,14 +68,13 @@ void cMaster::Run(void) {
 			UART_buffer_pointer=0;
 			BufferHasMessage=false;
 		}
-		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
-			cApplication * const ap = MODEL::Glo2locCmd[i];
-			if (ap) {
-				ap->DoEachCycle(now);
-			}
+		while (BSP::ReceiveCANMessage(&rcvMessage)) {
+			//Process CAN Message
+			ReceiveFromMessageBus();
 		}
 		BSP::DoEachCycle(now);
 		BSP::WaitAtLeastSinceLastCycle(20);
+
 	}
 }
 
@@ -108,7 +109,6 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 
 void cMaster::SendEventDirect(Time_t now, const eApplicationID sourceApp, const eEventType evt, uint8_t * payload, uint8_t payloadLength)
 {
-
 	cApplication * const app = MODEL::Glo2locEvt[(uint16_t)sourceApp];
 	if (app != NULL) {
 		app->OnEvent(sourceApp, evt, payload, payloadLength, now);
@@ -184,7 +184,9 @@ void cMaster::ReceiveFromMessageBus() {
 		if (app != NULL) {
 			app->OnCommand((eCommandType)rcvMessage.Data[0], &(rcvMessage.Data[1]), rcvMessage.Length, now);
 		}
-	} else {
+	}
+	else
+	{
 		//appId is the id of the source app
 		if(MODEL::TRACE_EVENTS)
 		{
@@ -206,7 +208,6 @@ void cMaster::ReceiveFromMessageBus() {
 std::chrono::hours
 cMaster::utc_offset_cet(std::chrono::system_clock::time_point tp)
 {
-
     constexpr auto CET = hours(1);
     constexpr auto CEST = hours(2);
     const auto y = year_month_day(floor<days>(tp)).year();

@@ -11,7 +11,7 @@
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_WARN
+#define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "PSHBT"
 #include "cLog.h"
 

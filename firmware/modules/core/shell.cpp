@@ -283,9 +283,9 @@ static int arg_parser(const char *cmd_line, int len, shell_cmd_args *args) {
 
 static eShellError cmdSEND_CAN(uint8_t *cmdBuffer, const uint16_t size)
 {
-		uint16_t appId = cmdBuffer[1] << 8 + cmdBuffer[0];
+		uint16_t appId = Common::ParseUInt16(cmdBuffer, 0);
 		uint8_t commandId = cmdBuffer[2];
-		sensact::cMaster::SendCommandToMessageBus(epochtimer, (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[3], (uint8_t)(size-3));
+		sensact::cMaster::SendCommandToMessageBus(BSP::GetTime(), (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[3], (uint8_t)(size-3));
 		return eShellError::PROCESS_OK;
 }
 
