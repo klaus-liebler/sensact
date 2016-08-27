@@ -5,6 +5,16 @@
 <#@ import namespace="System.Collections.Generic" #>
 <# RenderHeader("hc_model.cpp", "autogen", version, ModelReference, "All params and details about the home model"); #>
 
+//Known Nodes are
+<#
+foreach (ModelCppItem i in Items)
+{
+#>
+//NODE_<#=i.NodeId#>
+<#
+}
+#>
+
 #include "common.h"
 #include "cModel.h"
 

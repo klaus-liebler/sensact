@@ -11,10 +11,12 @@ extern volatile uint8_t UART_buffer_pointer;
 extern volatile uint8_t *UART_cmdBuffer;
 extern volatile bool BufferHasMessage;
 
-static uint64_t lastReceivedUARTChar=0;
+static Time_t lastReceivedUARTChar=0;
 static bool binaryMode=false;
 
-extern uint64_t epochtimer;
+
+extern uint64_t systemClockMsecCnt;
+extern uint64_t steadyClockMsecCnt;
 //extern ADC_HandleTypeDef    AdcHandle;
 //extern __IO uint16_t uhADCxConvertedValue;
 
@@ -25,11 +27,8 @@ extern "C" void SysTick_Handler(void)
 #ifdef DCF77
   sensact::cDCF77::CallEveryMillisecond(HAL_GetTick());
 #endif
-  if(HAL_GetTick()%1000 ==0)
-  {
-	  epochtimer++;
-  }
-
+  systemClockMsecCnt++;
+  steadyClockMsecCnt++;
 }
 
 void ADC_IRQHandler(void)
@@ -66,13 +65,13 @@ void USART3_IRQHandler(void)
 			sensact::Console::Writeln("Buffer not yet processed!!!");
 		}
 		volatile uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
-		if(binaryMode && epochtimer-lastReceivedUARTChar > 10)
+		if(binaryMode && steadyClockMsecCnt-lastReceivedUARTChar > 10)
 		{
 			//reset binary mode after some time without data
 			binaryMode=false;
 			UART_buffer_pointer=0;
 		}
-		lastReceivedUARTChar=epochtimer;
+		lastReceivedUARTChar=steadyClockMsecCnt;
 		if(UART_buffer_pointer==0)
 		{
 			binaryMode = chartoreceive==0x01;

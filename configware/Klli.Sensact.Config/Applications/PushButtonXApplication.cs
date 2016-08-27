@@ -13,6 +13,7 @@ namespace Klli.Sensact.Config.Applications
         public List<Command> CommandsOnReleasedShort;
         public List<Command> CommandsOnPressedShortAndHold;
         public List<Command> CommandsOnReleasedLong;
+        public List<Command> CommandsOnDoubleclick;
         public InputPin InputRessource;
 
 
@@ -60,6 +61,7 @@ namespace Klli.Sensact.Config.Applications
             sb.Append(CommandInitializer("OnReleasedShort", CommandsOnReleasedShort, m));
             sb.Append(CommandInitializer("OnPressedShortAndHold", CommandsOnPressedShortAndHold, m));
             sb.Append(CommandInitializer("OnReleasedLong", CommandsOnReleasedLong, m));
+            sb.Append(CommandInitializer("OnDoubleclick", CommandsOnDoubleclick, m));
             HashSet<EventType> locEvts = new HashSet<EventType>();
             m.id2localEvents.TryGetValue(ApplicationId, out locEvts);
             HashSet<EventType> busEvts = new HashSet<EventType>();
@@ -67,7 +69,7 @@ namespace Klli.Sensact.Config.Applications
 
             sb.Append(EventInitializer("Local", locEvts, m));
             sb.Append(EventInitializer("Bus", busEvts, m));
-            sb.AppendFormat("sensact::cPushbuttonX {0}(\"{0}\", eApplicationID::{0}, eInput::{1}, {0}_LocalEvents, {2}, {0}_BusEvents, {3}, {0}_OnPressed, {4}, {0}_OnReleased, {5}, {0}_OnReleasedShort, {6}, {0}_OnPressedShortAndHold, {7}, {0}_OnReleasedLong, {8});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::cPushbuttonX {0}(\"{0}\", eApplicationID::{0}, eInput::{1}, {0}_LocalEvents, {2}, {0}_BusEvents, {3}, {0}_OnPressed, {4}, {0}_OnReleased, {5}, {0}_OnReleasedShort, {6}, {0}_OnPressedShortAndHold, {7}, {0}_OnReleasedLong, {8}, {0}_OnDoubleclick, {9});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId, InputRessource, 
                 locEvts == null ? 0 : locEvts.Count, 
                 busEvts == null ? 0 : busEvts.Count, 
@@ -75,7 +77,8 @@ namespace Klli.Sensact.Config.Applications
                 CommandsOnReleased == null ? 0 : CommandsOnReleased.Count,
                 CommandsOnReleasedShort == null ? 0 : CommandsOnReleasedShort.Count, 
                 CommandsOnPressedShortAndHold==null ? 0:CommandsOnPressedShortAndHold.Count,
-                CommandsOnReleasedLong == null ? 0 : CommandsOnReleasedLong.Count);
+                CommandsOnReleasedLong == null ? 0 : CommandsOnReleasedLong.Count,
+                CommandsOnDoubleclick == null ? 0:CommandsOnDoubleclick.Count);
 
             return sb.ToString();
         }

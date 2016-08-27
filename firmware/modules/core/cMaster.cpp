@@ -51,7 +51,7 @@ void cMaster::Run(void) {
 	LOGI("%u local applications have been configured. Now, sensact is pleased to be at your service.\r\n", appCnt);
 
 	while (true) {
-		Time_t now = BSP::GetTime();
+		Time_t now = BSP::GetSteadyClock();
 		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
 			cApplication * const ap = MODEL::Glo2locCmd[i];
 			if (ap) {
@@ -167,7 +167,7 @@ void cMaster::SendEvent(Time_t now, const eApplicationID sourceApp, const eEvent
 //Das 11. (=10!) Bit definiert, ob die App ein Event sendet (==1) oder ob ein Befehl an diese App zu senden ist (==0)
 void cMaster::ReceiveFromMessageBus() {
 	uint32_t appId = rcvMessage.Id & (CMD_EVT_OFFSET - 1);
-	Time_t now = BSP::GetTime();
+	Time_t now = BSP::GetSteadyClock();
 
 	if (rcvMessage.Id < CMD_EVT_OFFSET) {
 		//appId is the id of the target app

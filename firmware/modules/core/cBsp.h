@@ -91,7 +91,7 @@ private:
 
 	static TIM_HandleTypeDef htim_pwm;
 	static Time_t nextLedToggle;
-	static uint32_t lastCycle;
+	static Time_t lastCycle;
 
 	static int16_t temperatures[];
 	static drivers::cDS2482 ds2482;
@@ -142,7 +142,7 @@ public:
 	static ePushState GetDigitalInput(eInput i);
 	static bool HasRCEventOccured(const uint32_t);
 	static char* GetTimestamp();
-	static uint64_t GetTime();
+	static Time_t GetSteadyClock();
 	static void WaitAtLeastSinceLastCycle(uint32_t ms);
 	static const char gimmick[];
 	static const char LicenseString[];

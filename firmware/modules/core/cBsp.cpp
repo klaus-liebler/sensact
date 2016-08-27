@@ -15,6 +15,9 @@
 #endif
 
 
+//extern uint64_t systemClockMsecCnt;
+extern uint64_t steadyClockMsecCnt;
+
 namespace sensact {
 
 
@@ -128,7 +131,7 @@ uint32_t BSP::lastCommittedPoweredOutputState[] = {0, 0, 0, 0};
 uint32_t BSP::inputState[] = {0, 0, 0, 0};
 
 
-uint32_t BSP::lastCycle = 0;
+Time_t BSP::lastCycle = 0;
 UART_HandleTypeDef BSP::comm;
 CAN_HandleTypeDef BSP::hcan;
 CanTxMsgTypeDef BSP::TxMessage;
@@ -136,6 +139,8 @@ CanRxMsgTypeDef BSP::RxMessage;
 TIM_HandleTypeDef BSP::htim_pwm;
 
 Time_t BSP::nextLedToggle = 0;
+
+
 
 #ifdef SENSACTUP_EXT_I2C
 drivers::cPCA9555 BSP::pca9555_U18(&i2c2, hw::ePCA9555Device::Dev3, GPIOA, GPIO_PIN_2);
@@ -897,14 +902,14 @@ char* BSP::GetTimestamp() {
 	return (char*) "NO RTC";
 }
 
-uint64_t BSP::GetTime() {
-	return HAL_GetTick();
+Time_t BSP::GetSteadyClock() {
+	return steadyClockMsecCnt;
 }
 
 void BSP::WaitAtLeastSinceLastCycle(uint32_t ms) {
-	uint32_t tickstart = 0;
+	Time_t tickstart = 0;
 	tickstart = lastCycle;
-	while ((HAL_GetTick() - tickstart) < ms) {
+	while ((GetSteadyClock() - tickstart) < ms) {
 	}
 	lastCycle = HAL_GetTick();
 }

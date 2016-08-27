@@ -19,7 +19,8 @@
 #undef errno
 extern int errno;
 
-uint64_t epochtimer = 0;
+uint64_t systemClockMsecCnt = 0;
+uint64_t steadyClockMsecCnt = 0;
 
 register char * stack_ptr asm("sp");
 
@@ -168,17 +169,19 @@ int _unlink(char *name)
 
 int _times(struct tms *buf)
 {
-	buf->tms_cstime=epochtimer;
-	buf->tms_cutime=epochtimer;
-	buf->tms_stime=epochtimer;
-	buf->tms_utime=epochtimer;
+	clock_t sec = (steadyClockMsecCnt/1000) % (uint64_t)4294967296;
+	buf->tms_cstime=sec;
+	buf->tms_cutime=sec;
+	buf->tms_stime=sec;
+	buf->tms_utime=sec;
 	return 0;
 }
 
 int gettimeofday(struct timeval *tp, void *z)
 {
-	tp->tv_sec = epochtimer;
+	tp->tv_sec = systemClockMsecCnt/1000;
 	tp->tv_usec = 0;
+	(void)z;
 	return 0;
 }
 

@@ -31,8 +31,8 @@ public:
 	static const uint8_t sensactWi_InputAddresses[][6];
 	static const uint8_t sensactWi_InputAddressesCnt;
 	static const uint8_t ds18b20_Addresses[][6];
-
 	static const uint8_t ds18b20_AddressesCnt;
+
 	static const uint8_t wellKnownRGBWColors[][4];
 	static const uint8_t wellKnownRGBWColorsCnt;
 	static cWeeklySchedule volumeSchedule;

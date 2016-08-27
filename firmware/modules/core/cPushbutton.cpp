@@ -69,9 +69,29 @@ void cPushbuttonX::OnPressedShortAndHold(Time_t now) {
 	}
 }
 
+void cPushbuttonX::OnDoubleclick(Time_t now)
+{
+	LOGD("%s OnDoubleclick %d with %d commands", Name, this->input, this->doubleclickCommandsLength);
+	int i=0;
+	for(i=0;i<this->doubleclickCommandsLength;i++)
+	{
+		Command c = doubleclickCommands[i];
+		cMaster::SendCommandToMessageBus(now, c.target, c.command, 0, 0);
+	}
+}
+
 bool cPushbutton::Setup() {
 	return BSP::RequestDigitalInput(this->input);
 }
+
+cPushbutton::cPushbutton(const char* name, const eApplicationID id, const eInput input,
+			const eEventType * const localEvents, const uint8_t localEventsLength,
+			const eEventType * const busEvents, const uint8_t busEventsLength) :
+				cApplication(name, id, eAppType::PUSHB), input(input), localEvents(
+					localEvents), localEventsLength(localEventsLength), busEvents(
+					busEvents), busEventsLength(busEventsLength), lastChange(0), state(
+					ePushState::RELEASED), holdShortSent(false), holdMediumSent(false), lastRelease(0) {
+	}
 
 
 void cPushbutton::DoEachCycle(Time_t now) {
@@ -96,10 +116,16 @@ void cPushbutton::DoEachCycle(Time_t now) {
 			OnReleasedLong(now);
 			cMaster::SendEvent(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		}
+
 		OnReleased(now);
 		cMaster::SendEvent(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+		if(now-lastRelease < 1000)
+				{
+					OnDoubleclick(now);
+				}
 		this->state = ePushState::RELEASED;
 		this->lastChange = now;
+		this->lastRelease=now;
 	} else if (this->state == ePushState::PRESSED
 			&& currentState == ePushState::PRESSED) {
 		if (!this->holdShortSent && now - this->lastChange > 400) {

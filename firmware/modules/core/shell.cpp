@@ -27,7 +27,8 @@
 #include "cBsp.h"
 #include "cApplication.h"
 
-extern uint64_t epochtimer;
+extern uint64_t systemClockMsecCnt;
+//extern uint64_t steadyClockMsecCnt;
 
 using namespace date;
 using namespace std::chrono;
@@ -125,7 +126,7 @@ static eShellError cmdCs(shell_cmd_args *args) {
 		{
 			eApplicationID appId = (eApplicationID)i;
 			uint8_t command = cShell::parseInt(args->args[1].val);
-			cMaster::SendCommandToMessageBus(BSP::GetTime(), appId, (eCommandType)command, NULL, 0);
+			cMaster::SendCommandToMessageBus(BSP::GetSteadyClock(), appId, (eCommandType)command, NULL, 0);
 		}
 	}
 	return eShellError::PROCESS_OK;
@@ -137,9 +138,9 @@ static eShellError cmdSettime(shell_cmd_args *args) {
 		return eShellError::PROCESS_ERR_ARGS_LEN;
 	}
 	int64_t time = cShell::parseULong(args->args[0].val);
-	if(std::abs(int64_t(time - epochtimer))>3) //only set the clock, if error is significant
+	if(std::abs(int64_t(time - systemClockMsecCnt))>3) //only set the clock, if error is significant
 	{
-		epochtimer = (uint64_t)time;
+		systemClockMsecCnt = (uint64_t)time;
 		sensact::Console::Writeln("Set the clock to a new value");
 	}
 	return eShellError::PROCESS_OK;
@@ -285,22 +286,26 @@ static eShellError cmdSEND_CAN(uint8_t *cmdBuffer, const uint16_t size)
 {
 		uint16_t appId = Common::ParseUInt16(cmdBuffer, 0);
 		uint8_t commandId = cmdBuffer[2];
-		sensact::cMaster::SendCommandToMessageBus(BSP::GetTime(), (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[3], (uint8_t)(size-3));
+		sensact::cMaster::SendCommandToMessageBus(BSP::GetSteadyClock(), (sensact::eApplicationID)appId, (sensact::eCommandType)commandId, (uint8_t*)&cmdBuffer[3], (uint8_t)(size-3));
 		return eShellError::PROCESS_OK;
 }
 
 static eShellError cmdSET_RTC(uint8_t *cmdBuffer, uint8_t size)
 {
-	epochtimer = Common::ParseUInt64(cmdBuffer, 0);
+	UNUSED(size);
+	systemClockMsecCnt = Common::ParseUInt64(cmdBuffer, 0);
 	return eShellError::PROCESS_OK;
 }
 
 static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 {
+	UNUSED(cmdBuffer);
+	UNUSED(size);
 	//std::chrono::system_clock::time_point tp = std::chrono::system_clock::now(); // tp is a C::system_clock::time_point
 	//std::chrono::system_clock::time_point dp = date::floor<date::days>(tp);
 	//date::time_of_day<std::chrono::seconds> time = date::make_time(std::chrono::duration_cast<std::chrono::seconds>(tp-dp));
 	Console::Writeln("Not yet implemented");
+	return eShellError::PROCESS_ERR_CMD_UNKN;
 }
 
 eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, uint8_t size)

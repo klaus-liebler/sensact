@@ -182,7 +182,7 @@ namespace Klli.Sensact.Config
             });
             SNSCT_L0_TECH_HS_1.Applications.Add(new LightbarrierApplication
             {
-                ApplicationId = _(ID.PUSHB_LX_FRON_B2),
+                ApplicationId = _(ID.LIBAR_LX_FRON_B2),
                 InputRessource = InputPin.I14,
                 ActiveSignalLevel = true,
                 BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),

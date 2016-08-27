@@ -30,6 +30,7 @@
         SEND_STATUS,
         SET_RGBW, //Params as u8
         SET_SIGNAL, //Param as u16 (mp3 song, well known color, light sequence)
+        DEMO
     }
 
     public enum EventType

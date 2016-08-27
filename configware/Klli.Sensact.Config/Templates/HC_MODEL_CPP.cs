@@ -34,17 +34,43 @@ namespace Klli.Sensact.Config.Templates
             
             #line default
             #line hidden
+            this.Write("\r\n//Known Nodes are\r\n");
+            
+            #line 9 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+
+foreach (ModelCppItem i in Items)
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("//NODE_");
+            
+            #line 13 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
+            
+            #line 14 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+
+}
+
+            
+            #line default
+            #line hidden
             this.Write("\r\n#include \"common.h\"\r\n#include \"cModel.h\"\r\n\r\nusing namespace std;\r\n\r\nnamespace s" +
                     "ensact {\r\n\r\nconst char * const MODEL::ApplicationNames[]={\r\n\t\t");
             
-            #line 16 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 26 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ApplicationNames));
             
             #line default
             #line hidden
             this.Write("\r\n\t};\r\n\r\n\r\n");
             
-            #line 20 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 30 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
        foreach (ModelCppItem i in Items)
        {
@@ -54,49 +80,49 @@ namespace Klli.Sensact.Config.Templates
             #line hidden
             this.Write("#ifdef NODE_");
             
-            #line 24 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 34 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
             
             #line default
             #line hidden
             this.Write("\r\n\r\neNodeID NODE = eNodeID::");
             
-            #line 26 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 36 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
             
             #line default
             #line hidden
             this.Write(";\r\n\r\nconst char MODEL::ModelString[] =\"");
             
-            #line 28 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 38 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.ModelInfo));
             
             #line default
             #line hidden
             this.Write("\";\r\n}//end namespace\r\n#include <cModel_base.inc>\r\nnamespace sensact{\r\n\r\n");
             
-            #line 33 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 43 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.StaticApplicationInitializers));
             
             #line default
             #line hidden
             this.Write("\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locCmd[] = {\r\n");
             
-            #line 38 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 48 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocPointers));
             
             #line default
             #line hidden
             this.Write("\r\n};\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locEvt[] = {\r\n");
             
-            #line 44 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 54 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocEvents));
             
             #line default
             #line hidden
             this.Write("\r\n};\r\n#endif\r\n\r\n");
             
-            #line 48 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 58 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
            
        }

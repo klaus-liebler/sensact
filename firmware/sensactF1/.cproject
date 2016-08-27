@@ -82,7 +82,7 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
+									<listOptionValue builtIn="false" value="NODE_SNSCT_L1_LVNG_UP"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.959137802" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -108,7 +108,7 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
+									<listOptionValue builtIn="false" value="NODE_SNSCT_L1_LVNG_UP"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1081618201" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -141,7 +141,7 @@
 									<listOptionValue builtIn="false" value="STM32F1"/>
 									<listOptionValue builtIn="false" value="STM32F103xB"/>
 									<listOptionValue builtIn="false" value="SENSACTUP02"/>
-									<listOptionValue builtIn="false" value="NODE_TEST_UP02"/>
+									<listOptionValue builtIn="false" value="NODE_SNSCT_L1_LVNG_UP"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.2050159930" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

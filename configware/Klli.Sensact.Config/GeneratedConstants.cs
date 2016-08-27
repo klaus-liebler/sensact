@@ -2,6 +2,6 @@ namespace Klli.Sensact.Config
 {
     public static class GeneratedConstants
     {
-        public const string ConfigSHA = /*ReplaceConfigSHA*/"c75b82f30bef80cfcfb054b369407f7fa38cfec2"/*ReplaceConfigSHA*/;
+        public const string ConfigSHA = /*ReplaceConfigSHA*/"ea29f6371a5d33c7621cecf1e6bda050edf38681"/*ReplaceConfigSHA*/;
     }
 }

@@ -204,7 +204,7 @@
         POWIT_LX_CARP_P1, //Carport
         POWIT_LX_CARP_P2,
         PUSHB_LX_FRON_B1, //Klingelknopf
-        PUSHB_LX_FRON_B2, //Bewegungsmelder
+        LIBAR_LX_FRON_B2, //Bewegungsmelder
         POWIT_LX_FRON_W1, //Licht für Haupteingang
         PUSHB_LX_GARA_B11, //ein Taster am Türeingang
         POWIT_LX_GARA_C1,

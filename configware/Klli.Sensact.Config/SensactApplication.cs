@@ -18,7 +18,7 @@ namespace Klli.Sensact.Config
     }
     public abstract class SensactApplication
     {
-        public const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|XXX)_.*";
+        public const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
 
         public string ApplicationId;
         
@@ -234,9 +234,9 @@ namespace Klli.Sensact.Config
         [SensactCommandMethod]
         public virtual void OnSET_PARAMCommand() { }
         [SensactCommandMethod]
-        public virtual void OnSET_HORIZONTAL_TARGETCommand(ushort target) { } //Param: the target as u16
+        public virtual void OnSET_HORIZONTAL_TARGETCommand(ushort target) { }
         [SensactCommandMethod]
-        public virtual void OnSTEP_HORIZONTALCommand(short step) { } //Param: the step size as i16
+        public virtual void OnSTEP_HORIZONTALCommand(short step) { }
         [SensactCommandMethod]
         public virtual void OnSET_VERTICAL_TARGETCommand(ushort target) { }
         [SensactCommandMethod]
@@ -250,16 +250,25 @@ namespace Klli.Sensact.Config
         [SensactCommandMethod]
         public virtual void OnSEND_STATUSCommand() { }
         [SensactCommandMethod]
-        public virtual void OnSET_RGBWCommand(byte R, byte G, byte B, byte W) { } //Params as u8
+        public virtual void OnSET_RGBWCommand(byte R, byte G, byte B, byte W) { }
+        /// <summary>
+        /// Param is mp3 song id or well known color or light sequence)
+        /// </summary>
+        /// <param name="signal"></param>
         [SensactCommandMethod]
-        public virtual void OnSET_SIGNALCommand(ushort signal) { } //Param as u16 (mp3 song, well known color, light sequence)
+        public virtual void OnSET_SIGNALCommand(ushort signal) { }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="payload">just an ubiquitary payload that is used as payload for the PONG</param>
         [SensactCommandMethod]
         public virtual void OnPINGCommand(uint payload) { }
-
+        /// <summary>
+        /// Advises the sensact application to "play" a demo of its capabilities
+        /// </summary>
+        /// <param name="demostep"></param>
+        [SensactCommandMethod]
+        public virtual void OnDEMOCommand(uint demostep) { } 
 
     }
 

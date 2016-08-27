@@ -53,12 +53,13 @@ static const sensact::sScheduleEntry schedule[]
 
 #endif
 
-#if defined SNSCT_L1_KTCH_UP or defined SNSCT_L1_LVNG_UP or defined SNSCT_L2_BATH_UP
+
+#if defined(NODE_SNSCT_L1_KTCH_UP) or defined(NODE_SNSCT_L1_LVNG_UP) or defined (NODE_SNSCT_L2_BATH_UP)
 	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
 	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
 	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
-	const uint8_t MODEL::ds18b20_Addresses[][6]={}};
+	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
 	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
