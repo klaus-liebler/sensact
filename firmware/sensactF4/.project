@@ -33,7 +33,7 @@
 		<link>
 			<name>cubemx</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.11.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.13.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
 		</link>
 		<link>
 			<name>drivers</name>
@@ -59,7 +59,7 @@
 	<variableList>
 		<variable>
 			<name>cubemx</name>
-			<value>file:/C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.11.0</value>
+			<value>file:/C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.13.0</value>
 		</variable>
 		<variable>
 			<name>sensact</name>
