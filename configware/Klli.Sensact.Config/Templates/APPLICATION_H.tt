@@ -26,6 +26,8 @@ public:
 	cApplication(const char* name, const eApplicationID id, const eAppType appType) :
 			Name(name), AppType(appType), Id(id) {
 	}
+
+	const char* N(eApplicationID appID);
 	virtual ~cApplication() {
 		return;
 	}

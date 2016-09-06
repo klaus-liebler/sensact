@@ -49,7 +49,7 @@ namespace Klli.Sensact.Config
         }
 
 
-        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, int autoOffIntervalMsecs = 0)
+        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, uint autoOffIntervalMsecs = 0)
         {
             list.Add(new PoweritemApplication()
             {
@@ -123,6 +123,14 @@ namespace Klli.Sensact.Config
                     new Command()
                     {
                         CommandType=CommandType.STOP,
+                        TargetAppId=targetAppId.ToString(),
+                    },
+                },
+                CommandsOnDoubleclick = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.ON,
                         TargetAppId=targetAppId.ToString(),
                     },
                 },

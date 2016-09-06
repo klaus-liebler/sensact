@@ -206,7 +206,8 @@
         PUSHB_LX_FRON_B1, //Klingelknopf
         LIBAR_LX_FRON_B2, //Bewegungsmelder
         POWIT_LX_FRON_W1, //Licht für Haupteingang
-        PUSHB_LX_GARA_B11, //ein Taster am Türeingang
+        PUSHB_LX_GARA_B11, //ein Taster am TÜReingang
+        PUSHB_LX_GARA_B21, //ein Taster am TOReingang, gemeinsames Kabel mit B11
         POWIT_LX_GARA_C1,
         POWIT_LX_GARA_P1,
         POWIT_LX_GARA_P2,
@@ -282,7 +283,9 @@
         PUSHB_L2_KID1_B11, //C1
         PUSHB_L2_KID1_B12, //J1
         PUSHB_L2_KID1_B13,
-        PUSHB_L2_KID1_B21, //C2
+        PUSHB_L2_KID1_B21, //C1
+        PUSHB_L2_KID1_B22, //C2
+
         PWM___L2_KID1_C1,
         POWIT_L2_KID1_C1,
         POWIT_L2_KID1_C2, //Balkon
@@ -333,6 +336,7 @@
         VALVE_L3_BEDR,
 
         PUSHB_L3_CORR_B11, //S+STRS.W5
+        PUSHB_L3_CORR_B12,//S+STRS.W5
         PUSHB_L3_CORR_B21, //S+STRS.W5
         PWM___L3_CORR_S,
 

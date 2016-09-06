@@ -9,7 +9,7 @@ namespace Klli.Sensact.Config.Applications
     public class PoweritemApplication : ActorApplication
     {
         public OutputPin OutputRessource;
-        public long AutoOffIntervalMsecs; 
+        public uint AutoOffIntervalMsecs; 
         public List<Event> ToggleEvents;
         public List<Event> OffEvents;
         public List<Event> OnEvents;
