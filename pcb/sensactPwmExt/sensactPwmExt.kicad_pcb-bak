@@ -65,7 +65,7 @@
     (pad_drill 0.762)
     (pad_to_mask_clearance 0.2)
     (aux_axis_origin 0 0)
-    (visible_elements 7FFFFF9F)
+    (visible_elements 7FFFFF7F)
     (pcbplotparams
       (layerselection 0x00030_80000001)
       (usegerberextensions false)
@@ -233,16 +233,16 @@
     (add_net /pwm9/LED-)
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CCF6A4)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F9C) (tstamp 57CCF6A4)
     (at 66.548 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCF397)
     (attr smd)
-    (fp_text reference C1 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C1 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7) (layer B.Fab)
+    (fp_text value 10u (at 0.254 2.54) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -262,13 +262,13 @@
     )
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CCF6AA)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F79) (tstamp 57CCF6AA)
     (at 76.962 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCF409)
     (attr smd)
-    (fp_text reference C2 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C2 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value 10u (at 0 -2.7) (layer B.Fab)
@@ -320,16 +320,16 @@
     )
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CCF6B6)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F6F) (tstamp 57CCF6B6)
     (at 97.79 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCF467)
     (attr smd)
-    (fp_text reference C4 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C4 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7) (layer B.Fab)
+    (fp_text value 10u (at 0 2.794) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -349,16 +349,16 @@
     )
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CCF6BC)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F8E) (tstamp 57CCF6BC)
     (at 56.134 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCF490)
     (attr smd)
-    (fp_text reference C5 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C5 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7) (layer B.Fab)
+    (fp_text value 10u (at -0.254 2.54) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -378,13 +378,13 @@
     )
   )
 
-  (module Capacitors_SMD:C_0805_HandSoldering (layer B.Cu) (tedit 541A9B8D) (tstamp 57CCF6C8)
+  (module Capacitors_SMD:C_0805_HandSoldering (layer B.Cu) (tedit 57CE4DD3) (tstamp 57CCF6C8)
     (at 84.836 46.228)
     (descr "Capacitor SMD 0805, hand soldering")
     (tags "capacitor 0805")
     (path /57CCFF85)
     (attr smd)
-    (fp_text reference C7 (at 0 2.1) (layer B.SilkS)
+    (fp_text reference C7 (at 0 2.1) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value u1 (at 0 -2.1) (layer B.Fab)
@@ -407,16 +407,16 @@
     )
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CCF6CE)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4DC6) (tstamp 57CCF6CE)
     (at 96.012 47.498 270)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCFFE2)
     (attr smd)
-    (fp_text reference C8 (at 0 2.7 270) (layer B.SilkS)
+    (fp_text reference C8 (at 0 2.7 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7 270) (layer B.Fab)
+    (fp_text value 10u (at 0 -2.7 270) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -436,16 +436,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF6D4)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4FB6) (tstamp 57CCF6D4)
     (at 34.544 68.326 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDC35F)
     (attr smd)
-    (fp_text reference JP1 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP1 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -465,13 +465,13 @@
     )
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer B.Cu) (tedit 55006B11) (tstamp 57CCF6E2)
+  (module sensact:SMD-solder-bridge-3pin (layer B.Cu) (tedit 57CE4DAE) (tstamp 57CCF6E2)
     (at 89.408 46.482 180)
     (path /57CD0242)
-    (fp_text reference JP3 (at 0 2.2 180) (layer B.SilkS)
+    (fp_text reference JP3 (at 0 2.2 180) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)) (justify mirror))
     )
-    (fp_text value JUMPER3 (at 0 -2.3 180) (layer B.SilkS)
+    (fp_text value JUMPER3 (at 0 -2.3 180) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)) (justify mirror))
     )
     (fp_line (start -1.9 1.2) (end 1.9 1.2) (layer B.SilkS) (width 0.2))
@@ -486,16 +486,16 @@
       (net 18 GNDA))
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF6EE)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E8D) (tstamp 57CCF6EE)
     (at 119.634 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CCF017/57CD1661)
     (attr smd)
-    (fp_text reference JP5 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP5 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -515,16 +515,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF6F4)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4D4B) (tstamp 57CCF6F4)
     (at 120.65 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CCF017/57CD15FA)
     (attr smd)
-    (fp_text reference JP6 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP6 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -544,16 +544,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF6FA)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4EEC) (tstamp 57CCF6FA)
     (at 114.554 92.202 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0726/57CD1661)
     (attr smd)
-    (fp_text reference JP7 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP7 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -573,16 +573,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF700)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4F24) (tstamp 57CCF700)
     (at 128.27 79.756 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0726/57CD15FA)
     (attr smd)
-    (fp_text reference JP8 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP8 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -602,16 +602,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF706)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E82) (tstamp 57CCF706)
     (at 109.22 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD07F6/57CD1661)
     (attr smd)
-    (fp_text reference JP9 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP9 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -631,16 +631,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF70C)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4D8C) (tstamp 57CCF70C)
     (at 110.236 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD07F6/57CD15FA)
     (attr smd)
-    (fp_text reference JP10 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP10 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -660,16 +660,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF712)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4EF4) (tstamp 57CCF712)
     (at 104.14 92.202 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD080D/57CD1661)
     (attr smd)
-    (fp_text reference JP11 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP11 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -689,16 +689,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF718)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4F2B) (tstamp 57CCF718)
     (at 117.856 79.756 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD080D/57CD15FA)
     (attr smd)
-    (fp_text reference JP12 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP12 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -718,16 +718,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF71E)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E70) (tstamp 57CCF71E)
     (at 98.806 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0824/57CD1661)
     (attr smd)
-    (fp_text reference JP13 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP13 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -747,16 +747,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF724)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4DC0) (tstamp 57CCF724)
     (at 99.822 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0824/57CD15FA)
     (attr smd)
-    (fp_text reference JP14 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP14 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -776,16 +776,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF72A)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4F00) (tstamp 57CCF72A)
     (at 93.726 92.202 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD083B/57CD1661)
     (attr smd)
-    (fp_text reference JP15 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP15 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -834,16 +834,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF736)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E61) (tstamp 57CCF736)
     (at 88.392 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0852/57CD1661)
     (attr smd)
-    (fp_text reference JP17 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP17 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -863,16 +863,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF73C)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4DB1) (tstamp 57CCF73C)
     (at 91.44 42.164 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0852/57CD15FA)
     (attr smd)
-    (fp_text reference JP18 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP18 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -892,13 +892,13 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CCF742)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4F04) (tstamp 57CCF742)
     (at 83.312 92.202 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CD0869/57CD1661)
     (attr smd)
-    (fp_text reference JP19 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP19 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
@@ -921,13 +921,13 @@
     )
   )
 
-  (module sensact:KF141R-8p (layer F.Cu) (tedit 5633883F) (tstamp 57CCF756)
+  (module sensact:KF141R-8p (layer F.Cu) (tedit 57CE4EC8) (tstamp 57CCF756)
     (at 39.37 49.022 270)
     (path /57CCF348)
-    (fp_text reference P1 (at -0.381 -0.127 270) (layer F.SilkS)
+    (fp_text reference P1 (at -0.381 -0.127 270) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X08 (at 0 9.779 270) (layer F.SilkS)
+    (fp_text value CONN_01X08 (at 0 9.779 270) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start 5.08 8.509) (end 12.7 8.509) (layer F.SilkS) (width 0.15))
@@ -974,13 +974,13 @@
       (net 17 "Net-(P1-Pad8)"))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF75C)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4FBD) (tstamp 57CCF75C)
     (at 41.148 68.326 90)
     (path /57CCF207)
-    (fp_text reference P2 (at 0 3 90) (layer F.SilkS)
+    (fp_text reference P2 (at 0 3 90) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4 90) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4 90) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -994,13 +994,13 @@
       (net 2 GND))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF762)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E93) (tstamp 57CCF762)
     (at 117.094 34.29)
     (path /57CCF017/57CCF041)
-    (fp_text reference P3 (at 0 3) (layer F.SilkS)
+    (fp_text reference P3 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1014,13 +1014,13 @@
       (net 30 /pwm1/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF768)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4F37) (tstamp 57CCF768)
     (at 117.094 89.408 180)
     (path /57CD0726/57CCF041)
-    (fp_text reference P4 (at 0 3 180) (layer F.SilkS)
+    (fp_text reference P4 (at 0 3 180) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1034,13 +1034,13 @@
       (net 32 /pwm2/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF76E)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E97) (tstamp 57CCF76E)
     (at 106.68 34.29)
     (path /57CD07F6/57CCF041)
-    (fp_text reference P5 (at 0 3) (layer F.SilkS)
+    (fp_text reference P5 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1054,13 +1054,13 @@
       (net 34 /pwm3/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF774)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4EE4) (tstamp 57CCF774)
     (at 106.68 89.408 180)
     (path /57CD080D/57CCF041)
     (fp_text reference P6 (at 0 3 180) (layer F.SilkS)
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1074,13 +1074,13 @@
       (net 36 /pwm4/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF77A)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E7A) (tstamp 57CCF77A)
     (at 96.266 34.29)
     (path /57CD0824/57CCF041)
-    (fp_text reference P7 (at 0 3) (layer F.SilkS)
+    (fp_text reference P7 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1094,13 +1094,13 @@
       (net 38 /pwm5/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF780)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4EF6) (tstamp 57CCF780)
     (at 96.266 89.408 180)
     (path /57CD083B/57CCF041)
     (fp_text reference P8 (at 0 3 180) (layer F.SilkS)
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1114,13 +1114,13 @@
       (net 40 /pwm6/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF786)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E66) (tstamp 57CCF786)
     (at 85.852 34.29)
     (path /57CD0852/57CCF041)
-    (fp_text reference P9 (at 0 3) (layer F.SilkS)
+    (fp_text reference P9 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1134,13 +1134,13 @@
       (net 42 /pwm7/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CCF78C)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4EFD) (tstamp 57CCF78C)
     (at 85.852 89.408 180)
     (path /57CD0869/57CCF041)
     (fp_text reference P10 (at 0 3 180) (layer F.SilkS)
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4 180) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -1239,13 +1239,13 @@
     )
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7B5)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4D7C) (tstamp 57CCF7B5)
     (at 124.46 50.292 90)
     (path /57CCF017/57CCF0EE)
-    (fp_text reference U2 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U2 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1265,13 +1265,13 @@
       (net 29 /pwm1/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7BE)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4F2E) (tstamp 57CCF7BE)
     (at 124.46 73.406 270)
     (path /57CD0726/57CCF0EE)
-    (fp_text reference U3 (at 0 0.5 270) (layer F.SilkS)
+    (fp_text reference U3 (at 0 0.5 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1291,13 +1291,13 @@
       (net 31 /pwm2/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7C7)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4D85) (tstamp 57CCF7C7)
     (at 114.046 50.292 90)
     (path /57CD07F6/57CCF0EE)
-    (fp_text reference U4 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U4 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1317,13 +1317,13 @@
       (net 33 /pwm3/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7D0)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4F33) (tstamp 57CCF7D0)
     (at 114.046 73.406 270)
     (path /57CD080D/57CCF0EE)
-    (fp_text reference U5 (at 0 0.5 270) (layer F.SilkS)
+    (fp_text reference U5 (at 0 0.5 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1343,13 +1343,13 @@
       (net 35 /pwm4/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7D9)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4D95) (tstamp 57CCF7D9)
     (at 103.632 50.292 90)
     (path /57CD0824/57CCF0EE)
-    (fp_text reference U6 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U6 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1369,13 +1369,13 @@
       (net 37 /pwm5/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7E2)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4F73) (tstamp 57CCF7E2)
     (at 103.632 73.406 270)
     (path /57CD083B/57CCF0EE)
-    (fp_text reference U7 (at 0 0.5 270) (layer F.SilkS)
+    (fp_text reference U7 (at 0 0.5 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1395,13 +1395,13 @@
       (net 39 /pwm6/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7EB)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4DCF) (tstamp 57CCF7EB)
     (at 93.218 50.292 90)
     (path /57CD0852/57CCF0EE)
-    (fp_text reference U8 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U8 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1421,13 +1421,13 @@
       (net 41 /pwm7/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CCF7F4)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4F08) (tstamp 57CCF7F4)
     (at 93.218 73.406 270)
     (path /57CD0869/57CCF0EE)
     (fp_text reference U9 (at 0 0.5 270) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -1447,16 +1447,16 @@
       (net 43 /pwm8/LED-))
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFB7)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4ED4) (tstamp 57CDAFB7)
     (at 80.518 50.546 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CCFB41)
     (attr smd)
-    (fp_text reference JP2 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP2 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1476,13 +1476,13 @@
     )
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer B.Cu) (tedit 55006B11) (tstamp 57CDAFBC)
+  (module sensact:SMD-solder-bridge-3pin (layer B.Cu) (tedit 57CE4DBC) (tstamp 57CDAFBC)
     (at 92.71 49.022 270)
     (path /57CD029B)
-    (fp_text reference JP4 (at 0 2.2 270) (layer B.SilkS)
+    (fp_text reference JP4 (at 0 2.2 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)) (justify mirror))
     )
-    (fp_text value JUMPER3 (at 0 -2.3 270) (layer B.SilkS)
+    (fp_text value JUMPER3 (at 0 -2.3 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)) (justify mirror))
     )
     (fp_line (start -1.9 1.2) (end 1.9 1.2) (layer B.SilkS) (width 0.2))
@@ -1526,16 +1526,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFCD)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E57) (tstamp 57CDAFCD)
     (at 77.978 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCD72/57CD1661)
     (attr smd)
-    (fp_text reference JP21 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP21 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1555,16 +1555,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFD3)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4DE0) (tstamp 57CDAFD3)
     (at 78.994 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCD72/57CD15FA)
     (attr smd)
-    (fp_text reference JP22 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP22 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1642,16 +1642,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFE5)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E47) (tstamp 57CDAFE5)
     (at 67.564 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCDC6/57CD1661)
     (attr smd)
-    (fp_text reference JP25 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP25 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1671,16 +1671,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFEB)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4DFA) (tstamp 57CDAFEB)
     (at 68.58 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCDC6/57CD15FA)
     (attr smd)
-    (fp_text reference JP26 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP26 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1758,16 +1758,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDAFFD)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E30) (tstamp 57CDAFFD)
     (at 57.15 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCE1A/57CD1661)
     (attr smd)
-    (fp_text reference JP29 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP29 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1787,16 +1787,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDB003)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E0A) (tstamp 57CDB003)
     (at 58.166 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCE1A/57CD15FA)
     (attr smd)
-    (fp_text reference JP30 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP30 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1874,16 +1874,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDB015)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4E25) (tstamp 57CDB015)
     (at 46.736 31.496 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCE97/57CD1661)
     (attr smd)
-    (fp_text reference JP33 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP33 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1903,16 +1903,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDB01B)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4EA4) (tstamp 57CDB01B)
     (at 47.752 43.942 90)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCE97/57CD15FA)
     (attr smd)
-    (fp_text reference JP34 (at 0 1.9 90) (layer B.SilkS)
+    (fp_text reference JP34 (at 0 1.9 90) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1961,16 +1961,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 5415CC62) (tstamp 57CDB027)
+  (module Resistors_SMD:R_0603 (layer B.Cu) (tedit 57CE4FC7) (tstamp 57CDB027)
     (at 55.372 79.756 270)
     (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
     (tags "resistor 0603")
     (path /57CDCEC1/57CD15FA)
     (attr smd)
-    (fp_text reference JP36 (at 0 1.9 270) (layer B.SilkS)
+    (fp_text reference JP36 (at 0 1.9 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab)
+    (fp_text value JUMPER (at 0 -1.9 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer B.CrtYd) (width 0.05))
@@ -1990,13 +1990,13 @@
     )
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CDB02D)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E4C) (tstamp 57CDB02D)
     (at 75.438 34.29)
     (path /57CDCD72/57CCF041)
-    (fp_text reference P11 (at 0 3) (layer F.SilkS)
+    (fp_text reference P11 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -2030,13 +2030,13 @@
       (net 48 /pwm10/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CDB039)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E3C) (tstamp 57CDB039)
     (at 65.024 34.29)
     (path /57CDCDC6/57CCF041)
-    (fp_text reference P13 (at 0 3) (layer F.SilkS)
+    (fp_text reference P13 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -2070,13 +2070,13 @@
       (net 52 /pwm12/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CDB045)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E34) (tstamp 57CDB045)
     (at 54.61 34.29)
     (path /57CDCE1A/57CCF041)
-    (fp_text reference P15 (at 0 3) (layer F.SilkS)
+    (fp_text reference P15 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -2110,13 +2110,13 @@
       (net 56 /pwm14/LED+))
   )
 
-  (module sensact:conn_2P (layer F.Cu) (tedit 550A6921) (tstamp 57CDB051)
+  (module sensact:conn_2P (layer F.Cu) (tedit 57CE4E2C) (tstamp 57CDB051)
     (at 44.196 34.29)
     (path /57CDCE97/57CCF041)
-    (fp_text reference P17 (at 0 3) (layer F.SilkS)
+    (fp_text reference P17 (at 0 3) (layer F.SilkS) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
-    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab)
+    (fp_text value CONN_01X02 (at 0.2 -3.4) (layer F.Fab) hide
       (effects (font (size 1.5 1.5) (thickness 0.15)))
     )
     (fp_line (start -5 -3.9) (end 5 -3.9) (layer F.SilkS) (width 0.15))
@@ -2150,13 +2150,13 @@
       (net 60 /pwm16/LED+))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB060)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4DD9) (tstamp 57CDB060)
     (at 82.804 50.292 90)
     (path /57CDCD72/57CCF0EE)
     (fp_text reference U10 (at 0 0.5 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2202,13 +2202,13 @@
       (net 47 /pwm10/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB072)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4DED) (tstamp 57CDB072)
     (at 72.39 50.292 90)
     (path /57CDCDC6/57CCF0EE)
-    (fp_text reference U12 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U12 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2254,13 +2254,13 @@
       (net 51 /pwm12/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB084)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4E9D) (tstamp 57CDB084)
     (at 61.976 50.292 90)
     (path /57CDCE1A/57CCF0EE)
-    (fp_text reference U14 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U14 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2280,13 +2280,13 @@
       (net 53 /pwm13/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB08D)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4FAC) (tstamp 57CDB08D)
     (at 61.976 73.406 270)
     (path /57CDCE6B/57CCF0EE)
-    (fp_text reference U15 (at 0 0.5 270) (layer F.SilkS)
+    (fp_text reference U15 (at 0 0.5 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2306,13 +2306,13 @@
       (net 55 /pwm14/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB096)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4EA1) (tstamp 57CDB096)
     (at 51.562 50.292 90)
     (path /57CDCE97/57CCF0EE)
-    (fp_text reference U16 (at 0 0.5 90) (layer F.SilkS)
+    (fp_text reference U16 (at 0 0.5 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2332,13 +2332,13 @@
       (net 57 /pwm15/LED-))
   )
 
-  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 55A690EA) (tstamp 57CDB09F)
+  (module sensact:MEANWELL_LDD_L (layer F.Cu) (tedit 57CE4FA4) (tstamp 57CDB09F)
     (at 51.562 73.406 270)
     (path /57CDCEC1/57CCF0EE)
-    (fp_text reference U17 (at 0 0.5 270) (layer F.SilkS)
+    (fp_text reference U17 (at 0 0.5 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab)
+    (fp_text value LED_DRIVER (at 0 -0.5 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -11.43 0) (end -11.43 -5.08) (layer F.SilkS) (width 0.15))
@@ -2358,15 +2358,15 @@
       (net 59 /pwm16/LED-))
   )
 
-  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 56D1B4CB) (tstamp 57CDC191)
+  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 57CE4E1E) (tstamp 57CDC191)
     (at 35.306 34.29)
     (descr "Mounting Hole 3.5mm, no annular")
     (tags "mounting hole 3.5mm no annular")
     (path /57CDE98F)
-    (fp_text reference P19 (at 0 -4.5) (layer F.SilkS)
+    (fp_text reference P19 (at 0 -4.5) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab)
+    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center 0 0) (end 3.5 0) (layer Cmts.User) (width 0.15))
@@ -2374,15 +2374,15 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask F.SilkS))
   )
 
-  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 56D1B4CB) (tstamp 57CDC196)
+  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 57CE4E8F) (tstamp 57CDC196)
     (at 125.984 34.29)
     (descr "Mounting Hole 3.5mm, no annular")
     (tags "mounting hole 3.5mm no annular")
     (path /57CDF11F)
-    (fp_text reference P20 (at 0 -4.5) (layer F.SilkS)
+    (fp_text reference P20 (at 0 -4.5) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab)
+    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center 0 0) (end 3.5 0) (layer Cmts.User) (width 0.15))
@@ -2390,12 +2390,12 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask F.SilkS))
   )
 
-  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 56D1B4CB) (tstamp 57CDC19B)
+  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 57CE4FCB) (tstamp 57CDC19B)
     (at 35.306 89.408)
     (descr "Mounting Hole 3.5mm, no annular")
     (tags "mounting hole 3.5mm no annular")
     (path /57CDF1BE)
-    (fp_text reference P21 (at 0 -4.5) (layer F.SilkS)
+    (fp_text reference P21 (at 0 -4.5) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab)
@@ -2406,15 +2406,15 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask F.SilkS))
   )
 
-  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 56D1B4CB) (tstamp 57CDC1A0)
+  (module Mounting_Holes:MountingHole_3.5mm (layer F.Cu) (tedit 57CE4F1C) (tstamp 57CDC1A0)
     (at 125.984 89.408)
     (descr "Mounting Hole 3.5mm, no annular")
     (tags "mounting hole 3.5mm no annular")
     (path /57CDF265)
-    (fp_text reference P22 (at 0 -4.5) (layer F.SilkS)
+    (fp_text reference P22 (at 0 -4.5) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab)
+    (fp_text value CONN_01X01 (at 0 4.5) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_circle (center 0 0) (end 3.5 0) (layer Cmts.User) (width 0.15))
@@ -2422,16 +2422,16 @@
     (pad 1 np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask F.SilkS))
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CDD50B)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F59) (tstamp 57CDD50B)
     (at 108.204 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CCF4B9)
     (attr smd)
-    (fp_text reference C6 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C6 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7) (layer B.Fab)
+    (fp_text value 10u (at 0 2.54) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -2451,16 +2451,16 @@
     )
   )
 
-  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 541A9C39) (tstamp 57CDD515)
+  (module Capacitors_SMD:C_1210_HandSoldering (layer B.Cu) (tedit 57CE4F49) (tstamp 57CDD515)
     (at 118.618 67.564)
     (descr "Capacitor SMD 1210, hand soldering")
     (tags "capacitor 1210")
     (path /57CDDB01)
     (attr smd)
-    (fp_text reference C9 (at 0 2.7) (layer B.SilkS)
+    (fp_text reference C9 (at 0 2.7) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 10u (at 0 -2.7) (layer B.Fab)
+    (fp_text value 10u (at 0 2.54) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -3.3 1.6) (end 3.3 1.6) (layer B.CrtYd) (width 0.05))
@@ -2480,16 +2480,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0805_HandSoldering (layer B.Cu) (tedit 54189DEE) (tstamp 57CE4BE8)
+  (module Resistors_SMD:R_0805_HandSoldering (layer B.Cu) (tedit 57CE4EB0) (tstamp 57CE4BE8)
     (at 44.45 46.482 270)
     (descr "Resistor SMD 0805, hand soldering")
     (tags "resistor 0805")
     (path /57CE4F2A)
     (attr smd)
-    (fp_text reference R1 (at 0 2.1 270) (layer B.SilkS)
+    (fp_text reference R1 (at 0 2.1 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 4k7 (at 0 -2.1 270) (layer B.Fab)
+    (fp_text value 4k7 (at 0 -2.1 270) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -2.4 1) (end 2.4 1) (layer B.CrtYd) (width 0.05))
@@ -2509,16 +2509,16 @@
     )
   )
 
-  (module Resistors_SMD:R_0805_HandSoldering (layer B.Cu) (tedit 54189DEE) (tstamp 57CE4BEE)
+  (module Resistors_SMD:R_0805_HandSoldering (layer B.Cu) (tedit 57CE4EC4) (tstamp 57CE4BEE)
     (at 34.29 46.482 270)
     (descr "Resistor SMD 0805, hand soldering")
     (tags "resistor 0805")
     (path /57CE5009)
     (attr smd)
-    (fp_text reference R2 (at 0 2.1 270) (layer B.SilkS)
+    (fp_text reference R2 (at 0 2.1 270) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
-    (fp_text value 4k7 (at 0 -2.1 270) (layer B.Fab)
+    (fp_text value 4k7 (at 0 1.778 270) (layer B.SilkS)
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start -2.4 1) (end 2.4 1) (layer B.CrtYd) (width 0.05))
@@ -2538,8 +2538,8 @@
     )
   )
 
-  (segment (start 117.856 64.516) (end 117.856 63.246) (width 2.5) (layer F.Cu) (net 1) (status 400000))
-  (segment (start 120.65 60.452) (end 120.65 59.182) (width 2.5) (layer F.Cu) (net 1) (tstamp 57CE4D03) (status 800000))
+  (segment (start 117.856 64.516) (end 117.856 63.246) (width 2.5) (layer F.Cu) (net 1))
+  (segment (start 120.65 60.452) (end 120.65 59.182) (width 2.5) (layer F.Cu) (net 1) (tstamp 57CE4D03))
   (segment (start 117.856 63.246) (end 120.65 60.452) (width 2.5) (layer F.Cu) (net 1) (tstamp 57CE4D00))
   (segment (start 128.27 64.516) (end 127.254 64.516) (width 2.5) (layer F.Cu) (net 1))
   (segment (start 127.254 64.516) (end 121.92 59.182) (width 2.5) (layer F.Cu) (net 1) (tstamp 57CE4CE2))
