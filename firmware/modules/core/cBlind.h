@@ -40,6 +40,7 @@ namespace sensact{
 		void prepareDown(Time_t now);
 		void stop(Time_t now, uint16_t currPos);
 		void stopForReverse(Time_t now, uint16_t currPos);
+		void assureAllRelaysOff();
 		uint16_t calculatePosition(Time_t now);
 
 

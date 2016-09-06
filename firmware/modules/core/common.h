@@ -48,7 +48,7 @@ enum struct ePushState
 
 	enum struct eDirection
 		:uint8_t {
-			STOP, UP, DOWN, PREPAREUP, PREPAREDOWN
+			STOP, UP, DOWN, PREPAREUP, PREPAREDOWN, PREPARESTOP
 	};
 
 	enum struct eAppType

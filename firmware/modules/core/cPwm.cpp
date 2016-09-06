@@ -5,8 +5,9 @@
  *      Author: klaus
  */
 #include <cMaster.h>
+#include "cModel.h"
 #include <cPwm.h>
-#define LOGLEVEL LEVEL_WARN
+#define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "PWM  "
 #include <cLog.h>
 namespace sensact {
@@ -144,6 +145,10 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 	{
 		autoOffTime=now+autoOffIntervalMsecs;
 	}
+	else if(autoReturnToOffMsecs !=0)
+	{
+		autoOffTime=now+autoReturnToOffMsecs;
+	}
 }
 
 
@@ -202,9 +207,10 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 		SetDimLevel(currentLevel);
 	}
 
-	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>10000)
+	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
 	{
-		cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
+		LOGD("%s sends heartbeat to %s", Name, N(standbyController));
+		SendHEARTBEATCommand(standbyController, now);
 		lastHeartbeatToStandbycontroller=now;
 	}
 	return;

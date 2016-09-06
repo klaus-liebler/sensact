@@ -15,4 +15,9 @@ void cApplication::OnEvent(eApplicationID sender, eEventType evt,
 		return;
 	}
 
+const char* cApplication::N(eApplicationID appId)
+{
+	return MODEL::ApplicationNames[(uint16_t)appId];
+}
+
 } /* namespace sensact */

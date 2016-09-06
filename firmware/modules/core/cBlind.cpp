@@ -164,6 +164,11 @@ uint16_t cBlind::calculatePosition(Time_t now)
 }
 
 
+void cBlind::assureAllRelaysOff()
+{
+	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
+	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+}
 
 
 /*
@@ -184,6 +189,10 @@ void cBlind::DoEachCycle(Time_t now) {
 			prepareDown(now);
 		} else if(targetLevel<wellKnownLevel){
 			prepareUp(now);
+		}
+		else
+		{
+			assureAllRelaysOff();
 		}
 		return;
 	}
