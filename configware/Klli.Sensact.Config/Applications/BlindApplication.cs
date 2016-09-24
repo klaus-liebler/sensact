@@ -9,7 +9,7 @@ namespace Klli.Sensact.Config.Applications
     public class BlindApplication : ActorApplication
     {
         public OutputPin OutputRessourceUpOrPower;
-        public OutputPin OutputRessourceDown;
+        public OutputPin OutputRessourceDownOrDirection;
         public RelayMode RelayMode;
         public List<Event> FullyCloseEvents;
         public List<Event> FullyOpenEvents;
@@ -40,7 +40,7 @@ namespace Klli.Sensact.Config.Applications
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
         {
-            if (usedPins.Contains(OutputRessourceDown.ToString()))
+            if (usedPins.Contains(OutputRessourceDownOrDirection.ToString()))
             {
                 return "OutputRessourceDown";
             }
@@ -49,7 +49,7 @@ namespace Klli.Sensact.Config.Applications
                 return "OutputRessourceUpOrPower";
             }
             
-            usedPins.Add(OutputRessourceDown.ToString());
+            usedPins.Add(OutputRessourceDownOrDirection.ToString());
             usedPins.Add(OutputRessourceUpOrPower.ToString());
             return null;
         }
@@ -62,7 +62,7 @@ namespace Klli.Sensact.Config.Applications
             }
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Blind {0}"+Environment.NewLine, ApplicationId);
-            sb.AppendFormat("cBlind {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, ePoweredOutput::{2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputRessourceUpOrPower, OutputRessourceDown, RelayMode, OpenCloseTimeInSeconds);
+            sb.AppendFormat("cBlind {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, ePoweredOutput::{2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputRessourceUpOrPower, OutputRessourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
             return sb.ToString();
         }
 

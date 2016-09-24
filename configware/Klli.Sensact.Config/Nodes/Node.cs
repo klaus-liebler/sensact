@@ -238,7 +238,7 @@ namespace Klli.Sensact.Config.Nodes
 
     public enum RelayMode
     {
-        TWO_PHASES = 0, INTERLOCKED = 1,
+        TWO_PHASES = 0, INTERLOCKED_ACTIVE_DOWN = 1, INTERLOCKED_ACTIVE_UP=2
     }
 
 

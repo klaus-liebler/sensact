@@ -15,7 +15,7 @@
 namespace sensact{
 
 	enum struct eRelayMode
-		: uint8_t {TWO_PHASES = 0, INTERLOCKED = 1
+		: uint8_t {TWO_PHASES = 0, INTERLOCKED_ACTIVE_DOWN = 1, INTERLOCKED_ACTIVE_UP=2
 	};
 
 	class cBlind: public cApplication{
@@ -27,7 +27,7 @@ namespace sensact{
 		const uint16_t FULLY_OPEN= 0xC000;
 		const uint16_t FULLY_OPEN_INT= 0xE000;
 		ePoweredOutput relayUpOrPower;
-		ePoweredOutput relayDown;
+		ePoweredOutput relayDownOrDirection;
 		eRelayMode relayMode;
 		Time_t lastChanged;
 		uint16_t wellKnownLevel;
@@ -56,8 +56,8 @@ namespace sensact{
 		 */
 		void RaiseEvent(eEventType evt);
 
-		cBlind(const char* name, eApplicationID id, ePoweredOutput relayUp, ePoweredOutput relayDown, eRelayMode relayMode, uint16_t fullStrokeTimeInSeconds) :
-					cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDown(relayDown), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_OPEN-FULLY_CLOSED) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP) {
+		cBlind(const char* name, eApplicationID id, ePoweredOutput relayUp, ePoweredOutput relayDownOrDirection, eRelayMode relayMode, uint16_t fullStrokeTimeInSeconds) :
+					cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_OPEN-FULLY_CLOSED) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP) {
 				}
 	};
 
