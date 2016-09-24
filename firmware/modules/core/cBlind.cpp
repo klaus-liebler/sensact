@@ -20,7 +20,7 @@
 namespace sensact {
 
 bool cBlind::Setup() {
-	return BSP::RequestPoweredOutput(this->relayUpOrPower) && BSP::RequestPoweredOutput(this->relayDown);
+	return BSP::RequestPoweredOutput(this->relayUpOrPower) && BSP::RequestPoweredOutput(this->relayDownOrDirection);
 }
 
 void cBlind::up(Time_t now)
@@ -28,24 +28,34 @@ void cBlind::up(Time_t now)
 	LOGD("%s goes up!", Name);
 	this->state=eDirection::UP;
 	this->lastChanged=now;
-	//NO DIFFERENCE BETWEEN MODES
-	//if(relayMode==eRelayMode::TWO_PHASES)
-	//{
-		BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
-		BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
-	//}
-	//else
-	//{
-	//	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
-	//	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
-	//}
+	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
+	switch (relayMode) {
+		case eRelayMode::TWO_PHASES:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_UP:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::ACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_DOWN:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
+			break;
+	}
 }
 void cBlind::prepareUp(Time_t now)
 {
 	LOGD("%s: prepares for up!", Name);
 	this->state=eDirection::PREPAREUP;
 	this->lastChanged=now;
-	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+	switch (relayMode) {
+		case eRelayMode::TWO_PHASES:
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_UP:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::ACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_DOWN:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
+			break;
+	}
 }
 
 void cBlind::prepareDown(Time_t now)
@@ -53,22 +63,35 @@ void cBlind::prepareDown(Time_t now)
 	LOGD("%s: prepares for down!", Name);
 	this->state=eDirection::PREPAREDOWN;
 	this->lastChanged=now;
-	BSP::SetPoweredOutput(relayDown, ePowerState::ACTIVE);
+	switch (relayMode) {
+		case eRelayMode::TWO_PHASES:
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_UP:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_DOWN:
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::ACTIVE);
+			break;
+	}
 }
 void cBlind::down(Time_t now)
 {
 	LOGD("%s: goes down!", Name);
 	this->state=eDirection::DOWN;
 	this->lastChanged=now;
-	if(relayMode==eRelayMode::TWO_PHASES)
-	{
-		BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
-		BSP::SetPoweredOutput(relayDown, ePowerState::ACTIVE);
-	}
-	else
-	{
-		BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
-		BSP::SetPoweredOutput(relayDown, ePowerState::ACTIVE);
+	switch (relayMode) {
+		case eRelayMode::TWO_PHASES:
+			BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::ACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_UP:
+			BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
+			break;
+		case eRelayMode::INTERLOCKED_ACTIVE_DOWN:
+			BSP::SetPoweredOutput(relayUpOrPower, ePowerState::ACTIVE);
+			BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::ACTIVE);
+			break;
 	}
 }
 void cBlind::stop(Time_t now, uint16_t currPos){
@@ -91,7 +114,7 @@ void cBlind::stop(Time_t now, uint16_t currPos){
 	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
 	if(relayMode==eRelayMode::TWO_PHASES)
 	{
-		BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+		BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
 	}
 }
 
@@ -104,7 +127,7 @@ void cBlind::stopForReverse(Time_t now, uint16_t currPos){
 	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
 	if(relayMode==eRelayMode::TWO_PHASES)
 	{
-		BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+		BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
 	}
 }
 
@@ -167,7 +190,7 @@ uint16_t cBlind::calculatePosition(Time_t now)
 void cBlind::assureAllRelaysOff()
 {
 	BSP::SetPoweredOutput(relayUpOrPower, ePowerState::INACTIVE);
-	BSP::SetPoweredOutput(relayDown, ePowerState::INACTIVE);
+	BSP::SetPoweredOutput(relayDownOrDirection, ePowerState::INACTIVE);
 }
 
 
