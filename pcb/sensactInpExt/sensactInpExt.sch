@@ -310,25 +310,25 @@ Wire Wire Line
 Wire Wire Line
 	7700 1500 8000 1500
 Text Label 5750 1200 0    60   ~ 0
-IN1
-Text Label 5750 1500 0    60   ~ 0
 IN2
+Text Label 5750 1500 0    60   ~ 0
+IN1
 Text Label 7850 1500 0    60   ~ 0
-IN3
-Text Label 7850 1200 0    60   ~ 0
 IN4
+Text Label 7850 1200 0    60   ~ 0
+IN3
 Connection ~ 6300 850 
 Connection ~ 7400 850 
 Connection ~ 6300 1850
 Connection ~ 7400 1850
 Text Label 6500 850  0    60   ~ 0
-I1
-Text Label 6500 1850 0    60   ~ 0
 I2
+Text Label 6500 1850 0    60   ~ 0
+I1
 Text Label 7050 1850 0    60   ~ 0
-I3
-Text Label 7050 850  0    60   ~ 0
 I4
+Text Label 7050 850  0    60   ~ 0
+I3
 $Comp
 L SRV05 U2
 U 1 1 57C88FCB
@@ -583,25 +583,25 @@ Wire Wire Line
 Wire Wire Line
 	7700 3000 8000 3000
 Text Label 5750 2700 0    60   ~ 0
-IN5
-Text Label 5750 3000 0    60   ~ 0
 IN6
+Text Label 5750 3000 0    60   ~ 0
+IN5
 Text Label 7850 3000 0    60   ~ 0
-IN7
-Text Label 7850 2700 0    60   ~ 0
 IN8
+Text Label 7850 2700 0    60   ~ 0
+IN7
 Connection ~ 6300 2350
 Connection ~ 7400 2350
 Connection ~ 6300 3350
 Connection ~ 7400 3350
 Text Label 6500 2350 0    60   ~ 0
-I5
-Text Label 6500 3350 0    60   ~ 0
 I6
+Text Label 6500 3350 0    60   ~ 0
+I5
 Text Label 7050 3350 0    60   ~ 0
-I7
-Text Label 7050 2350 0    60   ~ 0
 I8
+Text Label 7050 2350 0    60   ~ 0
+I7
 $Comp
 L SRV05 U3
 U 1 1 57C891A6
@@ -856,25 +856,25 @@ Wire Wire Line
 Wire Wire Line
 	10200 1500 10500 1500
 Text Label 8250 1200 0    60   ~ 0
-IN9
-Text Label 8250 1500 0    60   ~ 0
 IN10
+Text Label 8250 1500 0    60   ~ 0
+IN9
 Text Label 10350 1500 0    60   ~ 0
-IN11
-Text Label 10350 1200 0    60   ~ 0
 IN12
+Text Label 10350 1200 0    60   ~ 0
+IN11
 Connection ~ 8800 850 
 Connection ~ 9900 850 
 Connection ~ 8800 1850
 Connection ~ 9900 1850
 Text Label 9000 850  0    60   ~ 0
-I9
-Text Label 9000 1850 0    60   ~ 0
 I10
+Text Label 9000 1850 0    60   ~ 0
+I9
 Text Label 9550 1850 0    60   ~ 0
-I11
-Text Label 9550 850  0    60   ~ 0
 I12
+Text Label 9550 850  0    60   ~ 0
+I11
 $Comp
 L SRV05 U4
 U 1 1 57C893CF
@@ -1129,25 +1129,25 @@ Wire Wire Line
 Wire Wire Line
 	10200 3000 10500 3000
 Text Label 8250 2700 0    60   ~ 0
-IN13
-Text Label 8250 3000 0    60   ~ 0
 IN14
+Text Label 8250 3000 0    60   ~ 0
+IN13
 Text Label 10350 3000 0    60   ~ 0
-IN15
-Text Label 10350 2700 0    60   ~ 0
 IN16
+Text Label 10350 2700 0    60   ~ 0
+IN15
 Connection ~ 8800 2350
 Connection ~ 9900 2350
 Connection ~ 8800 3350
 Connection ~ 9900 3350
 Text Label 9000 2350 0    60   ~ 0
-I13
-Text Label 9000 3350 0    60   ~ 0
 I14
+Text Label 9000 3350 0    60   ~ 0
+I13
 Text Label 9550 3350 0    60   ~ 0
-I15
-Text Label 9550 2350 0    60   ~ 0
 I16
+Text Label 9550 2350 0    60   ~ 0
+I15
 $Comp
 L JUMPER3 JP1
 U 1 1 57C8A24C
@@ -1492,9 +1492,9 @@ Wire Wire Line
 Wire Wire Line
 	2750 4800 2500 4800
 Text Label 3300 4400 0    60   ~ 0
-SDA
-Text Label 2500 4500 0    60   ~ 0
 SCL
+Text Label 2500 4500 0    60   ~ 0
+SDA
 Text Label 3300 4500 0    60   ~ 0
 INT1
 Text Label 2500 4600 0    60   ~ 0
@@ -1530,7 +1530,7 @@ F 1 "CONN_02X06" H 2400 1650 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Straight_2x06" H 2400 800 50  0001 C CNN
 F 3 "" H 2400 800 50  0000 C CNN
 	1    2400 2000
-	1    0    0    -1  
+	-1   0    0    -1  
 $EndComp
 Wire Wire Line
 	2700 2250 2650 2250
@@ -1618,7 +1618,7 @@ F 3 "" H 1200 1250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	950  1000 1200 1000
+	950  1000 1700 1000
 Wire Wire Line
 	1200 1000 1200 1100
 Wire Wire Line
@@ -1627,9 +1627,9 @@ Connection ~ 1100 1000
 Wire Wire Line
 	1200 1500 1200 1400
 Wire Wire Line
-	950  1500 1200 1500
+	950  1500 1450 1500
 Wire Wire Line
-	950  1400 950  1500
+	950  1400 950  3800
 Connection ~ 1100 1500
 $Comp
 L DS2482 U5
@@ -1637,7 +1637,7 @@ U 1 1 57E6867F
 P 5350 4800
 F 0 "U5" H 4950 5150 60  0000 L CNN
 F 1 "DS2482" H 4950 5050 60  0000 L CNN
-F 2 "" H 5350 4800 60  0000 C CNN
+F 2 "sensact:SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder" H 5350 4800 60  0001 C CNN
 F 3 "" H 5350 4800 60  0000 C CNN
 	1    5350 4800
 	1    0    0    -1  
@@ -1690,7 +1690,7 @@ U 1 1 57E6A971
 P 6350 4550
 F 0 "JP4" H 6400 4450 50  0000 L CNN
 F 1 "JUMPER3" H 6350 4650 50  0000 C BNN
-F 2 "" H 6350 4550 50  0000 C CNN
+F 2 "sensact:SMD-solder-bridge-3pin" H 6350 4550 50  0001 C CNN
 F 3 "" H 6350 4550 50  0000 C CNN
 	1    6350 4550
 	1    0    0    -1  
@@ -1701,7 +1701,7 @@ U 1 1 57E6AA32
 P 7100 4550
 F 0 "JP5" H 7150 4450 50  0000 L CNN
 F 1 "JUMPER3" H 7100 4650 50  0000 C BNN
-F 2 "" H 7100 4550 50  0000 C CNN
+F 2 "sensact:SMD-solder-bridge-3pin" H 7100 4550 50  0001 C CNN
 F 3 "" H 7100 4550 50  0000 C CNN
 	1    7100 4550
 	1    0    0    -1  
@@ -1766,12 +1766,37 @@ U 1 1 57E75E4D
 P 4050 4800
 F 0 "P4" H 4050 4950 50  0000 C CNN
 F 1 "CONN_01X02" V 4150 4800 50  0000 C CNN
-F 2 "" H 4050 4800 50  0000 C CNN
+F 2 "sensact:KF141R-2p" H 4050 4800 50  0001 C CNN
 F 3 "" H 4050 4800 50  0000 C CNN
 	1    4050 4800
-	-1   0    0    -1  
+	-1   0    0    1   
 $EndComp
 Wire Wire Line
 	4300 4850 4300 4900
 Connection ~ 4300 4850
+$Comp
+L C C19
+U 1 1 57E7094E
+P 1450 1250
+F 0 "C19" H 1475 1350 50  0000 L CNN
+F 1 "u1" H 1475 1150 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 1488 1100 50  0001 C CNN
+F 3 "" H 1450 1250 50  0000 C CNN
+	1    1450 1250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1450 1000 1450 1100
+Connection ~ 1200 1000
+Wire Wire Line
+	1450 1500 1450 1400
+Connection ~ 1200 1500
+Wire Wire Line
+	3100 3700 1700 3700
+Wire Wire Line
+	1700 3700 1700 1000
+Connection ~ 1450 1000
+Wire Wire Line
+	950  3800 3100 3800
+Connection ~ 950  1500
 $EndSCHEMATC
