@@ -33,7 +33,8 @@
         PUSHB_L0_TECH_B11,
         POWIT_L0_TECH_C1,
         DEVCE_L0_TECH_HEAT,
-        DEVCE_L0_TECH_PUMP,
+        DEVCE_L0_TECH_PUMP, //Störsignal Hebepumpe
+        POWIT_L0_TECH_PUMP, //Power für Zirkulationspumpe
         POWIT_L0_TECH_P1,
         POWIT_L0_TECH_P2,
         SCLIM_L0_TECH_AIR,
