@@ -130,7 +130,7 @@ namespace Klli.Sensact.Config
 
             //PRTY
             SNSCT_L0_TECH_HS_1.Applications.AddTwoDimButtons(ID.PUSHB_L0_PRTY_B11, ID.PUSHB_L0_PRTY_B12, InputPin.I10, InputPin.I09, ID.PWM___L0_PRTY_S);//32,30
-            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_PRTY_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P01, PwmPin.P02, PwmPin.P03, PwmPin.P04 } });//144,143,142,141
+            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_PRTY_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P11, PwmPin.P10, PwmPin.P09, PwmPin.P08 } });//144,143,142,141
 
             //STO1
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L0_STO1_B11, InputPin.I08, ID.POWIT_L0_STO1_C1);//28
@@ -144,8 +144,8 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
             });
-            SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = OutputPin.O01, WaittimeInMsec = 10000 });//RL15
-            SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = OutputPin.O03, WaittimeInMsec = 10000 });//RL17, nicht 16!!!
+            SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = OutputPin.O04, WaittimeInMsec = 10000 });//RL15
+            SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = OutputPin.O06, WaittimeInMsec = 10000 });//RL17, nicht 16!!!
             //MISSING:Heizungsanlage
             //MISSING: Zirkulationspumpe RL14, O21 HS_1!!!
 
@@ -154,7 +154,7 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L0_WELL_B12, InputPin.I05, ID.PWM___L0_WELL_S1);//18Für Dusche
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L0_WELL_B21, InputPin.I04, ID.PWM___L0_WELL_S2); //16 Für WC
             SNSCT_L0_TECH_HS_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_WELL_C1), OutputRessource = OutputPin.O22 });//RL4
-            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_WELL_S1), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P05 } }); //140 Dusche
+            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_WELL_S1), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P07 } }); //140 Dusche
             SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L0_WELL_S2), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P06 } }); //138 WC
 
             //WORK
@@ -163,10 +163,10 @@ namespace Klli.Sensact.Config
             #endregion
             #region LX
             //Back
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_P1, OutputPin.O12); //RL18
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W1, OutputPin.O09); //RL27
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W2, OutputPin.O08); //RL26
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W3, OutputPin.O07); //RL25
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_P1, OutputPin.O21); //RL18
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W1, OutputPin.O12); //RL27
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W2, OutputPin.O11); //RL26
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_BACK_W3, OutputPin.O10); //RL25
             SNSCT_L0_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_LX_BACK_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O10, OutputRessourceDownOrDirection = OutputPin.O20, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN, });//K19 K20
 
             //Front (Klingelknopf, Licht, Bewegungsmelder)
@@ -183,27 +183,27 @@ namespace Klli.Sensact.Config
                 },
                 InputRessource = InputPin.I22,
             });
-            SNSCT_L0_TECH_HS_1.Applications.Add(new LightbarrierApplication
+            SNSCT_L0_TECH_HS_2.Applications.Add(new LightbarrierApplication
             {
                 ApplicationId = _(ID.LIBAR_LX_FRON_B2),
-                InputRessource = InputPin.I14, //Relais-Kabel
+                InputRessource = InputPin.I23, //Relais-Kabel
                 ActiveSignalLevel = true,
                 BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.POWIT_LX_FRON_W1),
             });
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, OutputPin.O13);//RL31
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, OutputPin.O16);//RL31
 
             //GARA
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_LX_GARA_B11, InputPin.I02, ID.POWIT_LX_GARA_C1);//4
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_LX_GARA_B21, InputPin.I01, ID.BLIND_LX_GARA_J1); //2
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_GARA_C1, OutputPin.O12); //RL30
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.BLIND_LX_GARA_J1, OutputPin.O14, 500); //unbeschriftet
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_GARA_C1, OutputPin.O15); //RL30
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.BLIND_LX_GARA_J1, OutputPin.O18, 500); //unbeschriftet
 
             //LEFT
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_LEFT_W1, OutputPin.O11); //RL29
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_LEFT_W1, OutputPin.O14); //RL29
 
             //RGHT
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_RGHT_W1, OutputPin.O10);//RL28
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_LX_RGHT_W1, OutputPin.O13);//RL28
 
             #endregion
             #region L1
@@ -252,10 +252,10 @@ namespace Klli.Sensact.Config
                 }
                 );
             SNSCT_L0_TECH_HS_2.Applications.AddBlindButtons(ID.PUSHB_L1_BATH_B12, ID.PUSHB_L1_BATH_B13, InputPin.I03, InputPin.I02, ID.BLIND_L1_BATH_J1); //94 93
-            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_BATH_S), StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P07 } }); //128
+            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_BATH_S), StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P04 } }); //128
             SNSCT_L0_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_BATH_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O01, OutputRessourceDownOrDirection = OutputPin.O11, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });//K1 K2
             //Dekoleuchten werden aus dem 48V-Netzteil + Spannungswandler versorgt
-            SNSCT_L0_TECH_HS_1.Applications.Add(new RgbwApplication { ApplicationId = _(ID.RGBW__L1_BATH_W1), StandbyController = _(ID.STDBY_L0_TECH_48V), LowMeansLampOn = true, OutputRessourceR = PwmPin.OP01, OutputRessourceB = PwmPin.OP02, OutputRessourceG = PwmPin.OP03, OutputRessourceW = PwmPin.NONE });
+            SNSCT_L0_TECH_HS_2.Applications.Add(new RgbwApplication { ApplicationId = _(ID.RGBW__L1_BATH_W1), StandbyController = _(ID.STDBY_L0_TECH_48V), LowMeansLampOn = true, OutputRessourceR = PwmPin.OP01, OutputRessourceB = PwmPin.OP02, OutputRessourceG = PwmPin.OP03, OutputRessourceW = PwmPin.NONE });
 
 
             //CORR
@@ -267,8 +267,8 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_CORR_B24, InputPin.I29, ID.POWIT_L1_CORR_W1);//84
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_CORR_B25, InputPin.I28, ID.POWIT_LX_FRON_W1);//82
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_CORR_B26, InputPin.I27, ID.POWIT_LX_LEFT_W1);//81
-            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_CORR_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P08, PwmPin.P09, PwmPin.P10 } }); //126, 125, 124
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_CORR_W1, OutputPin.O06);//RL24
+            SNSCT_L0_TECH_HS_1.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_CORR_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L0_TECH_48V), OutputRessources = new List<PwmPin> { PwmPin.P03, PwmPin.P02, PwmPin.P01 } }); //126, 125, 124
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_CORR_W1, OutputPin.O09);//RL24
 
             //L1.KTCH
             SNSCT_L1_KTCH_UP.Applications.AddRotaryEncoder(ID.ROTAR_L1_KTCH_B21, RotaryEncoder.ROTARYENCODER_1, InputPin.ROTAR_PUSH_1, ID.PWM___L1_KTCH_S1);
@@ -286,8 +286,8 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_KTCH_B11, InputPin.I26, ID.POWIT_L1_KTCH_C1);//80
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_KTCH_B12, InputPin.I25, ID.POWIT_LX_BACK_W1);//78
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_KTCH_B31, InputPin.I24, ID.PWM___L1_KTCH_S2);//76
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_KTCH_C1, OutputPin.O05);//RL23
-            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_KTCH_W1, OutputPin.O04);//RL22
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_KTCH_C1, OutputPin.O08);//RL23
+            SNSCT_L0_TECH_HS_2.Applications.AddPowIt(ID.POWIT_L1_KTCH_W1, OutputPin.O07);//RL22
             SNSCT_L0_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_KTCH_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O02, OutputRessourceDownOrDirection = OutputPin.O12, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });//K3 K4
             SNSCT_L0_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L1_KTCH_J2), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = OutputPin.O03, OutputRessourceDownOrDirection = OutputPin.O13, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });//K5 K6
 
