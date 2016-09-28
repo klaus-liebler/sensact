@@ -69,7 +69,6 @@ uint32_t Common::ParseUInt32(uint8_t *message, uint32_t offset)
 	uint8_t* ptr1 = ptr0+1;
 	uint8_t* ptr2 = ptr0+2;
 	uint8_t* ptr3 = ptr0+3;
-	uint8_t* ptr4 = ptr0+4;
 	*ptr0 = *(message+offset+0);
 	*ptr1 = *(message+offset+1);
 	*ptr2 = *(message+offset+2);

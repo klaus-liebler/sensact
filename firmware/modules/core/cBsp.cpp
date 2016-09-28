@@ -61,7 +61,7 @@ drivers::cDS2482 BSP::ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
 int16_t BSP::temperatures[16];
 
 //4 Intern, keine per SPI, 16 über den externen i2c
-uint32_t BSP::pwmRequests[] = {0xFFFFFC00, UINT32_MAX, 0xFFFFFFFF, UINT32_MAX};
+uint32_t BSP::pwmRequests[] = {0xFFFFFC00, UINT32_MAX, 0xFFFF0000, UINT32_MAX};
 uint32_t BSP::poweredOutputRequests[] = {0xFFFFFC00, UINT32_MAX, UINT32_MAX, UINT32_MAX};
 //C00 für 8 Inputs und die beiden RotaryEncoder
 uint32_t BSP::inputRequests[] = {0xFFFFFC00, UINT32_MAX, UINT32_MAX, UINT32_MAX};
@@ -486,7 +486,7 @@ bool BSP::HasRCEventOccured(const uint32_t eventNumber)
 }
 
 void BSP::DoEachCycle(Time_t now) {
-#if (defined(SENSACTHS07) || defined(SENSACTUP02))
+#if (defined(SENSACTHS07))
 	//modus: convert-command, nur inputs abfragen, wechselweise inputs und temp abfragen
 	static Time_t last_CONVERT_T_COMMAND=0;
 	static uint8_t mode = MODE_CONV_COMMAND;
@@ -743,7 +743,7 @@ bool BSP::ReceiveCANMessage(CANMessage* m) {
 			m->Data[i] = RxMessage.Data[i];
 		}
 		m->Id = RxMessage.ExtId;
-		LOGD("Received CAN-Message for ID %d", m->Id);
+		LOGI("Traced CAN-Message for ID %d", m->Id);
 		return true;
 	}
 	return false;
@@ -756,8 +756,12 @@ bool BSP::SendCANMessage(CANMessage* m) {
 	}
 	TxMessage.ExtId = m->Id;
 	if (HAL_CAN_Transmit(&hcan, 10)) {
-		LOGD("Sent CAN-Message for ID %d", m->Id);
+		LOGI("Sent CAN-Message for ID %d", m->Id);
 		return true;
+	}
+	else
+	{
+		LOGE("Failed to CAN-Message for ID %d", m->Id);
 	}
 	return false;
 }

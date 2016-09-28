@@ -18,6 +18,7 @@ void cApplication::OnCommand(eCommandType cmd, uint8_t *payload,
 <#=CommandParseImplementation#>
 		default:break;
 	}
+	(void)payloadLength;
 	return;
 }
 

@@ -1,6 +1,13 @@
+
+#ifdef STM32F4
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx.h"
-#include "stm32f4xx_it.h"
+#endif
+#ifdef STM32F1
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx.h"
+#endif
+#include "interrupts.h"
 #include "dcf77.h"
 #include "cRCSwitch.h"
 #include "cBsp.h"
@@ -13,6 +20,7 @@ extern volatile bool BufferHasMessage;
 
 static Time_t lastReceivedUARTChar=0;
 static bool binaryMode=false;
+
 
 
 extern uint64_t systemClockMsecCnt;
@@ -30,11 +38,26 @@ extern "C" void SysTick_Handler(void)
   systemClockMsecCnt++;
   steadyClockMsecCnt++;
 }
-
+#ifdef SENSACTHS07
 void ADC_IRQHandler(void)
 {
   //HAL_ADC_IRQHandler(&AdcHandle);
 }
+#endif
+#ifdef SENSACTUP02
+extern DMA_HandleTypeDef hdma_tim1_ch1;
+void DMA1_Channel2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_tim1_ch1);
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 1 */
+}
+#endif
+
 /*
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 {
@@ -46,7 +69,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
   //HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
 }
-
+#ifdef SENSACTHS07
 void EXTI9_5_IRQHandler(void)
 {
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5) != RESET)
@@ -55,16 +78,21 @@ void EXTI9_5_IRQHandler(void)
 		drivers::cRCSwitch::handleInterrupt();
 	}
 }
-
+#endif
+#ifdef SENSACTHS07
 void USART3_IRQHandler(void)
+#endif
+#ifdef SENSACTUP02
+void USART1_IRQHandler(void)
+#endif
 {
-	if(READ_BIT(USART3->SR, USART_SR_RXNE))
+	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
 	{
 		if(BufferHasMessage)
 		{
 			sensact::Console::Writeln("Buffer not yet processed!!!");
 		}
-		volatile uint8_t chartoreceive = (uint8_t)(USART3->DR); /* Receive data, clear flag */
+		volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->DR); /* Receive data, clear flag */
 		if(binaryMode && steadyClockMsecCnt-lastReceivedUARTChar > 10)
 		{
 			//reset binary mode after some time without data
@@ -109,5 +137,55 @@ void USART3_IRQHandler(void)
 			}
 		}
 	}
-	//USART1->ICR = UINT32_MAX;//clear all flags
+	//CONSOLE_USART->ICR = UINT32_MAX;//clear all flags
 }
+
+void NMI_Handler(void)
+{
+  HAL_RCC_NMI_IRQHandler();
+}
+
+void MemManage_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+
+void BusFault_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+void UsageFault_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+
+void DebugMon_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+void PVD_IRQHandler(void)
+{
+  //HAL_PWR_PVD_IRQHandler();
+}
+
+
+void FLASH_IRQHandler(void)
+{
+  //HAL_FLASH_IRQHandler();
+}
+
+
+void RCC_IRQHandler(void)
+{}
