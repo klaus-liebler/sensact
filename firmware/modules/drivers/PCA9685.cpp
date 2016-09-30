@@ -96,7 +96,7 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 
 	};
 	HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT,
-			data, 4, 0);
+			data, 4, 1000);
 
 }
 

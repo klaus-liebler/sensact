@@ -21,8 +21,15 @@ namespace drivers {
 	uint16_t cPCA9555::GetInput()
 	{
 		volatile uint16_t ret;
-		HAL_I2C_Mem_Read(i2c, ADDR, (uint16_t)ePCA9555Register::InputPort0, (uint16_t)I2C_MEMADD_SIZE_8BIT, (uint8_t*)&ret, 2, 100);
-		return ret;
+		if(HAL_I2C_Mem_Read(i2c, ADDR, (uint16_t)ePCA9555Register::InputPort0, (uint16_t)I2C_MEMADD_SIZE_8BIT, (uint8_t*)&ret, 2, 100)==HAL_OK)
+		{
+			return ret;
+		}
+		else
+		{
+			while(1);
+		}
+		return 0xFFFF;
 	}
 
 	bool cPCA9555::Setup()

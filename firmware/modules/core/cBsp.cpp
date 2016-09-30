@@ -736,7 +736,7 @@ ePushState BSP::GetDigitalInput(eInput i)
 
 bool BSP::ReceiveCANMessage(CANMessage* m) {
 
-	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 20) == HAL_OK) {
+	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 2) == HAL_OK) {
 		m->Length = (uint8_t)RxMessage.DLC;
 		int i = 0;
 		for (i = 0; i < m->Length; i++) {
