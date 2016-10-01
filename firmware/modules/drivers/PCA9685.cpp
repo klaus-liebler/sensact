@@ -108,10 +108,18 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 	uint8_t data[4] = { (uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0x1F), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0x1F)
 
 	};
-	if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT,
-			data, 4, 1000)!=HAL_OK)
+	if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
 	{
-		LOGE("i2c !HAL_OK");
+
+		if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+			{
+
+			if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+			{
+
+				LOGE("i2c !HAL_OK after three trials");
+			}
+		}
 	}
 }
 
