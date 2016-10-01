@@ -81,6 +81,7 @@ void BSP::Init(void) {
 	HAL_GPIO_Init(GPIOA, &gi);
 	InitAndTestUSART();
 
+	__I2C2_CLK_ENABLE();
 
 	//I2C
 	/*
@@ -102,8 +103,17 @@ void BSP::Init(void) {
 	BSP::i2c2.Init.OwnAddress2 = 0;
 	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
 	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-	HAL_I2C_Init(&BSP::i2c2);
-	LOGI(SUCCESSFUL_STRING, "I2C2");
+	if(HAL_I2C_Init(&BSP::i2c2)==HAL_OK)
+	{
+		LOGI(SUCCESSFUL_STRING, "I2C2");
+	}
+	else
+	{
+		LOGI(NOT_SUCCESSFUL_STRING, "I2C2");
+	}
+
+	SearchI2C("I2C2", &i2c2);
+
 
 	if(pca9685_ext.Setup())
 	{

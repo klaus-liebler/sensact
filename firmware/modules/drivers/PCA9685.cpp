@@ -11,6 +11,9 @@
 #include "stm32f1xx_hal.h"
 #endif
 #include "PCA9685.h"
+#define LOGLEVEL LEVEL_WARN
+#define LOGNAME "PCA96"
+#include "cLog.h"
 
 #define LEDn_ON_L(n)		((uint16_t)(0x06 + ((uint8_t)(n))*4))
 #define LEDn_ON_H(n)		(uint16_t)(0x07 + (n)*4)
@@ -33,11 +36,13 @@ namespace drivers {
 bool cPCA9685::Setup() {
 	if (HAL_I2C_IsDeviceReady((I2C_HandleTypeDef *) this->i2c, ADDR,
 			(uint32_t) 3, (uint32_t) 1000)!=HAL_OK) {
+		this->i2c=0;
 		return false;
 	}
 	uint8_t data = 1 << MODE1_SLEEP;
 	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
+		this->i2c=0;
 		return false;
 	}
 
@@ -49,6 +54,7 @@ bool cPCA9685::Setup() {
 	if(HAL_I2C_Mem_Write(i2c, ADDR, PRE_SCALE, I2C_MEMADD_SIZE_8BIT, &data, 1,
 			1000)!=HAL_OK)
 	{
+		this->i2c=0;
 		return false;
 	}
 
@@ -62,6 +68,7 @@ bool cPCA9685::Setup() {
 	data = (1 << MODE1_AI) | (1 << MODE1_ALLCALL);
 	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
+		this->i2c=0;
 		return false;
 	}
 
@@ -72,6 +79,7 @@ bool cPCA9685::Setup() {
 			| ((uint8_t)(outne) << MODE2_OUTNE0);
 	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE2, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
+		this->i2c=0;
 		return false;
 	}
 
@@ -91,12 +99,20 @@ bool cPCA9685::Setup() {
  */
 void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 		uint16_t OffValue) {
+	if(this->i2c==0)
+	{
+		LOGE("i2c device is null");
+		return;
+	}
 	// Optional: PCA9685_I2C_SlaveAtAddress(Address), might make things slower
 	uint8_t data[4] = { (uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0x1F), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0x1F)
 
 	};
-	HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT,
-			data, 4, 0);
+	if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT,
+			data, 4, 1000)!=HAL_OK)
+	{
+		LOGE("i2c !HAL_OK");
+	}
 
 }
 
@@ -108,6 +124,10 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
  * @retval	None
  */
 void cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
+	if(this->i2c==0)
+	{
+		return;
+	}
 	if (OnValue <= MAX_OUTPUT_VALUE && OffValue <= MAX_OUTPUT_VALUE) {
 		uint8_t data[4] = {(uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0xF), (uint8_t)(OffValue
 				& 0xFF), (uint8_t)((OffValue >> 8) & 0xF)
@@ -126,6 +146,10 @@ void cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
  * @retval	None
  */
 void cPCA9685::SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val) {
+	if(this->i2c==0)
+		{
+			return;
+		}
 	uint16_t offValue;
 	uint16_t onValue;
 	if(val == UINT16_MAX)

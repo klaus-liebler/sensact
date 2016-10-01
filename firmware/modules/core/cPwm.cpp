@@ -94,7 +94,7 @@ void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 	{
 		SetTargetRelative(4*step, now);
 	}
-	LOGD("%s sets PWM Value to %d", this->Id, currentLevel);
+	LOGD("%s sets PWM Value to %d", Name, currentLevel);
 }
 
 //gesendet vom 1BP
@@ -218,7 +218,7 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 
 void cPWM::SetDimLevel(uint8_t level) {
 
-	LOGD("SetDimLevel = %d", level);
+	//LOGD("SetDimLevel = %d", level);
 	currentLevel = level;
 	uint8_t i;
 	uint16_t val = cPWM::level2brightness[level];

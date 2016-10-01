@@ -440,7 +440,7 @@ void BSP::SearchI2C(const char* i2cName, I2C_HandleTypeDef *i2c)
 	uint8_t cnt=0;
 	for(uint8_t i=0;i<128;i++)
 	{
-		if(HAL_I2C_IsDeviceReady(i2c, i*2, 1, 1)==HAL_OK)
+		if(HAL_I2C_IsDeviceReady(i2c, i*2, 1, 10)==HAL_OK)
 		{
 			LOGI("Found device on address %d (%d)" , i, i*2);
 			cnt++;
@@ -736,7 +736,7 @@ ePushState BSP::GetDigitalInput(eInput i)
 
 bool BSP::ReceiveCANMessage(CANMessage* m) {
 
-	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 20) == HAL_OK) {
+	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 2) == HAL_OK) {
 		m->Length = (uint8_t)RxMessage.DLC;
 		int i = 0;
 		for (i = 0; i < m->Length; i++) {

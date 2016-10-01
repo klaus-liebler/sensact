@@ -48,7 +48,7 @@ void cMaster::Run(void) {
 			appCnt++;
 		}
 	}
-	LOGI("%u local applications have been configured. Now, sensact is pleased to be at your service.\r\n", appCnt);
+	LOGI("%u local applications have been configured. Now, %s is pleased to be at your service.\r\n", appCnt, MODEL::ModelString);
 
 	while (true) {
 		Time_t now = BSP::GetSteadyClock();

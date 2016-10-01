@@ -125,7 +125,7 @@ namespace Klli.Sensact.Config
                 }
 
             });
-                                                                                                                                    //Output Pin beginnt bei 05, weil die ersten vier fürs RGBW im Gäste-WC gebraucht werden
+                                                                                                                                    /
             SNSCT_L0_TECH_HS_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_CORR_C1), OutputRessource = OutputPin.O25 }); //RL7
 
             //PRTY
@@ -300,7 +300,7 @@ namespace Klli.Sensact.Config
             SNSCT_L1_LVNG_UP.Applications.AddRotaryEncoder(ID.ROTAR_L1_LVNG_B42, RotaryEncoder.ROTARYENCODER_1, InputPin.ROTAR_PUSH_1, ID.PWM___L1_LVNG_S);
             SNSCT_L1_LVNG_UP.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B43, InputPin.I07, ID.POWIT_L1_LVNG_W1);
             SNSCT_L1_LVNG_UP.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B44, InputPin.I08, ID.POWIT_L1_LVNG_C1);
-            SNSCT_L1_LVNG_UP.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_LVNG_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L2_CORR_24V), OutputRessources = new List<PwmPin> { PwmPin.P16, PwmPin.P17, PwmPin.P18, PwmPin.P19, PwmPin.P20, PwmPin.P21, PwmPin.P22, PwmPin.P23, PwmPin.P24, PwmPin.P25, PwmPin.P26, PwmPin.P27, PwmPin.P28 } });
+            SNSCT_L1_LVNG_UP.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_LVNG_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L2_CORR_24V), OutputRessources = new List<PwmPin> { PwmPin.P16, PwmPin.P18,  PwmPin.P20,  PwmPin.P22,  PwmPin.P24, PwmPin.P25, PwmPin.P26, PwmPin.P27, PwmPin.P28, PwmPin.P29, PwmPin.P30, PwmPin.P31 } });
 
             SNSCT_L0_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L1_LVNG_B11, ID.PUSHB_L1_LVNG_B12, InputPin.I23, InputPin.I22, ID.BLIND_LX_BACK_J1);
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B13, InputPin.I21, ID.POWIT_LX_BACK_W2);
