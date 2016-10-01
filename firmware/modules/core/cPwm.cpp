@@ -41,6 +41,7 @@ cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const ou
 
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
+	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Id, target);
 	SetTargetAbsolute(target, now);
 }
 
@@ -83,6 +84,7 @@ void cPWM::StopMove(Time_t now)
 //gesendet vom Inkrementalgeber
 void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 
+
 	if(targetLevel==0)
 	{
 		if(step>0)
@@ -94,12 +96,13 @@ void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 	{
 		SetTargetRelative(4*step, now);
 	}
-	LOGD("%s sets PWM Value to %d", Name, currentLevel);
+	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", this->Id, step, currentLevel);
 }
 
 //gesendet vom 1BP
 void cPWM::OnSTARTCommand(Time_t now)
 {
+	LOGD("%s OnSTARTCommand called", this->Id);
 	if(now-this->lastUserSignal> TIME_TO_FORGET_DIM_DIRECTION)
 	{
 		this->OneButtonDimDirection=eDirection::UP;
@@ -115,11 +118,13 @@ void cPWM::OnSTARTCommand(Time_t now)
 //gesendet vom 1PB
 void cPWM::OnSTOPCommand(Time_t now)
 {
+	LOGD("%s OnSTOPCommand called", this->Id);
 	StopMove(now);
 }
 
 void cPWM::OnUPCommand(Time_t now)
 {
+	LOGD("%s OnUPCommand called", this->Id);
 	MoveInDirection(eDirection::UP, now);
 }
 
@@ -127,6 +132,7 @@ void cPWM::OnUPCommand(Time_t now)
 void cPWM::OnTOGGLECommand(Time_t now)
 {
 	UNUSED(now);
+	LOGD("%s OnTOGGLECommand called", this->Id);
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
 	}

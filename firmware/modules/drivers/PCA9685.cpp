@@ -113,7 +113,6 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 	{
 		LOGE("i2c !HAL_OK");
 	}
-
 }
 
 /**
