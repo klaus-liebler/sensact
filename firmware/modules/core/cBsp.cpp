@@ -756,12 +756,12 @@ bool BSP::SendCANMessage(CANMessage* m) {
 	}
 	TxMessage.ExtId = m->Id;
 	if (HAL_CAN_Transmit(&hcan, 10)) {
-		LOGI("Sent CAN-Message for ID %d", m->Id);
+		LOGI("Sent CAN-Message for ID %s", MODEL::ApplicationNames[m->Id]);
 		return true;
 	}
 	else
 	{
-		LOGE("Failed to CAN-Message for ID %d", m->Id);
+		LOGE("Failed to send CAN-Message for ID %d", MODEL::ApplicationNames[m->Id]);
 	}
 	return false;
 }
