@@ -37,7 +37,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 13
+Sheet 1 21
 Title "Multi-HutschieneSTM32F1"
 Date "So 22 Mär 2015"
 Rev "0.2"
