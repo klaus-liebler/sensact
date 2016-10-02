@@ -97,12 +97,12 @@ bool cPCA9685::Setup() {
  * @param	OffValue: The value at which the output will turn off
  * @retval	None
  */
-void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
+bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 		uint16_t OffValue) {
 	if(this->i2c==0)
 	{
 		LOGE("i2c device is null");
-		return;
+		return false;
 	}
 	// Optional: PCA9685_I2C_SlaveAtAddress(Address), might make things slower
 	uint8_t data[4] = { (uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0x1F), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0x1F)
@@ -118,9 +118,11 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 			{
 
 				LOGE("i2c !HAL_OK after three trials");
+				return false;
 			}
 		}
 	}
+	return true;
 }
 
 /**
@@ -130,19 +132,28 @@ void cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
  * @param	OffValue: The value at which the outputs will turn off
  * @retval	None
  */
-void cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
+bool cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
 	if(this->i2c==0)
 	{
-		return;
+		return false;
 	}
-	if (OnValue <= MAX_OUTPUT_VALUE && OffValue <= MAX_OUTPUT_VALUE) {
-		uint8_t data[4] = {(uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0xF), (uint8_t)(OffValue
-				& 0xFF), (uint8_t)((OffValue >> 8) & 0xF)
-
-		};
-		HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data,
-				4, 1000);
+	if (OnValue <= MAX_OUTPUT_VALUE && OffValue <= MAX_OUTPUT_VALUE)
+	{
+		uint8_t data[4] = {(uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0xF), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0xF) };
+		if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+		{
+			if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+			{
+				if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+				{
+					LOGE("i2c !HAL_OK after three trials");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
+	return false;
 }
 
 /**
@@ -152,11 +163,11 @@ void cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
  * @param	val: The duty cycle for the output
  * @retval	None
  */
-void cPCA9685::SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val) {
+bool cPCA9685::SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val) {
 	if(this->i2c==0)
-		{
-			return;
-		}
+	{
+		return false;
+	}
 	uint16_t offValue;
 	uint16_t onValue;
 	if(val == UINT16_MAX)
@@ -174,7 +185,7 @@ void cPCA9685::SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val) {
 		onValue= 0;//((uint16_t)Output)*0xFF; //for phase shift to reduce EMI
 		offValue = (val>>4);// + onValue; //to make a 12bit-Value
 	}
-	SetOutput(Output, onValue, offValue);
+	return SetOutput(Output, onValue, offValue);
 }
 
 }

@@ -765,7 +765,7 @@ bool BSP::SendCANMessage(CANMessage* m) {
 		TxMessage.Data[i] = m->Data[i];
 	}
 	TxMessage.ExtId = m->Id;
-	if (HAL_CAN_Transmit(&hcan, 10)) {
+	if (HAL_CAN_Transmit(&hcan, 20)) {
 		LOGI("Sent CAN-Message for ID %d", m->Id);
 		return true;
 	}
@@ -1095,7 +1095,10 @@ void BSP::SetPWM(ePWMOutput po, uint16_t val) {
 	{
 		ipo-=64;
 		if (ipo < 16) {
-			pca9685_ext.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo), val);
+			if(!pca9685_ext.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo), val))
+			{
+				ErrorCounters[I2C_ERROR]++:
+			}
 		}
 	}
 #endif
@@ -1124,9 +1127,15 @@ void BSP::SetPWM(ePWMOutput po, uint16_t val) {
 	{
 		ipo-=64;
 		if (ipo < 16) {
-			pca9685_U7.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo), val);
+			if(!pca9685_U7.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo), val))
+			{
+				ErrorCounters[I2C_ERROR]++;
+			}
 		} else{
-			pca9685_U9.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo - 16), val);
+			if(!pca9685_U9.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo - 16), val))
+			{
+				ErrorCounters[I2C_ERROR]++;
+			}
 		}
 	}
 	else
