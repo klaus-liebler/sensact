@@ -123,7 +123,10 @@ uint32_t BSP::inputRequests[] = {0xFFFFFF80, UINT32_MAX, 0, UINT32_MAX};
 #undef C
 #undef D
 
-
+uint8_t BSP::ErrorCounters[3] = {0,0,0};
+const uint8_t CAN_ERROR=0;
+const uint8_t I2C_ERROR=1;
+const uint8_t OWI_ERROR=2;
 
 uint32_t BSP::poweredOutputState[] = {0, 0, 0, 0};
 uint32_t BSP::lastCommittedPoweredOutputState[] = {0, 0, 0, 0};
@@ -592,7 +595,14 @@ void BSP::DoEachCycle(Time_t now) {
 
 	//StartConversion und 1 sek später reihum einsammeln
 	if (now > nextLedToggle) {
-		nextLedToggle += 400;
+		for(uint8_t i=0;i<COUNTOF(BSP::ErrorCounters);i++)
+		{
+			if(BSP::ErrorCounters[i]!=0)
+			{
+				LOGW("ErrorCounters[%i] = %i", i, BSP::ErrorCounters[i]);
+			}
+		}
+		nextLedToggle += 1000;
 	}
 #endif
 #ifdef SENSACTHS07
@@ -762,6 +772,7 @@ bool BSP::SendCANMessage(CANMessage* m) {
 	else
 	{
 		LOGE("Failed to CAN-Message for ID %d", m->Id);
+		(ErrorCounters[CAN_ERROR])++;
 	}
 	return false;
 }

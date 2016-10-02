@@ -75,6 +75,9 @@ namespace sensact {
 
 class BSP {
 private:
+
+
+
 	static uint32_t pwmRequests[4]; //bit level
 
 	static uint32_t poweredOutputRequests[4];//bit level
@@ -126,6 +129,8 @@ public:
 	static const uint8_t T1H_WS2812 =50; //50,4
 	static const uint8_t T1H_WS2811=18; //18 half Datasheet!
 	static const uint8_t T0H_WS2811=43; //43,2 half Datasheet!
+
+	static uint8_t ErrorCounters[3];
 
 	static void Init();
 	static bool RequestPoweredOutput(ePoweredOutput r);
