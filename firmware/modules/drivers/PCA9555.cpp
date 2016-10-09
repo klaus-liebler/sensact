@@ -25,10 +25,6 @@ namespace drivers {
 		{
 			return ret;
 		}
-		else
-		{
-			while(1);
-		}
 		return 0xFFFF;
 	}
 

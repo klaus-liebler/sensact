@@ -84,7 +84,7 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 	{
 		return true;
 	}
-	if ((uint16_t) destinationApp < CMD_EVT_OFFSET) {
+	if ((uint16_t) destinationApp < (uint16_t)eApplicationID::CNT) {
 		cApplication * const app = MODEL::Glo2locCmd[(uint16_t) destinationApp];
 		if (app != NULL) {
 			//only in this case, the message can be processed local; no need to send it to can
@@ -100,10 +100,10 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 			for (i = 0; i < payloadLength; i++) {
 				m.Data[i+1] = payload[i];
 			}
-			BSP::SendCANMessage(&m);
+			return BSP::SendCANMessage(&m);
 		}
-		return true;
 	}
+	LOGE("Trying to send to an invalid application id %i", (uint16_t)destinationApp);
 	return false;
 }
 

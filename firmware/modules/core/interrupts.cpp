@@ -30,31 +30,31 @@ extern uint64_t steadyClockMsecCnt;
 
 extern "C" void SysTick_Handler(void)
 {
-  HAL_IncTick();
-  HAL_SYSTICK_IRQHandler();
+	HAL_IncTick();
+	HAL_SYSTICK_IRQHandler();
 #ifdef DCF77
-  sensact::cDCF77::CallEveryMillisecond(HAL_GetTick());
+	sensact::cDCF77::CallEveryMillisecond(HAL_GetTick());
 #endif
-  systemClockMsecCnt++;
-  steadyClockMsecCnt++;
+	systemClockMsecCnt++;
+	steadyClockMsecCnt++;
 }
 #ifdef SENSACTHS07
 void ADC_IRQHandler(void)
 {
-  //HAL_ADC_IRQHandler(&AdcHandle);
+	//HAL_ADC_IRQHandler(&AdcHandle);
 }
 #endif
 #ifdef SENSACTUP02
 extern DMA_HandleTypeDef hdma_tim1_ch1;
 void DMA1_Channel2_IRQHandler(void)
 {
-  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+	/* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
 
-  /* USER CODE END DMA1_Channel2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_tim1_ch1);
-  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+	/* USER CODE END DMA1_Channel2_IRQn 0 */
+	HAL_DMA_IRQHandler(&hdma_tim1_ch1);
+	/* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
 
-  /* USER CODE END DMA1_Channel2_IRQn 1 */
+	/* USER CODE END DMA1_Channel2_IRQn 1 */
 }
 #endif
 
@@ -64,10 +64,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
   // Get the converted value of regular channel
   uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
 }
-*/
+ */
 void DMA2_Stream0_IRQHandler(void)
 {
-  //HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
+	//HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
 }
 #ifdef SENSACTHS07
 void EXTI9_5_IRQHandler(void)
@@ -142,48 +142,80 @@ void USART1_IRQHandler(void)
 
 void NMI_Handler(void)
 {
-  HAL_RCC_NMI_IRQHandler();
+	sensact::Console::Writeln("NMI_Handler");
+	HAL_RCC_NMI_IRQHandler();
+}
+
+void HardFault_Handler(void)
+{
+	sensact::Console::Writeln("HardFault_Handler");
+	while (1)
+	{
+	}
 }
 
 void MemManage_Handler(void)
 {
-  while (1)
-  {
-  }
+	sensact::Console::Writeln("MemManage_Handler");
+	while (1)
+	{
+	}
 }
 
 
 void BusFault_Handler(void)
 {
-  while (1)
-  {
-  }
+	sensact::Console::Writeln("BusFault_Handler");
+	while (1)
+	{
+	}
 }
 
 void UsageFault_Handler(void)
 {
-  while (1)
-  {
-  }
+	sensact::Console::Writeln("UsageFault_Handler");
+	while (1)
+	{
+	}
 }
 
+void SVC_Handler(void)
+{
+	sensact::Console::Writeln("SVC_Handler");
+	while (1)
+	{
+	}
+}
 
 void DebugMon_Handler(void)
 {
-  while (1)
-  {
-  }
+	sensact::Console::Writeln("DebugMon_Handler");
+	while (1)
+	{
+	}
 }
+
+void PendSV_Handler(void)
+{
+	sensact::Console::Writeln("PendSV_Handler");
+	while (1)
+	{
+	}
+}
+
+
 
 void PVD_IRQHandler(void)
 {
-  //HAL_PWR_PVD_IRQHandler();
+	sensact::Console::Writeln("PVD_IRQHandler");
+	//HAL_PWR_PVD_IRQHandler();
 }
 
 
 void FLASH_IRQHandler(void)
 {
-  //HAL_FLASH_IRQHandler();
+	sensact::Console::Writeln("FLASH_IRQHandler");
+	//HAL_FLASH_IRQHandler();
 }
 
 

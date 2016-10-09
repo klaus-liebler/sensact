@@ -129,7 +129,8 @@ enum struct ePCA9685Output : uint16_t
 class cPCA9685{
 private:
 	const uint8_t DEVICE_ADDRESS_BASE= 0x80;
-	const uint8_t MODE1=0x00;
+	static const uint8_t SWRST = 0b00000110;
+	static const uint8_t MODE1=0x00;
 	const uint8_t MODE1_ALLCALL	=0;
 	const uint8_t MODE1_SUB3=1;
 	const uint8_t MODE1_SUB2=2;
@@ -163,6 +164,7 @@ private:
 	ePCA9685_Frequency freq;
 public:
 	bool Setup();
+	static bool SoftwareReset(I2C_HandleTypeDef *i2c);
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);
 	bool SetAll(uint16_t OnValue, uint16_t OffValue);
 	bool SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val);

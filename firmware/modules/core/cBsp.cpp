@@ -339,7 +339,7 @@ void BSP::Search1Wire(bool alarmOnly)
 
 void BSP::Init1wire()
 {
-#if (defined(SENSACTHS07) || defined(SENSACTUP02))
+#if (defined(SENSACTHS07))
 	poweredOutputState[WORD_1WI] = 0;
 	lastCommittedPoweredOutputState[WORD_1WI] = 0;
 	inputRequests[WORD_1WI] = 0xFFFFFFFF;
@@ -641,6 +641,7 @@ void BSP::DoEachCycle(Time_t now) {
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
 	}
 #endif
+	(void)now;
 }
 
 static void BlockOnDoubleRegister(uint32_t *reg, uint8_t bitpos, const char * name)
@@ -764,14 +765,15 @@ bool BSP::SendCANMessage(CANMessage* m) {
 	for (i = 0; i < m->Length; i++) {
 		TxMessage.Data[i] = m->Data[i];
 	}
+
 	TxMessage.ExtId = m->Id;
-	if (HAL_CAN_Transmit(&hcan, 10)) {
-		LOGI("Sent CAN-Message for ID %s", MODEL::ApplicationNames[m->Id]);
+	if (HAL_CAN_Transmit(&hcan, 20)==HAL_OK) {
+		LOGI("Sent CAN-Message for ID %d", m->Id); //not reference to ApplicationNames, because it can also be an event!
 		return true;
 	}
 	else
 	{
-		LOGE("Failed to send CAN-Message for ID %d", MODEL::ApplicationNames[m->Id]);
+		LOGE("Failed to send CAN-Message for ID %d", m->Id); //not reference to ApplicationNames, because it can also be an event!
 		(ErrorCounters[CAN_ERROR])++;
 	}
 	return false;
@@ -1097,7 +1099,7 @@ void BSP::SetPWM(ePWMOutput po, uint16_t val) {
 		if (ipo < 16) {
 			if(!pca9685_ext.SetDutyCycleForOutput((drivers::ePCA9685Output)(ipo), val))
 			{
-				ErrorCounters[I2C_ERROR]++:
+				ErrorCounters[I2C_ERROR]++;
 			}
 		}
 	}

@@ -114,16 +114,24 @@ void BSP::Init(void) {
 
 	SearchI2C("I2C2", &i2c2);
 
-
-	if(pca9685_ext.Setup())
+	if(drivers::cPCA9685::SoftwareReset(&BSP::i2c2))
 	{
-		LOGI(SUCCESSFUL_STRING, "pca9685_ext");
-		CLEAR_BIT(BSP::pwmRequests[WORD_I2C], 0x0000FFFF);
+		if(pca9685_ext.Setup())
+		{
+			LOGI(SUCCESSFUL_STRING, "pca9685_ext");
+			CLEAR_BIT(BSP::pwmRequests[WORD_I2C], 0x0000FFFF);
+		}
+		else
+		{
+			LOGE(NOT_SUCCESSFUL_STRING, "pca9685_ext");
+		}
 	}
 	else
 	{
-		LOGE(NOT_SUCCESSFUL_STRING, "pca9685_ext");
+		LOGE(NOT_SUCCESSFUL_STRING, "General reset of i2c devices");
 	}
+
+
 
 	//CAN
 	/*
@@ -166,6 +174,13 @@ void BSP::Init(void) {
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOB, &gi);
+	//Shutdown 5v
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+	gi.Mode = GPIO_MODE_OUTPUT_OD;
+	gi.Pin = GPIO_PIN_15;
+	gi.Pull = GPIO_NOPULL;
+	gi.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOC, &gi);
 	//Enable PoweredOutputs
 	gi.Mode=GPIO_MODE_OUTPUT_PP;
 	gi.Pin=GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
@@ -181,7 +196,7 @@ void BSP::Init(void) {
 
 	InitPWM();
 
-	Init1wire();
+	//Init1wire();
 	//Enable RGB-LED
 	//v02: PA8, T1.1
 

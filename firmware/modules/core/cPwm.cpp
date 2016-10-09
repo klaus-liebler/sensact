@@ -215,7 +215,7 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
 	{
-		LOGD("%s sends heartbeat to %s", Name, N(standbyController));
+		LOGD("%s sends heartbeat to %s at level %i", Name, N(standbyController), currentLevel);
 		SendHEARTBEATCommand(standbyController, now);
 		lastHeartbeatToStandbycontroller=now;
 	}

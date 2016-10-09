@@ -23,6 +23,17 @@
 
 namespace drivers {
 
+
+bool cPCA9685::SoftwareReset(I2C_HandleTypeDef *i2c)
+{
+	uint8_t data = cPCA9685::SWRST;
+	if(HAL_I2C_Master_Transmit(i2c, 0x00, &data, 1, 10)==HAL_OK)
+	{
+		return true;
+	}
+	return false;
+}
+
 /* Private variables ---------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /* Functions -----------------------------------------------------------------*/
@@ -39,6 +50,10 @@ bool cPCA9685::Setup() {
 		this->i2c=0;
 		return false;
 	}
+
+	//Software Reset to general call address
+
+
 	uint8_t data = 1 << MODE1_SLEEP;
 	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
@@ -108,21 +123,14 @@ bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 	uint8_t data[4] = { (uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0x1F), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0x1F)
 
 	};
-	if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+	uint8_t trials = 10;
+	HAL_StatusTypeDef status = HAL_ERROR;
+	while(status != HAL_OK && trials > 0)
 	{
-
-		if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
-			{
-
-			if(HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
-			{
-
-				LOGE("i2c !HAL_OK after three trials");
-				return false;
-			}
-		}
+		status=HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5);
+		trials--;
 	}
-	return true;
+	return status == HAL_OK;
 }
 
 /**
@@ -135,23 +143,19 @@ bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 bool cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
 	if(this->i2c==0)
 	{
+		LOGE("i2c device is null");
 		return false;
 	}
 	if (OnValue <= MAX_OUTPUT_VALUE && OffValue <= MAX_OUTPUT_VALUE)
 	{
 		uint8_t data[4] = {(uint8_t)(OnValue & 0xFF), (uint8_t)((OnValue >> 8) & 0xF), (uint8_t)(OffValue & 0xFF), (uint8_t)((OffValue >> 8) & 0xF) };
-		if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
+		uint8_t trials = 10;
+		HAL_StatusTypeDef status = HAL_ERROR;
+		while(status != HAL_OK && trials > 0)
 		{
-			if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
-			{
-				if(HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5)!=HAL_OK)
-				{
-					LOGE("i2c !HAL_OK after three trials");
-					return false;
-				}
-			}
+			status=HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5);
 		}
-		return true;
+		return status == HAL_OK;
 	}
 	return false;
 }
@@ -166,6 +170,7 @@ bool cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
 bool cPCA9685::SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val) {
 	if(this->i2c==0)
 	{
+		LOGE("i2c device is null");
 		return false;
 	}
 	uint16_t offValue;
