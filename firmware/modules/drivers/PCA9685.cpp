@@ -125,12 +125,32 @@ bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 	};
 	uint8_t trials = 10;
 	HAL_StatusTypeDef status = HAL_ERROR;
-	while(status != HAL_OK && trials > 0)
+	while(trials > 0)
 	{
 		status=HAL_I2C_Mem_Write(i2c, ADDR, LEDn_ON_L(Output), I2C_MEMADD_SIZE_8BIT, data, 4, 5);
+		if(status==HAL_OK)
+		{
+			break;
+		}
+		ReinitI2c();
 		trials--;
 	}
 	return status == HAL_OK;
+}
+
+void cPCA9685::ReinitI2c()
+{
+#ifdef STM32F1
+	LOGW("Resetting i2c");
+	CLEAR_BIT(i2c->Instance->CR1,  I2C_CR1_PE);
+	SET_BIT(i2c->Instance->CR1, I2C_CR1_SWRST);
+	i2c->Instance->CR2=36;
+	i2c->Instance->TRISE=37;
+	i2c->Instance->CCR=180;
+	i2c->Instance->OAR1=I2C_ADDRESSINGMODE_7BIT;
+	i2c->Instance->OAR2=0;
+	SET_BIT(i2c->Instance->CR1,  I2C_CR1_PE);
+#endif
 }
 
 /**

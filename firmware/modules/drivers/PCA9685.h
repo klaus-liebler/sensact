@@ -165,6 +165,7 @@ private:
 public:
 	bool Setup();
 	static bool SoftwareReset(I2C_HandleTypeDef *i2c);
+	void ReinitI2c();
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);
 	bool SetAll(uint16_t OnValue, uint16_t OffValue);
 	bool SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val);
