@@ -142,8 +142,8 @@ void cPCA9685::ReinitI2c()
 {
 #ifdef STM32F1
 	LOGW("Resetting i2c");
-	CLEAR_BIT(i2c->Instance->CR1,  I2C_CR1_PE);
 	SET_BIT(i2c->Instance->CR1, I2C_CR1_SWRST);
+	CLEAR_BIT(i2c->Instance->CR1, I2C_CR1_SWRST);
 	i2c->Instance->CR2=36;
 	i2c->Instance->TRISE=37;
 	i2c->Instance->CCR=180;
