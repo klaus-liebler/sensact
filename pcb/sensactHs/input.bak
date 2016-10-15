@@ -293,11 +293,11 @@ PA1
 Text Label 1650 6050 0    60   ~ 0
 PA2
 Text Label 1650 6150 0    60   ~ 0
-PA3
+PB1
 Text Label 1650 6250 0    60   ~ 0
 PC4
 Text Label 1650 6350 0    60   ~ 0
-PC5
+PB0
 Text Label 1650 6450 0    60   ~ 0
 PA6
 Text Label 1650 6550 0    60   ~ 0

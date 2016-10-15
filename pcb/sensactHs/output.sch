@@ -151,7 +151,7 @@ PB5
 Text Label 1800 4350 3    60   ~ 0
 PB3
 Text Label 900  3650 3    60   ~ 0
-PC14
+PC13
 Text Label 1500 4350 3    60   ~ 0
 PB4
 $Comp
@@ -251,17 +251,6 @@ F 1 "u1" H 4425 850 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805_HandSoldering" H 4438 800 30  0001 C CNN
 F 3 "" H 4400 950 60  0000 C CNN
 	1    4400 950 
-	1    0    0    -1  
-$EndComp
-$Comp
-L C C71
-U 1 1 563558EB
-P 4200 950
-F 0 "C71" H 4225 1050 50  0000 L CNN
-F 1 "u1" H 4225 850 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 4238 800 30  0001 C CNN
-F 3 "" H 4200 950 60  0000 C CNN
-	1    4200 950 
 	1    0    0    -1  
 $EndComp
 Text Label 2150 3150 0    60   ~ 0
@@ -431,20 +420,9 @@ F 3 "" H 5400 950 60  0000 C CNN
 	1    5400 950 
 	1    0    0    -1  
 $EndComp
-$Comp
-L C C70
-U 1 1 563B98FB
-P 4000 950
-F 0 "C70" H 4025 1050 50  0000 L CNN
-F 1 "u1" H 4025 850 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 4038 800 30  0001 C CNN
-F 3 "" H 4000 950 60  0000 C CNN
-	1    4000 950 
-	1    0    0    -1  
-$EndComp
 Text GLabel 1200 3650 1    60   BiDi ~ 0
 MOSI1
-Text GLabel 4800 6300 3    60   BiDi ~ 0
+Text GLabel 6450 7050 3    60   BiDi ~ 0
 MISO1
 Text GLabel 1050 3650 1    60   BiDi ~ 0
 SCK1
@@ -592,7 +570,7 @@ PB5
 Text Label 5850 4350 3    60   ~ 0
 PB3
 Text Label 4950 3650 3    60   ~ 0
-PC14
+PC13
 Text Label 5550 4350 3    60   ~ 0
 PB4
 $Comp
@@ -1204,9 +1182,9 @@ Wire Wire Line
 Wire Wire Line
 	8150 4700 7050 4700
 Wire Wire Line
-	4950 3650 4950 6100
+	4950 3650 4950 6750
 Wire Wire Line
-	5100 3650 5100 6000
+	5100 3650 5100 6700
 Wire Wire Line
 	8150 5500 7050 5500
 Wire Wire Line
@@ -1229,8 +1207,6 @@ Wire Wire Line
 	5750 5800 5700 5800
 Wire Wire Line
 	5450 5900 5750 5900
-Wire Wire Line
-	5750 6300 4800 6300
 Wire Wire Line
 	5750 6200 5700 6200
 Wire Wire Line
@@ -1319,4 +1295,63 @@ Wire Wire Line
 	10000 1350 10000 1100
 Wire Wire Line
 	10000 1100 9800 1100
+$Comp
+L JUMPER3 JP7
+U 1 1 5802D42C
+P 5200 6900
+F 0 "JP7" H 5250 6800 50  0000 L CNN
+F 1 "JUMPER3" H 5200 7000 50  0000 C BNN
+F 2 "sensact:SMD-solder-bridge-3pin" H 5200 6900 50  0001 C CNN
+F 3 "" H 5200 6900 50  0000 C CNN
+	1    5200 6900
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	5200 6300 5750 6300
+Wire Wire Line
+	5200 6300 5200 6800
+$Comp
+L CONN_01X04 P6
+U 1 1 5802D9E9
+P 5900 7050
+F 0 "P6" H 5900 7300 50  0000 C CNN
+F 1 "CONN_01X04" V 6000 7050 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x02" H 5900 7050 50  0001 C CNN
+F 3 "" H 5900 7050 50  0000 C CNN
+	1    5900 7050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 6900 5700 6900
+Wire Wire Line
+	4950 6750 5500 6750
+Wire Wire Line
+	5500 6750 5500 7100
+Connection ~ 4950 6100
+Wire Wire Line
+	5100 6700 5550 6700
+Wire Wire Line
+	5550 6700 5550 7200
+Connection ~ 5100 6000
+Wire Wire Line
+	5550 7200 5700 7200
+Wire Wire Line
+	5500 7100 5700 7100
+Wire Wire Line
+	5700 7000 5400 7000
+Wire Wire Line
+	5400 7000 5400 7150
+Wire Wire Line
+	5400 7150 4950 7150
+Wire Wire Line
+	5600 6900 5650 6900
+Wire Wire Line
+	5600 6700 6450 6700
+Wire Wire Line
+	6450 6700 6450 7050
+Connection ~ 5600 6900
+Wire Wire Line
+	5600 6900 5600 6700
+Wire Wire Line
+	4950 7150 4950 6900
 $EndSCHEMATC
