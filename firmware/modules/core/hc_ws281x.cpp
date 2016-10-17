@@ -32,7 +32,7 @@ const cRGB cWs281x::Green={0,125,0};
 const cRGB cWs281x::Purple={125,0,125};
 const cRGB cWs281x::Teal={0,125,125};
 const cRGB cWs281x::Navy={0,0,125};
-const cRGB cWs281x::Palette[] = {Black, White, Red, Lime, Blue, Yellow, Cyan, Magenta, Silver, Gray, Maroon, Olive, Green, Purple, Teal, Navy};
+const cRGB cWs281x::Palette[] = {White, Red, Lime, Blue, Yellow, Cyan, Magenta, Silver, Gray, Maroon, Olive, Green, Purple, Teal, Navy, Black, };
 
 
 cWs281x::cWs281x(const char* name, eApplicationID id, eWsVariant variant):cApplication(name, id, eAppType::RGBLED), wsVariant(variant)

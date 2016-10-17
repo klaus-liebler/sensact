@@ -7,6 +7,12 @@
 #include <console.h>
 #include "bh1750.h"
 #include "cBrightnessSensor.h"
+#include "cWs281x.h"
+
+#define RGB_SUPPLY_PORT GPIOA
+#define RGB_SUPPLY_PIN GPIO_PIN_15
+#define LED_PORT GPIOB
+#define LED_PIN 12
 
 DMA_HandleTypeDef hdma_tim1_ch1;
 
@@ -174,25 +180,24 @@ void BSP::Init(void) {
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOB, &gi);
-	//Shutdown 5v
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+
+	//Enable 5v-Supply for RGB LED
+	HAL_GPIO_WritePin(RGB_SUPPLY_PORT, RGB_SUPPLY_PIN, GPIO_PIN_SET);
 	gi.Mode = GPIO_MODE_OUTPUT_OD;
-	gi.Pin = GPIO_PIN_15;
+	gi.Pin = RGB_SUPPLY_PIN;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOC, &gi);
+	HAL_GPIO_Init(RGB_SUPPLY_PORT, &gi);
+
 	//Enable PoweredOutputs
 	gi.Mode=GPIO_MODE_OUTPUT_PP;
 	gi.Pin=GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOC, &gi);
-	int i=0;
-	for(i=0;i<5;i++)
-	{
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_12);
-		HAL_Delay(100);
-	}
+	HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_RESET);
+	HAL_Delay(200);
+	HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_SET);
 
 	InitPWM();
 
@@ -290,20 +295,20 @@ void BSP::Init(void) {
 	}
 #endif
 
-
-#ifdef WS2812_TEST
-	cWs281x x(eApplicationID::MASTER, eWsVariant::WS2812B);
+	//Let the RGB LED blink
+	cWs281x x("WS2812",eApplicationID::MASTER, eWsVariant::WS2812B);
 	x.Setup();
+	HAL_Delay(200);
 	int cnt=0;
-	while(true)
+	while(cnt<10)
 	{
 		x.SetAllPixelRGB(cWs281x::Palette[cnt]);
 		x.Commit();
-		HAL_Delay(500);
+		HAL_Delay(200);
 		cnt++;
-		if(cnt==16) cnt=0;
 	}
-#endif
+	//and deactivate the RGB LED
+	HAL_GPIO_WritePin(RGB_SUPPLY_PORT, RGB_SUPPLY_PIN, GPIO_PIN_RESET);
 return;
 }
 

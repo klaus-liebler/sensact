@@ -12,7 +12,7 @@
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_WARN
+#define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "LIBAR"
 #include "cLog.h"
 
@@ -32,10 +32,14 @@ cLightbarrier::cLightbarrier(const char* name, const eApplicationID id, const eI
 
 void cLightbarrier::DoEachCycle(Time_t now) {
 	ePushState currentState = BSP::GetDigitalInput(this->input);
+	if(activeSignalLevel)
+	{
+		currentState=currentState==ePushState::PRESSED?ePushState::RELEASED:ePushState::PRESSED;
+	}
 	if (this->state == ePushState::RELEASED
 			&& currentState == ePushState::PRESSED) {
 
-		LOGD("%s sends ON command to  %d ", Name, MODEL::ApplicationNames[(uint16_t)brightnessSensor]);
+		LOGD("%s sends ON command to  %s ", Name, N(brightnessSensor));
 		this->state = ePushState::PRESSED;
 		this->lastChange = now;
 		if(brightnessSensor==eApplicationID::NO_APPLICATION)

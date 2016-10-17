@@ -14,9 +14,10 @@
         SNSCT_L2_BATH_UP,
 
         //Keller
-        PUSHB_L0_CORR_B11, //STRS.W1
-        PUSHB_L0_CORR_B21,
-        PUSHB_L0_CORR_B31,
+        PUSHB_L0_CORR_B11, //STRS.W1. Das ist immer der rechte Taster
+        PUSHB_L0_CORR_B21, // das ist der linke Taster vor dem Technikraum
+        PUSHB_L0_CORR_B31, //das ist der linke Taster vor dem Saunaraum
+        //Der linke Taster vor dem Partyraum wird mit dem rechten parallel geschaltet
         POWIT_L0_CORR_C1,
         SCLIM_L0_CORR_AIR,
         PUSHB_L0_PRTY_B11, //up
@@ -97,6 +98,7 @@
         PUSHB_L1_KTCH_B27, //Rollo Garage hoch
         PUSHB_L1_KTCH_B28, // ...runter
         PUSHB_L1_KTCH_B31, //Spot S5
+        PUSHB_L1_KTCH_B32, //für zukünftige Erweiterung, falls hier ein Doppeltaster hinkommt
         POWIT_L1_KTCH_C1,
         PWM___L1_KTCH_C1,
         BLIND_L1_KTCH_J1,
@@ -224,11 +226,8 @@
         PWM___L2_BATH_S,
         POWIT_L2_BATH_P1,
         POWIT_L2_BATH_P2,
-        RGBW__L2_BATH_W,
-        //RGBW__L2_BATH_W1, //oben auf T-Wand
-        //RGBW__L2_BATH_W2, //Deko in den Wandfächern
-        //RGBW__L2_BATH_W3, // Dekostrahler im Boden
-        //RGBW__L2_BATH_W4, //Reserve; für Sternenhimmel
+        RGBW__L2_BATH_W, //Umfasst die komplette Bad-Dekobeleuchtung, eigene Applikation schreiben
+        //Bodenbeleuchtung, Seifenkastenbeleuchtung, T-Deckenbeleuchtung, Sternenhimmel
         SCLIM_L2_BATH_AIR,
         STEMP_L2_BATH_FLOOR,
         SWIND_L2_BATH,
@@ -316,8 +315,6 @@
         PUSHB_L2_WORK_B13,
         BLIND_L2_WORK_J1,
         PWM___L2_WORK_S,
-        //PWM___L2_WORK_S1,
-        //PWM___L2_WORK_S2,
         SCLIM_L2_WORK_AIR,
         STEMP_L2_WORK_FLOOR,
         SWIND_L2_WORK,
