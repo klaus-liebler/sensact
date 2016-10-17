@@ -293,21 +293,21 @@ PA1
 Text Label 1650 6050 0    60   ~ 0
 PA2
 Text Label 1650 6150 0    60   ~ 0
-PA3
+PB1
 Text Label 1650 6250 0    60   ~ 0
-PA4
+PC4
 Text Label 1650 6350 0    60   ~ 0
-PA5
+PB0
 Text Label 1650 6450 0    60   ~ 0
 PA6
 Text Label 1650 6550 0    60   ~ 0
 PA7
 Text Label 1650 6650 0    60   ~ 0
-PC4
+PA4
 Text Label 1650 6750 0    60   ~ 0
-PB1
+PA5
 Text Label 1650 6850 0    60   ~ 0
-PB0
+PA3
 $Comp
 L GND #PWR06
 U 1 1 563E0FE5
@@ -528,9 +528,9 @@ F 3 "" H 10750 2950 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Text Label 10850 2400 2    60   ~ 0
-PC2
+PB7
 Text Label 10900 4300 2    60   ~ 0
-PC3
+PB6
 $Comp
 L GND #PWR012
 U 1 1 57EDB38F
