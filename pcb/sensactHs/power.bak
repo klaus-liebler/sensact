@@ -974,4 +974,6 @@ $EndComp
 Wire Wire Line
 	900  3550 900  3750
 Connection ~ 900  3650
+Text Label 9750 2850 0    60   ~ 0
+CANH2
 $EndSCHEMATC
