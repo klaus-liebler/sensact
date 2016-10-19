@@ -150,8 +150,6 @@ Text Label 1950 4350 3    60   ~ 0
 PB5
 Text Label 1800 4350 3    60   ~ 0
 PB3
-Text Label 900  3650 3    60   ~ 0
-PC13
 Text Label 1500 4350 3    60   ~ 0
 PB4
 $Comp
@@ -569,8 +567,6 @@ Text Label 6000 4350 3    60   ~ 0
 PB5
 Text Label 5850 4350 3    60   ~ 0
 PB3
-Text Label 4950 3650 3    60   ~ 0
-PC13
 Text Label 5550 4350 3    60   ~ 0
 PB4
 $Comp
@@ -1041,7 +1037,7 @@ Wire Wire Line
 Wire Wire Line
 	4100 4700 3000 4700
 Wire Wire Line
-	900  3650 900  6100
+	900  2350 900  6100
 Wire Wire Line
 	1050 3650 1050 6000
 Wire Wire Line
@@ -1182,7 +1178,7 @@ Wire Wire Line
 Wire Wire Line
 	8150 4700 7050 4700
 Wire Wire Line
-	4950 3650 4950 7200
+	4950 2350 4950 7200
 Wire Wire Line
 	5100 3650 5100 6700
 Wire Wire Line
@@ -1330,4 +1326,11 @@ Wire Wire Line
 	5550 7000 5700 7000
 Wire Wire Line
 	4950 7200 5700 7200
+Wire Wire Line
+	4950 2350 900  2350
+Wire Wire Line
+	3350 2350 3350 1850
+Connection ~ 3350 2350
+Text GLabel 3350 1850 0    60   BiDi ~ 0
+LAT
 $EndSCHEMATC
