@@ -18,15 +18,16 @@ namespace Klli.Sensact.Config
 
         
 
+        
+
         public static bool CheckAndPrepare(ModelContainer mc)
         {
+
+            //preFill predefined indices
+            
+
             HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
-
-      
-            mc.NextFreeIndex = 1; //0 has specific meaning
-
-
-            SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = 0, Node = null };
+            SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = mc.GetIndex("MASTER"), Node = null };
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
             mc.index2app[0] = masterApp;
             foreach (Node n in mc.Model.Nodes)
@@ -58,10 +59,9 @@ namespace Klli.Sensact.Config
                     SensactApplicationContainer cont = new SensactApplicationContainer
                     {
                         Application = app,
-                        Index = mc.NextFreeIndex,
+                        Index = mc.GetIndex(app.ApplicationId),
                         Node = n,
                     };
-                    mc.NextFreeIndex++;
 
                     mc.id2app[cont.Application.ApplicationId] = cont;
                     mc.index2app[cont.Index] = cont;

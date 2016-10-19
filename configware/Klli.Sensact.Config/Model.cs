@@ -1,5 +1,6 @@
 ﻿using Klli.Sensact.Config.Applications;
 using Klli.Sensact.Config.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -21,6 +22,7 @@ namespace Klli.Sensact.Config
     {
         public Dictionary<int, SensactApplicationContainer> index2app = new Dictionary<int, SensactApplicationContainer>();
         public Dictionary<string, SensactApplicationContainer> id2app = new Dictionary<string, SensactApplicationContainer>();
+        public Dictionary<string, int> predefinedIndices = new Dictionary<string, int>();
         /// <summary>
         /// 0 ist reservierter Index für "MASTER_APP", Echte AppIndices beginnen bei 1
         /// </summary>
@@ -31,5 +33,29 @@ namespace Klli.Sensact.Config
         public Dictionary<string, HashSet<EventType>> id2busEvents = new Dictionary<string, HashSet<EventType>>();
         public Model Model;
         public int NextFreeIndex;
+
+        internal void PrefillPredefinedIndices(Array enumValues)
+        {
+            foreach (ID id in enumValues)
+            {
+                predefinedIndices.Add(id.ToString(), (int)id);
+                NextFreeIndex = Math.Max(NextFreeIndex, (int)id + 1);
+            }
+        }
+
+
+        internal int GetIndex(string name)
+        {
+            int foo = 0;
+            if (predefinedIndices.TryGetValue(name, out foo))
+            {
+                return foo;
+            }
+            else
+            {
+
+                return NextFreeIndex++;
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum ID
     {
+        NO_APPLICATION,
         MASTER,
         //Sensact-Geräte
         SNSCT_L0_TECH_HS_1,
@@ -413,8 +414,5 @@
         STDBY_L2_CORR_24V,
         STDBY_L3_TECH_48V,
         STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
-        NO_APPLICATION,
-        CNT,
-        
     }
 }
