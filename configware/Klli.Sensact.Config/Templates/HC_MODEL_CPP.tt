@@ -23,7 +23,14 @@ using namespace std;
 namespace sensact {
 
 const char * const MODEL::ApplicationNames[]={
-		<#=ApplicationNames#>
+<#
+foreach (string name in ApplicationNames)
+{
+#>
+"<#=name#>"
+<#
+}
+#>
 	};
 
 

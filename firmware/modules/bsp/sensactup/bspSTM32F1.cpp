@@ -175,11 +175,13 @@ void BSP::Init(void) {
 
 #ifdef SENSACTUP02
 	//LED an B12
+
+	HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_SET); //switch off LED
 	gi.Mode = GPIO_MODE_OUTPUT_PP;
-	gi.Pin = GPIO_PIN_12;
+	gi.Pin = LED_PIN;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOB, &gi);
+	HAL_GPIO_Init(LED_PORT, &gi);
 
 	//Enable 5v-Supply for RGB LED
 	HAL_GPIO_WritePin(RGB_SUPPLY_PORT, RGB_SUPPLY_PIN, GPIO_PIN_SET);

@@ -31,7 +31,7 @@ namespace Klli.Sensact.Config.Templates
         public List<ModelCppItem> Items = new List<ModelCppItem>();
         public string version;
         public string ModelReference;
-        public StringBuilder ApplicationNames = new StringBuilder();
+        public string[] ApplicationNames;
 
     }
 

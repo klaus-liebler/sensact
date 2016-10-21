@@ -24,7 +24,7 @@ namespace Klli.Sensact.Config
         {
 
             //preFill predefined indices
-            
+            mc.PrefillPredefinedIndices(Enum.GetValues(typeof(ID)));
 
             HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
             SensactApplicationContainer masterApp =  new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = mc.GetIndex("MASTER"), Node = null };
@@ -163,14 +163,11 @@ namespace Klli.Sensact.Config
             mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             page.Nodes.Add("CNT");
 
-            page.AppIds.Add("MASTER=0");
-            for (int i = 1; i < mc.NextFreeIndex; i++)
+            foreach(var kv in mc.predefinedIndices)
             {
-                SensactApplicationContainer appCont = mc.index2app[i];
-                page.AppIds.Add(appCont.Application.ApplicationId+"="+appCont.Index);
+                page.AppIds.Add(kv.Key + "=" + kv.Value);
             }
             page.AppIds.Add("CNT");
-            page.AppIds.Add("NO_APPLICATION");
             String pageContent = page.TransformText();
             File.WriteAllText(GetGeneratedPathForFile("appids.h"), pageContent);
             LOG.InfoFormat("Successfully created appids.h");
@@ -439,18 +436,10 @@ namespace Klli.Sensact.Config
                 version = "1.0",
                 ModelReference = mc.Model.Name +" created from GIT Head SHA "+GeneratedConstants.ConfigSHA, 
             };
-            for (int i = 0; i < mc.NextFreeIndex; i++)
+            file.ApplicationNames = new string[mc.NextFreeIndex];
+            foreach (var kv in mc.predefinedIndices)
             {
-                SensactApplicationContainer app;
-                if(mc.index2app.TryGetValue(i, out app))
-                {
-                    file.ApplicationNames.AppendLine("    \"" + app.Application.ApplicationId + "\",");
-                }
-                else
-                {
-                    file.ApplicationNames.AppendLine("    \"\",");
-                }
-                
+                file.ApplicationNames[kv.Value] = kv.Key;
             }
             foreach (Node node in mc.Model.Nodes)
             {
