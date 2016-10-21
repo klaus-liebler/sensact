@@ -10,6 +10,8 @@ namespace Klli.Sensact.Config
         private const int DEFAULT_MIN_DIM_LEVEL = 20;
 
         //Zählreihenfolge beim EIB-Kabel: rot, schwarz, weiß, gelb
+
+        //Infos: RL 32 ist für LX.Back.P3 auf Klemme X1.40.
         public static Model Build()
         {
             #region Floor sensors
