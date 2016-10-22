@@ -12,6 +12,7 @@
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
+#define NODE_TEST_HS07
 
 namespace sensact {
 

@@ -27,7 +27,7 @@ const char * const MODEL::ApplicationNames[]={
 foreach (string name in ApplicationNames)
 {
 #>
-"<#=name#>"
+"<#=name#>",
 <#
 }
 #>

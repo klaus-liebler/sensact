@@ -57,8 +57,9 @@ void BSP::Init(void) {
 	HAL_GPIO_Init(GPIOB, &gi);
 	LOGI(BSP::SUCCESSFUL_STRING, "GPIO for LED");
 
-	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=TX, A1=RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
+	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=USART4_TX, A1=USART4_RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
 	//VCC, RX, TX, DACR, DACL, SPK1, GND, SPK2
+	//Also: PA0 --> RX
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_LOW;

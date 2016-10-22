@@ -53,8 +53,10 @@ namespace Klli.Sensact.Config
             }
             else
             {
-
-                return NextFreeIndex++;
+                int myindex = NextFreeIndex;
+                NextFreeIndex++;
+                predefinedIndices.Add(name, myindex);
+                return myindex;
             }
         }
     }

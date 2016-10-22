@@ -250,6 +250,7 @@ void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 
 void cSound::OnSTARTCommand(Time_t now)
 {
+	LOGD("%s OnSTARTCommand called", this->Id);
 	OnSET_SIGNALCommand(1, now);
 }
 

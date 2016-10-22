@@ -10,7 +10,7 @@
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_DEBUG
+#define LOGLEVEL LEVEL_WARN
 #define LOGNAME "ROTAR"
 #include "cLog.h"
 
