@@ -655,6 +655,25 @@ static void BlockOnDoubleRegister(uint32_t *reg, uint8_t bitpos, const char * na
 	SBN(*reg, bitpos);
 }
 
+bool BSP::RequestDigitalOutput(eInput i) {
+#ifdef SENSACTHS07
+	uint8_t ii = (uint8_t)i;
+	if(ii < 32)
+	{
+		BlockOnDoubleRegister(&inputRequests[WORD_OBO], ii, "BuildIn digital output");
+		GPIO_InitTypeDef gi;
+		gi.Mode = GPIO_MODE_OUTPUT_OD;
+		gi.Speed = GPIO_SPEED_FREQ_LOW;
+		gi.Pin = PINxFromMap(i);
+		gi.Pull = GPIO_PULLUP;
+		gi.Alternate = 0;
+		HAL_GPIO_Init(GPIOxFromMap(i), &gi);
+		return true;
+	}
+#endif
+	return false;
+}
+
 bool BSP::RequestDigitalInput(eInput i) {
 	uint8_t ii = (uint8_t)i;
 	if(ii < 32)
@@ -1052,6 +1071,18 @@ void BSP::SetPoweredOutput(ePoweredOutput po, ePowerState state)
 			CBN(poweredOutputState[WORD_1WI], ipo);
 		}
 	}
+}
+
+void BSP::SetDigitalOutput(eInput inp, ePowerState state)
+{
+#ifdef SENSACTHS07
+	uint32_t ipo = (uint32_t) inp;
+	if(ipo<32)
+	{
+		HAL_GPIO_WritePin(GPIOxFromMap(ipo), PINxFromMap(ipo), state==ePowerState::ACTIVE?GPIO_PIN_SET:GPIO_PIN_RESET);
+	}
+#endif
+	return;
 }
 
 bool BSP::RequestPWM(const ePWMOutput po, const bool lowMeansLampOn) {

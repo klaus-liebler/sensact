@@ -54,7 +54,7 @@
 #define GPIOx(_N)   ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(_N)))
 #define PINx(_N)	(1 << (_N))
 #define GPIOxFromMap(_N)	GPIOx(INPUT[2*(uint8_t)(_N)])
-#define PINxFromMap(_N)	PINx(INPUT[2*(uint8_t)(_N)+1])
+#define PINxFromMap(_N)	(uint16_t)PINx(INPUT[2*(uint8_t)(_N)+1])
 #define I(x) &INPUT[2*x]
 
 
@@ -135,9 +135,11 @@ public:
 	static void Init();
 	static bool RequestPoweredOutput(ePoweredOutput r);
 	static bool RequestDigitalInput(eInput i);
+	static bool RequestDigitalOutput(eInput i);
 	static bool RequestPWM(ePWMOutput p, bool lowMeansLampOn);
 	static bool RequestRotaryEncoder(eRotaryEncoder re);
 	static void SetPoweredOutput(ePoweredOutput r, ePowerState state);
+	static void SetDigitalOutput(eInput r, ePowerState state);
 	static void SetPWM(ePWMOutput p, uint16_t val);
 	static void SetRgbLed(volatile uint8_t *framebuffer, uint16_t sizeIncludingZero);
 

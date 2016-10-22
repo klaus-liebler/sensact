@@ -142,9 +142,10 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L0_TECH_B11, InputPin.I07, ID.POWIT_L0_TECH_C1);//24
             SNSCT_L0_TECH_HS_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_TECH_C1), OutputRessource = OutputPin.O23 });//RL5
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I14, ID.NO_APPLICATION);//56
-            SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication
+            SNSCT_L0_TECH_HS_2.Applications.Add(new SoundApplication
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
+                InputRessourceAsOutput=InputPin.II01,
             });
             SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = OutputPin.O04, WaittimeInMsec = 10000 });//RL15
             SNSCT_L0_TECH_HS_2.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = OutputPin.O06, WaittimeInMsec = 10000 });//RL17, nicht 16!!!

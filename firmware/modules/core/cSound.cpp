@@ -233,15 +233,16 @@ static void mp3_random_play () {
 }
 */
 bool cSound::Setup() {
-	return true;
+	return BSP::RequestDigitalOutput(this->output);
 }
 
 void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
-	UNUSED(now);
 	//mp3_stop();
 	//volumeSchedule->DoEachCycle(std::chrono::system_clock::now());
 	//uint32_t vol = volumeSchedule->GetCurrentValue();
+	BSP::SetDigitalOutput(this->output, ePowerState::ACTIVE);
+	this->autoOffTime=now+30000;
 	mp3_set_volume(15);
 	HAL_Delay(20);
 	mp3_play(signal);
@@ -254,7 +255,10 @@ void cSound::OnSTARTCommand(Time_t now)
 
 void cSound::DoEachCycle(Time_t now)
 {
-	UNUSED(now);
+	if(now<this->autoOffTime)
+	{
+		BSP::SetDigitalOutput(this->output, ePowerState::INACTIVE);
+	}
 }
 }
 
