@@ -233,7 +233,12 @@ static void mp3_random_play () {
 }
 */
 bool cSound::Setup() {
-	return BSP::RequestDigitalOutput(this->output);
+	if(BSP::RequestDigitalOutput(this->output))
+	{
+		BSP::SetDigitalOutput(this->output, ePowerState::INACTIVE);
+		return true;
+	}
+	return false;
 }
 
 void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
@@ -256,7 +261,7 @@ void cSound::OnSTARTCommand(Time_t now)
 
 void cSound::DoEachCycle(Time_t now)
 {
-	if(now<this->autoOffTime)
+	if(now>this->autoOffTime)
 	{
 		BSP::SetDigitalOutput(this->output, ePowerState::INACTIVE);
 	}

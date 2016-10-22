@@ -798,6 +798,8 @@ bool BSP::SendCANMessage(CANMessage* m) {
 	return false;
 }
 
+#define DIGITAL_FILTER_VALUE 15
+
 bool BSP::RequestRotaryEncoder(eRotaryEncoder re) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 #if defined(SENSACTHS07)
@@ -825,11 +827,11 @@ bool BSP::RequestRotaryEncoder(eRotaryEncoder re) {
 	sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
 	sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
 	sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-	sConfig.IC1Filter = 0;
+	sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
 	sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
 	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
 	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-	sConfig.IC2Filter = 0;
+	sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
 	HAL_TIM_Encoder_Init(&htim4, &sConfig);
 
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
@@ -857,11 +859,11 @@ bool BSP::RequestRotaryEncoder(eRotaryEncoder re) {
 		sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
 		sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
 		sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC1Filter = 0;
+		sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
 		sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
 		sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
 		sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC2Filter = 0;
+		sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
 		HAL_TIM_Encoder_Init(&htim2, &sConfig);
 
 		sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
@@ -890,11 +892,11 @@ bool BSP::RequestRotaryEncoder(eRotaryEncoder re) {
 		sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
 		sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
 		sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC1Filter = 0;
+		sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
 		sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
 		sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
 		sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC2Filter = 0;
+		sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
 		HAL_TIM_Encoder_Init(&htim3, &sConfig);
 
 
