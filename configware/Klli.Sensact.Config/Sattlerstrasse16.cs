@@ -141,7 +141,7 @@ namespace Klli.Sensact.Config
             //TECH
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L0_TECH_B11, InputPin.I07, ID.POWIT_L0_TECH_C1);//24
             SNSCT_L0_TECH_HS_1.Applications.Add(new PoweritemApplication { ApplicationId = _(ID.POWIT_L0_TECH_C1), OutputRessource = OutputPin.O23 });//RL5
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I14, ID.NO_APPLICATION);//56
+            //SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I14, ID.NO_APPLICATION);//56
             SNSCT_L0_TECH_HS_2.Applications.Add(new SoundApplication
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
@@ -263,7 +263,7 @@ namespace Klli.Sensact.Config
 
             //CORR
             //Hinweis: LeavingHome/ComingHome ist noch nicht beschaltet
-            SNSCT_L0_TECH_HS_2.Applications.AddOneDimButton(ID.PUSHB_L1_CORR_B11, InputPin.I01, ID.PWM___L1_CORR_S);//92
+            SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_CORR_B11, InputPin.I14, ID.PWM___L1_CORR_S);//52
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_CORR_B21, InputPin.I32, ID.PWM___L1_CORR_S);//88
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_CORR_B22, InputPin.I31, ID.POWIT_L1_CORR_W1);//86
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_CORR_B23, InputPin.I30, ID.PWM___L1_CORR_S);//85
@@ -304,7 +304,11 @@ namespace Klli.Sensact.Config
             SNSCT_L1_LVNG_UP.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B43, InputPin.I07, ID.POWIT_L1_LVNG_W1);
             SNSCT_L1_LVNG_UP.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B44, InputPin.I08, ID.POWIT_L1_LVNG_C1);
             SNSCT_L1_LVNG_UP.Applications.Add(new PWMApplication { ApplicationId = _(ID.PWM___L1_LVNG_S), MinimalOnLevel = DEFAULT_MIN_DIM_LEVEL, StandbyController = _(ID.STDBY_L2_CORR_24V), OutputRessources = new List<PwmPin> { PwmPin.P16, PwmPin.P17, PwmPin.P18, PwmPin.P19, PwmPin.P20, PwmPin.P21, PwmPin.P22, PwmPin.P23, PwmPin.P24, PwmPin.P25, PwmPin.P26, PwmPin.P27 } });
-
+            //B11 I23
+            //B12 I22
+            //B13 I21
+            //14 I17
+            //
             SNSCT_L0_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L1_LVNG_B11, ID.PUSHB_L1_LVNG_B12, InputPin.I23, InputPin.I22, ID.BLIND_LX_BACK_J1);
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B13, InputPin.I21, ID.POWIT_LX_BACK_W2);
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B14, InputPin.I17, ID.POWIT_LX_BACK_W3);
