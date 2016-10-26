@@ -8,8 +8,8 @@ namespace sensact {
 
 class cSound: public cApplication {
 private:
-	cWeeklySchedule * const volumeSchedule;
 	const eInput output;
+	cWeeklySchedule * const volumeSchedule;
 	Time_t autoOffTime;
 public:
 	bool Setup() override;

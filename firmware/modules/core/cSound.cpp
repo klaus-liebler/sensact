@@ -248,7 +248,7 @@ void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 	//uint32_t vol = volumeSchedule->GetCurrentValue();
 	BSP::SetDigitalOutput(this->output, ePowerState::ACTIVE);
 	this->autoOffTime=now+30000;
-	mp3_set_volume(15);
+	mp3_set_volume(8);
 	HAL_Delay(20);
 	mp3_play(signal);
 }

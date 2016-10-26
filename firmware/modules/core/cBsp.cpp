@@ -671,6 +671,7 @@ bool BSP::RequestDigitalOutput(eInput i) {
 		return true;
 	}
 #endif
+	(void)i;
 	return false;
 }
 
@@ -1084,6 +1085,8 @@ void BSP::SetDigitalOutput(eInput inp, ePowerState state)
 		HAL_GPIO_WritePin(GPIOxFromMap(ipo), PINxFromMap(ipo), state==ePowerState::ACTIVE?GPIO_PIN_SET:GPIO_PIN_RESET);
 	}
 #endif
+	(void)inp;
+	(void)state;
 	return;
 }
 
