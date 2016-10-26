@@ -133,8 +133,6 @@ uint32_t BSP::lastCommittedPoweredOutputState[] = {0, 0, 0, 0};
 
 uint32_t BSP::inputState[] = {0, 0, 0, 0};
 
-
-Time_t BSP::lastCycle = 0;
 UART_HandleTypeDef BSP::comm;
 CAN_HandleTypeDef BSP::hcan;
 CanTxMsgTypeDef BSP::TxMessage;
@@ -767,7 +765,7 @@ ePushState BSP::GetDigitalInput(eInput i)
 
 bool BSP::ReceiveCANMessage(CANMessage* m) {
 
-	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 2) == HAL_OK) {
+	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 0) == HAL_OK) {
 		m->Length = (uint8_t)RxMessage.DLC;
 		int i = 0;
 		for (i = 0; i < m->Length; i++) {
@@ -943,14 +941,6 @@ char* BSP::GetTimestamp() {
 
 Time_t BSP::GetSteadyClock() {
 	return steadyClockMsecCnt;
-}
-
-void BSP::WaitAtLeastSinceLastCycle(uint32_t ms) {
-	Time_t tickstart = 0;
-	tickstart = lastCycle;
-	while ((GetSteadyClock() - tickstart) < ms) {
-	}
-	lastCycle = HAL_GetTick();
 }
 
 bool BSP::RequestPoweredOutput(ePoweredOutput po) {
