@@ -94,7 +94,6 @@ private:
 
 	static TIM_HandleTypeDef htim_pwm;
 	static Time_t nextLedToggle;
-	static Time_t lastCycle;
 
 	static int16_t temperatures[];
 	static drivers::cDS2482 ds2482;

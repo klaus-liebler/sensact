@@ -56,6 +56,7 @@ void cMaster::Run(void) {
 			cApplication * const ap = MODEL::Glo2locCmd[i];
 			if (ap) {
 				ap->DoEachCycle(now);
+				CanBusProcess();
 			}
 		}
 		if(BufferHasMessage)
@@ -68,13 +69,12 @@ void cMaster::Run(void) {
 			UART_buffer_pointer=0;
 			BufferHasMessage=false;
 		}
-		while (BSP::ReceiveCANMessage(&rcvMessage)) {
-			//Process CAN Message
-			ReceiveFromMessageBus();
-		}
+		CanBusProcess();
 		BSP::DoEachCycle(now);
-		BSP::WaitAtLeastSinceLastCycle(20);
-
+		CanBusProcess();
+		while (BSP::GetSteadyClock()-now < 20) {
+			CanBusProcess();
+		}
 	}
 }
 
@@ -165,41 +165,43 @@ void cMaster::SendEvent(Time_t now, const eApplicationID sourceApp, const eEvent
 //Wir arbeiten mit Extended IDs
 //Die niedrigsten 10 Bits definieren die Application
 //Das 11. (=10!) Bit definiert, ob die App ein Event sendet (==1) oder ob ein Befehl an diese App zu senden ist (==0)
-void cMaster::ReceiveFromMessageBus() {
+void cMaster::CanBusProcess() {
 	uint32_t appId = rcvMessage.Id & (CMD_EVT_OFFSET - 1);
 	Time_t now = BSP::GetSteadyClock();
-
-	if (rcvMessage.Id < CMD_EVT_OFFSET) {
-		//appId is the id of the target app
-		if(MODEL::TRACE_COMMANDS)
-		{
-			LOGX("Command to id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
-			for (int i = 0; i < rcvMessage.Length; i++)
-			{
-				Console::Write("0x%02X, ", rcvMessage.Data[i]);
-			}
-			Console::Writeln("");
-		}
-		cApplication *app = MODEL::Glo2locCmd[appId];
-		if (app != NULL) {
-			app->OnCommand((eCommandType)rcvMessage.Data[0], &(rcvMessage.Data[1]), rcvMessage.Length, now);
-		}
-	}
-	else
+	while (BSP::ReceiveCANMessage(&rcvMessage))
 	{
-		//appId is the id of the source app
-		if(MODEL::TRACE_EVENTS)
-		{
-			LOGX("Event from id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
-			for (int i = 0; i < rcvMessage.Length; i++)
+		if (rcvMessage.Id < CMD_EVT_OFFSET) {
+			//appId is the id of the target app
+			if(MODEL::TRACE_COMMANDS)
 			{
-				Console::Write("0x%02X, ", rcvMessage.Data[i]);
+				LOGX("Command to id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
+				for (int i = 0; i < rcvMessage.Length; i++)
+				{
+					Console::Write("0x%02X, ", rcvMessage.Data[i]);
+				}
+				Console::Writeln("");
 			}
-			Console::Writeln("");
+			cApplication *app = MODEL::Glo2locCmd[appId];
+			if (app != NULL) {
+				app->OnCommand((eCommandType)rcvMessage.Data[0], &(rcvMessage.Data[1]), rcvMessage.Length, now);
+			}
 		}
-		cApplication *app = MODEL::Glo2locEvt[appId];
-		if (app != NULL) {
-			app->OnEvent((eApplicationID) appId, (eEventType)rcvMessage.Data[0],  &(rcvMessage.Data[1]), rcvMessage.Length, now);
+		else
+		{
+			//appId is the id of the source app
+			if(MODEL::TRACE_EVENTS)
+			{
+				LOGX("Event from id:%s; len:%d; payload:", MODEL::ApplicationNames[appId], rcvMessage.Length);
+				for (int i = 0; i < rcvMessage.Length; i++)
+				{
+					Console::Write("0x%02X, ", rcvMessage.Data[i]);
+				}
+				Console::Writeln("");
+			}
+			cApplication *app = MODEL::Glo2locEvt[appId];
+			if (app != NULL) {
+				app->OnEvent((eApplicationID) appId, (eEventType)rcvMessage.Data[0],  &(rcvMessage.Data[1]), rcvMessage.Length, now);
+			}
 		}
 	}
 

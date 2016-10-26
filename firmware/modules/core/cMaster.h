@@ -32,7 +32,7 @@ public:
 	static bool SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd, uint8_t *payload, uint8_t payloadLength);
 	static void SendEvent(Time_t now, const eApplicationID, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t* payload, uint8_t payloadLenght);
 	static void SendEventDirect(Time_t now, const eApplicationID sourceApp, const eEventType evt, uint8_t * payload, uint8_t payloadLength);
-	static void ReceiveFromMessageBus();
+	static void CanBusProcess();
 	static void Run();
 	static Time_t Date2unixtimeMillis(uint16_t jahr, uint8_t monat, uint8_t tag, uint8_t stunde, uint8_t minute, uint8_t sekunde);
 	static std::chrono::hours cet_offset_utc(std::chrono::system_clock::time_point tp);
