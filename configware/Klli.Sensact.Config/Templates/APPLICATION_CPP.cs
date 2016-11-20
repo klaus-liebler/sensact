@@ -36,7 +36,8 @@ namespace Klli.Sensact.Config.Templates
             #line hidden
             this.Write("\r\n#include <cApplication.h>\r\n#include <cLog.h>\r\n#include <cModel.h>\r\n#include <cM" +
                     "aster.h>\r\n\r\nnamespace sensact {\r\nvoid cApplication::OnCommand(eCommandType cmd, " +
-                    "uint8_t *payload,\r\n\t\tuint8_t payloadLength, Time_t now) {\r\n\tswitch(cmd)\r\n\t{\r\n");
+                    "const uint8_t * const payload,\r\n\t\tuint8_t payloadLength, Time_t now) {\r\n\tswitch(" +
+                    "cmd)\r\n\t{\r\n");
             
             #line 18 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CommandParseImplementation));

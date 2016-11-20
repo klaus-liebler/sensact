@@ -7,6 +7,7 @@
 
 #pragma once
 #include <common.h>
+#include <bsp_features.h>
 #ifdef STM32F1
 #include <stm32f1xx_hal.h>
 #define CONSOLE_USART USART1

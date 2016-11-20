@@ -41,14 +41,14 @@ namespace Klli.Sensact.Config.Applications
             base.OnSTARTCommand();
         }
 
-        public override void OnUPCommand()
+        public override void OnUPCommand(byte forced)
         {
-            base.OnUPCommand();
+            base.OnUPCommand(forced);
         }
 
-        public override void OnDOWNCommand()
+        public override void OnDOWNCommand(byte forced)
         {
-            base.OnDOWNCommand();
+            base.OnDOWNCommand(forced);
         }
 
         public override void OnSTEP_VERTICALCommand(short step)

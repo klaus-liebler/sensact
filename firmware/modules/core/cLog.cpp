@@ -54,7 +54,7 @@ void CLogger::Error(const char * format, const char *logname, ...)
 
 void CLogger::DoLog(Level level, const char * format, const char *logname, va_list argp)
 {
-	Console::Write("%c %s %s :", level2char[(uint8_t)level], BSP::GetTimestamp(), logname);
+	Console::Write("%c %06d %s :", level2char[(uint8_t)level], BSP::GetSteadyClock(), logname);
 	Console::Write(format, argp);
 	Console::Writeln("");
 }

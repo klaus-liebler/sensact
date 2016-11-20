@@ -42,6 +42,7 @@ enum struct eBinCmd:uint16_t
 	SEND_1WI=2,
 	SET_RTC=3,
 	GET_RTC=4,
+	SEND_RAW_CAN=5,
 };
 
 static eShellError cmdHelp(shell_cmd_args *args);
@@ -308,6 +309,21 @@ static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 	return eShellError::PROCESS_ERR_CMD_UNKN;
 }
 
+static eShellError cmdSEND_RAW_CAN(uint8_t *cmdBuffer, uint8_t size)
+{
+	CANMessage cm;
+	cm.Id = Common::ParseUInt32(cmdBuffer, 0);
+	uint8_t i = 0;
+	while(i<size-4 && i<8 )
+	{
+		cm.Data[i]=cmdBuffer[4+i];
+		i++;
+	}
+	cm.Length = i;
+	sensact::BSP::SendCANMessage(&cm);
+	return eShellError::PROCESS_OK;
+}
+
 eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, uint8_t size)
 {
 	//Byte 0: 0x01
@@ -324,6 +340,8 @@ eShellError cShell::processBinaryCmd(uint8_t *cmdBuffer, uint8_t size)
 		return cmdSET_RTC(cmdBuffer, size);
 	case eBinCmd::GET_RTC:
 		return cmdGET_RTC(cmdBuffer, size);
+	case eBinCmd::SEND_RAW_CAN:
+		return cmdSEND_RAW_CAN(cmdBuffer, size);
 	default:
 		return eShellError::PROCESS_ERR_CMD_UNKN;
 	}

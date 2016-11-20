@@ -22,10 +22,10 @@ namespace sensact{
 	private:
 		const uint16_t WAITTIME=900;
 		const uint16_t WAITTIME_AFTER_PREPARE = 100;
-		const uint16_t FULLY_CLOSED_INT=0x2000;
-		const uint16_t FULLY_CLOSED=0x4000;
-		const uint16_t FULLY_OPEN= 0xC000;
-		const uint16_t FULLY_OPEN_INT= 0xE000;
+		const uint16_t FULLY_UP_INT=0x2000;
+		const uint16_t FULLY_UP=0x4000;
+		const uint16_t FULLY_DOWN= 0xC000;
+		const uint16_t FULLY_DOWN_INT= 0xE000;
 		ePoweredOutput relayUpOrPower;
 		ePoweredOutput relayDownOrDirection;
 		eRelayMode relayMode;
@@ -57,7 +57,7 @@ namespace sensact{
 		void RaiseEvent(eEventType evt);
 
 		cBlind(const char* name, eApplicationID id, ePoweredOutput relayUp, ePoweredOutput relayDownOrDirection, eRelayMode relayMode, uint16_t fullStrokeTimeInSeconds) :
-					cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_OPEN-FULLY_CLOSED) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP) {
+					cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_DOWN-FULLY_UP) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP) {
 				}
 	};
 

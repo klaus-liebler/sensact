@@ -23,7 +23,7 @@ void cPushbuttonX::OnPressed(Time_t now) {
 	for(i=0;i<this->pressedCommandsLength;i++)
 	{
 		Command c = pressedCommands[i];
-		cMaster::SendCommandToMessageBus(now, c.target, c.command, 0, 0);
+		cMaster::SendCommandToMessageBus(now, c.target, c.command, c.payload, c.payloadLength);
 	}
 }
 
@@ -33,7 +33,7 @@ void cPushbuttonX::OnReleased(Time_t now) {
 	for(i=0;i<this->releasedCommandsLength;i++)
 	{
 		Command c = releasedCommands[i];
-		cMaster::SendCommandToMessageBus(now, c.target, c.command, 0, 0);
+		cMaster::SendCommandToMessageBus(now, c.target, c.command, c.payload, c.payloadLength);
 	}
 }
 
@@ -43,7 +43,7 @@ void cPushbuttonX::OnReleasedShort(Time_t now) {
 	for(i=0;i<this->releasedShortCommandsLength;i++)
 	{
 		Command c = releasedShortCommands[i];
-		cMaster::SendCommandToMessageBus(now, c.target, c.command, 0, 0);
+		cMaster::SendCommandToMessageBus(now, c.target, c.command, c.payload, c.payloadLength);
 	}
 }
 void cPushbuttonX::OnReleasedMedium(Time_t now) {
@@ -106,7 +106,7 @@ void cPushbutton::DoEachCycle(Time_t now) {
 		cMaster::SendEvent(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->state == ePushState::PRESSED
 			&& currentState == ePushState::RELEASED) {
-		if (now - this->lastChange < 400) {
+		if (now - this->lastChange < 600) {
 			OnReleasedShort(now);
 			cMaster::SendEvent(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else if (now - this->lastChange < 4000) {
@@ -119,7 +119,7 @@ void cPushbutton::DoEachCycle(Time_t now) {
 
 		OnReleased(now);
 		cMaster::SendEvent(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
-		if(now-lastRelease < 1000)
+		if(now-lastRelease < 600)
 				{
 					OnDoubleclick(now);
 				}
@@ -128,7 +128,7 @@ void cPushbutton::DoEachCycle(Time_t now) {
 		this->lastRelease=now;
 	} else if (this->state == ePushState::PRESSED
 			&& currentState == ePushState::PRESSED) {
-		if (!this->holdShortSent && now - this->lastChange > 400) {
+		if (!this->holdShortSent && now - this->lastChange > 600) {
 			OnPressedShortAndHold(now);
 			cMaster::SendEvent(now, Id, eEventType::PRESSED_SHORT_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 			this->holdShortSent = true;

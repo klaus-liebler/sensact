@@ -4,6 +4,7 @@ using MiscUtil.Conversion;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.IO.Ports;
 using System.Reflection;
 using System.Windows.Forms;
@@ -464,6 +465,12 @@ namespace Klli.Sensact.TestGui
             return;
         }
 
-        
+        private void btnSelectFile_Click(object sender, EventArgs e)
+        {
+            DialogResult  res = openFileDialog1.ShowDialog();
+            Stream s = openFileDialog1.OpenFile();
+            byte[] buffer = new byte[1024 * 1024];
+            int read = s.Read(buffer, 0, 1024 * 1024);
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace sensact
 {
-int16_t Common::ParseInt16(uint8_t *message, uint32_t offset)
+int16_t Common::ParseInt16(const uint8_t * const message, uint32_t offset)
 {
 	int16_t step;
 	uint8_t* ptr1=(uint8_t*)&step;
@@ -21,7 +21,7 @@ void Common::WriteInt16(int16_t value, uint8_t *message, uint32_t offset)
 	*(message+offset+1) = *ptr2;
 }
 
-uint16_t Common::ParseUInt16(uint8_t *message, uint32_t offset)
+uint16_t Common::ParseUInt16(const uint8_t * const message, uint32_t offset)
 {
 	uint16_t step;
 	uint8_t* ptr1=(uint8_t*)&step;
@@ -31,7 +31,7 @@ uint16_t Common::ParseUInt16(uint8_t *message, uint32_t offset)
 	return step;
 }
 
-uint64_t Common::ParseUInt64(uint8_t *message, uint32_t offset)
+uint64_t Common::ParseUInt64(const uint8_t * const message, uint32_t offset)
 {
 	uint64_t step;
 	uint8_t* ptr0=(uint8_t*)&step;
@@ -62,7 +62,7 @@ void Common::WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset)
 	*(message+offset+1) = *ptr2;
 }
 
-uint32_t Common::ParseUInt32(uint8_t *message, uint32_t offset)
+uint32_t Common::ParseUInt32(const uint8_t * const message, uint32_t offset)
 {
 	uint32_t value;
 	uint8_t* ptr0=(uint8_t*)&value;

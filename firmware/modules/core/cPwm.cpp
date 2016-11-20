@@ -43,6 +43,10 @@ void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
 	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Id, target);
 	SetTargetAbsolute(target, now);
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 }
 
 void cPWM::SetTargetAbsolute(uint8_t level, Time_t now)
@@ -96,6 +100,10 @@ void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 	{
 		SetTargetRelative(4*step, now);
 	}
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", this->Id, step, currentLevel);
 }
 
@@ -120,21 +128,32 @@ void cPWM::OnSTOPCommand(Time_t now)
 {
 	LOGD("%s OnSTOPCommand called", this->Id);
 	StopMove(now);
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 }
 
-void cPWM::OnUPCommand(Time_t now)
+void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 {
 	LOGD("%s OnUPCommand called", this->Id);
 	MoveInDirection(eDirection::UP, now);
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 }
 
 
 void cPWM::OnTOGGLECommand(Time_t now)
 {
-	UNUSED(now);
 	LOGD("%s OnTOGGLECommand called", this->Id);
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
+		if(autoOffIntervalMsecs!=0)
+		{
+			autoOffTime=now+autoOffIntervalMsecs;
+		}
 	}
 	else
 	{
@@ -143,9 +162,9 @@ void cPWM::OnTOGGLECommand(Time_t now)
 	}
 }
 
+
 void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
-	UNUSED(autoReturnToOffMsecs);
-	UNUSED(now);
+	LOGD("%s OnONCommand called", this->Id);
 	targetLevel=UINT8_MAX;
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -159,13 +178,19 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 
 
 
-void cPWM::OnDOWNCommand(Time_t now) {
+void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
+	LOGD("%s OnDOWNCommand called", this->Id);
 	MoveInDirection(eDirection::DOWN, now);
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 }
 
 void cPWM::DoEachCycle(volatile Time_t now) {
 	if(autoOffIntervalMsecs!=0 && autoOffTime<now && targetLevel>0)
 	{
+		LOGD("%s starting to switch off automatically", Name);
 		targetLevel=0;
 		autoOffTime =TIME_MAX;
 	}
@@ -216,7 +241,7 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
 	{
 		LOGD("%s sends heartbeat to %s at level %i", Name, N(standbyController), currentLevel);
-		SendHEARTBEATCommand(standbyController, now);
+		cMaster::BufferHeartbeat(standbyController, now);
 		lastHeartbeatToStandbycontroller=now;
 	}
 	return;

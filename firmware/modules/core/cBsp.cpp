@@ -55,7 +55,7 @@ drivers::cPCA9685 BSP::pca9685_ext(&i2c2, drivers::ePCA9685Device::Dev00,
 		drivers::ePCA9685_InvOutputs::InvOutputs,
 		drivers::ePCA9685_OutputDriver::OutputDriver_TotemPole,
 		drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
-		drivers::ePCA9685_Frequency::Frequency_200Hz);
+		drivers::ePCA9685_Frequency::Frequency_400Hz);
 
 drivers::cDS2482 BSP::ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
 int16_t BSP::temperatures[16];
@@ -94,12 +94,12 @@ drivers::cPCA9685 BSP::pca9685_U7(&i2c1, drivers::ePCA9685Device::Dev00,
 		drivers::ePCA9685_InvOutputs::InvOutputs,
 		drivers::ePCA9685_OutputDriver::OutputDriver_TotemPole,
 		drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
-		drivers::ePCA9685_Frequency::Frequency_100Hz);
+		drivers::ePCA9685_Frequency::Frequency_400Hz);
 drivers::cPCA9685 BSP::pca9685_U9(&i2c1, drivers::ePCA9685Device::Dev31,
 		drivers::ePCA9685_InvOutputs::InvOutputs,
 		drivers::ePCA9685_OutputDriver::OutputDriver_TotemPole,
 		drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
-		drivers::ePCA9685_Frequency::Frequency_100Hz);
+		drivers::ePCA9685_Frequency::Frequency_400Hz);
 
 drivers::cRCSwitch BSP::rcSwitch = drivers::cRCSwitch();
 uint32_t BSP::rcSwitchQueue=0;
@@ -772,7 +772,7 @@ bool BSP::ReceiveCANMessage(CANMessage* m) {
 			m->Data[i] = RxMessage.Data[i];
 		}
 		m->Id = RxMessage.ExtId;
-		LOGI("Traced CAN-Message for ID %d", m->Id);
+		//LOGI("Traced CAN-Message for ID %d", m->Id);
 		return true;
 	}
 	return false;

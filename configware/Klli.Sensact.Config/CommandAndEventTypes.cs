@@ -3,6 +3,7 @@
     public enum CommandType
     {
         NOP,
+        START_IAP,
         PING, //geht an die "Master"-Applikation, die sich in jedem Sensact befindet
         RESET,
         START,
@@ -30,7 +31,8 @@
         SEND_STATUS,
         SET_RGBW, //Params as u8
         SET_SIGNAL, //Param as u16 (mp3 song, well known color, light sequence)
-        DEMO
+        DEMO,
+
     }
 
     public enum EventType
@@ -51,5 +53,6 @@
         CRITICAL_VALUE,
         ALARM,
         WARN,
+        IAP_READY,
     }
 }

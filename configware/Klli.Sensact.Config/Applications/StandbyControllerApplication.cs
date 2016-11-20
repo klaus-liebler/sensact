@@ -12,9 +12,9 @@ namespace Klli.Sensact.Config.Applications
         public long WaittimeInMsec;
 
         [SensactCommandMethod]
-        public override void OnHEARTBEATCommand()
+        public override void OnHEARTBEATCommand(uint sender)
         {
-            base.OnHEARTBEATCommand();
+            base.OnHEARTBEATCommand(sender);
         }
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedPins)

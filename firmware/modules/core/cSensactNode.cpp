@@ -23,6 +23,12 @@ void cSensactNode::OnPINGCommand(uint32_t payload, Time_t now)
 	cMaster::SendEventDirect(now, this->Id, eEventType::PONG, (uint8_t*)&payload, 4);
 }
 
+void cSensactNode::OnSTART_IAPCommand(Time_t now)
+{
+	UNUSED(now);
+	cMaster::StartIAP();
+}
+
 
 void cSensactNode::DoEachCycle(Time_t now)
 {

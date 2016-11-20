@@ -27,9 +27,10 @@ bool cStandbyController::Setup() {
 
 
 
-void cStandbyController::OnHEARTBEATCommand(Time_t now)
+void cStandbyController::OnHEARTBEATCommand(uint32_t sender, Time_t now)
 {
 	lastHeartbeat=now;
+	LOGD("%s OnHEARTBEATCommand from sender %s", Name, N4I(sender));
 	if(this->state == ePowerState::INACTIVE)
 	{
 		BSP::SetPoweredOutput(relay, ePowerState::ACTIVE);

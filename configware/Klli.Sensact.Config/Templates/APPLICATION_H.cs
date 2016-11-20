@@ -46,15 +46,16 @@ namespace Klli.Sensact.Config.Templates
 
 	virtual bool Setup()=0;
 	virtual void DoEachCycle(Time_t time)=0; //Muss vom Master alle 20ms aufgerufen werden
-	void OnCommand(eCommandType cmd, uint8_t *payload,
+	void OnCommand(eCommandType cmd, const uint8_t * const payload,
 			uint8_t payloadLength, Time_t now);
 	virtual void OnEvent(eApplicationID sender, eEventType evt,
-			uint8_t *payload, uint8_t payloadLength, Time_t now);
+			const uint8_t * const payload, uint8_t payloadLength, Time_t now);
 	cApplication(const char* name, const eApplicationID id, const eAppType appType) :
 			Name(name), AppType(appType), Id(id) {
 	}
 
 	const char* N(eApplicationID appID);
+	const char* N4I(uint32_t appID);
 	virtual ~cApplication() {
 		return;
 	}

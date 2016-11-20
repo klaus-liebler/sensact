@@ -16,6 +16,14 @@
 #define LOGNAME "BLIND"
 #include <cLog.h>
 
+/*
+ * Pressed - nichts!
+ * Released Short: Falls Endlage -> in andere Richtung Endlage fahren OtherEndOrDown
+ * 					Falls nicht Endlage -> in die definierte Richtung fahren
+ * 					PressedShortAndHold -> in die definierte Richtung Endlage fahren
+ *
+ *
+ */
 
 namespace sensact {
 
@@ -95,13 +103,13 @@ void cBlind::down(Time_t now)
 	}
 }
 void cBlind::stop(Time_t now, uint16_t currPos){
-	if(currPos>FULLY_OPEN)
+	if(currPos>FULLY_DOWN)
 	{
-		this->wellKnownLevel=FULLY_OPEN;
+		this->wellKnownLevel=FULLY_DOWN;
 	}
-	else if(currPos<FULLY_CLOSED)
+	else if(currPos<FULLY_UP)
 	{
-		this->wellKnownLevel=FULLY_CLOSED;
+		this->wellKnownLevel=FULLY_UP;
 	}
 	else
 	{
@@ -132,16 +140,24 @@ void cBlind::stopForReverse(Time_t now, uint16_t currPos){
 }
 
 
-void cBlind::OnUPCommand(Time_t now)
+void cBlind::OnUPCommand(uint8_t forced, Time_t now)
 {
 	if(state==eDirection::STOP)
 	{
-		LOGD("%s: goes up to targetLevel=FULLY_CLOSED_INT", Name);
-		this->targetLevel=FULLY_CLOSED_INT;
+		if(forced==0 && this->wellKnownLevel <= FULLY_UP )
+		{
+			LOGD("%s: OnUPCommandCalled, but goes up to targetLevel=FULLY_DOWN_INT", Name);
+			this->targetLevel=FULLY_DOWN_INT;
+		}
+		else
+		{
+			LOGD("%s: OnUPCommandCalled, goes up to targetLevel=FULLY_UP_INT", Name);
+			this->targetLevel=FULLY_UP_INT;
+		}
 	}
 	else
 	{
-		LOGD("%s: goes up to targetLevel = calculatePosition(now)", Name);
+		LOGD("%s: OnUPCommandCalled, goes up to targetLevel = calculatePosition(now)", Name);
 		this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
 	}
 }
@@ -155,13 +171,21 @@ void cBlind::OnSTOPCommand(Time_t now)
 
 //Events: Pr�fen State und setzen target
 //20ms-Handler: Setzen State und treiben Motore an
-void cBlind::OnDOWNCommand(Time_t now)
+void cBlind::OnDOWNCommand(uint8_t forced, Time_t now)
 {
 	LOGD("%s: OnDown called", Name);
 	if(state==eDirection::STOP)
 	{
-		LOGD("%s: this->targetLevel=FULLY_OPEN_INT", Name);
-		this->targetLevel=FULLY_OPEN_INT;
+		if(forced==0 && this->wellKnownLevel >= FULLY_DOWN )
+		{
+			LOGD("%s: OnDOWNCommandCalled, but goes up to targetLevel=FULLY_UP_INT", Name);
+			this->targetLevel=FULLY_UP_INT;
+		}
+		else
+		{
+			LOGD("%s: OnDOWNCommandCalled, goes down to targetLevel=FULLY_DOWN_INT", Name);
+			this->targetLevel=FULLY_DOWN_INT;
+		}
 	}
 	else
 	{
@@ -176,12 +200,12 @@ uint16_t cBlind::calculatePosition(Time_t now)
 	if(state==eDirection::UP)
 	{
 		tmp =  (wellKnownLevel - ((now-lastChanged)/100)*changePer100ms);
-		return tmp<FULLY_CLOSED_INT?FULLY_CLOSED_INT:tmp;
+		return tmp<FULLY_UP_INT?FULLY_UP_INT:tmp;
 	}
 	else if (state==eDirection::DOWN)
 	{
 		tmp = (wellKnownLevel + ((now-lastChanged)/100)*changePer100ms);
-		return tmp>FULLY_OPEN_INT?FULLY_OPEN_INT:tmp;
+		return tmp>FULLY_DOWN_INT?FULLY_DOWN_INT:tmp;
 	}
 	return this->wellKnownLevel;
 }

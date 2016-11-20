@@ -8,10 +8,10 @@
 #pragma once
 #include "common.h"
 #include "cApplication.h"
+#include "bsp_features.h"
 
 namespace sensact {
 
-#define RGBLED_SIZE 5
 
 enum struct eWsVariant: uint8_t {WS2812B, WS2812, WS2811};
 

@@ -16,13 +16,13 @@ namespace Klli.Sensact.Config.Applications
         public long OpenCloseTimeInSeconds;
 
         [SensactCommandMethod]
-        public override void OnUPCommand()
+        public override void OnUPCommand(byte forced)
         {
 
         }
          
         [SensactCommandMethod]
-        public override void OnDOWNCommand()
+        public override void OnDOWNCommand(byte forced)
         {
 
         }

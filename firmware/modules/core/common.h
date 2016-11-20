@@ -3,7 +3,6 @@
 #include <appids.h>
 #include <commandAndEventTypes.h>
 #include <stdint.h>
-#include <bsp_features.h>
 
 #define Time_t 		uint64_t
 #define TIME_MAX		UINT64_MAX
@@ -30,13 +29,13 @@ namespace sensact {
 class Common
 {
 public:
-	static int16_t ParseInt16(uint8_t *message, uint32_t offset);
+	static int16_t ParseInt16(const uint8_t * const message, uint32_t offset);
 	static void WriteInt16(int16_t value, uint8_t *message, uint32_t offset);
-	static uint16_t ParseUInt16(uint8_t *message, uint32_t offset);
+	static uint16_t ParseUInt16(const uint8_t  * const message, uint32_t offset);
 	static void WriteUInt16(uint16_t value, uint8_t *message, uint32_t offset);
-	static uint32_t ParseUInt32(uint8_t *message, uint32_t offset);
+	static uint32_t ParseUInt32(const uint8_t  * constmessage, uint32_t offset);
 	static void WriteUInt32(uint32_t value, uint8_t *message, uint32_t offset);
-	static uint64_t ParseUInt64(uint8_t *message, uint32_t offset);
+	static uint64_t ParseUInt64(const uint8_t  * constmessage, uint32_t offset);
 };
 
 enum struct ePushState
@@ -80,7 +79,9 @@ enum struct ePushState
 	};
 
 	struct Command {
-		eApplicationID target;
-		eCommandType command;
+		const eApplicationID target;
+		const eCommandType command;
+		const uint8_t * const payload;
+		const uint8_t payloadLength;
 	};
 }

@@ -25,15 +25,6 @@ namespace Klli.Sensact.Config.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\stm32tc\\gcc49_2015q3")]
-        public string ToolchainDirectory {
-            get {
-                return ((string)(this["ToolchainDirectory"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\stm32tc\\STM32CubeMX\\STM32Cube_FW_F1_V1.2.0")]
         public string STM32Cube_FW_F1 {
             get {
@@ -52,7 +43,16 @@ namespace Klli.Sensact.Config.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\stm32tc\\STM32CubeMX\\STM32Cube_FW_F4_V1.11.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\stm32tc\\gcc54_2016q2")]
+        public string ToolchainDirectory {
+            get {
+                return ((string)(this["ToolchainDirectory"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\stm32tc\\STM32CubeMX\\STM32Cube_FW_F4_V1.13.0")]
         public string STM32Cube_FW_F4 {
             get {
                 return ((string)(this["STM32Cube_FW_F4"]));

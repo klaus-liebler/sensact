@@ -214,12 +214,22 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = appIdUp,
                 InputRessource = inputPinUp,
-                CommandsOnPressed = new List<Command>()
+                CommandsOnReleasedShort = new List<Command>()
                 {
                     new Command()
                     {
                         CommandType=CommandType.UP,
                         TargetAppId=targetAppId,
+                        Payload=new byte[]{0},
+                    },
+                },
+                CommandsOnPressedShortAndHold= new List<Command>()
+                {
+                     new Command()
+                    {
+                        CommandType=CommandType.UP,
+                        TargetAppId=targetAppId,
+                        Payload=new byte[]{1},
                     },
                 },
 
@@ -236,12 +246,22 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = appIdDown,
                 InputRessource = inputPinDown,
-                CommandsOnPressed = new List<Command>()
+                CommandsOnReleasedShort = new List<Command>()
                 {
                     new Command()
                     {
                         CommandType=CommandType.DOWN,
                         TargetAppId=targetAppId,
+                        Payload=new byte[]{0},
+                    },
+                },
+                CommandsOnPressedShortAndHold = new List<Command>()
+                {
+                     new Command()
+                    {
+                        CommandType=CommandType.DOWN,
+                        TargetAppId=targetAppId,
+                        Payload=new byte[]{1},
                     },
                 },
 

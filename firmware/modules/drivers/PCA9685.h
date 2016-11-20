@@ -58,6 +58,7 @@ enum struct ePCA9685_OutputNotEn:uint8_t
  */
 enum struct ePCA9685_Frequency:uint8_t
 {
+	Frequency_400Hz =	14,
 	Frequency_200Hz =	32,
 	Frequency_100Hz =	65,
 	Frequency_60Hz =	108,

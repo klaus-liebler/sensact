@@ -31,8 +31,6 @@ class cPWM: public cApplication
 		void SetTargetRelative(int, Time_t);
 		void MoveInDirection(eDirection, Time_t);
 		void StopMove(Time_t);
-
-
 		const static uint16_t level2brightness[];
 		void SetDimLevel(uint8_t);
 

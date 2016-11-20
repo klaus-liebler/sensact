@@ -13,7 +13,7 @@ namespace sensact {
 #define HAS_DS2482
 #endif
 
-
+const uint8_t RGBLED_SIZE=0;
 
 enum struct ePoweredOutput : uint32_t
 {

@@ -123,16 +123,44 @@ namespace Klli.Sensact.Config
             return ret;
         }
 
+        //const uint8_t PUSHB_L1_LVNG_B31_OnPressed_payload1[3] = {1,2,3};
+
+        private string BuildUint8Array(string name, byte[] payload)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("const uint8_t {0}[{1}] = {{", name, payload.Length);
+            foreach (byte b in payload)
+            {
+                sb.Append(b + ",");
+            }
+            sb.Append("};"+Environment.NewLine);
+            return sb.ToString();
+        }
+
         protected string CommandInitializer(string collectionName, ICollection<Command> cmds, ModelContainer m)
         {
+            StringBuilder payloads = new StringBuilder();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("const Command {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*const " : "", ApplicationId, collectionName);
             if (cmds != null && cmds.Count > 0)
             {
                 sb.Append("[" + cmds.Count + "]={");
+                int cmdIndex = 0;
                 foreach (Command cmd in cmds)
                 {
-                    sb.Append("{eApplicationID::" + cmd.TargetAppId + ", eCommandType::" + cmd.CommandType + "},");
+                    sb.Append("{eApplicationID::" + cmd.TargetAppId + ", eCommandType::" + cmd.CommandType + ", ");
+                    if(cmd.Payload!=null && cmd.Payload.Length>0)
+                    {
+                        string nameOfArray = string.Format("{0}_{1}_{2}", ApplicationId, collectionName, cmdIndex);
+                        payloads.Append(BuildUint8Array(nameOfArray, cmd.Payload));
+                        sb.Append(nameOfArray+", " + cmd.Payload.Length + "}, ");
+                    }
+                    else
+                    {
+                        sb.Append("0, 0, },");
+                    }
+                    cmdIndex++;
+
                 }
 
                 sb.Append("}");
@@ -142,7 +170,9 @@ namespace Klli.Sensact.Config
                 sb.Append("=0");
             }
             sb.AppendLine(";");
-            return sb.ToString();
+
+            payloads.Append(sb);
+            return payloads.ToString();
         }
 
         protected string ResourcesInitializer(string collectionName, ICollection<PwmPin> cmds, ModelContainer m)
@@ -204,13 +234,15 @@ namespace Klli.Sensact.Config
         [SensactCommandMethod]
         public virtual void OnRESETCommand() { }
         [SensactCommandMethod]
+        public virtual void OnSTART_IAPCommand() { }
+        [SensactCommandMethod]
         public virtual void OnSTARTCommand() { }
         [SensactCommandMethod]
         public virtual void OnSTOPCommand() { }
         [SensactCommandMethod]
-        public virtual void OnUPCommand() { }
+        public virtual void OnUPCommand(byte forced) { }
         [SensactCommandMethod]
-        public virtual void OnDOWNCommand() { }
+        public virtual void OnDOWNCommand(byte forced) { }
         [SensactCommandMethod]
         public virtual void OnFORWARDCommand() { }
         [SensactCommandMethod]
@@ -246,7 +278,7 @@ namespace Klli.Sensact.Config
         [SensactCommandMethod]
         public virtual void OnSTEP_LATERALCommand(short step) { }
         [SensactCommandMethod]
-        public virtual void OnHEARTBEATCommand() { }
+        public virtual void OnHEARTBEATCommand(uint sender) { }
         [SensactCommandMethod]
         public virtual void OnSEND_STATUSCommand() { }
         [SensactCommandMethod]
@@ -278,6 +310,7 @@ namespace Klli.Sensact.Config
     {
         public string TargetAppId;
         public CommandType CommandType; //TODO: Prüfung: Kann die DestinationApp auf dieses Event reagieren?
+        public byte[] Payload;
     }
 
     

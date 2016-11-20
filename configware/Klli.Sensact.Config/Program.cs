@@ -2,17 +2,36 @@
 using log4net.Config;
 using Klli.Sensact.Config.Nodes;
 using System;
+using log4net;
+
+namespace KonCept.MMS.PDI.Plugin.PowerMacs4000API
+{
+    /// <summary>
+    ///this class contains the Parameters of a Station (Object)
+    ///in a PowerMACS System
+    /// </summary>
+    public class PowerMacsStation
+    {
+        private static readonly ILog LOG_STAT = LogManager.GetLogger(typeof(PowerMacsStation));
+        private static readonly ILog LOG_CYCLIC = LogManager.GetLogger(typeof(PowerMacsStation).FullName + ".Cyclic");
+        private static readonly ILog LOG_PROG = LogManager.GetLogger(typeof(Klli.Sensact.Config.Program));
+    }
+}
 
 namespace Klli.Sensact.Config
 {
+
+
     public class Program
     {
+        private static readonly ILog LOG = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog LOG_TEST = LogManager.GetLogger(typeof(Program).FullName+".Test");
         private static Model GetModel()
         {
             //return TestModelBuilder.BuildRGBWDemo();
-            return TestModelBuilder.BuildModelToTestAllPins();
+            //return TestModelBuilder.BuildModelToTestAllPins();
             //Model model = TestModelBuilder.BuildLIBARDemo();
-            //return Sattlerstrasse16.Build();
+            return Sattlerstrasse16.Build();
             //return TestModelBuilder.BuildCANCommunicationDemo();
             //return TestModelBuilder.BuildBLINDDemo();
         }
@@ -31,10 +50,9 @@ namespace Klli.Sensact.Config
             return null;
         }
 
-
-
         static void Main(string[] args)
         {
+
             XmlConfigurator.Configure();
             ModelContainer mc = CreateAndCheckModelContainer();
             if (mc == null)

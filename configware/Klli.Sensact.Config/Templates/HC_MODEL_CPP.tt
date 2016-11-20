@@ -42,10 +42,14 @@ foreach (string name in ApplicationNames)
 
 eNodeID NODE = eNodeID::<#=i.NodeId#>;
 
+
+
 const char MODEL::ModelString[] ="<#=i.ModelInfo#>";
 }//end namespace
 #include <cModel_base.inc>
 namespace sensact{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::<#=i.NodeId#>;
 
 <#=i.StaticApplicationInitializers#>
 

@@ -36,6 +36,8 @@
             this.lisTerminal = new System.Windows.Forms.ListBox();
             this.btnSetTime = new System.Windows.Forms.Button();
             this.btnGetTime = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnSelectFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnUpdateCOM
@@ -112,11 +114,26 @@
             this.btnGetTime.UseVisualStyleBackColor = true;
             this.btnGetTime.Click += new System.EventHandler(this.btnGetTime_Click);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog";
+            // 
+            // btnSelectFile
+            // 
+            this.btnSelectFile.Location = new System.Drawing.Point(508, 11);
+            this.btnSelectFile.Name = "btnSelectFile";
+            this.btnSelectFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectFile.TabIndex = 7;
+            this.btnSelectFile.Text = "Select File";
+            this.btnSelectFile.UseVisualStyleBackColor = true;
+            this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 641);
+            this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.btnGetTime);
             this.Controls.Add(this.btnSetTime);
             this.Controls.Add(this.lisTerminal);
@@ -140,6 +157,8 @@
         private System.Windows.Forms.ListBox lisTerminal;
         private System.Windows.Forms.Button btnSetTime;
         private System.Windows.Forms.Button btnGetTime;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnSelectFile;
         private System.Windows.Forms.Control cntrlMaster;
     }
 }

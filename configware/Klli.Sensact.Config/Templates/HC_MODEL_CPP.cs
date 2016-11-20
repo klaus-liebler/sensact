@@ -111,37 +111,45 @@ foreach (string name in ApplicationNames)
             
             #line default
             #line hidden
-            this.Write(";\r\n\r\nconst char MODEL::ModelString[] =\"");
+            this.Write(";\r\n\r\n\r\n\r\nconst char MODEL::ModelString[] =\"");
             
-            #line 45 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 47 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.ModelInfo));
             
             #line default
             #line hidden
-            this.Write("\";\r\n}//end namespace\r\n#include <cModel_base.inc>\r\nnamespace sensact{\r\n\r\n");
+            this.Write("\";\r\n}//end namespace\r\n#include <cModel_base.inc>\r\nnamespace sensact{\r\n\r\nconst eAp" +
+                    "plicationID MODEL::NodeMasterApplication = eApplicationID::");
             
-            #line 50 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 52 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));
+            
+            #line default
+            #line hidden
+            this.Write(";\r\n\r\n");
+            
+            #line 54 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.StaticApplicationInitializers));
             
             #line default
             #line hidden
             this.Write("\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locCmd[] = {\r\n");
             
-            #line 55 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 59 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocPointers));
             
             #line default
             #line hidden
             this.Write("\r\n};\r\n\r\n\r\n\r\ncApplication *const MODEL::Glo2locEvt[] = {\r\n");
             
-            #line 61 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 65 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.Glo2LocEvents));
             
             #line default
             #line hidden
             this.Write("\r\n};\r\n#endif\r\n\r\n");
             
-            #line 65 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
+            #line 69 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
 
            
        }

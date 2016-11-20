@@ -26,11 +26,17 @@ namespace Klli.Sensact.Config.Applications
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {
-            return new HashSet<EventType> { EventType.PONG };
+            return new HashSet<EventType> { EventType.PONG, EventType.IAP_READY };
         }
 
         [SensactCommandMethod]
         public override void OnPINGCommand(uint payload)
+        {
+
+        }
+
+        [SensactCommandMethod]
+        public override void OnSTART_IAPCommand()
         {
 
         }

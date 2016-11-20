@@ -15,6 +15,9 @@
 #include "cLog.h"
 #include "shell.h"
 #include "date.h"
+#ifdef STM32F1
+#include "flash_info.h"
+#endif
 
 volatile uint8_t UART_buffer_pointer=0;
 volatile uint64_t UART_cmdBuffer64[16];
@@ -28,6 +31,38 @@ namespace sensact {
 
 CANMessage cMaster::rcvMessage;
 const uint32_t cMaster::CMD_EVT_OFFSET=0x400;
+pIapPseudoFunction cMaster::JumpToApplication;
+uint32_t cMaster::JumpAddress;
+eApplicationID cMaster::heartbeatBuffer = eApplicationID::NO_APPLICATION;
+
+/*
+ * Avoids sending the save heartbeat message over and over if the same standby controller is requested from several apps of this node
+ */
+void cMaster::BufferHeartbeat(eApplicationID target, Time_t now)
+{
+	if(heartbeatBuffer != eApplicationID::NO_APPLICATION && heartbeatBuffer != target)
+	{
+		cApplication::SendHEARTBEATCommand(heartbeatBuffer, (uint32_t)MODEL::NodeMasterApplication, now);
+	}
+	heartbeatBuffer=target;
+}
+
+
+void cMaster::StartIAP()
+{
+#ifdef STM32F1
+    /* Test if user code is programmed starting from address "APPLICATION_ADDRESS" */
+    if (((*(__IO uint32_t*)IAP_APPLICATION_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
+    {
+      /* Jump to user application */
+      JumpAddress = *(__IO uint32_t*) (IAP_APPLICATION_ADDRESS + 4);
+      JumpToApplication = (pIapPseudoFunction) JumpAddress;
+      /* Initialize user application's Stack Pointer */
+      __set_MSP(*(__IO uint32_t*) IAP_APPLICATION_ADDRESS);
+      JumpToApplication();
+    }
+#endif
+}
 
 void cMaster::Run(void) {
 	BSP::Init();
@@ -56,7 +91,7 @@ void cMaster::Run(void) {
 			cApplication * const ap = MODEL::Glo2locCmd[i];
 			if (ap) {
 				ap->DoEachCycle(now);
-				CanBusProcess();
+				//CanBusProcess();
 			}
 		}
 		if(BufferHasMessage)
@@ -71,7 +106,8 @@ void cMaster::Run(void) {
 		}
 		CanBusProcess();
 		BSP::DoEachCycle(now);
-		CanBusProcess();
+		//special call to release and reset message
+		BufferHeartbeat(eApplicationID::NO_APPLICATION, now);
 		while (BSP::GetSteadyClock()-now < 20) {
 			CanBusProcess();
 		}
@@ -79,7 +115,7 @@ void cMaster::Run(void) {
 }
 
 bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd,
-		uint8_t *payload, uint8_t payloadLength) {
+		const uint8_t * const payload, const uint8_t payloadLength) {
 	if(destinationApp==eApplicationID::NO_APPLICATION)
 	{
 		return true;
@@ -165,11 +201,24 @@ void cMaster::SendEvent(Time_t now, const eApplicationID sourceApp, const eEvent
 //Wir arbeiten mit Extended IDs
 //Die niedrigsten 10 Bits definieren die Application
 //Das 11. (=10!) Bit definiert, ob die App ein Event sendet (==1) oder ob ein Befehl an diese App zu senden ist (==0)
+//Wenn das höchste Bit gesetzt ist, handelt es sich um einen Befehl des Bootloaders
+#define HIGHEST_CAN_BIT 0x10000000
 void cMaster::CanBusProcess() {
-	uint32_t appId = rcvMessage.Id & (CMD_EVT_OFFSET - 1);
+
 	Time_t now = BSP::GetSteadyClock();
 	while (BSP::ReceiveCANMessage(&rcvMessage))
 	{
+		if((rcvMessage.Id & HIGHEST_CAN_BIT) != 0)
+		{
+			//This is a Message for the Bootloader
+			return;
+		}
+		uint32_t appId = rcvMessage.Id & (CMD_EVT_OFFSET - 1);
+		if(appId >= (uint32_t)eApplicationID::CNT)
+		{
+			LOGD("Unknown applicationID %i", appId);
+			return;
+		}
 		if (rcvMessage.Id < CMD_EVT_OFFSET) {
 			//appId is the id of the target app
 			if(MODEL::TRACE_COMMANDS)

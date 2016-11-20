@@ -153,7 +153,7 @@
         POWIT_L1_LVNG_W1, //Wandleuchten
         PWM___L1_LVNG_W1, //Wandleuchten
         RGBW__L1_LVNG_W3, //Effekleuchte (Reserve)
-        POWIT_L1_LVNG_W4, //Wohnwandleuchte
+        PWM___L1_LVNG_W4, //Wohnwandleuchte
         SCLIM_L1_LVNG_AIR,
         SCLIM_L1_LVNG_AIR2, //zweiter Messpunkt im sensactUP
         STEMP_L1_LVNG_FLOOR,

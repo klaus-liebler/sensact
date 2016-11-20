@@ -12,7 +12,7 @@
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
-#define NODE_TEST_HS07
+//#define NODE_TEST_HS07
 
 namespace sensact {
 
@@ -36,6 +36,7 @@ public:
 	 */
 	static cApplication * const Glo2locCmd[];
 	static const char ModelString[];
+	static const eApplicationID NodeMasterApplication;
 	static const char * const ApplicationNames[];
 	static cWs281x RGBLED;
 	static const uint8_t sensactWi_RelayAddresses[][6];
