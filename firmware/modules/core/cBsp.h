@@ -58,35 +58,35 @@
 #define PINxFromMap(_N)	(uint16_t)PINx(INPUT[2*(uint8_t)(_N)+1])
 #define I(x) &INPUT[2*x]
 
-
-#define WORD_OBO 0
-#define WORD_SPI 1
-#define WORD_I2C 2
-#define WORD_1WI 3
-
-
-
-namespace sensact {
-
 //bei Inputs und Outputs gilt
 //00-31 für onBoard-Treiber
 //32-63 für spi-Treiber
 //64-95 für i2c-Treiber
 //96-127 für 1Wire-Treiber
+const uint8_t WORD_OBO=0;
+const uint8_t WORD_SPI=1;
+const uint8_t WORD_I2C=2;
+const uint8_t WORD_1WI=3;
+//const uint8_t WORD_CAN=4;
+const uint8_t WORD_CNT=4;
+
+
+
+namespace sensact {
 
 class BSP {
 private:
 
 
 
-	static uint32_t pwmRequests[4]; //bit level
+	static uint32_t pwmRequests[WORD_CNT]; //bit level
 
-	static uint32_t poweredOutputRequests[4];//bit level
-	static uint32_t poweredOutputState[4];//bit level
-	static uint32_t lastCommittedPoweredOutputState[4];//bit level
+	static uint32_t poweredOutputRequests[WORD_CNT];//bit level
+	static uint32_t poweredOutputState[WORD_CNT];//bit level
+	static uint32_t lastCommittedPoweredOutputState[WORD_CNT];//bit level
 
-	static uint32_t inputRequests[4];//bit level
-	static uint32_t inputState[4];//bit level
+	static uint32_t inputRequests[WORD_CNT];//bit level
+	static uint32_t inputState[WORD_CNT];//bit level
 
 	static UART_HandleTypeDef comm;
 	static CAN_HandleTypeDef hcan;
