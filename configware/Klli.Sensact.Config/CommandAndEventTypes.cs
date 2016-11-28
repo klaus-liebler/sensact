@@ -37,7 +37,7 @@
 
     public enum EventType
     {
-        NOE, //no event
+        NOEVENT, //no event
         PONG, //as response to ping, just to test communication
         PRESSED,
         RELEASED,
@@ -46,6 +46,7 @@
         RELEASED_SHORT,
         RELEASED_MEDIUM,
         RELEASED_LONG,
+        INPUT_CHANGED,
         TURNED,
         TIMER,
         STATUS,
