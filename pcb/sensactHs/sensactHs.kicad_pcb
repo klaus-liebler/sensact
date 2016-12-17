@@ -3,7 +3,7 @@
   (general
     (links 850)
     (no_connects 0)
-    (area 19.949999 19.449999 120.050001 106.050001)
+    (area 18.531715 17.6024 141.85 120.700001)
     (thickness 1.6)
     (drawings 65)
     (tracks 2861)
@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 1)
+    (last_trace_width 2)
     (user_trace_width 0.2032)
     (user_trace_width 0.35)
     (user_trace_width 0.45)
@@ -11901,6 +11901,9 @@
   (segment (start 81.28 89.662) (end 81.28 90.932) (width 0.2032) (layer F.Cu) (net 2) (tstamp 57ED91C4))
   (segment (start 81.788 89.154) (end 81.28 89.662) (width 0.2032) (layer F.Cu) (net 2) (tstamp 57ED91C3))
   (segment (start 49.657 64.516) (end 54.483 69.342) (width 0.5) (layer F.Cu) (net 2) (tstamp 5801B734))
+  (segment (start 51.689 84.709) (end 49.149 84.709) (width 2) (layer F.Cu) (net 3) (status C00000))
+  (segment (start 51.689 87.249) (end 49.149 87.249) (width 2) (layer F.Cu) (net 3) (status C00000))
+  (segment (start 51.689 87.249) (end 51.689 84.709) (width 2) (layer F.Cu) (net 3) (status C00000))
   (segment (start 56.32 97.155) (end 55.753 97.722) (width 1) (layer B.Cu) (net 3))
   (segment (start 55.753 97.722) (end 55.753 98.806) (width 1) (layer B.Cu) (net 3) (tstamp 5820FDA7))
   (segment (start 55.753 98.806) (end 55.753 98.679) (width 1) (layer F.Cu) (net 3) (tstamp 5820FDAE))
@@ -11992,9 +11995,6 @@
   (segment (start 37.592 49.53) (end 35.052 49.53) (width 1) (layer F.Cu) (net 3))
   (segment (start 27.432 46.99) (end 27.432 48.133) (width 1) (layer F.Cu) (net 3))
   (segment (start 27.432 48.133) (end 27.432 49.53) (width 1) (layer F.Cu) (net 3) (tstamp 58029EEB))
-  (segment (start 51.689 87.249) (end 49.149 87.249) (width 1) (layer F.Cu) (net 3))
-  (segment (start 49.149 84.709) (end 49.149 87.249) (width 1) (layer F.Cu) (net 3))
-  (segment (start 51.689 84.709) (end 49.149 84.709) (width 1) (layer F.Cu) (net 3))
   (segment (start 55.753 97.282) (end 55.753 95.885) (width 1) (layer F.Cu) (net 3))
   (segment (start 21.209 48.133) (end 21.209 98.425) (width 1) (layer F.Cu) (net 3) (tstamp 58029EEF))
   (segment (start 21.209 98.425) (end 24.765 101.981) (width 1) (layer F.Cu) (net 3) (tstamp 5801B96E))
