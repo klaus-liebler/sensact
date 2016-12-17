@@ -68,7 +68,8 @@ enum struct ePushState
 		RGBW,
 		RCEVT,
 		LIBAR,
-		SNSCT
+		SNSCT,
+		FRWRD
 
 	};
 

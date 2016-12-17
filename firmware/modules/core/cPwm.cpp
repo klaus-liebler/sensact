@@ -1,9 +1,3 @@
-/*
-  * hc_pwm.cpp
- *
- *  Created on: 10.05.2015
- *      Author: klaus
- */
 #include <cMaster.h>
 #include "cModel.h"
 #include <cPwm.h>
@@ -136,6 +130,7 @@ void cPWM::OnSTOPCommand(Time_t now)
 
 void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 {
+	UNUSED(forced);
 	LOGD("%s OnUPCommand called", this->Id);
 	MoveInDirection(eDirection::UP, now);
 	if(autoOffIntervalMsecs!=0)
@@ -179,6 +174,7 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 
 
 void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
+	UNUSED(forced);
 	LOGD("%s OnDOWNCommand called", this->Id);
 	MoveInDirection(eDirection::DOWN, now);
 	if(autoOffIntervalMsecs!=0)

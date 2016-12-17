@@ -22,7 +22,7 @@ void Console::outDgt(char dgt) {
 void Console::divOut(uint32_t div) {
 	unsigned char dgt = 0;
 	//num &= 0xffff; // just for testing the code  with 32 bit ints
-	while (num >= div) {
+	while ((uint32_t)num >= div) {
 		num -= div;
 		dgt++;
 	}
