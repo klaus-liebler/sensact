@@ -31,6 +31,7 @@
         SEND_STATUS,
         SET_RGBW, //Params as u8
         SET_SIGNAL, //Param as u16 (mp3 song, well known color, light sequence)
+        SET_PWM, //uint32 bitmask über die zu setzenden Kanäle, uint16 für den Wwert
         DEMO,
 
     }

@@ -300,7 +300,10 @@ namespace Klli.Sensact.Config
         /// </summary>
         /// <param name="demostep"></param>
         [SensactCommandMethod]
-        public virtual void OnDEMOCommand(uint demostep) { } 
+        public virtual void OnDEMOCommand(uint demostep) { }
+
+        [SensactCommandMethod]
+        public virtual void OnSET_PWMCommand(uint bitmask, ushort value) { }
 
     }
 

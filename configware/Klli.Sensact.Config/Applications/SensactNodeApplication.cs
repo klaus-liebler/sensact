@@ -41,9 +41,16 @@ namespace Klli.Sensact.Config.Applications
 
         }
 
+        [SensactCommandMethod]
+        public override void OnSET_PWMCommand(uint channelBitmask, ushort value)
+        {
+
+        }
+
         internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
         {
             return null;
         }
+
     }
 }

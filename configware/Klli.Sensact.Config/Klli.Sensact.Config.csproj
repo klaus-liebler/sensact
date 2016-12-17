@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBuilder.cs" />
     <Compile Include="ApplicationIds.cs" />
+    <Compile Include="Applications\ForwarderApplication.cs" />
     <Compile Include="Applications\BrightnessSensorApplication.cs" />
     <Compile Include="Applications\PlaceholderApplication.cs" />
     <Compile Include="Applications\LightbarrierApplication.cs" />
