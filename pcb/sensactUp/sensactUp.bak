@@ -2092,5 +2092,5 @@ Text Label 8500 1950 0    60   ~ 0
 Wire Wire Line
 	5350 6700 5950 6700
 Text Label 5550 6700 0    60   ~ 0
-PWM_0
+PMW_0
 $EndSCHEMATC

@@ -1,4 +1,4 @@
-update=08.12.2015 08:13:46
+update=13.12.2016 09:14:03
 version=1
 last_client=kicad
 [general]
@@ -74,8 +74,6 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=stm32
-LibName32=C:/Users/klaus/OneDrive/Hausbau/004 Elektro/kicad-libs/w_microcontrollers
-LibName33=C:/Users/klaus/OneDrive/Hausbau/004 Elektro/kicad-libs/kl_can
-LibName34=switches
-LibName35=relays
-LibName36=C:/Users/klaus/OneDrive/Hausbau/004 Elektro/kicad-libs/w_device
+LibName32=switches
+LibName33=relays
+LibName34=C:/sensact/pcb/kicad-libs/sensact
