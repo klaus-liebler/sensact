@@ -12,4 +12,16 @@ $CMP 24V_PERM
 K POWER, PWR
 $ENDCMP
 #
+$CMP ROTARY_ENCODER_SWITCH
+D Rotary encoder, dual channel, incremental quadrate outputs, integrated pushbutton switch
+K rotary switch encoder pushbutton
+F ~
+$ENDCMP
+#
+$CMP ROTARY_ENCODER_SWITCH_CASE
+D Rotary encoder, dual channel, incremental quadrate outputs, integrated pushbutton switch
+K rotary switch encoder pushbutton
+F ~
+$ENDCMP
+#
 #End Doc Library
