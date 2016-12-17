@@ -458,9 +458,7 @@ void Console::putcharX(char c) {
 	CONSOLE_USART->DR = c;
 }
 
-#define MODE_CONV_COMMAND 0
-#define MODE_QUERY_INPUTS 1
-#define MODE_MIX 2
+
 
 uint8_t BSP::SampleDCF77Pin()
 {
@@ -486,161 +484,7 @@ bool BSP::HasRCEventOccured(const uint32_t eventNumber)
 #endif
 }
 
-void BSP::DoEachCycle(Time_t now) {
-#if (defined(SENSACTHS07))
-	//modus: convert-command, nur inputs abfragen, wechselweise inputs und temp abfragen
-	static Time_t last_CONVERT_T_COMMAND=0;
-	static uint8_t mode = MODE_CONV_COMMAND;
-	static uint8_t inpId=0;
-	static uint8_t tempId=0;
-	static bool flipflop=false;
-	//das Durchschalten der Relais hat Priorität beim 1wire
 
-	if(lastCommittedPoweredOutputState[WORD_1WI]!=poweredOutputState[WORD_1WI])
-	{
-		//es gibt mal grundsätzlich Unterschiede...doch wo genau?
-		int i;
-		for(i=0;i<MODEL::sensactWi_RelayAddressesCnt;i++)
-		{
-			uint32_t mask = (0x3 << (i*2));
-			if((lastCommittedPoweredOutputState[WORD_1WI] & mask) != (poweredOutputState[WORD_1WI] & mask))
-			{
-				ds2482.OWWriteDS2413(drivers::e1WireFamilyCode::_3A2100H, MODEL::sensactWi_RelayAddresses[i], RBN(poweredOutputState[WORD_1WI], i*2), RBN(poweredOutputState[WORD_1WI], 2*i+1));
-				//clear both
-				lastCommittedPoweredOutputState[WORD_1WI] &= ~mask;
-				//set both
-				lastCommittedPoweredOutputState[WORD_1WI] |= (poweredOutputState[WORD_1WI] & mask);
-			}
-		}
-	}
-	else
-	{
-		switch(mode)
-		{
-		case MODE_CONV_COMMAND:
-			//issue Convert-Command;
-			ds2482.BeginTransactionForAll(drivers::e1WireCommand::CONVERT_T);
-			mode=MODE_QUERY_INPUTS;
-			last_CONVERT_T_COMMAND=now;
-			LOGD("MODE_CONV_COMMAND");
-			break;
-		case MODE_QUERY_INPUTS:
-			//fetch input data
-			if(MODEL::sensactWi_InputAddressesCnt>inpId)
-			{
-				ds2482.OWReadDS2413(drivers::e1WireFamilyCode::_3A2100H, MODEL::sensactWi_InputAddresses[inpId], inpId*2, &inputState[WORD_1WI]);
-				LOGD("MODE_QUERY_INPUTS %d", inpId);
-				inpId++;
-				if(inpId==MODEL::sensactWi_InputAddressesCnt)
-				{
-					inpId=0;
-				}
-			}
-			if(now-last_CONVERT_T_COMMAND>1000)
-			{
-				mode=MODE_MIX;
-			}
-			break;
-		case MODE_MIX:
-			if(flipflop)
-			{
-				if(MODEL::sensactWi_InputAddressesCnt>inpId)
-				{
-					//fetch input data
-					ds2482.OWReadDS2413(drivers::e1WireFamilyCode::_3A2100H, MODEL::sensactWi_InputAddresses[inpId], inpId*2, &inputState[WORD_1WI]);
-					LOGD("MODE_MIX inp %d", inpId);
-					inpId++;
-					if(inpId==MODEL::sensactWi_InputAddressesCnt)
-					{
-						inpId=0;
-					}
-				}
-			}
-			else
-			{
-				if(MODEL::ds18b20_AddressesCnt>tempId)
-				{
-					//fetch temperature data
-					ds2482.OWReadDS18B20Temp(MODEL::ds18b20_Addresses[tempId], &temperatures[tempId]);
-					LOGD("MODE_MIX temp %d", tempId);
-					tempId++;
-					if(tempId==MODEL::ds18b20_AddressesCnt)
-					{
-	/*
-						#if LOGLEVEL == LEVEL_INFO
-						LOGI("Got the following temperatures");
-						uint8_t tc=0;
-						for(tc=0;tc<16;tc++)
-						{
-							Console::Writeln("Sensor %d: %d and %d/16", tc, temperatures[tc]/16, temperatures[tc]%16);
-						}
-	#endif
-	*/
-						tempId=0;
-						mode=MODE_CONV_COMMAND;
-					}
-				}
-				else
-				{
-					tempId=0;
-					mode=MODE_CONV_COMMAND;
-				}
-			}
-			flipflop =!flipflop;
-			break;
-		}
-	}
-
-	//StartConversion und 1 sek später reihum einsammeln
-	if (now > nextLedToggle) {
-		for(uint8_t i=0;i<COUNTOF(BSP::ErrorCounters);i++)
-		{
-			if(BSP::ErrorCounters[i]!=0)
-			{
-				LOGW("ErrorCounters[%i] = %i", i, BSP::ErrorCounters[i]);
-			}
-		}
-		nextLedToggle += 1000;
-	}
-#endif
-#ifdef SENSACTHS07
-
-	if (pca9555_U18.HasChanged()) {
-		uint16_t tmp = pca9555_U18.GetInput();
-		inputState[WORD_I2C] = (inputState[WORD_I2C] & 0xFFFF0000) + tmp;
-	}
-	if (pca9555_U19.HasChanged()) {
-		uint16_t tmp = pca9555_U19.GetInput();
-		inputState[WORD_I2C] = (inputState[WORD_I2C] & 0x0000FFFF) + (tmp << 16);
-	}
-	uint8_t *tx = ((uint8_t*) &(poweredOutputState[WORD_SPI]));
-	if (lastCommittedPoweredOutputState[WORD_SPI] != poweredOutputState[WORD_SPI]) {
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
-		if (HAL_SPI_Transmit(&BSP::spi, tx, 3, 100) == HAL_OK) {
-			lastCommittedPoweredOutputState[WORD_SPI] = poweredOutputState[WORD_SPI];
-		}
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
-	}
-	if(rcSwitch.available())
-	{
-		uint32_t val=rcSwitch.getReceivedValue();
-		rcSwitchQueue=val;
-		rcSwitch.resetAvailable();
-	}
-#endif
-#ifdef SENSACTHS04
-
-	uint8_t *tx = ((uint8_t*) &poweredOutputState);
-	if (lastCommittedPoweredOutputState != poweredOutputState) {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
-		if (HAL_SPI_Transmit(&BSP::spi, tx, 1, 100) == HAL_OK) {
-			lastCommittedPoweredOutputState = poweredOutputState;
-		}
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
-	}
-#endif
-	(void)now;
-}
 
 static void BlockOnDoubleRegister(uint32_t *reg, uint8_t bitpos, const char * name)
 {
@@ -716,6 +560,31 @@ bool BSP::RequestDigitalInput(eInput i) {
 		}
 	}
 	return true;
+}
+
+uint32_t BSP::GetAllOnboardInputsLowLevel()
+{
+	uint32_t retval = 0;
+#ifdef SENSACTUP02
+	retval|=((GPIOB->IDR & (GPIO_PIN_0 | GPIO_PIN_1)) << 0); // B0+B1 auf 0 und 1
+	retval|=((GPIOA->IDR & (GPIO_PIN_6 | GPIO_PIN_7)) << 4) ; // A6+A7 auf 2 und 3
+	retval|=((GPIOA->IDR & (GPIO_PIN_4 | GPIO_PIN_5)) << 0) ; //A4+A5 auf 4 und 5
+	retval|=((GPIOA->IDR & (GPIO_PIN_2 | GPIO_PIN_3)) >> 4) ; //A2+A3 auf 6+7
+	retval|=((GPIOB->IDR & (GPIO_PIN_15)) >> 7) ; //B15 auf 8
+	retval|=((GPIOB->IDR & (GPIO_PIN_3)) << 6) ; //B15 auf 9
+#endif
+#ifdef SENSACTHS07
+	retval|=((GPIOC->IDR & (GPIO_PIN_13)) >>13); // C13 auf 0
+	retval|=((GPIOC->IDR & (GPIO_PIN_2 | GPIO_PIN_3)) << 1); // C2+C3 auf 1+2
+	retval|=((GPIOA->IDR & (GPIO_PIN_0 | GPIO_PIN_1| GPIO_PIN_2| GPIO_PIN_3| GPIO_PIN_4| GPIO_PIN_5| GPIO_PIN_6| GPIO_PIN_7)) >> 3); // A0...A7 auf 3..11
+	retval|=((GPIOC->IDR & (GPIO_PIN_4)) << 8); // C4 auf 12
+	retval|=((GPIOB->IDR & (GPIO_PIN_1)) << 12); // B1 auf 13
+	retval|=((GPIOB->IDR & (GPIO_PIN_0)) << 14); // B0 auf 14
+	static uint8_t INPUT[] = {P(C,4), P(B,1), P(B,0)};
+
+#endif
+
+return retval;
 }
 
 

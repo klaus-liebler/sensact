@@ -44,5 +44,6 @@ public:
 	static std::chrono::hours utc_offset_cet(std::chrono::system_clock::time_point tp);
 	static void StartIAP(void);
 	static void BufferHeartbeat(eApplicationID target, Time_t now);
+	static void OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now);
 };
 }

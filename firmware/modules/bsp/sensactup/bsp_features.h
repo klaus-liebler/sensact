@@ -70,14 +70,14 @@ enum struct eRotaryEncoder:uint8_t
 
 enum struct eInput : uint8_t
 {
-	I01=0,//A6
-	I02=1,//A7
-	I03=2,//B0
-	I04=3,//B1
-	I05=4,//A4
-	I06=5,//A5
-	I07=6,//A2
-	I08=7,//A3
+	I01=0,
+	I02=1,
+	I03=2,
+	I04=3,
+	I05=4,
+	I06=5,
+	I07=6,
+	I08=7,
 #ifdef SENSACTUP01
 	ROTAR_PUSH_1=8,
 	CNT=8,

@@ -18,6 +18,12 @@ DMA_HandleTypeDef hdma_tim1_ch1;
 
 namespace sensact {
 
+const ePWMOutput BSP::ALL_PWM_OUTPUTS[] = {ePWMOutput::P01, ePWMOutput::P03, ePWMOutput::P05, ePWMOutput::P07, ePWMOutput::P16, ePWMOutput::P17, ePWMOutput::P18, ePWMOutput::P19, ePWMOutput::P20, ePWMOutput::P21, ePWMOutput::P22, ePWMOutput::P23, ePWMOutput::P24, ePWMOutput::P25, ePWMOutput::P26, ePWMOutput::P27, ePWMOutput::P27, ePWMOutput::P28, ePWMOutput::P29, ePWMOutput::P30, ePWMOutput::P31,};
+
+void BSP::DoEachCycle(Time_t now)
+{
+	UNUSED(now);
+}
 
 static void InitPWM()
 {

@@ -80,13 +80,14 @@ private:
 
 
 	static uint32_t pwmRequests[WORD_CNT]; //bit level
-
+	static uint32_t inputRequests[WORD_CNT];//bit level
 	static uint32_t poweredOutputRequests[WORD_CNT];//bit level
+
+	static uint32_t inputState[WORD_CNT];//bit level
 	static uint32_t poweredOutputState[WORD_CNT];//bit level
 	static uint32_t lastCommittedPoweredOutputState[WORD_CNT];//bit level
 
-	static uint32_t inputRequests[WORD_CNT];//bit level
-	static uint32_t inputState[WORD_CNT];//bit level
+
 
 	static UART_HandleTypeDef comm;
 	static CAN_HandleTypeDef hcan;
@@ -102,6 +103,7 @@ private:
 	static drivers::cPCA9685 pca9685_ext;
 	//OCxREF is high as long as TIMx_CNT < TIMx_CCRx
 	//x=0,072*Impulse in nSecs
+
 
 #endif
 #ifdef SENSACTHS07
@@ -130,9 +132,12 @@ public:
 	static const uint8_t T1H_WS2811=18; //18 half Datasheet!
 	static const uint8_t T0H_WS2811=43; //43,2 half Datasheet!
 
+	static const ePWMOutput ALL_PWM_OUTPUTS[];
+
 	static uint8_t ErrorCounters[3];
 
 	static void Init();
+	static uint32_t GetAllOnboardInputsLowLevel();
 	static bool RequestPoweredOutput(ePoweredOutput r);
 	static bool RequestDigitalInput(eInput i);
 	static bool RequestDigitalOutput(eInput i);

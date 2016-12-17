@@ -27,6 +27,16 @@ volatile bool BufferHasMessage=false;
 using namespace date;
 using namespace std::chrono;
 
+//Was ist zu tun, um die sensactUP vom Programmieren zu befreien?
+//1) IAP - kompliziert und langwierig
+//2) UPs ohne eigene Verkettungslogik - Buttons und Drehimpulsgeber senden nur Events auf den Bus
+//und zwar einfache Events: Pressed, Released, turned (units).
+//diese Funktionalit‰t benˆtigt keine app, sondern "feuert" unter der appId des sensactUP
+//das Event heiﬂt "INPUT_CHANGED" und enth‰lt in einem 32bit-Wort die aktuelle Buttonbelegung )incl Drehgeber)
+//das Event heiﬂt "INC1_TURNED(int32 changeunits) oder INC2_TURNED(int32 changeunits)
+//das Kommando heiﬂt SET_PWM(uint32 PWM_MASK, uint16_t value): Alle mit PWM_MASK bezeichneten PWM-Ausg‰nge werden auf den Wert value gesetzt. Falls PWM_MASK==0, passiert also gar nicht
+
+
 namespace sensact {
 
 CANMessage cMaster::rcvMessage;
@@ -105,6 +115,33 @@ void cMaster::Run(void) {
 			BufferHasMessage=false;
 		}
 		CanBusProcess();
+#ifdef DUMP_FRONTEND
+		static uint32_t lastAllInputs = 0;
+		static uint16_t lastRot1Value = 0;
+		static uint16_t lastRot2Value=0;
+		uint32_t inputs = BSP::GetAllOnboardInputsLowLevel();
+		if(inputs != lastAllInputs)
+		{
+			SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::INPUT_CHANGED, (uint8_t*)&inputs, 4);
+		}
+		lastAllInputs=inputs;
+
+		uint16_t rot1val = BSP::GetRotaryEncoderValue(eRotaryEncoder::ROTARYENCODER_1);
+		if(rot1val!=lastRot1Value)
+		{
+			int16_t change =  rot1val-lastRot1Value;
+			cMaster::SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::TURNED, (uint8_t*)&change ,2);
+		}
+		lastRot1Value=rot1val;
+
+		uint16_t rot2val = BSP::GetRotaryEncoderValue(eRotaryEncoder::ROTARYENCODER_2);
+		if(rot2val!=lastRot2Value)
+		{
+			int16_t change =  rot2val-lastRot2Value;
+			cMaster::SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::TURNED, (uint8_t*)&change ,2);
+		}
+		lastRot2Value=rot2val;
+#endif
 		BSP::DoEachCycle(now);
 		//special call to release and reset message
 		BufferHeartbeat(eApplicationID::NO_APPLICATION, now);
@@ -113,6 +150,15 @@ void cMaster::Run(void) {
 		}
 	}
 }
+
+void cMaster::OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now)
+{
+	UNUSED(command);
+	UNUSED(data);
+	UNUSED(dataLenght);
+	UNUSED(now);
+}
+
 
 bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd,
 		const uint8_t * const payload, const uint8_t payloadLength) {
