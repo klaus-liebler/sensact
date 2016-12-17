@@ -104,6 +104,30 @@ bool cPCA9685::Setup() {
 	return true;
 }
 
+bool cPCA9685::SetOutputFull(ePCA9685Output Output, bool on)
+{
+	if(this->i2c==0)
+	{
+		LOGE("i2c device is null");
+		return false;
+	}
+	uint8_t data = 0xF0;
+	//07,4 on, 09,4 full off
+	uint8_t trials = 10;
+	HAL_StatusTypeDef status = HAL_ERROR;
+	while(trials > 0)
+	{
+		status=HAL_I2C_Mem_Write(i2c, ADDR, (uint16_t)(0x06+4*(uint8_t)Output+on?1:3), I2C_MEMADD_SIZE_8BIT, &data, 1, 5);
+		if(status==HAL_OK)
+		{
+			break;
+		}
+		ReinitI2c();
+		trials--;
+	}
+	return status == HAL_OK;
+}
+
 /**
  * @brief	Sets a specific output for a PCA9685
  * @param	Address: The address to the PCA9685
