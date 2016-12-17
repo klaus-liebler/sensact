@@ -34,7 +34,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 17
+Sheet 17 9
 Title ""
 Date ""
 Rev ""
@@ -45,203 +45,391 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L CONN_01X02 P3
+L CONN_01X02 P22
 U 1 1 57CCF041
-P 7250 3350
-AR Path="/57CCF017/57CCF041" Ref="P3"  Part="1" 
-AR Path="/57CD0726/57CCF041" Ref="P4"  Part="1" 
-AR Path="/57CD07F6/57CCF041" Ref="P5"  Part="1" 
-AR Path="/57CD080D/57CCF041" Ref="P6"  Part="1" 
-AR Path="/57CD0824/57CCF041" Ref="P7"  Part="1" 
-AR Path="/57CD083B/57CCF041" Ref="P8"  Part="1" 
-AR Path="/57CD0852/57CCF041" Ref="P9"  Part="1" 
-AR Path="/57CD0869/57CCF041" Ref="P10"  Part="1" 
-AR Path="/57CDCD72/57CCF041" Ref="P11"  Part="1" 
-AR Path="/57CDCD9C/57CCF041" Ref="P12"  Part="1" 
-AR Path="/57CDCDC6/57CCF041" Ref="P13"  Part="1" 
-AR Path="/57CDCDF0/57CCF041" Ref="P14"  Part="1" 
-AR Path="/57CDCE1A/57CCF041" Ref="P15"  Part="1" 
-AR Path="/57CDCE6B/57CCF041" Ref="P16"  Part="1" 
-AR Path="/57CDCE97/57CCF041" Ref="P17"  Part="1" 
-AR Path="/57CDCEC1/57CCF041" Ref="P18"  Part="1" 
-F 0 "P3" H 7250 3500 50  0000 C CNN
-F 1 "CONN_01X02" V 7350 3350 50  0000 C CNN
-F 2 "sensact:conn_2P" H 7250 3350 50  0001 C CNN
-F 3 "" H 7250 3350 50  0000 C CNN
-	1    7250 3350
+P 8200 3400
+AR Path="/57CDCEC1/57CCF041" Ref="P22"  Part="1" 
+AR Path="/57CCF017/57CCF041" Ref="P7"  Part="1" 
+AR Path="/57CD0726/57CCF041" Ref="P8"  Part="1" 
+AR Path="/57CD07F6/57CCF041" Ref="P9"  Part="1" 
+AR Path="/57CD080D/57CCF041" Ref="P10"  Part="1" 
+AR Path="/57CD0824/57CCF041" Ref="P11"  Part="1" 
+AR Path="/57CD083B/57CCF041" Ref="P12"  Part="1" 
+AR Path="/57CD0852/57CCF041" Ref="P13"  Part="1" 
+AR Path="/57CD0869/57CCF041" Ref="P14"  Part="1" 
+AR Path="/57CDCD72/57CCF041" Ref="P15"  Part="1" 
+AR Path="/57CDCD9C/57CCF041" Ref="P16"  Part="1" 
+AR Path="/57CDCDC6/57CCF041" Ref="P17"  Part="1" 
+AR Path="/57CDCDF0/57CCF041" Ref="P18"  Part="1" 
+AR Path="/57CDCE1A/57CCF041" Ref="P19"  Part="1" 
+AR Path="/57CDCE6B/57CCF041" Ref="P20"  Part="1" 
+AR Path="/57CDCE97/57CCF041" Ref="P21"  Part="1" 
+F 0 "P7" H 8200 3550 50  0000 C CNN
+F 1 "CONN_01X02" V 8300 3400 50  0000 C CNN
+F 2 "sensact:conn_2P" H 8200 3400 50  0001 C CNN
+F 3 "" H 8200 3400 50  0000 C CNN
+	1    8200 3400
 	1    0    0    1   
 $EndComp
 $Comp
-L LED_DRIVER U2
-U 1 1 57CCF0EE
-P 5900 3250
-AR Path="/57CCF017/57CCF0EE" Ref="U2"  Part="1" 
-AR Path="/57CD0726/57CCF0EE" Ref="U3"  Part="1" 
-AR Path="/57CD07F6/57CCF0EE" Ref="U4"  Part="1" 
-AR Path="/57CD080D/57CCF0EE" Ref="U5"  Part="1" 
-AR Path="/57CD0824/57CCF0EE" Ref="U6"  Part="1" 
-AR Path="/57CD083B/57CCF0EE" Ref="U7"  Part="1" 
-AR Path="/57CD0852/57CCF0EE" Ref="U8"  Part="1" 
-AR Path="/57CD0869/57CCF0EE" Ref="U9"  Part="1" 
-AR Path="/57CDCD72/57CCF0EE" Ref="U10"  Part="1" 
-AR Path="/57CDCD9C/57CCF0EE" Ref="U11"  Part="1" 
-AR Path="/57CDCDC6/57CCF0EE" Ref="U12"  Part="1" 
-AR Path="/57CDCDF0/57CCF0EE" Ref="U13"  Part="1" 
-AR Path="/57CDCE1A/57CCF0EE" Ref="U14"  Part="1" 
-AR Path="/57CDCE6B/57CCF0EE" Ref="U15"  Part="1" 
-AR Path="/57CDCE97/57CCF0EE" Ref="U16"  Part="1" 
-AR Path="/57CDCEC1/57CCF0EE" Ref="U17"  Part="1" 
-F 0 "U2" H 5900 3250 60  0000 C CNN
-F 1 "LED_DRIVER" H 5900 3150 60  0000 C CNN
-F 2 "sensact:MEANWELL_LDD_L" H 5900 3250 60  0001 C CNN
-F 3 "" H 5900 3250 60  0000 C CNN
-	1    5900 3250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6350 3300 7050 3300
-Wire Wire Line
-	6350 3300 6350 3150
-Wire Wire Line
-	7050 3400 6350 3400
-Wire Wire Line
-	6350 3400 6350 3900
-$Comp
-L GND #PWR015
+L GND #PWR049
 U 1 1 57CCF171
-P 5200 3550
-AR Path="/57CCF017/57CCF171" Ref="#PWR015"  Part="1" 
-AR Path="/57CD0726/57CCF171" Ref="#PWR017"  Part="1" 
-AR Path="/57CD07F6/57CCF171" Ref="#PWR019"  Part="1" 
-AR Path="/57CD080D/57CCF171" Ref="#PWR021"  Part="1" 
-AR Path="/57CD0824/57CCF171" Ref="#PWR023"  Part="1" 
-AR Path="/57CD083B/57CCF171" Ref="#PWR025"  Part="1" 
-AR Path="/57CD0852/57CCF171" Ref="#PWR027"  Part="1" 
-AR Path="/57CD0869/57CCF171" Ref="#PWR029"  Part="1" 
-AR Path="/57CDCD72/57CCF171" Ref="#PWR031"  Part="1" 
-AR Path="/57CDCD9C/57CCF171" Ref="#PWR033"  Part="1" 
-AR Path="/57CDCDC6/57CCF171" Ref="#PWR035"  Part="1" 
-AR Path="/57CDCDF0/57CCF171" Ref="#PWR037"  Part="1" 
-AR Path="/57CDCE1A/57CCF171" Ref="#PWR039"  Part="1" 
-AR Path="/57CDCE6B/57CCF171" Ref="#PWR041"  Part="1" 
-AR Path="/57CDCE97/57CCF171" Ref="#PWR043"  Part="1" 
-AR Path="/57CDCEC1/57CCF171" Ref="#PWR045"  Part="1" 
-F 0 "#PWR045" H 5200 3300 50  0001 C CNN
-F 1 "GND" H 5200 3400 50  0000 C CNN
-F 2 "" H 5200 3550 50  0000 C CNN
-F 3 "" H 5200 3550 50  0000 C CNN
-	1    5200 3550
+P 5750 4450
+AR Path="/57CDCEC1/57CCF171" Ref="#PWR049"  Part="1" 
+AR Path="/57CCF017/57CCF171" Ref="#PWR019"  Part="1" 
+AR Path="/57CD0726/57CCF171" Ref="#PWR021"  Part="1" 
+AR Path="/57CD07F6/57CCF171" Ref="#PWR023"  Part="1" 
+AR Path="/57CD080D/57CCF171" Ref="#PWR025"  Part="1" 
+AR Path="/57CD0824/57CCF171" Ref="#PWR027"  Part="1" 
+AR Path="/57CD083B/57CCF171" Ref="#PWR029"  Part="1" 
+AR Path="/57CD0852/57CCF171" Ref="#PWR031"  Part="1" 
+AR Path="/57CD0869/57CCF171" Ref="#PWR033"  Part="1" 
+AR Path="/57CDCD72/57CCF171" Ref="#PWR035"  Part="1" 
+AR Path="/57CDCD9C/57CCF171" Ref="#PWR037"  Part="1" 
+AR Path="/57CDCDC6/57CCF171" Ref="#PWR039"  Part="1" 
+AR Path="/57CDCDF0/57CCF171" Ref="#PWR041"  Part="1" 
+AR Path="/57CDCE1A/57CCF171" Ref="#PWR043"  Part="1" 
+AR Path="/57CDCE6B/57CCF171" Ref="#PWR045"  Part="1" 
+AR Path="/57CDCE97/57CCF171" Ref="#PWR047"  Part="1" 
+F 0 "#PWR019" H 5750 4200 50  0001 C CNN
+F 1 "GND" H 5750 4300 50  0000 C CNN
+F 2 "" H 5750 4450 50  0000 C CNN
+F 3 "" H 5750 4450 50  0000 C CNN
+	1    5750 4450
 	1    0    0    -1  
 $EndComp
 $Comp
-L +24V #PWR016
+L +24V #PWR050
 U 1 1 57CCF189
-P 5350 3150
-AR Path="/57CCF017/57CCF189" Ref="#PWR016"  Part="1" 
-AR Path="/57CD0726/57CCF189" Ref="#PWR018"  Part="1" 
-AR Path="/57CD07F6/57CCF189" Ref="#PWR020"  Part="1" 
-AR Path="/57CD080D/57CCF189" Ref="#PWR022"  Part="1" 
-AR Path="/57CD0824/57CCF189" Ref="#PWR024"  Part="1" 
-AR Path="/57CD083B/57CCF189" Ref="#PWR026"  Part="1" 
-AR Path="/57CD0852/57CCF189" Ref="#PWR028"  Part="1" 
-AR Path="/57CD0869/57CCF189" Ref="#PWR030"  Part="1" 
-AR Path="/57CDCD72/57CCF189" Ref="#PWR032"  Part="1" 
-AR Path="/57CDCD9C/57CCF189" Ref="#PWR034"  Part="1" 
-AR Path="/57CDCDC6/57CCF189" Ref="#PWR036"  Part="1" 
-AR Path="/57CDCDF0/57CCF189" Ref="#PWR038"  Part="1" 
-AR Path="/57CDCE1A/57CCF189" Ref="#PWR040"  Part="1" 
-AR Path="/57CDCE6B/57CCF189" Ref="#PWR042"  Part="1" 
-AR Path="/57CDCE97/57CCF189" Ref="#PWR044"  Part="1" 
-AR Path="/57CDCEC1/57CCF189" Ref="#PWR046"  Part="1" 
-F 0 "#PWR046" H 5350 3000 50  0001 C CNN
-F 1 "+24V" H 5350 3290 50  0000 C CNN
-F 2 "" H 5350 3150 50  0000 C CNN
-F 3 "" H 5350 3150 50  0000 C CNN
-	1    5350 3150
+P 4600 3100
+AR Path="/57CDCEC1/57CCF189" Ref="#PWR050"  Part="1" 
+AR Path="/57CCF017/57CCF189" Ref="#PWR020"  Part="1" 
+AR Path="/57CD0726/57CCF189" Ref="#PWR022"  Part="1" 
+AR Path="/57CD07F6/57CCF189" Ref="#PWR024"  Part="1" 
+AR Path="/57CD080D/57CCF189" Ref="#PWR026"  Part="1" 
+AR Path="/57CD0824/57CCF189" Ref="#PWR028"  Part="1" 
+AR Path="/57CD083B/57CCF189" Ref="#PWR030"  Part="1" 
+AR Path="/57CD0852/57CCF189" Ref="#PWR032"  Part="1" 
+AR Path="/57CD0869/57CCF189" Ref="#PWR034"  Part="1" 
+AR Path="/57CDCD72/57CCF189" Ref="#PWR036"  Part="1" 
+AR Path="/57CDCD9C/57CCF189" Ref="#PWR038"  Part="1" 
+AR Path="/57CDCDC6/57CCF189" Ref="#PWR040"  Part="1" 
+AR Path="/57CDCDF0/57CCF189" Ref="#PWR042"  Part="1" 
+AR Path="/57CDCE1A/57CCF189" Ref="#PWR044"  Part="1" 
+AR Path="/57CDCE6B/57CCF189" Ref="#PWR046"  Part="1" 
+AR Path="/57CDCE97/57CCF189" Ref="#PWR048"  Part="1" 
+F 0 "#PWR020" H 4600 2950 50  0001 C CNN
+F 1 "+24V" H 4600 3240 50  0000 C CNN
+F 2 "" H 4600 3100 50  0000 C CNN
+F 3 "" H 4600 3100 50  0000 C CNN
+	1    4600 3100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	5400 3150 5350 3150
-Wire Wire Line
-	5200 3550 5400 3550
-Text HLabel 4850 3450 0    60   Input ~ 0
+Text HLabel 5150 3800 0    60   Input ~ 0
 PWM_IN
-Wire Wire Line
-	4850 3450 5400 3450
-$Comp
-L JUMPER JP6
-U 1 1 57CD15FA
-P 5800 4200
-AR Path="/57CCF017/57CD15FA" Ref="JP6"  Part="1" 
-AR Path="/57CD0726/57CD15FA" Ref="JP8"  Part="1" 
-AR Path="/57CD07F6/57CD15FA" Ref="JP10"  Part="1" 
-AR Path="/57CD080D/57CD15FA" Ref="JP12"  Part="1" 
-AR Path="/57CD0824/57CD15FA" Ref="JP14"  Part="1" 
-AR Path="/57CD083B/57CD15FA" Ref="JP16"  Part="1" 
-AR Path="/57CD0852/57CD15FA" Ref="JP18"  Part="1" 
-AR Path="/57CD0869/57CD15FA" Ref="JP20"  Part="1" 
-AR Path="/57CDCD72/57CD15FA" Ref="JP22"  Part="1" 
-AR Path="/57CDCD9C/57CD15FA" Ref="JP24"  Part="1" 
-AR Path="/57CDCDC6/57CD15FA" Ref="JP26"  Part="1" 
-AR Path="/57CDCDF0/57CD15FA" Ref="JP28"  Part="1" 
-AR Path="/57CDCE1A/57CD15FA" Ref="JP30"  Part="1" 
-AR Path="/57CDCE6B/57CD15FA" Ref="JP32"  Part="1" 
-AR Path="/57CDCE97/57CD15FA" Ref="JP34"  Part="1" 
-AR Path="/57CDCEC1/57CD15FA" Ref="JP36"  Part="1" 
-F 0 "JP6" H 5800 4350 50  0000 C CNN
-F 1 "JUMPER" H 5800 4120 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603" H 5800 4200 50  0001 C CNN
-F 3 "" H 5800 4200 50  0000 C CNN
-	1    5800 4200
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5000 3450 5000 4200
-Wire Wire Line
-	5000 4200 5500 4200
-Connection ~ 5000 3450
-Wire Wire Line
-	6400 3300 6400 4200
-Wire Wire Line
-	6400 4200 6100 4200
-Connection ~ 6400 3300
-$Comp
-L JUMPER JP5
-U 1 1 57CD1661
-P 5800 3900
-AR Path="/57CCF017/57CD1661" Ref="JP5"  Part="1" 
-AR Path="/57CD0726/57CD1661" Ref="JP7"  Part="1" 
-AR Path="/57CD07F6/57CD1661" Ref="JP9"  Part="1" 
-AR Path="/57CD080D/57CD1661" Ref="JP11"  Part="1" 
-AR Path="/57CD0824/57CD1661" Ref="JP13"  Part="1" 
-AR Path="/57CD083B/57CD1661" Ref="JP15"  Part="1" 
-AR Path="/57CD0852/57CD1661" Ref="JP17"  Part="1" 
-AR Path="/57CD0869/57CD1661" Ref="JP19"  Part="1" 
-AR Path="/57CDCD72/57CD1661" Ref="JP21"  Part="1" 
-AR Path="/57CDCD9C/57CD1661" Ref="JP23"  Part="1" 
-AR Path="/57CDCDC6/57CD1661" Ref="JP25"  Part="1" 
-AR Path="/57CDCDF0/57CD1661" Ref="JP27"  Part="1" 
-AR Path="/57CDCE1A/57CD1661" Ref="JP29"  Part="1" 
-AR Path="/57CDCE6B/57CD1661" Ref="JP31"  Part="1" 
-AR Path="/57CDCE97/57CD1661" Ref="JP33"  Part="1" 
-AR Path="/57CDCEC1/57CD1661" Ref="JP35"  Part="1" 
-F 0 "JP5" H 5800 4050 50  0000 C CNN
-F 1 "JUMPER" H 5800 3820 50  0000 C CNN
-F 2 "Resistors_SMD:R_0603" H 5800 3900 50  0001 C CNN
-F 3 "" H 5800 3900 50  0000 C CNN
-	1    5800 3900
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6350 3900 6100 3900
-Connection ~ 6350 3550
-Wire Wire Line
-	5300 3550 5300 3900
-Wire Wire Line
-	5300 3900 5500 3900
-Connection ~ 5300 3550
-Text Label 6650 3300 0    60   ~ 0
+Text Label 7750 3350 0    60   ~ 0
 LED+
-Text Label 6650 3400 0    60   ~ 0
+Text Label 7750 3450 0    60   ~ 0
 LED-
+$Comp
+L LM3404 U17
+U 1 1 58432375
+P 5750 3700
+AR Path="/57CDCEC1/58432375" Ref="U17"  Part="1" 
+AR Path="/57CCF017/58432375" Ref="U2"  Part="1" 
+AR Path="/57CD0726/58432375" Ref="U3"  Part="1" 
+AR Path="/57CD07F6/58432375" Ref="U4"  Part="1" 
+AR Path="/57CD080D/58432375" Ref="U5"  Part="1" 
+AR Path="/57CD0824/58432375" Ref="U6"  Part="1" 
+AR Path="/57CD083B/58432375" Ref="U7"  Part="1" 
+AR Path="/57CD0852/58432375" Ref="U8"  Part="1" 
+AR Path="/57CD0869/58432375" Ref="U9"  Part="1" 
+AR Path="/57CDCD72/58432375" Ref="U10"  Part="1" 
+AR Path="/57CDCD9C/58432375" Ref="U11"  Part="1" 
+AR Path="/57CDCDC6/58432375" Ref="U12"  Part="1" 
+AR Path="/57CDCDF0/58432375" Ref="U13"  Part="1" 
+AR Path="/57CDCE1A/58432375" Ref="U14"  Part="1" 
+AR Path="/57CDCE6B/58432375" Ref="U15"  Part="1" 
+AR Path="/57CDCE97/58432375" Ref="U16"  Part="1" 
+F 0 "U2" H 5450 4400 60  0000 L CNN
+F 1 "LM3404" H 5450 4300 60  0000 L CNN
+F 2 "sensact:SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder" H 5800 3700 60  0001 C CNN
+F 3 "" H 5800 3700 60  0001 C CNN
+	1    5750 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R33
+U 1 1 584323DE
+P 5100 3400
+AR Path="/57CDCEC1/584323DE" Ref="R33"  Part="1" 
+AR Path="/57CCF017/584323DE" Ref="R3"  Part="1" 
+AR Path="/57CD0726/584323DE" Ref="R5"  Part="1" 
+AR Path="/57CD07F6/584323DE" Ref="R7"  Part="1" 
+AR Path="/57CD080D/584323DE" Ref="R9"  Part="1" 
+AR Path="/57CD0824/584323DE" Ref="R11"  Part="1" 
+AR Path="/57CD083B/584323DE" Ref="R13"  Part="1" 
+AR Path="/57CD0852/584323DE" Ref="R15"  Part="1" 
+AR Path="/57CD0869/584323DE" Ref="R17"  Part="1" 
+AR Path="/57CDCD72/584323DE" Ref="R19"  Part="1" 
+AR Path="/57CDCD9C/584323DE" Ref="R21"  Part="1" 
+AR Path="/57CDCDC6/584323DE" Ref="R23"  Part="1" 
+AR Path="/57CDCDF0/584323DE" Ref="R25"  Part="1" 
+AR Path="/57CDCE1A/584323DE" Ref="R27"  Part="1" 
+AR Path="/57CDCE6B/584323DE" Ref="R29"  Part="1" 
+AR Path="/57CDCE97/584323DE" Ref="R31"  Part="1" 
+F 0 "R3" V 5180 3400 50  0000 C CNN
+F 1 "1M" V 5100 3400 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5030 3400 50  0001 C CNN
+F 3 "" H 5100 3400 50  0000 C CNN
+	1    5100 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 4100 5750 4450
+Wire Wire Line
+	5250 3550 5100 3550
+Wire Wire Line
+	5250 3250 5250 3300
+Wire Wire Line
+	5050 3250 5250 3250
+Wire Wire Line
+	5050 3100 5050 3250
+Connection ~ 5100 3250
+Wire Wire Line
+	5250 3800 5150 3800
+$Comp
+L D_Schottky D16
+U 1 1 5843248F
+P 6500 3500
+AR Path="/57CDCEC1/5843248F" Ref="D16"  Part="1" 
+AR Path="/57CCF017/5843248F" Ref="D1"  Part="1" 
+AR Path="/57CD0726/5843248F" Ref="D2"  Part="1" 
+AR Path="/57CD07F6/5843248F" Ref="D3"  Part="1" 
+AR Path="/57CD080D/5843248F" Ref="D4"  Part="1" 
+AR Path="/57CD0824/5843248F" Ref="D5"  Part="1" 
+AR Path="/57CD083B/5843248F" Ref="D6"  Part="1" 
+AR Path="/57CD0852/5843248F" Ref="D7"  Part="1" 
+AR Path="/57CD0869/5843248F" Ref="D8"  Part="1" 
+AR Path="/57CDCD72/5843248F" Ref="D9"  Part="1" 
+AR Path="/57CDCD9C/5843248F" Ref="D10"  Part="1" 
+AR Path="/57CDCDC6/5843248F" Ref="D11"  Part="1" 
+AR Path="/57CDCDF0/5843248F" Ref="D12"  Part="1" 
+AR Path="/57CDCE1A/5843248F" Ref="D13"  Part="1" 
+AR Path="/57CDCE6B/5843248F" Ref="D14"  Part="1" 
+AR Path="/57CDCE97/5843248F" Ref="D15"  Part="1" 
+F 0 "D1" H 6500 3600 50  0000 C CNN
+F 1 "D_Schottky" H 6500 3400 50  0000 C CNN
+F 2 "sensact:do214ac_handsolder" H 6500 3500 50  0001 C CNN
+F 3 "" H 6500 3500 50  0000 C CNN
+	1    6500 3500
+	0    1    1    0   
+$EndComp
+$Comp
+L INDUCTOR L16
+U 1 1 584324F2
+P 6850 3300
+AR Path="/57CDCEC1/584324F2" Ref="L16"  Part="1" 
+AR Path="/57CCF017/584324F2" Ref="L1"  Part="1" 
+AR Path="/57CD0726/584324F2" Ref="L2"  Part="1" 
+AR Path="/57CD07F6/584324F2" Ref="L3"  Part="1" 
+AR Path="/57CD080D/584324F2" Ref="L4"  Part="1" 
+AR Path="/57CD0824/584324F2" Ref="L5"  Part="1" 
+AR Path="/57CD083B/584324F2" Ref="L6"  Part="1" 
+AR Path="/57CD0852/584324F2" Ref="L7"  Part="1" 
+AR Path="/57CD0869/584324F2" Ref="L8"  Part="1" 
+AR Path="/57CDCD72/584324F2" Ref="L9"  Part="1" 
+AR Path="/57CDCD9C/584324F2" Ref="L10"  Part="1" 
+AR Path="/57CDCDC6/584324F2" Ref="L11"  Part="1" 
+AR Path="/57CDCDF0/584324F2" Ref="L12"  Part="1" 
+AR Path="/57CDCE1A/584324F2" Ref="L13"  Part="1" 
+AR Path="/57CDCE6B/584324F2" Ref="L14"  Part="1" 
+AR Path="/57CDCE97/584324F2" Ref="L15"  Part="1" 
+F 0 "L1" V 6800 3300 50  0000 C CNN
+F 1 "330u" V 6950 3300 50  0000 C CNN
+F 2 "sensact:CD127" H 6850 3300 50  0001 C CNN
+F 3 "" H 6850 3300 50  0000 C CNN
+	1    6850 3300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8000 3450 7300 3450
+Wire Wire Line
+	6250 3300 6550 3300
+$Comp
+L R R34
+U 1 1 584326A5
+P 7300 4200
+AR Path="/57CDCEC1/584326A5" Ref="R34"  Part="1" 
+AR Path="/57CCF017/584326A5" Ref="R4"  Part="1" 
+AR Path="/57CD0726/584326A5" Ref="R6"  Part="1" 
+AR Path="/57CD07F6/584326A5" Ref="R8"  Part="1" 
+AR Path="/57CD080D/584326A5" Ref="R10"  Part="1" 
+AR Path="/57CD0824/584326A5" Ref="R12"  Part="1" 
+AR Path="/57CD083B/584326A5" Ref="R14"  Part="1" 
+AR Path="/57CD0852/584326A5" Ref="R16"  Part="1" 
+AR Path="/57CD0869/584326A5" Ref="R18"  Part="1" 
+AR Path="/57CDCD72/584326A5" Ref="R20"  Part="1" 
+AR Path="/57CDCD9C/584326A5" Ref="R22"  Part="1" 
+AR Path="/57CDCDC6/584326A5" Ref="R24"  Part="1" 
+AR Path="/57CDCDF0/584326A5" Ref="R26"  Part="1" 
+AR Path="/57CDCE1A/584326A5" Ref="R28"  Part="1" 
+AR Path="/57CDCE6B/584326A5" Ref="R30"  Part="1" 
+AR Path="/57CDCE97/584326A5" Ref="R32"  Part="1" 
+F 0 "R4" V 7380 4200 50  0000 C CNN
+F 1 "R68" V 7300 4200 50  0000 C CNN
+F 2 "Resistors_SMD:R_1206_HandSoldering" V 7230 4200 50  0001 C CNN
+F 3 "" H 7300 4200 50  0000 C CNN
+	1    7300 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7300 3450 7300 4050
+Wire Wire Line
+	6250 3550 6650 3550
+Wire Wire Line
+	6650 3550 6650 4000
+Wire Wire Line
+	6650 4000 7300 4000
+Connection ~ 7300 4000
+Wire Wire Line
+	6500 3000 6500 3350
+Wire Wire Line
+	6500 4100 6500 3650
+Wire Wire Line
+	5750 4100 6500 4100
+Connection ~ 5750 4100
+Wire Wire Line
+	7150 3350 8000 3350
+Wire Wire Line
+	7150 3300 7150 3350
+Connection ~ 6500 3300
+Wire Wire Line
+	4600 4350 7300 4350
+Connection ~ 5750 4350
+$Comp
+L C C72
+U 1 1 58432966
+P 6300 3950
+AR Path="/57CDCEC1/58432966" Ref="C72"  Part="1" 
+AR Path="/57CCF017/58432966" Ref="C12"  Part="1" 
+AR Path="/57CD0726/58432966" Ref="C16"  Part="1" 
+AR Path="/57CD07F6/58432966" Ref="C20"  Part="1" 
+AR Path="/57CD080D/58432966" Ref="C24"  Part="1" 
+AR Path="/57CD0824/58432966" Ref="C28"  Part="1" 
+AR Path="/57CD083B/58432966" Ref="C32"  Part="1" 
+AR Path="/57CD0852/58432966" Ref="C36"  Part="1" 
+AR Path="/57CD0869/58432966" Ref="C40"  Part="1" 
+AR Path="/57CDCD72/58432966" Ref="C44"  Part="1" 
+AR Path="/57CDCD9C/58432966" Ref="C48"  Part="1" 
+AR Path="/57CDCDC6/58432966" Ref="C52"  Part="1" 
+AR Path="/57CDCDF0/58432966" Ref="C56"  Part="1" 
+AR Path="/57CDCE1A/58432966" Ref="C60"  Part="1" 
+AR Path="/57CDCE6B/58432966" Ref="C64"  Part="1" 
+AR Path="/57CDCE97/58432966" Ref="C68"  Part="1" 
+F 0 "C12" H 6325 4050 50  0000 L CNN
+F 1 "u1" H 6325 3850 50  0000 L CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 6338 3800 50  0001 C CNN
+F 3 "" H 6300 3950 50  0000 C CNN
+	1    6300 3950
+	1    0    0    -1  
+$EndComp
+Connection ~ 6300 4100
+Wire Wire Line
+	6300 3800 6250 3800
+Wire Wire Line
+	5050 3100 4600 3100
+$Comp
+L C C70
+U 1 1 58432A2E
+P 4600 3500
+AR Path="/57CDCEC1/58432A2E" Ref="C70"  Part="1" 
+AR Path="/57CCF017/58432A2E" Ref="C10"  Part="1" 
+AR Path="/57CD0726/58432A2E" Ref="C14"  Part="1" 
+AR Path="/57CD07F6/58432A2E" Ref="C18"  Part="1" 
+AR Path="/57CD080D/58432A2E" Ref="C22"  Part="1" 
+AR Path="/57CD0824/58432A2E" Ref="C26"  Part="1" 
+AR Path="/57CD083B/58432A2E" Ref="C30"  Part="1" 
+AR Path="/57CD0852/58432A2E" Ref="C34"  Part="1" 
+AR Path="/57CD0869/58432A2E" Ref="C38"  Part="1" 
+AR Path="/57CDCD72/58432A2E" Ref="C42"  Part="1" 
+AR Path="/57CDCD9C/58432A2E" Ref="C46"  Part="1" 
+AR Path="/57CDCDC6/58432A2E" Ref="C50"  Part="1" 
+AR Path="/57CDCDF0/58432A2E" Ref="C54"  Part="1" 
+AR Path="/57CDCE1A/58432A2E" Ref="C58"  Part="1" 
+AR Path="/57CDCE6B/58432A2E" Ref="C62"  Part="1" 
+AR Path="/57CDCE97/58432A2E" Ref="C66"  Part="1" 
+F 0 "C10" H 4625 3600 50  0000 L CNN
+F 1 "2u2" H 4625 3400 50  0000 L CNN
+F 2 "Resistors_SMD:R_1210_HandSoldering" H 4638 3350 50  0001 C CNN
+F 3 "" H 4600 3500 50  0000 C CNN
+	1    4600 3500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4600 3100 4600 3350
+Wire Wire Line
+	4600 3650 4600 4350
+$Comp
+L C C73
+U 1 1 58432B9C
+P 7200 3500
+AR Path="/57CDCEC1/58432B9C" Ref="C73"  Part="1" 
+AR Path="/57CCF017/58432B9C" Ref="C13"  Part="1" 
+AR Path="/57CD0726/58432B9C" Ref="C17"  Part="1" 
+AR Path="/57CD07F6/58432B9C" Ref="C21"  Part="1" 
+AR Path="/57CD080D/58432B9C" Ref="C25"  Part="1" 
+AR Path="/57CD0824/58432B9C" Ref="C29"  Part="1" 
+AR Path="/57CD083B/58432B9C" Ref="C33"  Part="1" 
+AR Path="/57CD0852/58432B9C" Ref="C37"  Part="1" 
+AR Path="/57CD0869/58432B9C" Ref="C41"  Part="1" 
+AR Path="/57CDCD72/58432B9C" Ref="C45"  Part="1" 
+AR Path="/57CDCD9C/58432B9C" Ref="C49"  Part="1" 
+AR Path="/57CDCDC6/58432B9C" Ref="C53"  Part="1" 
+AR Path="/57CDCDF0/58432B9C" Ref="C57"  Part="1" 
+AR Path="/57CDCE1A/58432B9C" Ref="C61"  Part="1" 
+AR Path="/57CDCE6B/58432B9C" Ref="C65"  Part="1" 
+AR Path="/57CDCE97/58432B9C" Ref="C69"  Part="1" 
+F 0 "C13" H 7225 3600 50  0000 L CNN
+F 1 "2u2" H 7225 3400 50  0000 L CNN
+F 2 "Resistors_SMD:R_1210_HandSoldering" H 7238 3350 50  0001 C CNN
+F 3 "" H 7200 3500 50  0000 C CNN
+	1    7200 3500
+	1    0    0    -1  
+$EndComp
+Connection ~ 7200 3350
+Wire Wire Line
+	7200 3650 7300 3650
+Connection ~ 7300 3650
+$Comp
+L C C71
+U 1 1 58432D09
+P 6050 3000
+AR Path="/57CDCEC1/58432D09" Ref="C71"  Part="1" 
+AR Path="/57CCF017/58432D09" Ref="C11"  Part="1" 
+AR Path="/57CD0726/58432D09" Ref="C15"  Part="1" 
+AR Path="/57CD07F6/58432D09" Ref="C19"  Part="1" 
+AR Path="/57CD080D/58432D09" Ref="C23"  Part="1" 
+AR Path="/57CD0824/58432D09" Ref="C27"  Part="1" 
+AR Path="/57CD083B/58432D09" Ref="C31"  Part="1" 
+AR Path="/57CD0852/58432D09" Ref="C35"  Part="1" 
+AR Path="/57CD0869/58432D09" Ref="C39"  Part="1" 
+AR Path="/57CDCD72/58432D09" Ref="C43"  Part="1" 
+AR Path="/57CDCD9C/58432D09" Ref="C47"  Part="1" 
+AR Path="/57CDCDC6/58432D09" Ref="C51"  Part="1" 
+AR Path="/57CDCDF0/58432D09" Ref="C55"  Part="1" 
+AR Path="/57CDCE1A/58432D09" Ref="C59"  Part="1" 
+AR Path="/57CDCE6B/58432D09" Ref="C63"  Part="1" 
+AR Path="/57CDCE97/58432D09" Ref="C67"  Part="1" 
+F 0 "C11" H 6075 3100 50  0000 L CNN
+F 1 "10n" H 6075 2900 50  0000 L CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 6088 2850 50  0001 C CNN
+F 3 "" H 6050 3000 50  0000 C CNN
+	1    6050 3000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6500 3000 6200 3000
+Wire Wire Line
+	5900 3000 5850 3000
 $EndSCHEMATC
