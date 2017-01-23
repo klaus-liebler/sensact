@@ -38,7 +38,7 @@ void cSensactNode::OnSET_PWMCommand(uint32_t channelBitmask, uint16_t value, Tim
 		{
 			BSP::SetPWM(BSP::ALL_PWM_OUTPUTS[i], value);
 		}
-
+		channelBitmask=channelBitmask<<1;
 	}
 }
 
