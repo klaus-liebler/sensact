@@ -1,3 +1,37 @@
+/*
+Umbau:
+es werden
+64 pca9685 (Beginn ab 1b1000 0000, Ausnahme 1110 000X)
+8 pca9555 (Beginn ab  1b0100 0000)
+4 DS2482 (Beginn ab   1b0011 0000)
+vorgesehen
+00110
+diese werden zu beginn abgesucht und konfiguriert
+
+Outputs, egal ob PWM oder on/off gehen stets über pca9685.
+Es existieren also maximal 64*16 = 1024 Outputs und 8*16=128 Inputs.
+
+Inputs und Outputs werden über einen uint16 definiert, wobei für den Output die untersten 10bit und für den Input die
+untersten 7 bit rausgeschnitten werden. Dann wird die zahl um 4 bit nach rechts geschoben, um die Adresse des Chips zu bekommen.
+Outputs und Inputs mit gesetztem ersten MSB (>0x8000) werden als "stm32-Intern" betrachtet und sind dann eben nach außen geführte Kontakte
+
+
+
+BlockOnDoubleRegister wird gelöscht. Die Erkennung von Doppelregistrierungen findet zur Codeerzeugungszeit statt.
+Allen Inputs wird dazu ein INP und allen Outputs ein OUT vorangestellt, um Dopplungen zu vermeiden
+
+
+
+Es wird sich gemerkt, welche Adressen erreichbar und konfiuriert sind. (4x32bit-Array für die 127 Adressen).
+Der Bus sieht drei IRQ-Lines vor. Die IRQ-Linie entspricht dem Adressoffset % 3.
+Bei einem IRQ ist dann auch klar, welche Adressen  abzufragen sind.
+
+Die Unterscheidung zwischen PWM und nicht-PWM-Output fällt weg - Alles wird gleich behandelt. Ein nicht-pwm-fähiger
+Ausgang schaltet voll durch, wenn das PWM-Niveau > 0 ist.
+
+Der Treiber für PCS9685 und PCA9555 muss dahingehend geändert werden, dass der Chip bei allen Funktionen als Parameter übergeben wird und nicht ab Objekt gespeichert ist. Wegen der SharedIRQ-Lines muss auch das IRQ-Handling rausgenommen werden.
+*/
+
 #include <cBsp.h>
 #include <cModel.h>
 #define LOGLEVEL LEVEL_INFO
@@ -30,9 +64,6 @@ namespace sensact {
 
 //http://patorjk.com/software/taag/#p=display&f=Standard&t=multiupbox%201.0
 //http://www.freeformatter.com/java-dotnet-escape.html
-
-//alle pwms können stets auch als digitalOut gesteuert werden
-//
 
 #ifdef SENSACTUP01
 const char BSP::SystemString[] = "sensactup 0.1, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
