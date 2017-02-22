@@ -33,7 +33,7 @@
 		<link>
 			<name>cubemx</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.13.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.14.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
 		</link>
 		<link>
 			<name>drivers</name>
@@ -51,9 +51,9 @@
 			<location>C:/sensact/firmware/modules/bsp/sensacths</location>
 		</link>
 		<link>
-			<name>src/system_stm32f4xx.c</name>
+			<name>sensacths/system_stm32f4xx.c</name>
 			<type>1</type>
-			<locationURI>cubemx/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c</locationURI>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.14.0/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c</location>
 		</link>
 	</linkedResources>
 	<variableList>

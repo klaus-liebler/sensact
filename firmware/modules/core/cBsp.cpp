@@ -147,13 +147,6 @@ uint32_t BSP::inputRequests[] = {0xFFFFFF80, UINT32_MAX, 0, UINT32_MAX};
 #endif
 
 
-
-
-#undef A
-#undef B
-#undef C
-#undef D
-
 uint8_t BSP::ErrorCounters[3] = {0,0,0};
 const uint8_t CAN_ERROR=0;
 const uint8_t I2C_ERROR=1;
