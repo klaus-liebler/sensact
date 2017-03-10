@@ -9,7 +9,7 @@ namespace sensact {
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cRgbw::cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR, const ePWMOutput outputG, const ePWMOutput outputB, const ePWMOutput outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
+cRgbw::cRgbw(char const*const name, const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
 		cApplication(name, id, eAppType::RGBW),
 		outputR(outputR),
 		outputG(outputG),
@@ -50,12 +50,12 @@ void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
 		G=UINT8_MAX-G;
 		W=UINT8_MAX-W;
 	}
-	BSP::SetPWM(this->outputR, R==255?UINT16_MAX:R<<8);
-	BSP::SetPWM(this->outputG, G==255?UINT16_MAX:G<<8);
-	BSP::SetPWM(this->outputB, B==255?UINT16_MAX:B<<8);
-	if(this->outputB!=ePWMOutput::NONE)
+	BSP::SetDigitalOutput(this->outputR, R==255?UINT16_MAX:R<<8);
+	BSP::SetDigitalOutput(this->outputG, G==255?UINT16_MAX:G<<8);
+	BSP::SetDigitalOutput(this->outputB, B==255?UINT16_MAX:B<<8);
+	if(this->outputB!=UINT16_MAX)
 	{
-		BSP::SetPWM(this->outputW, W==255?UINT16_MAX:W<<8);
+		BSP::SetDigitalOutput(this->outputW, W==255?UINT16_MAX:W<<8);
 	}
 }
 void cRgbw::switchOff()
@@ -111,18 +111,8 @@ void cRgbw::DoEachCycle(volatile Time_t now) {
 
 
 
-bool cRgbw::Setup() {
-
-	if(!BSP::RequestPWM(this->outputR, this->lowMeansLampOn)
-	|| !BSP::RequestPWM(this->outputG, this->lowMeansLampOn)
-	|| !BSP::RequestPWM(this->outputB, this->lowMeansLampOn))
-	{
-		return false;
-	}
-	if(this->outputW!=ePWMOutput::NONE && !BSP::RequestPWM(this->outputW, this->lowMeansLampOn))
-	{
-		return false;
-	}
+bool cRgbw::Setup()
+{
 	switchOff();
 	return true;
 }

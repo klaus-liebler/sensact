@@ -10,18 +10,18 @@ namespace sensact {
 
 class cLightbarrier: public cApplication {
 protected:
-	const eInput input;
+	uint16_t const input;
 	const bool activeSignalLevel;
 	const eApplicationID brightnessSensor;
 	const eApplicationID finalTarget;
 public:
 	Time_t lastChange;
-	ePushState state;
+	bool wasActive;
 	bool Setup() override;
 	void DoEachCycle(Time_t time) override;
 
 
-	cLightbarrier(const char* name, const eApplicationID id, const eInput input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);
+	cLightbarrier(char const*const name, const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);
 };
 
 }

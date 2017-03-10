@@ -62,13 +62,8 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if(usedPins.Contains("PC5"))
-            {
-                return "PC5";
-            }
-            usedPins.Add("PC5");
             return null;
         }
     }

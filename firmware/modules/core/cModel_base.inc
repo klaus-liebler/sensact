@@ -13,6 +13,7 @@
 #include "cRCEvent.h"
 #include "cLightbarrier.h"
 #include "cSensactNode.h"
+#include "cBusmaster.h"
 namespace sensact{
 
 static const sensact::sScheduleEntry schedule[]
@@ -51,6 +52,32 @@ static const sensact::sScheduleEntry schedule[]
 	const bool MODEL::TRACE_COMMANDS=true;
 	const bool MODEL::TRACE_EVENTS=true;
 
+
+	const uint8_t OWID1[6] = {1,2,3,4,5,6};
+	drivers::cDS2482 ds2482(&BSP::i2c1, drivers::eDS2482Device::Dev0);
+	cSensactSENode sensactSE1(OWID1);
+	cDS1820Node ds1820_1(OWID1);
+	cDS2413Node ds2413_1(OWID1);
+	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
+	cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
+	drivers::cPCA9555 pca9555_D0(&BSP::i2c1, drivers::ePCA9555Device::Dev0);
+	drivers::cPCA9555 pca9555_D1(&BSP::i2c1, drivers::ePCA9555Device::Dev1);
+	#define pca9555ArrLength 2
+	drivers::cPCA9555 * const pca9555Arr[pca9555ArrLength] = {&pca9555_D0, &pca9555_D1};
+	const uint16_t interruptlines[3]={1,2,3};
+	char const * const name = "I2C1";
+	const cBusmaster bm1(
+			name,
+			&BSP::i2c1,
+			interruptlines,
+			pca9555Arr,
+			pca9555ArrLength,
+			3,//Bitmask!!!
+			&owSubbus1,
+			1
+			);
+	const cBusmaster busses[1] = {bm1};
+	cBusmaster * const MODEL::busses = busses;
 #endif
 
 

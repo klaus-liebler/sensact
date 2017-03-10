@@ -1,0 +1,63 @@
+Neues Konzept:
+Ein Thread überwacht binäre Eingänge (Polling im 50msek-Zyklus)
+Ein Thread überwacht macht HTTP-Server; empfängt Befehle über Rest
+Ein Thread lauscht an einem TCP-Port nach Nachrichten
+Ein Thread wartet auf Can-Bus Nachrichten
+Ein Thread sendet Nachrichten auf den Can-Bus (arbeitet Queue ab)
+Ein Thread sendet Nachrichten aud  den i2c-Bus
+Ein Thread regelt die Kommunikation mit dem 1wire Netzwerk (wie geht man mit Remote-Netzwerken )
+
+Ein Zentrales Datenmodell; bei Anderungen in diesem Modell (d.h. es werden ein paar Variablen innerhalb einer Transaktion verändert) muss ein Taskswitch durch eine "kritische REgion" vermieden werden
+
+Wie werden die Automatismen geregelt z.B. automatisches Hochdimmen oder automatisches Ausschalten nach soundsoviel Sekunden?
+Ein einziger "Sensact Automatisierungstask" macht das. Er verwaltet einen Bitvektor mit einem Bit für jede App. Jeder relevanten Funktion einer App wird eine Bit-Referenz übergeben für "needAutomation50msec" und "needsAutomation1000msec" sofern diese gesetzt werden, ruft der Automatisierungstask die Funktion OnAutomation mit der aktuellen Zeit auf
+
+Digitale Eingänge(Taster) benötigen keine solche Automatisierung. Die App wird statisch (zur Compilezeit) mit einem Taster verbunden (großes Array mit Bitnummer --> AppID). Von der App wird das OnDigitalIOEvent aufgerufen, wenn der Taster seinen Zustand ändert
+
+Es gibt eine zentrale Steuerung, die über alle Funktionen wacht und alle Zustände bescheid weis. Alle anderen Sensact-Komponenten sind nur verlängerte IO-Komponenten, die über CAN-Bus oder 1wire bus angeschlossen werden
+
+Offene Frage: 1wire-Netzwerk. Bisher lediglich Sensorik und keine Aktoren (kann aber kommen!). Außerdem: Remote-1wire, die nur über CAN-Bus erreichbar sind
+Typ des 1wire ergibt sich aus der ID. SensactSE könnte sich ja unter mehrere IDs zurückmelden, falls es mehrere Funktionen hat. Die 1wire Komponente kennt die Funktion der Sensoren anhand ihrer SensorID
+
+
+Enums für DigitalInputs und DigitalOutputs entfernen; Inputs und Outputs werden über einen 16bit-Wert in einem Can-Netzwerk beschrieben. Dabei sind die 4MSB die Node-Nummer und die 13LSB eine fortlaufende Nummer pro Node.
+Jede Node hat potentiell 8192 Applikationen. Die untersten 2048 müssel manuell hart codiert vergeben werden (Logik wie bisher über die Applikationen)
+
+Danach sind die ersten 1024 für den i2c (PCA9555; 16IO; 8 Devices max; 4 Busse) fest vorgesehen.
+Danach die nächsten 1024 für i2c-PWM-Outputs
+Dann kommen 2048 für die sensactSE. Jedes hat maximal 8 Inputs. Der letzte Teil der 1wire-Adresse (den ich ja frei festlegen kann) wird mit 8 multipliziert und ergibt dann die Basis. Insgesamt können so auf allen Bussen 256 sensactSE pro node verwaltet werden
+Dann 2048 für sensactSE-Outputs
+
+Die i2c/oneWire-i/o-Geschichten werden nicht über Applikationen geregelt ; die Logik ist statisch fest im Kern integriert; es handelt sich hier um sog. CoreApplications
+
+Nutzung der ExtCanId (29bit)
+5bit: Art der Nachricht: 0x00 = ApplicationEvent; 0x01 = ApplicationCommand
+
+Commands und Events sind dann gleich aufgebaut
+8bit Knotennummer
+16bit Applikationsnummer innerhalb des Knotens
+
+Das erste Byte des Payloads ist dann der EventName/COmmandName und dann verbleiben 7byte für die eigentlichen Nutzdaten
+
+
+
+
+
+
+Über CAN wird nur mit 
+
+
+Nodes haben ids, das sind die 5 MSB der ExtCanId (-->1+31 Nodes)
+Master node hat Id 0
+Jede Node hat einen i2c-Bus und einen 1wire-Bus. Für beide Busse machen sie ein Discovery, um herauszufinden, was angeschlossen ist.
+Für i2c gibt es eine feste Zuornung, wie von Schalter-IDs auf Adressen umgesetzt werden soll
+Neu gefundene Ausgänge dürfen die Namen/Nummern der alten nicht verändern; Betrachte Maximalausbau!
+Es gibt: DigitalInput, DigitalOutput, PWMOutput (extends DigitalOutput, kann also das selbe und mehr)
+Inputs: 256 intern, 256 per i2c
+Outputs (wir machen alle quasi pwm-fähig, wenn nicht, dann 0=0 und >0=1): 256 intern (z.b. auch per SPI!), 256 per i2c (16 pro i2c Adresse)
+Sensor(Bewegung, Temperatur, Feuchte, AirQuality, Smoke)
+IncrementalEncoder
+
+Alle 1wire-Geräte und Funkgeräte, die verwendet werden sollen, müssen explizit benannt werden und es muss jedem Gerät auch eine ID verpasst werden, unter der es Nachrichten versendet oder empfängt.
+Wie bisher werden diese alle Geräte als "Application" bezeichnet, die eine eigene ID bekommt und unter dieser ID eben versendet oder empfängt.
+

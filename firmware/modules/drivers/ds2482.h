@@ -100,11 +100,12 @@ public:
 	bool OWVerify();
 	bool OWVerifyPresence(e1WireFamilyCode family, const uint8_t * romAddressWithoutCRC);
 
-	bool OWReadDS2413(const e1WireFamilyCode family, const uint8_t *address, uint8_t bitPosToSetOrClear, uint32_t *inputState);
+	bool OWReadDS2413(const e1WireFamilyCode family, uint8_t const * const address, uint8_t bitPosToSetOrClear, uint32_t *inputState);
+	bool OWReadDS2413(const e1WireFamilyCode family, uint8_t const * const address, uint8_t *setOrClearBit0And1);
 	bool OWWriteDS2413(const e1WireFamilyCode family, const uint8_t *address, bool outputA, bool outputB);
 	bool OWWriteDS2406(const uint8_t *address, bool outputA, bool outputB);
 	bool OWReadDS18B20Temp(const uint8_t *address, int16_t *temp);
-	bool OWReadScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt);
+	bool OWReadScratchpad(const e1WireFamilyCode family, uint8_t const * const address, uint8_t *buffer, const uint8_t cnt);
 	bool OWWriteScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt);
 	bool BeginTransaction(e1WireFamilyCode family, const uint8_t *address, e1WireCommand cmd);
 	bool BeginTransactionForAll(e1WireCommand cmd);

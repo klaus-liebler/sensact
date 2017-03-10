@@ -39,7 +39,7 @@ public:
 };
 
 enum struct ePushState
-		: uint8_t {RELEASED = 0, PRESSED = 1
+		: uint8_t {RELEASED=0, PRESSED = 1
 	};
 	enum struct ePowerState
 		: uint8_t {INACTIVE = 0, ACTIVE = 1

@@ -616,6 +616,7 @@ namespace Klli.Sensact.Config
             SNSCT_L3_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LS_STRS_W3, OutputPin.O23);
             SNSCT_L3_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LS_STRS_W5, OutputPin.O22);
             #endregion
+
             return model;
         }
     }

@@ -1,0 +1,2 @@
+I2C3 wird über R76 und R83 in links vom AudioCodec abgefragt
+CAN1 wird über den Ext-Connector und PB8/PB9 genutzt. Ggf Pullups entfernen, aber vermutlich nicht nötig

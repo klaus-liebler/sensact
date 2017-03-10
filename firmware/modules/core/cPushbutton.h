@@ -19,7 +19,7 @@ namespace sensact {
 
 class cPushbutton: public cApplication {
 protected:
-	const eInput input;
+	uint16_t const input;
 	const eEventType *const localEvents;
 	const uint8_t localEventsLength;
 	const eEventType *const busEvents;
@@ -70,7 +70,7 @@ public:
 		return;
 	}
 
-	cPushbutton(const char* name, const eApplicationID id, const eInput input,
+	cPushbutton(char const*const name, const eApplicationID id, uint16_t const input,
 			const eEventType * const localEvents, const uint8_t localEventsLength,
 			const eEventType * const busEvents, const uint8_t busEventsLength);
 };
@@ -92,7 +92,7 @@ private:
 
 public:
 
-	cPushbuttonX(const char* name, const eApplicationID id, const eInput input,
+	cPushbuttonX(char const*const name, const eApplicationID id,uint16_t const input,
 			const eEventType *const localEvents, const uint8_t localEventsLength,
 			const eEventType * const  busEvents, const uint8_t busEventsLength,
 			const Command * const pressedCommands, const uint8_t pressedCommandsLength,

@@ -87,44 +87,5 @@ namespace Klli.Sensact.Config.Nodes
                 return 8000000;
             }
         }
-
-        [XmlIgnore]
-        public static Dictionary<InputPin, List<RessourceCapability>> Ressources;
-        static SensactHs07()
-        {
-            Ressources = new Dictionary<InputPin, List<RessourceCapability>>();
-            Ressources.Add(InputPin.I01, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I02, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I03, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I04, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I05, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I06, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I07, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I08, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I09, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I10, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I11, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I12, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I13, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I14, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I15, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I16, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I17, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I18, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I19, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I20, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I21, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I22, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I23, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I24, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I25, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I26, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I27, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I28, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I29, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I30, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I31, new List<RessourceCapability>() { RessourceCapability.PushButton });
-            Ressources.Add(InputPin.I32, new List<RessourceCapability>() { RessourceCapability.PushButton });
-        }
     }
 }

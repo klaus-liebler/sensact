@@ -11,10 +11,10 @@ class cRgbw: public cApplication
 {
 	private:
 
-		const ePWMOutput outputR;
-		const ePWMOutput outputG;
-		const ePWMOutput outputB;
-		const ePWMOutput outputW;
+		uint16_t const outputR;
+		uint16_t const outputG;
+		uint16_t const outputB;
+		uint16_t const outputW;
 		const bool lowMeansLampOn;
 		const uint8_t* WellKnownColors;
 		const uint8_t WellKnownColorsLength;
@@ -32,6 +32,6 @@ class cRgbw: public cApplication
 		#include <RgbwApplication.hinc>
 		bool Setup() override;
 		void DoEachCycle(Time_t time) override;
-		cRgbw(const char* name, const eApplicationID id, const ePWMOutput outputR, const ePWMOutput outputG, const ePWMOutput outputB, const ePWMOutput outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController);
+		cRgbw(char const*const name, const eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController);
 	};
 }

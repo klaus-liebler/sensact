@@ -15,11 +15,11 @@ void cApplication::OnEvent(eApplicationID sender, eEventType evt,
 		return;
 	}
 
-const char* cApplication::N(eApplicationID appId)
+const char*const cApplication::N(eApplicationID const appId)
 {
 	return MODEL::ApplicationNames[(uint16_t)appId];
 }
-const char* cApplication::N4I(uint32_t appId)
+const char*const cApplication::N4I(uint32_t const appId)
 {
 	if(appId<(uint32_t)eApplicationID::CNT)
 	{

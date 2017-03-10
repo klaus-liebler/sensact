@@ -1,5 +1,4 @@
-﻿using Klli.Sensact.Config.Nodes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
     public class SoundApplication : ActorApplication
     {
 
-        public InputPin InputRessourceAsOutput;
+        public ushort StandbyOutput;
 
         public override void OnSET_SIGNALCommand(ushort signal)
         {
@@ -31,19 +30,19 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// SOUND {0}" + Environment.NewLine, ApplicationId);
             //cBell DOORBELL("DOORBELL", eApplicationID::DOORBELL, &MODEL::volumeSchedule);
-            sb.AppendFormat("sensact::cSound {0}(\"{0}\", eApplicationID::{0}, eInput::{1}, &MODEL::volumeSchedule);" + Environment.NewLine + Environment.NewLine, 
-                ApplicationId, InputRessourceAsOutput);
+            sb.AppendFormat("sensact::cSound {0}(\"{0}\", eApplicationID::{0}, {1}, &MODEL::volumeSchedule);" + Environment.NewLine + Environment.NewLine, 
+                ApplicationId, StandbyOutput);
             return sb.ToString();
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedPins.Contains(InputRessourceAsOutput.ToString()))
+            if (usedOutputPins.Contains(StandbyOutput.ToString()))
             {
-                return nameof(InputRessourceAsOutput);
+                return nameof(StandbyOutput);
             }
 
-            usedPins.Add(InputRessourceAsOutput.ToString());
+            usedOutputPins.Add(StandbyOutput.ToString());
             return null;
         }
 

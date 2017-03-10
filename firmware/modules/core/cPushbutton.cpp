@@ -81,10 +81,10 @@ void cPushbuttonX::OnDoubleclick(Time_t now)
 }
 
 bool cPushbutton::Setup() {
-	return BSP::RequestDigitalInput(this->input);
+	return true;
 }
 
-cPushbutton::cPushbutton(const char* name, const eApplicationID id, const eInput input,
+cPushbutton::cPushbutton(char const*const name, const eApplicationID id, uint16_t const input,
 			const eEventType * const localEvents, const uint8_t localEventsLength,
 			const eEventType * const busEvents, const uint8_t busEventsLength) :
 				cApplication(name, id, eAppType::PUSHB), input(input), localEvents(
@@ -95,9 +95,11 @@ cPushbutton::cPushbutton(const char* name, const eApplicationID id, const eInput
 
 
 void cPushbutton::DoEachCycle(Time_t now) {
-	ePushState currentState = BSP::GetDigitalInput(this->input);
+	bool isPressed;
+	BSP::GetDigitalInput(this->input, &isPressed);
+	isPressed = !isPressed; //because all buttons are connected to GND
 	if (this->state == ePushState::RELEASED
-			&& currentState == ePushState::PRESSED) {
+			&& isPressed) {
 		this->holdShortSent = false;
 		this->holdMediumSent = false;
 		this->state = ePushState::PRESSED;
@@ -105,7 +107,7 @@ void cPushbutton::DoEachCycle(Time_t now) {
 		OnPressed(now);
 		cMaster::SendEvent(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->state == ePushState::PRESSED
-			&& currentState == ePushState::RELEASED) {
+			&& !isPressed) {
 		if (now - this->lastChange < 600) {
 			OnReleasedShort(now);
 			cMaster::SendEvent(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
@@ -127,7 +129,7 @@ void cPushbutton::DoEachCycle(Time_t now) {
 		this->lastChange = now;
 		this->lastRelease=now;
 	} else if (this->state == ePushState::PRESSED
-			&& currentState == ePushState::PRESSED) {
+			&& isPressed) {
 		if (!this->holdShortSent && now - this->lastChange > 600) {
 			OnPressedShortAndHold(now);
 			cMaster::SendEvent(now, Id, eEventType::PRESSED_SHORT_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);

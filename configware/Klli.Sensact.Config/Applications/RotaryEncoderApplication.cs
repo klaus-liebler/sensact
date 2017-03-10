@@ -13,22 +13,16 @@ namespace Klli.Sensact.Config.Applications
         public List<Command> CommandsOnLongReleased;
         public List<Command> CommandsOnTurned;
         public RotaryEncoder InputRotaryRessource;
-        public InputPin InputPushRessource;
+        public ushort InputPushRessource;
 
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedPins.Contains(InputPushRessource.ToString()))
+            if (usedInputPins.Contains(InputPushRessource.ToString()))
             {
                 return "InputPushRessource";
             }
-            if (usedPins.Contains(InputRotaryRessource.ToString()))
-            {
-                return "InputRotaryRessource";
-            }
-
-            usedPins.Add(InputPushRessource.ToString());
-            usedPins.Add(InputRotaryRessource.ToString());
+            usedInputPins.Add(InputPushRessource.ToString());
             return null;
         }
 
@@ -63,7 +57,7 @@ namespace Klli.Sensact.Config.Applications
             sb.Append(EventInitializer("Bus", busEvts, m));
             //homecontrol::cRotaryEncoder ROT_G0S0(eApplicationID::ROT_G0S0, sensact::eRotaryEncoder::ROTARYENCODER_1, sensact::eInput::I00, ROT_LocalEvents, 0, PUSHB_EG_WOZ_G0S0_BusEvents, 0, PUSHB_EG_WOZ_G0S0_OnPressed, 1, PUSHB_EG_WOZ_G0S0_OnShortReleased, 1, PUSHB_EG_WOZ_G0S0_OnLongReleased, 1, ROT_OnTurned, 1);
 
-            sb.AppendFormat("sensact::cROTAR {0}(\"{0}\", eApplicationID::{0}, eRotaryEncoder::{1}, eInput::{2}, {0}_LocalEvents, {3}, {0}_BusEvents, {4}, {0}_OnPressed, {5}, {0}_OnShortReleased, {6}, {0}_OnLongReleased, {7}, {0}_OnTurned, {8} );" + Environment.NewLine + Environment.NewLine, ApplicationId, InputRotaryRessource, InputPushRessource, locEvts == null ? 0 : locEvts.Count, busEvts == null ? 0 : busEvts.Count, CommandsOnPressed == null ? 0 : CommandsOnPressed.Count, CommandsOnShortReleased == null ? 0 : CommandsOnShortReleased.Count, CommandsOnLongReleased == null ? 0 :CommandsOnLongReleased.Count, CommandsOnTurned == null ? 0 : CommandsOnTurned.Count);
+            sb.AppendFormat("sensact::cROTAR {0}(\"{0}\", eApplicationID::{0}, eRotaryEncoder::{1}, {2}, {0}_LocalEvents, {3}, {0}_BusEvents, {4}, {0}_OnPressed, {5}, {0}_OnShortReleased, {6}, {0}_OnLongReleased, {7}, {0}_OnTurned, {8} );" + Environment.NewLine + Environment.NewLine, ApplicationId, InputRotaryRessource, InputPushRessource, locEvts == null ? 0 : locEvts.Count, busEvts == null ? 0 : busEvts.Count, CommandsOnPressed == null ? 0 : CommandsOnPressed.Count, CommandsOnShortReleased == null ? 0 : CommandsOnShortReleased.Count, CommandsOnLongReleased == null ? 0 :CommandsOnLongReleased.Count, CommandsOnTurned == null ? 0 : CommandsOnTurned.Count);
 
             return sb.ToString();
         }

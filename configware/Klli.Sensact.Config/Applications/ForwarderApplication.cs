@@ -37,7 +37,7 @@ namespace Klli.Sensact.Config.Applications
         [SensactCommandMethod]
         public override void OnON_FILTERCommand(ushort targetApplicationId, uint autoReturnToOffMsecs) { }
         [SensactCommandMethod]
-        public override void OnOFFCommand() { }
+        public override void OnOFFCommand(uint autoReturnToOnMsecs) { }
         [SensactCommandMethod]
         public override void OnTOGGLECommand() { }
         [SensactCommandMethod]
@@ -91,9 +91,8 @@ namespace Klli.Sensact.Config.Applications
             return new HashSet<EventType>();
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-          
             return null;
         }
 

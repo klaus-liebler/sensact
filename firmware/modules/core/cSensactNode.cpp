@@ -32,14 +32,8 @@ void cSensactNode::OnSTART_IAPCommand(Time_t now)
 void cSensactNode::OnSET_PWMCommand(uint32_t channelBitmask, uint16_t value, Time_t now)
 {
 	UNUSED(now);
-	for(uint8_t i=0;i<32;i++)
-	{
-		if(channelBitmask & 0x00000001)
-		{
-			BSP::SetPWM(BSP::ALL_PWM_OUTPUTS[i], value);
-		}
-		channelBitmask=channelBitmask<<1;
-	}
+	UNUSED(channelBitmask);
+	UNUSED(value);
 }
 
 

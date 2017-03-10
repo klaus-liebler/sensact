@@ -1,9 +1,3 @@
-/*
- * PCA9685.cpp
- *
- *  Created on: 16.11.2015
- *      Author: klaus
- */
 #ifdef STM32F4
 #include "stm32f4xx_hal.h"
 #endif
@@ -24,7 +18,7 @@
 namespace drivers {
 
 
-bool cPCA9685::SoftwareReset(I2C_HandleTypeDef *i2c)
+bool cPCA9685::SoftwareReset(I2C_HandleTypeDef * const i2c)
 {
 	uint8_t data = cPCA9685::SWRST;
 	if(HAL_I2C_Master_Transmit(i2c, 0x00, &data, 1, 10)==HAL_OK)
@@ -34,20 +28,14 @@ bool cPCA9685::SoftwareReset(I2C_HandleTypeDef *i2c)
 	return false;
 }
 
-/* Private variables ---------------------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
-/* Functions -----------------------------------------------------------------*/
+/*
+Device Offset is 0,1,2,3, not 0,2,4,6
+*/
 
-/**
- * @brief	Initializes the PCA9685
- * @param	None
- * @retval	1: A PCA9685 has been initialized
- * @retval	0: Initialization failed
- */
-bool cPCA9685::Setup() {
-	if (HAL_I2C_IsDeviceReady((I2C_HandleTypeDef *) this->i2c, ADDR,
-			(uint32_t) 3, (uint32_t) 1000)!=HAL_OK) {
-		this->i2c=0;
+bool cPCA9685::SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq)
+{
+	uint16_t addr = DEVICE_ADDRESS_BASE + 2*deviceOffset;
+	if (HAL_I2C_IsDeviceReady(i2c, addr, (uint32_t) 3, (uint32_t) 1000)!=HAL_OK) {
 		return false;
 	}
 
@@ -55,9 +43,8 @@ bool cPCA9685::Setup() {
 
 
 	uint8_t data = 1 << MODE1_SLEEP;
-	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
+	if(HAL_I2C_Mem_Write(i2c, addr, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
-		this->i2c=0;
 		return false;
 	}
 
@@ -65,11 +52,10 @@ bool cPCA9685::Setup() {
 	 * Set to value specified in PCA9685_InitStruct->PWMFrequency;
 	 * Has to be set when device is in sleep mode
 	 */
-	data = (uint8_t)(this->freq);
-	if(HAL_I2C_Mem_Write(i2c, ADDR, PRE_SCALE, I2C_MEMADD_SIZE_8BIT, &data, 1,
+	data = (uint8_t)(freq);
+	if(HAL_I2C_Mem_Write(i2c, addr, PRE_SCALE, I2C_MEMADD_SIZE_8BIT, &data, 1,
 			1000)!=HAL_OK)
 	{
-		this->i2c=0;
 		return false;
 	}
 
@@ -81,26 +67,101 @@ bool cPCA9685::Setup() {
 	 * Responds to All Call I2C-bus address
 	 */
 	data = (1 << MODE1_AI) | (1 << MODE1_ALLCALL);
-	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
+	if(HAL_I2C_Mem_Write(i2c, addr, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
-		this->i2c=0;
 		return false;
 	}
 
 	/* MODE2 Register:
 	 * Outputs change on STOP command
 	 */
-	data = ((uint8_t)(this->inv) << MODE2_INVRT) | ((uint8_t)(outdrv) << MODE2_OUTDRV)
+	data = ((uint8_t)(inv) << MODE2_INVRT) | ((uint8_t)(outdrv) << MODE2_OUTDRV)
 			| ((uint8_t)(outne) << MODE2_OUTNE0);
-	if(HAL_I2C_Mem_Write(i2c, ADDR, MODE2, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
+	if(HAL_I2C_Mem_Write(i2c, addr, MODE2, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
-		this->i2c=0;
 		return false;
 	}
 
 	//Switch all off
-	SetAll(0, 0);
+	SetOutputs(i2c, deviceOffset, 0xFFFF, 0);
 
+	return true;
+}
+
+bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t mask, uint16_t val)
+{
+
+	//suche 1er Blöcke und übertrage die zusammen
+	uint16_t offValue;
+	uint16_t onValue;
+	if(val == UINT16_MAX)
+	{
+		onValue=MAX_OUTPUT_VALUE;
+		offValue = 0;
+	}
+	else if(val==0)
+	{
+		onValue=0;
+		offValue = MAX_OUTPUT_VALUE;
+	}
+	else
+	{
+		onValue= 0;//((uint16_t)Output)*0xFF; //for phase shift to reduce EMI
+		offValue = (val>>4);// + onValue; //to make a 12bit-Value
+	}
+	uint8_t i=0;
+	while(mask>0)
+	{
+		while(mask>0 && !(mask & 0x0001))
+		{
+			mask>>=1;
+			i++;
+		}
+		uint8_t firstOne=i;
+		while(mask>0 && (mask & 0x0001))
+		{
+			mask>>=1;
+			i++;
+		}
+		uint8_t ones=i-firstOne;
+		uint8_t data[4*ones];
+		for(int j=0;j<ones;j++)
+		{
+			data[4*j+0]=(uint8_t)(onValue & 0xFF);
+			data[4*j+1]=(uint8_t)((onValue >> 8) & 0xF);
+			data[4*j+2]=(uint8_t)(offValue & 0xFF);
+			data[4*j+3]=(uint8_t)((offValue >> 8) & 0xF);
+		}
+		uint8_t trials = 10;
+		HAL_StatusTypeDef status = HAL_ERROR;
+		uint16_t addr = DEVICE_ADDRESS_BASE + 2*deviceOffset;
+		while(trials > 0)
+		{
+
+			status=HAL_I2C_Mem_Write(i2c, addr, LEDn_ON_L(firstOne), I2C_MEMADD_SIZE_8BIT, data, 4*ones, 5);
+			if(status==HAL_OK)
+			{
+				break;
+			}
+			ReinitI2c(i2c);
+			trials--;
+		}
+	}
+}
+
+
+/**
+ * @brief	Initializes the PCA9685
+ * @param	None
+ * @retval	1: A PCA9685 has been initialized
+ * @retval	0: Initialization failed
+ */
+bool cPCA9685::Setup() {
+	if(!SetupStatic(this->i2c, (uint8_t)this->device, this->inv, this->outdrv, outne, freq))
+	{
+		i2c=0;
+		return false;
+	}
 	return true;
 }
 
@@ -122,7 +183,7 @@ bool cPCA9685::SetOutputFull(ePCA9685Output Output, bool on)
 		{
 			break;
 		}
-		ReinitI2c();
+		ReinitI2c(this->i2c);
 		trials--;
 	}
 	return status == HAL_OK;
@@ -156,13 +217,13 @@ bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 		{
 			break;
 		}
-		ReinitI2c();
+		ReinitI2c(i2c);
 		trials--;
 	}
 	return status == HAL_OK;
 }
 
-void cPCA9685::ReinitI2c()
+void cPCA9685::ReinitI2c(I2C_HandleTypeDef *i2c)
 {
 #ifdef STM32F1
 	LOGW("Resetting i2c");

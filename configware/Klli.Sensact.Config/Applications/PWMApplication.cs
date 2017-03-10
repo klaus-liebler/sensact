@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class PWMApplication : ActorApplication
     {
-        public List<PwmPin> OutputRessources;
+        public List<ushort> OutputRessources;
         public int MinimalOnLevel;
         public int InitialStoredTargetLevel;
         public bool LowMeansLampOn;
@@ -20,18 +20,18 @@ namespace Klli.Sensact.Config.Applications
             base.OnSTOPCommand();
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            foreach(PwmPin pwm in OutputRessources)
+            foreach(ushort pwm in OutputRessources)
             {
-                if (usedPins.Contains(pwm.ToString()))
+                if (usedOutputPins.Contains(pwm.ToString()))
                 {
                     return pwm.ToString();
                 }
             }
-            foreach (PwmPin pwm in OutputRessources)
+            foreach (ushort pwm in OutputRessources)
             {
-                usedPins.Add(pwm.ToString());
+                usedOutputPins.Add(pwm.ToString());
             }
             return null;
         }

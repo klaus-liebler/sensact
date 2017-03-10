@@ -19,12 +19,59 @@
 
 namespace sensact {
 
-cPoweritem::cPoweritem(const char* name, eApplicationID id, ePoweredOutput relay, Time_t autoOffIntervalMsecs) :
-					cApplication(name, id, eAppType::POWIT), state(ePowerState::INACTIVE), output(relay), autoOffIntervalMsecs(autoOffIntervalMsecs), autoOffTime(TIME_MAX) {
-				}
+cPoweritem::cPoweritem(char const*const name, eApplicationID id, uint16_t output, Time_t autoOffIntervalMsecs, Time_t autoOnIntervalMsecs) :
+					cApplication(name, id, eAppType::POWIT), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX)
+{
+	if(autoOnIntervalMsecs!=0)
+	{
+		nextChange=autoOnIntervalMsecs; //damit der On/off-Zyklus auch angeregt wird
+	}
+}
 
 bool cPoweritem::Setup() {
-	return BSP::RequestPoweredOutput(this->output);
+	return true;
+}
+
+void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
+{
+	if(autoOffMsecs!=0)
+	{
+		nextChange=now+autoOffMsecs;
+		LOGD("%s is switched on and will be automatically switched off in %d msecs (defined by message)", Name, autoOffMsecs);
+	}
+	else if(autoOffIntervalMsecs!=0)
+	{
+		nextChange=now+autoOffIntervalMsecs;
+		LOGD("%s is switched on and will be automatically switched off in %d msecs (defined by objectConfig)", Name, autoOffIntervalMsecs);
+	}
+	else
+	{
+		nextChange=TIME_MAX;
+		LOGD("%s is switched on!", Name);
+	}
+	BSP::SetDigitalOutput(output, BSP::ACTIVE);
+	this->state=ePowerState::ACTIVE;
+}
+
+void cPoweritem::OnOFFCommand(uint32_t autoOnMsecs, Time_t now)
+{
+	if(autoOnMsecs!=0)
+	{
+		nextChange=now+autoOnMsecs;
+		LOGD("%s is switched off and will be automatically switched on in %d msecs (defined by message)", Name, autoOnMsecs);
+	}
+	else if(autoOnIntervalMsecs!=0)
+	{
+		nextChange=now+autoOnIntervalMsecs;
+		LOGD("%s is switched off and will be automatically switched on in %d msecs (defined by objectConfig)", Name, autoOnIntervalMsecs);
+	}
+	else
+	{
+		nextChange=TIME_MAX;
+		LOGD("%s is switched off!", Name);
+	}
+	BSP::SetDigitalOutput(output, BSP::INACTIVE);
+	this->state=ePowerState::INACTIVE;
 }
 
 void cPoweritem::OnTOGGLECommand(Time_t now)
@@ -32,73 +79,31 @@ void cPoweritem::OnTOGGLECommand(Time_t now)
 
 	if(this->state == ePowerState::INACTIVE)
 	{
-		if(autoOffIntervalMsecs!=0)
-		{
-			autoOffTime=now+autoOffIntervalMsecs;
-			LOGD("%s is switched on and will be automatically switched off in %d msecs", Name, autoOffIntervalMsecs);
-		}
-		else
-		{
-			LOGD("%s is switched on!", Name);
-		}
-		BSP::SetPoweredOutput(output, ePowerState::ACTIVE);
-		this->state=ePowerState::ACTIVE;
+		OnONCommand(0, now);
 	}
 	else
 	{
-		LOGD("%s is switched off!", Name);
-		BSP::SetPoweredOutput(output, ePowerState::INACTIVE);
-		this->state=ePowerState::INACTIVE;
+		OnOFFCommand(0, now);
 	}
 }
 
-void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
-{
-	if(autoOffMsecs!=0)
-	{
-		autoOffTime=now+autoOffMsecs;
-		LOGD("%s is switched on and will be automatically switched of in %d msecs (defined by message)", Name, autoOffMsecs);
-	}
-	else if(autoOffIntervalMsecs!=0)
-	{
-		autoOffTime=now+autoOffIntervalMsecs;
-		LOGD("%s is switched on and will be automatically switched of in %d msecs (defined by objectConfig)", Name, autoOffMsecs);
-	}
-	else
-	{
-		LOGD("%s is switched on!", Name);
-	}
-	BSP::SetPoweredOutput(output, ePowerState::ACTIVE);
-	this->state=ePowerState::ACTIVE;
-}
+
 
 void cPoweritem::OnTOGGLE_SPECIALCommand(Time_t now)
 {
 	UNUSED(now);
-	if(this->state == ePowerState::INACTIVE)
-	{
-		LOGD("%s is switched on without considering the autoOffIntervalMsecs", Name);
-		autoOffTime=TIME_MAX;
-		BSP::SetPoweredOutput(output, ePowerState::ACTIVE);
-		this->state=ePowerState::ACTIVE;
-	}
-	else
-	{
-		LOGD("%s is switched off!", Name);
-		BSP::SetPoweredOutput(output, ePowerState::INACTIVE);
-		this->state=ePowerState::INACTIVE;
-	}
+	OnTOGGLECommand(now);
+	nextChange=TIME_MAX;
 }
 
 
 void cPoweritem::DoEachCycle(Time_t now)
 {
-	if(autoOffTime<now && state == ePowerState::ACTIVE)
+	if(now>=nextChange)
 	{
-		LOGD("%s is automatically switched off", Name);
-		BSP::SetPoweredOutput(output, ePowerState::INACTIVE);
-		this->state=ePowerState::INACTIVE;
-		autoOffTime = TIME_MAX;
+		LOGD("%s is automatically changed now by executing the OnToggleCommand", Name);
+		OnTOGGLECommand(now);
+
 	}
 }
 

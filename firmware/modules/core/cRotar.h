@@ -19,7 +19,7 @@ namespace sensact {
 class cROTAR: public cApplication {
 private:
 	const eRotaryEncoder inputRotary;
-	const eInput inputPush;
+	uint16_t const inputPush;
 	const eEventType *const localEvents;
 	const uint8_t localEventsLength;
 	const eEventType *const busEvents;
@@ -45,10 +45,10 @@ public:
 	void DoEachCycle(Time_t time) override;
 
 	cROTAR(
-			const char* name,
+			char const*const name,
 			const eApplicationID id,
 			const eRotaryEncoder inputRotary,
-			const eInput inputPush,
+			uint16_t const inputPush,
 			const eEventType *const localEvents,
 			const uint8_t localEventsLength,
 			const eEventType *const busEvents,

@@ -52,15 +52,13 @@ private:
 	static const uint8_t DEVICE_ADDRESS_BASE= 0x40;
 	I2C_HandleTypeDef *i2c;
 	ePCA9555Device device;
-	GPIO_TypeDef *gpio;
-	uint16_t pin;
-
+	uint16_t cache;
 public:
-	uint16_t GetInput(void);
-	cPCA9555(I2C_HandleTypeDef *i2c, ePCA9555Device device, GPIO_TypeDef *gpio, uint16_t pin) :i2c(i2c), device(device), gpio(gpio), pin(pin) {
+	uint16_t GetCachedInput(void);
+	bool Update(void);
+	cPCA9555(I2C_HandleTypeDef *i2c, ePCA9555Device device) :i2c(i2c), device(device), cache(0) {
 	}
 	bool Setup(void);
-	bool HasChanged();
 
 };
 

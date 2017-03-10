@@ -149,13 +149,13 @@ static eShellError cmdSettime(shell_cmd_args *args) {
 
 static eShellError cmdOWS(shell_cmd_args *args) {
 	UNUSED(args);
-	BSP::Search1Wire(false);
+	//BSP::Search1Wire(false);
 	return eShellError::PROCESS_OK;
 }
 
 static eShellError cmdOWAS(shell_cmd_args *args) {
 	UNUSED(args);
-	BSP::Search1Wire(true);
+	//BSP::Search1Wire(true);
 	return eShellError::PROCESS_OK;
 }
 

@@ -48,24 +48,22 @@ void cROTAR::OnReleasedLong(Time_t now) {
 
 
 bool cROTAR::Setup() {
-	if(!BSP::RequestRotaryEncoder(this->inputRotary))
-	{
-		return false;
-	}
-	return BSP::RequestDigitalInput(this->inputPush);
+	return true;
 }
 
 
 void cROTAR::DoEachCycle(Time_t now) {
-	ePushState currentPushState = BSP::GetDigitalInput(this->inputPush);
+	bool isPressed=false;
+	BSP::GetDigitalInput(this->inputPush, &isPressed);
+	isPressed=!isPressed;
 	if (this->pushState == ePushState::RELEASED
-			&& currentPushState == ePushState::PRESSED) {
+			&& isPressed) {
 		this->pushState = ePushState::PRESSED;
 		this->lastChange = now;
 		OnPressed(now);
 		cMaster::SendEvent(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->pushState == ePushState::PRESSED
-			&& currentPushState == ePushState::RELEASED) {
+			&& !isPressed) {
 		if (now - this->lastChange < 400) {
 			OnReleasedShort(now);
 			cMaster::SendEvent(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);

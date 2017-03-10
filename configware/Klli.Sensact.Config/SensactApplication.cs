@@ -71,7 +71,7 @@ namespace Klli.Sensact.Config
             return ret;
         }
 
-        internal abstract string CheckAndAddUsedPins(HashSet<string> usedPins);
+        internal abstract string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins);
 
         public HashSet<CommandType> ICanReactOnTheseCommands()
         {
@@ -175,16 +175,16 @@ namespace Klli.Sensact.Config
             return payloads.ToString();
         }
 
-        protected string ResourcesInitializer(string collectionName, ICollection<PwmPin> cmds, ModelContainer m)
+        protected string ResourcesInitializer(string collectionName, ICollection<ushort> cmds, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("ePWMOutput {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
+            sb.AppendFormat("uint16_t {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
             if (cmds != null && cmds.Count > 0)
             {
                 sb.Append("[" + cmds.Count + "]={");
-                foreach (PwmPin cmd in cmds)
+                foreach (ushort cmd in cmds)
                 {
-                    sb.Append("ePWMOutput::" + Convert.ToString(cmd) + ",");
+                    sb.Append(Convert.ToString(cmd) + ",");
                 }
                 sb.Append("}");
             }
@@ -256,7 +256,7 @@ namespace Klli.Sensact.Config
         [SensactCommandMethod]
         public virtual void OnON_FILTERCommand(ushort targetApplicationId, uint autoReturnToOffMsecs) { }
         [SensactCommandMethod]
-        public virtual void OnOFFCommand() { }
+        public virtual void OnOFFCommand(uint autoReturnToOnMsecs) { }
         [SensactCommandMethod]
         public virtual void OnTOGGLECommand() { }
         [SensactCommandMethod]

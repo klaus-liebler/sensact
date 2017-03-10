@@ -520,7 +520,7 @@ bool cDS2482::OWReadScratchpad(const e1WireFamilyCode family, const uint8_t *add
 	return true;
 }
 
-bool cDS2482::OWWriteScratchpad(const e1WireFamilyCode family, const uint8_t *address, uint8_t *buffer, const uint8_t cnt)
+bool cDS2482::OWWriteScratchpad(const e1WireFamilyCode family, uint8_t const * const address, uint8_t *buffer, const uint8_t cnt)
 {
 	BeginTransaction(family, address, e1WireCommand::WRITE_SCRATCHPAD);
 	uint8_t crc8=0;
@@ -534,7 +534,40 @@ bool cDS2482::OWWriteScratchpad(const e1WireFamilyCode family, const uint8_t *ad
 	return true;
 }
 
-bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, const uint8_t *address, uint8_t bitPosToSetOrClear, uint32_t *inputState)
+bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, uint8_t const * const address, uint8_t *setOrClearBit0And1)
+{
+	BeginTransaction(family, address, e1WireCommand::READ_SCRATCHPAD);
+	uint8_t read= OWReadByte();
+	//die unteren vier maskieren, negieren und nach oben schieben
+	//und dann mit den unteren 4 verodern
+	uint8_t lower4 = (read & 0x0F);
+	uint8_t upper4 = (~(read&0x0F));
+	upper4=upper4<<4;
+
+	if(read != (lower4|upper4))
+	{
+		return false;
+	}
+	if(READ_BIT(read, 0x01))
+	{
+		SBN(*setOrClearBit0And1, 0);
+	}
+	else
+	{
+		CBN(*setOrClearBit0And1, 0);
+	}
+	if(READ_BIT(read, 0x04))
+	{
+		SBN(*setOrClearBit0And1, 1);
+	}
+	else
+	{
+		CBN(*setOrClearBit0And1, 1);
+	}
+	return true;
+}
+
+bool cDS2482::OWReadDS2413(const e1WireFamilyCode family, uint8_t const * const address, uint8_t bitPosToSetOrClear, uint32_t *inputState)
 {
 	BeginTransaction(family, address, e1WireCommand::READ_SCRATCHPAD);
 	uint8_t read= OWReadByte();

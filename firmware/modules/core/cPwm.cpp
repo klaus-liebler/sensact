@@ -13,10 +13,8 @@ static const int DIM_TO_TARGET_STEP=5;
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
+cPWM::cPWM(char const*const name, const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
 		cApplication(name, id, eAppType::PWM),
-		output(output),
-		outputLength(outputLength),
 		minimalOnLevel(minimalLevel),
 		lowMeansLampOn(lowMeansLampOn),
 		standbyController(standbyController),
@@ -31,6 +29,15 @@ cPWM::cPWM(const char* name, const eApplicationID id, const ePWMOutput *const ou
 		autoOffTime(TIME_MAX)
 {
 
+	baseOutput=output[0] & 0xFFFF00;
+	outputMask=0;
+	for(int i=0;i<outputLength;i++)
+	{
+		if(output[i] < baseOutput || output[i]>=baseOutput+16) continue;
+		int bitnumberToSet = output[i] & 0x000000FF;
+		outputMask|= (1<<bitnumberToSet);
+
+	}
 }
 
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
@@ -253,21 +260,12 @@ void cPWM::SetDimLevel(uint8_t level) {
 	{
 		val=UINT16_MAX-val;
 	}
-	for(i=0;i<outputLength;i++)
-	{
-		BSP::SetPWM(this->output[i], val);
-	}
+
+	BSP::SetDigitalOutput(baseOutput, outputMask, val);
+
 }
 
 bool cPWM::Setup() {
-	uint8_t i;
-	for(i=0;i<outputLength;i++)
-	{
-		if(!BSP::RequestPWM(this->output[i], this->lowMeansLampOn))
-		{
-			return false;
-		}
-	}
 	SetDimLevel(0);
 	return true;
 }

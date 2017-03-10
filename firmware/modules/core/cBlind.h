@@ -26,9 +26,9 @@ namespace sensact{
 		const uint16_t FULLY_UP=0x4000;
 		const uint16_t FULLY_DOWN= 0xC000;
 		const uint16_t FULLY_DOWN_INT= 0xE000;
-		ePoweredOutput relayUpOrPower;
-		ePoweredOutput relayDownOrDirection;
-		eRelayMode relayMode;
+		const uint16_t relayUpOrPower;
+		const uint16_t relayDownOrDirection;
+		const eRelayMode relayMode;
 		Time_t lastChanged;
 		uint16_t wellKnownLevel;
 		uint16_t targetLevel;
@@ -56,9 +56,7 @@ namespace sensact{
 		 */
 		void RaiseEvent(eEventType evt);
 
-		cBlind(const char* name, eApplicationID id, ePoweredOutput relayUp, ePoweredOutput relayDownOrDirection, eRelayMode relayMode, uint16_t fullStrokeTimeInSeconds) :
-					cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_DOWN-FULLY_UP) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP) {
-				}
+		cBlind(const char* name, eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);
 	};
 
 

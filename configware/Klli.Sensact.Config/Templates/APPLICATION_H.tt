@@ -27,8 +27,8 @@ public:
 			Name(name), AppType(appType), Id(id) {
 	}
 
-	const char* N(eApplicationID appID);
-	const char* N4I(uint32_t appID);
+	char const*const N(eApplicationID appID);
+	char const*const N4I(uint32_t appID);
 	virtual ~cApplication() {
 		return;
 	}

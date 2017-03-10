@@ -4,12 +4,13 @@
 #include "appids.h"
 #include "commandAndEventTypes.h"
 #include "cModel.h"
+#include "cCanIdUtils.h"
 
 #define CONSOLE_USART USART1
 #define CAN CAN1
 #define CAN_PRESCALER 18
 
-#define NodeMasterApplication 7
+#define NodeID 7
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 0
@@ -18,6 +19,7 @@ CanTxMsgTypeDef TxMessage;
 CanRxMsgTypeDef RxMessage;
 
 CAN_HandleTypeDef hcan;
+RTC_HandleTypeDef rtc;
 
 namespace sensact {
 void Console::putcharX(char c) {
@@ -29,6 +31,7 @@ void Console::putcharX(char c) {
 }
 static void IAP_Init(void);
 static void SystemClock_Config(void);
+uint8_t scratchpad[1024];
 
 /**
  * @brief  Main program
@@ -40,19 +43,77 @@ int main(void) {
 
 	/* Set the Vector Table base location at 0x0801C000
 	 (this is already done in system_stm32f1xx_reloc.c file) */
+	//TODO: Nein, der Bootloader wird immer als erstes gestartet; Damit ist er auch funktionsfähig, wenn beim Flashen des Hauptprogramms irgend was schief geht
+	//Normales Verhalten:
+	//Setze eine Eventnachricht als NodeMaster ab, dass sich die Node jetzt im Bootloader befindet (+ Version, +Scratchpad-Size in 8Byte-Einheiten)
+	//Warte zwei Sekunden auf einen Befehl für diesen Bootloader, der ein Subset aller Befehle für den NodeMaster kennt. Unter anderem den RESET und den WRITE_FLASH
+	//Wenn ein Befehl kommt, führe ihn und alle weiteren Befehle aus
+	//Wenn kein Befehl innerhalb der Wartezeit kommt, springe zur Applikation
+
+	//Falls geflashed werden soll, sendet der SensactMaster an den NodeMaster ein Befehl zum reset
+	//Dann wartet der NodeMaster 10sekunden auf das Event des NodeMasters, ansonsten neuer Reset-Befehl. Nach 3 Versuchen: Abbruch
+	//Nach dem Event:
+	//WRITE_TO_SCRATCHPAD(anzahl in 8byte-Einheiten)
+	////Dann Payload-Nachrichten, wobei ein Zähler runterzählt (die letzte Nachricht ist 0), jeweils werden 8 byte übertragen
+	//nach der letzten Nachricht wartet der SensactMaster 1 sek auf ein Ackn, ggf mit CRC vom NodeMaster. KOmmt das nicht oder ist CRC falsch -> neuer Write_TO-_SCRATCHPAD-Befehl
+	//Dann Befehl WRITE_SCRATCHPAD_TO_FLASH(flashStartAddress)
+	//Dann sendet NodeMaster ein ACK-Event. Darauf wartet der NodeMaster 1sek.
+	//Die ACKN enthalten immer als Payload das Kommando, das sie bestätigen.
+	//Dann beginnt ein neuer WRITE_TO_SCRATCHPAD-Zyklus
+
+
 
 	SystemClock_Config();
 
 	IAP_Init();
-	//Acknowledge readyness and send own version and appid
-	hcan.pTxMsg->ExtId = NodeMasterApplication +0x400;//(uint32_t) sensact::MODEL::NodeMasterApplication 0x400; //add Event offset
-	hcan.pTxMsg->IDE = CAN_ID_EXT;
-	hcan.pTxMsg->DLC = 3;
-	hcan.pTxMsg->Data[0] = 16;//(uint8_t)sensact::eEventType::IAP_READY;
-	hcan.pTxMsg->Data[1] = VERSION_MAJOR;
-	hcan.pTxMsg->Data[2] = VERSION_MINOR;
 
+
+
+	uint32_t value= HAL_RTCEx_BKUPRead(&rtc, RTC_BKP_DR1);
+	if(!value & 0x00000001)
+	{
+		sensact::Console::Writeln("Bit is NOT set in the backup register. Set it and do a soft reset");
+		HAL_RTCEx_BKUPWrite(&rtc, RTC_BKP_DR1, 1u);
+		NVIC_SystemReset();
+	}
+	sensact::Console::Writeln("Bit is set!");
+	//Acknowledge readyness and send own version and appid
+
+	hcan.pTxMsg->ExtId = sensact::cCanIdUtils::CreateNodeEventMessageId((uint8_t)NodeID, (uint8_t)sensact::eNodeEventType::BOOTLOADER_READY);
+	hcan.pTxMsg->IDE = CAN_ID_EXT;
+	hcan.pTxMsg->DLC = 4;
+	hcan.pTxMsg->Data[0] = VERSION_MAJOR;
+	hcan.pTxMsg->Data[1] = VERSION_MINOR;
+	sensact::Common::WriteUInt16(128, hcan.pTxMsg->Data, 2);
 	HAL_CAN_Transmit(&hcan, 1000);
+	bool commandDetected=false;
+	uint32_t start=HAL_GetTick();
+	while(commandDetected | HAL_GetTick()-start<2000)
+	{
+		if(HAL_CAN_Receive(&hcan, CAN_FIFO0, 10)!=HAL_OK
+				|| !sensact::cCanIdUtils::ParseCanMessageType(hcan.pRxMsg->ExtId)==sensact::eCanMessageTypes::NodeCommand)
+		{
+			continue;
+		}
+		uint8_t destinationNodeId;
+		uint8_t command;
+		sensact::cCanIdUtils::ParseNodeCommandMessageId(hcan.pRxMsg->ExtId, &destinationNodeId, &command);
+		if(destinationNodeId!=NodeID) continue;
+
+		commandDetected=true;
+		switch (command) {
+			case sensact::eNodeCommandType::PAYLOAD:
+
+				break;
+			default:
+				break;
+		}
+
+
+	}
+
+
+
 	//Erase Flash from 0 to 112
 	FLASH_EraseInitTypeDef pEraseInit;
 	uint32_t PageError = 0;
@@ -82,7 +143,7 @@ int main(void) {
 			if (((hcan.pRxMsg->ExtId & 0x10000000) == 0)
 					|| ((hcan.pRxMsg->ExtId
 							& 0x000000FF)
-									!= NodeMasterApplication)) {
+									!= NodeID)) {
 				continue;
 			}
 			//it is a bootloader message (28th bit == 1) for this node (8 LSB is node address)
@@ -192,6 +253,11 @@ void IAP_Init(void) {
 	hcan.pTxMsg->RTR = CAN_RTR_DATA;
 	hcan.pTxMsg->StdId = 0;
 	HAL_CAN_Init(&hcan);
+	rtc.Instance=RTC;
+	rtc.Init.AsynchPrediv=RTC_AUTO_1_SECOND;
+	rtc.Init.OutPut=RTC_OUTPUTSOURCE_NONE;
+	HAL_RTC_Init(&rtc);
+
 }
 
 #ifdef USE_FULL_ASSERT

@@ -1,24 +1,16 @@
+#include <cHal.h>
 #include <common.h>
-#include <cBsp.h>
-#include <stm32f4xx_hal.h>
-#include <cBsp.h>
-#include <cModel.h>
+
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "BRDSP"
 #include <cLog.h>
 #include <console.h>
-#include <cRCSwitch.h>
 
-ADC_HandleTypeDef    AdcHandle;
-
-/* Variable used to get converted value */
-__IO uint16_t uhADCxConvertedValue = 0;
 
 namespace sensact{
 
-const ePWMOutput BSP::ALL_PWM_OUTPUTS[] = {ePWMOutput::P01, ePWMOutput::P03, ePWMOutput::P05, ePWMOutput::P07, ePWMOutput::P16, ePWMOutput::P17, ePWMOutput::P18, ePWMOutput::P19, ePWMOutput::P20, ePWMOutput::P21, ePWMOutput::P22, ePWMOutput::P23, ePWMOutput::P24, ePWMOutput::P25, ePWMOutput::P26, ePWMOutput::P27, ePWMOutput::P27, ePWMOutput::P28, ePWMOutput::P29, ePWMOutput::P30, ePWMOutput::P31,};
 
-void BSP::Init(void) {
+void cHAL::Init(void) {
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
@@ -31,8 +23,7 @@ void BSP::Init(void) {
 	GPIO_InitTypeDef gi;
 	HAL_StatusTypeDef status;
 
-	//Enable UaRT
-
+	//Enable UART
 	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11; //C10=TX, C11=RX
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_PULLUP;
@@ -40,6 +31,15 @@ void BSP::Init(void) {
 	gi.Alternate = GPIO_AF7_USART3;
 	HAL_GPIO_Init(GPIOC, &gi);
 	InitAndTestUSART();
+
+	//Onboard LEDs
+	gi.Mode = GPIO_MODE_OUTPUT_PP;
+	gi.Alternate = 0;
+	gi.Pull = GPIO_NOPULL;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Pin = GPIO_PIN_7;
+	HAL_GPIO_Init(GPIOB, &gi);
+	LOGI(BSP::SUCCESSFUL_STRING, "GPIO for LED");
 
 	if(InitDWTCounter())
 	{
@@ -50,16 +50,7 @@ void BSP::Init(void) {
 		LOGE(NOT_SUCCESSFUL_STRING, "DWTCounter");
 	}
 
-#ifdef SENSACTHS07
-	//Enable LEDs
-	gi.Mode = GPIO_MODE_OUTPUT_PP;
-	gi.Alternate = 0;
-	gi.Pull = GPIO_NOPULL;
-	gi.Speed = GPIO_SPEED_LOW;
-	gi.Pin = GPIO_PIN_7;
-	HAL_GPIO_Init(GPIOB, &gi);
-	LOGI(BSP::SUCCESSFUL_STRING, "GPIO for LED");
-
+	//MP3-Player
 	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=USART4_TX, A1=USART4_RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
 	//VCC, RX, TX, DACR, DACL, SPK1, GND, SPK2
 	//Also: PA0 --> RX
@@ -79,8 +70,8 @@ void BSP::Init(void) {
 	HAL_UART_Init(&BSP::BELL);
 	LOGI(SUCCESSFUL_STRING, "UART4 for MP3-Module");
 
-	__I2C1_CLK_ENABLE()
-	;
+	__I2C1_CLK_ENABLE();
+	__I2C2_CLK_ENABLE();
 	/*
 	 PB08     ------> I2C1_SCL
 	 PB09     ------> I2C1_SDA
@@ -91,18 +82,41 @@ void BSP::Init(void) {
 	gi.Speed = GPIO_SPEED_MEDIUM;
 	gi.Alternate = GPIO_AF4_I2C1;
 	HAL_GPIO_Init(GPIOB, &gi);
+	/*
+	 PB10     ------> I2C2_SCL
+	 PB11     ------> I2C2_SDA
+	 */
+	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	gi.Alternate = GPIO_AF4_I2C2;
+	HAL_GPIO_Init(GPIOB, &gi);
 
-	BSP::i2c1.Instance = I2C1;
-	BSP::i2c1.Init.ClockSpeed = 100000;
-	BSP::i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	BSP::i2c1.Init.OwnAddress1 = 0;
-	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
-	BSP::i2c1.Init.OwnAddress2 = 0;
-	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
-	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
-	HAL_I2C_Init(&BSP::i2c1);
-	LOGI("I2C1 configured for input buttons and pwm");
+	i2cbus[0].Instance = I2C1;
+	i2cbus[0].Init.ClockSpeed = 100000;
+	i2cbus[0].Init.DutyCycle = I2C_DUTYCYCLE_2;
+	i2cbus[0].Init.OwnAddress1 = 0;
+	i2cbus[0].Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	i2cbus[0].Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	i2cbus[0].Init.OwnAddress2 = 0;
+	i2cbus[0].Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	i2cbus[0].Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	HAL_I2C_Init(&i2cbus[0]);
+	LOGI("I2C1 configured for onboard digital io");
+
+	i2cbus[1].Instance = I2C2;
+	i2cbus[1].Init.ClockSpeed = 100000;
+	i2cbus[1].Init.DutyCycle = I2C_DUTYCYCLE_2;
+	i2cbus[1].Init.OwnAddress1 = 0;
+	i2cbus[1].Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	i2cbus[1].Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	i2cbus[1].Init.OwnAddress2 = 0;
+	i2cbus[1].Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	i2cbus[1].Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	HAL_I2C_Init(&BSP::i2c2);
+	LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+
 
 	if(drivers::cPCA9685::SoftwareReset(&BSP::i2c1))
 	{
@@ -114,7 +128,7 @@ void BSP::Init(void) {
 	}
 
 
-	if(pca9685_U7.Setup())//n婥r an CPU, alle A-Pins an GND b01
+	if(pca9685_U7.Setup())//next to CPU, all A-Pins @ GND b01
 	{
 		LOGI(SUCCESSFUL_STRING, "pca9685_U7");
 	}
@@ -131,7 +145,7 @@ void BSP::Init(void) {
 		LOGE(NOT_SUCCESSFUL_STRING, "pca9685_U9");
 	}
 
-	//Interrupt-Pins f𲠰ca9555
+	//Interrupt-Pins for�PCA9555
 	gi.Pin = GPIO_PIN_0|GPIO_PIN_1;
 	gi.Mode = GPIO_MODE_INPUT;
 	gi.Pull = GPIO_PULLUP;
@@ -161,36 +175,10 @@ void BSP::Init(void) {
 
 	rcSwitch.enableReceive();
 
-	/*
-	 PB10     ------> I2C2_SCL
-	 PB11     ------> I2C2_SDA
-	 */
-	__I2C2_CLK_ENABLE();
-	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11;
-	gi.Mode = GPIO_MODE_AF_OD;
-	gi.Pull = GPIO_PULLUP;
-	gi.Speed = GPIO_SPEED_MEDIUM;
-	gi.Alternate = GPIO_AF4_I2C2;
-	HAL_GPIO_Init(GPIOB, &gi);
 
-	BSP::i2c2.Instance = I2C2;
-	BSP::i2c2.Init.ClockSpeed = 100000;
-	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	BSP::i2c2.Init.OwnAddress1 = 0;
-	BSP::i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	BSP::i2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
-	BSP::i2c2.Init.OwnAddress2 = 0;
-	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
-	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
-	status=HAL_I2C_Init(&BSP::i2c2);
-	if(status==HAL_OK)
-	{
-		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
-	}
-	else
-	{
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
-	}
+
+
+
 
 	if(drivers::cPCA9685::SoftwareReset(&BSP::i2c2))
 	{
@@ -221,54 +209,7 @@ void BSP::Init(void) {
 	gi.Pin=DCF77_PIN;
 	HAL_GPIO_Init(DCF77_PORT, &gi);
 #endif
-	/*
-	//ADCs
-	//A2 ADC123_IN2
 
-	ADC_ChannelConfTypeDef adcChConfig;
-	AdcHandle.Instance          			= ADC3;
-	AdcHandle.Init.ClockPrescaler 		= ADC_CLOCKPRESCALER_PCLK_DIV8;
-	AdcHandle.Init.Resolution 			= ADC_RESOLUTION_12B;
-	AdcHandle.Init.ScanConvMode 		= DISABLE;
-	AdcHandle.Init.ContinuousConvMode 	= ENABLE;
-	AdcHandle.Init.DiscontinuousConvMode 	= DISABLE;
-	AdcHandle.Init.NbrOfDiscConversion 	= 0;
-	AdcHandle.Init.ExternalTrigConvEdge 	= ADC_EXTERNALTRIGCONVEDGE_NONE;
-	AdcHandle.Init.ExternalTrigConv 		= ADC_EXTERNALTRIGCONV_T1_CC1;
-	AdcHandle.Init.DataAlign 				= ADC_DATAALIGN_RIGHT;
-	AdcHandle.Init.NbrOfConversion 		= 1;
-	AdcHandle.Init.DMAContinuousRequests 	= ENABLE;
-	AdcHandle.Init.EOCSelection 			= DISABLE;
-	if(HAL_ADC_Init(&AdcHandle) != HAL_OK)
-	{
-		LOGE(NOT_SUCCESSFUL_STRING, "ADC for distance sensor");
-	}
-	adcChConfig.Channel = ADC_CHANNEL_2;
-	adcChConfig.Rank = 1;
-	adcChConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
-	adcChConfig.Offset = 0;
-
-	if(HAL_ADC_ConfigChannel(&AdcHandle, &adcChConfig) != HAL_OK)
-	{
-		LOGE(NOT_SUCCESSFUL_STRING, "ADC channel for distance sensor");
-	}
-
-	if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK)
-	{
-		LOGI(NOT_SUCCESSFUL_STRING, "ADC start DMA");
-	}
-
-	HAL_Delay(200);
-
-
-	while (1)
-	{
-		LOGI("ADCValue %d", uhADCxConvertedValue);
-		HAL_Delay(200);
-		HAL_ADC_Start_IT(&AdcHandle);
-		HAL_Delay(200);
-	}
-	*/
 
 #endif
 	//=====PWM-Timers

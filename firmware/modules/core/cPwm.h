@@ -12,8 +12,8 @@ class cPWM: public cApplication
 {
 	private:
 
-		const ePWMOutput *const output;
-		const uint8_t outputLength;
+		uint16_t baseOutput;
+		uint16_t outputMask;
 		const uint8_t minimalOnLevel;
 		const bool lowMeansLampOn;
 		const eApplicationID standbyController;
@@ -38,6 +38,6 @@ class cPWM: public cApplication
 #include <PwmApplication.hinc>
 	bool Setup() override;
 			void DoEachCycle(Time_t time) override;
-			cPWM(const char* name, const eApplicationID id, const ePWMOutput * const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
+			cPWM(char const*const name, const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }

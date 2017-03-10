@@ -67,10 +67,10 @@ void cForwarder::OnRESETCommand(Time_t now)
 	{
 		cApplication::SendON_FILTERCommand(finalTarget, targetApplicationId, autoReturnToOffMsecs, now);
 	}
-	void cForwarder::OnOFFCommand(Time_t now)
+	void cForwarder::OnOFFCommand(uint32_t autoReturnToOnMsecs, Time_t now)
 
 	{
-		cApplication::SendOFFCommand(finalTarget, now);
+		cApplication::SendOFFCommand(finalTarget, autoReturnToOnMsecs ,now);
 	}
 	void cForwarder::OnTOGGLECommand(Time_t now)
 

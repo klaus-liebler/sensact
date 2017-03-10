@@ -8,7 +8,7 @@ namespace sensact {
 
 class cSound: public cApplication {
 private:
-	const eInput output;
+	uint16_t const output;
 	cWeeklySchedule * const volumeSchedule;
 	Time_t autoOffTime;
 public:
@@ -16,7 +16,7 @@ public:
 	void DoEachCycle(Time_t now) override;
 #include <SoundApplication.hinc>
 
-	cSound(const char* name, eApplicationID id, const eInput output, cWeeklySchedule * const volumeSchedule) :
+	cSound(char const*const name, eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule) :
 			cApplication(name, id, eAppType::SOUND), output(output), volumeSchedule(volumeSchedule), autoOffTime(TIME_MAX) {
 	}
 };

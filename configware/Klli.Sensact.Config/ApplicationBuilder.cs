@@ -14,7 +14,7 @@ namespace Klli.Sensact.Config
             });
         }
 
-        public static void AddToggleButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
+        public static void AddToggleButton(this List<SensactApplication> list, ID appId, ushort inputRessource, ID targetAppId)
         {
             list.Add(new PushButtonXApplication()
             {
@@ -31,7 +31,7 @@ namespace Klli.Sensact.Config
             });
         }
 
-        public static void AddOnIfDarkButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
+        public static void AddOnIfDarkButton(this List<SensactApplication> list, ID appId, ushort inputRessource, ID targetAppId)
         {
             list.Add(new PushButtonXApplication()
             {
@@ -49,7 +49,7 @@ namespace Klli.Sensact.Config
         }
 
 
-        public static void AddPowIt(this List<SensactApplication> list, ID appId, OutputPin outputRessource, uint autoOffIntervalMsecs = 0)
+        public static void AddPowIt(this List<SensactApplication> list, ID appId, ushort outputRessource, uint autoOffIntervalMsecs = 0)
         {
             list.Add(new PoweritemApplication()
             {
@@ -59,11 +59,11 @@ namespace Klli.Sensact.Config
             });
         }
 
-        public static void AddRotaryEncoder(this List<SensactApplication> list, ID appId, RotaryEncoder rotEnc, InputPin inputRessource, ID targetAppId)
+        public static void AddRotaryEncoder(this List<SensactApplication> list, ID appId, RotaryEncoder rotEnc, ushort inputRessource, ID targetAppId)
         {
             list.Add(BuildRotaryEncoder(appId, rotEnc, inputRessource, targetAppId));
         }
-        public static RotaryEncoderApplication BuildRotaryEncoder(ID appId, RotaryEncoder rotEnc, InputPin inputRessource, ID targetAppId)
+        public static RotaryEncoderApplication BuildRotaryEncoder(ID appId, RotaryEncoder rotEnc, ushort inputRessource, ID targetAppId)
         {
             return new RotaryEncoderApplication
             {
@@ -88,13 +88,13 @@ namespace Klli.Sensact.Config
                 }
             };
         }
-        public static void AddOneDimButton(this List<SensactApplication> list, ID appId, InputPin inputRessource, ID targetAppId)
+        public static void AddOneDimButton(this List<SensactApplication> list, ID appId, ushort inputRessource, ID targetAppId)
         {
             list.Add(BuildOnePushbuttonDimmer(appId, inputRessource, targetAppId));
         }
         
 
-        public static PushButtonXApplication BuildOnePushbuttonDimmer(ID appId, InputPin inputRessource, ID targetAppId)
+        public static PushButtonXApplication BuildOnePushbuttonDimmer(ID appId, ushort inputRessource, ID targetAppId)
         {
             return new PushButtonXApplication()
             {
@@ -138,7 +138,7 @@ namespace Klli.Sensact.Config
             };
         }
 
-        public static void AddTwoDimButtons(this List<SensactApplication> list, ID appIdUp, ID appIdDown, InputPin inputPinUp, InputPin inputPinDown, ID targetAppId)
+        public static void AddTwoDimButtons(this List<SensactApplication> list, ID appIdUp, ID appIdDown, ushort inputPinUp, ushort inputPinDown, ID targetAppId)
         {
             PushButtonXApplication up = new PushButtonXApplication
             {
@@ -203,12 +203,13 @@ namespace Klli.Sensact.Config
             list.Add(up);
             list.Add(down);
         }
-        public static void AddBlindButtons(this List<SensactApplication> list, ID appIdUp, ID appIdDown, InputPin inputPinUp, InputPin inputPinDown, ID targetAppId)
+
+        public static void AddBlindButtons(this List<SensactApplication> list, ID appIdUp, ID appIdDown, ushort inputPinUp, ushort inputPinDown, ID targetAppId)
         {
             list.AddBlindButtons(appIdUp.ToString(), appIdDown.ToString(), inputPinUp, inputPinDown, targetAppId.ToString());
         }
 
-        public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, string appIdDown, InputPin inputPinUp, InputPin inputPinDown, string targetAppId)
+        public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, string appIdDown, ushort inputPinUp, ushort inputPinDown, string targetAppId)
         {
             PushButtonXApplication up = new PushButtonXApplication
             {

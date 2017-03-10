@@ -18,7 +18,7 @@ namespace Klli.Sensact.Config.Applications
             return string.Empty;
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
             return null;
         }

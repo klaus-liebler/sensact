@@ -27,13 +27,13 @@ namespace Klli.Sensact.Config
                             MinimalOnLevel=10,
                             InitialStoredTargetLevel=255,
                             StandbyController="STDBY_XX_XXX_1",
-                            OutputRessources=new List<PwmPin>() { PwmPin.P01 },
+                            OutputRessources=new List<ushort>() { 1 },
                         },
                         
                         new StandbyControllerApplication
                         {
                             ApplicationId="STDBY_XX_XXX_1",
-                            OutputRessource=OutputPin.O16,
+                            OutputRessource=16,
                             WaittimeInMsec=10000,
                         },
                         new RCEventApplication
@@ -59,12 +59,12 @@ namespace Klli.Sensact.Config
             };
             return model;
         }
-        private static SensactApplication BuildInput(int i)
+        private static SensactApplication BuildInput(ushort i)
         {
             return new PushButtonXApplication()
             {
                 ApplicationId = "PUSHB_XX_XXX_" + i,
-                InputRessource = Node.index2input[i],
+                InputRessource = i,
                 CommandsOnReleasedShort = new List<Command>()
                 {
                     new Command()
@@ -100,21 +100,21 @@ namespace Klli.Sensact.Config
             };
         }
 
-        private static SensactApplication BuildOutput(int i)
+        private static SensactApplication BuildOutput(ushort i)
         {
             return new PoweritemApplication()
             {
                 ApplicationId = "POWIT_XX_XXX_"+i,
-                OutputRessource = Node.index2output[i],
+                OutputRessource = i,
             };
         }
 
-        private static SensactApplication BuildPWMOutput(int i)
+        private static SensactApplication BuildPWMOutput(ushort i)
         {
             return new PWMApplication()
             {
                 ApplicationId = "PWM_XX_XXX_" + i,
-                OutputRessources = new List<PwmPin>() { Node.index2pwm[i] },
+                OutputRessources = new List<ushort>() { i },
                 LowMeansLampOn = true,
             };
         }
@@ -133,7 +133,7 @@ namespace Klli.Sensact.Config
                         ActiveSignalLevel = true,
                         BrightnessSensor = _(ID.NO_APPLICATION),
                         FinalTarget = "PWM___XX_XXX",
-                        InputRessource = InputPin.II01,
+                        InputRessource = 1,
                     },
                     new PWMApplication
                     {
@@ -141,7 +141,7 @@ namespace Klli.Sensact.Config
                         InitialStoredTargetLevel=255,
                         LowMeansLampOn=true,
                         MinimalOnLevel=20,
-                        OutputRessources=new List<PwmPin>() { PwmPin.P01 },
+                        OutputRessources=new List<ushort>() { 1 },
                         StandbyController=_(ID.NO_APPLICATION),
                         AutoOffIntervalMsecs=5000,
                     }
@@ -157,8 +157,8 @@ namespace Klli.Sensact.Config
             Model model = new Model("BLINDDemo");
             Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07");
             model.Nodes.Add(TEST_HS07);
-            TEST_HS07.Applications.AddBlindButtons("PUSHB_XX_XXX_UP", "PUSHB_XX_XXX_DO", InputPin.I01, InputPin.I02, "BLIND_XX_XXX_1");
-            TEST_HS07.Applications.Add(new BlindApplication { ApplicationId = "BLIND_XX_XXX_1", OpenCloseTimeInSeconds = 10, OutputRessourceUpOrPower = OutputPin.O01, OutputRessourceDownOrDirection = OutputPin.O02, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
+            TEST_HS07.Applications.AddBlindButtons("PUSHB_XX_XXX_UP", "PUSHB_XX_XXX_DO", 1, 2, "BLIND_XX_XXX_1");
+            TEST_HS07.Applications.Add(new BlindApplication { ApplicationId = "BLIND_XX_XXX_1", OpenCloseTimeInSeconds = 10, OutputRessourceUpOrPower = 1, OutputRessourceDownOrDirection = 2, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
             return model;
         }
 
@@ -174,7 +174,7 @@ namespace Klli.Sensact.Config
                       new PushButtonXApplication
                       {
                           ApplicationId="PUSHB_XX_XXX_1",
-                          InputRessource=InputPin.I01,
+                          InputRessource=1,
                           CommandsOnPressed=new List<Command>
                           {
                               new Command
@@ -187,7 +187,7 @@ namespace Klli.Sensact.Config
                       new PushButtonXApplication
                       {
                           ApplicationId="PUSHB_XX_XXX_2",
-                          InputRessource=InputPin.I02,
+                          InputRessource=2,
                           CommandsOnPressed=new List<Command>
                           {
                               new Command
@@ -200,10 +200,10 @@ namespace Klli.Sensact.Config
                     new RgbwApplication
                     {
                         ApplicationId="RGBW__XX_XXX_1",
-                        OutputRessourceR=PwmPin.P01,
-                        OutputRessourceG=PwmPin.P02,
-                        OutputRessourceB=PwmPin.P03,
-                        OutputRessourceW=PwmPin.P04,
+                        OutputRessourceR=1,
+                        OutputRessourceG=2,
+                        OutputRessourceB=3,
+                        OutputRessourceW=4,
                         StandbyController=_(ID.NO_APPLICATION),
                         LowMeansLampOn=false,
                     },
@@ -221,7 +221,7 @@ namespace Klli.Sensact.Config
                     {
                         ApplicationId="ROTAR_YY_YYY_1",
                         InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                        InputPushRessource=InputPin.ROTAR_PUSH_1,
+                        InputPushRessource=0,
                         CommandsOnPressed=new List<Command>
                         {
                             new Command
@@ -242,10 +242,10 @@ namespace Klli.Sensact.Config
                    new RgbwApplication
                     {
                         ApplicationId="RGBW__YY_YYY_1",
-                        OutputRessourceR=PwmPin.P01,
-                        OutputRessourceG=PwmPin.P03,
-                        OutputRessourceB=PwmPin.P05,
-                        OutputRessourceW=PwmPin.P07,
+                        OutputRessourceR=1,
+                        OutputRessourceG=3,
+                        OutputRessourceB=5,
+                        OutputRessourceW=7,
                         StandbyController=_(ID.NO_APPLICATION),
                         LowMeansLampOn=true,
                     },
@@ -276,7 +276,7 @@ namespace Klli.Sensact.Config
                     new StandbyControllerApplication
                       {
                           ApplicationId="STDBY_XX_XXX_1",
-                          OutputRessource=OutputPin.O01,
+                          OutputRessource=1,
                           WaittimeInMsec=10000
                       } ,
                       new PWMApplication
@@ -285,7 +285,7 @@ namespace Klli.Sensact.Config
                           InitialStoredTargetLevel=255,
                           LowMeansLampOn=false,
                           MinimalOnLevel=20,
-                          OutputRessources=new List<PwmPin>() { PwmPin.P01},
+                          OutputRessources=new List<ushort>() {2},
                           StandbyController="STDBY_XX_XXX_1"
                       },
                       new BlindApplication
@@ -293,13 +293,13 @@ namespace Klli.Sensact.Config
                           ApplicationId="BLIND_XX_XXX_1",
                           RelayMode=RelayMode.INTERLOCKED_ACTIVE_DOWN,
                           OpenCloseTimeInSeconds=10,
-                          OutputRessourceDownOrDirection=OutputPin.O02,
-                          OutputRessourceUpOrPower=OutputPin.O03,
+                          OutputRessourceDownOrDirection=3,
+                          OutputRessourceUpOrPower=4,
                       },
                       new PushButtonXApplication
                       {
                           ApplicationId="PUSHB_LX_FRO_1",
-                          InputRessource=InputPin.I04,
+                          InputRessource=4,
                           CommandsOnPressed=new List<Command>
                           {
                               new Command
@@ -332,16 +332,16 @@ namespace Klli.Sensact.Config
                     new RgbwApplication
                     {
                         ApplicationId="RGBW__YY_YYY_1",
-                        OutputRessourceR=PwmPin.P01,
-                        OutputRessourceG=PwmPin.P03,
-                        OutputRessourceB=PwmPin.P05,
-                        OutputRessourceW=PwmPin.P07,
+                        OutputRessourceR=1,
+                        OutputRessourceG=3,
+                        OutputRessourceB=5,
+                        OutputRessourceW=7,
                     },
                     new RotaryEncoderApplication
                     {
                         ApplicationId="ROTAR_YY_YYY_1",
                         InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                        InputPushRessource=InputPin.ROTAR_PUSH_1,
+                        InputPushRessource=0,
                         CommandsOnPressed=new List<Command>
                         {
                             new Command
@@ -362,13 +362,13 @@ namespace Klli.Sensact.Config
                     new PoweritemApplication
                     {
                         ApplicationId="POWIT_YY_YYY_01",
-                        OutputRessource=OutputPin.O_LED,
+                        OutputRessource=0,//TODO
                         AutoOffIntervalMsecs=3000,
                     },
                     new PushButtonXApplication
                     {
                         ApplicationId="PUSHB_YY_PUB_1",
-                        InputRessource=InputPin.I01,
+                        InputRessource=1,
                         CommandsOnPressed=new List<Command>
                         {
                             new Command
@@ -404,7 +404,7 @@ namespace Klli.Sensact.Config
                         {
                             ApplicationId="ROTAR_XX_XXX_1",
                             InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                            InputPushRessource=InputPin.ROTAR_PUSH_1,
+                            InputPushRessource=0,
                             CommandsOnPressed=new List<Command>
                             {
                                 new Command
@@ -433,7 +433,7 @@ namespace Klli.Sensact.Config
                     {
                         ApplicationId="ROTAR_YY_YYY_1",
                         InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                        InputPushRessource=InputPin.ROTAR_PUSH_1,
+                        InputPushRessource=0,
                         CommandsOnPressed=new List<Command>
                         {
                             new Command
@@ -454,7 +454,7 @@ namespace Klli.Sensact.Config
                     new PoweritemApplication
                     {
                         ApplicationId="POWIT_YY_YYY_01",
-                        OutputRessource=OutputPin.O_LED,
+                        OutputRessource=0,//TODO
                     },
                     /*
                     new PWMApplication
@@ -481,7 +481,7 @@ namespace Klli.Sensact.Config
                 TEST_UP02
                 
             };
-            for(int i=1;i<=32;i++)
+            for(ushort i=1;i<=32;i++)
             {
                 TEST_HS07.Applications.Add(BuildInput(i));
                 TEST_HS07.Applications.Add(BuildOutput(i));

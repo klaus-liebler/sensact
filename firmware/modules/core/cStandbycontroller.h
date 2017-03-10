@@ -20,7 +20,7 @@ namespace sensact{
 	private:
 
 		ePowerState state;
-		const ePoweredOutput relay;
+		uint16_t const relay;
 		Time_t lastHeartbeat;
 		const uint32_t waitTimeMsecs;
 	public:
@@ -32,9 +32,7 @@ namespace sensact{
 		 */
 		void RaiseEvent(eEventType evt);
 
-		cStandbyController(const char* name, const eApplicationID id, const ePoweredOutput relay, const uint32_t waitTimeMsecs) :
-					cApplication(name, id, eAppType::STNDBY), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs){
-				}
+		cStandbyController(char const*const name, eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs);
 	};
 
 

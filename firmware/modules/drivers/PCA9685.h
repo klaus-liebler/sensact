@@ -69,37 +69,37 @@ enum struct ePCA9685_Frequency:uint8_t
 enum struct ePCA9685Device : uint8_t
 {
 	Dev00=0,
-	Dev01=2,
-	Dev02=4,
-	Dev03=6,
-	Dev04=8,
-	Dev05=10,
-	Dev06=12,
-	Dev07=14,
-	Dev08=16,
-	Dev09=18,
-	Dev10=20,
-	Dev11=22,
-	Dev12=24,
-	Dev13=26,
-	Dev14=28,
-	Dev15=30,
-	Dev16=32,
-	Dev17=34,
-	Dev18=36,
-	Dev19=38,
-	Dev20=40,
-	Dev21=42,
-	Dev22=44,
-	Dev23=46,
-	Dev24=48,
-	Dev25=50,
-	Dev26=52,
-	Dev27=54,
-	Dev28=56,
-	Dev29=58,
-	Dev30=60,
-	Dev31=62,
+	Dev01=1,
+	Dev02=2,
+	Dev03=3,
+	Dev04=4,
+	Dev05=5,
+	Dev06=6,
+	Dev07=7,
+	Dev08=8,
+	Dev09=9,
+	Dev10=10,
+	Dev11=11,
+	Dev12=12,
+	Dev13=13,
+	Dev14=14,
+	Dev15=15,
+	Dev16=16,
+	Dev17=17,
+	Dev18=18,
+	Dev19=19,
+	Dev20=20,
+	Dev21=21,
+	Dev22=22,
+	Dev23=23,
+	Dev24=24,
+	Dev25=25,
+	Dev26=26,
+	Dev27=27,
+	Dev28=28,
+	Dev29=29,
+	Dev30=30,
+	Dev31=31,
 };
 
 enum struct ePCA9685Output : uint16_t
@@ -129,33 +129,33 @@ enum struct ePCA9685Output : uint16_t
 
 class cPCA9685{
 private:
-	const uint8_t DEVICE_ADDRESS_BASE= 0x80;
+	static const uint8_t DEVICE_ADDRESS_BASE= 0x80;
 	static const uint8_t SWRST = 0b00000110;
 	static const uint8_t MODE1=0x00;
-	const uint8_t MODE1_ALLCALL	=0;
-	const uint8_t MODE1_SUB3=1;
-	const uint8_t MODE1_SUB2=2;
-	const uint8_t MODE1_SUB1=3;
-	const uint8_t MODE1_SLEEP=4;
-	const uint8_t MODE1_AI=5;
-	const uint8_t MODE1_EXTCLK=6;
-	const uint8_t MODE1_RESTART=7;
-	const uint8_t MODE2	=0x01;
-	const uint8_t MODE2_OUTNE0=0;
-	const uint8_t MODE2_OUTNE1=1;
-	const uint8_t MODE2_OUTDRV=2;
-	const uint8_t MODE2_OCH=3;
-	const uint8_t MODE2_INVRT=4;
-	const uint8_t SUBADR1=0x02;
-	const uint8_t SUBADR2=0x03;
-	const uint8_t SUBADR3=0x04;
-	const uint8_t ALLCALLADR=0x05;
-	const uint8_t ALL_LED_ON_L=0xFA;
-	const uint8_t ALL_LED_ON_H=0xFB;
-	const uint8_t ALL_LED_OFF_L=0xFC;
-	const uint8_t ALL_LED_OFF_H=0xFD;
-	const uint8_t PRE_SCALE=0xFE;
-	const uint16_t MAX_OUTPUT_VALUE=0x1000;
+	static const uint8_t MODE1_ALLCALL	=0;
+	static const uint8_t MODE1_SUB3=1;
+	static const uint8_t MODE1_SUB2=2;
+	static const uint8_t MODE1_SUB1=3;
+	static const uint8_t MODE1_SLEEP=4;
+	static const uint8_t MODE1_AI=5;
+	static const uint8_t MODE1_EXTCLK=6;
+	static const uint8_t MODE1_RESTART=7;
+	static const uint8_t MODE2	=0x01;
+	static const uint8_t MODE2_OUTNE0=0;
+	static const uint8_t MODE2_OUTNE1=1;
+	static const uint8_t MODE2_OUTDRV=2;
+	static const uint8_t MODE2_OCH=3;
+	static const uint8_t MODE2_INVRT=4;
+	static const uint8_t SUBADR1=0x02;
+	static const uint8_t SUBADR2=0x03;
+	static const uint8_t SUBADR3=0x04;
+	static const uint8_t ALLCALLADR=0x05;
+	static const uint8_t ALL_LED_ON_L=0xFA;
+	static const uint8_t ALL_LED_ON_H=0xFB;
+	static const uint8_t ALL_LED_OFF_L=0xFC;
+	static const uint8_t ALL_LED_OFF_H=0xFD;
+	static const uint8_t PRE_SCALE=0xFE;
+	static const uint16_t MAX_OUTPUT_VALUE=0x1000;
 
 	I2C_HandleTypeDef *i2c;
 	ePCA9685Device device;
@@ -165,9 +165,11 @@ private:
 	ePCA9685_Frequency freq;
 public:
 	bool Setup();
-	static bool SoftwareReset(I2C_HandleTypeDef *i2c);
-	void ReinitI2c();
+	static bool SoftwareReset(I2C_HandleTypeDef * const i2c);
+	static void ReinitI2c(I2C_HandleTypeDef *i2c);
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);
+	static bool SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq);
+	static bool SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t mask, uint16_t dutyCycle);
 	bool SetOutputFull(ePCA9685Output Output, bool on);
 	bool SetAll(uint16_t OnValue, uint16_t OffValue);
 	bool SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val);

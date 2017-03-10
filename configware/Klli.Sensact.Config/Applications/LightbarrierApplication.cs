@@ -9,7 +9,7 @@ namespace Klli.Sensact.Config.Applications
     public class LightbarrierApplication : SensorApplication
     {
 
-        public InputPin InputRessource;
+        public ushort InputRessource;
         public string FinalTarget;
         public string BrightnessSensor;
         public bool ActiveSignalLevel;
@@ -22,14 +22,13 @@ namespace Klli.Sensact.Config.Applications
             };
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedPins.Contains(InputRessource.ToString()))
+            if (usedInputPins.Contains(InputRessource.ToString()))
             {
                 return "InputRessource";
             }
-          
-            usedPins.Add(InputRessource.ToString());
+            usedInputPins.Add(InputRessource.ToString());
             return null;
         }
 
@@ -45,7 +44,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Lightbarrier {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cLightbarrier {0}(\"{0}\", eApplicationID::{0}, eInput::{1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::cLightbarrier {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId, InputRessource, 
                 ActiveSignalLevel.ToString().ToLower(),
                 BrightnessSensor,

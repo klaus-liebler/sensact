@@ -16,10 +16,10 @@ namespace Klli.Sensact.Config.Applications
 
     public class RgbwApplication : ActorApplication
     {
-        public PwmPin OutputRessourceR;
-        public PwmPin OutputRessourceG;
-        public PwmPin OutputRessourceB;
-        public PwmPin OutputRessourceW;
+        public ushort OutputRessourceR;
+        public ushort OutputRessourceG;
+        public ushort OutputRessourceB;
+        public ushort OutputRessourceW;
         public bool LowMeansLampOn;
         public string StandbyController="NO_APPLICATION";
 
@@ -54,34 +54,34 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// RGBW {0} (Full Color Light)" + Environment.NewLine, ApplicationId);
             //sensact::cRgbw BATH("RGBWBATH", eApplicationID::BELL__DOOR, ePWMOutput::O1_01, ePWMOutput::O1_02, ePWMOutput::O1_03, ePWMOutput::NONE, false, (uint8_t*)MODEL::wellKnownRGBWColors, 2, eApplicationID::STDBY_XX_XXX_1);
-            sb.AppendFormat("sensact::cRgbw {0}(\"{0}\", eApplicationID::{0}, ePWMOutput::{1}, ePWMOutput::{2}, ePWMOutput::{3}, ePWMOutput::{4}, {5}, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::{6});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, LowMeansLampOn.ToString().ToLower(), StandbyController);
+            sb.AppendFormat("sensact::cRgbw {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::{6});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, LowMeansLampOn.ToString().ToLower(), StandbyController);
             return sb.ToString();
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
-        {
-            if (usedPins.Contains(OutputRessourceR.ToString()))
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
+       {
+            if (usedOutputPins.Contains(OutputRessourceR.ToString()))
             {
                 return "OutputRessourceR";
             }
-            if (usedPins.Contains(OutputRessourceG.ToString()))
+            if (usedOutputPins.Contains(OutputRessourceG.ToString()))
             {
                 return "OutputRessourceG";
             }
-            if (usedPins.Contains(OutputRessourceB.ToString()))
+            if (usedOutputPins.Contains(OutputRessourceB.ToString()))
             {
                 return "OutputRessourceB";
             }
-            if (OutputRessourceW!=PwmPin.NONE && usedPins.Contains(OutputRessourceW.ToString()))
+            if (OutputRessourceW!=ushort.MaxValue && usedOutputPins.Contains(OutputRessourceW.ToString()))
             {
                 return "OutputRessourceR";
             }
-            usedPins.Add(OutputRessourceR.ToString());
-            usedPins.Add(OutputRessourceG.ToString());
-            usedPins.Add(OutputRessourceB.ToString());
-            if(OutputRessourceW!=PwmPin.NONE)
+            usedOutputPins.Add(OutputRessourceR.ToString());
+            usedOutputPins.Add(OutputRessourceG.ToString());
+            usedOutputPins.Add(OutputRessourceB.ToString());
+            if(OutputRessourceW!= ushort.MaxValue)
             {
-                usedPins.Add(OutputRessourceW.ToString());
+                usedOutputPins.Add(OutputRessourceW.ToString());
             }
             return null;
         }

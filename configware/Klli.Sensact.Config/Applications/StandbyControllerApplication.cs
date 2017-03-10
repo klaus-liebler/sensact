@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class StandbyControllerApplication : ActorApplication
     {
-        public OutputPin OutputRessource;
+        public ushort OutputRessource;
         public long WaittimeInMsec;
 
         [SensactCommandMethod]
@@ -17,14 +17,14 @@ namespace Klli.Sensact.Config.Applications
             base.OnHEARTBEATCommand(sender);
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedPins.Contains(OutputRessource.ToString()))
+            if (usedOutputPins.Contains(OutputRessource.ToString()))
             {
                 return "OutputRessource";
             }
 
-            usedPins.Add(OutputRessource.ToString());
+            usedOutputPins.Add(OutputRessource.ToString());
             return null;
         }
 
@@ -37,7 +37,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// STDBY {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cStandbyController {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, WaittimeInMsec);
+            sb.AppendFormat("sensact::cStandbyController {0}(\"{0}\", eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, WaittimeInMsec);
             return sb.ToString();
         }
 

@@ -59,7 +59,7 @@
 	<variableList>
 		<variable>
 			<name>cubemx</name>
-			<value>file:/C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.13.0</value>
+			<value>file:/C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.14.0</value>
 		</variable>
 		<variable>
 			<name>sensact</name>

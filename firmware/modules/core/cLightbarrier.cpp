@@ -21,26 +21,25 @@ namespace sensact {
 
 
 bool cLightbarrier::Setup() {
-	return BSP::RequestDigitalInput(this->input);
+	return true;
 }
 
-cLightbarrier::cLightbarrier(const char* name, const eApplicationID id, const eInput input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget) :
-				cApplication(name, id, eAppType::LIBAR), input(input), activeSignalLevel(activeSignalLevel), brightnessSensor(brightnessSensor), finalTarget(finalTarget), lastChange(0), state(
-					ePushState::RELEASED) {
+cLightbarrier::cLightbarrier(char const*const name, const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget) :
+				cApplication(name, id, eAppType::LIBAR), input(input), activeSignalLevel(activeSignalLevel), brightnessSensor(brightnessSensor), finalTarget(finalTarget), lastChange(0), wasActive(false) {
 	}
 
 
 void cLightbarrier::DoEachCycle(Time_t now) {
-	ePushState currentState = BSP::GetDigitalInput(this->input);
-	if(activeSignalLevel)
+	bool active=false;
+	BSP::GetDigitalInput(this->input, &active);
+	if(!activeSignalLevel)
 	{
-		currentState=currentState==ePushState::PRESSED?ePushState::RELEASED:ePushState::PRESSED;
+		active=!active;
 	}
-	if (this->state == ePushState::RELEASED
-			&& currentState == ePushState::PRESSED) {
+	if (!this->wasActive && active) {
 
 		LOGD("%s sends ON command to  %s ", Name, N(brightnessSensor));
-		this->state = ePushState::PRESSED;
+		this->wasActive = true;
 		this->lastChange = now;
 		if(brightnessSensor==eApplicationID::NO_APPLICATION)
 		{
@@ -50,9 +49,8 @@ void cLightbarrier::DoEachCycle(Time_t now) {
 		{
 			SendON_FILTERCommand(brightnessSensor, (uint16_t)finalTarget, 0, now);
 		}
-	} else if (this->state == ePushState::PRESSED
-			&& currentState == ePushState::RELEASED) {
-		this->state = ePushState::RELEASED;
+	} else if (this->wasActive && !active) {
+		this->wasActive = false;
 		this->lastChange = now;
 	}
 }

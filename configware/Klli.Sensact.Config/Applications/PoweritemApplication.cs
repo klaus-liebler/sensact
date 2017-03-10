@@ -1,5 +1,4 @@
-﻿using Klli.Sensact.Config.Nodes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,8 +7,9 @@ namespace Klli.Sensact.Config.Applications
 {
     public class PoweritemApplication : ActorApplication
     {
-        public OutputPin OutputRessource;
-        public uint AutoOffIntervalMsecs; 
+        public ushort OutputRessource;
+        public uint AutoOffIntervalMsecs;
+        public uint AutoOnIntervalMsecs;
         public List<Event> ToggleEvents;
         public List<Event> OffEvents;
         public List<Event> OnEvents;
@@ -20,14 +20,13 @@ namespace Klli.Sensact.Config.Applications
 
         }
 
-        internal override string CheckAndAddUsedPins(HashSet<string> usedPins)
+        internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedPins.Contains(OutputRessource.ToString()))
+            if (usedOutputPins.Contains(OutputRessource.ToString()))
             {
                 return "OutputRessource";
             }
-
-            usedPins.Add(OutputRessource.ToString());
+            usedOutputPins.Add(OutputRessource.ToString());
             return null;
         }
 
@@ -43,6 +42,12 @@ namespace Klli.Sensact.Config.Applications
 
         }
 
+        [SensactCommandMethod]
+        public override void OnOFFCommand(uint autoReturnToOnMsecs)
+        {
+
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();
@@ -52,7 +57,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// POWIT {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cPoweritem {0}(\"{0}\", eApplicationID::{0}, ePoweredOutput::{1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffIntervalMsecs);
+            sb.AppendFormat("sensact::cPoweritem {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, {3});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffIntervalMsecs, AutoOnIntervalMsecs);
             return sb.ToString();
         }
 
