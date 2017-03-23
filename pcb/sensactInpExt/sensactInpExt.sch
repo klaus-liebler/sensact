@@ -1498,9 +1498,9 @@ Wire Wire Line
 Wire Wire Line
 	3100 2400 2850 2400
 Text Label 2850 2300 0    60   ~ 0
-SDA
-Text Label 2850 2400 0    60   ~ 0
 SCL
+Text Label 2850 2400 0    60   ~ 0
+SDA
 Wire Wire Line
 	3100 2500 3100 2450
 Wire Wire Line

@@ -64,48 +64,131 @@ cSensactSENode::cSensactSENode(uint8_t const * const owid):owid(owid)
 }
 
 
-void cBusmaster::Init()
+void cBusmaster::Init() const
 {
 
-	LOGI("Searching i2c bus %s for devices", name);
-	uint8_t cnt=0;
-	for(uint8_t i=0;i<128;i++)
+	LOGI("%s: Init Interrupt Lines", name);
+	for(int i=0;i<3;i++)
 	{
-		if(HAL_I2C_IsDeviceReady(mybus, i*2, 1, 10)==HAL_OK)
+		uint16_t line = interruptlines[i];
+		GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(line>>4)));
+#ifdef STM32F4
+		uint32_t currVal =  theGPIO->PUPDR;
+		currVal |= (1 << 2*(line & 0x000F));
+		theGPIO->PUPDR=currVal;
+#endif
+#ifdef STM32F1
+		if(line & 0x0008)
 		{
-			LOGI("Found device on address %d (%d)" , i, i*2);
+			//line >=8
+			uint32_t currVal = theGPIO->CRH;
+			currVal |= (0b0010 << 4*(line & 0x0007));
+			theGPIO->CRH=currVal;
+		}
+		else
+		{
+			//line <8
+			uint32_t currVal = theGPIO->CRL;
+			currVal |= (0b0010 << 4*(line & 0x0007));
+			theGPIO->CRL=currVal;
+		}
+		uint32_t currVal = theGPIO->ODR;
+		currVal |= (0b1 << (line & 0xF));
+		theGPIO->ODR=currVal;
+
+#endif
+	}
+
+
+	LOGI("Searching i2c bus %s for devices", name);
+	uint8_t cnt;
+	cnt=0;
+	for(uint16_t i=4;i<256;i+=2)
+	{
+		if(HAL_I2C_IsDeviceReady(mybus, i, 1, 10)==HAL_OK)
+		{
+			if(i>=0x80)
+			{
+				LOGI("Found probably PCA9685 on address 0x%02X (Base + offset %d)" , i, i-0x80);
+			}
+			else if(i>=0x40 && i<0x50)
+			{
+				LOGI("Found probably PCA9555 on address 0x%02X (Base + offset %d)" , i, i-0x40);
+			}
+			else if(i>=0x50 && i<0x58)
+			{
+				LOGI("Found probably DS2482 on address 0x%02X (Base + offset %d)" , i, i-0x50);
+			}
+			else
+			{
+				LOGI("Found device on address 0x%02X" , i);
+			}
 			cnt++;
 		}
 	}
 	LOGI("%d devices found on i2c bus '%s'", cnt, name);
 
-
-	drivers::cPCA9685::SoftwareReset(mybus);
-	uint32_t a9685 = availablePca9685;
-	uint8_t dev=0;
-	while(a9685>0)
-	{
-		if(a9685 & 0x00000001)
-		{
-			drivers::cPCA9685::SetupStatic(
-					mybus,
-					dev,
-					drivers::ePCA9685_InvOutputs::InvOutputs,
-					drivers::ePCA9685_OutputDriver::OutputDriver_TotemPole,
-					drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
-					drivers::ePCA9685_Frequency::Frequency_400Hz);
-		}
-		a9685>>=1;
-		dev++;
-	}
+	LOGI("Start setup of PCA9555 on i2c bus '%s'", name);
 	for(uint8_t i=0;i<pca9555Cnt;i++)
 	{
 		if(pca9555[i]!=0)
 		{
-			pca9555[i]->Setup();
+			if(pca9555[i]->Setup())
+			{
+				LOGI("Bus %s: Setup of PCA9555, Device %d was successful", name, pca9555[i]->GetDevice());
+			}
+			else
+			{
+				LOGE("Bus %s: Setup of PCA9555, Device %d was NOT successful", name, pca9555[i]->GetDevice());
+			}
 		}
 
 	}
+
+	drivers::cPCA9685::SoftwareReset(mybus);
+
+	uint32_t a9685 = availablePca9685;
+	uint8_t dev=0;
+
+	LOGI("Start setup of PCA9685 on i2c bus '%s'", name);
+	while(a9685>0)
+	{
+		if(a9685 & 0x00000001)
+		{
+			if(drivers::cPCA9685::SetupStatic(
+					mybus,
+					dev,
+					drivers::ePCA9685_InvOutputs::NotInvOutputs,
+					drivers::ePCA9685_OutputDriver::TotemPole,
+					drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
+					drivers::ePCA9685_Frequency::Frequency_400Hz))
+			{
+				LOGI("Bus %s: Setup of PCA9685, Device %d was successful", name, dev);
+			}
+			else
+			{
+				LOGE("Bus %s: Setup of PCA9685, Device %d was NOT successful", name, dev);
+			}
+		}
+		a9685>>=1;
+		dev++;
+	}
+/*
+	while(true)
+	{
+		if(!drivers::cPCA9685::SetAllOutputs(mybus, 1, BSP::ACTIVE))
+		{
+			LOGE("Error!");
+		}
+		HAL_Delay(500);
+		if(!drivers::cPCA9685::SetAllOutputs(mybus, 1, BSP::INACTIVE))
+		{
+			LOGE("Error!");
+		}
+		HAL_Delay(500);
+	}
+*/
+
 	for(uint8_t i=0;i<owsubbusCnt;i++)
 	{
 		owsubbus[i].Init();
@@ -116,7 +199,7 @@ void cBusmaster::Init()
 
 
 
-const void cBusmaster::Process(Time_t now)
+void cBusmaster::Process(Time_t now) const
 {
 	bool inputState;
 	for(uint8_t i=0;i<3;i++)
@@ -129,7 +212,10 @@ const void cBusmaster::Process(Time_t now)
 			{
 				if(pca9555[p]!=0)
 				{
-					pca9555[p]->Update();
+					if(!pca9555[p]->Update())
+					{
+						LOGI("Bus %s: Error while accessing PCA9555, device offset %d ", name, pca9555[i]->GetDevice());
+					}
 				}
 				p+=3;
 			}
@@ -355,7 +441,7 @@ void cOwSubbus::Init()
 }
 
 
-bool cBusmaster::GetInput(uint16_t input, bool *inputState)
+bool cBusmaster::GetInput(uint16_t input, bool *inputState) const
 {
 
 	uint16_t localInput = input & 0x3FFF;
@@ -401,7 +487,7 @@ bool cBusmaster::GetInput(uint16_t input, bool *inputState)
 }
 
 //bei 01-Ausgängen bestimmt das oberste Bit, ob an oder aus
-bool cBusmaster::SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value)
+bool cBusmaster::SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value) const
 {
 	uint8_t i2cAddrOffset = (output & 0x03F0) >> 4;
 	uint32_t availableMask = 1 << i2cAddrOffset;

@@ -1,0 +1,173 @@
+#include <common.h>
+#include <cBsp.h>
+#include <stm32f4xx_hal.h>
+#include <cModel.h>
+#define LOGLEVEL LEVEL_DEBUG
+#define LOGNAME "BRDSP"
+#include <cLog.h>
+#include <console.h>
+#include <cRCSwitch.h>
+#include <cBusmaster.h>
+
+
+namespace sensact{
+
+
+void BSP::Init(void) {
+
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_CAN2_CLK_ENABLE();
+	__HAL_RCC_CAN1_CLK_ENABLE();
+	__HAL_RCC_USART3_CLK_ENABLE();
+	__HAL_RCC_UART4_CLK_ENABLE();
+
+	GPIO_InitTypeDef gi;
+	HAL_StatusTypeDef status;
+
+	//Enable UART
+	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11; //C10=TX, C11=RX
+	gi.Mode = GPIO_MODE_AF_PP;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Alternate = GPIO_AF7_USART3;
+	HAL_GPIO_Init(GPIOC, &gi);
+	InitAndTestUSART();
+
+	if(InitDWTCounter())
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "DWTCounter");
+	}
+	else
+	{
+		LOGE(NOT_SUCCESSFUL_STRING, "DWTCounter");
+	}
+
+	//Onboard LEDs
+	gi.Mode = GPIO_MODE_OUTPUT_PP;
+	gi.Alternate = 0;
+	gi.Pull = GPIO_NOPULL;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Pin = GPIO_PIN_7;
+	HAL_GPIO_Init(GPIOB, &gi);
+	LOGI(BSP::SUCCESSFUL_STRING, "GPIO for LED");
+
+	//MP3-Player
+	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=USART4_TX, A1=USART4_RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
+	//VCC, RX, TX, DACR, DACL, SPK1, GND, SPK2
+	//Also: PA0 --> RX
+	gi.Mode = GPIO_MODE_AF_PP;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Alternate = GPIO_AF8_UART4;
+	HAL_GPIO_Init(GPIOA, &gi);
+	BELL.Instance = UART4;
+	BELL.Init.BaudRate = 9600;
+	BELL.Init.WordLength = UART_WORDLENGTH_8B;
+	BELL.Init.StopBits = UART_STOPBITS_1;
+	BELL.Init.Parity = UART_PARITY_NONE;
+	BELL.Init.Mode = UART_MODE_TX_RX;
+	BELL.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	BELL.Init.OverSampling = UART_OVERSAMPLING_16;
+	HAL_UART_Init(&BSP::BELL);
+	LOGI(SUCCESSFUL_STRING, "UART4 for MP3-Module");
+
+	/*
+	PB08     ------> I2C1_SCL
+	PB09     ------> I2C1_SDA
+	PB10     ------> I2C2_SCL
+	PB11     ------> I2C2_SDA
+	*/
+	__I2C1_CLK_ENABLE();
+	__I2C2_CLK_ENABLE();
+	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	gi.Alternate = GPIO_AF4_I2C1;
+	gi.Alternate = GPIO_AF4_I2C2;
+	HAL_GPIO_Init(GPIOB, &gi);
+
+	BSP::i2c1.Instance = I2C1;
+	BSP::i2c1.Init.ClockSpeed = 100000;
+	BSP::i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	BSP::i2c1.Init.OwnAddress1 = 0;
+	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	BSP::i2c1.Init.OwnAddress2 = 0;
+	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	status=HAL_I2C_Init(&BSP::i2c1);
+	if(status==HAL_OK)
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+	}
+	else
+	{
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+	}
+	BSP::i2c2.Instance = I2C2;
+	BSP::i2c2.Init.ClockSpeed = 100000;
+	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	BSP::i2c2.Init.OwnAddress1 = 0;
+	BSP::i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	BSP::i2c2.Init.OwnAddress2 = 0;
+	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	status=HAL_I2C_Init(&BSP::i2c2);
+	if(status==HAL_OK)
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+	}
+	else
+	{
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+	}
+
+	/**CAN2 GPIO Configuration
+	 PB12     ------> CAN2_RX
+	 PB13     ------> CAN2_TX
+	 */
+	gi.Pin = GPIO_PIN_12 | GPIO_PIN_13;
+	gi.Mode = GPIO_MODE_AF_PP;
+	gi.Pull = GPIO_NOPULL;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Alternate = GPIO_AF9_CAN2;
+	HAL_GPIO_Init(GPIOB, &gi);
+	InitCAN();
+
+	for(uint8_t i = 0; i<BSP::busCnt;i++)
+	{
+		MODEL::busses[i]->Init();
+	}
+
+
+	return;
+}
+
+
+
+void BSP::DoEachCycle(Time_t now) {
+	for(uint8_t i = 0; i<BSP::busCnt;i++)
+	{
+		MODEL::busses[i]->Process(now);
+	}
+	//StartConversion und 1 sek später reihum einsammeln
+	if (now > nextLedToggle) {
+		for(uint8_t i=0;i<COUNTOF(BSP::ErrorCounters);i++)
+		{
+			if(BSP::ErrorCounters[i]!=0)
+			{
+				LOGW("ErrorCounters[%i] = %i", i, BSP::ErrorCounters[i]);
+			}
+		}
+		nextLedToggle += 1000;
+	}
+
+
+}
+}

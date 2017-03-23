@@ -34,8 +34,8 @@ enum struct ePCA9685_InvOutputs:uint8_t
  */
 enum struct ePCA9685_OutputDriver:uint8_t
 {
-	OutputDriver_OpenDrain =	0,
-	OutputDriver_TotemPole =	1
+	OpenDrain =	0,
+	TotemPole =	1
 };
 
 
@@ -130,7 +130,7 @@ enum struct ePCA9685Output : uint16_t
 class cPCA9685{
 private:
 	static const uint8_t DEVICE_ADDRESS_BASE= 0x80;
-	static const uint8_t SWRST = 0b00000110;
+
 	static const uint8_t MODE1=0x00;
 	static const uint8_t MODE1_ALLCALL	=0;
 	static const uint8_t MODE1_SUB3=1;
@@ -164,12 +164,14 @@ private:
 	ePCA9685_OutputNotEn outne;
 	ePCA9685_Frequency freq;
 public:
+	static const uint8_t SWRST = 0b00000110;
 	bool Setup();
 	static bool SoftwareReset(I2C_HandleTypeDef * const i2c);
 	static void ReinitI2c(I2C_HandleTypeDef *i2c);
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);
 	static bool SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq);
 	static bool SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t mask, uint16_t dutyCycle);
+	static bool SetAllOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t dutyCycle);
 	bool SetOutputFull(ePCA9685Output Output, bool on);
 	bool SetAll(uint16_t OnValue, uint16_t OffValue);
 	bool SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val);

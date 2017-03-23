@@ -29,10 +29,10 @@ namespace Klli.Sensact.Config
         private static Model GetModel()
         {
             //return TestModelBuilder.BuildRGBWDemo();
-            //return TestModelBuilder.BuildModelToTestAllPins();
+            return TestModelBuilder.BuildModelToTestAllPins();
             //Model model = TestModelBuilder.BuildLIBARDemo();
             //return Sattlerstrasse16.Build();
-            return TestModelBuilder.BuildCANCommunicationDemo();
+            //return TestModelBuilder.BuildCANCommunicationDemo();
             //return TestModelBuilder.BuildBLINDDemo();
         }
 

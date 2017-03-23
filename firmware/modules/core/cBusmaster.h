@@ -88,14 +88,14 @@ public:
 			uint8_t const owsubbusCnt);
 
 
-	void Init(void);
-	const void Process(Time_t now);
-	bool GetInput(uint16_t input, bool *inputState);
+	void Init(void) const;
+	void Process(Time_t now) const;
+	bool GetInput(uint16_t input, bool *inputState) const;
 
 	/*
 	 * sixteenMask = 0: do not consider sixteenMask. Just set the output to the value
 	 * sixteenMask !=0: consider output & 0xFFFFF0 and the following 16 outputs. Set all with a "1" in the given value
 	 */
-	bool SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value);
+	bool SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value) const;
 };
 }

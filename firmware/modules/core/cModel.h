@@ -15,16 +15,18 @@
 //#define NODE_SNSCT_L2_BATH_UP
 #define NODE_TEST_HS07
 
+#define INTI 0x0000
+#define BUS0 0x4000
+#define BUS1 0x8000
+#define BUS2 0xC000
+#define BUS3 0xF000
+#define I2C  0x0000
+#define OW0  0x0400
+#define OW1  0x0800
+#define OW2  0x0C00
+#define OW3  0x1000
+
 namespace sensact {
-
-
-
-//naming scheme:
-//application type
-//floor  (KG, EG, OG, DG)
-//room (WOZ, KI1, KI2, KUE, ARB, BAD, HWR, FLU (Flur+Treppe, Mehrgeschoss-Aktoren gehören zu dem unteren Stockwerk)
-//group: Nummerierung ausgehend von der Tür im UZS, bei mehreren Türen ist jene Tür die Referenztür, die der Haustür am nächsten ist
-//element: Zeilenweise, beginnend Oben rechts (Die Taster einer Wippe haben das idR eine Differenz von 2)
 
 class MODEL{
 public:
@@ -36,16 +38,12 @@ public:
 	 * Index is destination appId
 	 */
 	static cApplication * const Glo2locCmd[];
+
 	static const char ModelString[];
 	static const eApplicationID NodeMasterApplication;
 	static const char * const ApplicationNames[];
 	static cWs281x RGBLED;
-	static const uint8_t sensactWi_RelayAddresses[][6];
-	static const uint8_t sensactWi_RelayAddressesCnt;
-	static const uint8_t sensactWi_InputAddresses[][6];
-	static const uint8_t sensactWi_InputAddressesCnt;
-	static const uint8_t ds18b20_Addresses[][6];
-	static const uint8_t ds18b20_AddressesCnt;
+
 
 	static const uint8_t wellKnownRGBWColors[][4];
 	static const uint8_t wellKnownRGBWColorsCnt;
@@ -53,7 +51,7 @@ public:
 
 	static const bool TRACE_COMMANDS;
 	static const bool TRACE_EVENTS;
-	static cBusmaster * const busses;
+	static cBusmaster const * const busses[];
 };
 
 

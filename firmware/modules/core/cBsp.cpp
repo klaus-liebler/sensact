@@ -76,22 +76,7 @@ const char BSP::SystemString[] = "sensactup 0.2, (c) Dr.-Ing. Klaus M. Liebler, 
 const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
 DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c2;
-static uint8_t INPUT[] = { P(B, 0), P(B, 1), P(A, 6), P(A, 7), P(A,4), P(A, 5), P(A, 2), P(A, 3), P(B, 15), P(B, 3) };
-
-drivers::cPCA9685 BSP::pca9685_ext(&i2c2, drivers::ePCA9685Device::Dev00,
-		drivers::ePCA9685_InvOutputs::InvOutputs,
-		drivers::ePCA9685_OutputDriver::OutputDriver_TotemPole,
-		drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
-		drivers::ePCA9685_Frequency::Frequency_400Hz);
-
-drivers::cDS2482 BSP::ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
-int16_t BSP::temperatures[16];
-
-//4 Intern, keine per SPI, 16 über den externen i2c
-uint32_t BSP::pwmRequests[] = {0xFFFFFC00, UINT32_MAX, 0xFFFF0000, UINT32_MAX};
-uint32_t BSP::poweredOutputRequests[] = {0xFFFFFC00, UINT32_MAX, UINT32_MAX, UINT32_MAX};
-//C00 für 8 Inputs und die beiden RotaryEncoder
-uint32_t BSP::inputRequests[] = {0xFFFFFC00, UINT32_MAX, UINT32_MAX, UINT32_MAX};
+static uint8_t INPUT[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
 #ifdef SENSACTHS04
@@ -276,16 +261,16 @@ void Console::putcharX(char c) {
 
 bool BSP::GetDigitalInput(uint16_t const input, bool *inputState)
 {
-	if(input<256)
+	if(input<1024)
 	{
 		GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(input>>4)));
 		*inputState =  (theGPIO->IDR) &  (1 << (input & 0x0000000F));
 		return true;
 	}
-	uint16_t bus = (input&0xC000)>>14;
+	uint16_t bus = ((input&0xC000)>>14)-1;
 	if(bus<busCnt)
 	{
-		return MODEL::busses[bus].GetInput(input, inputState);
+		return MODEL::busses[bus]->GetInput(input, inputState);
 	}
 	return false;
 }
@@ -296,11 +281,14 @@ bool BSP::SetDigitalOutput(uint16_t output, uint16_t value)
 
 bool BSP::SetDigitalOutput(uint16_t output, uint16_t mask, uint16_t value)
 {
-
-	uint16_t bus = (output&0xC000)>>14;
+	if(output<1024)
+	{
+		return false;
+	}
+	uint16_t bus = ((output&0xC000)>>14)-1;
 	if(bus<busCnt)
 	{
-		return MODEL::busses[bus].SetOutput(output, mask, value);
+		return MODEL::busses[bus]->SetOutput(output, mask, value);
 	}
 	return false;
 }

@@ -1,11 +1,23 @@
-﻿using Klli.Sensact.Config.Applications;
+﻿
+using Klli.Sensact.Config.Applications;
 using Klli.Sensact.Config.Nodes;
 using System.Collections.Generic;
 
 namespace Klli.Sensact.Config
 {
+
     public static class TestModelBuilder
     {
+        const ushort INTI = 0x0000;
+        const ushort BUS0 = 0x4000;
+        const ushort BUS1 = 0x8000;
+        const ushort BUS2 = 0xC000;
+        const ushort BUS3 = 0xF000;
+        const ushort I2C = 0x0000;
+        const ushort OW0 = 0x0400;
+        const ushort OW1 = 0x0800;
+        const ushort OW2 = 0x0C00;
+        const ushort OW3 = 0x1000;
         private static string _(this ID id)
         {
             return id.ToString();
@@ -59,48 +71,24 @@ namespace Klli.Sensact.Config
             };
             return model;
         }
-        private static SensactApplication BuildInput(ushort i)
+        private static SensactApplication BuildInput(ushort input, ushort output)
         {
             return new PushButtonXApplication()
             {
-                ApplicationId = "PUSHB_XX_XXX_" + i,
-                InputRessource = i,
+                ApplicationId = "PUSHB_XX_XXX_" + input,
+                InputRessource = input,
                 CommandsOnReleasedShort = new List<Command>()
                 {
                     new Command()
                     {
                         CommandType=CommandType.TOGGLE,
-                        TargetAppId="PWM_XX_XXX_"+i,
+                        TargetAppId="PWM_XX_XXX_"+output,
                     },
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId="POWIT_XX_XXX_"+(((i-1)%24)+1),
-                    },
-                },
-
-                CommandsOnPressedShortAndHold = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.START,
-                        TargetAppId="PWM_XX_XXX_"+i,
-                    },
-                },
-
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId="PWM_XX_XXX_"+i,
-                    },
-                },
-                
+                },  
             };
         }
 
-        private static SensactApplication BuildOutput(ushort i)
+        private static SensactApplication BuildOutput_Deprec(ushort i)
         {
             return new PoweritemApplication()
             {
@@ -409,7 +397,7 @@ namespace Klli.Sensact.Config
                             {
                                 new Command
                                 {
-                                    TargetAppId="PWM_XX_XXX_1",
+                                    TargetAppId="PWM_XX_XXX_"+(ushort)(BUS0 + I2C + 0),
                                     CommandType=CommandType.TOGGLE,
                                 }
                             },
@@ -417,7 +405,7 @@ namespace Klli.Sensact.Config
                             {
                                 new Command
                                 {
-                                    TargetAppId="PWM_XX_XXX_1",
+                                    TargetAppId="PWM_XX_XXX_"+(ushort)(BUS0 + I2C + 0),
                                     CommandType=CommandType.STEP_VERTICAL,
                                 }
                             }
@@ -438,7 +426,7 @@ namespace Klli.Sensact.Config
                         {
                             new Command
                             {
-                                TargetAppId="PWM_XX_XXX_1",
+                                TargetAppId="PWM___YY_YYY_01",
                                 CommandType=CommandType.TOGGLE,
                             }
                         },
@@ -446,32 +434,26 @@ namespace Klli.Sensact.Config
                         {
                             new Command
                             {
-                                TargetAppId="PWM_XX_XXX_1",
+                                TargetAppId="PWM___YY_YYY_01",
                                 CommandType=CommandType.STEP_VERTICAL,
                             }
                         }
                     },
-                    new PoweritemApplication
-                    {
-                        ApplicationId="POWIT_YY_YYY_01",
-                        OutputRessource=0,//TODO
-                    },
-                    /*
                     new PWMApplication
                     {
                         ApplicationId="PWM___YY_YYY_01",
                         LowMeansLampOn=true,
                         MinimalOnLevel=20,
                         StandbyController=null,
-                        OutputRessources=new List<PwmPin>
+                        OutputRessources=new List<ushort>
                         {
-                            PwmPin.P16,
-                            PwmPin.P17,
-                            PwmPin.P18,
-                            PwmPin.P19,
+                            (ushort)(BUS0 + I2C + 0),
+                            (ushort)(BUS0 + I2C + 1),
+                            (ushort)(BUS0 + I2C + 2),
+                            (ushort)(BUS0 + I2C + 3),
                         }
                     }
-                    */
+                    
                 },
                 
             };
@@ -481,11 +463,10 @@ namespace Klli.Sensact.Config
                 TEST_UP02
                 
             };
-            for(ushort i=1;i<=32;i++)
+            for(ushort i=0;i<16;i++)
             {
-                TEST_HS07.Applications.Add(BuildInput(i));
-                TEST_HS07.Applications.Add(BuildOutput(i));
-                TEST_HS07.Applications.Add(BuildPWMOutput(i));
+                TEST_HS07.Applications.Add(BuildInput((ushort)(BUS0 + I2C + i), (ushort)(BUS0 + I2C + i)));
+                TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS0 + I2C + i)));
             }
             return model;
         }

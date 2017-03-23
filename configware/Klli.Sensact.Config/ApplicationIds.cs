@@ -323,33 +323,33 @@
 
 
         PUSHB_L3_BEDR_B11, //C1
-        PUSHB_L3_BEDR_B12, //J1
-        PUSHB_L3_BEDR_B13,
+        PUSHB_L3_BEDR_B12, //CORR_S + STRS
+        PUSHB_L3_BEDR_B13, //J1
+        PUSHB_L3_BEDR_B14,
         POWIT_L3_BEDR_C1,
         BLIND_L3_BEDR_J1,
         SCLIM_L3_BEDR_AIR,
-        STEMP_L3_BEDR_FLOOR,
         POWIT_L3_BEDR_P1,
         POWIT_L3_BEDR_P2,
         SWIND_L3_BEDR,
         VALVE_L3_BEDR,
 
-        PUSHB_L3_CORR_B11, //S+STRS.W5
-        PUSHB_L3_CORR_B12,//S+STRS.W5
-        PUSHB_L3_CORR_B21, //S+STRS.W5
-        PWM___L3_CORR_S,
+        PUSHB_L3_CORR_Dummy1, //Deleteme
+        PUSHB_L3_CORR_Dummy2, //Deleteme
+        PUSHB_L3_CORR_Dummy3, //Deleteme
 
-        PUSHB_L3_TECH_B11,
-        POWIT_L3_TECH_C1,
+        PWM___L3_CORR_S, //es ist kein Schalter im Korridor oben. Die Lichter werden von den Zimmern aus geschaltet
+
         DEVCE_L3_TECH_VENT,
+        DEVCE_L3_TECH_SATI, //Satellitenreceiver
+        DEVCE_L3_TECH_DUMMY, //Deleteme
 
-        
-
-        ROTAR_L3_WORK_B11, //S*
-        PUSHB_L3_WORK_B12, //J1
-        PUSHB_L3_WORK_B13,
-        PUSHB_L3_WORK_B14,//J2
-        PUSHB_L3_WORK_B15,
+        PUSHB_L3_WORK_B11, //S
+        PUSHB_L3_WORK_B12, //C1
+        PUSHB_L3_WORK_B13,//J1
+        PUSHB_L3_WORK_B14,//
+        PUSHB_L3_WORK_B15,//CORR_S + STRS
+        POWIT_L3_WORK_C1,
         BLIND_L3_WORK_J1,
         BLIND_L3_WORK_J2,
         POWIT_L3_WORK_P1,
@@ -362,29 +362,31 @@
         //PWM___L3_WORK_S5,
         //PWM___L3_WORK_S6,
         SCLIM_L3_WORK_AIR,
-        STEMP_L3_WORK_FLOOR,
         SWIND_L3_WORK_W1,
         SWIND_L3_WORK_W2,
         VALVE_L3_WORK,
 
-        //Treppenhaus
+        //Treppenhaus (von unten nach oben)
+        //Lichtschranke im Keller
         LIBAR_LS_STRS_B11, //W2
 
+        //Schaltergruppe im L1
         PUSHB_LS_STRS_B21, //W3
         PUSHB_LS_STRS_B22, //S*
         PUSHB_LS_STRS_B23, //W1
 
-        LIBAR_LS_STRS_B31, //W2
-        LIBAR_LS_STRS_B32, //W4
+        LIBAR_LS_STRS_B31, //W2 (Lichtschranke in Richtung L0)
+        LIBAR_LS_STRS_B32, //W4 (Lichtschranke in Richtung L2)
 
+        //Schaltergruppe im L2
         PUSHB_LS_STRS_B41, //W5
         PUSHB_LS_STRS_B42, //S*
         PUSHB_LS_STRS_B43, //W3
 
-        LIBAR_LS_STRS_B51, //W4
-        LIBAR_LS_STRS_B52, //W6
+        LIBAR_LS_STRS_B51, //W4 (Lichtschranke in Richtung L2)
+        LIBAR_LS_STRS_B52, //W6 (Lichtschranke in Richtung L3)
 
-        LIBAR_LS_STRS_B71, //W6
+        LIBAR_LS_STRS_B71, //W6 (Lichtschranke in Richtung L2)
 
         POWIT_LS_STRS_W1,
         PWM___LS_STRS_W2,

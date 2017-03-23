@@ -42,7 +42,7 @@ cPWM::cPWM(char const*const name, const eApplicationID id, uint16_t  const*const
 
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
-	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Id, target);
+	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Name, target);
 	SetTargetAbsolute(target, now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -105,13 +105,13 @@ void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 	{
 		autoOffTime=now+autoOffIntervalMsecs;
 	}
-	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", this->Id, step, currentLevel);
+	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", this->Name, step, currentLevel);
 }
 
 //gesendet vom 1BP
 void cPWM::OnSTARTCommand(Time_t now)
 {
-	LOGD("%s OnSTARTCommand called", this->Id);
+	LOGD("%s OnSTARTCommand called", this->Name);
 	if(now-this->lastUserSignal> TIME_TO_FORGET_DIM_DIRECTION)
 	{
 		this->OneButtonDimDirection=eDirection::UP;
@@ -127,7 +127,7 @@ void cPWM::OnSTARTCommand(Time_t now)
 //gesendet vom 1PB
 void cPWM::OnSTOPCommand(Time_t now)
 {
-	LOGD("%s OnSTOPCommand called", this->Id);
+	LOGD("%s OnSTOPCommand called", this->Name);
 	StopMove(now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -138,7 +138,7 @@ void cPWM::OnSTOPCommand(Time_t now)
 void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 {
 	UNUSED(forced);
-	LOGD("%s OnUPCommand called", this->Id);
+	LOGD("%s OnUPCommand called", this->Name);
 	MoveInDirection(eDirection::UP, now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -149,7 +149,7 @@ void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 
 void cPWM::OnTOGGLECommand(Time_t now)
 {
-	LOGD("%s OnTOGGLECommand called", this->Id);
+	LOGD("%s OnTOGGLECommand called", this->Name);
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
 		if(autoOffIntervalMsecs!=0)
@@ -166,7 +166,7 @@ void cPWM::OnTOGGLECommand(Time_t now)
 
 
 void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
-	LOGD("%s OnONCommand called", this->Id);
+	LOGD("%s OnONCommand called", this->Name);
 	targetLevel=UINT8_MAX;
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -182,7 +182,7 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 
 void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 	UNUSED(forced);
-	LOGD("%s OnDOWNCommand called", this->Id);
+	LOGD("%s OnDOWNCommand called", this->Name);
 	MoveInDirection(eDirection::DOWN, now);
 	if(autoOffIntervalMsecs!=0)
 	{

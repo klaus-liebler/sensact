@@ -15,7 +15,7 @@
 #endif
 #include "pca9555.h"
 
-#define ADDR				(uint16_t)(this->DEVICE_ADDRESS_BASE+(uint16_t)this->device)
+#define ADDR				(uint16_t)(DEVICE_ADDRESS_BASE+(uint16_t)this->device)
 
 namespace drivers {
 	bool cPCA9555::Update()
@@ -34,15 +34,18 @@ namespace drivers {
 		return cache;
 	}
 
-
+	ePCA9555Device cPCA9555::GetDevice()
+	{
+		return device;
+	}
 
 	bool cPCA9555::Setup()
 	{
-		if(HAL_I2C_IsDeviceReady((I2C_HandleTypeDef *) this->i2c, ADDR, (uint32_t) 3, (uint32_t) 1000) == HAL_OK)
+		if(HAL_I2C_IsDeviceReady((I2C_HandleTypeDef *) this->i2c, ADDR, (uint32_t) 3, (uint32_t) 1000) != HAL_OK)
 		{
-			return true;
+			return false;
 		}
-		return false;
+		return Update();
 	}
 
 }  // namespace hw

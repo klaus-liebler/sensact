@@ -39,8 +39,6 @@ bool cPCA9685::SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA968
 		return false;
 	}
 
-	//Software Reset to general call address
-
 
 	uint8_t data = 1 << MODE1_SLEEP;
 	if(HAL_I2C_Mem_Write(i2c, addr, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
@@ -60,13 +58,13 @@ bool cPCA9685::SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA968
 	}
 
 	/* MODE1 Register:
-	 * Internal clock
+	 * Internal clock, not external
 	 * Register Auto-Increment enabled
 	 * Normal mode (not sleep)
 	 * Does not respond to subaddresses
-	 * Responds to All Call I2C-bus address
+	 * Does not respond to All Call I2C-bus address
 	 */
-	data = (1 << MODE1_AI) | (1 << MODE1_ALLCALL);
+	data = (1 << MODE1_AI) ;
 	if(HAL_I2C_Mem_Write(i2c, addr, MODE1, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000)!=HAL_OK)
 	{
 		return false;
@@ -83,14 +81,13 @@ bool cPCA9685::SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA968
 	}
 
 	//Switch all off
-	SetOutputs(i2c, deviceOffset, 0xFFFF, 0);
-
+	SetOutputs(i2c, deviceOffset, 0x0001, 0);
 	return true;
 }
 
 bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t mask, uint16_t val)
 {
-
+	uint8_t data[64];
 	//suche 1er Blöcke und übertrage die zusammen
 	uint16_t offValue;
 	uint16_t onValue;
@@ -124,13 +121,12 @@ bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t
 			i++;
 		}
 		uint8_t ones=i-firstOne;
-		uint8_t data[4*ones];
 		for(int j=0;j<ones;j++)
 		{
 			data[4*j+0]=(uint8_t)(onValue & 0xFF);
-			data[4*j+1]=(uint8_t)((onValue >> 8) & 0xF);
+			data[4*j+1]=(uint8_t)((onValue >> 8) & 0xFF);
 			data[4*j+2]=(uint8_t)(offValue & 0xFF);
-			data[4*j+3]=(uint8_t)((offValue >> 8) & 0xF);
+			data[4*j+3]=(uint8_t)((offValue >> 8) & 0xFF);
 		}
 		uint8_t trials = 10;
 		HAL_StatusTypeDef status = HAL_ERROR;
@@ -138,7 +134,7 @@ bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t
 		while(trials > 0)
 		{
 
-			status=HAL_I2C_Mem_Write(i2c, addr, LEDn_ON_L(firstOne), I2C_MEMADD_SIZE_8BIT, data, 4*ones, 5);
+			status=HAL_I2C_Mem_Write(i2c, addr, LEDn_ON_L(firstOne), I2C_MEMADD_SIZE_8BIT, (uint8_t*)data, 4*ones, 100);
 			if(status==HAL_OK)
 			{
 				break;
@@ -146,7 +142,12 @@ bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t
 			ReinitI2c(i2c);
 			trials--;
 		}
+		if(trials==0)
+		{
+			return false;
+		}
 	}
+	return true;
 }
 
 
@@ -238,6 +239,39 @@ void cPCA9685::ReinitI2c(I2C_HandleTypeDef *i2c)
 #endif
 }
 
+
+bool cPCA9685::SetAllOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t dutyCycle)
+{
+	uint16_t offValue;
+		uint16_t onValue;
+		if(dutyCycle == UINT16_MAX)
+		{
+			onValue=MAX_OUTPUT_VALUE;
+			offValue = 0;
+		}
+		else if(dutyCycle==0)
+		{
+			onValue=0;
+			offValue = MAX_OUTPUT_VALUE;
+		}
+		else
+		{
+			onValue= 0;//((uint16_t)Output)*0xFF; //for phase shift to reduce EMI
+			offValue = (dutyCycle>>4);// + onValue; //to make a 12bit-Value
+		}
+
+		uint8_t data[4] = {(uint8_t)(onValue & 0xFF), (uint8_t)((onValue >> 8) & 0x1F), (uint8_t)(offValue & 0xFF), (uint8_t)((offValue >> 8) & 0x1F) };
+		uint8_t trials = 10;
+		uint16_t addr = DEVICE_ADDRESS_BASE + 2*deviceOffset;
+		HAL_StatusTypeDef status = HAL_ERROR;
+		while(status != HAL_OK && trials > 0)
+		{
+			status=HAL_I2C_Mem_Write(i2c, addr, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5);
+			trials--;
+		}
+		return status == HAL_OK;
+}
+
 /**
  * @brief	Sets all outputs for a PCA9685
  * @param	Address: The address to the PCA9685
@@ -259,6 +293,7 @@ bool cPCA9685::SetAll(uint16_t OnValue, uint16_t OffValue) {
 		while(status != HAL_OK && trials > 0)
 		{
 			status=HAL_I2C_Mem_Write(i2c, ADDR, ALL_LED_ON_L, I2C_MEMADD_SIZE_8BIT, data, 4, 5);
+			trials--;
 		}
 		return status == HAL_OK;
 	}

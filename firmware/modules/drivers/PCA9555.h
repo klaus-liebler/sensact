@@ -56,9 +56,10 @@ private:
 public:
 	uint16_t GetCachedInput(void);
 	bool Update(void);
-	cPCA9555(I2C_HandleTypeDef *i2c, ePCA9555Device device) :i2c(i2c), device(device), cache(0) {
+	cPCA9555(I2C_HandleTypeDef *i2c, ePCA9555Device device, uint16_t initialValue) :i2c(i2c), device(device), cache(initialValue) {
 	}
 	bool Setup(void);
+	ePCA9555Device GetDevice();
 
 };
 
