@@ -59,6 +59,7 @@ void BSP::Init(void) {
 	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=USART4_TX, A1=USART4_RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
 	//VCC, RX, TX, DACR, DACL, SPK1, GND, SPK2
 	//Also: PA0 --> RX
+	//PE2 ist Mute
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_LOW;
@@ -74,6 +75,14 @@ void BSP::Init(void) {
 	BELL.Init.OverSampling = UART_OVERSAMPLING_16;
 	HAL_UART_Init(&BSP::BELL);
 	LOGI(SUCCESSFUL_STRING, "UART4 for MP3-Module");
+
+	//For Standby
+	gi.Pin = GPIO_PIN_2;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Alternate = 0;
+	HAL_GPIO_Init(GPIOE, &gi);
 
 	/*
 	PB08     ------> I2C1_SCL

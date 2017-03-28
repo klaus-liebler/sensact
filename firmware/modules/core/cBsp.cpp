@@ -281,9 +281,28 @@ bool BSP::SetDigitalOutput(uint16_t output, uint16_t value)
 
 bool BSP::SetDigitalOutput(uint16_t output, uint16_t mask, uint16_t value)
 {
+	if(output==UINT16_MAX)
+	{
+		return true;
+	}
 	if(output<1024)
 	{
+
+#ifdef STM32F4
+		GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(output>>4)));
+		uint16_t GPIO_Pin=  (1 << (output & 0x0000000F));
+		if(value)
+		  {
+			theGPIO->BSRR = GPIO_Pin;
+		  }
+		  else
+		  {
+			  theGPIO->BSRR = (uint32_t)GPIO_Pin << 16U;
+		  }
+		return true;
+#else
 		return false;
+#endif
 	}
 	uint16_t bus = ((output&0xC000)>>14)-1;
 	if(bus<busCnt)

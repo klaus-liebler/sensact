@@ -40,32 +40,7 @@ static const sensact::sScheduleEntry schedule[]
 	const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
 
 #if defined(NODE_TEST_HS07) || defined(NODE_TEST_UP02)
-	const bool MODEL::TRACE_COMMANDS=true;
-	const bool MODEL::TRACE_EVENTS=true;
 
-	static const uint8_t OWID1[6] = {1,2,3,4,5,6};
-	static drivers::cDS2482 ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
-	static cSensactSENode sensactSE1(OWID1);
-	static cDS1820Node ds1820_1(OWID1);
-	static cDS2413Node ds2413_1(OWID1);
-	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
-	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
-	static drivers::cPCA9555 pca9555_D0(&BSP::i2c2, drivers::ePCA9555Device::Dev1, 0xFFFF);
-	//drivers::cPCA9555 pca9555_D1(&BSP::i2c1, drivers::ePCA9555Device::Dev1);
-	#define pca9555ArrLength 1
-	static drivers::cPCA9555 * const pca9555Arr[pca9555ArrLength] = {&pca9555_D0};
-	static const uint16_t interruptlines[3]={64+15,64+14,64+13};//E15 ist der erste
-	static const cBusmaster bm1(
-			"I2C2",
-			&BSP::i2c2,
-			interruptlines,
-			pca9555Arr,
-			pca9555ArrLength,
-			2,//Bitmask!!!
-			0,
-			0
-			);
-	cBusmaster const * const MODEL::busses[] = {&bm1};
 #endif
 
 
@@ -107,16 +82,32 @@ static const sensact::sScheduleEntry schedule[]
 #endif
 
 #ifdef NODE_SNSCT_L3_TECH_HS_1
-	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+	const bool MODEL::TRACE_COMMANDS=true;
+	const bool MODEL::TRACE_EVENTS=true;
 
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
-
-	const uint8_t MODEL::ds18b20_Addresses[][6]={};
-	const uint8_t MODEL::ds18b20_AddressesCnt=0;
-	const bool MODEL::TRACE_COMMANDS=false;
-	const bool MODEL::TRACE_EVENTS=false;
+	static const uint8_t OWID1[6] = {1,2,3,4,5,6};
+	static drivers::cDS2482 ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
+	static cSensactSENode sensactSE1(OWID1);
+	static cDS1820Node ds1820_1(OWID1);
+	static cDS2413Node ds2413_1(OWID1);
+	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
+	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
+	static drivers::cPCA9555 pca9555_D0(&BSP::i2c2, drivers::ePCA9555Device::Dev1, 0xFFFF);
+	//drivers::cPCA9555 pca9555_D1(&BSP::i2c1, drivers::ePCA9555Device::Dev1);
+	#define pca9555ArrLength 1
+	static drivers::cPCA9555 * const pca9555Arr[pca9555ArrLength] = {&pca9555_D0};
+	static const uint16_t interruptlines[3]={64+15,64+14,64+13};//E15 ist der erste
+	static const cBusmaster bm1(
+			"I2C2",
+			&BSP::i2c2,
+			interruptlines,
+			pca9555Arr,
+			pca9555ArrLength,
+			2,//Bitmask!!!
+			0,
+			0
+			);
+	cBusmaster const * const MODEL::busses[] = {&bm1};
 #endif
 
 #ifdef NODE_SNSCT_L3_TECH_HS_2
