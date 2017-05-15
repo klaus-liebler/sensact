@@ -455,7 +455,7 @@ namespace Klli.Sensact.TestGui
             }
             this.Controls.Remove(cntrlMaster);
             this.cntrlMaster.Dispose();
-            this.cntrlMaster = CreateCommandsTable(sac);
+            this.cntrlMaster = (Panel)CreateCommandsTable(sac);
             this.Controls.Add(cntrlMaster);
             Invalidate();
             this.Update();

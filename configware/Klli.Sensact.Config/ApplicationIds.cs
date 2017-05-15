@@ -349,7 +349,7 @@
         PUSHB_L3_WORK_B13,//J1
         PUSHB_L3_WORK_B14,//
         PUSHB_L3_WORK_B15,//CORR_S + STRS
-        POWIT_L3_WORK_C1,
+        PWM___L3_WORK_C1,
         BLIND_L3_WORK_J1,
         BLIND_L3_WORK_J2,
         POWIT_L3_WORK_P1,
@@ -416,5 +416,6 @@
         STDBY_L2_CORR_24V,
         STDBY_L3_TECH_48V,
         STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
+        STDBY_L3_WORK_C1, //ist die Stromversorgung fur die Deckenlampe im Arbeitszimmer
     }
 }

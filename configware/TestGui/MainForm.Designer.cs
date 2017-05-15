@@ -42,9 +42,10 @@
             // 
             // btnUpdateCOM
             // 
-            this.btnUpdateCOM.Location = new System.Drawing.Point(12, 12);
+            this.btnUpdateCOM.Location = new System.Drawing.Point(16, 15);
+            this.btnUpdateCOM.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnUpdateCOM.Name = "btnUpdateCOM";
-            this.btnUpdateCOM.Size = new System.Drawing.Size(92, 23);
+            this.btnUpdateCOM.Size = new System.Drawing.Size(123, 28);
             this.btnUpdateCOM.TabIndex = 0;
             this.btnUpdateCOM.Text = "Update COM";
             this.btnUpdateCOM.UseVisualStyleBackColor = true;
@@ -53,16 +54,18 @@
             // cboSelectCOM
             // 
             this.cboSelectCOM.FormattingEnabled = true;
-            this.cboSelectCOM.Location = new System.Drawing.Point(110, 14);
+            this.cboSelectCOM.Location = new System.Drawing.Point(147, 17);
+            this.cboSelectCOM.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboSelectCOM.Name = "cboSelectCOM";
-            this.cboSelectCOM.Size = new System.Drawing.Size(121, 21);
+            this.cboSelectCOM.Size = new System.Drawing.Size(160, 24);
             this.cboSelectCOM.TabIndex = 1;
             // 
             // btnOpenCOM
             // 
-            this.btnOpenCOM.Location = new System.Drawing.Point(237, 12);
+            this.btnOpenCOM.Location = new System.Drawing.Point(316, 15);
+            this.btnOpenCOM.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOpenCOM.Name = "btnOpenCOM";
-            this.btnOpenCOM.Size = new System.Drawing.Size(75, 23);
+            this.btnOpenCOM.Size = new System.Drawing.Size(100, 28);
             this.btnOpenCOM.TabIndex = 2;
             this.btnOpenCOM.Text = "Open Port";
             this.btnOpenCOM.UseVisualStyleBackColor = true;
@@ -71,16 +74,18 @@
             // cntrlMaster
             // 
             this.cntrlMaster.BackColor = System.Drawing.Color.DarkMagenta;
-            this.cntrlMaster.Location = new System.Drawing.Point(299, 41);
+            this.cntrlMaster.Location = new System.Drawing.Point(399, 50);
+            this.cntrlMaster.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cntrlMaster.Name = "cntrlMaster";
-            this.cntrlMaster.Size = new System.Drawing.Size(673, 408);
+            this.cntrlMaster.Size = new System.Drawing.Size(897, 502);
             this.cntrlMaster.TabIndex = 3;
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(12, 41);
+            this.treeView1.Location = new System.Drawing.Point(16, 50);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(281, 408);
+            this.treeView1.Size = new System.Drawing.Size(373, 501);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -88,17 +93,20 @@
             // 
             this.lisTerminal.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lisTerminal.FormattingEnabled = true;
-            this.lisTerminal.Location = new System.Drawing.Point(12, 455);
+            this.lisTerminal.ItemHeight = 17;
+            this.lisTerminal.Location = new System.Drawing.Point(16, 560);
+            this.lisTerminal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lisTerminal.Name = "lisTerminal";
             this.lisTerminal.ScrollAlwaysVisible = true;
-            this.lisTerminal.Size = new System.Drawing.Size(960, 173);
+            this.lisTerminal.Size = new System.Drawing.Size(1279, 208);
             this.lisTerminal.TabIndex = 4;
             // 
             // btnSetTime
             // 
-            this.btnSetTime.Location = new System.Drawing.Point(318, 12);
+            this.btnSetTime.Location = new System.Drawing.Point(424, 15);
+            this.btnSetTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSetTime.Name = "btnSetTime";
-            this.btnSetTime.Size = new System.Drawing.Size(75, 23);
+            this.btnSetTime.Size = new System.Drawing.Size(100, 28);
             this.btnSetTime.TabIndex = 5;
             this.btnSetTime.Text = "Set Time";
             this.btnSetTime.UseVisualStyleBackColor = true;
@@ -106,9 +114,10 @@
             // 
             // btnGetTime
             // 
-            this.btnGetTime.Location = new System.Drawing.Point(399, 12);
+            this.btnGetTime.Location = new System.Drawing.Point(532, 15);
+            this.btnGetTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnGetTime.Name = "btnGetTime";
-            this.btnGetTime.Size = new System.Drawing.Size(75, 23);
+            this.btnGetTime.Size = new System.Drawing.Size(100, 28);
             this.btnGetTime.TabIndex = 6;
             this.btnGetTime.Text = "GetTime";
             this.btnGetTime.UseVisualStyleBackColor = true;
@@ -120,9 +129,10 @@
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(508, 11);
+            this.btnSelectFile.Location = new System.Drawing.Point(1195, 13);
+            this.btnSelectFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSelectFile.Name = "btnSelectFile";
-            this.btnSelectFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectFile.Size = new System.Drawing.Size(100, 28);
             this.btnSelectFile.TabIndex = 7;
             this.btnSelectFile.Text = "Select File";
             this.btnSelectFile.UseVisualStyleBackColor = true;
@@ -130,9 +140,9 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 641);
+            this.ClientSize = new System.Drawing.Size(1312, 789);
             this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.btnGetTime);
             this.Controls.Add(this.btnSetTime);
@@ -142,6 +152,7 @@
             this.Controls.Add(this.btnOpenCOM);
             this.Controls.Add(this.cboSelectCOM);
             this.Controls.Add(this.btnUpdateCOM);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "Sensact Command Invoker";
             this.ResumeLayout(false);
@@ -159,7 +170,7 @@
         private System.Windows.Forms.Button btnGetTime;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button btnSelectFile;
-        private System.Windows.Forms.Control cntrlMaster;
+        private System.Windows.Forms.Panel cntrlMaster;
     }
 }
 

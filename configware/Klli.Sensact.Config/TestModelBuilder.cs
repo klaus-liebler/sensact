@@ -1,7 +1,9 @@
 ﻿
 using Klli.Sensact.Config.Applications;
 using Klli.Sensact.Config.Nodes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Klli.Sensact.Config
 {
@@ -71,7 +73,7 @@ namespace Klli.Sensact.Config
             };
             return model;
         }
-        private static SensactApplication BuildInput(ushort input, ushort output)
+        private static SensactApplication BuildInputForPWM(ushort input, ushort PWM_XX_XXX_i)
         {
             return new PushButtonXApplication()
             {
@@ -82,13 +84,30 @@ namespace Klli.Sensact.Config
                     new Command()
                     {
                         CommandType=CommandType.TOGGLE,
-                        TargetAppId="PWM_XX_XXX_"+output,
+                        TargetAppId="PWM_XX_XXX_"+PWM_XX_XXX_i,
                     },
                 },  
             };
         }
 
-        private static SensactApplication BuildOutput_Deprec(ushort i)
+        private static SensactApplication BuildInputForPowit(ushort input, ushort POWIT_XX_XXX_i)
+        {
+            return new PushButtonXApplication()
+            {
+                ApplicationId = "PUSHB_XX_XXX_" + input,
+                InputRessource = input,
+                CommandsOnReleasedShort = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.TOGGLE,
+                        TargetAppId="POWIT_XX_XXX_"+POWIT_XX_XXX_i,
+                    },
+                },
+            };
+        }
+
+        private static SensactApplication BuildPowit(ushort i)
         {
             return new PoweritemApplication()
             {
@@ -97,12 +116,22 @@ namespace Klli.Sensact.Config
             };
         }
 
-        private static SensactApplication BuildPWMOutput(ushort i)
+        private static SensactApplication BuildPWMOutput(ushort PWM_XXX_XXX_i)
         {
             return new PWMApplication()
             {
-                ApplicationId = "PWM_XX_XXX_" + i,
-                OutputRessources = new List<ushort>() { i },
+                ApplicationId = "PWM_XX_XXX_" + PWM_XXX_XXX_i,
+                OutputRessources = new List<ushort>() { PWM_XXX_XXX_i },
+                LowMeansLampOn = true,
+            };
+        }
+
+        private static SensactApplication BuildPWMOutput(params ushort[] i)
+        {
+            return new PWMApplication()
+            {
+                ApplicationId = "PWM_XX_XXX_" + i[0],
+                OutputRessources = i.ToList(),
                 LowMeansLampOn = true,
             };
         }
@@ -384,90 +413,22 @@ namespace Klli.Sensact.Config
 
             Model model = new Model("TestAllPins");
 
-            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07")
-            {
-                Applications = new List<SensactApplication>()
-                    {
-                        new RotaryEncoderApplication
-                        {
-                            ApplicationId="ROTAR_XX_XXX_1",
-                            InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                            InputPushRessource=0,
-                            CommandsOnPressed=new List<Command>
-                            {
-                                new Command
-                                {
-                                    TargetAppId="PWM_XX_XXX_"+(ushort)(BUS0 + I2C + 0),
-                                    CommandType=CommandType.TOGGLE,
-                                }
-                            },
-                            CommandsOnTurned=new List<Command>
-                            {
-                                new Command
-                                {
-                                    TargetAppId="PWM_XX_XXX_"+(ushort)(BUS0 + I2C + 0),
-                                    CommandType=CommandType.STEP_VERTICAL,
-                                }
-                            }
-                        },
-                    }
-            };
+            Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07");
 
-            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
-            {
-                Applications = new List<SensactApplication>
-                {
-                    new RotaryEncoderApplication
-                    {
-                        ApplicationId="ROTAR_YY_YYY_1",
-                        InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                        InputPushRessource=0,
-                        CommandsOnPressed=new List<Command>
-                        {
-                            new Command
-                            {
-                                TargetAppId="PWM___YY_YYY_01",
-                                CommandType=CommandType.TOGGLE,
-                            }
-                        },
-                        CommandsOnTurned=new List<Command>
-                        {
-                            new Command
-                            {
-                                TargetAppId="PWM___YY_YYY_01",
-                                CommandType=CommandType.STEP_VERTICAL,
-                            }
-                        }
-                    },
-                    new PWMApplication
-                    {
-                        ApplicationId="PWM___YY_YYY_01",
-                        LowMeansLampOn=true,
-                        MinimalOnLevel=20,
-                        StandbyController=null,
-                        OutputRessources=new List<ushort>
-                        {
-                            (ushort)(BUS0 + I2C + 0),
-                            (ushort)(BUS0 + I2C + 1),
-                            (ushort)(BUS0 + I2C + 2),
-                            (ushort)(BUS0 + I2C + 3),
-                        }
-                    }
-                    
-                },
-                
-            };
 
             model.Nodes = new List<Node>(){
                 TEST_HS07,
-                TEST_UP02
                 
             };
-            for(ushort i=0;i<16;i++)
+            for(ushort i=0;i<24;i++)
             {
-                TEST_HS07.Applications.Add(BuildInput((ushort)(BUS0 + I2C + i), (ushort)(BUS0 + I2C + i)));
-                TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS0 + I2C + i)));
+                TEST_HS07.Applications.Add(BuildInputForPowit((ushort)(BUS0 + I2C + i), (ushort)(BUS1 + I2C + i)));
+                TEST_HS07.Applications.Add(BuildPowit((ushort)(BUS1 + I2C + i)));
             }
+            TEST_HS07.Applications.Add(BuildInputForPWM((ushort)(BUS0 + I2C + 24), (ushort)(BUS1 + I2C + 24)));
+            TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS1 + I2C + 24), (ushort)(BUS1 + I2C + 25), (ushort)(BUS1 + I2C + 26), (ushort)(BUS1 + I2C + 27)));
+            TEST_HS07.Applications.Add(BuildInputForPWM((ushort)(BUS0 + I2C + 28), (ushort)(BUS1 + I2C + 28)));
+            TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS1 + I2C + 28), (ushort)(BUS1 + I2C + 29), (ushort)(BUS1 + I2C + 30), (ushort)(BUS1 + I2C + 31)));
             return model;
         }
     }
