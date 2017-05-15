@@ -36,6 +36,7 @@ public:
 	static uint32_t ParseUInt32(const uint8_t  * constmessage, uint32_t offset);
 	static void WriteUInt32(uint32_t value, uint8_t *message, uint32_t offset);
 	static uint64_t ParseUInt64(const uint8_t  * constmessage, uint32_t offset);
+
 };
 
 enum struct ePushState

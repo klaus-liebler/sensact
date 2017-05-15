@@ -1,19 +1,17 @@
-#include "stm32f1xx_hal.h"
+
 #include "console.h"
 #include "flash_if.h"
 #include "appids.h"
 #include "commandAndEventTypes.h"
 #include "cModel.h"
 #include "cCanIdUtils.h"
+#include "bsp.h"
+#include "sensactIAPConfig.h"
+#include "cCanMessageBuilder.h"
 
-#define CONSOLE_USART USART1
-#define CAN CAN1
-#define CAN_PRESCALER 18
 
-#define NodeID 7
 
-#define VERSION_MAJOR 1
-#define VERSION_MINOR 0
+
 
 CanTxMsgTypeDef TxMessage;
 CanRxMsgTypeDef RxMessage;
@@ -31,7 +29,20 @@ void Console::putcharX(char c) {
 }
 static void IAP_Init(void);
 static void SystemClock_Config(void);
-uint8_t scratchpad[1024];
+static void HandleRESET();
+static void HandleCOPY_SCRATCH_TO_FLASH();
+static void HandleWRITE_SCRATCH();
+static void HandlePAYLOAD(uint16_t chunkindex);
+
+//pointer is offset from start in bytes
+uint32_t maxpointer8=0;
+uint32_t pointer8=0;
+union{
+	uint64_t scratchpad64[FLASH_PAGE_SIZE/8];
+	uint32_t scratchpad32[FLASH_PAGE_SIZE/4];
+	uint8_t  scratchpad  [FLASH_PAGE_SIZE];
+};
+
 
 /**
  * @brief  Main program
@@ -41,12 +52,15 @@ uint8_t scratchpad[1024];
 int main(void) {
 	HAL_Init();
 
-	/* Set the Vector Table base location at 0x0801C000
-	 (this is already done in system_stm32f1xx_reloc.c file) */
-	//TODO: Nein, der Bootloader wird immer als erstes gestartet; Damit ist er auch funktionsfähig, wenn beim Flashen des Hauptprogramms irgend was schief geht
-	//Normales Verhalten:
+	/*
+	 * In the Main Application
+	 * Set the Vector Table base location at 0x0801C000 (this is already done in system_stm32f1xx_reloc.c file)
+	 * Change Linker file
+	 *
 	//Setze eine Eventnachricht als NodeMaster ab, dass sich die Node jetzt im Bootloader befindet (+ Version, +Scratchpad-Size in 8Byte-Einheiten)
-	//Warte zwei Sekunden auf einen Befehl für diesen Bootloader, der ein Subset aller Befehle für den NodeMaster kennt. Unter anderem den RESET und den WRITE_FLASH
+	//Warte zwei Sekunden auf einen Befehl für diesen Bootloader
+	//Der Bootloader verhält sich wie ein NodeMaster-Light, der ein Subset aller Befehle für den NodeMaster kennt.
+	//Unter anderem den RESET und den WRITE_FLASH
 	//Wenn ein Befehl kommt, führe ihn und alle weiteren Befehle aus
 	//Wenn kein Befehl innerhalb der Wartezeit kommt, springe zur Applikation
 
@@ -61,7 +75,7 @@ int main(void) {
 	//Die ACKN enthalten immer als Payload das Kommando, das sie bestätigen.
 	//Dann beginnt ein neuer WRITE_TO_SCRATCHPAD-Zyklus
 
-
+*/
 
 	SystemClock_Config();
 
@@ -78,43 +92,105 @@ int main(void) {
 	}
 	sensact::Console::Writeln("Bit is set!");
 	//Acknowledge readyness and send own version and appid
-
-	hcan.pTxMsg->ExtId = sensact::cCanIdUtils::CreateNodeEventMessageId((uint8_t)NodeID, (uint8_t)sensact::eNodeEventType::BOOTLOADER_READY);
-	hcan.pTxMsg->IDE = CAN_ID_EXT;
-	hcan.pTxMsg->DLC = 4;
-	hcan.pTxMsg->Data[0] = VERSION_MAJOR;
-	hcan.pTxMsg->Data[1] = VERSION_MINOR;
-	sensact::Common::WriteUInt16(128, hcan.pTxMsg->Data, 2);
+	sensact::cCanMessageBuilder::CreateBOOTLOADER_READY(hcan.pTxMsg);
 	HAL_CAN_Transmit(&hcan, 1000);
 	bool commandDetected=false;
 	uint32_t start=HAL_GetTick();
-	while(commandDetected | HAL_GetTick()-start<2000)
+	uint8_t command;
+	uint8_t destinationNodeId;
+	while(HAL_GetTick()-start<2000)
 	{
 		if(HAL_CAN_Receive(&hcan, CAN_FIFO0, 10)!=HAL_OK
 				|| !sensact::cCanIdUtils::ParseCanMessageType(hcan.pRxMsg->ExtId)==sensact::eCanMessageTypes::NodeCommand)
 		{
 			continue;
 		}
-		uint8_t destinationNodeId;
-		uint8_t command;
 		sensact::cCanIdUtils::ParseNodeCommandMessageId(hcan.pRxMsg->ExtId, &destinationNodeId, &command);
-		if(destinationNodeId!=NodeID) continue;
-
-		commandDetected=true;
-		switch (command) {
-			case sensact::eNodeCommandType::PAYLOAD:
-
-				break;
-			default:
-				break;
+		if(destinationNodeId==NodeID)
+		{
+			commandDetected=true;
+			break;
 		}
-
-
+	}
+	if(!commandDetected)
+	{
+		//Check whether main application exists
+		//Boot to main application
 	}
 
+	while(true)
+	{
+
+		switch(command)
+		{
+		case (uint8_t)sensact::eNodeCommandType::RESET:
+				HandleRESET();
+				break;
+		case (uint8_t)sensact::eNodeCommandType::COPY_SCRATCH_TO_FLASH:
+				HandleCOPY_SCRATCH_TO_FLASH();
+				break;
+		case (uint8_t)sensact::eNodeCommandType::WRITE_SCRATCH:
+				HandleWRITE_SCRATCH();
+				break;
+		case (uint8_t)sensact::eNodeCommandType::PAYLOAD:
+				uint16_t chunkindex;
+				sensact::cCanIdUtils::ParsePayloadMessageId(hcan.pRxMsg->ExtId, &destinationNodeId, &chunkindex);
+				HandlePAYLOAD(chunkindex);
+				break;
 
 
-	//Erase Flash from 0 to 112
+		}
+	}
+}
+
+void HandleRESET()
+{
+	//Format of payload
+	//no payload
+	NVIC_SystemReset();
+}
+
+void HandlePAYLOAD(uint16_t chunkindex)
+{
+	if(8*chunkindex != (pointer8))
+	{
+		sensact::Console::Writeln("8*chunkindex != (pointer8)");
+		return;
+	}
+	if(pointer8>=maxpointer8)
+	{
+		sensact::Console::Writeln("8*chunkindex != (pointer8)");
+		return;
+	}
+	for(int i=0;i<8;i++)
+	{
+		scratchpad[pointer8++]=RxMessage.Data[i];
+	}
+}
+
+void HandleWRITE_SCRATCH()
+{
+	//pointer is considered as the number of bytes to be transferred in the next PAYLOAD phase
+	//check on each
+	maxpointer8  = sensact::Common::ParseUInt32(RxMessage.Data, 0);
+	for(int i=0;i<FLASH_PAGE_SIZE/4;i++)
+	{
+		scratchpad32[i]=0;
+	}
+}
+
+void HandleCOPY_SCRATCH_TO_FLASH()
+{
+	//Format of payload
+	uint32_t page = sensact::Common::ParseUInt32(RxMessage.Data, 0);
+
+	//check
+	if(pointer8!=maxpointer8)
+	{
+		sensact::Console::Writeln("pointer8!=maxpointer8");
+	}
+
+	//Erase Page
 	FLASH_EraseInitTypeDef pEraseInit;
 	uint32_t PageError = 0;
 
@@ -123,9 +199,9 @@ int main(void) {
 	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPERR);
 
 	pEraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
-	pEraseInit.PageAddress = 0;
+	pEraseInit.PageAddress = page;
 	pEraseInit.Banks = FLASH_BANK_1;
-	pEraseInit.NbPages = 112;
+	pEraseInit.NbPages = 1;
 	if (HAL_FLASHEx_Erase(&pEraseInit, &PageError) != HAL_OK) {
 		sensact::Console::Writeln(
 				"FLASH ERASE was not successful. PageError=%i Halting!",
@@ -133,64 +209,17 @@ int main(void) {
 		while (true)
 			;
 	}
-	HAL_FLASH_Lock();
-	int expectedPacketNumber = -1;
-	int receivedPacketNumber = -1;
-	uint32_t packetCnt = 0;
-	do {
-		//Accept Bootloader Messages for this node only
-		if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 10) == HAL_OK) {
-			if (((hcan.pRxMsg->ExtId & 0x10000000) == 0)
-					|| ((hcan.pRxMsg->ExtId
-							& 0x000000FF)
-									!= NodeID)) {
-				continue;
-			}
-			//it is a bootloader message (28th bit == 1) for this node (8 LSB is node address)
-
-			receivedPacketNumber = (hcan.pRxMsg->ExtId & 0x10000000) >> 8;
-			if (expectedPacketNumber == -1) {
-				//setup the counter at the first package
-				expectedPacketNumber = receivedPacketNumber;
-			} else if (expectedPacketNumber != receivedPacketNumber) {
-				sensact::Console::Writeln(
-						"(ExpectedPacketNumber=%i)!=(ReceivedPackageNumber=%i). Halting!",
-						expectedPacketNumber, receivedPacketNumber);
-				while (true)
-					;
-			}
-			//bootloader message for this node with right packet number
-			//ok, all right, let's flash!
-			uint32_t destination = ADDR_FLASH_PAGE_0 + 8 * packetCnt;
-			uint64_t data = 0;
-			uint8_t *datap = (uint8_t*) &data;
-			for (uint8_t i = 0; i < 8; i++) {
-				//to get 64bit alignment
-				datap[i] = hcan.pRxMsg->Data[i];
-			}
-
-			if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, destination,
-					data) == HAL_OK) {
-				/* Check the two written values */
-				if (*(uint32_t*) destination != *(uint32_t*) (data)) {
-					sensact::Console::Writeln(
-							"Flash content in first written word does not match packet data %i. Halting!",
-							receivedPacketNumber);
-				}
-				if (*(uint32_t*) (destination + 4)
-						!= *(uint32_t*) (datap + 4)) {
-					sensact::Console::Writeln(
-							"Flash content in second written word does not match packet data %i. Halting!",
-							receivedPacketNumber);
-				}
-			}
-			packetCnt++;
-			expectedPacketNumber--;
+	uint32_t basedestination = ADDR_FLASH_PAGE_0 + page * FLASH_PAGE_SIZE;
+	for (uint8_t i = 0; i < FLASH_PAGE_SIZE; i+=4) {
+		uint32_t address = basedestination+i;
+		uint64_t data = sensact::Common::ParseUInt32(scratchpad, i);
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address,data);
+		uint32_t writtenValue = *(uint32_t*) (address);
+		if (writtenValue != data) {
+			sensact::Console::Writeln("Flash content on address %i is %i does not match packet data %i. Halting!", address, writtenValue, data);
 		}
-	} while (receivedPacketNumber != 0);
+	}
 	HAL_FLASH_Lock();
-	NVIC_SystemReset();
-	return 0;
 }
 
 void SystemClock_Config(void) {

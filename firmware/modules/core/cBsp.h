@@ -1,15 +1,30 @@
-/*
- * hc_bsp.h
- *
- *  Created on: 17.11.2015
- *      Author: klaus
- */
-
 #pragma once
 #include <common.h>
 #include <bsp_features.h>
+
+#ifdef STM32F0
+#include <stm32f0xx_hal.h>
+#endif
 #ifdef STM32F1
 #include <stm32f1xx_hal.h>
+#endif
+#ifdef STM32F4
+#include <stm32f4xx_hal.h>
+#endif
+
+#ifdef SENSACTUP03
+#define CONSOLE_USART USART1
+#define MP3_BELL_USART USART1
+#define CONSOLE_USART_IRQn USART1_IRQn
+#define UART_BUFFER_SIZE 100
+//#define CAN CAN
+#define CAN_PRESCALER 24
+#define DCF77_PORT GPIOC
+#define DCF77_PIN GPIO_PIN_4
+#define BUS_CNT 2
+#endif
+
+#ifdef SENSACTUP02
 #define CONSOLE_USART USART1
 #define MP3_BELL_USART USART1
 #define CONSOLE_USART_IRQn USART1_IRQn
@@ -18,28 +33,50 @@
 #define CAN_PRESCALER 18
 #define DCF77_PORT GPIOC
 #define DCF77_PIN GPIO_PIN_4
+#define BUS_CNT 1
 #endif
-#ifdef STM32F4
-#include <stm32f4xx_hal.h>
+
+#ifdef SENSACTHS07
 #define CONSOLE_USART USART3
+#define CONSOLE_USART_IRQn USART1_IRQn
 #define MP3_BELL_USART USART4
-#define CONSOLE_USART_IRQn USART3_IRQn
 #define UART_BUFFER_SIZE 100
 #define CAN CAN2
 #define CAN_PRESCALER 21
+#define CAN_PINS GPIO_PIN_12 | GPIO_PIN_13
+#define CAN_PORT GPIOB
 #define DCF77_PORT GPIOC
 #define DCF77_PIN GPIO_PIN_4
+#define BUS_CNT 2
+#endif
+
+#ifdef SENSACTHS08
+#define CONSOLE_USART USART1
+#define CONSOLE_USART_IRQn USART1_IRQn
+#define MP3_BELL_USART USART4
+#define UART_BUFFER_SIZE 100
+#define CAN CAN1
+#define CAN_PRESCALER 21
+#define CAN_PINS GPIO_PIN_0 | GPIO_PIN_1
+#define CAN_PORT GPIOD
+#define DCF77_PORT GPIOC
+#define DCF77_PIN GPIO_PIN_4
+#define BUS_CNT 2
 #endif
 
 
 namespace sensact {
 
+
+
 class BSP {
 
+	static DMA_HandleTypeDef hdma_tim3_ch1_trig;
 	static UART_HandleTypeDef comm;
 	static CAN_HandleTypeDef hcan;
 	static CanTxMsgTypeDef TxMessage;
 	static CanRxMsgTypeDef RxMessage;
+
 
 	static TIM_HandleTypeDef htim_pwm;
 	static Time_t nextLedToggle;
@@ -58,9 +95,10 @@ public:
 	static const uint8_t T1H_WS2812 =50; //50,4
 	static const uint8_t T1H_WS2811=18; //18 half Datasheet!
 	static const uint8_t T0H_WS2811=43; //43,2 half Datasheet!
+	static const uint32_t BAUDRATE = 115200;
 
 
-	static const uint8_t busCnt=1;
+	static const uint8_t busCnt=BUS_CNT;
 
 	static uint8_t ErrorCounters[3];
 

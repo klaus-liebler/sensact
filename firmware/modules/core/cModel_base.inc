@@ -15,7 +15,7 @@
 #include "cSensactNode.h"
 #include "cBusmaster.h"
 namespace sensact{
-
+/*
 static const sensact::sScheduleEntry schedule[]
 												  {
 														  {days(0)+hours(7), 30},
@@ -35,24 +35,82 @@ static const sensact::sScheduleEntry schedule[]
 
 												  };
 	cWeeklySchedule MODEL::volumeSchedule(0, schedule, 14);
-
+*/
 	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
 	const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
 
 #if defined(NODE_TEST_HS07) || defined(NODE_TEST_UP02)
+	const bool MODEL::TRACE_COMMANDS=true;
+	const bool MODEL::TRACE_EVENTS=true;
 
+	static const uint8_t OWID1[6] = {0,0,0,0,0,0};
+	static drivers::cDS2482 ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
+	static cSensactSENode sensactSE1(OWID1);
+	static cDS1820Node ds1820_1(OWID1);
+	static cDS2413Node ds2413_1(OWID1);
+	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
+	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
+
+#define RB &BSP::i2c1
+#define BB &BSP::i2c2
+
+	static drivers::cPCA9555 BB_9555_00(BB, drivers::ePCA9555Device::Dev0, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_01(BB, drivers::ePCA9555Device::Dev1, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_02(BB, drivers::ePCA9555Device::Dev2, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_03(BB, drivers::ePCA9555Device::Dev3, 0xFFFF);
+
+	#define BB_9555_LEN 4
+	static drivers::cPCA9555 * const BB_9555[BB_9555_LEN] = {&BB_9555_00, &BB_9555_01, &BB_9555_02, &BB_9555_03};
+	static const uint16_t BB_interruptlines[3]={64+13,64+14,64+15};//E15 ist der erste
+	static const cBusmaster buttonBus(
+			"Button Bus",
+			BB,
+			BB_interruptlines,
+			BB_9555,
+			BB_9555_LEN,
+			0,//Bitmask!!!
+			0,
+			0
+			);
+
+	#define RB_9555_LEN 0
+	static drivers::cPCA9555 * const RB_9555[RB_9555_LEN] = {};
+	static const uint16_t RB_interruptlines[3]={64+10,64+11,64+12};//E15 ist der erste
+	static const cBusmaster relayBus(
+			"Relay Bus",
+			RB,
+			RB_interruptlines,
+			RB_9555,
+			RB_9555_LEN,
+			1+2+4+8,//Bitmask!!!
+			0,
+			0
+			);
+
+	cBusmaster const * const MODEL::busses[] = {&buttonBus, &relayBus};
 #endif
 
 
 #if defined(NODE_SNSCT_L1_KTCH_UP) or defined(NODE_SNSCT_L1_LVNG_UP) or defined (NODE_SNSCT_L2_BATH_UP)
-	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
-	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
-	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
+#define RB &BSP::i2c2
+
+	#define RB_9555_LEN 0
+	static drivers::cPCA9555 * const RB_9555[RB_9555_LEN] = {};
+	static const uint16_t RB_interruptlines[3]={64+10,64+11,64+12};//E15 ist der erste
+	static const cBusmaster relayBus(
+			"Relay Bus",
+			RB,
+			RB_interruptlines,
+			RB_9555,
+			RB_9555_LEN,
+			1+2+4+8,//Bitmask!!!
+			0,
+			0
+			);
+
+	cBusmaster const * const MODEL::busses[] = {&relayBus};
 #endif
 
 #ifdef NODE_SNSCT_L0_TECH_HS_1
@@ -85,46 +143,51 @@ static const sensact::sScheduleEntry schedule[]
 	const bool MODEL::TRACE_COMMANDS=true;
 	const bool MODEL::TRACE_EVENTS=true;
 
-	static const uint8_t OWID1[6] = {1,2,3,4,5,6};
+	static const uint8_t OWID1[6] = {0,0,0,0,0,0};
 	static drivers::cDS2482 ds2482(&BSP::i2c2, drivers::eDS2482Device::Dev0);
 	static cSensactSENode sensactSE1(OWID1);
 	static cDS1820Node ds1820_1(OWID1);
 	static cDS2413Node ds2413_1(OWID1);
 	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
 	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
-	static drivers::cPCA9555 pca9555_D0(&BSP::i2c2, drivers::ePCA9555Device::Dev1, 0xFFFF);
-	//drivers::cPCA9555 pca9555_D1(&BSP::i2c1, drivers::ePCA9555Device::Dev1);
-	#define pca9555ArrLength 1
-	static drivers::cPCA9555 * const pca9555Arr[pca9555ArrLength] = {&pca9555_D0};
-	static const uint16_t interruptlines[3]={64+15,64+14,64+13};//E15 ist der erste
-	static const cBusmaster bm1(
-			"I2C2",
-			&BSP::i2c2,
-			interruptlines,
-			pca9555Arr,
-			pca9555ArrLength,
-			2,//Bitmask!!!
+
+#define RB &BSP::i2c1
+#define BB &BSP::i2c2
+
+	static drivers::cPCA9555 BB_9555_00(BB, drivers::ePCA9555Device::Dev0, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_01(BB, drivers::ePCA9555Device::Dev1, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_02(BB, drivers::ePCA9555Device::Dev2, 0xFFFF);
+	static drivers::cPCA9555 BB_9555_03(BB, drivers::ePCA9555Device::Dev3, 0xFFFF);
+
+	#define BB_9555_LEN 4
+	static drivers::cPCA9555 * const BB_9555[BB_9555_LEN] = {&BB_9555_00, &BB_9555_01, &BB_9555_02, &BB_9555_03};
+	static const uint16_t BB_interruptlines[3]={64+13,64+14,64+15};//E15 ist der erste
+	static const cBusmaster buttonBus(
+			"Button Bus",
+			BB,
+			BB_interruptlines,
+			BB_9555,
+			BB_9555_LEN,
+			0,//Bitmask!!!
 			0,
 			0
 			);
-	cBusmaster const * const MODEL::busses[] = {&bm1};
-#endif
 
-#ifdef NODE_SNSCT_L3_TECH_HS_2
-	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
+	#define RB_9555_LEN 0
+	static drivers::cPCA9555 * const RB_9555[BB_9555_LEN] = {};
+	static const uint16_t RB_interruptlines[3]={64+10,64+11,64+12};//E15 ist der erste
+	static const cBusmaster relayBus(
+			"Relay Bus",
+			RB,
+			RB_interruptlines,
+			RB_9555,
+			RB_9555_LEN,
+			1+2+4+8,//Bitmask!!!
+			0,
+			0
+			);
 
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={{}};
-	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
-
-	const uint8_t MODEL::ds18b20_Addresses[][6]={{}};
-	const uint8_t MODEL::ds18b20_AddressesCnt=0;
-
-	drivers::cBH1750 bh1750(&BSP::i2c2, drivers::eBH1750Device::Dev0);
-	sensact::cBrightnessSensor SBRGH_LX_ROOF("SBRGH_LX_ROOF", eApplicationID::SBRGH_LX_ROOF, &bh1750, 300);
-
-	const bool MODEL::TRACE_COMMANDS=false;
-	const bool MODEL::TRACE_EVENTS=false;
+	cBusmaster const * const MODEL::busses[] = {&buttonBus, &relayBus};
 #endif
 
 }

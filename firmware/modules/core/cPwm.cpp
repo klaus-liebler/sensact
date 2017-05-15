@@ -29,12 +29,12 @@ cPWM::cPWM(char const*const name, const eApplicationID id, uint16_t  const*const
 		autoOffTime(TIME_MAX)
 {
 
-	baseOutput=output[0] & 0xFFFF00;
+	baseOutput=output[0] & 0xFFF0;
 	outputMask=0;
 	for(int i=0;i<outputLength;i++)
 	{
 		if(output[i] < baseOutput || output[i]>=baseOutput+16) continue;
-		int bitnumberToSet = output[i] & 0x000000FF;
+		int bitnumberToSet = output[i] & 0x0000000F;
 		outputMask|= (1<<bitnumberToSet);
 
 	}
@@ -261,7 +261,10 @@ void cPWM::SetDimLevel(uint8_t level) {
 		val=UINT16_MAX-val;
 	}
 
-	BSP::SetDigitalOutput(baseOutput, outputMask, val);
+	if(!BSP::SetDigitalOutput(baseOutput, outputMask, val))
+	{
+		LOGE("%s could not set output %i to level %i", Name, baseOutput, level);
+	}
 
 }
 

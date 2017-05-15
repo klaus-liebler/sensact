@@ -11,14 +11,14 @@
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_DEBUG
+#define LOGLEVEL LEVEL_INFO
 #define LOGNAME "PSHBT"
 #include "cLog.h"
 
 namespace sensact {
 
 void cPushbuttonX::OnPressed(Time_t now) {
-	LOGD("%s OnPressed %d with %d commands", Name, this->input, this->pressedCommandsLength);
+	LOGI("%s OnPressed %d with %d commands", Name, this->input, this->pressedCommandsLength);
 	int i=0;
 	for(i=0;i<this->pressedCommandsLength;i++)
 	{

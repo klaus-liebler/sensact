@@ -27,12 +27,6 @@ private:
 	static eApplicationID heartbeatBuffer;
 
 public:
-	static bool RequireInput(uint8_t input);
-	static bool RequirePWM(uint8_t pwm); // 0..4
-	static bool RequireOutput(uint8_t o); //0..31
-	static bool RequireInput(eInput i);
-	static uint8_t Input2GPIOIndex(eInput i);
-	static uint8_t Input2PinIndex(eInput i);
 	static void MasterControlLoop(void);
 	static bool SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength);
 	static void SendEvent(Time_t now, const eApplicationID, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t* payload, uint8_t payloadLenght);

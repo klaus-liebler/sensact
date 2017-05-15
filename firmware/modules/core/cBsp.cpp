@@ -53,11 +53,6 @@ extern uint64_t steadyClockMsecCnt;
 
 namespace sensact {
 
-
-
-
-
-
 //http://patorjk.com/software/taag/#p=display&f=Standard&t=multiupbox%201.0
 //http://www.freeformatter.com/java-dotnet-escape.html
 
@@ -75,6 +70,15 @@ uint32_t BSP::inputRequests = 0xFFFFFE00;
 const char BSP::SystemString[] = "sensactup 0.2, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
 const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
 DMA_HandleTypeDef hdma_tim1_ch1;
+I2C_HandleTypeDef BSP::i2c2;
+static uint8_t INPUT[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+#endif
+
+#ifdef SENSACTUP03
+const char BSP::SystemString[] = "sensactup 0.3, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
+const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
+DMA_HandleTypeDef hdma_tim1_ch1;
+I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 static uint8_t INPUT[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
@@ -99,7 +103,14 @@ I2C_HandleTypeDef BSP::i2c2;
 UART_HandleTypeDef BSP::BELL;
 //static uint8_t INPUT[] = { /*Rotar Push*/P(C, 13), /*14pin output*/P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
 static uint8_t INPUT[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,16};
+#endif
 
+#ifdef SENSACTHS08
+const char BSP::SystemString[] = "sensactHS08 2017-05-11, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
+const char BSP::gimmick[] ="";
+I2C_HandleTypeDef BSP::i2c1;
+I2C_HandleTypeDef BSP::i2c2;
+UART_HandleTypeDef BSP::BELL;
 #endif
 
 
@@ -123,7 +134,7 @@ const char BSP::NOT_SUCCESSFUL_STRING[] =  "Setup of %s was NOT successful";
 void BSP::InitAndTestUSART()
 {
 	comm.Instance = CONSOLE_USART;
-	comm.Init.BaudRate = 115200;
+	comm.Init.BaudRate = BSP::BAUDRATE;
 	comm.Init.WordLength = UART_WORDLENGTH_8B;
 	comm.Init.StopBits = UART_STOPBITS_1;
 	comm.Init.Parity = UART_PARITY_NONE;
@@ -146,6 +157,9 @@ void BSP::InitAndTestUSART()
 }
 
 bool BSP::InitDWTCounter(void) {
+#ifdef STM32F0
+	return false;
+#else
 	uint32_t c;
 
     /* Enable TRC */
@@ -168,11 +182,12 @@ bool BSP::InitDWTCounter(void) {
 
 	/* Return difference, if result is zero, DWT has not started */
 	return (DWT->CYCCNT - c)>0;
+#endif
 }
 
 void BSP::DelayUs(__IO uint32_t micros)
 {
-	#if !defined(STM32F0xx)
+	#if !defined(STM32F0)
 		uint32_t start = DWT->CYCCNT;
 
 		/* Go to number of cycles for system */
@@ -191,12 +206,20 @@ void BSP::DelayUs(__IO uint32_t micros)
 
 uint32_t BSP::GetCycCnt()
 {
+#ifdef STM32F0
+return 0;
+#else
 	return DWT->CYCCNT;
+#endif
 }
 
 uint32_t BSP::GetUsSinceCycCnt(uint32_t cyccnt)
 {
+#ifdef STM32F0
+return 0;
+#else
 	return (DWT->CYCCNT - cyccnt) / (SystemCoreClock / 1000000);
+#endif
 }
 
 void BSP::InitCAN()
@@ -253,9 +276,14 @@ void BSP::InitCAN()
 
 void Console::putcharX(char c) {
 
+
+#ifdef STM32F0
+
+#else
 	while (!(CONSOLE_USART->SR & USART_SR_TXE))
-		;
+			;
 	CONSOLE_USART->DR = c;
+#endif
 }
 
 
@@ -350,7 +378,7 @@ bool BSP::SendCANMessage(CANMessage* m) {
 
 static bool RequestRotaryEncoder(eRotaryEncoder re) {
 	GPIO_InitTypeDef GPIO_InitStruct;
-#if defined(SENSACTHS07)
+#ifdef SENSACTHS07
 	(void)re;
 
 	__HAL_RCC_TIM4_CLK_ENABLE();
@@ -479,7 +507,7 @@ uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 	}
 #endif
 
-#ifdef SENSACTHS04
+#if defined(SENSACTHS04) | defined(SENSACTHS08)
 	return 0;
 #endif
 }

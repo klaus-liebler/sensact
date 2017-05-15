@@ -13,9 +13,9 @@ namespace sensact {
 
 //Die höchsten beiden Bits geben den Bus an
 //00=intern
-//01=Bus1
-//10=Bus2
-//11=Bus3
+//01=Bus0
+//10=Bus1
+//11=Bus2
 //Inputs werden über einen 16bit-Wert angesprochen
 //Interne Inputs: PA0 = 0, PA15=15, PB0=16, PB15=31 etc
 //dann ab 16384 geht es weiter mit den busmaster i2c1
@@ -67,7 +67,7 @@ cSensactSENode::cSensactSENode(uint8_t const * const owid):owid(owid)
 void cBusmaster::Init() const
 {
 
-	LOGI("%s: Init Interrupt Lines", name);
+	LOGI("Bus %s: Init Interrupt Lines", name);
 	for(int i=0;i<3;i++)
 	{
 		uint16_t line = interruptlines[i];
@@ -100,7 +100,7 @@ void cBusmaster::Init() const
 	}
 
 
-	LOGI("Searching i2c bus %s for devices", name);
+	LOGI("Bus %s: Searching for devices", name);
 	uint8_t cnt;
 	cnt=0;
 	for(uint16_t i=4;i<256;i+=2)
@@ -109,37 +109,37 @@ void cBusmaster::Init() const
 		{
 			if(i>=0x80)
 			{
-				LOGI("Found probably PCA9685 on address 0x%02X (Base + offset %d)" , i, i-0x80);
+				LOGI("Bus %s: Found probably PCA9685 on address 0x%02X (Base + offset %d)" ,name,  i, i-0x80);
 			}
 			else if(i>=0x40 && i<0x50)
 			{
-				LOGI("Found probably PCA9555 on address 0x%02X (Base + offset %d)" , i, i-0x40);
+				LOGI("Bus %s: Found probably PCA9555 on address 0x%02X (Base + offset %d)" ,name,  i, i-0x40);
 			}
 			else if(i>=0x50 && i<0x58)
 			{
-				LOGI("Found probably DS2482 on address 0x%02X (Base + offset %d)" , i, i-0x50);
+				LOGI("Bus %s: Found probably DS2482 on address 0x%02X (Base + offset %d)" , name, i, i-0x50);
 			}
 			else
 			{
-				LOGI("Found device on address 0x%02X" , i);
+				LOGI("Bus %s: Found device on address 0x%02X" ,name,  i);
 			}
 			cnt++;
 		}
 	}
-	LOGI("%d devices found on i2c bus '%s'", cnt, name);
+	LOGI("Bus %s: %d devices found", name, cnt);
 
-	LOGI("Start setup of PCA9555 on i2c bus '%s'", name);
+	LOGI("Bus %s: Start setup of PCA9555", name);
 	for(uint8_t i=0;i<pca9555Cnt;i++)
 	{
 		if(pca9555[i]!=0)
 		{
 			if(pca9555[i]->Setup())
 			{
-				LOGI("Bus %s: Setup of PCA9555, Device %d was successful", name, pca9555[i]->GetDevice());
+				LOGI("Bus %s: Setup of PCA9555 on address 0x%02X was successful", name, pca9555[i]->GetAddress());
 			}
 			else
 			{
-				LOGE("Bus %s: Setup of PCA9555, Device %d was NOT successful", name, pca9555[i]->GetDevice());
+				LOGE("Bus %s: Setup of PCA9555 on address  0x%02X was NOT successful", name, pca9555[i]->GetAddress());
 			}
 		}
 
@@ -150,7 +150,7 @@ void cBusmaster::Init() const
 	uint32_t a9685 = availablePca9685;
 	uint8_t dev=0;
 
-	LOGI("Start setup of PCA9685 on i2c bus '%s'", name);
+	LOGI("Bus %s: Start setup of PCA9685", name);
 	while(a9685>0)
 	{
 		if(a9685 & 0x00000001)

@@ -5,7 +5,12 @@ namespace sensact
 
 enum struct eCanMessageTypes:uint32_t
 {
-	NodeEvent   = 0x00000000,
+	//There is no "node application", all node-related messages are in a seperate namespace
+	//Reason: Node-messages can be send/received from the bootloader and there
+	//hence, the node ID has to be burned in the bootloader of a node
+	//this very basic information is burned in the bootloader
+	//the bootloader places this information in the RTC_RAM
+	NodeEvent   = 0x00000000, //it is an event from the node itself and not from an application
 	NodeCommand = 0x01000000,
 	NodeCommandAcknowledge=0x02000000,
 	Event		= 0x03000000,
@@ -18,7 +23,8 @@ enum struct eNodeCommandType:uint8_t{
 	    NOP=0 ,
         RESET=1 ,
         PAYLOAD=2 ,
-        WRITE_SCRATCH_TO_FLASH=3 ,
+        COPY_SCRATCH_TO_FLASH=3 ,
+		WRITE_SCRATCH=4,
         CNT
 };
 

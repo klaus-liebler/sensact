@@ -38,7 +38,7 @@ extern "C" void SysTick_Handler(void)
 	systemClockMsecCnt++;
 	steadyClockMsecCnt++;
 }
-#ifdef SENSACTHS07
+#if defined(SENSACTHS07) | defined(SENSACTHS08)
 void ADC_IRQHandler(void)
 {
 	//HAL_ADC_IRQHandler(&AdcHandle);
@@ -69,7 +69,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
 	//HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
 }
-#ifdef SENSACTHS07
+#if defined(SENSACTHS07) | defined(SENSACTHS08)
 void EXTI9_5_IRQHandler(void)
 {
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5) != RESET)
@@ -79,20 +79,37 @@ void EXTI9_5_IRQHandler(void)
 	}
 }
 #endif
-#ifdef SENSACTHS07
+#if defined(SENSACTHS07) | defined(SENSACTHS08)
 void USART3_IRQHandler(void)
+{
+	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
 #endif
 #ifdef SENSACTUP02
 void USART1_IRQHandler(void)
-#endif
 {
 	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
+#endif
+#ifdef SENSACTUP03
+void USART1_IRQHandler(void)
+{
+	if(READ_BIT(CONSOLE_USART->ISR, USART_ISR_RXNE))
+#endif
+
 	{
 		if(BufferHasMessage)
 		{
 			sensact::Console::Writeln("Buffer not yet processed!!!");
 		}
-		volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->DR); /* Receive data, clear flag */
+#if defined(SENSACTHS07) | defined(SENSACTHS08)
+			volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->DR); /* Receive data, clear flag */
+#endif
+#ifdef SENSACTUP02
+			volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->DR); /* Receive data, clear flag */
+#endif
+#ifdef SENSACTUP03
+			volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->RDR); /* Receive data, clear flag */
+#endif
+
 		if(binaryMode && steadyClockMsecCnt-lastReceivedUARTChar > 10)
 		{
 			//reset binary mode after some time without data
@@ -105,19 +122,22 @@ void USART1_IRQHandler(void)
 			binaryMode = chartoreceive==0x01;
 		}
 
+
 		if(binaryMode)
 		{
 			//Binary Format: (Multibyte: little endian!)
-			//1 byte Binary Sign = "0x01"
-			//1 byte Message Length
+			//0: 1 byte Binary Sign = "0x01"
+			//1: 1 byte payload Length
+			//2 message payload with a length of "payload length"
+			//3 byte "0x00" = 2+buffer[1]
 			if(UART_buffer_pointer<UART_BUFFER_SIZE)
 			{
 				UART_cmdBuffer[UART_buffer_pointer]=chartoreceive;
+				if(UART_buffer_pointer>2 && UART_buffer_pointer==2+UART_cmdBuffer[1])
+				{
+					BufferHasMessage=true;
+				}
 				UART_buffer_pointer++;
-			}
-			if(UART_buffer_pointer>1 && UART_buffer_pointer==UART_cmdBuffer[1])
-			{
-				BufferHasMessage=true;
 			}
 		}
 		else

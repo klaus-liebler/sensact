@@ -22,19 +22,35 @@ void BSP::Init(void) {
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 	__HAL_RCC_CAN2_CLK_ENABLE();
 	__HAL_RCC_CAN1_CLK_ENABLE();
-	__HAL_RCC_USART3_CLK_ENABLE();
+	__HAL_RCC_CRC_CLK_ENABLE();
+
 	__HAL_RCC_UART4_CLK_ENABLE();
+	__HAL_RCC_USART1_CLK_ENABLE();
+
+
+	CRC_HandleTypeDef   CrcHandle;
+	CrcHandle.Instance = CRC;
+	//HAL_CRC_Init(&CrcHandle);
 
 	GPIO_InitTypeDef gi;
 	HAL_StatusTypeDef status;
 
 	//Enable UART
+	/*
 	gi.Pin = GPIO_PIN_10 | GPIO_PIN_11; //C10=TX, C11=RX
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_LOW;
 	gi.Alternate = GPIO_AF7_USART3;
 	HAL_GPIO_Init(GPIOC, &gi);
+	*/
+	gi.Pin = GPIO_PIN_9 | GPIO_PIN_10; //A09=TX, A10=RX
+	gi.Mode = GPIO_MODE_AF_PP;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Alternate = GPIO_AF7_USART1;
+	HAL_GPIO_Init(GPIOA, &gi);
+
 	InitAndTestUSART();
 
 	if(InitDWTCounter())
@@ -141,12 +157,12 @@ void BSP::Init(void) {
 	 PB12     ------> CAN2_RX
 	 PB13     ------> CAN2_TX
 	 */
-	gi.Pin = GPIO_PIN_12 | GPIO_PIN_13;
+	gi.Pin = CAN_PINS;
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_LOW;
-	gi.Alternate = GPIO_AF9_CAN2;
-	HAL_GPIO_Init(GPIOB, &gi);
+	gi.Alternate = GPIO_AF9_CAN1; //GPIO_AF9_CAN2 has the same value!
+	HAL_GPIO_Init(CAN_PORT, &gi);
 	InitCAN();
 
 	for(uint8_t i = 0; i<BSP::busCnt;i++)

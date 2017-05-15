@@ -60,6 +60,7 @@ public:
 	}
 	bool Setup(void);
 	ePCA9555Device GetDevice();
+	uint8_t GetAddress();
 
 };
 

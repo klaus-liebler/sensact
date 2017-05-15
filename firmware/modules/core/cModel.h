@@ -2,7 +2,7 @@
 #include "cApplication.h"
 #include <cWs281x.h>
 #include <cBusmaster.h>
-#include <cWeeklySchedule.h>
+//#include <cWeeklySchedule.h>
 #include "common.h"
 
 //Known Nodes are
@@ -11,7 +11,7 @@
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
-#define NODE_TEST_HS07
+//#define NODE_TEST_HS07
 
 #define INTI 0x0000
 #define BUS0 0x4000
@@ -45,7 +45,7 @@ public:
 
 	static const uint8_t wellKnownRGBWColors[][4];
 	static const uint8_t wellKnownRGBWColorsCnt;
-	static cWeeklySchedule volumeSchedule;
+	//static cWeeklySchedule volumeSchedule;
 
 	static const bool TRACE_COMMANDS;
 	static const bool TRACE_EVENTS;
