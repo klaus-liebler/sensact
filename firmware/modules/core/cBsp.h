@@ -14,9 +14,10 @@
 
 #ifdef SENSACTUP03
 #define CONSOLE_USART USART1
-#define MP3_BELL_USART USART1
+#define BUS_USART USART2
 #define CONSOLE_USART_IRQn USART1_IRQn
 #define UART_BUFFER_SIZE 100
+#define MP3_BELL_USART USART1
 //#define CAN CAN
 #define CAN_PRESCALER 24
 #define DCF77_PORT GPIOC
@@ -96,11 +97,12 @@ public:
 	static const uint8_t T1H_WS2811=18; //18 half Datasheet!
 	static const uint8_t T0H_WS2811=43; //43,2 half Datasheet!
 	static const uint32_t BAUDRATE = 115200;
-
+	static const uint16_t PredefinedInputs[];
 
 	static const uint8_t busCnt=BUS_CNT;
 
 	static uint8_t ErrorCounters[3];
+
 
 	static void Init();
 	static void SetRgbLed(volatile uint8_t *framebuffer, uint16_t sizeIncludingZero);

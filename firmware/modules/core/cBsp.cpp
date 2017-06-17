@@ -60,7 +60,7 @@ namespace sensact {
 const char BSP::SystemString[] = "sensactup 0.1, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
 const char BSP::gimmick[] ="  ____                            _   _   _          ___   _ \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ / |\r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | || |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| || |\r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_|\r\n                                           |_|               ";
 
-static uint8_t INPUT[] = { P(A, 6), P(A, 7), P(B, 0), P(B, 1), P(A,4), P(A, 5), P(A, 2), P(A, 3), P(B, 8) };
+static uint16_t BSP::PredefinedInputs[] = { P(A, 6), P(A, 7), P(B, 0), P(B, 1), P(A,4), P(A, 5), P(A, 2), P(A, 3), P(B, 8) };
 uint32_t BSP::pwmRequests = 0xFFFFFFF0;
 uint32_t BSP::poweredOutputRequests = 0xFFFFFF80;
 uint32_t BSP::inputRequests = 0xFFFFFE00;
@@ -71,7 +71,7 @@ const char BSP::SystemString[] = "sensactup 0.2, (c) Dr.-Ing. Klaus M. Liebler, 
 const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
 DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c2;
-static uint8_t INPUT[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+static uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
 #ifdef SENSACTUP03
@@ -80,7 +80,8 @@ const char BSP::gimmick[] ="  ____                            _   _   _         
 DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
-static uint8_t INPUT[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+//int teh 2017-03-02-Version, IO1 aka "2" aka PA2 does not work
+static uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
 #ifdef SENSACTHS04
@@ -102,7 +103,7 @@ I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 UART_HandleTypeDef BSP::BELL;
 //static uint8_t INPUT[] = { /*Rotar Push*/P(C, 13), /*14pin output*/P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
-static uint8_t INPUT[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,16};
+static uint16_t BSP::PredefinedInputs[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,16};
 #endif
 
 #ifdef SENSACTHS08
@@ -111,6 +112,7 @@ const char BSP::gimmick[] ="";
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 UART_HandleTypeDef BSP::BELL;
+static uint16_t BSP::PredefinedInputs[] = {};
 #endif
 
 
@@ -138,14 +140,22 @@ void BSP::InitAndTestUSART()
 	comm.Init.WordLength = UART_WORDLENGTH_8B;
 	comm.Init.StopBits = UART_STOPBITS_1;
 	comm.Init.Parity = UART_PARITY_NONE;
-	comm.Init.Mode = UART_MODE_TX_RX;
 	comm.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	comm.Init.Mode = UART_MODE_TX_RX;
+#ifdef STM32F0
+	comm.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+#else
 	comm.Init.OverSampling = UART_OVERSAMPLING_16;
+#endif
 	HAL_StatusTypeDef status = HAL_UART_Init(&BSP::comm);
 	if (status != HAL_OK) {
 		while (1) {
 		};
 	}
+
+	HAL_UART_Transmit(&comm, (uint8_t*)"TEST", 4, 5000);
+
+
     HAL_NVIC_SetPriority(CONSOLE_USART_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(CONSOLE_USART_IRQn);
     SET_BIT(CONSOLE_USART->CR1, USART_CR1_RXNEIE);
@@ -224,6 +234,9 @@ return 0;
 
 void BSP::InitCAN()
 {
+	//set prescaler for 2MHz/500ns Frequency of Time qunata
+	//STM32F0: 48MHz --> 24, STM32F1: 36MHz --> 18, STM32F4: 42MHz -->21
+	//Use 16 time quanta for one bit -->125kbit/sec
 	hcan.Instance = CAN;
 	hcan.Init.Prescaler = CAN_PRESCALER; //bei 36MHz -->2MHz Abtastrate
 	hcan.Init.Mode = CAN_MODE_NORMAL;
@@ -278,7 +291,9 @@ void Console::putcharX(char c) {
 
 
 #ifdef STM32F0
-
+	while(!(CONSOLE_USART->ISR & UART_FLAG_TXE));
+	CONSOLE_USART->TDR=c;
+	while(!(CONSOLE_USART->ISR & UART_FLAG_TC));
 #else
 	while (!(CONSOLE_USART->SR & USART_SR_TXE))
 			;
@@ -482,6 +497,9 @@ static bool RequestRotaryEncoder(eRotaryEncoder re) {
 		HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 	}
 #endif
+#ifdef SENSACTUP03
+
+#endif
 	return true;
 }
 
@@ -494,8 +512,7 @@ uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 	{
 		return 0;
 	}
-#endif
-#ifdef SENSACTUP02
+#elif defined(SENSACTUP02) || defined(SENSACTUP03)
 	if (re == eRotaryEncoder::ROTARYENCODER_1) {
 		return (uint16_t) (TIM2->CNT & 0xFFFE);
 	} else if (re == eRotaryEncoder::ROTARYENCODER_2) {
@@ -505,10 +522,10 @@ uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 	{
 		return 0;
 	}
-#endif
-
-#if defined(SENSACTHS04) | defined(SENSACTHS08)
+#elif defined(SENSACTHS04) | defined(SENSACTHS08)
 	return 0;
+#elif
+	#error("No known board for BSP::GetRotaryEncoderValue");
 #endif
 }
 

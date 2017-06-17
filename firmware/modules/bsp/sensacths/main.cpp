@@ -22,7 +22,6 @@ void HAL_MspInit(void) {
 	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-
 void SystemClock_Config(void)
 {
 	//* 8MHZ Quartz

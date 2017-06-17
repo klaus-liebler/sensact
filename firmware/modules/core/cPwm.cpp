@@ -202,7 +202,11 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 		case eDirection::STOP:
 			break;
 		case eDirection::UP:
-			if(targetLevel<MAXIMUM_LEVEL)
+			if(targetLevel==0)
+			{
+				targetLevel=minimalOnLevel;
+			}
+			else if(targetLevel<MAXIMUM_LEVEL)
 			{
 				targetLevel++;
 			}
@@ -226,7 +230,7 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 		{
 			currentLevel+=DIM_TO_TARGET_STEP;
 		}
-		SetDimLevel(currentLevel);
+		WriteCurrentLevelToOutput();
 	}
 	else if(targetLevel<currentLevel)
 	{
@@ -238,24 +242,23 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 		{
 			currentLevel-=DIM_TO_TARGET_STEP;
 		}
-		SetDimLevel(currentLevel);
+		WriteCurrentLevelToOutput();
 	}
 
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
 	{
-		LOGD("%s sends heartbeat to %s at level %i", Name, N(standbyController), currentLevel);
+		LOGD("%s sends heartbeat to %s at level %d", Name, N(standbyController), currentLevel);
 		cMaster::BufferHeartbeat(standbyController, now);
 		lastHeartbeatToStandbycontroller=now;
 	}
 	return;
 }
 
-void cPWM::SetDimLevel(uint8_t level) {
+void cPWM::WriteCurrentLevelToOutput() {
 
 	//LOGD("SetDimLevel = %d", level);
-	currentLevel = level;
 	uint8_t i;
-	uint16_t val = cPWM::level2brightness[level];
+	uint16_t val = cPWM::level2brightness[currentLevel];
 	if(!lowMeansLampOn)
 	{
 		val=UINT16_MAX-val;
@@ -263,13 +266,14 @@ void cPWM::SetDimLevel(uint8_t level) {
 
 	if(!BSP::SetDigitalOutput(baseOutput, outputMask, val))
 	{
-		LOGE("%s could not set output %i to level %i", Name, baseOutput, level);
+		LOGE("%s could not set output %i to level %i", Name, baseOutput, currentLevel);
 	}
 
 }
 
 bool cPWM::Setup() {
-	SetDimLevel(0);
+	currentLevel=0;
+	WriteCurrentLevelToOutput();
 	return true;
 }
 

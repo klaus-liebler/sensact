@@ -302,8 +302,11 @@ static eShellError cmdSET_RTC(uint8_t *cmdBuffer, uint8_t size)
 
 static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 {
+#ifdef STM32F1
 	UNUSED(cmdBuffer);
 	UNUSED(size);
+	return eShellError::PROCESS_ERR_CMD_UNKN;
+#else
 	//std::chrono::system_clock::time_point tp = std::chrono::system_clock::now(); // tp is a C::system_clock::time_point
 	//std::chrono::system_clock::time_point dp = date::floor<date::days>(tp);
 	//date::time_of_day<std::chrono::seconds> time = date::make_time(std::chrono::duration_cast<std::chrono::seconds>(tp-dp));
@@ -338,7 +341,8 @@ static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 	//uint32_t epochSeconds = Common::Unixtime(yearGMT, monthGMT, dayGMT, hoursGMT, minutesGMT, secondsGMT);
 	//epochSeconds+=hourOffset*3600;
 	//
-	return eShellError::PROCESS_ERR_CMD_UNKN;
+	return eShellError::PROCESS_OK;
+#endif
 }
 
 

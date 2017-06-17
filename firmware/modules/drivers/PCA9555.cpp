@@ -6,6 +6,10 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_i2c.h"
 #endif
+#ifdef STM32F0
+#include "stm32f0xx_hal.h"
+#include "stm32f0xx_hal_i2c.h"
+#endif
 #include "pca9555.h"
 
 #define ADDR				((uint16_t)(DEVICE_ADDRESS_BASE+(uint16_t)this->device))
@@ -49,7 +53,9 @@ namespace drivers {
 		return Update();
 	}
 
-}  // namespace hw
+	cPCA9555::cPCA9555(I2C_HandleTypeDef *i2c, ePCA9555Device device, uint16_t initialValue) :i2c(i2c), device(device), cache(initialValue) {}
+
+}
 
 
 

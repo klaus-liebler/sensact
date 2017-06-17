@@ -175,10 +175,7 @@ public:
 	bool SetOutputFull(ePCA9685Output Output, bool on);
 	bool SetAll(uint16_t OnValue, uint16_t OffValue);
 	bool SetDutyCycleForOutput(ePCA9685Output Output, uint16_t val);
-	cPCA9685(I2C_HandleTypeDef *i2c, ePCA9685Device device, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq) :i2c(i2c), device(device), inv(inv), outdrv(outdrv), outne(outne), freq(freq)
-	{
-
-	}
+	cPCA9685(I2C_HandleTypeDef *i2c, ePCA9685Device device, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq);
 
 };
 
