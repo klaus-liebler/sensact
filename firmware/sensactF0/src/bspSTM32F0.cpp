@@ -62,78 +62,56 @@ DOWN=                  GPIO_PUPDR_PUPDR0_1, /*!< Select I/O pull down */
 
 enum class AF
 {
-	/* AF 0 */
-	AF0_EVENTOUT     =((uint8_t)0x00U),  /*!< AF0: EVENTOUT Alternate Function mapping  */
-	AF0_SWDIO        =((uint8_t)0x00U),  /*!< AF0: SWDIO Alternate Function mapping     */
-	AF0_SWCLK        =((uint8_t)0x00U),  /*!< AF0: SWCLK Alternate Function mapping     */
-	AF0_MCO          =((uint8_t)0x00U),  /*!< AF0: MCO Alternate Function mapping       */
-	AF0_CEC          =((uint8_t)0x00U),  /*!< AF0: CEC Alternate Function mapping       */
-	AF0_CRS          =((uint8_t)0x00U),  /*!< AF0: CRS Alternate Function mapping       */
-	AF0_IR           =((uint8_t)0x00U),  /*!< AF0: IR Alternate Function mapping        */
-	AF0_SPI1         =((uint8_t)0x00U),  /*!< AF0: SPI1/I2S1 Alternate Function mapping */
-	AF0_SPI2         =((uint8_t)0x00U),  /*!< AF0: SPI2/I2S2 Alternate Function mapping */
-	AF0_TIM1         =((uint8_t)0x00U),  /*!< AF0: TIM1 Alternate Function mapping      */
-	AF0_TIM3         =((uint8_t)0x00U),  /*!< AF0: TIM3 Alternate Function mapping      */
-	AF0_TIM14        =((uint8_t)0x00U),  /*!< AF0: TIM14 Alternate Function mapping     */
-	AF0_TIM15        =((uint8_t)0x00U),  /*!< AF0: TIM15 Alternate Function mapping     */
-	AF0_TIM16        =((uint8_t)0x00U),  /*!< AF0: TIM16 Alternate Function mapping     */
-	AF0_TIM17        =((uint8_t)0x00U),  /*!< AF0: TIM17 Alternate Function mapping     */
-	AF0_TSC          =((uint8_t)0x00U),  /*!< AF0: TSC Alternate Function mapping       */
-	AF0_USART1       =((uint8_t)0x00U),  /*!< AF0: USART1 Alternate Function mapping    */
-	AF0_USART2       =((uint8_t)0x00U),  /*!< AF0: USART2 Alternate Function mapping    */
-	AF0_USART3       =((uint8_t)0x00U),  /*!< AF0: USART2 Alternate Function mapping    */
-	AF0_USART4       =((uint8_t)0x00U),  /*!< AF0: USART4 Alternate Function mapping    */
-	AF0_CAN          =((uint8_t)0x00U),  /*!< AF0: CAN Alternate Function mapping       */
+	PA00_USART2 = 1,
+	PA01_USART2=1,
+	PA02_USART2=1,
+	PA03_USART2=1,
+	PA04_USART2=1,
+	PA05_CEC=1,
+	PA06_TIM3=1,
+	PA07_TIM3=1,
+	PA08_USART1=1,
+	PA09_USART1=1,
+	PA10_USART1=1,
+	PA11_USART1=1,
+	PA12_USART1=1,
+	PA13_IR_OUT=1,
+	PA14_USART2=1,
+	PA15_USART2=1,
 
-	/* AF 1 */
-	AF1_TIM3         =((uint8_t)0x01U),  /*!< AF1: TIM3 Alternate Function mapping      */
-	AF1_TIM15        =((uint8_t)0x01U),  /*!< AF1: TIM15 Alternate Function mapping     */
-	AF1_USART1       =((uint8_t)0x01U),  /*!< AF1: USART1 Alternate Function mapping    */
-	AF1_USART2       =((uint8_t)0x01U),  /*!< AF1: USART2 Alternate Function mapping    */
-	AF1_USART3       =((uint8_t)0x01U),  /*!< AF1: USART3 Alternate Function mapping    */
-	AF1_IR           =((uint8_t)0x01U),  /*!< AF1: IR Alternate Function mapping        */
-	AF1_CEC          =((uint8_t)0x01U),  /*!< AF1: CEC Alternate Function mapping       */
-	AF1_EVENTOUT     =((uint8_t)0x01U),  /*!< AF1: EVENTOUT Alternate Function mapping  */
-	AF1_I2C1         =((uint8_t)0x01U),  /*!< AF1: I2C1 Alternate Function mapping      */
-	AF1_I2C2         =((uint8_t)0x01U),  /*!< AF1: I2C1 Alternate Function mapping      */
-	AF1_TSC          =((uint8_t)0x01U),  /*!< AF1: I2C1 Alternate Function mapping      */
-	AF1_SPI1         =((uint8_t)0x01U),  /*!< AF1: SPI1 Alternate Function mapping      */
-	AF1_SPI2         =((uint8_t)0x01U),  /*!< AF1: SPI2 Alternate Function mapping      */
-	/* AF 2 */
-	AF2_TIM1         =((uint8_t)0x02U),  /*!< AF2: TIM1 Alternate Function mapping      */
-	AF2_TIM2         =((uint8_t)0x02U),  /*!< AF2: TIM2 Alternate Function mapping      */
-	AF2_TIM16        =((uint8_t)0x02U),  /*!< AF2: TIM16 Alternate Function mapping     */
-	AF2_TIM17        =((uint8_t)0x02U),  /*!< AF2: TIM17 Alternate Function mapping     */
-	AF2_EVENTOUT     =((uint8_t)0x02U),  /*!< AF2: EVENTOUT Alternate Function mapping  */
-	AF2_USB          =((uint8_t)0x02U),  /*!< AF2: USB Alternate Function mapping       */
+	PB00_TIM3 = 1,
+	PB01_TIM3=1,
 
-	/* AF 3 */
-	AF3_EVENTOUT     =((uint8_t)0x03U),  /*!< AF3: EVENTOUT Alternate Function mapping  */
-	AF3_TSC          =((uint8_t)0x03U),  /*!< AF3: TSC Alternate Function mapping       */
-	AF3_TIM15        =((uint8_t)0x03U),  /*!< AF3: TIM15 Alternate Function mapping     */
-	AF3_I2C1         =((uint8_t)0x03U),  /*!< AF3: I2C1 Alternate Function mapping      */
+	PB03_EVENTOUT=1,
+	PB04_TIM3=1,
+	PB05_TIM3=1,
+	PB06_I2C1=1,
+	PB07_I2C1=1,
+	PB08_I2C1=1,
+	PB09_I2C1=1,
+	PB10_I2C2=1,
+	PB11_I2C2=1,
+	PB12_EVENTOUT=1,
 
-	/* AF 4 */
-	AF4_TIM14        =((uint8_t)0x04U),  /*!< AF4: TIM14 Alternate Function mapping     */
-	AF4_USART4       =((uint8_t)0x04U),  /*!< AF4: USART4 Alternate Function mapping    */
-	AF4_USART3       =((uint8_t)0x04U),  /*!< AF4: USART3 Alternate Function mapping    */
-	AF4_CRS          =((uint8_t)0x04U),  /*!< AF4: CRS Alternate Function mapping       */
-	AF4_CAN          =((uint8_t)0x04U),  /*!< AF4: CAN Alternate Function mapping       */
-	/* AF 5 */
-	AF5_TIM15        =((uint8_t)0x05U),  /*!< AF5: TIM15 Alternate Function mapping     */
-	AF5_TIM16        =((uint8_t)0x05U),  /*!< AF5: TIM16 Alternate Function mapping     */
-	AF5_TIM17        =((uint8_t)0x05U),  /*!< AF5: TIM17 Alternate Function mapping     */
-	AF5_SPI2         =((uint8_t)0x05U),  /*!< AF5: SPI2 Alternate Function mapping      */
-	AF5_I2C2         =((uint8_t)0x05U),  /*!< AF5: I2C2 Alternate Function mapping      */
+	PB14_TIM15=1,
+	PB15_TIM15=1,
 
-	/* AF 6 */
-	AF6_EVENTOUT     =((uint8_t)0x06U),  /*!< AF6: EVENTOUT Alternate Function mapping  */
-
-	/* AF 7 */
-	AF7_COMP1        =((uint8_t)0x07U),  /*!< AF7: COMP1 Alternate Function mapping     */
-	AF7_COMP2        =((uint8_t)0x07U),  /*!< AF7: COMP2 Alternate Function mapping     */
+	PA00_USART4 = 4,
+	PA01_USART4=4,
+	PA04_TIM14=4,
+	PA06_USART3=4,
+	PA07_TIM14=4,
+	PA08_CRSSYNC=4,
+	PA11_CAN=4,
+	PA12_CAN=4,
+	PA15_USART4=4,
 
 };
+
+void ConfigureGPIOPinAlternate(GPIO_TypeDef * gpio, Pin pin, AF af, Speed speed, OutputType outputType, Pull pull );
+void ConfigureGPIOPinOutput(GPIO_TypeDef * gpio, Pin pin, OutputType outputType, Pull pull );
+void ConfigureGPIOPinInput(GPIO_TypeDef * gpio, Pin pin, Pull pull);
+
 void ConfigureGPIOPinAlternate(GPIO_TypeDef * gpio, Pin pin, AF af, Speed speed, OutputType outputType, Pull pull )
 {
 	LL_GPIO_SetPinMode(gpio, (uint32_t)pin, LL_GPIO_MODE_ALTERNATE);
@@ -177,24 +155,39 @@ void BSP::Init(void) {
 	;
 	__HAL_RCC_USART1_CLK_ENABLE()
 	;
+	__HAL_RCC_USART2_CLK_ENABLE()
+	;
 
-	//Enable UART on A09 and A10
-	ConfigureGPIOPinAlternate(GPIOA, Pin::P09, AF::AF0_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
-	ConfigureGPIOPinAlternate(GPIOA, Pin::P10, AF::AF0_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
+	//Enable USART1 on A09 and A10
+	ConfigureGPIOPinAlternate(GPIOA, Pin::P09, AF::PA09_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOA, Pin::P10, AF::PA10_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
 	InitAndTestUSART();
+
 	if (InitDWTCounter()) {
 		LOGI(BSP::SUCCESSFUL_STRING, "DWTCounter");
 	} else {
-		LOGE(NOT_SUCCESSFUL_STRING, "DWTCounter");
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "DWTCounter");
 	}
+
+	//PullUps for Rotary Encoders and all inputs
+	ConfigureGPIOPinInput(GPIOB, Pin::P15, Pull::UP);
+	ConfigureGPIOPinInput(GPIOB, Pin::P03, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P02, Pull::UP);
+	// Shortcut in current PCB ConfigureGPIOPinInput(GPIOA, Pin::P03, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P04, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P05, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P06, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P07, Pull::UP);
+	ConfigureGPIOPinInput(GPIOB, Pin::P00, Pull::UP);
+	ConfigureGPIOPinInput(GPIOB, Pin::P01, Pull::UP);
 
 	//I2C
 	/*
 	 PB10     ------> I2C2_SCL
 	 PB11     ------> I2C2_SDA
 	 */
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::AF1_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::AF1_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::PB10_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::PB11_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
 
 
 	BSP::i2c2.Instance = I2C2;
@@ -216,8 +209,8 @@ void BSP::Init(void) {
 	 PB06     ------> I2C1_SCL
 	 PB07     ------> I2C1_SDA
 	 */
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::AF1_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::AF1_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P06, AF::PB06_I2C1, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P07, AF::PB07_I2C1, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
 
 
 	BSP::i2c1.Instance = I2C2;
@@ -233,14 +226,99 @@ void BSP::Init(void) {
 	} else {
 		LOGI(NOT_SUCCESSFUL_STRING, "I2C1");
 	}
+	#define DIGITAL_FILTER_VALUE 15
+	//Rotary Encoders
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+
+	__HAL_RCC_TIM2_CLK_ENABLE();
+
+	/**TIM2 GPIO Configuration
+	    PA0     ------> TIM2_CH1
+	    PA1     ------> TIM2_CH2
+	    */
+
+	GPIO_InitStruct.Pin = ROTA_Pin|ROTB_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Alternate = GPIO_AF2_TIM2;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	TIM_Encoder_InitTypeDef sConfig;
+	TIM_MasterConfigTypeDef sMasterConfig;
+	TIM_HandleTypeDef htim2;
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = 0;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = UINT16_MAX;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+	sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
+	sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+	sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+	sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
+	sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+	sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
+	HAL_TIM_Encoder_Init(&htim2, &sConfig);
+
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
+	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+
+	__HAL_RCC_TIM3_CLK_ENABLE();
+
+	/**TIM3 GPIO Configuration
+	PB4     ------> TIM3_CH1
+	PB5     ------> TIM3_CH2
+	*/
+	GPIO_InitStruct.Pin = xROTA_Pin|xROTB_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM3;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	TIM_HandleTypeDef htim3;
+	htim3.Instance = TIM3;
+	htim3.Init.Prescaler = 0;
+	htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim3.Init.Period = UINT16_MAX;
+	htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+	sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
+	sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+	sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+	sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
+	sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+	sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
+	HAL_TIM_Encoder_Init(&htim3, &sConfig);
+
+
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
 	//CAN
-	/*
-	 PA11     ------> CAN_RX
-	 PA12     ------> CAN_TX
-	 */
-	ConfigureGPIOPinInput(GPIOA, Pin::P11, Pull::NO);
-	ConfigureGPIOPinAlternate(GPIOA, Pin::P12, AF::AF4_CAN, Speed::HIGH, OutputType::PUSHPULL, Pull::NO);
+
+  __HAL_RCC_CAN1_CLK_ENABLE();
+
+	/**CAN GPIO Configuration
+	PB8     ------> CAN_RX
+	PB9     ------> CAN_TX
+	*/
+	GPIO_InitStruct.Pin = CANR_Pin|CANT_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF4_CAN;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	InitCAN();
 
 	//Disable 5v-Supply for RGB LED

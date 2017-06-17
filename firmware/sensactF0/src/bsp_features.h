@@ -1,5 +1,21 @@
 #pragma once
-#define RGBLED_SIZE 5
+
+namespace sensact {
+
+const uint8_t RGBLED_SIZE=0;
+
+enum struct eRotaryEncoder
+	:uint8_t
+	{
+		ROTARYENCODER_1,
+		ROTARYENCODER_2,
+		CNT = 2
+};
+
+
+
+}
+
 
 #define ROTA_Pin GPIO_PIN_0
 #define ROTA_GPIO_Port GPIOA
