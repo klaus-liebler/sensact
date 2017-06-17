@@ -1,0 +1,4 @@
+Immer eine LED vorsehen (AN/AUS oder an einem GPIO; mit Lötbrücke trennbar machen)
+IO1 hat Kurzschluss mit 3V3 (wurde bereits korrigiert, DRC hat das nicht gefunden)
+Kleinere Bohrungen für USB-Buchse
+4 Transistoren zum Schalten auf den UP-Geräten für RGB-LEDs

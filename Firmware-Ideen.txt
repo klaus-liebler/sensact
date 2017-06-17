@@ -1,0 +1,36 @@
+Separater COM-Port für binäre Steuerung. Normaler Port gibt nur String-Meldungen aus.
+Separater COM-Port arbeitet mit hoher Geschwindigkeit 512000bit/sek
+Nachrichtenformat ist 1byte Version und Namespace der folgenden Nachricht, 1byte Counter, 1byte Länge des Payloads (ohne Längefeld, Haupttypfeld und CRC-Feld), 1byte Typ, N byte Payload, 2byte CRC-16 gemäß Standard-Polynom der STM32-CRC-Engine über die gesamte Nachricht incl. Header
+Der PC ist der Master, die Node ist der Slave. Beide können sich gegenseitig Nachrichten senden. Der Versand von Nachrichten ist nicht in IRQ-Handlern, sondern ausschließlich in der Hauptschleife zulässig. So können sich Nachrichten nicht überlagern. Die Bezeichnung der Nachrichten orientiert sich aus der Sicht des Masters (Ich, Master, fordere Dich, Board, auf, etwas für mich zu tun).
+Mehrbyte-Zahlen in Nachrichten werden littleendian übertragen
+
+
+Es gibt vier Namespaces für Nachrichten "REQUEST" und "RESPONSE", "EVENT" und "ACKNOWLEDGE". Dies wird mit den beiden LSB des Versions-Namespace-Bytes erklärt (Somit bleiben 64 Versionierungsmöglichkeiten)
+Alle vier Namespaces haben ihren eigenen counter. Dieser beginnt bei 0x0 mit der ersten versendeten Nachricht und läuft nach 255 (0xFF) wieder auf 0. Die Ready-Nachricht wird immer mit counter=0x0 übertragen. Sie darf verwendet werden, um die Kommunikations-Session abzubrechen und die counter neu zu starten. Die counter representieren gemeinsames Wissen von Master und Slave  
+REQEST (0b00): Vom Master zum Slave.
+RESPONSE (0b01): Antwort auf REQUEST
+EVENT (0b10): Vom Slave zum Master
+ACKNOWLEDGE (0b11): Antwort des Masters auf ein Event
+
+REQUEST
+0x00: "HEARTBEAT": Board gibt Heartbeat zurück
+0x01: "IDENTIFY: 
+0x02: "SEND_CAN":
+
+RESPONSE
+In der Response wird einfach die ID des Requests übernommen. Häufig wird dann ein REQUEST-spezifischer Fehlercode als uint32-t zurück geliefert. Eine 0x0 steht dann per Konvention für eine fehlerfreie Verarbeitung. Ggf. werden in Zukunft WELL_KNOWN_ERROR_CODES definiert.
+0x01: UNEXPECTED_COUNTER
+0x02: CRC_ERROR
+
+
+Alle Responses, die nicht nur einen reinen Error-Code, sondern spezifischere Daten zurück liefern, werden im folgenden beschrieben  
+0x01: "IDENTIFY": Board gibt Board-Typ u16. NodeID u16 und ID des Chips u96 (?) zurück.
+
+EVENTS
+00 "READY" Slave meldet sich nach dem Booten und gibt an, dass er jetzt für Befehle aller Art bereit steht. Beginn einer Session. Alle counter werden auf 0 gesetzt, außer der EVENT_COUNTER - der muss nun auf 1 stehen
+02 "CAN_RECEIVED": Slave zeigt an, dass er eine CAN-Nachricht empfangen (besser: auf dem Bus mitgelesen) hat
+
+ACKNOWLEDGES:
+Der Slave kann bei ausbleibendem Acknowledge die Nachricht nochmals versenden
+
+Erkenntnis: Über den COM-Port kann 
