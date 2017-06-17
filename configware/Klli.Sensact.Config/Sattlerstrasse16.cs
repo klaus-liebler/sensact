@@ -7,7 +7,7 @@ namespace Klli.Sensact.Config
     public static class Sattlerstrasse16
     {
         private static string _(this ID id){return id.ToString();}
-        private const int DEFAULT_MIN_DIM_LEVEL = 10;
+        private const int DEFAULT_MIN_DIM_LEVEL = 5;
         private const int DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS = 20000;
         const ushort INTI = 0x0000;
         const ushort BB = 0x4000;
@@ -378,10 +378,10 @@ namespace Klli.Sensact.Config
             SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B12, BB + I2C + 2, ID.POWIT_L2_BEDR_P1);
             SNSCT_L3_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L2_BEDR_B13, BB + I2C + 6, ID.PWM___L2_BEDR_S);
             SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L2_BEDR_B14, ID.PUSHB_L2_BEDR_B15, BB + I2C + 5, BB + I2C + 4, ID.BLIND_L2_BEDR_J1);
-            SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B25, BB + I2C + 7, ID.POWIT_L2_BEDR_P3); //Erst mal nur Netzfreischaltung
-            SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B24, BB + I2C + 8, ID.POWIT_L2_BEDR_P2);
+            SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B25, BB + I2C + 10, ID.POWIT_L2_BEDR_P3); //Erst mal nur Netzfreischaltung
+            SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B24, BB + I2C + 11, ID.POWIT_L2_BEDR_P2);
             SNSCT_L3_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L2_BEDR_B23, BB + I2C + 9, ID.PWM___L2_BEDR_S);
-            SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L2_BEDR_B21, ID.PUSHB_L2_BEDR_B22, BB + I2C + 11, BB + I2C + 10, ID.BLIND_L2_BEDR_J1);
+            SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L2_BEDR_B21, ID.PUSHB_L2_BEDR_B22, BB + I2C + 8, BB + I2C + 7, ID.BLIND_L2_BEDR_J1);
 
             SNSCT_L3_TECH_HS_1.Applications.AddTwoDimButtons(ID.PUSHB_L2_BEDR_B31, ID.PUSHB_L2_BEDR_B32, BB + I2C + 15, BB + I2C + 13, ID.PWM___L2_BEDR_S);
             SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L2_BEDR_B33, BB + I2C + 12, ID.POWIT_L2_BEDR_P1);

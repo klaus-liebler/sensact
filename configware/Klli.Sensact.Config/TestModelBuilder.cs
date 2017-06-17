@@ -286,10 +286,6 @@ namespace Klli.Sensact.Config
             {
                 Applications = new List<SensactApplication>()
                 {
-                    new SoundApplication
-                    {
-                        ApplicationId="BELL__DOOR"
-                    },
                     new StandbyControllerApplication
                       {
                           ApplicationId="STDBY_XX_XXX_1",
@@ -305,27 +301,6 @@ namespace Klli.Sensact.Config
                           OutputRessources=new List<ushort>() {2},
                           StandbyController="STDBY_XX_XXX_1"
                       },
-                      new BlindApplication
-                      {
-                          ApplicationId="BLIND_XX_XXX_1",
-                          RelayMode=RelayMode.INTERLOCKED_ACTIVE_DOWN,
-                          OpenCloseTimeInSeconds=10,
-                          OutputRessourceDownOrDirection=3,
-                          OutputRessourceUpOrPower=4,
-                      },
-                      new PushButtonXApplication
-                      {
-                          ApplicationId="PUSHB_LX_FRO_1",
-                          InputRessource=4,
-                          CommandsOnPressed=new List<Command>
-                          {
-                              new Command
-                              {
-                                  CommandType=CommandType.SET_SIGNAL,
-                                  TargetAppId="BELL__DOOR",
-                              }
-                          }
-                      }
                 }
             };
             //TEST_HS07.Applications.AddBlindButtons("_XX_BLN_", InputPin.I01, InputPin.I02, "XX_XXX_1");
@@ -337,28 +312,11 @@ namespace Klli.Sensact.Config
             {
                 Applications = new List<SensactApplication>
                 {
-                    /*
-                    new BrightnessSensorApplication
-                    {
-                        ApplicationId="BSENS_ROOF_BH1750",
-                        LimitForPassingToggle=300,
-                        ToggleTarget="POWIT_YY_YYY_01",
-                        SensorName="bh1750",
-                    },
-                    */
-                    new RgbwApplication
-                    {
-                        ApplicationId="RGBW__YY_YYY_1",
-                        OutputRessourceR=1,
-                        OutputRessourceG=3,
-                        OutputRessourceB=5,
-                        OutputRessourceW=7,
-                    },
                     new RotaryEncoderApplication
                     {
                         ApplicationId="ROTAR_YY_YYY_1",
                         InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
-                        InputPushRessource=0,
+                        InputPushRessource=16+15,
                         CommandsOnPressed=new List<Command>
                         {
                             new Command
@@ -376,25 +334,6 @@ namespace Klli.Sensact.Config
                             }
                         }
                     },
-                    new PoweritemApplication
-                    {
-                        ApplicationId="POWIT_YY_YYY_01",
-                        OutputRessource=0,//TODO
-                        AutoOffIntervalMsecs=3000,
-                    },
-                    new PushButtonXApplication
-                    {
-                        ApplicationId="PUSHB_YY_PUB_1",
-                        InputRessource=1,
-                        CommandsOnPressed=new List<Command>
-                        {
-                            new Command
-                            {
-                                TargetAppId="POWIT_YY_YYY_01",
-                                CommandType=CommandType.ON,
-                            }
-                        }
-                    }
                     
                 },
 
