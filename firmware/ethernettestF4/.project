@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ethernettestF4</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>HAL</name>
+			<type>2</type>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
+		</link>
+		<link>
+			<name>LwIP</name>
+			<type>2</type>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Middlewares/Third_Party/LwIP/src</location>
+		</link>
+		<link>
+			<name>STM32_USB_Device_Library</name>
+			<type>2</type>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F1_V1.4.0/Middlewares/ST/STM32_USB_Device_Library</location>
+		</link>
+	</linkedResources>
+</projectDescription>
