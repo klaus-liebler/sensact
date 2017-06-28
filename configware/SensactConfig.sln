@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klli.Sensact.Config", "Klli.Sensact.Config\Klli.Sensact.Config.csproj", "{B6A7A1A1-740B-445A-85FB-7D466C08ADE9}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klli.Sensact.IAPWriter", "IAPWriter\Klli.Sensact.IAPWriter.csproj", "{F13C7ED2-DBB9-4A73-9B68-5EE5D27BB50E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiscUtil", "MiscUtil\MiscUtil.csproj", "{4FC1D5F4-661F-48DC-B397-4CDCB7D61ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPTester", "UDPTester\UDPTester.csproj", "{70B2D229-0186-4ED0-8DD0-022239CF2495}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,12 @@ Global
 		{4FC1D5F4-661F-48DC-B397-4CDCB7D61ABE}.Release 2.0|Any CPU.Build.0 = Release 2.0|Any CPU
 		{4FC1D5F4-661F-48DC-B397-4CDCB7D61ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FC1D5F4-661F-48DC-B397-4CDCB7D61ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Release 2.0|Any CPU.ActiveCfg = Release|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Release 2.0|Any CPU.Build.0 = Release|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B2D229-0186-4ED0-8DD0-022239CF2495}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
