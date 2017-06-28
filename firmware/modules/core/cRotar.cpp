@@ -1,16 +1,9 @@
-/*
- * hc_rotaryencoder.cpp
- *
- *  Created on: 14.08.2015
- *      Author: klaus
- */
-
 #include <cMaster.h>
 #include <cRotar.h>
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_WARN
+#define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "ROTAR"
 #include "cLog.h"
 

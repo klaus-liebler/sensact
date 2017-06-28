@@ -1,12 +1,3 @@
-/*
- * hc_blind.cpp
- *
- *  Created on: 18.04.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #include <cBlind.h>
 #include <cMaster.h>
 #include <cModel.h>

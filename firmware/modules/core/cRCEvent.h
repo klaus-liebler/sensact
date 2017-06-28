@@ -1,12 +1,3 @@
-/*
- * hc_pushbutton.h
- *
- *  Created on: 05.04.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #pragma once
 
 #include "common.h"

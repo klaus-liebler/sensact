@@ -1,12 +1,3 @@
-/*
- * hc_blind.h
- *
- *  Created on: 05.05.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #pragma once
 #include "common.h"
 #include "cBsp.h"

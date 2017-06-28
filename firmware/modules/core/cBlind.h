@@ -1,12 +1,3 @@
-/*
- * hc_blind.h
- *
- *  Created on: 18.04.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #pragma once
 #include <cBsp.h>
 #include "common.h"
@@ -17,6 +8,7 @@ namespace sensact{
 	enum struct eRelayMode
 		: uint8_t {TWO_PHASES = 0, INTERLOCKED_ACTIVE_DOWN = 1, INTERLOCKED_ACTIVE_UP=2
 	};
+
 
 	class cBlind: public cApplication{
 	private:
@@ -47,7 +39,7 @@ namespace sensact{
 
 	public:
 		bool Setup() override;
-		void DoEachCycle(Time_t now) override; //Muss vom Master alle 20ms aufgerufen werden
+		void DoEachCycle(Time_t now) override;
 #include <BlindApplication.hinc>
 
 		/**

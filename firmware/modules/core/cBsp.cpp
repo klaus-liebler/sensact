@@ -1,37 +1,3 @@
-/*
-Umbau:
-es werden
-64 pca9685 (Beginn ab 1b1000 0000, Ausnahme 1110 000X)
-8 pca9555 (Beginn ab  1b0100 0000)
-4 DS2482 (Beginn ab   1b0011 0000)
-vorgesehen
-00110
-diese werden zu beginn abgesucht und konfiguriert
-
-Outputs, egal ob PWM oder on/off gehen stets über pca9685.
-Es existieren also maximal 64*16 = 1024 Outputs und 8*16=128 Inputs.
-
-Inputs und Outputs werden über einen uint16 definiert, wobei für den Output die untersten 10bit und für den Input die
-untersten 7 bit rausgeschnitten werden. Dann wird die zahl um 4 bit nach rechts geschoben, um die Adresse des Chips zu bekommen.
-Outputs und Inputs mit gesetztem ersten MSB (>0x8000) werden als "stm32-Intern" betrachtet und sind dann eben nach außen geführte Kontakte
-
-
-
-BlockOnDoubleRegister wird gelöscht. Die Erkennung von Doppelregistrierungen findet zur Codeerzeugungszeit statt.
-Allen Inputs wird dazu ein INP und allen Outputs ein OUT vorangestellt, um Dopplungen zu vermeiden
-
-
-
-Es wird sich gemerkt, welche Adressen erreichbar und konfiuriert sind. (4x32bit-Array für die 127 Adressen).
-Der Bus sieht drei IRQ-Lines vor. Die IRQ-Linie entspricht dem Adressoffset % 3.
-Bei einem IRQ ist dann auch klar, welche Adressen  abzufragen sind.
-
-Die Unterscheidung zwischen PWM und nicht-PWM-Output fällt weg - Alles wird gleich behandelt. Ein nicht-pwm-fähiger
-Ausgang schaltet voll durch, wenn das PWM-Niveau > 0 ist.
-
-Der Treiber für PCS9685 und PCA9555 muss dahingehend geändert werden, dass der Chip bei allen Funktionen als Parameter übergeben wird und nicht ab Objekt gespeichert ist. Wegen der SharedIRQ-Lines muss auch das IRQ-Handling rausgenommen werden.
-*/
-
 #include <cBsp.h>
 #include <cModel.h>
 #define LOGLEVEL LEVEL_INFO
@@ -81,7 +47,7 @@ DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 //int teh 2017-03-02-Version, IO1 aka "2" aka PA2 does not work
-static uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+const uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
 #ifdef SENSACTHS04
@@ -103,7 +69,7 @@ I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 UART_HandleTypeDef BSP::BELL;
 //static uint8_t INPUT[] = { /*Rotar Push*/P(C, 13), /*14pin output*/P(C,2), P(C,3), P(A,0), P(A,1),P(A,2), P(A,3), P(A,4), P(A,5), P(A,6), P(A,7), P(C,4), P(B,1), P(B,0)};
-static uint16_t BSP::PredefinedInputs[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,16};
+const uint16_t BSP::PredefinedInputs[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,16};
 #endif
 
 #ifdef SENSACTHS08
@@ -112,7 +78,8 @@ const char BSP::gimmick[] ="";
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
 UART_HandleTypeDef BSP::BELL;
-static uint16_t BSP::PredefinedInputs[] = {};
+SPI_HandleTypeDef BSP::spi2;
+const uint16_t BSP::PredefinedInputs[] = {};
 #endif
 
 

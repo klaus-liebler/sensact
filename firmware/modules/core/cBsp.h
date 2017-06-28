@@ -126,7 +126,9 @@ public:
 	static UART_HandleTypeDef BELL;
 	static I2C_HandleTypeDef i2c1;
 	static I2C_HandleTypeDef i2c2;
-
+#ifdef SENSACTHS08
+	static SPI_HandleTypeDef spi2;
+#endif
 	static void DelayUs(uint32_t us);
 	static uint32_t GetCycCnt();
 	static uint32_t GetUsSinceCycCnt(uint32_t cyccnt);

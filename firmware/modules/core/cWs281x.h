@@ -1,10 +1,3 @@
-/*
- * hc_ws281x.h
- *
- *  Created on: 20.08.2015
- *      Author: klaus
- */
-
 #pragma once
 #include "common.h"
 #include "cApplication.h"

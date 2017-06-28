@@ -1,12 +1,3 @@
-/*
- * hc_poweritem.cpp
- *
- *  Created on: 05.05.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #include "common.h"
 #include "cBsp.h"
 #include "cStandbycontroller.h"

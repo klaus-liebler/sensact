@@ -1,11 +1,3 @@
-/*
- * hc_ws281x.cpp
- *
- *  Created on: 20.08.2015
- *      Author: klaus
- */
-
-
 #include "common.h"
 #include "cWs281x.h"
 #include "cMaster.h"

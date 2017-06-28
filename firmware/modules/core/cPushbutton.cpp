@@ -1,17 +1,9 @@
-/*
- * hc_pushbutton.c
- *
- *  Created on: 04.04.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
 #include <cMaster.h>
 #include <cPushbutton.h>
 
 #include "common.h"
 #include "cBsp.h"
-#define LOGLEVEL LEVEL_INFO
+#define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "PSHBT"
 #include "cLog.h"
 

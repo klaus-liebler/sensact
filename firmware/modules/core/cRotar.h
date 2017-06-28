@@ -1,12 +1,3 @@
-/*
- * hc_rotaryencoer.h
- *
- *  Created on: 14.08.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #pragma once
 
 #include "common.h"
