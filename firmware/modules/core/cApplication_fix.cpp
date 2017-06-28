@@ -4,6 +4,7 @@
 
 namespace sensact {
 
+cApplication::cApplication(const eApplicationID id) : Id(id) {}
 
 void cApplication::OnEvent(eApplicationID sender, eEventType evt,
 			const uint8_t * const payload, uint8_t payloadLength, Time_t now) {
