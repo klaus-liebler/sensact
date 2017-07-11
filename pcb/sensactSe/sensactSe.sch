@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:sensactSe-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -65,7 +66,7 @@ U 1 1 56D4C6BA
 P 1800 850
 F 0 "U1" H 1550 1050 50  0000 C CNN
 F 1 "TLV70033DDC" H 1900 1050 50  0000 C CNN
-F 2 "kl_footprints:SOT-23-6_handsolder" H 1800 950 50  0000 C CIN
+F 2 "kl_footprints:SOT-23-6_handsolder" H 1800 1150 50  0000 C CIN
 F 3 "" H 1800 850 50  0000 C CNN
 	1    1800 850 
 	1    0    0    -1  
@@ -1002,7 +1003,7 @@ F 3 "" H 3500 1150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LED D1
+L LED-RESCUE-sensactSe D1
 U 1 1 57838692
 P 3500 1550
 F 0 "D1" H 3500 1650 50  0000 C CNN
