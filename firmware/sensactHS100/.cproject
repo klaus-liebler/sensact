@@ -40,7 +40,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.660187329" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.15571863" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.950001617" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/ethernettestF4}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.345258735" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
+							<builder buildPath="${workspace_loc:/sensactHS100}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.345258735" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.88774454" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.263976027" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.285712328" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" useByScannerDiscovery="true" valueType="includePath">
@@ -49,7 +49,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Drivers\STM32F4xx_HAL_Driver\Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ethernettestF4/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/sensactHS100/Inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.445513422" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
@@ -67,7 +67,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Drivers\STM32F4xx_HAL_Driver\Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ethernettestF4/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/sensactHS100/Inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1860928652" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
@@ -108,10 +108,13 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="STM32_USB_Device_Library|Middlewares|Drivers|src|HAL|LwIP" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="generated|drivers|core|STM32_USB_Device_Library|Middlewares|Drivers|src|HAL|LwIP" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry excluding="stm32f4xx_hal_timebase_tim_template.c|stm32f4xx_hal_timebase_rtc_wakeup_template.c|stm32f4xx_hal_timebase_rtc_alarm_template.c|stm32f4xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="HAL"/>
-						<entry excluding="apps/httpd/fsdata.c|apps/httpd/makefsdata|netif/ethernetif_template.c|apps/tftp|apps/sntp|apps/snmp|apps/netbiosns|apps/mdns|apps/lwiperf" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LwIP"/>
+						<entry excluding="core/ipv6|netif/ppp|apps/httpd/fsdata.c|apps/httpd/makefsdata|netif/ethernetif_template.c|apps/tftp|apps/sntp|apps/snmp|apps/netbiosns|apps/mdns|apps/lwiperf" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LwIP"/>
 						<entry excluding="Class/CDC/Src/usbd_cdc_if_template.c|Class/Template|Class/MSC|Class/HID|Class/DFU|Class/CustomHID|Class/AUDIO" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32_USB_Device_Library"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="core"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="generated"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -156,7 +159,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.762146993" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.625651699" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" value="true" valueType="boolean"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.2025239253" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/ethernettestF4}/Release" id="ilg.gnuarmeclipse.managedbuild.cross.builder.676591186" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
+							<builder buildPath="${workspace_loc:/sensactHS100}/Release" id="ilg.gnuarmeclipse.managedbuild.cross.builder.676591186" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.166129997" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.1129000364" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.149553194" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -165,7 +168,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Drivers\STM32F4xx_HAL_Driver\Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ethernettestF4/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/sensactHS100/Inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.296611742" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
@@ -183,7 +186,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Drivers\STM32F4xx_HAL_Driver\Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ethernettestF4/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/sensactHS100/Inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.362860471" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
@@ -220,7 +223,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc_if_template.c|STM32_USB_Device_Library/Class/Template|STM32_USB_Device_Library/Class/MSC|STM32_USB_Device_Library/Class/HID|STM32_USB_Device_Library/Class/DFU|STM32_USB_Device_Library/Class/CustomHID|STM32_USB_Device_Library/Class/AUDIO|LwIP/apps/httpd/fsdata.c|LwIP/apps/httpd/makefsdata|Middlewares|Drivers|LwIP/netif/ethernetif_template.c|LwIP/apps/tftp|LwIP/apps/sntp|LwIP/apps/snmp|LwIP/apps/netbiosns|LwIP/apps/mdns|LwIP/apps/lwiperf|HAL/stm32f4xx_hal_timebase_tim_template.c|HAL/stm32f4xx_hal_timebase_rtc_wakeup_template.c|HAL/stm32f4xx_hal_timebase_rtc_alarm_template.c|HAL/stm32f4xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="LwIP/core/ipv6|LwIP/netif/ppp|STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc_if_template.c|STM32_USB_Device_Library/Class/Template|STM32_USB_Device_Library/Class/MSC|STM32_USB_Device_Library/Class/HID|STM32_USB_Device_Library/Class/DFU|STM32_USB_Device_Library/Class/CustomHID|STM32_USB_Device_Library/Class/AUDIO|LwIP/apps/httpd/fsdata.c|LwIP/apps/httpd/makefsdata|Middlewares|Drivers|LwIP/netif/ethernetif_template.c|LwIP/apps/tftp|LwIP/apps/sntp|LwIP/apps/snmp|LwIP/apps/netbiosns|LwIP/apps/mdns|LwIP/apps/lwiperf|HAL/stm32f4xx_hal_timebase_tim_template.c|HAL/stm32f4xx_hal_timebase_rtc_wakeup_template.c|HAL/stm32f4xx_hal_timebase_rtc_alarm_template.c|HAL/stm32f4xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -228,7 +231,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="ethernettestF4.ilg.gnuarmeclipse.managedbuild.cross.target.elf.1888716546" name="Executable" projectType="ilg.gnuarmeclipse.managedbuild.cross.target.elf"/>
+		<project id="sensactHS100.ilg.gnuarmeclipse.managedbuild.cross.target.elf.1888716546" name="Executable" projectType="ilg.gnuarmeclipse.managedbuild.cross.target.elf"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -242,10 +245,10 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/ethernettestF4"/>
+			<resource resourceType="PROJECT" workspacePath="/sensactHS100"/>
 		</configuration>
 		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/ethernettestF4"/>
+			<resource resourceType="PROJECT" workspacePath="/sensactHS100"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>

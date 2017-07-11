@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/sensact/firmware/ethernettestF4/Inc
+HeaderPath=C:/sensact/firmware/sensactHS100/Inc
 HeaderFiles=lwip.h;lwipopts.h;ethernetif.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;
-SourcePath=C:/sensact/firmware/ethernettestF4/Src
+SourcePath=C:/sensact/firmware/sensactHS100/Src
 SourceFiles=lwip.h;lwipopts.h;ethernetif.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;lwip.c;ethernetif.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;
 
 [PreviousLibFiles]
