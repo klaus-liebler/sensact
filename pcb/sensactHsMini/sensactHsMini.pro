@@ -1,4 +1,4 @@
-update=22.01.2017 13:20:57
+update=29.04.2017 13:32:45
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,13 @@ LibName30=stm32
 LibName31=C:/sensact/pcb/kicad-libs/sensact
 LibName32=C:/sensact/pcb/kicad-libs/w_connectors
 LibName33=C:/sensact/pcb/kicad-libs/w_device
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
