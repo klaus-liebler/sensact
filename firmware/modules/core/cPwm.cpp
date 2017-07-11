@@ -13,8 +13,8 @@ static const int DIM_TO_TARGET_STEP=5;
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cPWM::cPWM(char const*const name, const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
-		cApplication(name, id, eAppType::PWM),
+cPWM::cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
+		cApplication(id),
 		minimalOnLevel(minimalLevel),
 		lowMeansLampOn(lowMeansLampOn),
 		standbyController(standbyController),
@@ -190,7 +190,7 @@ void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 	}
 }
 
-void cPWM::DoEachCycle(volatile Time_t now) {
+eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(autoOffIntervalMsecs!=0 && autoOffTime<now && targetLevel>0)
 	{
 		LOGD("%s starting to switch off automatically", Name);
@@ -247,11 +247,13 @@ void cPWM::DoEachCycle(volatile Time_t now) {
 
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
 	{
-		LOGD("%s sends heartbeat to %s at level %d", Name, N(standbyController), currentLevel);
+		LOGD("%s sends heartbeat to %s at level %d", N(), NN(standbyController), currentLevel);
 		cMaster::BufferHeartbeat(standbyController, now);
 		lastHeartbeatToStandbycontroller=now;
 	}
-	return;
+	statusBuffer[0]=targetLevel;
+	*statusBufferLength=1;
+	return eAppResult::OK;
 }
 
 void cPWM::WriteCurrentLevelToOutput() {
@@ -266,15 +268,15 @@ void cPWM::WriteCurrentLevelToOutput() {
 
 	if(!BSP::SetDigitalOutput(baseOutput, outputMask, val))
 	{
-		LOGE("%s could not set output %i to level %i", Name, baseOutput, currentLevel);
+		LOGE("%s could not set output %i to level %i", N(), baseOutput, currentLevel);
 	}
 
 }
 
-bool cPWM::Setup() {
+eAppResult cPWM::Setup() {
 	currentLevel=0;
 	WriteCurrentLevelToOutput();
-	return true;
+	return eAppResult::OK;
 }
 
 const uint16_t cPWM::level2brightness[] = { 0, 66, 67, 69, 71, 73, 75, 77,

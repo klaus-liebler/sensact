@@ -14,10 +14,10 @@ private:
 	uint16_t previousValue;
 	const uint16_t limitForPassingToggle;
 public:
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <BrightnessSensorApplication.hinc>
-	cBrightnessSensor(const char* name, const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle);
+	cBrightnessSensor(const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle);
 };
 
 }

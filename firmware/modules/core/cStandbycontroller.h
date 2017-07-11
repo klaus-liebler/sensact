@@ -15,15 +15,15 @@ namespace sensact{
 		Time_t lastHeartbeat;
 		const uint32_t waitTimeMsecs;
 	public:
-		bool Setup() override;
-		void DoEachCycle(Time_t time) override;
+		eAppResult Setup() override;
+		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 		#include <StandbyControllerApplication.hinc>
 		/**
 		 * @param evt
 		 */
 		void RaiseEvent(eEventType evt);
 
-		cStandbyController(char const*const name, eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs);
+		cStandbyController(eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs);
 	};
 
 

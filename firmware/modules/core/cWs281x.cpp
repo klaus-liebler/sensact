@@ -1,5 +1,6 @@
 #include "common.h"
 #include "cWs281x.h"
+#include "cWs281x.h"
 #include "cMaster.h"
 #include "cBsp.h"
 #define LOGLEVEL LEVEL_DEBUG
@@ -27,14 +28,14 @@ const cRGB cWs281x::Navy={0,0,125};
 const cRGB cWs281x::Palette[] = {White, Red, Lime, Blue, Yellow, Cyan, Magenta, Silver, Gray, Maroon, Olive, Green, Purple, Teal, Navy, Black, };
 
 
-cWs281x::cWs281x(const char* name, eApplicationID id, eWsVariant variant):cApplication(name, id, eAppType::RGBLED), wsVariant(variant)
+cWs281x::cWs281x(eApplicationID id, eWsVariant variant):cApplication(id), wsVariant(variant)
 {
 
 }
 
 
 
-bool cWs281x::Setup()
+eAppResult cWs281x::Setup()
 {
 	uint16_t bitindex;
 	for(bitindex=0;bitindex<=24*RGBLED_SIZE;bitindex++) //"<=" for final reset impulse
@@ -42,7 +43,7 @@ bool cWs281x::Setup()
 		buffer[bitindex]=0;
 	}
 
-	return true;
+	return eAppResult::OK;
 }
 
 void cWs281x::SetPixelRGB(uint8_t ledIndex, cRGB color)
@@ -268,10 +269,16 @@ void cWs281x::Commit()
 }
 
 
-void cWs281x::DoEachCycle(Time_t now)
+eAppResult cWs281x::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	UNUSED(now);
-	return;
+	for(int i=0;i<8;i++)
+	{
+		statusBuffer[i]=this->buffer[i];
+	}
+	*statusBufferLength=8;
+
+	return eAppResult::OK;
 }
 
 

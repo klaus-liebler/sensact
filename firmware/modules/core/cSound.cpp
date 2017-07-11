@@ -223,11 +223,9 @@ static void mp3_random_play () {
 	mp3_send_cmd (0x18);
 }
 */
-bool cSound::Setup() {
+eAppResult cSound::Setup() {
 
-		BSP::SetDigitalOutput(this->output, BSP::INACTIVE);
-		return true;
-
+	return BSP::SetDigitalOutput(this->output, BSP::INACTIVE)?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
 void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
@@ -248,12 +246,15 @@ void cSound::OnSTARTCommand(Time_t now)
 	OnSET_SIGNALCommand(1, now);
 }
 
-void cSound::DoEachCycle(Time_t now)
+eAppResult cSound::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(now>this->autoOffTime)
 	{
 		BSP::SetDigitalOutput(this->output, BSP::INACTIVE);
 	}
+	UNUSED(statusBuffer);
+	*statusBufferLength=0;
+	return eAppResult::OK;
 }
 }
 

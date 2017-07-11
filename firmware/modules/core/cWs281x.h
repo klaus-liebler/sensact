@@ -27,6 +27,8 @@ private:
 	volatile uint8_t buffer[24*RGBLED_SIZE+1] __attribute__((aligned(4)));
 	eWsVariant wsVariant;
 public:
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 	static const cRGB Black;//(0,0,0);
 	static const cRGB White;//	#FFFFFF	(255,255,255)
 	static const cRGB  	Red;//	#FF0000	(255,0,0)
@@ -44,9 +46,8 @@ public:
 	static const cRGB Teal;//	#008080	(0,128,128)
 	static const cRGB Navy;//	#000080	(0,0,128)
 	static const cRGB Palette[16];
-	cWs281x(const char* name, eApplicationID id, eWsVariant variant);
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override; //slowly dim to target level
+	cWs281x(eApplicationID id, eWsVariant variant);
+
 	void SetPixelRGB(uint8_t ledIndex, cRGB color);
 	void SetAllPixelRGB(cRGB color);
 	void SetPixelHSV(uint8_t ledIndex, cHSV color);

@@ -11,10 +11,10 @@ class cSensactNode: public cApplication {
 private:
 
 public:
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <SensactNodeApplication.hinc>
-	cSensactNode(const char* name, const eApplicationID id);
+	cSensactNode(const eApplicationID id);
 };
 
 }

@@ -54,6 +54,7 @@ enum struct eSocketResult:uint8_t
 	WRONG_STATE,
 	PAYLOAD_TOO_LARGE,
 	SEND_ERROR,
+	SOCKET_CLOSED,
 };
 
 enum SocketFlags
@@ -62,6 +63,7 @@ enum SocketFlags
     MacFilter =0x40,
     UseNoDelayedAck = 0x20,
 	UseIGMPv1 = 0x20,
+	NONE = 0x00,
 };
 
 inline SocketFlags operator|(SocketFlags a, SocketFlags b)
@@ -73,6 +75,7 @@ enum struct eSocketId:uint8_t
 	S1=1,
 	S2=2,
 	S3=3,
+	UNDEFINED=UINT8_MAX
 };
 
 #define IPADDR(a,b,c,d) (((uint8_t)a >> 0) + ((uint8_t)b >> 8) + ((uint8_t)c >> 16) + ((uint8_t)d >> 24))
@@ -80,6 +83,7 @@ enum struct eSocketId:uint8_t
 class cW5100 {
 
 private:
+	sensact::iMessageReceiverCallback *callback;
 	SPI_HandleTypeDef * const hspi;
 	GPIO_TypeDef * const ssGPIOx;
 	uint16_t const ssGPIOpin;
@@ -89,24 +93,23 @@ private:
 	uint8_t const * const mac;
 	uint8_t const * const nm;
 	bool acceptConnections;
-	sensact::iMessageReceiverCallback *callback;
+
 	eSocketResult write(uint16_t reg, uint8_t data);
 	eSocketResult write16(uint16_t firstReg, uint16_t data);
 	eSocketResult write32(uint16_t firstReg, uint32_t data);
 	void write_data(eSocketId s, const uint8_t * src, uint16_t dstAddr, uint16_t len);
-	void read_data(eSocketId s, uint16_t srcAddr, const uint8_t * dst, uint16_t len);
-	uint16_t wiz_write_buf(uint16_t addr, const uint8_t* buf,uint16_t len);
-	uint16_t wiz_read_buf(uint16_t addr, const uint8_t* buf,uint16_t len);
-	eSocketResult read(uint16_t reg, const uint8_t *data);
+	void read_data(eSocketId s, uint16_t srcAddr, uint8_t * dst, uint16_t len);
+	uint16_t wiz_write_buf(uint16_t addr, uint8_t * buf,uint16_t len);
+	uint16_t wiz_read_buf(uint16_t addr, uint8_t* buf,uint16_t len);
+	eSocketResult read(uint16_t reg, uint8_t * data);
 	eSocketResult read16(uint16_t reg, uint16_t *data);
 	eSocketResult read32(uint16_t firstReg, uint32_t *data);
 	eSocketResult sendCommand(eSocketId id, eSocketCmd cmd);
     eSocketStatus getStatus(eSocketId sock);
     uint16_t socketFreeTXMEM(eSocketId sock);
     uint16_t getSn_TX_FSR(eSocketId s);
-    eSocketResult send_data_processing(eSocketId s, const uint8_t *data, uint16_t len);
-    eSocketResult recv_data_processing(eSocketId s, const uint8_t *data, uint16_t len);
-    uint8_t buf[256];
+    eSocketResult send_data_processing(eSocketId s, uint8_t *data, uint16_t len);
+    eSocketResult recv_data_processing(eSocketId s, uint8_t *data, uint16_t len);
 public:
     cW5100(sensact::iMessageReceiverCallback *callback, SPI_HandleTypeDef * const hspi, GPIO_TypeDef * const ssGPIOx, uint16_t const ssGPIOpin, uint8_t const * const dns, uint8_t const * const gw, uint8_t const * const ip, uint8_t const * const mac, uint8_t const * const nm);
     eSocketResult Init();
@@ -115,11 +118,11 @@ public:
     eSocketResult Listen(eSocketId id);
     eSocketResult Connect(eSocketId s, uint32_t addr, uint16_t port);
     eSocketResult Disconnect(eSocketId s);
-    eSocketResult Send(eSocketId s, const uint8_t * buf, uint16_t len);
-    eSocketResult Recv(eSocketId s, const uint8_t * buf, uint16_t len);
+    eSocketResult Send(eSocketId s, uint8_t * buf, uint16_t len);
+    eSocketResult Recv(eSocketId s, uint8_t * buf, uint16_t len);
     eSocketResult Sendto(
     		eSocketId s,     /**< socket index */
-    		const uint8_t * buf,  /**< a pointer to the data */
+    		uint8_t * buf,  /**< a pointer to the data */
     		uint16_t len,     /**< the data size to send */
     		uint32_t addr,     /**< the peer's Destination IP address */
     		uint16_t port   /**< the peer's destination port number */
@@ -131,7 +134,7 @@ public:
     		uint32_t *addr,   /**< a pointer to store the peer's IP address */
     		uint16_t *port  /**< a pointer to store the peer's port number. */
     );
-	bool ListenServerUDP(eSocketId socketId,  uint8_t const * const myIP, uint16_t myPort);
+	eSocketResult ListenServerUDP(eSocketId socketId, uint16_t myPort);
 	void CallMeRegularly();
 	void WriteUDPMessage(uint32_t destinationIp, uint16_t destinationPort, uint8_t * payload, uint16_t payloadLength);
 };

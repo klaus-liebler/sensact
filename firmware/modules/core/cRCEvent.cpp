@@ -10,7 +10,6 @@
 namespace sensact {
 
 cRCEvent::cRCEvent(
-			const char* name,
 			const eApplicationID id,
 			const uint32_t eventCode,
 			const Command *const pressedCommands, const uint8_t pressedCommandsLength,
@@ -18,7 +17,7 @@ cRCEvent::cRCEvent(
 			const Command *const releasedShortCommands, const uint8_t releasedShortCommandsLength,
 			const Command *const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
 			const Command *const releasedLongCommands, const uint8_t releasedLongCommandsLength) :
-			cApplication(name, id, eAppType::RCEVT),
+			cApplication(id),
 			pressedCommands(pressedCommands), pressedCommandsLength(pressedCommandsLength),
 			releasedCommands(releasedCommands), releasedCommandsLength(releasedCommandsLength),
 			releasedShortCommands(releasedShortCommands), releasedShortCommandsLength(releasedShortCommandsLength),
@@ -75,13 +74,13 @@ void cRCEvent::OnPressedShortAndHold(Time_t now) {
 	}
 }
 
-bool cRCEvent::Setup()
+eAppResult cRCEvent::Setup()
 {
-	return true;
+	return eAppResult::OK;
 }
 
 
-void cRCEvent::DoEachCycle(Time_t now) {
+eAppResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(BSP::HasRCEventOccured(eventCode))
 	{
 		lastEvent=now;
@@ -112,6 +111,8 @@ void cRCEvent::DoEachCycle(Time_t now) {
 		eventStart=TIME_MAX;//reset to default
 		//lastEvent is not resettet, but remains on the timestamp of the last perceived event
 	}
+	*statusBufferLength=0;
+	return eAppResult::OK;
 }
 
 }

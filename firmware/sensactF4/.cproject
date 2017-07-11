@@ -26,7 +26,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.117687907" name="'char' is signed (-fsigned-char)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.1776321017" name="Function sections (-ffunction-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.926158885" name="Data sections (-fdata-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections" useByScannerDiscovery="true" value="true" valueType="boolean"/>
-							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1966297597" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level" useByScannerDiscovery="true" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.max" valueType="enumerated"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1966297597" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level" useByScannerDiscovery="true" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.default" valueType="enumerated"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.973243225" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format" useByScannerDiscovery="true"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.1681177455" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family" useByScannerDiscovery="false" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.mcpu.cortex-m4" valueType="enumerated"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.656752218" name="Float ABI" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi" useByScannerDiscovery="false" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.soft" valueType="enumerated"/>
@@ -61,7 +61,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1764967817" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.278051974" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.208932198" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/sensactF4}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.692719687" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder">
+							<builder buildPath="${workspace_loc:/sensactF4}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.692719687" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
@@ -77,15 +77,19 @@
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/STM32F4xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.622681683" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="TRACE"/>
-									<listOptionValue builtIn="false" value="STM32F405xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1908516725" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -98,6 +102,9 @@
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/STM32F4xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.missingprototypes.1109794835" name="Warn if a global function has no prototype (-Wmissing-prototypes)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.missingprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.strictprototypes.924068099" name="Warn if a function has no arg type (-Wstrict-prototypes)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.strictprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -105,11 +112,12 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.488826788" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="TRACE"/>
-									<listOptionValue builtIn="false" value="STM32F405xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1204884290" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -122,6 +130,9 @@
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/STM32F4xx_HAL_Driver/Inc"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.1207819149" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.141417005" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -136,11 +147,12 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs.864572219" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="TRACE"/>
-									<listOptionValue builtIn="false" value="STM32F405xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.std.1682087189" name="Language standard" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.std" useByScannerDiscovery="true" value="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.std.cpp11" valueType="enumerated"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.233582619" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
@@ -228,6 +240,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.2146591816.1625821515" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.2146591816"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1764967817.141507250" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1764967817"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.278051974.1944978409" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.278051974"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.5062270" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.916595228">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.657959584" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -245,9 +258,13 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.909982504" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1047726968"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.512812877.1600703570" name="stm32f4xx_hal_eth.c" rcbsApplicability="disable" resourcePath="cubemx/stm32f4xx_hal_eth.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.396101156.1929872962">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.396101156.1929872962" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.396101156"/>
+					</fileInfo>
 					<sourceEntries>
+						<entry excluding="apps/httpd/fsdata.c|apps/httpd/makefsdata|apps/tftp|apps/sntp|apps/snmp|apps/netbiosns|apps/mdns|apps/lwiperf|netif/ethernetif_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LwIP"/>
 						<entry excluding="cDateTime.cpp|cModel_base.inc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="core"/>
-						<entry excluding="stm32f4xx_hal_timebase_rtc_wakeup_template.c|stm32f4xx_hal_timebase_rtc_alarm_template.c|stm32f4xx_hal_iwdg.c|stm32f4xx_hal_dcmi.c|stm32f4xx_hal_timebase_tim_template.c|stm32f4xx_hal_crc.c|stm32f4xx_hal_eth.c|stm32f4xx_hal_sram.c|stm32f4xx_hal_nand.c|stm32f4xx_hal_flash.c|stm32f4xx_hal_dsi.c|stm32f4xx_hal_dac_ex.c|stm32f4xx_hal_cryp_ex.c|stm32f4xx_hal_smartcard.c|stm32f4xx_hal_cryp.c|stm32f4xx_hal_dma2d.c|stm32f4xx_hal_rtc.c|stm32f4xx_hal_rcc_ex.c|stm32f4xx_hal_pwr_ex.c|stm32f4xx_hal_ltdc.c|stm32f4xx_hal_pccard.c|stm32f4xx_hal_hash.c|stm32f4xx_hal_msp_template.c|stm32f4xx_hal_flash_ex.c|stm32f4xx_hal_i2s_ex.c|stm32f4xx_hal_pcd.c|stm32f4xx_ll_fmc.c|stm32f4xx_hal_dma_ex.c|stm32f4xx_hal_dcmi_ex.c|stm32f4xx_hal_irda.c|stm32f4xx_hal_sai_ex.c|stm32f4xx_hal_dac.c|stm32f4xx_hal_rtc_ex.c|stm32f4xx_hal_lptim.c|stm32f4xx_hal_usart.c|stm32f4xx_hal_rng.c|stm32f4xx_hal_pwr.c|stm32f4xx_hal_hcd.c|stm32f4xx_ll_fsmc.c|stm32f4xx_hal_sai.c|stm32f4xx_hal_pcd_ex.c|stm32f4xx_hal_wwdg.c|stm32f4xx_hal_qspi.c|stm32f4xx_hal_i2c_ex.c|stm32f4xx_hal_flash_ramfunc.c|stm32f4xx_hal_i2s.c|stm32f4xx_hal_ltdc_ex.c|stm32f4xx_hal_fmpi2c_ex.c|stm32f4xx_hal_hash_ex.c|stm32f4xx_hal_nor.c|stm32f4xx_hal_spdifrx.c|stm32f4xx_hal_sdram.c|stm32f4xx_hal_fmpi2c.c|stm32f4xx_hal_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
+						<entry excluding="stm32f4xx_hal_timebase_rtc_wakeup_template.c|stm32f4xx_hal_timebase_rtc_alarm_template.c|stm32f4xx_hal_iwdg.c|stm32f4xx_hal_dcmi.c|stm32f4xx_hal_timebase_tim_template.c|stm32f4xx_hal_crc.c|stm32f4xx_hal_sram.c|stm32f4xx_hal_nand.c|stm32f4xx_hal_flash.c|stm32f4xx_hal_dsi.c|stm32f4xx_hal_dac_ex.c|stm32f4xx_hal_cryp_ex.c|stm32f4xx_hal_smartcard.c|stm32f4xx_hal_cryp.c|stm32f4xx_hal_dma2d.c|stm32f4xx_hal_rtc.c|stm32f4xx_hal_rcc_ex.c|stm32f4xx_hal_pwr_ex.c|stm32f4xx_hal_ltdc.c|stm32f4xx_hal_pccard.c|stm32f4xx_hal_hash.c|stm32f4xx_hal_msp_template.c|stm32f4xx_hal_flash_ex.c|stm32f4xx_hal_i2s_ex.c|stm32f4xx_hal_pcd.c|stm32f4xx_ll_fmc.c|stm32f4xx_hal_dma_ex.c|stm32f4xx_hal_dcmi_ex.c|stm32f4xx_hal_irda.c|stm32f4xx_hal_sai_ex.c|stm32f4xx_hal_dac.c|stm32f4xx_hal_rtc_ex.c|stm32f4xx_hal_lptim.c|stm32f4xx_hal_usart.c|stm32f4xx_hal_rng.c|stm32f4xx_hal_pwr.c|stm32f4xx_hal_hcd.c|stm32f4xx_ll_fsmc.c|stm32f4xx_hal_sai.c|stm32f4xx_hal_pcd_ex.c|stm32f4xx_hal_wwdg.c|stm32f4xx_hal_qspi.c|stm32f4xx_hal_i2c_ex.c|stm32f4xx_hal_flash_ramfunc.c|stm32f4xx_hal_i2s.c|stm32f4xx_hal_ltdc_ex.c|stm32f4xx_hal_fmpi2c_ex.c|stm32f4xx_hal_hash_ex.c|stm32f4xx_hal_nor.c|stm32f4xx_hal_spdifrx.c|stm32f4xx_hal_sdram.c|stm32f4xx_hal_fmpi2c.c|stm32f4xx_hal_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="generated"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sensacths"/>
@@ -328,6 +345,9 @@
 									<listOptionValue builtIn="false" value="&quot;${sensact}\modules\hc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet\W5100&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.1355515291" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_STDOUT"/>
@@ -336,6 +356,8 @@
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.2047801796" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -354,6 +376,9 @@
 									<listOptionValue builtIn="false" value="&quot;${sensact}\modules\hc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet\W5100&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.missingprototypes.827639382" name="Warn if a global function has no prototype (-Wmissing-prototypes)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.missingprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.strictprototypes.224102179" name="Warn if a function has no arg type (-Wstrict-prototypes)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.warning.strictprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -365,6 +390,8 @@
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1991514993" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -383,6 +410,9 @@
 									<listOptionValue builtIn="false" value="&quot;${sensact}\modules\hc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\sensact\firmware\modules\ioLibrary_Driver\Ethernet\W5100&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\stm32tc\STM32CubeMX\STM32Cube_FW_F4_V1.16.0\Middlewares\Third_Party\LwIP\src\apps\httpd&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions.1512871567" name="Do not use exceptions (-fno-exceptions)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.noexceptions" useByScannerDiscovery="true" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti.2116860807" name="Do not use RTTI (-fno-rtti)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.nortti" useByScannerDiscovery="true" value="true" valueType="boolean"/>
@@ -401,6 +431,8 @@
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="STM32F4"/>
 									<listOptionValue builtIn="false" value="SENSACTHS08"/>
+									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="SENSACTHS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.493910946" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -507,8 +539,11 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.573635759" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.654890138"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.529605280.1635413141" name="stm32f4xx_hal_eth.c" rcbsApplicability="disable" resourcePath="cubemx/stm32f4xx_hal_eth.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.2017726102.1657806030">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.2017726102.1657806030" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.2017726102"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="stm32f4xx_hal_timebase_rtc_wakeup_template.c|stm32f4xx_hal_timebase_rtc_alarm_template.c|stm32f4xx_hal_timebase_tim_template.c|stm32f4xx_ll_fsmc.c|stm32f4xx_ll_fmc.c|stm32f4xx_hal_wwdg.c|stm32f4xx_hal_usart.c|stm32f4xx_hal_sram.c|stm32f4xx_hal_spdifrx.c|stm32f4xx_hal_smartcard.c|stm32f4xx_hal_sdram.c|stm32f4xx_hal_sai.c|stm32f4xx_hal_sai_ex.c|stm32f4xx_hal_rtc.c|stm32f4xx_hal_rtc_ex.c|stm32f4xx_hal_rng.c|stm32f4xx_hal_rcc_ex.c|stm32f4xx_hal_qspi.c|stm32f4xx_hal_pwr.c|stm32f4xx_hal_pwr_ex.c|stm32f4xx_hal_pcd.c|stm32f4xx_hal_pcd_ex.c|stm32f4xx_hal_pccard.c|stm32f4xx_hal_nor.c|stm32f4xx_hal_nand.c|stm32f4xx_hal_ltdc.c|stm32f4xx_hal_ltdc_ex.c|stm32f4xx_hal_lptim.c|stm32f4xx_hal_iwdg.c|stm32f4xx_hal_irda.c|stm32f4xx_hal_i2s.c|stm32f4xx_hal_i2s_ex.c|stm32f4xx_hal_i2c_ex.c|stm32f4xx_hal_hcd.c|stm32f4xx_hal_hash.c|stm32f4xx_hal_hash_ex.c|stm32f4xx_hal_fmpi2c.c|stm32f4xx_hal_fmpi2c_ex.c|stm32f4xx_hal_flash.c|stm32f4xx_hal_flash_ramfunc.c|stm32f4xx_hal_flash_ex.c|stm32f4xx_hal_eth.c|stm32f4xx_hal_dsi.c|stm32f4xx_hal_dma2d.c|stm32f4xx_hal_dma_ex.c|stm32f4xx_hal_dac.c|stm32f4xx_hal_dcmi.c|stm32f4xx_hal_dcmi_ex.c|stm32f4xx_hal_dac_ex.c|stm32f4xx_hal_cryp.c|stm32f4xx_hal_cryp_ex.c|stm32f4xx_hal_crc.c|stm32f4xx_hal_cec.c|stm32f4xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
+						<entry excluding="stm32f4xx_hal_timebase_rtc_wakeup_template.c|stm32f4xx_hal_timebase_rtc_alarm_template.c|stm32f4xx_hal_timebase_tim_template.c|stm32f4xx_ll_fsmc.c|stm32f4xx_ll_fmc.c|stm32f4xx_hal_wwdg.c|stm32f4xx_hal_usart.c|stm32f4xx_hal_sram.c|stm32f4xx_hal_spdifrx.c|stm32f4xx_hal_smartcard.c|stm32f4xx_hal_sdram.c|stm32f4xx_hal_sai.c|stm32f4xx_hal_sai_ex.c|stm32f4xx_hal_rtc.c|stm32f4xx_hal_rtc_ex.c|stm32f4xx_hal_rng.c|stm32f4xx_hal_rcc_ex.c|stm32f4xx_hal_qspi.c|stm32f4xx_hal_pwr.c|stm32f4xx_hal_pwr_ex.c|stm32f4xx_hal_pcd.c|stm32f4xx_hal_pcd_ex.c|stm32f4xx_hal_pccard.c|stm32f4xx_hal_nor.c|stm32f4xx_hal_nand.c|stm32f4xx_hal_ltdc.c|stm32f4xx_hal_ltdc_ex.c|stm32f4xx_hal_lptim.c|stm32f4xx_hal_iwdg.c|stm32f4xx_hal_irda.c|stm32f4xx_hal_i2s.c|stm32f4xx_hal_i2s_ex.c|stm32f4xx_hal_i2c_ex.c|stm32f4xx_hal_hcd.c|stm32f4xx_hal_hash.c|stm32f4xx_hal_hash_ex.c|stm32f4xx_hal_fmpi2c.c|stm32f4xx_hal_fmpi2c_ex.c|stm32f4xx_hal_flash.c|stm32f4xx_hal_flash_ramfunc.c|stm32f4xx_hal_flash_ex.c|stm32f4xx_hal_dsi.c|stm32f4xx_hal_dma2d.c|stm32f4xx_hal_dma_ex.c|stm32f4xx_hal_dac.c|stm32f4xx_hal_dcmi.c|stm32f4xx_hal_dcmi_ex.c|stm32f4xx_hal_dac_ex.c|stm32f4xx_hal_cryp.c|stm32f4xx_hal_cryp_ex.c|stm32f4xx_hal_crc.c|stm32f4xx_hal_cec.c|stm32f4xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

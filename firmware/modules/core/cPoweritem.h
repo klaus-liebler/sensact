@@ -14,11 +14,11 @@ namespace sensact
 		Time_t nextChange; //calculated time for autoOff/autoOff
 
 	public:
-		bool Setup() override;
+		eAppResult Setup() override;
+		eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PoweritemApplication.hinc>
-		void DoEachCycle(Time_t time) override;
 		void RaiseEvent(eEventType evt);
-		cPoweritem(char const*const name, eApplicationID id, uint16_t const output, Time_t const autoOffIntervalMsecs, Time_t const autoOnIntervalMsecs);
+		cPoweritem(eApplicationID id, uint16_t const output, Time_t const autoOffIntervalMsecs, Time_t const autoOnIntervalMsecs);
 	};
 }
 

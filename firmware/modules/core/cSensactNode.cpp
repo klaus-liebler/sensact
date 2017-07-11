@@ -9,18 +9,18 @@
 namespace sensact {
 
 
-cSensactNode::cSensactNode(const char* name, const eApplicationID id):cApplication(name, id, eAppType::SNSCT)
+cSensactNode::cSensactNode(const eApplicationID id):cApplication(id)
 {
 
 }
 
-bool cSensactNode::Setup() {
-	return true;
+eAppResult cSensactNode::Setup() {
+	return eAppResult::OK;
 }
 
 void cSensactNode::OnPINGCommand(uint32_t payload, Time_t now)
 {
-	cMaster::SendEventDirect(now, this->Id, eEventType::PONG, (uint8_t*)&payload, 4);
+	cMaster::PublishApplicationEvent(now, this->Id, eEventType::PONG, (uint8_t*)&payload, 4);
 }
 
 void cSensactNode::OnSTART_IAPCommand(Time_t now)
@@ -37,10 +37,12 @@ void cSensactNode::OnSET_PWMCommand(uint32_t channelBitmask, uint16_t value, Tim
 }
 
 
-void cSensactNode::DoEachCycle(Time_t now)
+eAppResult cSensactNode::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	UNUSED(now);
-	return;
+	UNUSED(statusBuffer);
+	*statusBufferLength=0;
+	return eAppResult::OK;
 }
 
 }

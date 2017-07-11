@@ -336,21 +336,21 @@ bool BSP::ReceiveCANMessage(CANMessage* m) {
 	}
 	return false;
 }
-bool BSP::SendCANMessage(CANMessage* m) {
-	TxMessage.DLC = m->Length;
+bool BSP::SendCANMessage(uint32_t id, uint8_t const * const data, uint8_t len) {
+	TxMessage.DLC = len;
 	int i = 0;
-	for (i = 0; i < m->Length; i++) {
-		TxMessage.Data[i] = m->Data[i];
+	for (i = 0; i < len; i++) {
+		TxMessage.Data[i] = data[i];
 	}
 
-	TxMessage.ExtId = m->Id;
+	TxMessage.ExtId = id;
 	if (HAL_CAN_Transmit(&hcan, 20)==HAL_OK) {
-		LOGI("Sent CAN-Message for ID %d", m->Id); //not reference to ApplicationNames, because it can also be an event!
+		LOGI("Sent CAN-Message for ID %d", id); //not reference to ApplicationNames, because it can also be an event!
 		return true;
 	}
 	else
 	{
-		LOGE("Failed to send CAN-Message for ID %d", m->Id); //not reference to ApplicationNames, because it can also be an event!
+		LOGE("Failed to send CAN-Message for ID %d", id); //not reference to ApplicationNames, because it can also be an event!
 		(ErrorCounters[CAN_ERROR])++;
 	}
 	return false;

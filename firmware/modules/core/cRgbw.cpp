@@ -9,8 +9,8 @@ namespace sensact {
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cRgbw::cRgbw(char const*const name, const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
-		cApplication(name, id, eAppType::RGBW),
+cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
+		cApplication(id),
 		outputR(outputR),
 		outputG(outputG),
 		outputB(outputB),
@@ -101,20 +101,26 @@ void cRgbw::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 }
 
 
-void cRgbw::DoEachCycle(volatile Time_t now) {
+eAppResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(standbyController!=eApplicationID::NO_APPLICATION && state==ePowerState::ACTIVE && now-lastHeartbeatToStandbycontroller>10000)
 	{
 		cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
 		lastHeartbeatToStandbycontroller=now;
 	}
+	Common::WriteInt16(outputR, statusBuffer, 0);
+	Common::WriteInt16(outputG, statusBuffer, 2);
+	Common::WriteInt16(outputB, statusBuffer, 4);
+	Common::WriteInt16(outputW, statusBuffer, 6);
+	*statusBufferLength=8;
+	return eAppResult::OK;
 }
 
 
 
-bool cRgbw::Setup()
+eAppResult cRgbw::Setup()
 {
 	switchOff();
-	return true;
+	return eAppResult::OK;
 }
 }
 

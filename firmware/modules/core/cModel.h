@@ -7,11 +7,20 @@
 
 //Known Nodes are
 //#define NODE_SNSCT_L0_TECH_HS_1
-#define NODE_SNSCT_L3_TECH_HS_1
+//#define NODE_SNSCT_L3_TECH_HS_1
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
-//#define NODE_TEST_HS07
+#define NODE_TEST_HS07
+//#define NODE_TEST_UP02
+//#define NODE_TEST_UP03
+
+#ifdef NODE_SNSCT_L3_TECH_HS_1
+#define MASTERNODE
+#endif
+#ifdef NODE_TEST_HS07
+#define MASTERNODE
+#endif
 
 #define INTI 0x0000
 #define BUS0 0x4000
@@ -36,12 +45,16 @@ public:
 	 * Index is destination appId
 	 */
 	static cApplication * const Glo2locCmd[];
+#ifdef MASTERNODE
+	static uint8_t applicationStatus[][8];
+#endif
 
 	static const char ModelString[];
 	static const eApplicationID NodeMasterApplication;
 	static const char * const ApplicationNames[];
+#ifdef SENSACTUP
 	static cWs281x RGBLED;
-
+#endif
 
 	static const uint8_t wellKnownRGBWColors[][4];
 	static const uint8_t wellKnownRGBWColorsCnt;

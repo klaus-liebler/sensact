@@ -40,12 +40,12 @@ void cROTAR::OnReleasedLong(Time_t now) {
 }
 
 
-bool cROTAR::Setup() {
-	return true;
+eAppResult cROTAR::Setup() {
+	return eAppResult::OK;
 }
 
 
-void cROTAR::DoEachCycle(Time_t now) {
+eAppResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool isPressed=false;
 	BSP::GetDigitalInput(this->inputPush, &isPressed);
 	isPressed=!isPressed;
@@ -54,17 +54,17 @@ void cROTAR::DoEachCycle(Time_t now) {
 		this->pushState = ePushState::PRESSED;
 		this->lastChange = now;
 		OnPressed(now);
-		cMaster::SendEvent(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->pushState == ePushState::PRESSED
 			&& !isPressed) {
 		if (now - this->lastChange < 400) {
 			OnReleasedShort(now);
-			cMaster::SendEvent(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else {
 			OnReleasedLong(now);
-			cMaster::SendEvent(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		}
-		cMaster::SendEvent(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		this->pushState = ePushState::RELEASED;
 		this->lastChange = now;
 	}
@@ -73,10 +73,11 @@ void cROTAR::DoEachCycle(Time_t now) {
 	{
 		int16_t change =  currentRotaryState-this->rotaryState;
 		OnTurned(now, change);
-		cMaster::SendEvent(now, Id, eEventType::TURNED, localEvents, localEventsLength, busEvents, busEventsLength, (uint8_t*)&change ,2);
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::TURNED, localEvents, localEventsLength, busEvents, busEventsLength, (uint8_t*)&change ,2);
 		this->rotaryState=currentRotaryState;
 	}
-
+	*statusBufferLength=0;
+	return eAppResult::OK;
 }
 
 void cROTAR::OnTurned(Time_t now, int16_t change)

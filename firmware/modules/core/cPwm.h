@@ -35,9 +35,9 @@ class cPWM: public cApplication
 		void WriteCurrentLevelToOutput();
 
 	public:
+		eAppResult Setup() override;
+		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PwmApplication.hinc>
-	bool Setup() override;
-			void DoEachCycle(Time_t time) override;
-			cPWM(char const*const name, const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
+			cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }

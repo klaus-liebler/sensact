@@ -7,8 +7,8 @@
 #include "cLog.h"
 namespace sensact {
 
-cForwarder::cForwarder(const char* name, eApplicationID id, eApplicationID finalTarget):
-				cApplication(name, id, eAppType::FRWRD), finalTarget(finalTarget)
+cForwarder::cForwarder(eApplicationID id, eApplicationID finalTarget):
+				cApplication(id), finalTarget(finalTarget)
 {
 
 }

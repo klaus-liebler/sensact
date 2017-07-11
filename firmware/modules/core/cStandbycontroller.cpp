@@ -11,15 +11,15 @@
 
 namespace sensact {
 
-cStandbyController::cStandbyController(char const * const name, eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs):
+cStandbyController::cStandbyController(eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs):
 
-		cApplication(name, id, eAppType::STNDBY), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs){
+		cApplication(id), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs){
 }
 
 
-bool cStandbyController::Setup() {
-	return true;
-
+eAppResult cStandbyController::Setup()
+{
+	return BSP::SetDigitalOutput(this->relay, BSP::INACTIVE)?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
 
@@ -36,7 +36,7 @@ void cStandbyController::OnHEARTBEATCommand(uint32_t sender, Time_t now)
 	}
 }
 
-void cStandbyController::DoEachCycle(Time_t now)
+eAppResult cStandbyController::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(now-lastHeartbeat > waitTimeMsecs && this->state == ePowerState::ACTIVE)
 	{
@@ -44,6 +44,9 @@ void cStandbyController::DoEachCycle(Time_t now)
 		this->state=ePowerState::INACTIVE;
 		LOGD("%s is OFF", Name);
 	}
+	statusBuffer[0]=(uint8_t)state;
+	*statusBufferLength=1;
+	return eAppResult::OK;
 }
 
 }

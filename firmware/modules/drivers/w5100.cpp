@@ -69,7 +69,7 @@ enum struct eW5100Register : uint8_t
 #define Sn_TX_RD0(s) (uint16_t)(SOCK0_BASE_ADDR + ((uint8_t)(s)*SOCKn_REG_SIZE) + 0x0022) //Sn_TX_RD0 register - Socket n TX Read pointer
 #define Sn_TX_WR0(s) (uint16_t)(SOCK0_BASE_ADDR + ((uint8_t)(s)*SOCKn_REG_SIZE) + 0x0024) //Sn_TX_WR0 register - Socket n TX Write pointer
 #define Sn_RX_RSR0(s)(uint16_t)(SOCK0_BASE_ADDR + ((uint8_t)(s)*SOCKn_REG_SIZE) + 0x0026) //Sn_RX_RSR0 register - Socket n Received size
-#define Sn_RX_RD0(s) (uint16_t)(SOCK0_BASE_ADDR + ((uint8_t)(s)*SOCKn_REG_SIZE) + 0x0028) //Sn_RX_RD0 register - Socket n RX Read pointer
+#define Sn_RX_RD0(s) (uint16_t)(SOCK0_BASE_ADDR + (((uint8_t)(s))*SOCKn_REG_SIZE) + 0x0028) //Sn_RX_RD0 register - Socket n RX Read pointer
 
 #define Sn_IR_CONNECTED 0x01
 #define Sn_IR_DISCONNECTED 0x02
@@ -118,8 +118,6 @@ enum struct _eSockConnMode:uint8_t {
 #define RxMAX(s) 	(RxBASE(s)+RxSIZE(s))
 
 
-
-bool cW5100::acceptConnections;
 
 
 cW5100::cW5100(
@@ -209,7 +207,7 @@ eSocketResult cW5100::Listen(eSocketId s)
 	case eSocketStatus::SOCK_INIT:
 		return sendCommand(s, eSocketCmd::LISTEN);
 	case eSocketStatus::BUS_ERROR:
-		return eSocketResult::SPI_ERROR;
+		return eSocketResult::BUS_ERROR;
 	default:
 		return eSocketResult::WRONG_STATE;
 	}
@@ -242,7 +240,7 @@ eSocketResult cW5100::Disconnect(eSocketId s)
 This function read the Tx write pointer register and after copy the data in buffer update the Tx write pointer
 register. User should read upper byte first and lower byte later to get proper value.
 */
-eSocketResult cW5100::send_data_processing(eSocketId s, const uint8_t *data, uint16_t len)
+eSocketResult cW5100::send_data_processing(eSocketId s, uint8_t *data, uint16_t len)
 {
 	uint16_t ptr;
 	uint8_t foo;
@@ -261,21 +259,21 @@ This function read the Rx read pointer register
 and after copy the data from receive buffer update the Rx write pointer register.
 User should read upper byte first and lower byte later to get proper value.
 */
-eSocketResult cW5100::recv_data_processing(eSocketId s, const uint8_t *data, uint16_t len)
+eSocketResult cW5100::recv_data_processing(eSocketId s, uint8_t *data, uint16_t len)
 {
 	uint16_t ptr;
 	read16(Sn_RX_RD0(s), &ptr);
 	LOGD("ISR_RX: rd_ptr : %.4x\r\n", ptr);
 	read_data(s, ptr, data, len); // read data
 	ptr += len;
-	write16(Sn_RX_RD0(), ptr);
+	write16(Sn_RX_RD0(s), ptr);
 	return eSocketResult::OK;
 }
 
 /**
 @brief	This function writes into W5100 memory(Buffer)
 */
-uint16_t cW5100::wiz_write_buf(uint16_t addr, const uint8_t* buf,uint16_t len)
+uint16_t cW5100::wiz_write_buf(uint16_t addr, uint8_t* buf,uint16_t len)
 {
 	for(uint16_t idx=0;idx<len;idx++)
 	{
@@ -287,7 +285,7 @@ uint16_t cW5100::wiz_write_buf(uint16_t addr, const uint8_t* buf,uint16_t len)
 /**
 @brief	This function reads into W5100 memory(Buffer)
 */
-uint16_t cW5100::wiz_read_buf(uint16_t addr, const uint8_t* buf,uint16_t len)
+uint16_t cW5100::wiz_read_buf(uint16_t addr, uint8_t* buf,uint16_t len)
 {
 	for (uint16_t idx=0; idx<len; idx++)
     {
@@ -334,7 +332,7 @@ It calculate the actual physical address where one has to read
 the data from Receive buffer. Here also take care of the condition while it exceed
 the Rx memory uper-bound of socket.
 */
-void cW5100::read_data(eSocketId s, uint16_t srcAddr, const uint8_t * dst, uint16_t len)
+void cW5100::read_data(eSocketId s, uint16_t srcAddr, uint8_t * dst, uint16_t len)
 {
 	uint16_t size;
 
@@ -358,9 +356,9 @@ void cW5100::read_data(eSocketId s, uint16_t srcAddr, const uint8_t * dst, uint1
 	}
 }
 
-eSocketResult cW5100::Send(eSocketId s, const uint8_t * buf, uint16_t len)
+eSocketResult cW5100::Send(eSocketId s, uint8_t * buf, uint16_t len)
 {
-	eSocketStatus status=0;
+	eSocketStatus status;
 	uint16_t ret;
 	uint16_t freesize=0;
 	LOGD("send()");
@@ -398,13 +396,13 @@ eSocketResult cW5100::Send(eSocketId s, const uint8_t * buf, uint16_t len)
 			{
 				LOGD("SOCK_CLOSED.\r\n");
 				Close(s);
-				return 0;
+				return eSocketResult::SOCKET_CLOSED;
 			}
 			read(Sn_IR(s), &isr);
 		}
 
 	write(Sn_IR(s), Sn_IR_SEND_OK);
-	return ret;
+	return eSocketResult::OK;
 }
 
 uint16_t cW5100::getSn_TX_FSR(eSocketId s)
@@ -422,37 +420,41 @@ uint16_t cW5100::getSn_TX_FSR(eSocketId s)
 	return val0;
 }
 
-bool cW5100::ListenServerUDP(eSocketId socketId, uint8_t const*const myIP, uint16_t port)
+eSocketResult cW5100::ListenServerUDP(eSocketId s, uint16_t port)
 {
 	this->acceptConnections=true;
-	if(getStatus(socketId)!=eSocketStatus::SOCK_CLOSED) return false;
-	if(!write(Sn_MR(socketId), (uint8_t)eSocketProtocol::SOCK_PROTO_UDP)) return false;
-	if(!sendCommand(socketId, eSocketCmd::OPEN)) return false;
-	if(getStatus(socketId)!=eSocketStatus::SOCK_INIT)
+	if(getStatus(s)!=eSocketStatus::SOCK_CLOSED) return eSocketResult::WRONG_STATE;
+	write(Sn_MR(s), (uint8_t)eSocketProtocol::SOCK_PROTO_UDP);
+	sendCommand(s, eSocketCmd::OPEN);
+	if(getStatus(s)!=eSocketStatus::SOCK_INIT)
 	{
-		sendCommand(socketId, eSocketCmd::CLOSE);
-		return false;
+		sendCommand(s, eSocketCmd::CLOSE);
+		return eSocketResult::WRONG_STATE;
 	}
-	if(sendCommand(socketId, eSocketCmd::LISTEN)) return false;
-	if(getStatus(socketId)!=eSocketStatus::SOCK_LISTEN)
+	sendCommand(s, eSocketCmd::LISTEN);
+	if(getStatus(s)!=eSocketStatus::SOCK_LISTEN)
 	{
-		sendCommand(socketId, eSocketCmd::CLOSE);
-		return false;
+		sendCommand(s, eSocketCmd::CLOSE);
+		return eSocketResult::WRONG_STATE;
 	}
-	return true;
+	return eSocketResult::OK;
 }
 
 eSocketResult cW5100::sendCommand(eSocketId sock, eSocketCmd cmd)
 {
 	write((uint16_t)Sn_CR(sock), (uint8_t)cmd);
 	uint8_t cr = 0;
-	while(read(Sn_CR(sock), &cr));
+
+	do{
+		read(Sn_CR(sock), &cr);
+	} while(cr!=0);
 	return eSocketResult::OK;
 }
 
 
 void cW5100::CallMeRegularly()
 {
+	uint8_t buf[256];
 	if(this->acceptConnections)
 	{
 		for(uint8_t socknum = 0; socknum < SOCK_MAX_NUM; socknum++)
@@ -460,7 +462,8 @@ void cW5100::CallMeRegularly()
 			eSocketId socket = (eSocketId)socknum;
 			if(getStatus(socket) != eSocketStatus::SOCK_ESTABLISHED) continue;
 			uint8_t im;
-			if(!read(Sn_IR(socket), &im)) continue;
+			read(Sn_IR(socket), &im);
+			if(!SOCK_CONNECTED(im)) continue;
 			if(!SOCK_DATA_RECV(im)) continue;
 			uint16_t get_size;
 			uint16_t readPointer;
@@ -470,10 +473,11 @@ void cW5100::CallMeRegularly()
 			if(get_size==0) continue;
 			read16(Sn_RX_RD0(socket), &readPointer);
 			uint16_t memaddr;
+			uint16_t bufptr=0;
 			for(int i=0; i < get_size; i++) {
 				memaddr = RxBASE(socket) + (readPointer++ & RxMASK(socket));
-				read(memaddr, buf);
-				buf++;
+				read(memaddr, &buf[bufptr]);
+				bufptr++;
 			}
 			write16(Sn_RX_RD0(socket), readPointer);
 			sendCommand(socket, eSocketCmd::RECV);
@@ -496,16 +500,14 @@ void cW5100::CallMeRegularly()
  * @retval HAL status
  */
 eSocketResult cW5100::write(uint16_t regaddr, uint8_t data) {
-	HAL_StatusTypeDef status = HAL_OK;
-
 	/* Every W5100 write command starts with 0xF0 byte, followed by the register address (2 bytes) and data (1 byte) */
 	uint8_t buf[] = {0xF0, (uint8_t)(regaddr >> 8), (uint8_t)(regaddr & 0x00FF), data};
 
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_RESET); //CS LOW
-	status = HAL_SPI_Transmit(this->hspi, buf, 4, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(this->hspi, buf, 4, HAL_MAX_DELAY);
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_SET); //CS HIGH
 
-	return status==HAL_OK;
+	return eSocketResult::OK;
 }
 
 
@@ -552,11 +554,11 @@ eSocketResult cW5100::write32(uint16_t firstReg, uint32_t data)
 	return eSocketResult::OK;
 }
 
-eSocketResult cW5100::read(uint16_t regaddr, const uint8_t *data) {
+eSocketResult cW5100::read(uint16_t regaddr, uint8_t * data) {
 	HAL_StatusTypeDef status = HAL_OK;
 
 	/* Every W5100 read command starts with 0x0F byte, followed by the register address (2 bytes) and data (1 byte) */
-	uint8_t wbuf[] = {0x0F, (uint8_t)regaddr >> 8, (uint8_t)(regaddr & 0x00FF), 0x00};
+	uint8_t wbuf[] = {0x0F, (uint8_t)(regaddr >> 8), (uint8_t)(regaddr & 0x00FF), 0x00};
 	uint8_t rbuf[4];
 
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_RESET); //CS LOW
@@ -564,7 +566,7 @@ eSocketResult cW5100::read(uint16_t regaddr, const uint8_t *data) {
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_SET); //CS HIGH
 
 	*data = rbuf[3];
-	return status;
+	return eSocketResult::OK;
 }
 
 /**
@@ -573,7 +575,7 @@ eSocketResult cW5100::read(uint16_t regaddr, const uint8_t *data) {
 
 @return received data size for success else -1.
  */
-eSocketResult cW5100::Recv(eSocketId s, const uint8_t * buf, uint16_t len)
+eSocketResult cW5100::Recv(eSocketId s, uint8_t * buf, uint16_t len)
 {
 	uint16_t ret=0;
 	LOGD("recv()");
@@ -583,7 +585,7 @@ eSocketResult cW5100::Recv(eSocketId s, const uint8_t * buf, uint16_t len)
 		sendCommand(s, eSocketCmd::RECV);
 		ret = len;
 	}
-	return ret;
+	return eSocketResult::OK;
 }
 
 
@@ -595,7 +597,7 @@ eSocketResult cW5100::Recv(eSocketId s, const uint8_t * buf, uint16_t len)
  */
 eSocketResult cW5100::Sendto(
 		eSocketId s,     /**< socket index */
-		const uint8_t * buf,  /**< a pointer to the data */
+		uint8_t * buf,  /**< a pointer to the data */
 		uint16_t len,     /**< the data size to send */
 		uint32_t addr,     /**< the peer's Destination IP address  */
 		uint16_t port   /**< the peer's destination port number */
@@ -627,7 +629,7 @@ eSocketResult cW5100::Sendto(
 		read(Sn_IR(s), &ir);
 	}
 	write(Sn_IR(s), Sn_IR_SEND_OK);
-	return ret;
+	return eSocketResult::OK;
 }
 
 /**
@@ -711,7 +713,7 @@ eSocketResult cW5100::Recvfrom(
 		sendCommand(s, eSocketCmd::RECV);
 	}
 	LOGD("recvfrom() end ..\r\n");
-	return data_len;
+	return eSocketResult::OK;
 }
 
 }

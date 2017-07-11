@@ -8,18 +8,17 @@
 
 namespace sensact {
 
-static eEventType evts[] = {eEventType::STATUS};
 static uint32_t counter = 0;
 
 
 
-cBrightnessSensor::cBrightnessSensor(const char* name, const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle):cApplication(name, id, eAppType::BSENS), sensor(sensor), previousValue(0), limitForPassingToggle(limitForPassingToggle)
+cBrightnessSensor::cBrightnessSensor(const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle):cApplication(id), sensor(sensor), previousValue(0), limitForPassingToggle(limitForPassingToggle)
 {
 
 }
 
-bool cBrightnessSensor::Setup() {
-	return this->sensor->Setup();
+eAppResult cBrightnessSensor::Setup() {
+	return this->sensor->Setup()?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
 void cBrightnessSensor::OnTOGGLE_FILTERCommand(uint16_t targetApplicationId, Time_t now)
@@ -47,21 +46,21 @@ void cBrightnessSensor::OnSEND_STATUSCommand(Time_t now)
 	uint8_t buffer[2]={0,0};
 	LOGD("%s Acquired raw sensor value is %d", Name, raw);
 	Common::WriteInt16(raw, buffer, 0);
-	cMaster::SendEvent(now, this->Id, eEventType::STATUS, evts, 1, evts, 1, buffer, 2);
+	cMaster::PublishApplicationEvent(now, this->Id, eEventType::NEW_SENSOR_VALUE, buffer, 2);
 }
 
 
-void cBrightnessSensor::DoEachCycle(Time_t now)
+eAppResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(counter%1024==0)
 	{
-		uint16_t raw = this->sensor->GetRawSensorValue();
-		LOGD("%s Cyclic Event: Raw sensor value is %d", Name, raw);
-		uint8_t buffer[2]={0,0};
-		Common::WriteInt16(raw, buffer, 0);
-		cMaster::SendEvent(now, this->Id, eEventType::STATUS, evts, 1, evts, 1, buffer, 2);
+		this->previousValue = this->sensor->GetRawSensorValue();
+		LOGD("%s Cyclic Event: Raw sensor value is %d", Name, previousValue);
+
 	}
 	counter++;
+	Common::WriteInt16(previousValue, statusBuffer, 0);
+	*statusBufferLength=2;
 }
 
 }

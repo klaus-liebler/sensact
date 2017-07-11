@@ -17,11 +17,11 @@ protected:
 public:
 	Time_t lastChange;
 	bool wasActive;
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 
-	cLightbarrier(char const*const name, const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);
+	cLightbarrier(const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);
 };
 
 }

@@ -349,16 +349,16 @@ static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 
 static eShellError cmdSEND_RAW_CAN(uint8_t *cmdBuffer, uint8_t size)
 {
-	CANMessage cm;
-	cm.Id = Common::ParseUInt32(cmdBuffer, 0);
+	uint32_t id = Common::ParseUInt32(cmdBuffer, 0);
 	uint8_t i = 0;
+	uint8_t buf[8];
 	while(i<size-4 && i<8 )
 	{
-		cm.Data[i]=cmdBuffer[4+i];
+		buf[i]=cmdBuffer[4+i];
 		i++;
 	}
-	cm.Length = i;
-	sensact::BSP::SendCANMessage(&cm);
+
+	sensact::BSP::SendCANMessage(id, buf, i);
 	return eShellError::PROCESS_OK;
 }
 

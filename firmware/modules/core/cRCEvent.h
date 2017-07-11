@@ -26,13 +26,12 @@ public:
 	Time_t eventStart;
 	Time_t lastEvent;
 	bool eventRemainedLongerSent;
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 
 
 	cRCEvent(
-			const char* name,
 			const eApplicationID id,
 			const uint32_t eventCoder,
 			const Command *const pressedCommands, const uint8_t pressedCommandsLength,

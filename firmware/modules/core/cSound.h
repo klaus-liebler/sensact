@@ -12,12 +12,12 @@ private:
 	cWeeklySchedule * const volumeSchedule;
 	Time_t autoOffTime;
 public:
-	bool Setup() override;
-	void DoEachCycle(Time_t now) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <SoundApplication.hinc>
 
-	cSound(char const*const name, eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule) :
-			cApplication(name, id, eAppType::SOUND), output(output), volumeSchedule(volumeSchedule), autoOffTime(TIME_MAX) {
+	cSound(eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule) :
+			cApplication(id), output(output), volumeSchedule(volumeSchedule), autoOffTime(TIME_MAX) {
 	}
 };
 }

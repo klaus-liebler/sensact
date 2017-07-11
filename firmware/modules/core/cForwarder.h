@@ -11,11 +11,11 @@ namespace sensact{
 	private:
 		eApplicationID finalTarget;
 	public:
-		bool Setup() override;
+		eAppResult Setup() override;
 #include <ForwarderApplication.hinc>
 
 
-		cForwarder(const char* name, eApplicationID id, eApplicationID finalTarget);
+		cForwarder(eApplicationID id, eApplicationID finalTarget);
 	};
 
 

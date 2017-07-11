@@ -18,18 +18,18 @@
 
 namespace sensact {
 
-cBlind::cBlind(char const * const name, eApplicationID const id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds):
-	cApplication(name, id, eAppType::BLIND), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_DOWN-FULLY_UP) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP)
+cBlind::cBlind(eApplicationID const id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds):
+	cApplication(id), relayUpOrPower(relayUp), relayDownOrDirection(relayDownOrDirection), relayMode(relayMode), lastChanged(0L), wellKnownLevel(0x8000),  targetLevel(0x8000), changePer100ms((FULLY_DOWN-FULLY_UP) / (10*fullStrokeTimeInSeconds)), state(eDirection::STOP)
 {
 }
 
-bool cBlind::Setup() {
-	return true;
+eAppResult cBlind::Setup() {
+	return eAppResult::OK;
 }
 
 void cBlind::up(Time_t now)
 {
-	LOGD("%s goes up!", Name);
+	LOGD("%s goes up!", N());
 	this->state=eDirection::UP;
 	this->lastChanged=now;
 	BSP::SetDigitalOutput(relayUpOrPower,0, BSP::ACTIVE);
@@ -47,7 +47,7 @@ void cBlind::up(Time_t now)
 }
 void cBlind::prepareUp(Time_t now)
 {
-	LOGD("%s: prepares for up!", Name);
+	LOGD("%s: prepares for up!", N());
 	this->state=eDirection::PREPAREUP;
 	this->lastChanged=now;
 	switch (relayMode) {
@@ -64,7 +64,7 @@ void cBlind::prepareUp(Time_t now)
 
 void cBlind::prepareDown(Time_t now)
 {
-	LOGD("%s: prepares for down!", Name);
+	LOGD("%s: prepares for down!", N());
 	this->state=eDirection::PREPAREDOWN;
 	this->lastChanged=now;
 	switch (relayMode) {
@@ -80,7 +80,7 @@ void cBlind::prepareDown(Time_t now)
 }
 void cBlind::down(Time_t now)
 {
-	LOGD("%s: goes down!", Name);
+	LOGD("%s: goes down!", N());
 	this->state=eDirection::DOWN;
 	this->lastChanged=now;
 	switch (relayMode) {
@@ -112,7 +112,7 @@ void cBlind::stop(Time_t now, uint16_t currPos){
 		this->wellKnownLevel=currPos;
 	}
 	this->targetLevel=this->wellKnownLevel;
-	LOGD("%s: stops at pos %d", Name, this->targetLevel);
+	LOGD("%s: stops at pos %d", N(), this->targetLevel);
 	this->state=eDirection::STOP;
 	this->lastChanged=now;
 	BSP::SetDigitalOutput(relayUpOrPower,0, BSP::INACTIVE);
@@ -124,7 +124,7 @@ void cBlind::stop(Time_t now, uint16_t currPos){
 
 void cBlind::stopForReverse(Time_t now, uint16_t currPos){
 	//stop
-	LOGD("%s stops for reverse!", Name);
+	LOGD("%s stops for reverse!", N());
 	this->wellKnownLevel = currPos;
 	this->state=eDirection::STOP;
 	this->lastChanged=now;
@@ -154,7 +154,7 @@ void cBlind::OnUPCommand(uint8_t forced, Time_t now)
 	else
 	{
 		LOGD("%s: OnUPCommandCalled, goes up to targetLevel = calculatePosition(now)", Name);
-		this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
+		this->targetLevel = calculatePosition(now); //->leads to a motor stop
 	}
 }
 
@@ -165,8 +165,6 @@ void cBlind::OnSTOPCommand(Time_t now)
 	this->targetLevel = calculatePosition(now); //->f�hrt zu einem Motorstop
 }
 
-//Events: Pr�fen State und setzen target
-//20ms-Handler: Setzen State und treiben Motore an
 void cBlind::OnDOWNCommand(uint8_t forced, Time_t now)
 {
 	LOGD("%s: OnDown called", Name);
@@ -222,7 +220,8 @@ void cBlind::assureAllRelaysOff()
  * Bei einem Stop wird die WellKnownPosition aktualisiert.
  * Sonderfälle MIN und MAX Position: Damit diese auf jeden Fall erreicht werden, hört der Motor in diesen Fällen erst auf, wenn der berechnete Istwert deutlich unter/überschritten wird
  */
-void cBlind::DoEachCycle(Time_t now) {
+eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+{
 
 	uint16_t currPos;
 
@@ -237,15 +236,15 @@ void cBlind::DoEachCycle(Time_t now) {
 		{
 			assureAllRelaysOff();
 		}
-		return;
+		return eAppResult::OK;
 	}
 	if(this->state==eDirection::PREPAREDOWN && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		down(now);
-		return;
+		return eAppResult::OK;
 	}
 	if(this->state==eDirection::PREPAREUP && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		up(now);
-		return;
+		return eAppResult::OK;
 	}
 	currPos=calculatePosition(now);
 	if(this->state == eDirection::UP)
@@ -262,19 +261,24 @@ void cBlind::DoEachCycle(Time_t now) {
 		}
 	}
 	if(this->state == eDirection::DOWN)
+	{
+		if(currPos>=targetLevel)
 		{
-			if(currPos>=targetLevel)
+			if(currPos<targetLevel+2000){
+				stop(now, currPos);
+			}
+			else
 			{
-				if(currPos<targetLevel+2000){
-					stop(now, currPos);
-				}
-				else
-				{
-					stopForReverse(now, currPos);
-				}
+				stopForReverse(now, currPos);
 			}
 		}
 	}
+	Common::WriteUInt16(currPos, statusBuffer, 0);
+	Common::WriteUInt16(targetLevel, statusBuffer, 2);
+	*statusBufferLength=4;
+	return eAppResult::OK;
 }
+
+};
 
 

@@ -10,8 +10,10 @@ namespace sensact{
 	};
 
 
+
 	class cBlind: public cApplication{
 	private:
+
 		const uint16_t WAITTIME=900;
 		const uint16_t WAITTIME_AFTER_PREPARE = 100;
 		const uint16_t FULLY_UP_INT=0x2000;
@@ -38,17 +40,13 @@ namespace sensact{
 
 
 	public:
-		bool Setup() override;
-		void DoEachCycle(Time_t now) override;
+		eAppResult Setup() override;
+		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <BlindApplication.hinc>
 
-		/**
-		 * Sendet ein Event auf den CAN-Bus; ApplicationID ist die EmpfangsID + 1 oder +512 ?!?!
-		 * @param evt
-		 */
 		void RaiseEvent(eEventType evt);
 
-		cBlind(const char* name, eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);
+		cBlind(eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);
 	};
 
 

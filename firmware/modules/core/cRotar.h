@@ -32,11 +32,10 @@ private:
 	void OnTurned(Time_t, int16_t);
 
 public:
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 	cROTAR(
-			char const*const name,
 			const eApplicationID id,
 			const eRotaryEncoder inputRotary,
 			uint16_t const inputPush,
@@ -53,7 +52,7 @@ public:
 			const Command *const turnedCommands,
 			const uint8_t turnedCommandsLength
 			) :
-			cApplication(name, id, eAppType::ROTAR),
+			cApplication(id),
 				inputRotary(inputRotary),
 				inputPush(inputPush),
 				localEvents(localEvents),

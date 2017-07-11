@@ -26,6 +26,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>LwIP</name>
+			<type>2</type>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Middlewares/Third_Party/LwIP/src</location>
+		</link>
+		<link>
 			<name>core</name>
 			<type>2</type>
 			<location>C:/sensact/firmware/modules/core</location>
@@ -51,9 +56,14 @@
 			<location>C:/sensact/firmware/modules/bsp/sensacths</location>
 		</link>
 		<link>
+			<name>sensacths/startup_stm32f407xx.S</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.S</locationURI>
+		</link>
+		<link>
 			<name>sensacths/system_stm32f4xx.c</name>
 			<type>1</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.14.0/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c</location>
+			<locationURI>PARENT-3-PROJECT_LOC/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

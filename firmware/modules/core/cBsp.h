@@ -121,7 +121,7 @@ public:
 	static const char SUCCESSFUL_STRING[];
 	static const char NOT_SUCCESSFUL_STRING[];
 	static bool ReceiveCANMessage(CANMessage *m);
-	static bool SendCANMessage(CANMessage *m);
+	static bool SendCANMessage(uint32_t id, uint8_t const*const data, uint8_t len);
 	static uint8_t SampleDCF77Pin();
 	static UART_HandleTypeDef BELL;
 	static I2C_HandleTypeDef i2c1;

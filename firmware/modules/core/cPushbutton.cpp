@@ -72,21 +72,21 @@ void cPushbuttonX::OnDoubleclick(Time_t now)
 	}
 }
 
-bool cPushbutton::Setup() {
-	return true;
+eAppResult cPushbutton::Setup() {
+	return eAppResult::OK;
 }
 
-cPushbutton::cPushbutton(char const*const name, const eApplicationID id, uint16_t const input,
+cPushbutton::cPushbutton(const eApplicationID id, uint16_t const input,
 			const eEventType * const localEvents, const uint8_t localEventsLength,
 			const eEventType * const busEvents, const uint8_t busEventsLength) :
-				cApplication(name, id, eAppType::PUSHB), input(input), localEvents(
+				cApplication(id), input(input), localEvents(
 					localEvents), localEventsLength(localEventsLength), busEvents(
 					busEvents), busEventsLength(busEventsLength), lastChange(0), state(
 					ePushState::RELEASED), holdShortSent(false), holdMediumSent(false), lastRelease(0) {
 	}
 
 
-void cPushbutton::DoEachCycle(Time_t now) {
+eAppResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool isPressed;
 	BSP::GetDigitalInput(this->input, &isPressed);
 	isPressed = !isPressed; //because all buttons are connected to GND
@@ -97,22 +97,22 @@ void cPushbutton::DoEachCycle(Time_t now) {
 		this->state = ePushState::PRESSED;
 		this->lastChange = now;
 		OnPressed(now);
-		cMaster::SendEvent(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->state == ePushState::PRESSED
 			&& !isPressed) {
 		if (now - this->lastChange < 600) {
 			OnReleasedShort(now);
-			cMaster::SendEvent(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else if (now - this->lastChange < 4000) {
 			OnReleasedMedium(now);
-			cMaster::SendEvent(now, Id, eEventType::RELEASED_MEDIUM, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_MEDIUM, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else {
 			OnReleasedLong(now);
-			cMaster::SendEvent(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		}
 
 		OnReleased(now);
-		cMaster::SendEvent(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		if(now-lastRelease < 600)
 				{
 					OnDoubleclick(now);
@@ -124,15 +124,16 @@ void cPushbutton::DoEachCycle(Time_t now) {
 			&& isPressed) {
 		if (!this->holdShortSent && now - this->lastChange > 600) {
 			OnPressedShortAndHold(now);
-			cMaster::SendEvent(now, Id, eEventType::PRESSED_SHORT_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED_SHORT_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 			this->holdShortSent = true;
 		}
 		if (!this->holdMediumSent && now - this->lastChange > 4000) {
 			OnPressedMediumAndHold(now);
-			cMaster::SendEvent(now, Id, eEventType::PRESSED_MEDIUM_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED_MEDIUM_AND_HOLD, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 			this->holdMediumSent = true;
 		}
 	}
+	*statusBufferLength=0;
 }
 
 }

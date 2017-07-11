@@ -1,12 +1,3 @@
-/*
- * hc_poweritem.cpp
- *
- *  Created on: 05.05.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #include "cMaster.h"
 #include "cPoweritem.h"
 
@@ -19,8 +10,8 @@
 
 namespace sensact {
 
-cPoweritem::cPoweritem(char const*const name, eApplicationID id, uint16_t output, Time_t autoOffIntervalMsecs, Time_t autoOnIntervalMsecs) :
-					cApplication(name, id, eAppType::POWIT), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX)
+cPoweritem::cPoweritem(eApplicationID id, uint16_t output, Time_t autoOffIntervalMsecs, Time_t autoOnIntervalMsecs) :
+					cApplication(id), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX)
 {
 	if(autoOnIntervalMsecs!=0)
 	{
@@ -28,8 +19,8 @@ cPoweritem::cPoweritem(char const*const name, eApplicationID id, uint16_t output
 	}
 }
 
-bool cPoweritem::Setup() {
-	return true;
+eAppResult cPoweritem::Setup() {
+	return eAppResult::OK;
 }
 
 void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
@@ -97,7 +88,7 @@ void cPoweritem::OnTOGGLE_SPECIALCommand(Time_t now)
 }
 
 
-void cPoweritem::DoEachCycle(Time_t now)
+eAppResult cPoweritem::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(now>=nextChange)
 	{
@@ -105,6 +96,9 @@ void cPoweritem::DoEachCycle(Time_t now)
 		OnTOGGLECommand(now);
 
 	}
+	statusBuffer[0]=(uint8_t)state;
+	*statusBufferLength=1;
+	return eAppResult::OK;
 }
 
 }

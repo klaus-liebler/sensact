@@ -36,8 +36,14 @@ static const sensact::sScheduleEntry schedule[]
 												  };
 	cWeeklySchedule MODEL::volumeSchedule(0, schedule, 14);
 */
+#ifdef SENSACTUP
 	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
 	const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
+#endif
+#ifdef MASTERNODE
+	uint8_t MODEL::applicationStatus[(uint16_t)eApplicationID::CNT][8];
+#endif
+
 
 #if defined(NODE_TEST_HS07)
 	const bool MODEL::TRACE_COMMANDS=true;

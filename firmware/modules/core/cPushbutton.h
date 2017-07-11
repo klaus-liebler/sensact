@@ -22,8 +22,8 @@ protected:
 	bool holdMediumSent;
 	Time_t lastRelease;
 public:
-	bool Setup() override;
-	void DoEachCycle(Time_t time) override;
+	eAppResult Setup() override;
+	eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 	virtual void OnPressed(Time_t now) {
 		UNUSED(now);
@@ -61,7 +61,7 @@ public:
 		return;
 	}
 
-	cPushbutton(char const*const name, const eApplicationID id, uint16_t const input,
+	cPushbutton(const eApplicationID id, uint16_t const input,
 			const eEventType * const localEvents, const uint8_t localEventsLength,
 			const eEventType * const busEvents, const uint8_t busEventsLength);
 };
@@ -83,7 +83,7 @@ private:
 
 public:
 
-	cPushbuttonX(char const*const name, const eApplicationID id,uint16_t const input,
+	cPushbuttonX(const eApplicationID id,uint16_t const input,
 			const eEventType *const localEvents, const uint8_t localEventsLength,
 			const eEventType * const  busEvents, const uint8_t busEventsLength,
 			const Command * const pressedCommands, const uint8_t pressedCommandsLength,
@@ -92,7 +92,7 @@ public:
 			const Command * const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
 			const Command * const releasedLongCommands, const uint8_t releasedLongCommandsLength,
 			const Command * const doubleclickCommands, const uint8_t doubleclickCommandsLength) :
-			cPushbutton(name, id, input, localEvents, localEventsLength, busEvents, busEventsLength),
+			cPushbutton(id, input, localEvents, localEventsLength, busEvents, busEventsLength),
 					pressedCommands(pressedCommands), pressedCommandsLength(pressedCommandsLength),
 					releasedCommands(releasedCommands), releasedCommandsLength(releasedCommandsLength),
 					releasedShortCommands(releasedShortCommands), releasedShortCommandsLength(releasedShortCommandsLength),

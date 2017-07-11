@@ -39,6 +39,14 @@ public:
 
 };
 
+enum struct eAppResult:uint8_t
+{
+	OK=0,
+	BUS_ERROR=1,
+	STATE_ERROR=2,
+	NOT_IMPLEMENTED=3,
+};
+
 enum struct ePushState
 		: uint8_t {RELEASED=0, PRESSED = 1
 	};
@@ -51,6 +59,15 @@ enum struct ePushState
 			STOP, UP, DOWN, PREPAREUP, PREPAREDOWN, PREPARESTOP
 	};
 
+	enum struct eApplicationStatus:uint8_t
+	{
+		STARTED,
+		NEW_STATUS,
+		REGULAR_STATUS,
+		TERMINATED,
+	};
+
+/*
 	enum struct eAppType
 		:uint8_t
 		{
@@ -74,9 +91,10 @@ enum struct ePushState
 
 	};
 
+*/
 	struct CANMessage {
 		uint32_t Id;
-		uint8_t Data[8];
+		uint8_t *Data;
 		uint8_t Length;
 	};
 
