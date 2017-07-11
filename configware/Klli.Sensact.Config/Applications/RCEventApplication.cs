@@ -51,7 +51,7 @@ namespace Klli.Sensact.Config.Applications
             sb.Append(CommandInitializer("OnPressedShortAndHold", CommandsOnPressedShortAndHold, m));
             sb.Append(CommandInitializer("OnReleasedLong", CommandsOnReleasedLong, m));
 
-            sb.AppendFormat("sensact::cRCEvent {0}(\"{0}\", eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::cRCEvent {0}(eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId, EventCode, 
                 CommandsOnPressed == null ? 0 : CommandsOnPressed.Count,
                 CommandsOnReleased == null ? 0 : CommandsOnReleased.Count,

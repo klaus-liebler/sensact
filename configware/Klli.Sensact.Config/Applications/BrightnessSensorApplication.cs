@@ -44,7 +44,7 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// BrightnessSensor {0}" + Environment.NewLine, ApplicationId);
             //cBrightnessSensor::cBrightnessSensor(const char* name, eApplicationID id, drivers::cBH1750 *sensor, eApplicationID toggleTarget, uint16_t limitForPassingToggle)
-            sb.AppendFormat("sensact::cBrightnessSensor {0}(\"{0}\", eApplicationID::{0}, &{1}, eApplicationID::{2}, {3});"+Environment.NewLine+Environment.NewLine, ApplicationId, SensorName, ToggleTarget, LimitForPassingToggle);
+            sb.AppendFormat("sensact::cBrightnessSensor {0}(eApplicationID::{0}, &{1}, eApplicationID::{2}, {3});"+Environment.NewLine+Environment.NewLine, ApplicationId, SensorName, ToggleTarget, LimitForPassingToggle);
             return sb.ToString();
         }
 

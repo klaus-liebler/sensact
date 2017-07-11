@@ -100,7 +100,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Forwarder {0}"+Environment.NewLine, ApplicationId);
-            sb.AppendFormat("cForwarder {0}(\"{0}\", eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationId, FinalTarget);
+            sb.AppendFormat("cForwarder {0}(eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationId, FinalTarget);
             return sb.ToString();
         }
 

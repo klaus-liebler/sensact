@@ -44,7 +44,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Lightbarrier {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cLightbarrier {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId, InputRessource, 
                 ActiveSignalLevel.ToString().ToLower(),
                 BrightnessSensor,

@@ -37,7 +37,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// STDBY {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cStandbyController {0}(\"{0}\", eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, WaittimeInMsec);
+            sb.AppendFormat("sensact::cStandbyController {0}(eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, WaittimeInMsec);
             return sb.ToString();
         }
 

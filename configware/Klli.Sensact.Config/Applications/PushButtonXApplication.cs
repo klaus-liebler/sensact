@@ -69,7 +69,7 @@ namespace Klli.Sensact.Config.Applications
 
             sb.Append(EventInitializer("Local", locEvts, m));
             sb.Append(EventInitializer("Bus", busEvts, m));
-            sb.AppendFormat("sensact::cPushbuttonX {0}(\"{0}\", eApplicationID::{0}, {1}, {0}_LocalEvents, {2}, {0}_BusEvents, {3}, {0}_OnPressed, {4}, {0}_OnReleased, {5}, {0}_OnReleasedShort, {6}, {0}_OnPressedShortAndHold, {7}, {0}_OnReleasedLong, {8}, {0}_OnDoubleclick, {9});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::cPushbuttonX {0}(eApplicationID::{0}, {1}, {0}_LocalEvents, {2}, {0}_BusEvents, {3}, {0}_OnPressed, {4}, {0}_OnReleased, {5}, {0}_OnReleasedShort, {6}, {0}_OnPressedShortAndHold, {7}, {0}_OnReleasedLong, {8}, {0}_OnDoubleclick, {9});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId, InputRessource, 
                 locEvts == null ? 0 : locEvts.Count, 
                 busEvts == null ? 0 : busEvts.Count, 

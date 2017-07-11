@@ -57,7 +57,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// POWIT {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::cPoweritem {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, {3});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffIntervalMsecs, AutoOnIntervalMsecs);
+            sb.AppendFormat("sensact::cPoweritem {0}(eApplicationID::{0}, {1}, {2}, {3});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, AutoOffIntervalMsecs, AutoOnIntervalMsecs);
             return sb.ToString();
         }
 

@@ -20,7 +20,7 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Sensact node management application {0} " + Environment.NewLine, ApplicationId);
             //sb.AppendFormat("//is already hardcoded");
-            sb.AppendFormat("sensact::cSensactNode {0}(\"{0}\", eApplicationID::{0});" + Environment.NewLine + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("sensact::cSensactNode {0}(eApplicationID::{0});" + Environment.NewLine + Environment.NewLine, ApplicationId);
             return sb.ToString();
         }
 

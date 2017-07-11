@@ -62,7 +62,7 @@ namespace Klli.Sensact.Config.Applications
             }
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Blind {0}"+Environment.NewLine, ApplicationId);
-            sb.AppendFormat("cBlind {0}(\"{0}\", eApplicationID::{0}, {1}, {2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputRessourceUpOrPower, OutputRessourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
+            sb.AppendFormat("cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputRessourceUpOrPower, OutputRessourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
             return sb.ToString();
         }
 
