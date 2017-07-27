@@ -3,7 +3,7 @@
   (general
     (links 161)
     (no_connects 0)
-    (area 154.424999 97.424999 197.575001 146.575001)
+    (area 151.046001 96.275 199.4606 146.575001)
     (thickness 1.6)
     (drawings 14)
     (tracks 367)
@@ -873,7 +873,7 @@
     )
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 584C7FF9) (tstamp 57C87E34)
+  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 5979061C) (tstamp 57C87E34)
     (at 170.942 119.888 270)
     (path /57C8A24C)
     (fp_text reference JP1 (at 0 -2.2 270) (layer F.SilkS) hide
@@ -894,13 +894,13 @@
       (net 1 +3V3))
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 584C7FF3) (tstamp 57C87E3B)
+  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 59790618) (tstamp 57C87E3B)
     (at 166.878 119.888 270)
     (path /57C8A477)
     (fp_text reference JP2 (at 0 -2.2 270) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)))
     )
-    (fp_text value A1 (at 2.794 0 360) (layer F.SilkS)
+    (fp_text value A1 (at 1.397 2.286 360) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.2)))
     )
     (fp_line (start -1.9 -1.2) (end 1.9 -1.2) (layer F.SilkS) (width 0.2))
@@ -915,13 +915,13 @@
       (net 1 +3V3))
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 584C8001) (tstamp 57C87E42)
+  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 59790621) (tstamp 57C87E42)
     (at 171.704 123.952 90)
     (path /57C8A506)
     (fp_text reference JP3 (at 0 -2.2 90) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)))
     )
-    (fp_text value A0 (at -1.27 2.286 180) (layer F.SilkS)
+    (fp_text value A0 (at 1.27 2.413 180) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.2)))
     )
     (fp_line (start -1.9 -1.2) (end 1.9 -1.2) (layer F.SilkS) (width 0.2))
@@ -2024,13 +2024,13 @@
     )
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 584C7F72) (tstamp 57E6D383)
+  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 59790607) (tstamp 57E6D383)
     (at 162.306 118.872 180)
     (path /57E6A971)
     (fp_text reference JP4 (at 0 -2.2 180) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)))
     )
-    (fp_text value AD0 (at 0 -2.032 180) (layer F.SilkS)
+    (fp_text value AD0 (at 1.143 -2.794 270) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.2)))
     )
     (fp_line (start -1.9 -1.2) (end 1.9 -1.2) (layer F.SilkS) (width 0.2))
@@ -2045,13 +2045,13 @@
       (net 1 +3V3))
   )
 
-  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 584C7F0E) (tstamp 57E6D38E)
+  (module sensact:SMD-solder-bridge-3pin (layer F.Cu) (tedit 59790611) (tstamp 57E6D38E)
     (at 158.496 118.872)
     (path /57E6AA32)
     (fp_text reference JP5 (at 0 -2.2) (layer F.SilkS) hide
       (effects (font (size 1 1) (thickness 0.2)))
     )
-    (fp_text value AD1 (at -0.762 2.032) (layer F.SilkS)
+    (fp_text value AD1 (at 1.143 2.794 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.2)))
     )
     (fp_line (start -1.9 -1.2) (end 1.9 -1.2) (layer F.SilkS) (width 0.2))
