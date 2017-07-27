@@ -31,11 +31,17 @@ void cCanIdUtils::ParseApplicationStatusMessageId(uint32_t messageId, uint16_t *
 	*statusType=(uint8_t)((messageId & 0x000000FF)>>0);
 }
 
-
+#ifdef NEW_CANID
 uint32_t cCanIdUtils::CreateCommandMessageId(uint16_t destinationAppId, uint8_t commandId)
 {
 	return (uint32_t)eCanMessageType::ApplicationCommand | ((uint32_t)destinationAppId) << 8 | ((uint32_t)commandId)<<0;
 }
+#else
+uint32_t cCanIdUtils::CreateCommandMessageId(uint16_t destinationAppId, uint8_t commandId)
+{
+	return (uint32_t)eCanMessageType::ApplicationCommand | ((uint32_t)destinationAppId);
+}
+#endif
 uint32_t cCanIdUtils::CreateCommandAcknowledgeMessageId(uint16_t acknowledgingdestinationAppId, uint8_t commandId)
 {
 	return (uint32_t)eCanMessageType::CommandAcknowledge | ((uint32_t)acknowledgingdestinationAppId) << 8 | ((uint32_t)commandId)<<0;
@@ -72,11 +78,20 @@ void cCanIdUtils::ParseEventMessageId(uint32_t messageId, uint16_t *sourceAppId,
 	*sourceAppId=(uint16_t)((messageId & 0x00FFFF00)>>8);
 	*eventId=(uint8_t)((messageId & 0x000000FF)>>0);
 }
-void cCanIdUtils::ParseCommandMessageId(uint32_t messageId, uint16_t *destinationAppId, uint8_t *commandId)
+#ifdef NEW_CANID
+void cCanIdUtils::ParseCommandMessageId(uint32_t messageId, uint16_t *destinationAppId, uint8_t *commandId, uint8_t firstByteOfMessage)
 {
 	*destinationAppId=(uint16_t)((messageId & 0x00FFFF00)>>8);
 	*commandId=(uint8_t)((messageId & 0x000000FF)>>0);
 }
+#else
+void cCanIdUtils::ParseCommandMessageId(uint32_t messageId, uint16_t *destinationAppId, uint8_t *commandId, uint8_t firstByteOfMessage)
+{
+	*destinationAppId=(uint16_t)((messageId & 0x3FF));
+	*commandId=firstByteOfMessage;
+}
+
+#endif
 void cCanIdUtils::ParseCommandAcknowledgeMessageId(uint32_t messageId, uint16_t *acknowledgingdestinationAppId, uint8_t *commandId)
 {
 	*acknowledgingdestinationAppId=(uint16_t)((messageId & 0x00FFFF00)>>8);

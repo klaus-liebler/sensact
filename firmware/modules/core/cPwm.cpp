@@ -8,7 +8,7 @@ namespace sensact {
 
 static const int MAXIMUM_LEVEL =UINT8_MAX;
 static const int TIME_TO_FORGET_DIM_DIRECTION=5000;
-static const int DIM_TO_TARGET_STEP=5;
+static const int DIM_TO_TARGET_STEP=2;
 
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
@@ -26,7 +26,8 @@ cPWM::cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t 
 		autoDimDirection(eDirection::STOP),
 		targetLevel(0),
 		lastHeartbeatToStandbycontroller(0),
-		autoOffTime(TIME_MAX)
+		autoOffTime(TIME_MAX),
+		lastReturnedSpecialAppResult(eAppResult::OK)
 {
 
 	baseOutput=output[0] & 0xFFF0;
@@ -197,6 +198,7 @@ eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBu
 		targetLevel=0;
 		autoOffTime =TIME_MAX;
 	}
+	eAppResult ret = eAppResult::OK;
 
 	switch (autoDimDirection) {
 		case eDirection::STOP:
@@ -222,27 +224,41 @@ eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBu
 	}
 	if(targetLevel>currentLevel)
 	{
-		if(currentLevel+DIM_TO_TARGET_STEP>targetLevel)
+		if(currentLevel+DIM_TO_TARGET_STEP>=targetLevel)
 		{
 			currentLevel=targetLevel;
 		}
 		else
 		{
 			currentLevel+=DIM_TO_TARGET_STEP;
+			if(lastReturnedSpecialAppResult!=eAppResult::OK_CHANGEUP_START)
+			{
+				lastReturnedSpecialAppResult = ret = eAppResult::OK_CHANGEUP_START;
+			}
 		}
+
 		WriteCurrentLevelToOutput();
 	}
 	else if(targetLevel<currentLevel)
 	{
-		if(currentLevel-DIM_TO_TARGET_STEP<targetLevel)
+		if(currentLevel-DIM_TO_TARGET_STEP<=targetLevel)
 		{
 			currentLevel=targetLevel;
 		}
 		else
 		{
 			currentLevel-=DIM_TO_TARGET_STEP;
+			if(lastReturnedSpecialAppResult!=eAppResult::OK_CHANGEUP_START)
+			{
+				lastReturnedSpecialAppResult = ret = eAppResult::OK_CHANGEDOWN_START;
+
+			}
 		}
 		WriteCurrentLevelToOutput();
+	}
+	if(targetLevel==currentLevel && lastReturnedSpecialAppResult != eAppResult::OK_CHANGE_END)
+	{
+		ret= lastReturnedSpecialAppResult = eAppResult::OK_CHANGE_END;
 	}
 
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
@@ -253,7 +269,7 @@ eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBu
 	}
 	statusBuffer[0]=targetLevel;
 	*statusBufferLength=1;
-	return eAppResult::OK;
+	return ret;
 }
 
 void cPWM::WriteCurrentLevelToOutput() {

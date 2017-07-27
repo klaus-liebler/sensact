@@ -167,7 +167,6 @@ public:
 	static const uint8_t SWRST = 0b00000110;
 	bool Setup();
 	static bool SoftwareReset(I2C_HandleTypeDef * const i2c);
-	static void ReinitI2c(I2C_HandleTypeDef *i2c);
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);
 	static bool SetupStatic(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, ePCA9685_InvOutputs inv, ePCA9685_OutputDriver outdrv, ePCA9685_OutputNotEn outne, ePCA9685_Frequency freq);
 	static bool SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t mask, uint16_t dutyCycle);

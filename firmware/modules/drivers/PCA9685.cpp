@@ -1,3 +1,5 @@
+#include "common.h"
+#include "cBsp.h"
 #ifdef STM32F4
 #include "stm32f4xx_hal.h"
 #endif
@@ -139,7 +141,7 @@ bool cPCA9685::SetOutputs(I2C_HandleTypeDef *i2c, uint8_t deviceOffset, uint16_t
 			{
 				break;
 			}
-			ReinitI2c(i2c);
+			sensact::BSP::ReInitI2C();
 			trials--;
 		}
 		if(trials==0)
@@ -184,7 +186,7 @@ bool cPCA9685::SetOutputFull(ePCA9685Output Output, bool on)
 		{
 			break;
 		}
-		ReinitI2c(this->i2c);
+		sensact::BSP::ReInitI2C();
 		trials--;
 	}
 	return status == HAL_OK;
@@ -218,25 +220,10 @@ bool cPCA9685::SetOutput(ePCA9685Output Output, uint16_t OnValue,
 		{
 			break;
 		}
-		ReinitI2c(i2c);
+		sensact::BSP::ReInitI2C();
 		trials--;
 	}
 	return status == HAL_OK;
-}
-
-void cPCA9685::ReinitI2c(I2C_HandleTypeDef *i2c)
-{
-#ifdef STM32F1
-	LOGW("Resetting i2c");
-	SET_BIT(i2c->Instance->CR1, I2C_CR1_SWRST);
-	CLEAR_BIT(i2c->Instance->CR1, I2C_CR1_SWRST);
-	i2c->Instance->CR2=36;
-	i2c->Instance->TRISE=37;
-	i2c->Instance->CCR=180;
-	i2c->Instance->OAR1=I2C_ADDRESSINGMODE_7BIT;
-	i2c->Instance->OAR2=0;
-	SET_BIT(i2c->Instance->CR1,  I2C_CR1_PE);
-#endif
 }
 
 

@@ -1,3 +1,10 @@
+Die Applikation muss dem Master mitteilen können, ob sich der Status gerade eben signifikant verändert hat und ob ein Update zu senden ist
+Bei einer Änderung muss spätenstens nach 100ms ein Event versendet werden
+Aber Vorsicht: PWM und Blind würden dann im 20ms-Raster senden - das muss auch verhindert werden.
+Auch wenn eine Applikation ständig Veränderungen mitteilt, wird die Veränderung tatsächlich nur einmal pro Sekunde versenden. Nicht vergessen, den letzten Status nach Ende der Veränderung auch zu versenden
+
+
+
 Separater COM-Port für binäre Steuerung. Normaler Port gibt nur String-Meldungen aus.
 Separater COM-Port arbeitet mit hoher Geschwindigkeit 512000bit/sek
 Nachrichtenformat ist 1byte Version und Namespace der folgenden Nachricht, 1byte Counter, 1byte Länge des Payloads (ohne Längefeld, Haupttypfeld und CRC-Feld), 1byte Typ, N byte Payload, 2byte CRC-16 gemäß Standard-Polynom der STM32-CRC-Engine über die gesamte Nachricht incl. Header
@@ -32,5 +39,3 @@ EVENTS
 
 ACKNOWLEDGES:
 Der Slave kann bei ausbleibendem Acknowledge die Nachricht nochmals versenden
-
-Erkenntnis: Über den COM-Port kann 

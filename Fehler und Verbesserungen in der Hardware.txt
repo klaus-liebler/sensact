@@ -1,2 +1,9 @@
 Beschaltung vom LIN-Tranceiver, insbesondere Pufferkondensatoren
 Allgemein: Mehr Pufferkondensatoren? - Ein paar u1 noch am Spannungsreglerausgang?
+
+sensactHS mini:
+3V3 on board
+5V, 12V über Steckmodule (hochkant)
+Ehternet über Steckmodul (Hochkant)
+MP3 über Steckmodul (nicht hochkant, aber mit Möglichkeit zum Tausch der microSD-Karte)
+

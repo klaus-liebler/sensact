@@ -24,10 +24,13 @@
 #include <string.h>
 #endif
 
+
+
 volatile uint8_t UART_buffer_pointer=0;
 volatile uint64_t UART_cmdBuffer64[16];
 volatile uint8_t *UART_cmdBuffer = (uint8_t *)UART_cmdBuffer64;
 volatile bool BufferHasMessage=false;
+
 
 using namespace date;
 using namespace std::chrono;
@@ -36,7 +39,17 @@ using namespace std::chrono;
 #define u16 uint16_t
 #define u32 uint32_t
 
+#define STATUSBUFFER_LENGTH_BYTES 8
+
 namespace sensact {
+
+enum struct eMQTTState
+{
+	DEFAULT,
+	CONNECTION_STARTED,
+	REGISTRATION_STARTED,
+	READY,
+};
 
 enum struct eMqttTopic
 {
@@ -56,7 +69,7 @@ const char * const incomingMqttTopicNames[]={
 		"NODE_COMMAND",
 };
 
-
+volatile eMQTTState mqttState = eMQTTState::DEFAULT;
 CANMessage cMaster::rcvMessage;
 pIapPseudoFunction cMaster::JumpToApplication;
 uint32_t cMaster::JumpAddress;
@@ -66,6 +79,7 @@ Time_t cMaster::lastSentCANMessage = 0;
 #ifdef MASTERNODE
 struct mqtt_connect_client_info_t cMaster::ci;
 mqtt_client_t cMaster::client;
+uint32_t cMaster::subscriberIndex;
 
 #endif
 
@@ -95,78 +109,138 @@ void cMaster::StartIAP()
 		__set_MSP(*(__IO uint32_t*) IAP_APPLICATION_ADDRESS);
 		JumpToApplication();
 	}
+#else
+	LOGE("StartIAP not supported");
+	while(1);
 #endif
 }
 
 void cMaster::Run(void) {
 	BSP::Init();
+	Time_t now = BSP::GetSteadyClock();
 #ifdef MASTERNODE
 	MX_LWIP_Init();
 	httpd_init();
 	ip4_addr_t ip_addr;
-	IP4_ADDR(&ip_addr, 192, 168, 1, 1);
+	IP4_ADDR(&ip_addr, 192, 168, 1, 213);
 	err_t err;
 
 	// Setup an empty client info structure
 	memset(&ci, 0, sizeof(ci));
-	ci.client_id = "lwip_test";
+	ci.client_id = "SENSACTMASTERNODE";
+	ci.keep_alive=10;
+	mqttState=eMQTTState::CONNECTION_STARTED;
+	LOGI("Trying to connect to MQTT@%d", ip_addr);
 	err = mqtt_client_connect(&client, &ip_addr, MQTT_PORT, cMaster::mqtt_connection_cb, 0, &ci);
+
+	if(err!=ERR_OK)
+	{
+		LOGE("err after mqtt_client_connect: %d\n", err);
+	}
+	while(mqttState!=eMQTTState::REGISTRATION_STARTED && BSP::GetSteadyClock()-now < 2000)
+	{
+		MX_LWIP_Process();
+	}
+	if(!mqtt_client_is_connected(&client))
+	{
+		LOGW("Unable to connect to MQTT@%d", ip_addr);
+	}
+	else
+	{
+		LOGI("Successfully connected to MQTT@%d", ip_addr);
+	}
+	PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
+
 #endif
-	uint16_t i = 0;
+	uint16_t appId = 0;
 	uint16_t appCnt=0;
-	uint16_t statusApp=0;
-	uint32_t statusBufferU32[16]; //use u32 to have it 4byte-aligned
+	uint16_t nextStatusApp=0;
+	uint32_t statusBufferU32[STATUSBUFFER_LENGTH_BYTES/4]; //use u32 to have it 4byte-aligned
 	uint8_t* statusBuffer = (uint8_t*)statusBufferU32;
 	size_t statusBufferLength=0;
 	eAppResult appResult;
-	Time_t now = BSP::GetSteadyClock();
+
 
 	//start at "1" here, because "0" is the local/global master
-	for (i = 1; i < (uint16_t) eApplicationID::CNT; i++) {
-		cApplication * const ap = MODEL::Glo2locCmd[i];
-		if (ap) {
-			appResult = ap->Setup();
-			if(appResult==eAppResult::OK)
-			{
-				LOGI("App %s successfully configured", MODEL::ApplicationNames[i]);
-			}
-			else
-			{
-				LOGE("Error while configuring App %s. Error is %u", MODEL::ApplicationNames[i], appResult);
-			}
-			statusBuffer[0]=(u8)appResult;
-			PublishApplicationStatus(now, (eApplicationID)i, eApplicationStatus::STARTED, statusBuffer, 1);
-			appCnt++;
+	for (appId = 1; appId < (uint16_t) eApplicationID::CNT; appId++) {
+		cApplication * const ap = MODEL::Glo2locCmd[appId];
+		if (!ap) continue;
+		appResult = ap->Setup();
+		MX_LWIP_Process();
+		if((uint8_t)appResult<(uint8_t)eAppResult::ERROR_GENERIC)
+		{
+			LOGI("App %s successfully configured", MODEL::ApplicationNames[appId]);
 		}
+		else
+		{
+			LOGE("Error while configuring App %s. Error is %u", MODEL::ApplicationNames[appId], appResult);
+		}
+		statusBuffer[0]=(u8)appResult;
+		PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::STARTED, statusBuffer, 8);
+		MX_LWIP_Process();
+		appCnt++;
+
 	}
 	LOGI("%u local applications have been configured. Now, %s is pleased to be at your service.\r\n", appCnt, MODEL::ModelString);
-	bool published=false;
+	PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_READY, 0, 0);
+
+	while(MODEL::Glo2locCmd[nextStatusApp]==0)
+	{
+		nextStatusApp++;
+	}
 	while (true) {
 
 		now = BSP::GetSteadyClock();
-		MX_LWIP_Process();
-
-		if(mqtt_client_is_connected(&client) && !published)
-		{
-			uint8_t text[] = {1,2,3,4,5};
-			mqtt_publishOnTopic(eMqttTopic::NODE_EVENT, text, 5, 0);
-			published=true;
-		}
-
-		for (i = 0; i < (uint16_t) eApplicationID::CNT; i++) {
-			cApplication * const ap = MODEL::Glo2locCmd[i];
-			if (ap) {
-				appResult = ap->DoEachCycle(now, statusBuffer, &statusBufferLength);
-				//CanBusProcess();
-			}
-#ifndef MASTERNODE1
-			if(now-lastSentCANMessage>1000 && i > statusApp && statusBufferLength>0)
+		for (appId = 0; appId < (uint16_t) eApplicationID::CNT; appId++) {
+			cApplication * const ap = MODEL::Glo2locCmd[appId];
+			if (!ap) continue;
+			appResult = ap->DoEachCycle(now, statusBuffer, &statusBufferLength);
+#ifdef MASTERNODE
+			for(int i = 0;i<statusBufferLength && i <STATUSBUFFER_LENGTH_BYTES;i++)
 			{
-				PublishApplicationStatus(now, (eApplicationID)i, eApplicationStatus::REGULAR_STATUS, statusBuffer, statusBufferLength);
-				statusApp=i;
+				MODEL::applicationStatus[appId][i]=rcvMessage.Data[i];
 			}
 #endif
+
+			if((uint8_t)appResult<(uint8_t)eAppResult::ERROR_GENERIC)
+			{
+				if(appResult != eAppResult::OK)
+				{
+					if(statusBufferLength>0)
+					{
+						PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
+					}
+				}
+				if(now-lastSentCANMessage>1000 && appId == nextStatusApp)
+				{
+					if(statusBufferLength>0)
+					{
+						PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
+					}
+
+					do{
+						nextStatusApp++;
+						if(nextStatusApp==(uint16_t) eApplicationID::CNT)
+						{
+							nextStatusApp=0;
+						}
+					}
+					while(MODEL::Glo2locCmd[nextStatusApp]==0);
+				}
+
+			}
+			else
+			{
+				PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::ERROR_ON_CYCLIC, statusBuffer, 8);
+			}
+
+
 		}
+
+#ifdef MASTERNODE
+		MX_LWIP_Process();
+#endif
+
 
 		if(BufferHasMessage)
 		{
@@ -179,39 +253,13 @@ void cMaster::Run(void) {
 			BufferHasMessage=false;
 		}
 		CanBusProcess();
-#ifdef DUMP_FRONTEND
-		static uint32_t lastAllInputs = 0;
-		static uint16_t lastRot1Value = 0;
-		static uint16_t lastRot2Value=0;
-		uint32_t inputs = BSP::GetAllOnboardInputsLowLevel();
-		if(inputs != lastAllInputs)
-		{
-			SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::INPUT_CHANGED, (uint8_t*)&inputs, 4);
-		}
-		lastAllInputs=inputs;
-
-		uint16_t rot1val = BSP::GetRotaryEncoderValue(eRotaryEncoder::ROTARYENCODER_1);
-		if(rot1val!=lastRot1Value)
-		{
-			int16_t change =  rot1val-lastRot1Value;
-			cMaster::SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::TURNED, (uint8_t*)&change ,2);
-		}
-		lastRot1Value=rot1val;
-
-		uint16_t rot2val = BSP::GetRotaryEncoderValue(eRotaryEncoder::ROTARYENCODER_2);
-		if(rot2val!=lastRot2Value)
-		{
-			int16_t change =  rot2val-lastRot2Value;
-			cMaster::SendEventDirect(now, MODEL::NodeMasterApplication, eEventType::TURNED, (uint8_t*)&change ,2);
-		}
-		lastRot2Value=rot2val;
-#endif
 		BSP::DoEachCycle(now);
 		//special call to release and reset message
 		BufferHeartbeat(eApplicationID::NO_APPLICATION, now);
 		while (BSP::GetSteadyClock()-now < 20) {
 			CanBusProcess();
 		}
+		MX_LWIP_Process();
 	}
 }
 
@@ -223,25 +271,39 @@ void cMaster::mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connecti
 
 		/* Setup callback for incoming publish requests */
 		mqtt_set_inpub_callback(client, cMaster::mqtt_incoming_publish_cb, cMaster::mqtt_incoming_data_cb, arg);
-
-		/* Subscribe to a topic named "subtopic" with QoS level 1, call mqtt_sub_request_cb with result */
-		err = mqtt_subscribe(client, "subtopic", 1, cMaster::mqtt_sub_request_cb, arg);
-
-		if(err != ERR_OK) {
-			LOGE("mqtt_subscribe return: %d\n", err);
+		mqttState=eMQTTState::REGISTRATION_STARTED;
+		subscriberIndex=0;
+		if(COUNTOF(incomingMqttTopicNames)>subscriberIndex)
+		{
+			LOGI("mqtt_connection_cb: Requesting subscription for '%s'", incomingMqttTopicNames[subscriberIndex]);
+			err = mqtt_subscribe(client, incomingMqttTopicNames[subscriberIndex], 1, cMaster::mqtt_sub_request_cb, arg);
+			if(err != ERR_OK) {
+				LOGE("first mqtt_subscribe for '%s' return: %d\n", incomingMqttTopicNames[subscriberIndex], err);
+			}
+			subscriberIndex++;
 		}
 	} else {
 		LOGE("mqtt_connection_cb: Disconnected, reason: %d\n", status);
-
 	}
 }
 
 void cMaster::mqtt_sub_request_cb(void *arg, err_t result)
 {
-	/* Just print the result code here for simplicity,
-     normal behaviour would be to take some action if subscribe fails like
-     notifying user, retry subscribe or disconnect from server */
-	LOGI("Subscribe result: %d\n", result);
+	err_t err;
+	if(COUNTOF(incomingMqttTopicNames)>subscriberIndex)
+	{
+		LOGI("mqtt_sub_request_cb: Requesting subscription for '%s'", incomingMqttTopicNames[subscriberIndex]);
+		err = mqtt_subscribe(&client, incomingMqttTopicNames[subscriberIndex], 1, cMaster::mqtt_sub_request_cb, arg);
+		if(err != ERR_OK) {
+			LOGE("subsequent mqtt_subscribe for '%s' return: %d\n", incomingMqttTopicNames[subscriberIndex], err);
+		}
+		subscriberIndex++;
+	}
+	else
+	{
+		mqttState=eMQTTState::READY;
+		LOGI("%d Subscriptions completed\n", (subscriberIndex));
+	}
 }
 
 
@@ -274,12 +336,12 @@ void cMaster::mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t
 		if(inpub_id == 0) {
 			/* Don't trust the publisher, check zero termination */
 			if(data[len-1] == 0) {
-				printf("mqtt_incoming_data_cb: %s\n", (const char *)data);
+				LOGI("mqtt_incoming_data_cb: %s\n", (const char *)data);
 			}
 		} else if(inpub_id == 1) {
 			/* Call an 'A' function... */
 		} else {
-			printf("mqtt_incoming_data_cb: Ignoring payload...\n");
+			LOGI("mqtt_incoming_data_cb: Ignoring payload...\n");
 		}
 	} else {
 		/* Handle fragmented payload, store in buffer, write to file or whatever */
@@ -287,23 +349,30 @@ void cMaster::mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t
 }
 
 
-void cMaster::mqtt_publishOnTopic(eMqttTopic topic, u8 *buf, size_t len, void *arg)
+//qos At most once (0), At least once (1), Exactly once (2).
+void cMaster::mqtt_publishOnTopic(eMqttTopic topic, u8 *buf, size_t len, void *arg, uint8_t qos)
 {
 	err_t err;
-	u8_t qos = 2; /* 0 1 or 2, see MQTT specification */
 	u8_t retain = 0; /* No don't retain such crappy payload... */
+	char charbuf[2*len+1];
+	for(int i=0;i<len;i++)
+	{
+		sprintf(&charbuf[2*i], "%02X, ", buf[i]);
+	}
+	charbuf[2*len]='\0';
+
+	LOGI("Publishing on topic %s with payload %s", mqttTopicNames[(u8)topic], charbuf);
 	err = mqtt_publish(&cMaster::client, mqttTopicNames[(u8)topic], buf, len, qos, retain, cMaster::mqtt_pub_request_cb, arg);
 	if(err != ERR_OK) {
-		printf("Publish err: %d\n", err);
+		LOGE("Publish err: %d\n", err);
 	}
 }
 
 /* Called when publish is complete either with sucess or failure */
 void cMaster::mqtt_pub_request_cb(void *arg, err_t result)
 {
-	if(result != ERR_OK) {
-		printf("Publish result: %d\n", result);
-	}
+		LOGI("Publish result: %d\n", result);
+
 }
 
 void cMaster::OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now)
@@ -330,28 +399,35 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 		} else {
 			lastSentCANMessage=now;
 			uint32_t canid=cCanIdUtils::CreateCommandMessageId((u16)destinationApp, (u8)cmd);
+#ifdef NEW_CANID
 			return BSP::SendCANMessage(canid, payload, payloadLength);
+#else
+			if(payloadLength>7)
+			{
+				LOGE("PAYLOAD TOO LARGE");
+			}
+			uint8_t buf[8];
+			buf[0]=(uint8_t)cmd;
+			for(int i=0;i<payloadLength;i++)
+			{
+				buf[i+1]=payload[i];
+			}
+			return BSP::SendCANMessage(canid, payload, payloadLength);
+#endif
+
 		}
 	}
 	LOGE("Trying to send to an invalid application id %i", (uint16_t)destinationApp);
 	return false;
 }
 
-/*
-Download zur MASTERNODE: Commands an die Node (insbes Abfrage von Statuus), Command an Apps
-Upload von der MASTERNODE: Returns von Commands, Events von Nodes und Apps
- *
- *
- */
 
-//Das sind einfach nur AppEvents
-//SLAVE-Nodes write it to the CAN, Masternode writes it to can and MQTT
 void cMaster::PublishNodeEvent(Time_t now, eNodeID sourceNode, eNodeEventType event, uint8_t * payload, uint8_t payloadLength)
 {
 	lastSentCANMessage=now;
 	BSP::SendCANMessage(cCanIdUtils::CreateNodeEventMessageId((u8)sourceNode, (u8)event), payload, payloadLength);
 #ifdef MASTERNODE
-	cMaster::mqtt_publishOnTopic(eMqttTopic::NODE_EVENT, payload, payloadLength, 0);
+	cMaster::mqtt_publishOnTopic(eMqttTopic::NODE_EVENT, payload, payloadLength, 0, 1);
 #endif
 }
 
@@ -360,7 +436,14 @@ void cMaster::PublishApplicationEvent(Time_t now, eApplicationID sourceApp, eEve
 	lastSentCANMessage=now;
 	BSP::SendCANMessage(cCanIdUtils::CreateEventMessageId((u16)sourceApp, (u8)event), payload, payloadLength);
 #ifdef MASTERNODE
-	cMaster::mqtt_publishOnTopic(eMqttTopic::APP_EVENT, payload, payloadLength, 0);
+	uint8_t buf[11];
+	Common::WriteInt16((u16)sourceApp, buf, 0);
+	buf[2]=(u8)event;
+	for(int i=0;i<payloadLength;i++)
+	{
+		buf[i+3]=payload[i];
+	}
+	cMaster::mqtt_publishOnTopic(eMqttTopic::APP_EVENT, buf, 3+payloadLength, 0, 1);
 #endif
 }
 
@@ -372,13 +455,14 @@ void cMaster::PublishApplicationStatus(Time_t now, eApplicationID sourceApp, eAp
 	uint8_t buf[11];
 	Common::WriteInt16((u16)sourceApp, buf, 0);
 	buf[2]=(u8)statusType;
-	for(int i=0;i<8;i++)
+	for(int i=0;i<payloadLength;i++)
 	{
-		buf[i+3]=rcvMessage.Data[i];
+		buf[i+3]=payload[i];
 	}
-	cMaster::mqtt_publishOnTopic(eMqttTopic::APP_STATUS, payload, payloadLength, 0);
+	cMaster::mqtt_publishOnTopic(eMqttTopic::APP_STATUS, buf, 3+payloadLength, 0, 1);
 #endif
 }
+
 
 void cMaster::PublishApplicationEventFiltered(Time_t now, const eApplicationID sourceApp, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t * payload, uint8_t payloadLength)
 {
@@ -422,24 +506,33 @@ void cMaster::CanBusProcess() {
 		switch(type)
 		{
 		case eCanMessageType::ApplicationCommand:
-			cCanIdUtils::ParseCommandMessageId(rcvMessage.Id, &appId, &commandOrEventId);
+			cCanIdUtils::ParseCommandMessageId(rcvMessage.Id, &appId, &commandOrEventId, rcvMessage.Data[0]);
 			if(appId >= (uint32_t)eApplicationID::CNT)
 			{
-				LOGW("Unknown applicationID %i", appId);
+				LOGW("Received ApplicationCommand. Unknown applicationID %i", appId);
 				return;
 			}
 			if(MODEL::TRACE_COMMANDS)
 			{
-				LOGX("Command to id:%s; command:%d; len:%d; payload:", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length);
-				for (int i = 0; i < rcvMessage.Length; i++)
+				char charbuf[2*rcvMessage.Length+1];
+				for(int i=0;i<rcvMessage.Length;i++)
 				{
-					Console::Write("0x%02X, ", rcvMessage.Data[i]);
+					sprintf(&charbuf[2*i], "%02X, ", buf[i]);
 				}
-				Console::Writeln("");
+				charbuf[2*rcvMessage.Length]='\0';
+#ifdef NEN_CANID
+				LOGX("ApplicationCommand to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+#else
+				LOGX("ApplicationCommand (old CAN-ID) to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+#endif
 			}
 			app = MODEL::Glo2locCmd[appId];
 			if (app != NULL) {
+#ifdef NEW_CANID
 				app->OnCommand((eCommandType)commandOrEventId, rcvMessage.Data, rcvMessage.Length, now);
+#else
+				app->OnCommand((eCommandType)commandOrEventId, &rcvMessage.Data[1], rcvMessage.Length-1, now);
+#endif
 			}
 			break;
 		case eCanMessageType::ApplicationEvent:
@@ -451,12 +544,17 @@ void cMaster::CanBusProcess() {
 			}
 			if(MODEL::TRACE_EVENTS)
 			{
-				LOGX("Event from id:%s; event:%d; len:%d; payload:", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length);
-				for (int i = 0; i < rcvMessage.Length; i++)
+				char charbuf[2*rcvMessage.Length+1];
+				for(int i=0;i<rcvMessage.Length;i++)
 				{
-					Console::Write("0x%02X, ", rcvMessage.Data[i]);
+					sprintf(&charbuf[2*i], "%02X, ", buf[i]);
 				}
-				Console::Writeln("");
+				charbuf[2*rcvMessage.Length]='\0';
+#ifdef NEN_CANID
+				LOGX("ApplicationEvent to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+#else
+				LOGX("ApplicationEvent (old CAN-ID) to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+#endif
 			}
 			app = MODEL::Glo2locEvt[appId];
 			if (app != NULL) {
@@ -468,18 +566,18 @@ void cMaster::CanBusProcess() {
 			cCanIdUtils::ParseApplicationStatusMessageId(rcvMessage.Id, &appId, &commandOrEventId);
 			if(appId >= (uint32_t)eApplicationID::CNT)
 			{
-				LOGW("Unknown applicationID %i", appId);
+				LOGW("Received ApplicationStatus; unknown applicationID %i", appId);
 				return;
 			}
 
 			Common::WriteInt16(appId, buf, 0);
 			buf[2]=commandOrEventId;
-			for(int i=0;i<8;i++)
+			for(int i=0;i<rcvMessage.Length;i++)
 			{
 				MODEL::applicationStatus[appId][i]=rcvMessage.Data[i];
 				buf[i+3]=rcvMessage.Data[i];
 			}
-			cMaster::mqtt_publishOnTopic(eMqttTopic::APP_STATUS, buf, 10, 0);
+			cMaster::mqtt_publishOnTopic(eMqttTopic::APP_STATUS, buf, 3+rcvMessage.Length, 0, 1);
 
 #endif
 			break;

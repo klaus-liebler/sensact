@@ -21,7 +21,8 @@ cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const out
 		standbyController(standbyController),
 		lastHeartbeatToStandbycontroller(0),
 		lastColor(0),
-		state(ePowerState::INACTIVE)
+		state(ePowerState::INACTIVE),
+		changeRecorded(false)
 {
 
 }
@@ -53,10 +54,11 @@ void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
 	BSP::SetDigitalOutput(this->outputR, R==255?UINT16_MAX:R<<8);
 	BSP::SetDigitalOutput(this->outputG, G==255?UINT16_MAX:G<<8);
 	BSP::SetDigitalOutput(this->outputB, B==255?UINT16_MAX:B<<8);
-	if(this->outputB!=UINT16_MAX)
+	if(this->outputW!=UINT16_MAX)
 	{
 		BSP::SetDigitalOutput(this->outputW, W==255?UINT16_MAX:W<<8);
 	}
+	changeRecorded=true;
 }
 void cRgbw::switchOff()
 {
@@ -112,7 +114,9 @@ eAppResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, size_t
 	Common::WriteInt16(outputB, statusBuffer, 4);
 	Common::WriteInt16(outputW, statusBuffer, 6);
 	*statusBufferLength=8;
-	return eAppResult::OK;
+	eAppResult ret = changeRecorded?eAppResult::OK_CHANGED:eAppResult::OK;
+	changeRecorded=false;
+	return ret;
 }
 
 

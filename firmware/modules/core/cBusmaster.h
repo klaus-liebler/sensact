@@ -56,6 +56,7 @@ private:
 public:
 	void Init(void);
 	void Process(Time_t now);
+
 	bool GetSensactSeInput(uint16_t input, bool *inputState);
 	//null must be allowed; will not be written!!!
 	bool GetSensactSeScratchpad(uint16_t index, uint8_t *airQuality, uint8_t *humidity, int16_t *temperatureX16, uint8_t *payloadSpec, uint16_t *payload);
@@ -90,6 +91,7 @@ public:
 
 	void Init(void) const;
 	void Process(Time_t now) const;
+	void ReinitI2c();
 	bool GetInput(uint16_t input, bool *inputState) const;
 
 	/*

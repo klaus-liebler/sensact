@@ -11,7 +11,7 @@
 namespace sensact {
 
 cPoweritem::cPoweritem(eApplicationID id, uint16_t output, Time_t autoOffIntervalMsecs, Time_t autoOnIntervalMsecs) :
-					cApplication(id), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX)
+					cApplication(id), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX), changedFlag(false)
 {
 	if(autoOnIntervalMsecs!=0)
 	{
@@ -42,6 +42,7 @@ void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
 	}
 	BSP::SetDigitalOutput(output, BSP::ACTIVE);
 	this->state=ePowerState::ACTIVE;
+	changedFlag=true;
 }
 
 void cPoweritem::OnOFFCommand(uint32_t autoOnMsecs, Time_t now)
@@ -63,6 +64,7 @@ void cPoweritem::OnOFFCommand(uint32_t autoOnMsecs, Time_t now)
 	}
 	BSP::SetDigitalOutput(output, BSP::INACTIVE);
 	this->state=ePowerState::INACTIVE;
+	changedFlag=true;
 }
 
 void cPoweritem::OnTOGGLECommand(Time_t now)
@@ -98,7 +100,9 @@ eAppResult cPoweritem::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *st
 	}
 	statusBuffer[0]=(uint8_t)state;
 	*statusBufferLength=1;
-	return eAppResult::OK;
+	eAppResult ret = changedFlag?eAppResult::OK_CHANGED:eAppResult::OK;
+	changedFlag=false;
+	return ret;
 }
 
 }

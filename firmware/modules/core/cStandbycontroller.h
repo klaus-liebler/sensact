@@ -14,6 +14,7 @@ namespace sensact{
 		uint16_t const relay;
 		Time_t lastHeartbeat;
 		const uint32_t waitTimeMsecs;
+		bool changedFlag;
 	public:
 		eAppResult Setup() override;
 		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;

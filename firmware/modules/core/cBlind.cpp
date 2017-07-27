@@ -222,9 +222,11 @@ void cBlind::assureAllRelaysOff()
  */
 eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
-
 	uint16_t currPos;
 
+	Common::WriteUInt16(currPos, statusBuffer, 0);
+	Common::WriteUInt16(targetLevel, statusBuffer, 2);
+	*statusBufferLength=4;
 	if(this->state==eDirection::STOP && now-lastChanged >= WAITTIME){
 		if(targetLevel>wellKnownLevel)
 		{
@@ -240,11 +242,11 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 	}
 	if(this->state==eDirection::PREPAREDOWN && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		down(now);
-		return eAppResult::OK;
+		return eAppResult::OK_CHANGEDOWN_START;
 	}
 	if(this->state==eDirection::PREPAREUP && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		up(now);
-		return eAppResult::OK;
+		return eAppResult::OK_CHANGEUP_START;
 	}
 	currPos=calculatePosition(now);
 	if(this->state == eDirection::UP)
@@ -257,8 +259,9 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 			{
 				stopForReverse(now, currPos);
 			}
-
+			return eAppResult::OK_CHANGE_END;
 		}
+
 	}
 	if(this->state == eDirection::DOWN)
 	{
@@ -272,10 +275,8 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 				stopForReverse(now, currPos);
 			}
 		}
+		return eAppResult::OK_CHANGE_END;
 	}
-	Common::WriteUInt16(currPos, statusBuffer, 0);
-	Common::WriteUInt16(targetLevel, statusBuffer, 2);
-	*statusBufferLength=4;
 	return eAppResult::OK;
 }
 

@@ -3,9 +3,24 @@
 namespace sensact
 {
 
+#ifndef NEW_CANID
+//as long as not all nodes speak the new CAN IDs, this assures compatibility, if only Commands are used
 enum struct eCanMessageType:uint32_t
 {
-	//There is no "node application", all node-related messages are in a seperate namespace
+	ApplicationCommand		= 0x00000000,
+	ApplicationEvent		= 0x01000000,
+	NodeCommand 			= 0x02000000,
+	NodeCommandAcknowledge	= 0x03000000,
+	NodeEvent				= 0x04000000,
+	CommandAcknowledge		= 0x05000000,
+	ApplicationStatus 		= 0x06000000,
+	Payload           		= 0x1F000000,
+
+};
+#else
+enum struct eCanMessageType:uint32_t
+{
+	//There is no "node application", all node-related messages are in a separate namespace
 	//Reason: Node-messages can be send/received from the bootloader and there
 	//hence, the node ID has to be burned in the bootloader of a node
 	//this very basic information is burned in the bootloader
@@ -22,6 +37,7 @@ enum struct eCanMessageType:uint32_t
 	Payload           		= 0x1F000000,
 
 };
+#endif
 
 enum struct eNodeCommandType:uint8_t{
 	    NOC=0 ,
@@ -37,10 +53,11 @@ enum struct eNodeEventType:uint8_t{
         NODE_STARTED=1 ,
 		NODE_STATUS=2,
 		NODE_STOPPED=3,
-		BOOTLOADER_READY=4,
-		APPLICATION_STARTED=5,
-		APPLICATION_STATUS=6,
-		APPLICATION_STOPPED=7,
+		NODE_READY=4,
+		BOOTLOADER_READY=5,
+		//APPLICATION_STARTED=5, NO!!! THIS IS APPLICATION STATUS
+		//APPLICATION_STATUS=6,
+		//APPLICATION_STOPPED=7,
         CNT,
 };
 
@@ -65,7 +82,7 @@ public:
 		static void ParseEventMessageId(uint32_t messageId, uint16_t *sourceAppId, uint8_t *eventId);
 		static void ParseApplicationStatusMessageId(uint32_t messageId, uint16_t *sourceAppId, uint8_t *statusType);
 
-		static void ParseCommandMessageId(uint32_t messageId, uint16_t *destinationAppId, uint8_t *commandId);
+		static void ParseCommandMessageId(uint32_t messageId, uint16_t *destinationAppId, uint8_t *commandId, uint8_t firstByteOfMessage);
 		static void ParseCommandAcknowledgeMessageId(uint32_t messageId, uint16_t *acknowledgingdestinationAppId, uint8_t *commandId);
 		static void ParsePayloadMessageId(uint32_t messageId, uint8_t *destinationNodeId, uint16_t *chunkIndex);
 	};

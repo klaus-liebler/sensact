@@ -445,7 +445,7 @@ namespace Klli.Sensact.Config
                     new Command
                     {
                         CommandType=CommandType.TOGGLE,
-                        TargetAppId=_(ID.POWIT_LS_STRS_W5),
+                        TargetAppId=_(ID.PWM___LS_STRS_W6),
                     },
                 }
 
@@ -486,7 +486,7 @@ namespace Klli.Sensact.Config
                     new Command
                     {
                         CommandType=CommandType.TOGGLE,
-                        TargetAppId=_(ID.POWIT_LS_STRS_W5),
+                        TargetAppId=_(ID.PWM___LS_STRS_W6),
                     },
                 }
 
@@ -604,6 +604,8 @@ namespace Klli.Sensact.Config
             #endregion
 
             return model;
+
+
         }
     }
 }

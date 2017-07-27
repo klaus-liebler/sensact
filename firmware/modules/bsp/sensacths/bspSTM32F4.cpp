@@ -13,6 +13,86 @@
 namespace sensact{
 
 
+void BSP::ReInitI2C()
+{
+
+	HAL_I2C_DeInit(&BSP::i2c1);
+	HAL_I2C_DeInit(&BSP::i2c2);
+
+	/*
+	PB08     ------> I2C1_SCL
+	PB09     ------> I2C1_SDA
+	PB10     ------> I2C2_SCL
+	PB11     ------> I2C2_SDA
+	*/
+	GPIO_InitTypeDef gi;
+	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Mode = GPIO_MODE_OUTPUT_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	HAL_GPIO_Init(GPIOB, &gi);
+	for(int i=0;i<10;i++)
+	{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+		BSP::DelayUs(50);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+		BSP::DelayUs(50);
+	}
+
+	HAL_StatusTypeDef status;
+
+
+	__I2C1_CLK_ENABLE();
+	__I2C2_CLK_ENABLE();
+	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	gi.Alternate = GPIO_AF4_I2C1;
+	gi.Alternate = GPIO_AF4_I2C2;
+	HAL_GPIO_Init(GPIOB, &gi);
+
+	BSP::i2c1.Instance = I2C1;
+	BSP::i2c1.Init.ClockSpeed = 100000;
+	BSP::i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	BSP::i2c1.Init.OwnAddress1 = 0;
+	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	BSP::i2c1.Init.OwnAddress2 = 0;
+	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	status=HAL_I2C_Init(&BSP::i2c1);
+	if(status==HAL_OK)
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+	}
+	else
+	{
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+	}
+	BSP::i2c2.Instance = I2C2;
+	BSP::i2c2.Init.ClockSpeed = 100000;
+	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	BSP::i2c2.Init.OwnAddress1 = 0;
+	BSP::i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
+	BSP::i2c2.Init.OwnAddress2 = 0;
+	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
+	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
+	status=HAL_I2C_Init(&BSP::i2c2);
+	if(status==HAL_OK)
+	{
+		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+	}
+	else
+	{
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+	}
+}
+
+
 void BSP::Init(void) {
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
@@ -100,58 +180,7 @@ void BSP::Init(void) {
 	gi.Alternate = 0;
 	HAL_GPIO_Init(GPIOE, &gi);
 
-	/*
-	PB08     ------> I2C1_SCL
-	PB09     ------> I2C1_SDA
-	PB10     ------> I2C2_SCL
-	PB11     ------> I2C2_SDA
-	*/
-	__I2C1_CLK_ENABLE();
-	__I2C2_CLK_ENABLE();
-	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
-	gi.Mode = GPIO_MODE_AF_OD;
-	gi.Pull = GPIO_PULLUP;
-	gi.Speed = GPIO_SPEED_MEDIUM;
-	gi.Alternate = GPIO_AF4_I2C1;
-	gi.Alternate = GPIO_AF4_I2C2;
-	HAL_GPIO_Init(GPIOB, &gi);
-
-	BSP::i2c1.Instance = I2C1;
-	BSP::i2c1.Init.ClockSpeed = 100000;
-	BSP::i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	BSP::i2c1.Init.OwnAddress1 = 0;
-	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
-	BSP::i2c1.Init.OwnAddress2 = 0;
-	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
-	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
-	status=HAL_I2C_Init(&BSP::i2c1);
-	if(status==HAL_OK)
-	{
-		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for onboard digital io");
-	}
-	else
-	{
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for onboard digital io");
-	}
-	BSP::i2c2.Instance = I2C2;
-	BSP::i2c2.Init.ClockSpeed = 100000;
-	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	BSP::i2c2.Init.OwnAddress1 = 0;
-	BSP::i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	BSP::i2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;
-	BSP::i2c2.Init.OwnAddress2 = 0;
-	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;
-	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED;
-	status=HAL_I2C_Init(&BSP::i2c2);
-	if(status==HAL_OK)
-	{
-		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
-	}
-	else
-	{
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
-	}
+	ReInitI2C();
 
 	/**CAN2 GPIO Configuration
 	 PB12     ------> CAN2_RX
@@ -164,112 +193,6 @@ void BSP::Init(void) {
 	gi.Alternate = GPIO_AF9_CAN1; //GPIO_AF9_CAN2 has the same value!
 	HAL_GPIO_Init(CAN_PORT, &gi);
 	InitCAN();
-#if defined(SENSACTHS08) && defined(ETHERNET)
-	    spi2.Instance = SPI2;
-	    spi2.Init.Mode = SPI_MODE_MASTER;
-	    spi2.Init.Direction = SPI_DIRECTION_2LINES;
-	    spi2.Init.DataSize = SPI_DATASIZE_8BIT;
-	    spi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-	    spi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-	    spi2.Init.NSS = SPI_NSS_SOFT;
-	    spi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-	    spi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	    spi2.Init.TIMode = SPI_TIMODE_DISABLED;
-	    spi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-
-	    __SPI2_CLK_ENABLE();
-	    /**SPI2 GPIO Configuration
-	    PB13     ------> SPI2_SCK
-	    PB14     ------> SPI2_MISO
-	    PB15     ------> SPI2_MOSI
-	    */
-	    gi.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
-	    gi.Mode = GPIO_MODE_AF_PP;
-	    gi.Pull = GPIO_NOPULL;
-	    gi.Speed = GPIO_SPEED_HIGH;
-	    gi.Alternate = GPIO_AF5_SPI2;
-	    HAL_GPIO_Init(GPIOB, &gi);
-
-	    /*Configure GPIO pin : PB12 as chip select */
-	    gi.Pin = GPIO_PIN_12;
-	    gi.Mode = GPIO_MODE_OUTPUT_PP;
-	    gi.Pull = GPIO_PULLUP;
-	    gi.Speed = GPIO_SPEED_LOW;
-	    HAL_GPIO_Init(GPIOB, &gi);
-
-		HAL_SPI_Init(&spi2);
-
-		uint8_t retVal, sockStatus;
-		int16_t rcvLen;
-		uint8_t rcvBuf[20], bufSize[] = {2, 2, 2, 2};
-
-		PRINT_HEADER();
-
-		reg_wizchip_cs_cbfunc(cs_sel, cs_desel);
-		reg_wizchip_spi_cbfunc(spi_rb, spi_wb);
-
-		wizchip_init(bufSize, bufSize);
-		wiz_NetInfo netInfo = { .mac 	= {0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef},	// Mac address
-		                          .ip 	= {192, 168, 1, 192},					// IP address
-		                          .sn 	= {255, 255, 255, 0},					// Subnet mask
-		                          .gw 	= {192, 168, 1, 1}};					// Gateway address
-		wizchip_setnetinfo(&netInfo);
-		wizchip_getnetinfo(&netInfo);
-		  PRINT_NETINFO(netInfo);
-		  reconnect:
-		    /* Open socket 0 as TCP_SOCKET with port 5000 */
-		    if((retVal = socket(0, Sn_MR_TCP, 5000, 0)) == 0) {
-		  	  /* Put socket in LISTEN mode. This means we are creating a TCP server */
-		  	  if((retVal = listen(0)) == SOCK_OK) {
-		  		  /* While socket is in LISTEN mode we wait for a remote connection */
-		  		  while(sockStatus = getSn_SR(0) == SOCK_LISTEN)
-		  			  HAL_Delay(100);
-		  		  /* OK. Got a remote peer. Let's send a message to it */
-		  		  while(1) {
-		  			  /* If connection is ESTABLISHED with remote peer */
-		  			  if(sockStatus = getSn_SR(0) == SOCK_ESTABLISHED) {
-		  				  uint8_t remoteIP[4];
-		  				  uint16_t remotePort;
-		  				  /* Retrieving remote peer IP and port number */
-		  				  getsockopt(0, SO_DESTIP, remoteIP);
-		  				  getsockopt(0, SO_DESTPORT, (uint8_t*)&remotePort);
-		  				  sprintf(msg, CONN_ESTABLISHED_MSG, remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3], remotePort);
-		  				  PRINT_STR(msg);
-		  				  /* Let's send a welcome message and closing socket */
-		  				  if(retVal = send(0, (uint8_t *)GREETING_MSG, strlen(GREETING_MSG)) == (int16_t)strlen(GREETING_MSG))
-		  					  PRINT_STR(SENT_MESSAGE_MSG);
-		  				  else { /* Ops: something went wrong during data transfer */
-		  					  sprintf(msg, WRONG_RETVAL_MSG, retVal);
-		  					  PRINT_STR(msg);
-		  				  }
-		  				  break;
-		  			  }
-		  			  else { /* Something went wrong with remote peer, maybe the connection was closed unexpectedly */
-		  				  sprintf(msg, WRONG_STATUS_MSG, sockStatus);
-		  				  PRINT_STR(msg);
-		  				  break;
-		  			  }
-		  		  }
-
-		  	  } else /* Ops: socket not in LISTEN mode. Something went wrong */
-		  		  PRINT_STR(LISTEN_ERR_MSG);
-		    } else { /* Can't open the socket. This means something is wrong with W5100 configuration: maybe SPI issue? */
-		  	  sprintf(msg, WRONG_RETVAL_MSG, retVal);
-		  	  PRINT_STR(msg);
-		    }
-
-		    /* We close the socket and start a connection again */
-		    disconnect(0);
-		    close(0);
-		    goto reconnect;
-
-		    /* Infinite loop */
-		    while (1)
-		    {
-		    }
-
-#endif
-
 
 	for(uint8_t i = 0; i<BSP::busCnt;i++)
 	{
@@ -279,6 +202,22 @@ void BSP::Init(void) {
 
 	return;
 }
+
+#ifdef STM32F1
+#define APBCLK 36
+//CCR = 5usec * 36MHz
+#define CCRVAL 180
+//TRISEVAL = 36MHz+1
+#define TRISEVAL 37
+
+#endif
+#ifdef STM32F4
+#define	APBCLK 42
+//CCR= 5usec * 42MHz
+#define CCRVAL 210
+//TRISEVAL = 42MHz+1
+#define TRISEVAL 43
+#endif
 
 
 

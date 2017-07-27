@@ -12,6 +12,7 @@ namespace sensact
 		Time_t const autoOnIntervalMsecs; //Interval bei dem regelmaessig eingeschaltet wird nach letztem ausschalten (z.B.für die Umwaelzpumpe). "0" schaltet die Funktion aus.
 		ePowerState state;
 		Time_t nextChange; //calculated time for autoOff/autoOff
+		bool changedFlag;
 
 	public:
 		eAppResult Setup() override;

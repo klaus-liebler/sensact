@@ -38,7 +38,8 @@ private:
 #ifdef MASTERNODE
 	static mqtt_client_t client;
 	static struct mqtt_connect_client_info_t ci;
-#endif
+	static uint32_t subscriberIndex;
+
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -46,9 +47,9 @@ private:
 	static void mqtt_sub_request_cb(void *arg, err_t result);
 	static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len);
 	static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags);
-	static void mqtt_publishOnTopic(eMqttTopic topic, uint8_t *buf, size_t len, void *arg);
+	static void mqtt_publishOnTopic(eMqttTopic topic, uint8_t *buf, size_t len, void *arg, uint8_t qos);
 	static void mqtt_pub_request_cb(void *arg, err_t result);
-
+#endif
 public:
 	static void MasterControlLoop(void);
 	static bool SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength);

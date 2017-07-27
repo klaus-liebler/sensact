@@ -93,9 +93,13 @@ void Console::Write(const char *fmt, va_list va) {
 			case 'X':
 				uc = ch == 'X';
 				num = va_arg(va, unsigned int);
-				divOut(0x1000);
-				divOut(0x100);
-				divOut(0x10);
+				divOut(0x10000000);
+				divOut(0x01000000);
+				divOut(0x00100000);
+				divOut(0x00010000);
+				divOut(0x00001000);
+				divOut(0x00000100);
+				divOut(0x00000010);
 				outDgt(num);
 				break;
 			case 'c':

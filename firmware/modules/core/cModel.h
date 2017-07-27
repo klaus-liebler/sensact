@@ -51,6 +51,7 @@ public:
 
 	static const char ModelString[];
 	static const eApplicationID NodeMasterApplication;
+	static const eNodeID NodeID;
 	static const char * const ApplicationNames[];
 #ifdef SENSACTUP
 	static cWs281x RGBLED;

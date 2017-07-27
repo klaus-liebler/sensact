@@ -227,6 +227,12 @@ void cBusmaster::Process(Time_t now) const
 	}
 }
 
+
+
+
+
+
+
 //eOwMode cOwSubbus::owMode;
 //uint32_t cOwSubbus::ds1820Index;
 //uint32_t cOwSubbus::othersIndex;

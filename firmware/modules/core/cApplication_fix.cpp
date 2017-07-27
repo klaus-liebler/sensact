@@ -35,4 +35,4 @@ const char*const cApplication::N4I(uint32_t const appId)
 	return "INVALID APPID";
 }
 
-} /* namespace sensact */
+}

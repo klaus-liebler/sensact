@@ -1,3 +1,5 @@
+#include "common.h"
+#include "cBsp.h"
 #ifdef STM32F4
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_i2c.h"
@@ -18,8 +20,20 @@ namespace drivers {
 	bool cPCA9555::Update()
 	{
 		volatile uint16_t ret=0xFFFF;
-		volatile HAL_StatusTypeDef sta=HAL_I2C_Mem_Read((I2C_HandleTypeDef *) this->i2c, ADDR, (uint16_t)ePCA9555Register::InputPort0, (uint16_t)I2C_MEMADD_SIZE_8BIT, (uint8_t*)&ret, 2, 100);
-		if(sta==HAL_OK)
+		uint8_t trials = 10;
+		volatile HAL_StatusTypeDef status = HAL_ERROR;
+		while(trials > 0)
+		{
+
+			status=HAL_I2C_Mem_Read((I2C_HandleTypeDef *) this->i2c, ADDR, (uint16_t)ePCA9555Register::InputPort0, (uint16_t)I2C_MEMADD_SIZE_8BIT, (uint8_t*)&ret, 2, 100);
+			if(status==HAL_OK)
+			{
+				break;
+			}
+			sensact::BSP::ReInitI2C();
+			trials--;
+		}
+		if(status==HAL_OK)
 		{
 			this->cache=ret;
 			return true;

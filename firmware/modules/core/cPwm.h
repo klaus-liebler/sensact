@@ -27,6 +27,7 @@ class cPWM: public cApplication
 		uint8_t targetLevel; //Zielhelligkeit, nur diese wird gesetzt durch die Helper-Funktionen
 		Time_t lastHeartbeatToStandbycontroller;
 		Time_t autoOffTime;
+		eAppResult lastReturnedSpecialAppResult;
 		void SetTargetAbsolute(uint8_t, Time_t);
 		void SetTargetRelative(int, Time_t);
 		void MoveInDirection(eDirection, Time_t);

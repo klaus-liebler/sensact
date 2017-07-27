@@ -45,7 +45,6 @@ namespace sensact{
 #include <BlindApplication.hinc>
 
 		void RaiseEvent(eEventType evt);
-
 		cBlind(eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);
 	};
 

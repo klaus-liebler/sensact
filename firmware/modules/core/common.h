@@ -42,9 +42,14 @@ public:
 enum struct eAppResult:uint8_t
 {
 	OK=0,
-	BUS_ERROR=1,
-	STATE_ERROR=2,
-	NOT_IMPLEMENTED=3,
+	OK_CHANGED=1,
+	OK_CHANGEUP_START=2,
+	OK_CHANGEDOWN_START=3,
+	OK_CHANGE_END=4,
+	ERROR_GENERIC=128,
+	BUS_ERROR=129,
+	STATE_ERROR=130,
+	NOT_IMPLEMENTED=255,
 };
 
 enum struct ePushState
@@ -64,6 +69,7 @@ enum struct ePushState
 		STARTED,
 		NEW_STATUS,
 		REGULAR_STATUS,
+		ERROR_ON_CYCLIC,
 		TERMINATED,
 	};
 
@@ -94,7 +100,7 @@ enum struct ePushState
 */
 	struct CANMessage {
 		uint32_t Id;
-		uint8_t *Data;
+		uint8_t Data[8];
 		uint8_t Length;
 	};
 

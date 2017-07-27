@@ -4,12 +4,14 @@
 
 #ifdef STM32F0
 #include <stm32f0xx_hal.h>
+#include <stm32f0xx_ll_gpio.h>
 #endif
 #ifdef STM32F1
 #include <stm32f1xx_hal.h>
 #endif
 #ifdef STM32F4
 #include <stm32f4xx_hal.h>
+#include <stm32f4xx_ll_gpio.h>
 #endif
 
 #ifdef SENSACTUP03
@@ -58,6 +60,7 @@
 #define UART_BUFFER_SIZE 100
 #define CAN CAN1
 #define CAN_PRESCALER 21
+//D0=RX, D1=TX
 #define CAN_PINS GPIO_PIN_0 | GPIO_PIN_1
 #define CAN_PORT GPIOD
 #define DCF77_PORT GPIOC
@@ -105,6 +108,7 @@ public:
 
 
 	static void Init();
+	static void ReInitI2C();
 	static void SetRgbLed(volatile uint8_t *framebuffer, uint16_t sizeIncludingZero);
 	static bool SetDigitalOutput(uint16_t output, uint16_t value);
 	static bool SetDigitalOutput(uint16_t output, uint16_t sixteenMask, uint16_t value);

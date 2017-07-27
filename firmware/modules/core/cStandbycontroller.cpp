@@ -13,7 +13,7 @@ namespace sensact {
 
 cStandbyController::cStandbyController(eApplicationID const id, uint16_t const relay, uint32_t const waitTimeMsecs):
 
-		cApplication(id), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs){
+		cApplication(id), state(ePowerState::INACTIVE), relay(relay), lastHeartbeat(0), waitTimeMsecs(waitTimeMsecs), changedFlag(false){
 }
 
 
@@ -32,6 +32,7 @@ void cStandbyController::OnHEARTBEATCommand(uint32_t sender, Time_t now)
 	{
 		BSP::SetDigitalOutput(relay, 0, BSP::ACTIVE);
 		this->state=ePowerState::ACTIVE;
+		changedFlag=true;
 		LOGD("%s is ON", Name);
 	}
 }
@@ -42,11 +43,14 @@ eAppResult cStandbyController::DoEachCycle(Time_t now, uint8_t *statusBuffer, si
 	{
 		BSP::SetDigitalOutput(relay, 0, BSP::INACTIVE);
 		this->state=ePowerState::INACTIVE;
+		changedFlag=true;
 		LOGD("%s is OFF", Name);
 	}
 	statusBuffer[0]=(uint8_t)state;
 	*statusBufferLength=1;
-	return eAppResult::OK;
+	eAppResult ret = changedFlag?eAppResult::OK_CHANGED:eAppResult::OK;
+	changedFlag=false;
+	return ret;
 }
 
 }
