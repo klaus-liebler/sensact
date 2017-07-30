@@ -22,22 +22,37 @@ void BSP::ReInitI2C()
 	/*
 	PB08     ------> I2C1_SCL
 	PB09     ------> I2C1_SDA
-	PB10     ------> I2C2_SCL
-	PB11     ------> I2C2_SDA
+	--PB10     ------> I2C2_SCL
+	--PB11     ------> I2C2_SDA
+	PA08 I2C3_SCL AF4
+	PC09 I2C3_SDA AF4
 	*/
 	GPIO_InitTypeDef gi;
-	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
+	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9;
 	gi.Mode = GPIO_MODE_OUTPUT_OD;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_MEDIUM;
 	HAL_GPIO_Init(GPIOB, &gi);
+
+	gi.Pin = GPIO_PIN_8;
+	gi.Mode = GPIO_MODE_OUTPUT_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	HAL_GPIO_Init(GPIOA, &gi);
+
+	gi.Pin = GPIO_PIN_9;
+	gi.Mode = GPIO_MODE_OUTPUT_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	HAL_GPIO_Init(GPIOC, &gi);
+
 	for(int i=0;i<10;i++)
 	{
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 		BSP::DelayUs(50);
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
 		BSP::DelayUs(50);
 	}
 
@@ -45,14 +60,27 @@ void BSP::ReInitI2C()
 
 
 	__I2C1_CLK_ENABLE();
-	__I2C2_CLK_ENABLE();
-	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9|GPIO_PIN_10 | GPIO_PIN_11;
+	__I2C3_CLK_ENABLE();
+	gi.Pin = GPIO_PIN_8 | GPIO_PIN_9;
 	gi.Mode = GPIO_MODE_AF_OD;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_MEDIUM;
 	gi.Alternate = GPIO_AF4_I2C1;
-	gi.Alternate = GPIO_AF4_I2C2;
 	HAL_GPIO_Init(GPIOB, &gi);
+
+	gi.Pin = GPIO_PIN_8;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	gi.Alternate = GPIO_AF4_I2C3;
+	HAL_GPIO_Init(GPIOA, &gi);
+
+	gi.Pin = GPIO_PIN_9;
+	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_MEDIUM;
+	gi.Alternate = GPIO_AF4_I2C3;
+	HAL_GPIO_Init(GPIOC, &gi);
 
 	BSP::i2c1.Instance = I2C1;
 	BSP::i2c1.Init.ClockSpeed = 100000;
@@ -66,13 +94,13 @@ void BSP::ReInitI2C()
 	status=HAL_I2C_Init(&BSP::i2c1);
 	if(status==HAL_OK)
 	{
-		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+		//LOGI(BSP::SUCCESSFUL_STRING, "I2C2 Button Bus");
 	}
 	else
 	{
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for onboard digital io");
+		//LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 Button Bus");
 	}
-	BSP::i2c2.Instance = I2C2;
+	BSP::i2c2.Instance = I2C3;
 	BSP::i2c2.Init.ClockSpeed = 100000;
 	BSP::i2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
 	BSP::i2c2.Init.OwnAddress1 = 0;
@@ -84,11 +112,11 @@ void BSP::ReInitI2C()
 	status=HAL_I2C_Init(&BSP::i2c2);
 	if(status==HAL_OK)
 	{
-		LOGI(BSP::SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+		//LOGI(BSP::SUCCESSFUL_STRING, "I2C2 Relay Bus");
 	}
 	else
 	{
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 for 1wire and external");
+		//LOGE(BSP::NOT_SUCCESSFUL_STRING, "I2C2 Relay Bus");
 	}
 }
 

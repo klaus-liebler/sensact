@@ -7,11 +7,11 @@
 
 //Known Nodes are
 //#define NODE_SNSCT_L0_TECH_HS_1
-//#define NODE_SNSCT_L3_TECH_HS_1
+#define NODE_SNSCT_L3_TECH_HS_1
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
-#define NODE_TEST_HS07
+//#define NODE_TEST_HS07
 //#define NODE_TEST_UP02
 //#define NODE_TEST_UP03
 

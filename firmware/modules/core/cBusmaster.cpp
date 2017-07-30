@@ -490,6 +490,7 @@ bool cBusmaster::GetInput(uint16_t input, bool *inputState) const
 		}
 
 	}
+	return false;
 }
 
 //bei 01-Ausgängen bestimmt das oberste Bit, ob an oder aus

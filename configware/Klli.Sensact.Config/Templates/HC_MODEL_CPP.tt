@@ -40,7 +40,7 @@ foreach (string name in ApplicationNames)
 #>
 #ifdef NODE_<#=i.NodeId#>
 
-eNodeID MODEL::NodeID = eNodeID::<#=i.NodeId#>;
+const eNodeID MODEL::NodeID = eNodeID::<#=i.NodeId#>;
 
 
 

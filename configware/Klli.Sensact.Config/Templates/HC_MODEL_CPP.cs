@@ -104,7 +104,7 @@ foreach (string name in ApplicationNames)
             
             #line default
             #line hidden
-            this.Write("\r\n\r\neNodeID MODEL::NodeID = eNodeID::");
+            this.Write("\r\n\r\nconst eNodeID MODEL::NodeID = eNodeID::");
             
             #line 43 "C:\sensact\configware\Klli.Sensact.Config\Templates\HC_MODEL_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.NodeId));

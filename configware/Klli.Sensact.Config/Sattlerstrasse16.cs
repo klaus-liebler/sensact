@@ -431,6 +431,8 @@ namespace Klli.Sensact.Config
             #region L3
             //BEDR
             SNSCT_L3_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L3_BEDR_B11, BB + I2C + 38, ID.POWIT_L3_BEDR_C1);
+            SNSCT_L3_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L3_BEDR_B12, BB + I2C + 37, ID.PWM___LS_STRS_W6);
+            /*
             SNSCT_L3_TECH_HS_1.Applications.Add(new PushButtonXApplication
              {
                  ApplicationId = _(ID.PUSHB_L3_BEDR_B12),
@@ -450,7 +452,7 @@ namespace Klli.Sensact.Config
                 }
 
              });
-
+             */
             SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L3_BEDR_B13, ID.PUSHB_L3_BEDR_B14, BB + I2C + 36, BB + I2C + 35, ID.BLIND_L3_BEDR_J1);
             SNSCT_L3_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L3_BEDR_C1, RB + I2C + 42);
             SNSCT_L3_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L3_BEDR_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = RB + I2C + 23, OutputRessourceDownOrDirection = RB + I2C + 32, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
@@ -472,6 +474,9 @@ namespace Klli.Sensact.Config
             SNSCT_L3_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L3_WORK_B12, BB + I2C + 40, ID.PWM___L3_WORK_S);
 
             SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L3_WORK_B13, ID.PUSHB_L3_WORK_B14, BB + I2C + 39, BB + I2C + 44, ID.BLIND_L3_WORK_J1);
+            SNSCT_L3_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L3_WORK_B15, BB + I2C + 43, ID.PWM___LS_STRS_W6);
+
+            /*
             SNSCT_L3_TECH_HS_1.Applications.Add(new PushButtonXApplication
             {
                 ApplicationId = _(ID.PUSHB_L3_WORK_B15),
@@ -491,6 +496,7 @@ namespace Klli.Sensact.Config
                 }
 
             });
+            */
             SNSCT_L3_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L3_WORK_J1), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = RB + I2C + 22, OutputRessourceDownOrDirection = RB + I2C + 31, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
             //SNSCT_L3_TECH_HS_1.Applications.Add(new BlindApplication { ApplicationId = _(ID.BLIND_L3_WORK_J2), OpenCloseTimeInSeconds = 40, OutputRessourceUpOrPower = BUS0 + I2C + 8, OutputRessourceDownOrDirection = BUS0 + I2C + 17, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
 
