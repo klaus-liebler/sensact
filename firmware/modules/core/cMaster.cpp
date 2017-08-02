@@ -412,7 +412,7 @@ bool cMaster::SendCommandToMessageBus(Time_t now, eApplicationID destinationApp,
 			{
 				buf[i+1]=payload[i];
 			}
-			return BSP::SendCANMessage(canid, payload, payloadLength);
+			return BSP::SendCANMessage(canid, buf, payloadLength+1);
 #endif
 
 		}
