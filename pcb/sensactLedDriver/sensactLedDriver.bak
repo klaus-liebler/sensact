@@ -335,28 +335,6 @@ F 3 "" H 9900 6050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X01 P5
-U 1 1 57CDF1BE
-P 10250 6050
-F 0 "P5" H 10250 6150 50  0000 C CNN
-F 1 "CONN_01X01" V 10350 6050 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.5mm" H 10250 6050 50  0001 C CNN
-F 3 "" H 10250 6050 50  0000 C CNN
-	1    10250 6050
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_01X01 P6
-U 1 1 57CDF265
-P 10650 6050
-F 0 "P6" H 10650 6150 50  0000 C CNN
-F 1 "CONN_01X01" V 10750 6050 50  0000 C CNN
-F 2 "Mounting_Holes:MountingHole_3.5mm" H 10650 6050 50  0001 C CNN
-F 3 "" H 10650 6050 50  0000 C CNN
-	1    10650 6050
-	1    0    0    -1  
-$EndComp
-$Comp
 L R R1
 U 1 1 57CE4F2A
 P 1900 3850
@@ -422,8 +400,6 @@ F 3 "" H 1500 1000 50  0000 C CNN
 	1    1500 1000
 	1    0    0    -1  
 $EndComp
-NoConn ~ 10450 6050
-NoConn ~ 10050 6050
 NoConn ~ 9700 6050
 NoConn ~ 9350 6050
 $Comp
@@ -826,4 +802,8 @@ Connection ~ 2550 3300
 Connection ~ 2500 3200
 Connection ~ 2450 3100
 Connection ~ 2400 3000
+Text Label 2800 1900 0    60   ~ 0
+A0
+Text Label 2750 2150 0    60   ~ 0
+A1
 $EndSCHEMATC

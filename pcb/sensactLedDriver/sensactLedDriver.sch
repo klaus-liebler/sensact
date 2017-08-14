@@ -802,4 +802,10 @@ Connection ~ 2550 3300
 Connection ~ 2500 3200
 Connection ~ 2450 3100
 Connection ~ 2400 3000
+Text Label 2800 1900 0    60   ~ 0
+A0
+Text Label 2750 2150 0    60   ~ 0
+A1
+Text Label 2700 2300 0    60   ~ 0
+A2
 $EndSCHEMATC
