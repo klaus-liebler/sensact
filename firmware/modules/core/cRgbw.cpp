@@ -26,6 +26,12 @@ cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const out
 {
 
 }
+
+eAppType cRgbw::GetAppType()
+{
+	return eAppType::RGBW;
+}
+
 void cRgbw::showColorOfIndex(uint8_t index)
 {
 	index%=WellKnownColorsLength;

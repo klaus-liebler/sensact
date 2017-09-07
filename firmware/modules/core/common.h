@@ -23,6 +23,8 @@
 
 #define RBN(REG, BIT)    ((REG) & (1<<(BIT)))
 
+const uint32_t SHORT_PRESS = 400;
+const uint32_t LONG_PRESS = 4000;
 
 
 namespace sensact {
@@ -73,7 +75,6 @@ enum struct ePushState
 		TERMINATED,
 	};
 
-/*
 	enum struct eAppType
 		:uint8_t
 		{
@@ -81,23 +82,38 @@ enum struct ePushState
 		BLIND,
 		POWIT,
 		PWM,
-		PUSHB,
+		PSHBT,
 		ROTAR,
 		BMP180,
 		BSENS,
-		RGBLED,
-		STNDBY,
+		RGBW,
+		STDBY,
 		SOUND,
 		MLTLC,
-		RGBW,
 		RCEVT,
 		LIBAR,
 		SNSCT,
-		FRWRD
-
+		FRWRD,
 	};
+		const char * const eAppType2Name[]={
+				"UNDEFINED",
+						"BLIND",
+						"POWIT",
+						"PWM",
+						"PSHBT",
+						"ROTAR",
+						"BMP180",
+						"BSENS",
+						"RGBW",
+						"STDBY",
+						"SOUND",
+						"MLTLC",
+						"RCEVT",
+						"LIBAR",
+						"SNSCT",
+						"FRWRD",
+		};
 
-*/
 	struct CANMessage {
 		uint32_t Id;
 		uint8_t Data[8];

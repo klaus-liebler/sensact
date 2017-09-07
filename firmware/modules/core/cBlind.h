@@ -41,6 +41,7 @@ namespace sensact{
 
 	public:
 		eAppResult Setup() override;
+		eAppType GetAppType() override;
 		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <BlindApplication.hinc>
 

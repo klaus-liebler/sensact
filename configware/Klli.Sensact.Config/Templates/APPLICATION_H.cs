@@ -44,6 +44,7 @@ namespace Klli.Sensact.Config.Templates
             #line hidden
             this.Write(@"
 
+	virtual eAppType GetAppType()=0;
 	virtual eAppResult Setup()=0;
 	virtual eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)=0; //has to be called cyclically
 	eAppResult OnCommand(eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength, Time_t now);

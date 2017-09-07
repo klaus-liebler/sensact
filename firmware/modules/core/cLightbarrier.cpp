@@ -23,6 +23,10 @@ namespace sensact {
 eAppResult cLightbarrier::Setup() {
 	return eAppResult::OK;
 }
+eAppType cLightbarrier::GetAppType()
+{
+	return eAppType::LIBAR;
+}
 
 cLightbarrier::cLightbarrier(const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget) :
 				cApplication(id), input(input), activeSignalLevel(activeSignalLevel), brightnessSensor(brightnessSensor), finalTarget(finalTarget), lastChange(0), wasActive(false) {

@@ -13,6 +13,11 @@ cForwarder::cForwarder(eApplicationID id, eApplicationID finalTarget):
 
 }
 
+eAppType cForwarder::GetAppType()
+{
+	return eAppType::FRWRD;
+}
+
 
 void cForwarder::OnNOPCommand(Time_t now)
 {

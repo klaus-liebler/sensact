@@ -1,0 +1,56 @@
+syntax = "proto3";
+package sensact.messages;
+
+message NodeEvent {
+	int32  sourceNodeId=1;
+	int32  event=2;
+	sfixed64 payload=3;
+}
+
+message AppEvent {
+	int32  sourceNodeId=1;
+	int32  event=2;
+	sfixed64 payload=3;
+}
+message BLINDStatus
+{
+	int32 currpos=1;
+	int32 targetLevel=2;
+}
+
+message BSENSStatus
+{
+	int32 value=1;
+}
+
+message POWITStatus
+{
+	bool active=1;
+}
+
+message PWMStatus{int32 level = 1;}
+
+message RGBWStatus{
+	int32 R=1;
+	int32 G=2;
+	int32 B=3;
+	int32 W=4;
+}
+
+message STDBYStatus
+{
+	bool active=1;
+}
+
+message StatusMessage {
+
+  oneof oneofstatus {
+    BLINDStatus blind = 1;
+    BSENSStatus bsens = 2;
+    POWITStatus powit = 3;
+    PWMStatus pwm = 4;
+    RGBWStatus rgbw = 5;
+    STDBYStatus stdby = 6;
+  }
+
+}

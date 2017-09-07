@@ -228,6 +228,11 @@ eAppResult cSound::Setup() {
 	return BSP::SetDigitalOutput(this->output, BSP::INACTIVE)?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
+eAppType cSound::GetAppType()
+{
+	return eAppType::SOUND;
+}
+
 void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	//mp3_stop();

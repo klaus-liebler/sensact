@@ -7,7 +7,7 @@ namespace Klli.Sensact.Config
     public static class Sattlerstrasse16
     {
         private static string _(this ID id){return id.ToString();}
-        private const int DEFAULT_MIN_DIM_LEVEL = 5;
+        private const int DEFAULT_MIN_DIM_LEVEL = 2;
         private const int DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS = 20000;
         const ushort INTI = 0x0000;
         const ushort BB = 0x4000;

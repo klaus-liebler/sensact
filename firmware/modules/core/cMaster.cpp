@@ -353,7 +353,7 @@ void cMaster::mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t
 void cMaster::mqtt_publishOnTopic(eMqttTopic topic, u8 *buf, size_t len, void *arg, uint8_t qos)
 {
 	err_t err;
-	u8_t retain = 0; /* No don't retain such crappy payload... */
+	u8_t retain = 0;
 	char charbuf[2*len+1];
 	for(int i=0;i<len;i++)
 	{

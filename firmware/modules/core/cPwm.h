@@ -37,6 +37,7 @@ class cPWM: public cApplication
 
 	public:
 		eAppResult Setup() override;
+		eAppType GetAppType() override;
 		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PwmApplication.hinc>
 			cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);

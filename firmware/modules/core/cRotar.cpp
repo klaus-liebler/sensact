@@ -9,6 +9,48 @@
 
 namespace sensact {
 
+const uint32_t DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE = 400;
+
+cROTAR::cROTAR(
+			const eApplicationID id,
+			const eRotaryEncoder inputRotary,
+			uint16_t const inputPush,
+			const eEventType *const localEvents,
+			const uint8_t localEventsLength,
+			const eEventType *const busEvents,
+			const uint8_t busEventsLength,
+			const Command *const pressedCommands,
+			const uint8_t pressedCommandsLength,
+			const Command *const releasedShortCommands,
+			const uint8_t releasedShortCommandsLength,
+			const Command *const releasedLongCommands,
+			const uint8_t releasedLongCommandsLength,
+			const Command *const turnedCommands,
+			const uint8_t turnedCommandsLength
+			) :
+			cApplication(id),
+				inputRotary(inputRotary),
+				inputPush(inputPush),
+				localEvents(localEvents),
+				localEventsLength(localEventsLength),
+				busEvents(busEvents),
+				busEventsLength(busEventsLength),
+				pressedCommands(pressedCommands),
+				pressedCommandsLength(pressedCommandsLength),
+				releasedShortCommands(releasedShortCommands),
+				releasedShortCommandsLength(releasedShortCommandsLength),
+				releasedLongCommands(releasedLongCommands),
+				releasedLongCommandsLength(releasedLongCommandsLength),
+				turnedCommands(turnedCommands),
+				turnedCommandsLength(turnedCommandsLength),
+				lastChange(0), lastPressOrRelease(0), rotaryState(0), pushState(ePushState::RELEASED) {
+	}
+
+eAppType cROTAR::GetAppType()
+{
+	return eAppType::ROTAR;
+}
+
 
 void cROTAR::OnPressed(Time_t now) {
 	LOGD("cROTAR::OnPressed with %d commands", this->pressedCommandsLength);
@@ -53,11 +95,12 @@ eAppResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 			&& isPressed) {
 		this->pushState = ePushState::PRESSED;
 		this->lastChange = now;
+		this->lastPressOrRelease=now;
 		OnPressed(now);
 		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->pushState == ePushState::PRESSED
 			&& !isPressed) {
-		if (now - this->lastChange < 400) {
+		if (now - this->lastChange < SHORT_PRESS) {
 			OnReleasedShort(now);
 			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else {
@@ -67,13 +110,18 @@ eAppResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		this->pushState = ePushState::RELEASED;
 		this->lastChange = now;
+		this->lastPressOrRelease=now;
 	}
 	uint16_t currentRotaryState = BSP::GetRotaryEncoderValue(this->inputRotary);
 	if(currentRotaryState!=this->rotaryState)
 	{
 		int16_t change =  currentRotaryState-this->rotaryState;
-		OnTurned(now, change);
-		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::TURNED, localEvents, localEventsLength, busEvents, busEventsLength, (uint8_t*)&change ,2);
+		this->lastChange=now;
+		if(now-this->lastPressOrRelease>DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE)
+		{
+			OnTurned(now, change);
+			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::TURNED, localEvents, localEventsLength, busEvents, busEventsLength, (uint8_t*)&change ,2);
+		}
 		this->rotaryState=currentRotaryState;
 	}
 	*statusBufferLength=0;

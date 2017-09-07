@@ -18,6 +18,11 @@ eAppResult cSensactNode::Setup() {
 	return eAppResult::OK;
 }
 
+eAppType cSensactNode::GetAppType()
+{
+	return eAppType::SNSCT;
+}
+
 void cSensactNode::OnPINGCommand(uint32_t payload, Time_t now)
 {
 	cMaster::PublishApplicationEvent(now, this->Id, eEventType::PONG, (uint8_t*)&payload, 4);

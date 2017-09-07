@@ -27,6 +27,11 @@ eAppResult cBlind::Setup() {
 	return eAppResult::OK;
 }
 
+eAppType cBlind::GetAppType()
+{
+	return eAppType::BLIND;
+}
+
 void cBlind::up(Time_t now)
 {
 	LOGD("%s goes up!", N());

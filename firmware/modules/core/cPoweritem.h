@@ -16,6 +16,7 @@ namespace sensact
 
 	public:
 		eAppResult Setup() override;
+		eAppType GetAppType() override;
 		eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PoweritemApplication.hinc>
 		void RaiseEvent(eEventType evt);

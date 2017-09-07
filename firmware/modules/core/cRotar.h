@@ -24,6 +24,7 @@ private:
 	const Command *const turnedCommands;
 	const uint8_t turnedCommandsLength;
 	Time_t lastChange;
+	Time_t lastPressOrRelease;
 	uint16_t rotaryState;
 	ePushState pushState;
 	void OnPressed(Time_t);
@@ -33,6 +34,7 @@ private:
 
 public:
 	eAppResult Setup() override;
+	eAppType GetAppType() override;
 	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 	cROTAR(
@@ -51,24 +53,7 @@ public:
 			const uint8_t releasedLongCommandsLength,
 			const Command *const turnedCommands,
 			const uint8_t turnedCommandsLength
-			) :
-			cApplication(id),
-				inputRotary(inputRotary),
-				inputPush(inputPush),
-				localEvents(localEvents),
-				localEventsLength(localEventsLength),
-				busEvents(busEvents),
-				busEventsLength(busEventsLength),
-				pressedCommands(pressedCommands),
-				pressedCommandsLength(pressedCommandsLength),
-				releasedShortCommands(releasedShortCommands),
-				releasedShortCommandsLength(releasedShortCommandsLength),
-				releasedLongCommands(releasedLongCommands),
-				releasedLongCommandsLength(releasedLongCommandsLength),
-				turnedCommands(turnedCommands),
-				turnedCommandsLength(turnedCommandsLength),
-				lastChange(0), rotaryState(0), pushState(ePushState::RELEASED) {
-	}
+			);
 };
 }
 

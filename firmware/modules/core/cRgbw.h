@@ -31,6 +31,7 @@ class cRgbw: public cApplication
 
 	public:
 		eAppResult Setup() override;
+		eAppType GetAppType() override;
 		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 		#include <RgbwApplication.hinc>
 		cRgbw(const eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController);

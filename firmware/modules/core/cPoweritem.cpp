@@ -23,6 +23,11 @@ eAppResult cPoweritem::Setup() {
 	return eAppResult::OK;
 }
 
+eAppType cPoweritem::GetAppType()
+{
+	return eAppType::POWIT;
+}
+
 void cPoweritem::OnONCommand(uint32_t autoOffMsecs, Time_t now)
 {
 	if(autoOffMsecs!=0)

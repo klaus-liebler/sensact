@@ -9,6 +9,11 @@
 
 namespace sensact {
 
+eAppType cPushbutton::GetAppType()
+{
+	return eAppType::PSHBT;
+}
+
 void cPushbuttonX::OnPressed(Time_t now) {
 	LOGI("%s OnPressed %d with %d commands", Name, this->input, this->pressedCommandsLength);
 	int i=0;
@@ -100,10 +105,10 @@ eAppResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *s
 		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 	} else if (this->state == ePushState::PRESSED
 			&& !isPressed) {
-		if (now - this->lastChange < 600) {
+		if (now - this->lastChange < SHORT_PRESS) {
 			OnReleasedShort(now);
 			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_SHORT, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
-		} else if (now - this->lastChange < 4000) {
+		} else if (now - this->lastChange < LONG_PRESS) {
 			OnReleasedMedium(now);
 			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_MEDIUM, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		} else {

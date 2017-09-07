@@ -22,6 +22,11 @@ eAppResult cStandbyController::Setup()
 	return BSP::SetDigitalOutput(this->relay, BSP::INACTIVE)?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
+eAppType cStandbyController::GetAppType()
+{
+	return eAppType::SNSCT;
+}
+
 
 
 void cStandbyController::OnHEARTBEATCommand(uint32_t sender, Time_t now)

@@ -41,6 +41,11 @@ cPWM::cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t 
 	}
 }
 
+eAppType cPWM::GetAppType()
+{
+	return eAppType::PWM;
+}
+
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
 	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Name, target);

@@ -21,6 +21,11 @@ eAppResult cBrightnessSensor::Setup() {
 	return this->sensor->Setup()?eAppResult::OK:eAppResult::BUS_ERROR;
 }
 
+eAppType cBrightnessSensor::GetAppType()
+{
+	return eAppType::BSENS;
+}
+
 void cBrightnessSensor::OnTOGGLE_FILTERCommand(uint16_t targetApplicationId, Time_t now)
 {
 	uint16_t raw = this->sensor->GetRawSensorValue();
@@ -61,6 +66,7 @@ eAppResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, si
 	counter++;
 	Common::WriteInt16(previousValue, statusBuffer, 0);
 	*statusBufferLength=2;
+	return eAppResult::OK;
 }
 
 }

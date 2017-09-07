@@ -12,6 +12,7 @@ namespace sensact{
 		eApplicationID finalTarget;
 	public:
 		eAppResult Setup() override;
+		eAppType GetAppType() override;
 #include <ForwarderApplication.hinc>
 
 
