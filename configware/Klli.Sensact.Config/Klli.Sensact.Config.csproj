@@ -58,6 +58,7 @@
     <Compile Include="Applications\RgbwApplication.cs" />
     <Compile Include="Applications\SensactNodeApplication.cs" />
     <Compile Include="GeneratedConstants.cs" />
+    <Compile Include="Nodes\SensactUp04.cs" />
     <Compile Include="SensactApplication.cs" />
     <Compile Include="Applications\BlindApplication.cs" />
     <Compile Include="Applications\MasterApplication.cs" />

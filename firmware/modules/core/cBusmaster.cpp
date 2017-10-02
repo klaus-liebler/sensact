@@ -72,7 +72,7 @@ void cBusmaster::Init() const
 	{
 		uint16_t line = interruptlines[i];
 		GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(line>>4)));
-#ifdef STM32F4
+#if defined(STM32F4) or defined(STM32F0)
 		uint32_t currVal =  theGPIO->PUPDR;
 		currVal |= (1 << 2*(line & 0x000F));
 		theGPIO->PUPDR=currVal;
@@ -507,7 +507,7 @@ bool cBusmaster::SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value
 		sixteenMask = 1<<(output & 0xF);
 	}
 
-	drivers::cPCA9685::SetOutputs(mybus, i2cAddrOffset, sixteenMask, value);
+	return drivers::cPCA9685::SetOutputs(mybus, i2cAddrOffset, sixteenMask, value);
 }
 
 

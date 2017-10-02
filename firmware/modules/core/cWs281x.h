@@ -27,8 +27,9 @@ private:
 	volatile uint8_t buffer[24*RGBLED_SIZE+1] __attribute__((aligned(4)));
 	eWsVariant wsVariant;
 public:
-	eAppResult Setup() override;
-	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult Setup() override;
+	eAppType GetAppType() override;
+	eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 	static const cRGB Black;//(0,0,0);
 	static const cRGB White;//	#FFFFFF	(255,255,255)
 	static const cRGB  	Red;//	#FF0000	(255,0,0)

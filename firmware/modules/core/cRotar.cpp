@@ -82,12 +82,12 @@ void cROTAR::OnReleasedLong(Time_t now) {
 }
 
 
-eAppResult cROTAR::Setup() {
-	return eAppResult::OK;
+eAppCallResult cROTAR::Setup() {
+	return eAppCallResult::OK;
 }
 
 
-eAppResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool isPressed=false;
 	BSP::GetDigitalInput(this->inputPush, &isPressed);
 	isPressed=!isPressed;
@@ -125,7 +125,7 @@ eAppResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 		this->rotaryState=currentRotaryState;
 	}
 	*statusBufferLength=0;
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 void cROTAR::OnTurned(Time_t now, int16_t change)

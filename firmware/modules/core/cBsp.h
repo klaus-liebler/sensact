@@ -27,6 +27,19 @@
 #define BUS_CNT 2
 #endif
 
+#ifdef SENSACTUP04
+#define CONSOLE_USART USART1
+//#define BUS_USART USART2
+#define CONSOLE_USART_IRQn USART1_IRQn
+#define UART_BUFFER_SIZE 100
+//#define MP3_BELL_USART USART1
+//#define CAN CAN
+#define CAN_PRESCALER 24
+//#define DCF77_PORT GPIOC
+//#define DCF77_PIN GPIO_PIN_4
+#define BUS_CNT 1
+#endif
+
 #ifdef SENSACTUP02
 #define CONSOLE_USART USART1
 #define MP3_BELL_USART USART1

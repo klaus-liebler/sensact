@@ -92,7 +92,7 @@ static const sensact::sScheduleEntry schedule[]
 	cBusmaster const * const MODEL::busses[] = {&buttonBus, &relayBus};
 #endif
 
-#if defined(NODE_TEST_UP02)
+#if defined(NODE_TEST_UP02) || defined(NODE_TEST_UP03) || defined(NODE_TEST_UP04)
 	const bool MODEL::TRACE_COMMANDS=true;
 	const bool MODEL::TRACE_EVENTS=true;
 

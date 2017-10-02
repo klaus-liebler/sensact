@@ -50,6 +50,15 @@ I2C_HandleTypeDef BSP::i2c2;
 const uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
+#ifdef SENSACTUP04
+const char BSP::SystemString[] = "sensactup 0.4, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
+const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
+DMA_HandleTypeDef hdma_tim1_ch1;
+I2C_HandleTypeDef BSP::i2c1;
+I2C_HandleTypeDef BSP::i2c2;
+const uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+#endif
+
 #ifdef SENSACTHS04
 const char BSP::SystemString[] = "sensactHS04 2015-07-27, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
 const char BSP::gimmick[] ="                                _      ___   ____  \r\n  ___  ___ _ __  ___  __ _  ___| |_   / _ \\ | ___| \r\n / __|/ _ \\ '_ \\/ __|/ _` |/ __| __| | | | ||___ \\ \r\n \\__ \\  __/ | | \\__ \\ (_| | (__| |_  | |_| | ___) |\r\n |___/\\___|_| |_|___/\\__,_|\\___|\\__|  \\___(_)____/ \r\n";
@@ -473,6 +482,9 @@ static bool RequestRotaryEncoder(eRotaryEncoder re) {
 #ifdef SENSACTUP03
 
 #endif
+#ifdef SENSACTUP04
+
+#endif
 	return true;
 }
 
@@ -485,7 +497,7 @@ uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 	{
 		return 0;
 	}
-#elif defined(SENSACTUP02) || defined(SENSACTUP03)
+#elif defined(SENSACTUP02) || defined(SENSACTUP03) || defined(SENSACTUP04)
 	if (re == eRotaryEncoder::ROTARYENCODER_1) {
 		return (uint16_t) (TIM2->CNT & 0xFFFE);
 	} else if (re == eRotaryEncoder::ROTARYENCODER_2) {

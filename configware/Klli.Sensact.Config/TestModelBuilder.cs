@@ -308,7 +308,7 @@ namespace Klli.Sensact.Config
 
 
 
-            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
+            Node TEST_UP04 = new Nodes.SensactUp04("TEST_UP04")
             {
                 Applications = new List<SensactApplication>
                 {
@@ -340,7 +340,7 @@ namespace Klli.Sensact.Config
             };
             model.Nodes = new List<Node>(){
                 TEST_HS07,
-                TEST_UP02
+                TEST_UP04
 
             };
             return model;

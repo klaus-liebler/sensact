@@ -77,8 +77,8 @@ void cPushbuttonX::OnDoubleclick(Time_t now)
 	}
 }
 
-eAppResult cPushbutton::Setup() {
-	return eAppResult::OK;
+eAppCallResult cPushbutton::Setup() {
+	return eAppCallResult::OK;
 }
 
 cPushbutton::cPushbutton(const eApplicationID id, uint16_t const input,
@@ -91,7 +91,7 @@ cPushbutton::cPushbutton(const eApplicationID id, uint16_t const input,
 	}
 
 
-eAppResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool isPressed;
 	BSP::GetDigitalInput(this->input, &isPressed);
 	isPressed = !isPressed; //because all buttons are connected to GND
@@ -139,6 +139,7 @@ eAppResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *s
 		}
 	}
 	*statusBufferLength=0;
+	return eAppCallResult::OK;
 }
 
 }

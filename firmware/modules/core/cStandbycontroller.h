@@ -16,9 +16,9 @@ namespace sensact{
 		const uint32_t waitTimeMsecs;
 		bool changedFlag;
 	public:
-		eAppResult Setup() override;
+		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
-		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+		eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 		#include <StandbyControllerApplication.hinc>
 		/**
 		 * @param evt

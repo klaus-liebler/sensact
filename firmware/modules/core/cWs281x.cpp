@@ -35,7 +35,7 @@ cWs281x::cWs281x(eApplicationID id, eWsVariant variant):cApplication(id), wsVari
 
 
 
-eAppResult cWs281x::Setup()
+eAppCallResult cWs281x::Setup()
 {
 	uint16_t bitindex;
 	for(bitindex=0;bitindex<=24*RGBLED_SIZE;bitindex++) //"<=" for final reset impulse
@@ -43,7 +43,12 @@ eAppResult cWs281x::Setup()
 		buffer[bitindex]=0;
 	}
 
-	return eAppResult::OK;
+	return eAppCallResult::OK;
+}
+
+eAppType cWs281x::GetAppType()
+{
+	return eAppType::RGBW;
 }
 
 void cWs281x::SetPixelRGB(uint8_t ledIndex, cRGB color)
@@ -269,7 +274,7 @@ void cWs281x::Commit()
 }
 
 
-eAppResult cWs281x::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cWs281x::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	UNUSED(now);
 	for(int i=0;i<8;i++)
@@ -278,7 +283,7 @@ eAppResult cWs281x::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statu
 	}
 	*statusBufferLength=8;
 
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 

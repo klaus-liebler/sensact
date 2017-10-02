@@ -14,8 +14,8 @@ cSensactNode::cSensactNode(const eApplicationID id):cApplication(id)
 
 }
 
-eAppResult cSensactNode::Setup() {
-	return eAppResult::OK;
+eAppCallResult cSensactNode::Setup() {
+	return eAppCallResult::OK;
 }
 
 eAppType cSensactNode::GetAppType()
@@ -42,12 +42,12 @@ void cSensactNode::OnSET_PWMCommand(uint32_t channelBitmask, uint16_t value, Tim
 }
 
 
-eAppResult cSensactNode::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cSensactNode::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	UNUSED(now);
 	UNUSED(statusBuffer);
 	*statusBufferLength=0;
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 }

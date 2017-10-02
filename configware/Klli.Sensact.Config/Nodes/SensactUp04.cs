@@ -2,7 +2,7 @@
 
 namespace Klli.Sensact.Config.Nodes
 {
-    internal class SensactUp02 : Node
+    internal class SensactUp04 : Node
     {
         public const int Pin_ROTD = 16+15;
         public const int Pin_xROTD = 16 + 3;
@@ -14,11 +14,11 @@ namespace Klli.Sensact.Config.Nodes
         public const int Pin_5 = 7;
         public const int Pin_6 = 16;
         public const int Pin_7 = 17;
-        public SensactUp02(ID appId) : base(appId)
+        public SensactUp04(ID appId) : base(appId)
         {
 
         }
-        public SensactUp02(string appId) : base(appId)
+        public SensactUp04(string appId) : base(appId)
         {
 
         }
@@ -28,8 +28,8 @@ namespace Klli.Sensact.Config.Nodes
             {
                 return new STM32Chip()
                 {
-                    Family = STM32_FAMILY.F1,
-                    Type = STM32_TYPE._03,
+                    Family = STM32_FAMILY.F0,
+                    Type = STM32_TYPE._72,
                     Package = STM32_PACKAGE.C,
                     Flash = STM32_FLASH._B
                 };
@@ -63,7 +63,7 @@ namespace Klli.Sensact.Config.Nodes
         {
             get
             {
-                return 12000000;
+                return 16000000;
             }
         }
 
@@ -79,7 +79,7 @@ namespace Klli.Sensact.Config.Nodes
         {
             get
             {
-                return 2;
+                return 4;
             }
         }
     }

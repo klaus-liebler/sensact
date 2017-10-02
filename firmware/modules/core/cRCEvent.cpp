@@ -74,13 +74,13 @@ void cRCEvent::OnPressedShortAndHold(Time_t now) {
 	}
 }
 
-eAppResult cRCEvent::Setup()
+eAppCallResult cRCEvent::Setup()
 {
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 
-eAppResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(BSP::HasRCEventOccured(eventCode))
 	{
 		lastEvent=now;
@@ -112,7 +112,7 @@ eAppResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 		//lastEvent is not resettet, but remains on the timestamp of the last perceived event
 	}
 	*statusBufferLength=0;
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 }

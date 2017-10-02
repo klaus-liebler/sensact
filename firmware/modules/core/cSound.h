@@ -12,9 +12,9 @@ private:
 	cWeeklySchedule * const volumeSchedule;
 	Time_t autoOffTime;
 public:
-	eAppResult Setup() override;
+	eAppCallResult Setup() override;
 	eAppType GetAppType() override;
-	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <SoundApplication.hinc>
 
 	cSound(eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule) :

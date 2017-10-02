@@ -15,9 +15,9 @@ namespace sensact
 		bool changedFlag;
 
 	public:
-		eAppResult Setup() override;
+		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
-		eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+		eAppCallResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PoweritemApplication.hinc>
 		void RaiseEvent(eEventType evt);
 		cPoweritem(eApplicationID id, uint16_t const output, Time_t const autoOffIntervalMsecs, Time_t const autoOnIntervalMsecs);

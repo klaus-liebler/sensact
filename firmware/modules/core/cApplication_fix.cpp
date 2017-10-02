@@ -6,14 +6,14 @@ namespace sensact {
 
 cApplication::cApplication(const eApplicationID id) : Id(id) {}
 
-eAppResult cApplication::OnEvent(eApplicationID sender, eEventType evt,
+eAppCallResult cApplication::OnEvent(eApplicationID sender, eEventType evt,
 			const uint8_t * const payload, uint8_t payloadLength, Time_t now) {
 		(void) sender;
 		(void) evt;
 		(void) payload;
 		(void) payloadLength;
 		(void) now;
-		return eAppResult::OK;
+		return eAppCallResult::OK;
 	}
 
 const char*const cApplication::NN(eApplicationID const appId)

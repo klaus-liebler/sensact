@@ -7,19 +7,27 @@
 
 //Known Nodes are
 //#define NODE_SNSCT_L0_TECH_HS_1
-#define NODE_SNSCT_L3_TECH_HS_1
+//#define NODE_SNSCT_L3_TECH_HS_1
 //#define NODE_SNSCT_L1_KTCH_UP
 //#define NODE_SNSCT_L1_LVNG_UP
 //#define NODE_SNSCT_L2_BATH_UP
 //#define NODE_TEST_HS07
 //#define NODE_TEST_UP02
 //#define NODE_TEST_UP03
+#define NODE_TEST_UP04
 
 #ifdef NODE_SNSCT_L3_TECH_HS_1
 #define MASTERNODE
 #endif
 #ifdef NODE_TEST_HS07
 #define MASTERNODE
+#endif
+#if defined(SENSACTUP01) || defined(SENSACTUP02) || defined(SENSACTUP03) || defined(SENSACTUP04)
+#define SENSACTUP
+#elif defined(SENSACTHS07) || defined(SENSACTHS08)
+#define SENSACTHS
+#else
+#error This is neither sensacths nor sensactup
 #endif
 
 #define INTI 0x0000

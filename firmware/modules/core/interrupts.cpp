@@ -89,7 +89,7 @@ void USART1_IRQHandler(void)
 {
 	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
 #endif
-#ifdef SENSACTUP03
+#if defined(SENSACTUP03) or defined (SENSACTUP04)
 void USART1_IRQHandler(void)
 {
 	if(READ_BIT(CONSOLE_USART->ISR, USART_ISR_RXNE))
@@ -106,7 +106,7 @@ void USART1_IRQHandler(void)
 #ifdef SENSACTUP02
 			volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->DR); /* Receive data, clear flag */
 #endif
-#ifdef SENSACTUP03
+#if defined(SENSACTUP03) or defined(SENSACTUP04)
 			volatile uint8_t chartoreceive = (uint8_t)(CONSOLE_USART->RDR); /* Receive data, clear flag */
 #endif
 

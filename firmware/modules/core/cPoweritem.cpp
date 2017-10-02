@@ -11,7 +11,7 @@
 namespace sensact {
 
 cPoweritem::cPoweritem(eApplicationID id, uint16_t output, Time_t autoOffIntervalMsecs, Time_t autoOnIntervalMsecs) :
-					cApplication(id), state(ePowerState::INACTIVE), output(output), autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), nextChange(TIME_MAX), changedFlag(false)
+					cApplication(id), output(output),  autoOffIntervalMsecs(autoOffIntervalMsecs),autoOnIntervalMsecs(autoOnIntervalMsecs), state(ePowerState::INACTIVE), nextChange(TIME_MAX), changedFlag(false)
 {
 	if(autoOnIntervalMsecs!=0)
 	{
@@ -19,8 +19,8 @@ cPoweritem::cPoweritem(eApplicationID id, uint16_t output, Time_t autoOffInterva
 	}
 }
 
-eAppResult cPoweritem::Setup() {
-	return eAppResult::OK;
+eAppCallResult cPoweritem::Setup() {
+	return eAppCallResult::OK;
 }
 
 eAppType cPoweritem::GetAppType()
@@ -95,7 +95,7 @@ void cPoweritem::OnTOGGLE_SPECIALCommand(Time_t now)
 }
 
 
-eAppResult cPoweritem::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cPoweritem::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(now>=nextChange)
 	{
@@ -105,7 +105,7 @@ eAppResult cPoweritem::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *st
 	}
 	statusBuffer[0]=(uint8_t)state;
 	*statusBufferLength=1;
-	eAppResult ret = changedFlag?eAppResult::OK_CHANGED:eAppResult::OK;
+	eAppCallResult ret = changedFlag?eAppCallResult::OK_CHANGED:eAppCallResult::OK;
 	changedFlag=false;
 	return ret;
 }

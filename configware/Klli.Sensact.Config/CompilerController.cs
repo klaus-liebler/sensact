@@ -44,7 +44,7 @@ namespace Klli.Sensact.Config
     }
 
     public enum STM32_FAMILY { F0 = 0, F1 = 1, F2 = 2, F4 = 4 };
-    public enum STM32_TYPE { _00=0, _01=1, _03=3, _05=5, _07=7 }
+    public enum STM32_TYPE { _00=0, _01=1, _03=3, _05=5, _07=7, _72=72 }
     public enum STM32_PACKAGE { T = 36, C = 48, R = 64, V = 100, Z = 144, I = 176 }
     public enum STM32_FLASH { _4 = 16, _6 = 32, _8 = 64, _B = 128, _C = 256, _D = 384, _E = 512, _F = 768, _G = 1024 }
 

@@ -27,7 +27,7 @@ cPWM::cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t 
 		targetLevel(0),
 		lastHeartbeatToStandbycontroller(0),
 		autoOffTime(TIME_MAX),
-		lastReturnedSpecialAppResult(eAppResult::OK)
+		lastReturnedSpecialAppResult(eAppCallResult::OK)
 {
 
 	baseOutput=output[0] & 0xFFF0;
@@ -152,7 +152,6 @@ void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 	}
 }
 
-
 void cPWM::OnTOGGLECommand(Time_t now)
 {
 	LOGD("%s OnTOGGLECommand called", this->Name);
@@ -170,7 +169,6 @@ void cPWM::OnTOGGLECommand(Time_t now)
 	}
 }
 
-
 void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 	LOGD("%s OnONCommand called", this->Name);
 	targetLevel=UINT8_MAX;
@@ -184,8 +182,6 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 	}
 }
 
-
-
 void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 	UNUSED(forced);
 	LOGD("%s OnDOWNCommand called", this->Name);
@@ -196,14 +192,14 @@ void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 	}
 }
 
-eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(autoOffIntervalMsecs!=0 && autoOffTime<now && targetLevel>0)
 	{
 		LOGD("%s starting to switch off automatically", Name);
 		targetLevel=0;
 		autoOffTime =TIME_MAX;
 	}
-	eAppResult ret = eAppResult::OK;
+	eAppCallResult ret = eAppCallResult::OK;
 
 	switch (autoDimDirection) {
 		case eDirection::STOP:
@@ -232,13 +228,14 @@ eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBu
 		if(currentLevel+DIM_TO_TARGET_STEP>=targetLevel)
 		{
 			currentLevel=targetLevel;
+			LOGD("%s currentLevel+DIM_TO_TARGET_STEP>=targetLevel %d", N(), currentLevel);
 		}
 		else
 		{
 			currentLevel+=DIM_TO_TARGET_STEP;
-			if(lastReturnedSpecialAppResult!=eAppResult::OK_CHANGEUP_START)
+			if(lastReturnedSpecialAppResult!=eAppCallResult::OK_CHANGEUP_START)
 			{
-				lastReturnedSpecialAppResult = ret = eAppResult::OK_CHANGEUP_START;
+				lastReturnedSpecialAppResult = ret = eAppCallResult::OK_CHANGEUP_START;
 			}
 		}
 
@@ -249,21 +246,23 @@ eAppResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBu
 		if(currentLevel-DIM_TO_TARGET_STEP<=targetLevel)
 		{
 			currentLevel=targetLevel;
+			LOGD("%s currentLevel-DIM_TO_TARGET_STEP<=targetLevel %d", N(), currentLevel);
 		}
 		else
 		{
 			currentLevel-=DIM_TO_TARGET_STEP;
-			if(lastReturnedSpecialAppResult!=eAppResult::OK_CHANGEUP_START)
+			if(lastReturnedSpecialAppResult!=eAppCallResult::OK_CHANGEUP_START)
 			{
-				lastReturnedSpecialAppResult = ret = eAppResult::OK_CHANGEDOWN_START;
+				lastReturnedSpecialAppResult = ret = eAppCallResult::OK_CHANGEDOWN_START;
 
 			}
 		}
 		WriteCurrentLevelToOutput();
 	}
-	if(targetLevel==currentLevel && lastReturnedSpecialAppResult != eAppResult::OK_CHANGE_END)
+	if(targetLevel==currentLevel && lastReturnedSpecialAppResult != eAppCallResult::OK_CHANGE_END)
 	{
-		ret= lastReturnedSpecialAppResult = eAppResult::OK_CHANGE_END;
+		ret= lastReturnedSpecialAppResult = eAppCallResult::OK_CHANGE_END;
+		LOGD("%s ret= lastReturnedSpecialAppResult = eAppResult::OK_CHANGE_END;");
 	}
 
 	if(standbyController!=eApplicationID::NO_APPLICATION && currentLevel>0 && now-lastHeartbeatToStandbycontroller>3000)
@@ -294,10 +293,10 @@ void cPWM::WriteCurrentLevelToOutput() {
 
 }
 
-eAppResult cPWM::Setup() {
+eAppCallResult cPWM::Setup() {
 	currentLevel=0;
 	WriteCurrentLevelToOutput();
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 const uint16_t cPWM::level2brightness[] = { 0, 66, 67, 69, 71, 73, 75, 77,

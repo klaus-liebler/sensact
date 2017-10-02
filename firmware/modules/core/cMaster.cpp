@@ -158,16 +158,18 @@ void cMaster::Run(void) {
 	uint32_t statusBufferU32[STATUSBUFFER_LENGTH_BYTES/4]; //use u32 to have it 4byte-aligned
 	uint8_t* statusBuffer = (uint8_t*)statusBufferU32;
 	size_t statusBufferLength=0;
-	eAppResult appResult;
+	eAppCallResult appResult;
 
 
-	//start at "1" here, because "0" is the local/global master
+	//start at "1" here, because "0" is the global master, then starting at 1, the node application start
 	for (appId = 1; appId < (uint16_t) eApplicationID::CNT; appId++) {
 		cApplication * const ap = MODEL::Glo2locCmd[appId];
 		if (!ap) continue;
 		appResult = ap->Setup();
+#ifdef MASTERNODE
 		MX_LWIP_Process();
-		if((uint8_t)appResult<(uint8_t)eAppResult::ERROR_GENERIC)
+#endif
+		if((uint8_t)appResult<(uint8_t)eAppCallResult::ERROR_GENERIC)
 		{
 			LOGI("App %s successfully configured", MODEL::ApplicationNames[appId]);
 		}
@@ -177,7 +179,9 @@ void cMaster::Run(void) {
 		}
 		statusBuffer[0]=(u8)appResult;
 		PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::STARTED, statusBuffer, 8);
+#ifdef MASTERNODE
 		MX_LWIP_Process();
+#endif
 		appCnt++;
 
 	}
@@ -202,9 +206,9 @@ void cMaster::Run(void) {
 			}
 #endif
 
-			if((uint8_t)appResult<(uint8_t)eAppResult::ERROR_GENERIC)
+			if((uint8_t)appResult<(uint8_t)eAppCallResult::ERROR_GENERIC)//means: no error
 			{
-				if(appResult != eAppResult::OK)
+				if(appResult != eAppCallResult::OK)
 				{
 					if(statusBufferLength>0)
 					{
@@ -259,10 +263,12 @@ void cMaster::Run(void) {
 		while (BSP::GetSteadyClock()-now < 20) {
 			CanBusProcess();
 		}
+#ifdef MASTERNODE
 		MX_LWIP_Process();
+#endif
 	}
 }
-
+#ifdef MASTERNODE
 void cMaster::mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
 {
 	err_t err;
@@ -374,7 +380,7 @@ void cMaster::mqtt_pub_request_cb(void *arg, err_t result)
 		LOGI("Publish result: %d\n", result);
 
 }
-
+#endif
 void cMaster::OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now)
 {
 	UNUSED(command);
@@ -492,7 +498,6 @@ void cMaster::PublishApplicationEventFiltered(Time_t now, const eApplicationID s
 
 }
 
-#define HIGHEST_CAN_BIT 0x10000000
 void cMaster::CanBusProcess() {
 
 	uint16_t appId;

@@ -23,8 +23,8 @@ cBlind::cBlind(eApplicationID const id, uint16_t const relayUp, uint16_t const r
 {
 }
 
-eAppResult cBlind::Setup() {
-	return eAppResult::OK;
+eAppCallResult cBlind::Setup() {
+	return eAppCallResult::OK;
 }
 
 eAppType cBlind::GetAppType()
@@ -225,7 +225,7 @@ void cBlind::assureAllRelaysOff()
  * Bei einem Stop wird die WellKnownPosition aktualisiert.
  * Sonderfälle MIN und MAX Position: Damit diese auf jeden Fall erreicht werden, hört der Motor in diesen Fällen erst auf, wenn der berechnete Istwert deutlich unter/überschritten wird
  */
-eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	uint16_t currPos;
 
@@ -243,15 +243,15 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 		{
 			assureAllRelaysOff();
 		}
-		return eAppResult::OK;
+		return eAppCallResult::OK;
 	}
 	if(this->state==eDirection::PREPAREDOWN && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		down(now);
-		return eAppResult::OK_CHANGEDOWN_START;
+		return eAppCallResult::OK_CHANGEDOWN_START;
 	}
 	if(this->state==eDirection::PREPAREUP && now-lastChanged >= WAITTIME_AFTER_PREPARE){
 		up(now);
-		return eAppResult::OK_CHANGEUP_START;
+		return eAppCallResult::OK_CHANGEUP_START;
 	}
 	currPos=calculatePosition(now);
 	if(this->state == eDirection::UP)
@@ -264,7 +264,7 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 			{
 				stopForReverse(now, currPos);
 			}
-			return eAppResult::OK_CHANGE_END;
+			return eAppCallResult::OK_CHANGE_END;
 		}
 
 	}
@@ -280,9 +280,9 @@ eAppResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *status
 				stopForReverse(now, currPos);
 			}
 		}
-		return eAppResult::OK_CHANGE_END;
+		return eAppCallResult::OK_CHANGE_END;
 	}
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 };

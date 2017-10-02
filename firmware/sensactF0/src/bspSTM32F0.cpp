@@ -2,7 +2,7 @@
 #include <cBsp.h>
 #include <bsp_features.h>
 #include <cModel.h>
-#define LOGLEVEL LEVEL_WARN
+#define LOGLEVEL LEVEL_INFO
 #define LOGNAME "BRDSP"
 #include <cLog.h>
 #include <console.h>
@@ -112,6 +112,21 @@ void ConfigureGPIOPinAlternate(GPIO_TypeDef * gpio, Pin pin, AF af, Speed speed,
 void ConfigureGPIOPinOutput(GPIO_TypeDef * gpio, Pin pin, OutputType outputType, Pull pull );
 void ConfigureGPIOPinInput(GPIO_TypeDef * gpio, Pin pin, Pull pull);
 
+void ConfigureGPIOPinAlternate(uint8_t pin, AF af, Speed speed, OutputType outputType, Pull pull )
+{
+	GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(pin>>4)));
+	Pin pinEnum =(Pin)(1<<(pin & 0xF));
+	ConfigureGPIOPinAlternate(theGPIO, pinEnum, af, speed, outputType, pull);
+}
+
+void ConfigureGPIOPinOutput(uint8_t pin, OutputType outputType, Pull pull )
+{
+	GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(pin>>4)));
+	Pin pinEnum =(Pin)(1<<(pin & 0xF));
+	ConfigureGPIOPinOutput(theGPIO, pinEnum, outputType, pull);
+}
+
+
 void ConfigureGPIOPinAlternate(GPIO_TypeDef * gpio, Pin pin, AF af, Speed speed, OutputType outputType, Pull pull )
 {
 	LL_GPIO_SetPinMode(gpio, (uint32_t)pin, LL_GPIO_MODE_ALTERNATE);
@@ -132,7 +147,7 @@ void ConfigureGPIOPinAlternate(GPIO_TypeDef * gpio, Pin pin, AF af, Speed speed,
 void ConfigureGPIOPinOutput(GPIO_TypeDef * gpio, Pin pin, OutputType outputType, Pull pull )
 {
 	LL_GPIO_SetPinMode(gpio, (uint32_t)pin, LL_GPIO_MODE_OUTPUT);
-	LL_GPIO_SetPinSpeed(gpio, (uint32_t)pin, GPIO_SPEED_FREQ_LOW);
+	LL_GPIO_SetPinSpeed(gpio, (uint32_t)pin, GPIO_SPEED_FREQ_MEDIUM);
 	LL_GPIO_SetPinOutputType(gpio, (uint32_t)pin, (uint32_t)outputType);
 	LL_GPIO_SetPinPull(gpio, (uint32_t)pin, (uint32_t)pull);
 }
@@ -141,55 +156,9 @@ void ConfigureGPIOPinInput(GPIO_TypeDef * gpio, Pin pin, Pull pull )
 {
 	LL_GPIO_SetPinPull(gpio, (uint32_t)pin, (uint32_t)pull);
 }
-void BSP::Init(void) {
 
-	GPIO_InitTypeDef gi;
-	//HAL_StatusTypeDef status;
-	__HAL_RCC_GPIOA_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOB_CLK_ENABLE()
-	;
-	__HAL_RCC_GPIOC_CLK_ENABLE()
-	;
-	__HAL_RCC_CAN1_CLK_ENABLE()
-	;
-	__HAL_RCC_USART1_CLK_ENABLE()
-	;
-	__HAL_RCC_USART2_CLK_ENABLE()
-	;
-
-	//Enable USART1 on A09 and A10
-	ConfigureGPIOPinAlternate(GPIOA, Pin::P09, AF::PA09_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
-	ConfigureGPIOPinAlternate(GPIOA, Pin::P10, AF::PA10_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
-	InitAndTestUSART();
-
-	if (InitDWTCounter()) {
-		LOGI(BSP::SUCCESSFUL_STRING, "DWTCounter");
-	} else {
-		LOGE(BSP::NOT_SUCCESSFUL_STRING, "DWTCounter");
-	}
-
-	//PullUps for Rotary Encoders and all inputs
-	ConfigureGPIOPinInput(GPIOB, Pin::P15, Pull::UP);
-	ConfigureGPIOPinInput(GPIOB, Pin::P03, Pull::UP);
-	ConfigureGPIOPinInput(GPIOA, Pin::P02, Pull::UP);
-	// Shortcut in current PCB ConfigureGPIOPinInput(GPIOA, Pin::P03, Pull::UP);
-	ConfigureGPIOPinInput(GPIOA, Pin::P04, Pull::UP);
-	ConfigureGPIOPinInput(GPIOA, Pin::P05, Pull::UP);
-	ConfigureGPIOPinInput(GPIOA, Pin::P06, Pull::UP);
-	ConfigureGPIOPinInput(GPIOA, Pin::P07, Pull::UP);
-	ConfigureGPIOPinInput(GPIOB, Pin::P00, Pull::UP);
-	ConfigureGPIOPinInput(GPIOB, Pin::P01, Pull::UP);
-
-	//I2C
-	/*
-	 PB10     ------> I2C2_SCL
-	 PB11     ------> I2C2_SDA
-	 */
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::PB10_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::PB11_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-
-
+void BSP::ReInitI2C()
+{
 	BSP::i2c2.Instance = I2C2;
 	BSP::i2c2.Init.Timing=0x20303E5D;
 	BSP::i2c2.Init.OwnAddress1 = 0;
@@ -198,6 +167,53 @@ void BSP::Init(void) {
 	BSP::i2c2.Init.OwnAddress2 = 0;
 	BSP::i2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
 	BSP::i2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+
+	BSP::i2c1.Instance = I2C2;
+	BSP::i2c1.Init.Timing=0x20303E5D;
+	BSP::i2c1.Init.OwnAddress1 = 0;
+	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	BSP::i2c1.Init.OwnAddress2 = 0;
+	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+
+
+	/*
+	 PB10     ------> I2C2_SCL
+	 PB11     ------> I2C2_SDA
+	 */
+	/*
+	 PB06     ------> I2C1_SCL
+	 PB07     ------> I2C1_SDA
+	 */
+/*
+	HAL_I2C_DeInit(&BSP::i2c1);
+	HAL_I2C_DeInit(&BSP::i2c2);
+
+	ConfigureGPIOPinOutput(GPIOB, Pin::P06, OutputType::PUSHPULL, Pull::NO);
+	ConfigureGPIOPinOutput(GPIOB, Pin::P07, OutputType::PUSHPULL, Pull::NO);
+	ConfigureGPIOPinOutput(GPIOB, Pin::P10, OutputType::PUSHPULL, Pull::NO);
+	ConfigureGPIOPinOutput(GPIOB, Pin::P11, OutputType::PUSHPULL, Pull::NO);
+
+	for(int i=0;i<10;i++)
+	{
+		LL_GPIO_ResetOutputPin(GPIOB, GPIO_PIN_6);
+		LL_GPIO_ResetOutputPin(GPIOB, GPIO_PIN_10);
+		BSP::DelayUs(50);
+		LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_6);
+		LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_10);
+		BSP::DelayUs(50);
+	}
+*/
+	/*
+	 PB10     ------> I2C2_SCL
+	 PB11     ------> I2C2_SDA
+	 */
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::PB10_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::PB11_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
+
+
+
 	if (HAL_I2C_Init(&BSP::i2c2) == HAL_OK) {
 		LOGI(SUCCESSFUL_STRING, "I2C2");
 	} else {
@@ -213,19 +229,68 @@ void BSP::Init(void) {
 	ConfigureGPIOPinAlternate(GPIOB, Pin::P07, AF::PB07_I2C1, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
 
 
-	BSP::i2c1.Instance = I2C2;
-	BSP::i2c1.Init.Timing=0x20303E5D;
-	BSP::i2c1.Init.OwnAddress1 = 0;
-	BSP::i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	BSP::i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-	BSP::i2c1.Init.OwnAddress2 = 0;
-	BSP::i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-	BSP::i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+
 	if (HAL_I2C_Init(&BSP::i2c1) == HAL_OK) {
 		LOGI(SUCCESSFUL_STRING, "I2C1");
 	} else {
 		LOGI(NOT_SUCCESSFUL_STRING, "I2C1");
 	}
+}
+
+
+
+
+void BSP::Init(void)
+{
+
+	__HAL_RCC_GPIOA_CLK_ENABLE()
+	;
+	__HAL_RCC_GPIOB_CLK_ENABLE()
+	;
+	__HAL_RCC_GPIOC_CLK_ENABLE()
+	;
+	__HAL_RCC_CAN1_CLK_ENABLE()
+	;
+	__HAL_RCC_USART1_CLK_ENABLE()
+	;
+	__HAL_RCC_USART2_CLK_ENABLE()
+	;
+	__HAL_RCC_I2C1_CLK_ENABLE()
+	;
+	__HAL_RCC_I2C2_CLK_ENABLE()
+	;
+
+	//Enable USART1 on A09 and A10
+	ConfigureGPIOPinAlternate(GPIOA, Pin::P09, AF::PA09_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
+	ConfigureGPIOPinAlternate(GPIOA, Pin::P10, AF::PA10_USART1, Speed::HIGH, OutputType::PUSHPULL, Pull::UP);
+	InitAndTestUSART();
+
+	if (InitDWTCounter()) {
+		LOGI(BSP::SUCCESSFUL_STRING, "DWTCounter");
+	} else {
+		LOGE(BSP::NOT_SUCCESSFUL_STRING, "DWTCounter");
+	}
+
+	//PullUps for Rotary Encoders
+	ConfigureGPIOPinInput(GPIOB, Pin::P15, Pull::UP); //ROTD
+	ConfigureGPIOPinInput(GPIOB, Pin::P03, Pull::UP); //xROTD
+
+	//PullUps for all inputs
+	ConfigureGPIOPinInput(GPIOA, Pin::P02, Pull::UP);
+#ifdef SENSACTUP04
+	ConfigureGPIOPinInput(GPIOA, Pin::P03, Pull::UP); //There is a shortcut in the 03 version
+#endif
+	ConfigureGPIOPinInput(GPIOA, Pin::P04, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P05, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P06, Pull::UP);
+	ConfigureGPIOPinInput(GPIOA, Pin::P07, Pull::UP);
+	ConfigureGPIOPinInput(GPIOB, Pin::P00, Pull::UP);
+	ConfigureGPIOPinInput(GPIOB, Pin::P01, Pull::UP);
+
+
+	ReInitI2C();
+	//I2C
+
 	#define DIGITAL_FILTER_VALUE 15
 	//Rotary Encoders
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -328,6 +393,21 @@ void BSP::Init(void) {
 	for (uint8_t i = 0; i < BSP::busCnt; i++) {
 		MODEL::busses[i]->Init();
 	}
+
+
+#ifdef SENSACTUP04
+	//There is a led in version04; let it blink. Low is on!
+	LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_2);
+	ConfigureGPIOPinOutput(GPIOB, Pin::P02, OutputType::OPENDRAIN, Pull::NO);
+	for(int i=0;i<5;i++)
+	{
+		LL_GPIO_ResetOutputPin(GPIOB, GPIO_PIN_2);
+		HAL_Delay(100);
+		LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_2);
+		HAL_Delay(100);
+	}
+#endif
+
 	return;
 }
 

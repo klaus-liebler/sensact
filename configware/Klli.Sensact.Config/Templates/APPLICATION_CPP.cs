@@ -41,7 +41,7 @@ namespace Klli.Sensact.Config.Templates
 #include <cMaster.h>
 
 namespace sensact {
-eAppResult cApplication::OnCommand(eCommandType cmd, const uint8_t * const payload,
+eAppCallResult cApplication::OnCommand(eCommandType cmd, const uint8_t * const payload,
 		uint8_t payloadLength, Time_t now) {
 	switch(cmd)
 	{
@@ -52,8 +52,8 @@ eAppResult cApplication::OnCommand(eCommandType cmd, const uint8_t * const paylo
             
             #line default
             #line hidden
-            this.Write("\r\n\t\tdefault:return eAppResult::NOT_IMPLEMENTED;\r\n\t}\r\n\t(void)payloadLength;\r\n\tretu" +
-                    "rn eAppResult::OK;\r\n}\r\n\r\n");
+            this.Write("\r\n\t\tdefault:return eAppCallResult::NOT_IMPLEMENTED;\r\n\t}\r\n\t(void)payloadLength;\r\n\t" +
+                    "return eAppCallResult::OK;\r\n}\r\n\r\n");
             
             #line 25 "C:\sensact\configware\Klli.Sensact.Config\Templates\APPLICATION_CPP.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CommandCreateImplementation));

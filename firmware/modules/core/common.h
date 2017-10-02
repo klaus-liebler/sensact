@@ -41,7 +41,7 @@ public:
 
 };
 
-enum struct eAppResult:uint8_t
+enum struct eAppCallResult:uint8_t
 {
 	OK=0,
 	OK_CHANGED=1,

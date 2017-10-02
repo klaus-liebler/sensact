@@ -109,7 +109,7 @@ void cRgbw::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 }
 
 
-eAppResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(standbyController!=eApplicationID::NO_APPLICATION && state==ePowerState::ACTIVE && now-lastHeartbeatToStandbycontroller>10000)
 	{
 		cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
@@ -120,17 +120,17 @@ eAppResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, size_t
 	Common::WriteInt16(outputB, statusBuffer, 4);
 	Common::WriteInt16(outputW, statusBuffer, 6);
 	*statusBufferLength=8;
-	eAppResult ret = changeRecorded?eAppResult::OK_CHANGED:eAppResult::OK;
+	eAppCallResult ret = changeRecorded?eAppCallResult::OK_CHANGED:eAppCallResult::OK;
 	changeRecorded=false;
 	return ret;
 }
 
 
 
-eAppResult cRgbw::Setup()
+eAppCallResult cRgbw::Setup()
 {
 	switchOff();
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 }
 

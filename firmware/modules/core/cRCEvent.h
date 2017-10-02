@@ -26,8 +26,8 @@ public:
 	Time_t eventStart;
 	Time_t lastEvent;
 	bool eventRemainedLongerSent;
-	eAppResult Setup() override;
-	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult Setup() override;
+	eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 
 

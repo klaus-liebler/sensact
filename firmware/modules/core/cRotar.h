@@ -33,9 +33,9 @@ private:
 	void OnTurned(Time_t, int16_t);
 
 public:
-	eAppResult Setup() override;
+	eAppCallResult Setup() override;
 	eAppType GetAppType() override;
-	eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 	cROTAR(
 			const eApplicationID id,

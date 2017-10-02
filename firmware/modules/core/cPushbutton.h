@@ -22,10 +22,10 @@ protected:
 	bool holdMediumSent;
 	Time_t lastRelease;
 public:
-	eAppResult Setup() override;
+	eAppCallResult Setup() override;
 	eAppType GetAppType() override;
 
-	eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 	virtual void OnPressed(Time_t now) {
 		UNUSED(now);

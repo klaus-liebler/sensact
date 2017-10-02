@@ -17,8 +17,8 @@ cBrightnessSensor::cBrightnessSensor(const eApplicationID id, drivers::cBH1750 *
 
 }
 
-eAppResult cBrightnessSensor::Setup() {
-	return this->sensor->Setup()?eAppResult::OK:eAppResult::BUS_ERROR;
+eAppCallResult cBrightnessSensor::Setup() {
+	return this->sensor->Setup()?eAppCallResult::OK:eAppCallResult::BUS_ERROR;
 }
 
 eAppType cBrightnessSensor::GetAppType()
@@ -55,7 +55,7 @@ void cBrightnessSensor::OnSEND_STATUSCommand(Time_t now)
 }
 
 
-eAppResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(counter%1024==0)
 	{
@@ -66,7 +66,7 @@ eAppResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, si
 	counter++;
 	Common::WriteInt16(previousValue, statusBuffer, 0);
 	*statusBufferLength=2;
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 }

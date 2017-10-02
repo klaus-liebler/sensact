@@ -20,8 +20,8 @@ namespace sensact {
 
 
 
-eAppResult cLightbarrier::Setup() {
-	return eAppResult::OK;
+eAppCallResult cLightbarrier::Setup() {
+	return eAppCallResult::OK;
 }
 eAppType cLightbarrier::GetAppType()
 {
@@ -33,7 +33,7 @@ cLightbarrier::cLightbarrier(const eApplicationID id, uint16_t const input, cons
 	}
 
 
-eAppResult cLightbarrier::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+eAppCallResult cLightbarrier::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool active=false;
 	BSP::GetDigitalInput(this->input, &active);
 	if(!activeSignalLevel)
@@ -58,7 +58,7 @@ eAppResult cLightbarrier::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t 
 		this->lastChange = now;
 	}
 	*statusBufferLength=0;
-	return eAppResult::OK;
+	return eAppCallResult::OK;
 }
 
 }

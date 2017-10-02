@@ -17,9 +17,9 @@ protected:
 public:
 	Time_t lastChange;
 	bool wasActive;
-	eAppResult Setup() override;
+	eAppCallResult Setup() override;
 	eAppType GetAppType() override;
-	eAppResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+	eAppCallResult DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 
 
 	cLightbarrier(const eApplicationID id, uint16_t const input, const bool activeSignalLevel, const eApplicationID brightnessSensor, const eApplicationID finalTarget);

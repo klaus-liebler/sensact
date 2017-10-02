@@ -2,18 +2,33 @@
 
 namespace sensact
 {
+/*
+Der Status einer Applikation wird beim Start und bei jedem Applikationszyklus ermittelt
+Der Status wird publiziert, wann immer sich der Status ändert und auch regelmäßig
+Statusnachrichten
+ApplicationStartedMessages, erstes Byte ist das eAppCallResult vom Setup
+ApplicationErrorMessages, erstes Byte ist das eAppCallResult
+Der Master hat einen statischen Buffer mit fester Länge statisch alloziiert, der die Statusnachricht der Application aufnehmen kann
+Die anderen Nodes senden die Statusnachrichten
+Der Server hat ein array id->eAppType und weiß deshalb, welchen Typs die Nachricht ist.
+Man braucht dann auch ein Array (uint8_t)eAppType->"stringNameDerApp beziehungsweise der Queue"
+Außerdem muss auch irgendwo die Länge stehen,
+damit klar st, wie viel Bytes über MQTT gesendet werden
+*/
 
 #ifndef NEW_CANID
 //as long as not all nodes speak the new CAN IDs, this assures compatibility, if only Commands are used
 enum struct eCanMessageType:uint32_t
 {
-	ApplicationCommand		= 0x00000000,
-	ApplicationEvent		= 0x01000000,
-	NodeCommand 			= 0x02000000,
-	NodeCommandAcknowledge	= 0x03000000,
-	NodeEvent				= 0x04000000,
-	CommandAcknowledge		= 0x05000000,
-	ApplicationStatus 		= 0x06000000,
+	ApplicationCommand			= 0x00000000,
+	ApplicationEvent			= 0x01000000,
+	NodeCommand 				= 0x02000000,
+	NodeCommandAcknowledge		= 0x03000000,
+	NodeEvent					= 0x04000000,
+	CommandAcknowledge			= 0x05000000,
+	ApplicationStatus 			= 0x06000000,
+	ApplicationStatus1 			= 0x07000000,//if 8bytes for status are not enough, this may address the second 8 bytes
+	ApplicationStatusSplitted	= 0x08000000,//first Byte of Payload is Index ==>Status may have 256*7Bytes =1792bytes
 	Payload           		= 0x1F000000,
 
 };

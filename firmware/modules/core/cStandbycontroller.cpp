@@ -17,9 +17,9 @@ cStandbyController::cStandbyController(eApplicationID const id, uint16_t const r
 }
 
 
-eAppResult cStandbyController::Setup()
+eAppCallResult cStandbyController::Setup()
 {
-	return BSP::SetDigitalOutput(this->relay, BSP::INACTIVE)?eAppResult::OK:eAppResult::BUS_ERROR;
+	return BSP::SetDigitalOutput(this->relay, BSP::INACTIVE)?eAppCallResult::OK:eAppCallResult::BUS_ERROR;
 }
 
 eAppType cStandbyController::GetAppType()
@@ -42,7 +42,7 @@ void cStandbyController::OnHEARTBEATCommand(uint32_t sender, Time_t now)
 	}
 }
 
-eAppResult cStandbyController::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cStandbyController::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
 	if(now-lastHeartbeat > waitTimeMsecs && this->state == ePowerState::ACTIVE)
 	{
@@ -53,7 +53,7 @@ eAppResult cStandbyController::DoEachCycle(Time_t now, uint8_t *statusBuffer, si
 	}
 	statusBuffer[0]=(uint8_t)state;
 	*statusBufferLength=1;
-	eAppResult ret = changedFlag?eAppResult::OK_CHANGED:eAppResult::OK;
+	eAppCallResult ret = changedFlag?eAppCallResult::OK_CHANGED:eAppCallResult::OK;
 	changedFlag=false;
 	return ret;
 }

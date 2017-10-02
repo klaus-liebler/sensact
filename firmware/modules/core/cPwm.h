@@ -27,7 +27,7 @@ class cPWM: public cApplication
 		uint8_t targetLevel; //Zielhelligkeit, nur diese wird gesetzt durch die Helper-Funktionen
 		Time_t lastHeartbeatToStandbycontroller;
 		Time_t autoOffTime;
-		eAppResult lastReturnedSpecialAppResult;
+		eAppCallResult lastReturnedSpecialAppResult;
 		void SetTargetAbsolute(uint8_t, Time_t);
 		void SetTargetRelative(int, Time_t);
 		void MoveInDirection(eDirection, Time_t);
@@ -36,9 +36,9 @@ class cPWM: public cApplication
 		void WriteCurrentLevelToOutput();
 
 	public:
-		eAppResult Setup() override;
+		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
-		eAppResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+		eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
 #include <PwmApplication.hinc>
 			cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
