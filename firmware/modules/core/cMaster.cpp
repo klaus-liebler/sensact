@@ -73,7 +73,7 @@ volatile eMQTTState mqttState = eMQTTState::DEFAULT;
 CANMessage cMaster::rcvMessage;
 pIapPseudoFunction cMaster::JumpToApplication;
 uint32_t cMaster::JumpAddress;
-eApplicationID cMaster::heartbeatBuffer = eApplicationID::NO_APPLICATION;
+eApplicationID cMaster::heartbeatBuffer[3] = {eApplicationID::NO_APPLICATION, eApplicationID::NO_APPLICATION, eApplicationID::NO_APPLICATION, };
 Time_t cMaster::lastSentCANMessage = 0;
 
 #ifdef MASTERNODE
@@ -88,11 +88,21 @@ uint32_t cMaster::subscriberIndex;
  */
 void cMaster::BufferHeartbeat(eApplicationID target, Time_t now)
 {
-	if(heartbeatBuffer != eApplicationID::NO_APPLICATION && heartbeatBuffer != target)
+	for(int i=0;i<COUNTOF(heartbeatBuffer);i++)
 	{
-		cApplication::SendHEARTBEATCommand(heartbeatBuffer, (uint32_t)MODEL::NodeMasterApplication, now);
+		if(heartbeatBuffer[i] == target)
+		{
+			return;
+		}
+		if(heartbeatBuffer[i] == eApplicationID::NO_APPLICATION)
+		{
+			cApplication::SendHEARTBEATCommand(target, (uint32_t)MODEL::NodeMasterApplication, now);
+			heartbeatBuffer[i]=target;
+			return;
+		}
 	}
-	heartbeatBuffer=target;
+	LOGW("Heartbeat buffer overflow");
+	cApplication::SendHEARTBEATCommand(target, (uint32_t)MODEL::NodeMasterApplication, now);
 }
 
 
@@ -258,8 +268,11 @@ void cMaster::Run(void) {
 		}
 		CanBusProcess();
 		BSP::DoEachCycle(now);
-		//special call to release and reset message
-		BufferHeartbeat(eApplicationID::NO_APPLICATION, now);
+		//Reset heartbeat buffer;
+		for(int i=0;i<COUNTOF(heartbeatBuffer);i++)
+		{
+			heartbeatBuffer[i] = eApplicationID::NO_APPLICATION;
+		}
 		while (BSP::GetSteadyClock()-now < 20) {
 			CanBusProcess();
 		}

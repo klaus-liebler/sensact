@@ -31,7 +31,7 @@ private:
 	static CANMessage rcvMessage;
 	static pIapPseudoFunction JumpToApplication;
 	static uint32_t JumpAddress;
-	static eApplicationID heartbeatBuffer;
+	static eApplicationID heartbeatBuffer[3];
 	static Time_t lastSentCANMessage;
 
 	static uint32_t inpub_id;
