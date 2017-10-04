@@ -49,13 +49,14 @@ namespace Klli.Sensact.Config
         }
 
 
-        public static void AddPowIt(this List<SensactApplication> list, ID appId, ushort outputRessource, uint autoOffIntervalMsecs = 0)
+        public static void AddPowIt(this List<SensactApplication> list, ID appId, ushort outputRessource, uint autoOffIntervalMsecs = 0, uint autoOnIntervalMsecs = 0)
         {
             list.Add(new PoweritemApplication()
             {
                 ApplicationId = appId.ToString(),
                 OutputRessource = outputRessource,
                 AutoOffIntervalMsecs= autoOffIntervalMsecs,
+                AutoOnIntervalMsecs= autoOnIntervalMsecs
             });
         }
 

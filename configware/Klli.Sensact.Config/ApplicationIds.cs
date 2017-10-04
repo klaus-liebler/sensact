@@ -80,7 +80,7 @@
         POWIT_L1_CORR_P1,
         POWIT_L1_CORR_P2,
         PWM___L1_CORR_S,
-        POWIT_L1_CORR_W1,
+        POWIT_L1_CORR_W1, //TODO: Obsolet, löschen, Es wird nur noch PWM benötigt
         PWM___L1_CORR_W1,
         SCLIM_L1_CORR_AIR,
         STEMP_L1_CORR_FLOOR,
@@ -150,7 +150,7 @@
         POWIT_L1_LVNG_P4,
         POWIT_L1_LVNG_P5,
         PWM___L1_LVNG_S,
-        POWIT_L1_LVNG_W1, //Wandleuchten
+        POWIT_L1_LVNG_W1, //Wandleuchten TODO obsolet, entfernen!!!
         PWM___L1_LVNG_W1, //Wandleuchten
         RGBW__L1_LVNG_W3, //Effekleuchte (Reserve)
         PWM___L1_LVNG_W4, //Wohnwandleuchte
