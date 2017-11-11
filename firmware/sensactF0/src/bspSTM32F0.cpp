@@ -186,7 +186,7 @@ void BSP::ReInitI2C()
 	 PB06     ------> I2C1_SCL
 	 PB07     ------> I2C1_SDA
 	 */
-/*
+
 	HAL_I2C_DeInit(&BSP::i2c1);
 	HAL_I2C_DeInit(&BSP::i2c2);
 
@@ -204,15 +204,9 @@ void BSP::ReInitI2C()
 		LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_10);
 		BSP::DelayUs(50);
 	}
-*/
-	/*
-	 PB10     ------> I2C2_SCL
-	 PB11     ------> I2C2_SDA
-	 */
+
 	ConfigureGPIOPinAlternate(GPIOB, Pin::P10, AF::PB10_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
 	ConfigureGPIOPinAlternate(GPIOB, Pin::P11, AF::PB11_I2C2, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-
-
 
 	if (HAL_I2C_Init(&BSP::i2c2) == HAL_OK) {
 		LOGI(SUCCESSFUL_STRING, "I2C2");
@@ -220,15 +214,8 @@ void BSP::ReInitI2C()
 		LOGI(NOT_SUCCESSFUL_STRING, "I2C2");
 	}
 
-	//I2C1
-	/*
-	 PB06     ------> I2C1_SCL
-	 PB07     ------> I2C1_SDA
-	 */
 	ConfigureGPIOPinAlternate(GPIOB, Pin::P06, AF::PB06_I2C1, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
 	ConfigureGPIOPinAlternate(GPIOB, Pin::P07, AF::PB07_I2C1, Speed::HIGH, OutputType::OPENDRAIN, Pull::UP);
-
-
 
 	if (HAL_I2C_Init(&BSP::i2c1) == HAL_OK) {
 		LOGI(SUCCESSFUL_STRING, "I2C1");

@@ -88,20 +88,20 @@ uint32_t cMaster::subscriberIndex;
  */
 void cMaster::BufferHeartbeat(eApplicationID target, Time_t now)
 {
-	for(int i=0;i<COUNTOF(heartbeatBuffer);i++)
+	for(uint i=0;i<COUNTOF(heartbeatBuffer);i++)
 	{
+		if(heartbeatBuffer[i] == eApplicationID::NO_APPLICATION)
+		{
+			heartbeatBuffer[i]=target;
+			return;
+		}
 		if(heartbeatBuffer[i] == target)
 		{
 			return;
 		}
-		if(heartbeatBuffer[i] == eApplicationID::NO_APPLICATION)
-		{
-			cApplication::SendHEARTBEATCommand(target, (uint32_t)MODEL::NodeMasterApplication, now);
-			heartbeatBuffer[i]=target;
-			return;
-		}
+
 	}
-	LOGW("Heartbeat buffer overflow");
+	LOGW("Heartbeat buffer overflow. Sending heartbeat directly...");
 	cApplication::SendHEARTBEATCommand(target, (uint32_t)MODEL::NodeMasterApplication, now);
 }
 
@@ -269,8 +269,11 @@ void cMaster::Run(void) {
 		CanBusProcess();
 		BSP::DoEachCycle(now);
 		//Reset heartbeat buffer;
-		for(int i=0;i<COUNTOF(heartbeatBuffer);i++)
+		for(uint i=0;i<COUNTOF(heartbeatBuffer);i++)
 		{
+			if(heartbeatBuffer[i]== eApplicationID::NO_APPLICATION) break;
+			LOGD("Flushing heartbeat buffer with target %s", cApplication::N4I((uint32_t const)heartbeatBuffer[i]));
+			cApplication::SendHEARTBEATCommand(heartbeatBuffer[i], (uint32_t)MODEL::NodeMasterApplication, now);
 			heartbeatBuffer[i] = eApplicationID::NO_APPLICATION;
 		}
 		while (BSP::GetSteadyClock()-now < 20) {

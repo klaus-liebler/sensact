@@ -1,4 +1,5 @@
 #include "cCanIdUtils.h"
+#include "common.h"
 namespace sensact
 {
 uint32_t cCanIdUtils::MessageTypeMask = (uint32_t)0x1F00000000U;
@@ -39,6 +40,7 @@ uint32_t cCanIdUtils::CreateCommandMessageId(uint16_t destinationAppId, uint8_t 
 #else
 uint32_t cCanIdUtils::CreateCommandMessageId(uint16_t destinationAppId, uint8_t commandId)
 {
+	(void)(commandId);
 	return (uint32_t)eCanMessageType::ApplicationCommand | ((uint32_t)destinationAppId);
 }
 #endif

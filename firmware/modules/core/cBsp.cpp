@@ -37,7 +37,7 @@ const char BSP::SystemString[] = "sensactup 0.2, (c) Dr.-Ing. Klaus M. Liebler, 
 const char BSP::gimmick[] ="  ____                            _   _   _          ___   ____  \r\n / ___|  ___ _ __  ___  __ _  ___| |_| | | |_ __    / _ \\ |___ \\ \r\n \\___ \\ / _ \\ '_ \\/ __|/ _` |/ __| __| | | | '_ \\  | | | |  __) |\r\n  ___) |  __/ | | \\__ \\ (_| | (__| |_| |_| | |_) | | |_| | / __/ \r\n |____/ \\___|_| |_|___/\\__,_|\\___|\\__|\\___/| .__/   \\___(_)_____|\r\n                                           |_|                   ";
 DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c2;
-static uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
+const uint16_t BSP::PredefinedInputs[] = {16+15/*ROTD*/, 16+3/*xROTD*/, 16+0, 16+1, 6, 7, 4, 5, 2, 3};
 #endif
 
 #ifdef SENSACTUP03
@@ -46,7 +46,7 @@ const char BSP::gimmick[] ="  ____                            _   _   _         
 DMA_HandleTypeDef hdma_tim1_ch1;
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;
-//int teh 2017-03-02-Version, IO1 aka "2" aka PA2 does not work
+//in the 2017-03-02-Version, IO1 aka "2" aka PA2 does not work
 const uint16_t BSP::PredefinedInputs[] = {16+15, 16+3, 2, 3, 4, 5, 6, 7, 16, 17};
 #endif
 
@@ -349,7 +349,7 @@ bool BSP::SendCANMessage(uint32_t id, uint8_t const * const data, uint8_t len) {
 #ifndef NEW_CANID
 	if(id>=0x400)
 	{
-		LOGW("CAN-ID is 0x%04x > 0x0400 will not be sent due to ifndef NEW_CANID", id);
+		LOGD("CAN-ID is 0x%04x > 0x0400 will not be sent due to ifndef NEW_CANID", id);
 		return true;
 	}
 #endif
@@ -371,122 +371,6 @@ bool BSP::SendCANMessage(uint32_t id, uint8_t const * const data, uint8_t len) {
 	return false;
 }
 
-#define DIGITAL_FILTER_VALUE 15
-
-static bool RequestRotaryEncoder(eRotaryEncoder re) {
-	GPIO_InitTypeDef GPIO_InitStruct;
-#ifdef SENSACTHS07
-	(void)re;
-
-	__HAL_RCC_TIM4_CLK_ENABLE();
-	/**TIM4 GPIO Configuration
-	PB6     ------> TIM4_CH1
-	PB7     ------> TIM4_CH2
-	 */
-	GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	TIM_Encoder_InitTypeDef sConfig;
-	TIM_MasterConfigTypeDef sMasterConfig;
-	TIM_HandleTypeDef htim4;
-	htim4.Instance = TIM4;
-	htim4.Init.Prescaler = 0;
-	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim4.Init.Period = UINT16_MAX;
-	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
-	sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
-	sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-	sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-	sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
-	sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-	sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
-	HAL_TIM_Encoder_Init(&htim4, &sConfig);
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig);
-	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-#endif
-#ifdef SENSACTUP02
-	if (re == eRotaryEncoder::ROTARYENCODER_1) {
-		__HAL_RCC_TIM2_CLK_ENABLE();
-		GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
-		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-		TIM_Encoder_InitTypeDef sConfig;
-		TIM_MasterConfigTypeDef sMasterConfig;
-		TIM_HandleTypeDef htim2;
-		htim2.Instance = TIM2;
-		htim2.Init.Prescaler = 0;
-		htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-		htim2.Init.Period = UINT16_MAX;
-		htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-		sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
-		sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
-		sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-		sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
-		sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-		sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-		sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
-		HAL_TIM_Encoder_Init(&htim2, &sConfig);
-
-		sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-		sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-		HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
-		HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
-	}
-	if (re == eRotaryEncoder::ROTARYENCODER_2) {
-		__HAL_RCC_TIM3_CLK_ENABLE();
-		GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5;
-		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-		__HAL_AFIO_REMAP_TIM3_PARTIAL();
-
-		TIM_Encoder_InitTypeDef sConfig;
-		TIM_MasterConfigTypeDef sMasterConfig;
-		TIM_HandleTypeDef htim3;
-		htim3.Instance = TIM3;
-		htim3.Init.Prescaler = 0;
-		htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-		htim3.Init.Period = UINT16_MAX;
-		htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-		sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
-		sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
-		sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-		sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC1Filter = DIGITAL_FILTER_VALUE;
-		sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-		sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-		sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-		sConfig.IC2Filter = DIGITAL_FILTER_VALUE;
-		HAL_TIM_Encoder_Init(&htim3, &sConfig);
-
-
-		sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-		sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-		HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
-		HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-	}
-#endif
-#ifdef SENSACTUP03
-
-#endif
-#ifdef SENSACTUP04
-
-#endif
-	return true;
-}
 
 uint16_t BSP::GetRotaryEncoderValue(eRotaryEncoder re) {
 #ifdef SENSACTHS07

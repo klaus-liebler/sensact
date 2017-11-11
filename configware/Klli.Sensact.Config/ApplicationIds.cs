@@ -91,7 +91,7 @@
         PUSHB_L1_KTCH_B11, //C1
         PUSHB_L1_KTCH_B12, //Außenbeleuchtung W1
         ROTAR_L1_KTCH_B21, //Spots 1...4 dimmen
-        ROTAR_L1_KTCH_B22, //Spot 5 dimmen
+        PUSHB_L1_KTCH_B22, //Spot 5 dimmen
         PUSHB_L1_KTCH_B23, //Deckenleuchte
         PUSHB_L1_KTCH_B24, //Wandleuchten
         PUSHB_L1_KTCH_B25, //Rollo Garten hoch
@@ -108,7 +108,7 @@
         BLIND_L1_KTCH_P2,
         PWM___L1_KTCH_S1, //die ersten vier Spots
         PWM___L1_KTCH_S2, //über Spüle
-        POWIT_L1_KTCH_W1,
+        POWIT_L1_KTCH_W1_Dummy, //TODO obsolet!!
         PWM___L1_KTCH_W1,
         SCLIM_L1_KTCH_AIR,
         STEMP_L1_KTCH_FLOOR,
@@ -116,32 +116,36 @@
         SWIND_L1_KTCH_W2,
         VALVE_L1_KTCH,
 
-        PUSHB_L1_LVNG_B11, //LX.BACK.J1 hoch
+        PUSHB_L1_LVNG_B11, //LX.BACK.J1 (Markise) hoch
         PUSHB_L1_LVNG_B12, //runter
         PUSHB_L1_LVNG_B13, //LX.BACK.W2
         PUSHB_L1_LVNG_B14, //LX.BACK.W3
         PUSHB_L1_LVNG_B15, //LX.BACK.P3
         PUSHB_L1_LVNG_B16, //L1.LVNG.S* one button dimmer
-        PUSHB_L1_LVNG_B21, //L1.LVNG.W1
-        PUSHB_L1_LVNG_B22, //L1.LVNG.W4
-        PUSHB_L1_LVNG_B23, //LX.RGHT.W1
+
+        PUSHB_L1_LVNG_B21, //L1.LVNG.W4 Wohnwahdleuchten Dim hoch
+        PUSHB_L1_LVNG_B22, //L1.LVNG.W4 Wohnwahdleuchten Dim runter
+        PUSHB_L1_LVNG_B23, //LX.RGHT.W1 Außenlampe
+
         PUSHB_L1_LVNG_B31, //J1
         PUSHB_L1_LVNG_B32,
         PUSHB_L1_LVNG_B33, //J2
         PUSHB_L1_LVNG_B34,
         PUSHB_L1_LVNG_B35, //J3
         PUSHB_L1_LVNG_B36,
-        ROTAR_L1_LVNG_B41, //Spots im Essbereich
-        ROTAR_L1_LVNG_B42, //Spots im Couchbereich
-        PUSHB_L1_LVNG_B43, //L1.LVNG.C1
-        PUSHB_L1_LVNG_B44, //L1.LVNG.W1
+
+        ROTAR_L1_LVNG_B41, //Spots
+        PUSHB_L1_LVNG_B42, //C1 Esstisch-Deckenlampe
+        PUSHB_L1_LVNG_B43, //C2 Kaminregal one Button Dimmer
+        PUSHB_L1_LVNG_B44, //W1 Deko-Wandlampen
+
         PUSHB_L1_LVNG_B51, //L1.LVNG.S* one button dimmer
         PUSHB_L1_LVNG_B52, //L1.KTCH.S*
         PUSHB_L1_LVNG_B53, //L1.KTCH.C1
         
 
-        POWIT_L1_LVNG_C1,
-        PWM___L1_LVNG_C1,
+        POWIT_L1_LVNG_C1, //Lampe über Essbereich
+        PWM___L1_LVNG_C2, //Lampe im Kaminregal
         BLIND_L1_LVNG_J1,
         BLIND_L1_LVNG_J2,
         BLIND_L1_LVNG_J3,
@@ -150,9 +154,9 @@
         POWIT_L1_LVNG_P4,
         POWIT_L1_LVNG_P5,
         PWM___L1_LVNG_S,
-        POWIT_L1_LVNG_W1, //Wandleuchten TODO obsolet, entfernen!!!
+        POWIT_L1_LVNG_W1, //TODO Wandleuchten geschaltet TODO obsolet, entfernen!!!
         PWM___L1_LVNG_W1, //Wandleuchten
-        RGBW__L1_LVNG_W3, //Effekleuchte (Reserve)
+        RGBW__L1_LVNG_W3, //Effektleuchte (Reserve)
         PWM___L1_LVNG_W4, //Wohnwandleuchte
         SCLIM_L1_LVNG_AIR,
         SCLIM_L1_LVNG_AIR2, //zweiter Messpunkt im sensactUP
@@ -273,9 +277,6 @@
         POWIT_L2_CORR_P1,
         POWIT_L2_CORR_P2,
         PWM___L2_CORR_S,
-        //PWM___L2_CORR_S1,
-        //PWM___L2_CORR_S2,
-        //PWM___L2_CORR_S3,
         SCLIM_L2_CORR_AIR,
         STEMP_L2_CORR_FLOOR,
         SWIND_L2_CORR,
@@ -334,15 +335,15 @@
         SWIND_L3_BEDR,
         VALVE_L3_BEDR,
 
-        PUSHB_L3_CORR_Dummy1, //Deleteme
-        PUSHB_L3_CORR_Dummy2, //Deleteme
-        PUSHB_L3_CORR_Dummy3, //Deleteme
+        PUSHB_L3_CORR_Dummy1, //TODO Deleteme
+        PUSHB_L3_CORR_Dummy2, //TODO Deleteme
+        PUSHB_L3_CORR_Dummy3, //TODO Deleteme
 
         PWM___L3_CORR_S, //es ist kein Schalter im Korridor oben. Die Lichter werden von den Zimmern aus geschaltet
 
         DEVCE_L3_TECH_VENT,
         DEVCE_L3_TECH_SATI, //Satellitenreceiver
-        DEVCE_L3_TECH_DUMMY, //Deleteme
+        DEVCE_L3_TECH_DUMMY, //TODO Deleteme
 
         PUSHB_L3_WORK_B11, //S
         PUSHB_L3_WORK_B12, //C1
@@ -355,12 +356,6 @@
         POWIT_L3_WORK_P1,
         POWIT_L3_WORK_P2,
         PWM___L3_WORK_S,
-        //PWM___L3_WORK_S1,
-        //PWM___L3_WORK_S2,
-        //PWM___L3_WORK_S3,
-        //PWM___L3_WORK_S4,
-        //PWM___L3_WORK_S5,
-        //PWM___L3_WORK_S6,
         SCLIM_L3_WORK_AIR,
         SWIND_L3_WORK_W1,
         SWIND_L3_WORK_W2,
@@ -388,13 +383,13 @@
 
         LIBAR_LS_STRS_B71, //W6 (Lichtschranke in Richtung L2)
 
-        POWIT_LS_STRS_W1,
-        PWM___LS_STRS_W2,
-        POWIT_LS_STRS_W3,
-        PWM___LS_STRS_W4,
-        POWIT_LS_STRS_W5,
-        PWM___LS_STRS_W6,
-        
+        PWM___LS_STRS_W1, //L0-L1-Treppe Wand
+        PWM___LS_STRS_W2, //L0-L1-Treppe Trittstufen
+        PWM___LS_STRS_W3, //L1-L2-Treppe Wand
+        PWM___LS_STRS_W4, //L1-L2-Trepp Trittstufen
+        PWM___LS_STRS_W5, //L2-L3-Treppe Wand
+        PWM___LS_STRS_W6, //L2-L3-Treppe Trittstufen
+
 
 
 

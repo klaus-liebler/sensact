@@ -81,6 +81,7 @@ eAppCallResult cRCEvent::Setup()
 
 
 eAppCallResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+	(void)(statusBuffer);
 	if(BSP::HasRCEventOccured(eventCode))
 	{
 		lastEvent=now;

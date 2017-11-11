@@ -227,7 +227,7 @@ void cBlind::assureAllRelaysOff()
  */
 eAppCallResult cBlind::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
-	uint16_t currPos;
+	uint16_t currPos=0;
 
 	Common::WriteUInt16(currPos, statusBuffer, 0);
 	Common::WriteUInt16(targetLevel, statusBuffer, 2);

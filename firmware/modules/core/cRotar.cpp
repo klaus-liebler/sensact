@@ -9,7 +9,7 @@
 
 namespace sensact {
 
-const uint32_t DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE = 400;
+const uint32_t DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE = 800;
 
 cROTAR::cROTAR(
 			const eApplicationID id,
@@ -88,16 +88,19 @@ eAppCallResult cROTAR::Setup() {
 
 
 eAppCallResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
+	(void)(statusBuffer);
 	bool isPressed=false;
 	BSP::GetDigitalInput(this->inputPush, &isPressed);
 	isPressed=!isPressed;
 	if (this->pushState == ePushState::RELEASED
 			&& isPressed) {
+		OnPressed(now);
+
+		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		this->pushState = ePushState::PRESSED;
 		this->lastChange = now;
 		this->lastPressOrRelease=now;
-		OnPressed(now);
-		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::PRESSED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
+
 	} else if (this->pushState == ePushState::PRESSED
 			&& !isPressed) {
 		if (now - this->lastChange < SHORT_PRESS) {
@@ -107,6 +110,7 @@ eAppCallResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *st
 			OnReleasedLong(now);
 			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED_LONG, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		}
+
 		cMaster::PublishApplicationEventFiltered(now, Id, eEventType::RELEASED, localEvents, localEventsLength, busEvents, busEventsLength, 0,0);
 		this->pushState = ePushState::RELEASED;
 		this->lastChange = now;
@@ -122,8 +126,8 @@ eAppCallResult cROTAR::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *st
 			OnTurned(now, change);
 			cMaster::PublishApplicationEventFiltered(now, Id, eEventType::TURNED, localEvents, localEventsLength, busEvents, busEventsLength, (uint8_t*)&change ,2);
 		}
-		this->rotaryState=currentRotaryState;
 	}
+	this->rotaryState=currentRotaryState;
 	*statusBufferLength=0;
 	return eAppCallResult::OK;
 }

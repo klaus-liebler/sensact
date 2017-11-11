@@ -1,6 +1,6 @@
 #include <cMaster.h>
 #include <cRgbw.h>
-#define LOGLEVEL LEVEL_DEBUG
+#define LOGLEVEL LEVEL_INFO
 #define LOGNAME "RGBW "
 #include <cLog.h>
 namespace sensact {
@@ -9,7 +9,7 @@ namespace sensact {
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController) :
+cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
 		cApplication(id),
 		outputR(outputR),
 		outputG(outputG),
@@ -19,10 +19,12 @@ cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const out
 		WellKnownColors(WellKnownColors),
 		WellKnownColorsLength(WellKnownColorsLength),
 		standbyController(standbyController),
+		autoOffIntervalMsecs(autoOffIntervalMsecs),
 		lastHeartbeatToStandbycontroller(0),
 		lastColor(0),
 		state(ePowerState::INACTIVE),
-		changeRecorded(false)
+		changeRecorded(false),
+		autoOffTime(TIME_MAX)
 {
 
 }
@@ -32,15 +34,15 @@ eAppType cRgbw::GetAppType()
 	return eAppType::RGBW;
 }
 
-void cRgbw::showColorOfIndex(uint8_t index)
+void cRgbw::showColorOfIndex(Time_t now, uint8_t index)
 {
 	index%=WellKnownColorsLength;
 	uint8_t* ptr = (uint8_t*)(this->WellKnownColors+4*index);
 	lastColor=index;
 	LOGD("Showing Color ID %d", lastColor);
-	showColorOfRGBW(ptr[0], ptr[1], ptr[2], ptr[3]);
+	showColorOfRGBW(now, ptr[0], ptr[1], ptr[2], ptr[3]);
 }
-void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
+void cRgbw::showColorOfRGBW(Time_t now, uint8_t R, uint8_t G, uint8_t B, uint8_t W)
 {
 	if(R==0 && G==0 && B==0 && W==0 )
 	{
@@ -65,10 +67,14 @@ void cRgbw::showColorOfRGBW(uint8_t R, uint8_t G, uint8_t B, uint8_t W)
 		BSP::SetDigitalOutput(this->outputW, W==255?UINT16_MAX:W<<8);
 	}
 	changeRecorded=true;
+	if(autoOffIntervalMsecs!=0)
+	{
+		autoOffTime=now+autoOffIntervalMsecs;
+	}
 }
-void cRgbw::switchOff()
+void cRgbw::switchOff(Time_t now)
 {
-	showColorOfRGBW(0,0,0,0);
+	showColorOfRGBW(now, 0,0,0,0);
 }
 
 void cRgbw::OnSTEP_VERTICALCommand(int16_t step, Time_t now)
@@ -76,7 +82,7 @@ void cRgbw::OnSTEP_VERTICALCommand(int16_t step, Time_t now)
 	UNUSED(now);
 	if(step==0) step=1;
 	uint8_t index = ((int)(100 + lastColor + step)) % WellKnownColorsLength;//+100 um ausreichend im Positiven zu sein auch bei negativen steps
-	showColorOfIndex(index);
+	showColorOfIndex(now, index);
 }
 
 
@@ -85,18 +91,17 @@ void cRgbw::OnTOGGLECommand(Time_t now)
 	UNUSED(now);
 	if(this->state == ePowerState::INACTIVE)
 	{
-		showColorOfIndex(lastColor);
+		showColorOfIndex(now, lastColor);
 	}
 	else
 	{
-		switchOff();
+		switchOff(now);
 	}
 }
 
 void cRgbw::OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, Time_t now)
 {
-	UNUSED(now);
-	showColorOfRGBW(R, G, B, W);
+	showColorOfRGBW(now, R, G, B, W);
 
 
 }
@@ -105,7 +110,7 @@ void cRgbw::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	UNUSED(now);
 	uint8_t index = signal%WellKnownColorsLength;
-	showColorOfIndex(index);
+	showColorOfIndex(now, index);
 }
 
 
@@ -129,7 +134,7 @@ eAppCallResult cRgbw::DoEachCycle(volatile Time_t now, uint8_t *statusBuffer, si
 
 eAppCallResult cRgbw::Setup()
 {
-	switchOff();
+	switchOff(0);
 	return eAppCallResult::OK;
 }
 }

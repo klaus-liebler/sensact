@@ -165,6 +165,7 @@ private:
 	ePCA9685_Frequency freq;
 public:
 	static const uint8_t SWRST = 0b00000110;
+	static const uint8_t ALL_CALL =0b11100000;
 	bool Setup();
 	static bool SoftwareReset(I2C_HandleTypeDef * const i2c);
 	bool SetOutput(ePCA9685Output Output, uint16_t OnValue, uint16_t OffValue);

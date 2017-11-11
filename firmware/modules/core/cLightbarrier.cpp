@@ -35,6 +35,7 @@ cLightbarrier::cLightbarrier(const eApplicationID id, uint16_t const input, cons
 
 eAppCallResult cLightbarrier::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool active=false;
+	(void)(statusBuffer);
 	BSP::GetDigitalInput(this->input, &active);
 	if(!activeSignalLevel)
 	{

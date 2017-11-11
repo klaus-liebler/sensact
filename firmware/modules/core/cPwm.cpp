@@ -48,7 +48,7 @@ eAppType cPWM::GetAppType()
 
 void cPWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, Time_t now)
 {
-	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", this->Name, target);
+	LOGD("%s OnSET_VERTICAL_TARGETCommand called with  %d", N(), target);
 	SetTargetAbsolute(target, now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -111,7 +111,7 @@ void cPWM::OnSTEP_VERTICALCommand(int16_t step, Time_t now) {
 	{
 		autoOffTime=now+autoOffIntervalMsecs;
 	}
-	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", this->Name, step, currentLevel);
+	LOGD("%s OnSTEP_VERTICALCommand called with  %d resulting in %d", N(), step, currentLevel);
 }
 
 //gesendet vom 1BP
@@ -144,7 +144,7 @@ void cPWM::OnSTOPCommand(Time_t now)
 void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 {
 	UNUSED(forced);
-	LOGD("%s OnUPCommand called", this->Name);
+	LOGI("%s OnUPCommand called", N());
 	MoveInDirection(eDirection::UP, now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -154,7 +154,6 @@ void cPWM::OnUPCommand(uint8_t forced, Time_t now)
 
 void cPWM::OnTOGGLECommand(Time_t now)
 {
-	LOGD("%s OnTOGGLECommand called", this->Name);
 	if (targetLevel == 0) {
 		targetLevel=storedTargetLevel;
 		if(autoOffIntervalMsecs!=0)
@@ -167,10 +166,11 @@ void cPWM::OnTOGGLECommand(Time_t now)
 		storedTargetLevel=targetLevel;
 		targetLevel=0;
 	}
+	LOGI("%s OnTOGGLECommand called. Setting target level to %d", N(), targetLevel);
 }
 
 void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
-	LOGD("%s OnONCommand called", this->Name);
+	LOGI("%s OnONCommand called", this->Name);
 	targetLevel=UINT8_MAX;
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -184,7 +184,7 @@ void cPWM::OnONCommand(uint32_t autoReturnToOffMsecs, Time_t now) {
 
 void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 	UNUSED(forced);
-	LOGD("%s OnDOWNCommand called", this->Name);
+	LOGD("%s OnDOWNCommand called", N());
 	MoveInDirection(eDirection::DOWN, now);
 	if(autoOffIntervalMsecs!=0)
 	{
@@ -195,7 +195,7 @@ void cPWM::OnDOWNCommand(uint8_t forced,  Time_t now) {
 eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	if(autoOffIntervalMsecs!=0 && autoOffTime<now && targetLevel>0)
 	{
-		LOGD("%s starting to switch off automatically", Name);
+		LOGD("%s starting to switch off automatically", N());
 		targetLevel=0;
 		autoOffTime =TIME_MAX;
 	}
@@ -225,6 +225,7 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 	}
 	if(targetLevel>currentLevel)
 	{
+
 		if(currentLevel+DIM_TO_TARGET_STEP>=targetLevel)
 		{
 			currentLevel=targetLevel;
@@ -232,7 +233,10 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 		}
 		else
 		{
-			currentLevel+=DIM_TO_TARGET_STEP;
+			if(currentLevel==0 && minimalOnLevel!=0 && targetLevel>0)
+				currentLevel=minimalOnLevel;
+			else
+				currentLevel+=DIM_TO_TARGET_STEP;
 			if(lastReturnedSpecialAppResult!=eAppCallResult::OK_CHANGEUP_START)
 			{
 				lastReturnedSpecialAppResult = ret = eAppCallResult::OK_CHANGEUP_START;
@@ -251,7 +255,7 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 		else
 		{
 			currentLevel-=DIM_TO_TARGET_STEP;
-			if(lastReturnedSpecialAppResult!=eAppCallResult::OK_CHANGEUP_START)
+			if(lastReturnedSpecialAppResult!=eAppCallResult::OK_CHANGEDOWN_START)
 			{
 				lastReturnedSpecialAppResult = ret = eAppCallResult::OK_CHANGEDOWN_START;
 
@@ -278,8 +282,6 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 
 void cPWM::WriteCurrentLevelToOutput() {
 
-	//LOGD("SetDimLevel = %d", level);
-	uint8_t i;
 	uint16_t val = cPWM::level2brightness[currentLevel];
 	if(!lowMeansLampOn)
 	{
@@ -288,7 +290,7 @@ void cPWM::WriteCurrentLevelToOutput() {
 
 	if(!BSP::SetDigitalOutput(baseOutput, outputMask, val))
 	{
-		LOGE("%s could not set output %i to level %i", N(), baseOutput, currentLevel);
+		LOGE("%s could not set output %d to level %d", N(), baseOutput, currentLevel);
 	}
 
 }

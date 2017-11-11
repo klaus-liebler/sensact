@@ -175,7 +175,7 @@ namespace Klli.Sensact.Config
             Node TEST_HS07 = new Nodes.SensactHs07("TEST_HS07");
             model.Nodes.Add(TEST_HS07);
             TEST_HS07.Applications.AddBlindButtons("PUSHB_XX_XXX_UP", "PUSHB_XX_XXX_DO", 1, 2, "BLIND_XX_XXX_1");
-            TEST_HS07.Applications.Add(new BlindApplication { ApplicationId = "BLIND_XX_XXX_1", OpenCloseTimeInSeconds = 10, OutputRessourceUpOrPower = 1, OutputRessourceDownOrDirection = 2, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
+            TEST_HS07.Applications.Add(new BlindApplication { ApplicationId = "BLIND_XX_XXX_1", OpenCloseTimeInSeconds = 10, OutputResourceUpOrPower = 1, OutputResourceDownOrDirection = 2, RelayMode = RelayMode.INTERLOCKED_ACTIVE_DOWN });
             return model;
         }
 

@@ -109,8 +109,7 @@ void cWs281x::SetPixelRGB(uint8_t ledIndex, cRGB color)
 
 void cWs281x::SetAllPixelRGB(cRGB color)
 {
-	uint8_t ledIndex;
-	for(ledIndex=0; ledIndex<RGBLED_SIZE; ledIndex++)
+	for(uint8_t ledIndex=0; ledIndex<RGBLED_SIZE; ledIndex++)
 	{
 		SetPixelRGB(ledIndex, color);
 	}

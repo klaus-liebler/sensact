@@ -93,6 +93,7 @@ cPushbutton::cPushbutton(const eApplicationID id, uint16_t const input,
 
 eAppCallResult cPushbutton::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength) {
 	bool isPressed;
+	(void)(statusBuffer);
 	BSP::GetDigitalInput(this->input, &isPressed);
 	isPressed = !isPressed; //because all buttons are connected to GND
 	if (this->state == ePushState::RELEASED

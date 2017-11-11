@@ -8,8 +8,8 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BlindApplication : ActorApplication
     {
-        public ushort OutputRessourceUpOrPower;
-        public ushort OutputRessourceDownOrDirection;
+        public ushort OutputResourceUpOrPower;
+        public ushort OutputResourceDownOrDirection;
         public RelayMode RelayMode;
         public List<Event> FullyCloseEvents;
         public List<Event> FullyOpenEvents;
@@ -40,17 +40,17 @@ namespace Klli.Sensact.Config.Applications
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedOutputPins.Contains(OutputRessourceDownOrDirection.ToString()))
+            if (usedOutputPins.Contains(OutputResourceDownOrDirection.ToString()))
             {
                 return "OutputRessourceDown";
             }
-            if (usedOutputPins.Contains(OutputRessourceUpOrPower.ToString()))
+            if (usedOutputPins.Contains(OutputResourceUpOrPower.ToString()))
             {
                 return "OutputRessourceUpOrPower";
             }
 
-            usedOutputPins.Add(OutputRessourceDownOrDirection.ToString());
-            usedOutputPins.Add(OutputRessourceUpOrPower.ToString());
+            usedOutputPins.Add(OutputResourceDownOrDirection.ToString());
+            usedOutputPins.Add(OutputResourceUpOrPower.ToString());
             return null;
         }
 
@@ -62,7 +62,7 @@ namespace Klli.Sensact.Config.Applications
             }
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Blind {0}"+Environment.NewLine, ApplicationId);
-            sb.AppendFormat("cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputRessourceUpOrPower, OutputRessourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
+            sb.AppendFormat("cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputResourceUpOrPower, OutputResourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
             return sb.ToString();
         }
 

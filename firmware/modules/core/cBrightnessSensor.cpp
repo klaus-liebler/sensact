@@ -55,8 +55,9 @@ void cBrightnessSensor::OnSEND_STATUSCommand(Time_t now)
 }
 
 
-eAppCallResult cBrightnessSensor::DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)
+eAppCallResult cBrightnessSensor::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
+	(void)(now);
 	if(counter%1024==0)
 	{
 		this->previousValue = this->sensor->GetRawSensorValue();

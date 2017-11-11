@@ -31,8 +31,8 @@ namespace Klli.Sensact.Config
             //return TestModelBuilder.BuildRGBWDemo();
             //return TestModelBuilder.BuildModelToTestAllPins();
             //Model model = TestModelBuilder.BuildLIBARDemo();
-           // return Sattlerstrasse16.Build();
-            return TestModelBuilder.BuildCANCommunicationDemo();
+            return Sattlerstrasse16.Build();
+            //return TestModelBuilder.BuildCANCommunicationDemo();
             //return TestModelBuilder.BuildBLINDDemo();
         }
 

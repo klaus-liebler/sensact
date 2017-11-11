@@ -71,6 +71,7 @@ void cBusmaster::Init() const
 	for(int i=0;i<3;i++)
 	{
 		uint16_t line = interruptlines[i];
+		if(line==UINT16_MAX) continue;//UINT16_MAX means: not defined
 		GPIO_TypeDef * theGPIO = ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(line>>4)));
 #if defined(STM32F4) or defined(STM32F0)
 		uint32_t currVal =  theGPIO->PUPDR;
@@ -107,17 +108,21 @@ void cBusmaster::Init() const
 	{
 		if(HAL_I2C_IsDeviceReady(mybus, i, 1, 10)==HAL_OK)
 		{
-			if(i>=0x80)
+			if(i==drivers::cPCA9685::ALL_CALL)
 			{
-				LOGI("Bus %s: Found probably PCA9685 on address 0x%02X (Base + offset %d)" ,name,  i, i-0x80);
+				LOGI("Bus %s: Found probably PCA9685 'allcall'  0x%02X " ,name,  i);
+			}
+			else if(i>=0x80)
+			{
+				LOGI("Bus %s: Found probably PCA9685 on 8bit address 0x%02X (Base + offset %d)" ,name,  i, i-0x80);
 			}
 			else if(i>=0x40 && i<0x50)
 			{
-				LOGI("Bus %s: Found probably PCA9555 on address 0x%02X (Base + offset %d)" ,name,  i, i-0x40);
+				LOGI("Bus %s: Found probably PCA9555 on 8bit address 0x%02X (Base + offset %d)" ,name,  i, i-0x40);
 			}
 			else if(i>=0x50 && i<0x58)
 			{
-				LOGI("Bus %s: Found probably DS2482 on address 0x%02X (Base + offset %d)" , name, i, i-0x50);
+				LOGI("Bus %s: Found probably DS2482 on 8bit address 0x%02X (Base + offset %d)" , name, i, i-0x50);
 			}
 			else
 			{
@@ -158,10 +163,16 @@ void cBusmaster::Init() const
 			if(drivers::cPCA9685::SetupStatic(
 					mybus,
 					dev,
+#if defined (SENSACTUP02) || defined (SENSACTUP03) ||defined (SENSACTUP04)
+					drivers::ePCA9685_InvOutputs::InvOutputs, //to be able to test outputs with simple LED connected to 3v3
+					drivers::ePCA9685_OutputDriver::OpenDrain,
+#else
 					drivers::ePCA9685_InvOutputs::NotInvOutputs,
 					drivers::ePCA9685_OutputDriver::TotemPole,
+#endif
 					drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
 					drivers::ePCA9685_Frequency::Frequency_400Hz))
+
 			{
 				LOGI("Bus %s: Setup of PCA9685, Device %d was successful", name, dev);
 			}
@@ -174,14 +185,49 @@ void cBusmaster::Init() const
 		dev++;
 	}
 /*
+	LOGE("PCA9555 testmode active!!!");
+	drivers::cPCA9555 dev9555(mybus, drivers::ePCA9555Device::Dev0, 0);
+	if(dev9555.Setup())
+	{
+		LOGI("Testdevice OK");
+
+	}
+	else
+	{
+		LOGE("Testdevice NOK");
+	}
 	while(true)
 	{
-		if(!drivers::cPCA9685::SetAllOutputs(mybus, 1, BSP::ACTIVE))
+		dev9555.Update();
+		LOGI("PCA9555 value is %d", dev9555.GetCachedInput());
+		HAL_Delay(500);
+	}
+*/
+/*
+	dev=3;
+	LOGE("PCA9585 testmode active!!!");
+	if(drivers::cPCA9685::SetupStatic(
+			mybus,
+			dev,
+			drivers::ePCA9685_InvOutputs::NotInvOutputs,
+			drivers::ePCA9685_OutputDriver::TotemPole,
+			drivers::ePCA9685_OutputNotEn::OutputNotEn_0,
+			drivers::ePCA9685_Frequency::Frequency_400Hz))
+	{
+		LOGI("Bus %s: Setup of PCA9685, Device %d was successful", name, dev);
+	}
+	else
+	{
+		LOGE("Bus %s: Setup of PCA9685, Device %d was NOT successful", name, dev);
+	}
+	while(true)
+	{
+		if(!drivers::cPCA9685::SetAllOutputs(mybus, dev, BSP::ACTIVE))
 		{
 			LOGE("Error!");
 		}
 		HAL_Delay(500);
-		if(!drivers::cPCA9685::SetAllOutputs(mybus, 1, BSP::INACTIVE))
+		if(!drivers::cPCA9685::SetAllOutputs(mybus, dev, BSP::INACTIVE))
 		{
 			LOGE("Error!");
 		}
@@ -204,6 +250,7 @@ void cBusmaster::Process(Time_t now) const
 	bool inputState;
 	for(uint8_t i=0;i<3;i++)
 	{
+		if(interruptlines[i]==UINT16_MAX) continue;
 		BSP::GetDigitalInput(interruptlines[i], &inputState);
 		if(!inputState)//IRQ pending
 		{
@@ -477,7 +524,7 @@ bool cBusmaster::GetInput(uint16_t input, bool *inputState) const
 		{
 			return false;
 		}
-		if(input & 0x03FF < 768)
+		if((input & 0x03FF) < 768)
 		{
 			uint16_t owinput = (input & 0x03FF);
 			return owsubbus[i2cSubbus].GetSensactSeInput(owinput, inputState);

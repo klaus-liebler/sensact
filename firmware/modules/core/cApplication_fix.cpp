@@ -16,17 +16,17 @@ eAppCallResult cApplication::OnEvent(eApplicationID sender, eEventType evt,
 		return eAppCallResult::OK;
 	}
 
-const char*const cApplication::NN(eApplicationID const appId)
+const char* cApplication::NN(eApplicationID const appId)
 {
 	return MODEL::ApplicationNames[(uint16_t)appId];
 }
 
-const char*const cApplication::N()
+const char* cApplication::N()
 {
 	return MODEL::ApplicationNames[(uint16_t)this->Id];
 }
 
-const char*const cApplication::N4I(uint32_t const appId)
+const char* cApplication::N4I(uint32_t const appId)
 {
 	if(appId<(uint32_t)eApplicationID::CNT)
 	{

@@ -127,23 +127,33 @@ static const sensact::sScheduleEntry schedule[]
 #if defined(NODE_SNSCT_L1_KTCH_UP) or defined(NODE_SNSCT_L1_LVNG_UP) or defined (NODE_SNSCT_L2_BATH_UP)
 	const bool MODEL::TRACE_COMMANDS=false;
 	const bool MODEL::TRACE_EVENTS=false;
-#define RB &BSP::i2c2
+#define BUS &BSP::i2c2
 
-	#define RB_9555_LEN 0
-	static drivers::cPCA9555 * const RB_9555[RB_9555_LEN] = {};
-	static const uint16_t RB_interruptlines[3]={64+10,64+11,64+12};//E15 ist der erste
-	static const cBusmaster relayBus(
-			"Relay Bus",
-			RB,
-			RB_interruptlines,
-			RB_9555,
-			RB_9555_LEN,
-			1+2+4+8,//Bitmask!!!
+	#define BUS_9555_LEN 0
+	static drivers::cPCA9555 * const bus9555[BUS_9555_LEN] = {};
+	static const uint16_t BUS_interruptlines[3]={UINT16_MAX,UINT16_MAX,UINT16_MAX};//UINT16_MAX means: not defined
+	static const cBusmaster mainBus(
+			"Bus",
+			BUS,
+			BUS_interruptlines,
+			bus9555,
+			BUS_9555_LEN,
+#ifdef NODE_SNSCT_L2_BATH_UP
+
+			1,//Bitmask!!!
+#endif
+#ifdef NODE_SNSCT_L1_LVNG_UP
+			1+2,
+#endif
+#ifdef NODE_SNSCT_L1_KTCH_UP
+			1,
+#endif
+
 			0,
 			0
 			);
 
-	cBusmaster const * const MODEL::busses[] = {&relayBus};
+	cBusmaster const * const MODEL::busses[] = {&mainBus};
 #endif
 
 #ifdef NODE_SNSCT_L0_TECH_HS_1

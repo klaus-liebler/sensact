@@ -169,7 +169,6 @@ static uint16_t local_port=0;
 
 eSocketResult cW5100::InitSocket(eSocketId id, eSocketProtocol protocol, uint16_t port, SocketFlags flags)
 {
-	eSocketResult ret;
 	LOGD("socket()");
 	Close(id);
 	write((uint16_t)Sn_MR(id), (uint8_t)((uint8_t)protocol | (uint8_t)flags));
@@ -201,7 +200,6 @@ eSocketStatus cW5100::getStatus(eSocketId sock) {
  */
 eSocketResult cW5100::Listen(eSocketId s)
 {
-	eSocketResult ret;
 	LOGD("listen()\r\n");
 	switch (getStatus(s)) {
 	case eSocketStatus::SOCK_INIT:
@@ -243,8 +241,6 @@ register. User should read upper byte first and lower byte later to get proper v
 eSocketResult cW5100::send_data_processing(eSocketId s, uint8_t *data, uint16_t len)
 {
 	uint16_t ptr;
-	uint8_t foo;
-	eSocketResult ret;
 	read16(Sn_TX_WR0(s), &ptr);
 	write_data(s, data, ptr, len);
 	ptr += len;
@@ -422,6 +418,7 @@ uint16_t cW5100::getSn_TX_FSR(eSocketId s)
 
 eSocketResult cW5100::ListenServerUDP(eSocketId s, uint16_t port)
 {
+	(void)(port);
 	this->acceptConnections=true;
 	if(getStatus(s)!=eSocketStatus::SOCK_CLOSED) return eSocketResult::WRONG_STATE;
 	write(Sn_MR(s), (uint8_t)eSocketProtocol::SOCK_PROTO_UDP);
@@ -555,14 +552,12 @@ eSocketResult cW5100::write32(uint16_t firstReg, uint32_t data)
 }
 
 eSocketResult cW5100::read(uint16_t regaddr, uint8_t * data) {
-	HAL_StatusTypeDef status = HAL_OK;
-
 	/* Every W5100 read command starts with 0x0F byte, followed by the register address (2 bytes) and data (1 byte) */
 	uint8_t wbuf[] = {0x0F, (uint8_t)(regaddr >> 8), (uint8_t)(regaddr & 0x00FF), 0x00};
 	uint8_t rbuf[4];
 
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_RESET); //CS LOW
-	status = HAL_SPI_TransmitReceive(this->hspi, wbuf, rbuf, 4, HAL_MAX_DELAY);
+	HAL_SPI_TransmitReceive(this->hspi, wbuf, rbuf, 4, HAL_MAX_DELAY);
 	HAL_GPIO_WritePin(this->ssGPIOx, this->ssGPIOpin, GPIO_PIN_SET); //CS HIGH
 
 	*data = rbuf[3];
@@ -577,13 +572,11 @@ eSocketResult cW5100::read(uint16_t regaddr, uint8_t * data) {
  */
 eSocketResult cW5100::Recv(eSocketId s, uint8_t * buf, uint16_t len)
 {
-	uint16_t ret=0;
 	LOGD("recv()");
 	if ( len > 0 )
 	{
 		recv_data_processing(s, buf, len);
 		sendCommand(s, eSocketCmd::RECV);
-		ret = len;
 	}
 	return eSocketResult::OK;
 }

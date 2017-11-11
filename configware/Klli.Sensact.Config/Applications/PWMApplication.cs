@@ -82,7 +82,7 @@ namespace Klli.Sensact.Config.Applications
         {
             if(MinimalOnLevel<1)
             {
-                MinimalOnLevel = 127;
+                MinimalOnLevel = 1;
             }
             if(MinimalOnLevel>Byte.MaxValue)
             {

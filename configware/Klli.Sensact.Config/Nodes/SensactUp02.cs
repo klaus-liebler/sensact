@@ -6,14 +6,14 @@ namespace Klli.Sensact.Config.Nodes
     {
         public const int Pin_ROTD = 16+15;
         public const int Pin_xROTD = 16 + 3;
-        public const int Pin_0 = 2;
-        public const int Pin_1 = 3;
-        public const int Pin_2 = 4;
-        public const int Pin_3 = 5;
-        public const int Pin_4 = 6;
-        public const int Pin_5 = 7;
-        public const int Pin_6 = 16;
-        public const int Pin_7 = 17;
+        public const int IO1 = 16;
+        public const int IO2 = 17;
+        public const int IO3 = 6;
+        public const int IO4 = 7;
+        public const int IO5 = 4;
+        public const int IO6 = 5;
+        public const int IO7 = 2;
+        public const int IO8 = 3;
         public SensactUp02(ID appId) : base(appId)
         {
 

@@ -4,7 +4,7 @@
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1882086157">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1882086157" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="HALPATH" type="VALUE_PATH_DIR" value="C:\stm32tc\STM32CubeMX\STM32Cube_FW_F1_V1.4.0"/>
+					<stringMacro name="HALPATH" type="VALUE_PATH_DIR" value="C:\stm32tc\STM32CubeMX\STM32Cube_FW_F1_V1.6.0"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -189,7 +189,7 @@
 					<sourceEntries>
 						<entry excluding="sensactup|cubemx|generated|core|src|drivers" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry excluding="cDateTime.cpp|cModel_base.inc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="core"/>
-						<entry excluding="stm32f1xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
+						<entry excluding="stm32f1xx_hal_timebase_rtc_alarm_template.c|stm32f1xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cubemx"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="generated"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sensactup"/>
@@ -420,7 +420,7 @@
 					</folderInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.1990938606.1357612253" name="cModel_base.inc" rcbsApplicability="disable" resourcePath="core/cModel_base.inc" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="core/cDateTime.cpp|core/cModel_base.inc|cubemx/stm32f1xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cubemx/stm32f1xx_hal_timebase_rtc_alarm_template.c|core/cDateTime.cpp|core/cModel_base.inc|cubemx/stm32f1xx_hal_msp_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

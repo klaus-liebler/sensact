@@ -37,16 +37,14 @@ bool cCSS811::Setup(Time_t now)
 	HAL_I2C_Mem_Read(i2c, (uint8_t)device, (uint8_t)eCSS811Register::STATUS, I2C_MEMADD_SIZE_8BIT, data, 1, TIMEOUT);
 
 
-	uint8_t bit = (data[0] & (1 << 5-1)) != 0;
-	if(bit != 1)
+	if(!(data[0] & (1 << 4)))
 	{
 		LOGE("Error: No application firmware loaded.");
 		return false;
 	}
 
 	HAL_I2C_Mem_Read(i2c, (uint8_t)device, (uint8_t)eCSS811Register::STATUS, I2C_MEMADD_SIZE_8BIT, data, 1, TIMEOUT);
-	bit = (data[0] & (1<<8-1)) !=0; // black magic to read FW_MODE bit from STATUS register
-	if(bit != 1)
+	if(!(data[0] & (1<<7)))
 	{
 		LOGE("Error: Firmware still in boot mode.");
 		return false;
@@ -64,6 +62,7 @@ bool cCSS811::Update()
 	HAL_I2C_Mem_Read(i2c, (uint8_t)device, (uint8_t)eCSS811Register::ALG_RESULT_DATA, I2C_MEMADD_SIZE_8BIT, data, 4, TIMEOUT);
 	this->co2 = (data[0]<<8) + data[1];
 	this->tvoc = (data[2]<<8) + data[3];
+	return true;
 }
 
 uint16_t cCSS811::GetCo2()

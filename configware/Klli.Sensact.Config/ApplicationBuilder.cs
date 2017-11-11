@@ -6,12 +6,24 @@ namespace Klli.Sensact.Config
 {
     public static class AB
     {
+        public const int DEFAULT_MIN_DIM_LEVEL = 2;
+
         public static void AddPlaceholder(this List<SensactApplication> list, ID appId)
         {
             list.Add(new PlaceholderApplication()
             {
                 ApplicationId = appId.ToString(),
             });
+        }
+
+        public static void AddBlindApplication(this List<SensactApplication> list, ID appId, int OpenCloseTimeInSeconds, ushort OutputResourcePower, ushort OutputResourceDirection, RelayMode relMode)
+        {
+            list.Add(new BlindApplication { ApplicationId = appId.ToString(), OpenCloseTimeInSeconds= OpenCloseTimeInSeconds, OutputResourceUpOrPower=OutputResourcePower, OutputResourceDownOrDirection=OutputResourceDirection, RelayMode=relMode });
+        }
+
+        public static void AddPWMApplication(this List<SensactApplication> list, ID appId, ID standbyController, List<ushort> outputResources, int AutoOffIntervalMsecs= 0, int minimalOnLevel=DEFAULT_MIN_DIM_LEVEL)
+        {
+            list.Add(new PWMApplication() { ApplicationId = appId.ToString(), MinimalOnLevel = minimalOnLevel, StandbyController = standbyController.ToString(), OutputRessources = outputResources, AutoOffIntervalMsecs= AutoOffIntervalMsecs });
         }
 
         public static void AddToggleButton(this List<SensactApplication> list, ID appId, ushort inputRessource, ID targetAppId)

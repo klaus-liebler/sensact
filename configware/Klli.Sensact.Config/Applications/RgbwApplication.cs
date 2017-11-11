@@ -22,6 +22,7 @@ namespace Klli.Sensact.Config.Applications
         public ushort OutputRessourceW;
         public bool LowMeansLampOn;
         public string StandbyController="NO_APPLICATION";
+        public int AutoOffIntervalMsecs;
 
         public override void OnSET_RGBWCommand(byte R, byte G, byte B, byte W)
         {
@@ -54,7 +55,7 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// RGBW {0} (Full Color Light)" + Environment.NewLine, ApplicationId);
             //sensact::cRgbw BATH("RGBWBATH", eApplicationID::BELL__DOOR, ePWMOutput::O1_01, ePWMOutput::O1_02, ePWMOutput::O1_03, ePWMOutput::NONE, false, (uint8_t*)MODEL::wellKnownRGBWColors, 2, eApplicationID::STDBY_XX_XXX_1);
-            sb.AppendFormat("sensact::cRgbw {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::{6});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, LowMeansLampOn.ToString().ToLower(), StandbyController);
+            sb.AppendFormat("sensact::cRgbw {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::{6}, {7});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, LowMeansLampOn.ToString().ToLower(), StandbyController, AutoOffIntervalMsecs);
             return sb.ToString();
         }
 
