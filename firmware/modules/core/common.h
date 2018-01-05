@@ -3,6 +3,7 @@
 #include <appids.h>
 #include <commandAndEventTypes.h>
 #include <stdint.h>
+#include <compileconfig.h>
 
 #define Time_t 		uint64_t
 #define TIME_MAX		UINT64_MAX
@@ -53,6 +54,9 @@ enum struct eAppCallResult:uint8_t
 	STATE_ERROR=130,
 	NOT_IMPLEMENTED=255,
 };
+
+
+
 
 enum struct ePushState
 		: uint8_t {RELEASED=0, PRESSED = 1

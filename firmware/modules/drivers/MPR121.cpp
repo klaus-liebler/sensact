@@ -1,10 +1,3 @@
-/*
- * cMPR121.cpp
- *
- *  Created on: 27.11.2015
- *      Author: klaus
- */
-
 #include <MPR121.h>
 /* ------------- Local defines --------------- */
 

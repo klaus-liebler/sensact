@@ -1,4 +1,11 @@
 #include "stm32f0xx_hal.h"
+#include "stm32f0xx_ll_bus.h"
+#include "stm32f0xx_ll_rcc.h"
+#include "stm32f0xx_ll_system.h"
+#include "stm32f0xx_ll_utils.h"
+#include "stm32f0xx_ll_cortex.h"
+#include "stm32f0xx_ll_gpio.h"
+#include "stm32f0xx_ll_exti.h"
 #include "cMaster.h"
 #include "console.h"
 
@@ -38,8 +45,26 @@ void Error_Handler(void)
 
 void SystemClock_Config(void)
 {
+	/* Set FLASH latency */
+//	  LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
+//
+//	  /* Enable HSI48 and wait for activation*/
+//	  LL_RCC_HSI48_Enable();
+//	  while(!LL_RCC_HSI48_IsReady());
+//
+//	  /* Sysclk activation on the main PLL */
+//	  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+//	  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSI48);
+//	  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSI48)
+//	  {
+//	  };
+//
+//	  /* Set APB1 prescaler */
+//	  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+//	  LL_Init1msTick(48000000);
+//	  LL_SetSystemCoreClock(48000000);
 
-  RCC_OscInitTypeDef RCC_OscInitStruct;
+	RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
@@ -89,33 +114,34 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+
 }
 
-void SystemClock_Config2(void)
-{
-	//Quartz aktivieren
-	RCC->CR |=RCC_CR_HSEON; //Schaltet HSI ein
-	while(!(RCC->CR & RCC_CR_HSERDY));
-	//PLL und Clock-MUxes konfigurieren
-	RCC->CFGR = RCC_CFGR_PLLMUL3 | RCC_CFGR_PLLSRC_HSE_PREDIV;
-	RCC->CFGR3 = RCC_CFGR3_USBSW | RCC_CFGR3_I2C1SW;
-	//PLL aktivieren
-	RCC->CR |=RCC_CR_PLLON;
-	while(!(RCC->CR & RCC_CR_PLLRDY));
-	//Und Sysclock auf PLL umschalten, sobald er bereit ist
-	RCC->CFGR |= RCC_CFGR_SWS_PLL;
-	//Internen Oszillator ausschalten
-	RCC->CR &=~RCC_CR_HSEON;
-	SystemCoreClock = 48000000;
-	/**Configure the Systick interrupt time
-	 */
-	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
-	/**Configure the Systick
-	 */
-	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
-	/* SysTick_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-}
+//void SystemClock_Config2(void)
+//{
+//	//Quartz aktivieren
+//	RCC->CR |=RCC_CR_HSEON; //Schaltet HSI ein
+//	while(!(RCC->CR & RCC_CR_HSERDY));
+//	//PLL und Clock-MUxes konfigurieren
+//	RCC->CFGR = RCC_CFGR_PLLMUL3 | RCC_CFGR_PLLSRC_HSE_PREDIV;
+//	RCC->CFGR3 = RCC_CFGR3_USBSW | RCC_CFGR3_I2C1SW;
+//	//PLL aktivieren
+//	RCC->CR |=RCC_CR_PLLON;
+//	while(!(RCC->CR & RCC_CR_PLLRDY));
+//	//Und Sysclock auf PLL umschalten, sobald er bereit ist
+//	RCC->CFGR |= RCC_CFGR_SWS_PLL;
+//	//Internen Oszillator ausschalten
+//	RCC->CR &=~RCC_CR_HSEON;
+//	SystemCoreClock = 48000000;
+//	/**Configure the Systick interrupt time
+//	 */
+//	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+//	/**Configure the Systick
+//	 */
+//	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+//	/* SysTick_IRQn interrupt configuration */
+//	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+//}
 
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line)

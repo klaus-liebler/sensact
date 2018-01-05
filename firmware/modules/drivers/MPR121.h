@@ -1,10 +1,3 @@
-/*
- * cMPR121.h
- *
- *  Created on: 27.11.2015
- *      Author: klaus
- */
-
 #pragma once
 #ifdef STM32F4
 #include "stm32f4xx_hal.h"

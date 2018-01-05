@@ -1,12 +1,3 @@
-/*
- * homecontrol_master.h
- *
- *  Created on: 31.03.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
-
 #pragma once
 #include "common.h"
 #include "stdint.h"

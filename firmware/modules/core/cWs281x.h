@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
+#include "cBsp.h"
 #include "cApplication.h"
-#include "bsp_features.h"
 
 namespace sensact {
 

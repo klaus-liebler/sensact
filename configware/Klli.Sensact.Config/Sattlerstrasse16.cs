@@ -150,7 +150,10 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication
             {
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
-                StandbyOutput = (ushort)(INTI + 64u + 2u)//e2,
+                StandbyOutput = (ushort)(INTI + 64u + 2u),//e2,
+                NameOfVoulumeScheduleOrNull=null,
+                
+                
             });
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L0_TECH_PUMP, BUS0 + I2C + 45, 0, 5000); //sollte 5sek nach Start an gehen und dann auch an bleiben RL14
             SNSCT_L0_TECH_HS_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = BB + I2C + 46, WaittimeInMsec = DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS });//RL15
@@ -197,11 +200,11 @@ namespace Klli.Sensact.Config
             {
                 ApplicationId = _(ID.LIBAR_LX_FRON_B2),
                 InputRessource = BB + I2C + 63, //Relais-Kabel
-                ActiveSignalLevel = true,
+                ActiveSignalLevel = false,
                 BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
                 FinalTarget = _(ID.POWIT_LX_FRON_W1),
             });
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, BB + I2C + 55, 1000 * 60 * 360);//RL31
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, BB + I2C + 55, 1000 * 60 * 2);//RL31
 
             //GARA
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_LX_GARA_B11, BB + I2C + 2, ID.POWIT_LX_GARA_C1);//4
@@ -271,7 +274,7 @@ namespace Klli.Sensact.Config
             //Einzelspot
             SNSCT_L1_KTCH_UP.Applications.AddPWMApplication(ID.PWM___L1_KTCH_S2, ID.STDBY_L0_TECH_48V, new List<ushort> { BUS0 + I2C + 4 } );
             //Wandlampen
-            SNSCT_L1_KTCH_UP.Applications.AddPWMApplication(ID.PWM___L1_KTCH_W1, ID.STDBY_L0_TECH_48V, new List<ushort> { BUS0 + I2C + 5 }, 1000*60*240, 150 ); //hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
+            SNSCT_L1_KTCH_UP.Applications.AddPWMApplication(ID.PWM___L1_KTCH_W1, ID.STDBY_L0_TECH_48V, new List<ushort> { BUS0 + I2C + 5 }, 1000*60*360, 150 ); //hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
 
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_KTCH_B11, BUS0 + I2C + 29, ID.POWIT_L1_KTCH_C1);//80
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_KTCH_B12, BUS0 + I2C + 28, ID.POWIT_LX_BACK_W1);//78
@@ -292,7 +295,7 @@ namespace Klli.Sensact.Config
             SNSCT_L1_LVNG_UP.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B43, SensactUp02.IO7, ID.PWM___L1_LVNG_W1);
             SNSCT_L1_LVNG_UP.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B44, SensactUp02.IO8, ID.PWM___L1_LVNG_C2);
             SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___L1_LVNG_S, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2, BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5, BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8, BUS0 + I2C + 9, BUS0 + I2C + 10, BUS0 + I2C + 11 } );
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___L1_LVNG_W1, ID.STDBY_L0_TECH_48V, new List<ushort> { BUS0 + I2C + 12 } );
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___L1_LVNG_W1, ID.STDBY_L0_TECH_48V, new List<ushort> { BUS0 + I2C + 12 }, 1000 * 60 * 360, 150);//hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
             //TODO: C2 soll mal eine RGBW-Applikation werden und es braucht dann 3 oder 4 Outputs
             SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___L1_LVNG_C2, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 13 /*14+15?*/ } );
             //Erinnerung: Treppenstufenbeleuchtung und Wandlampen im Treppenhaus werden auch von diesem SensactUP gesteuert
@@ -591,14 +594,14 @@ namespace Klli.Sensact.Config
             //!!!SNSAC_L1_LVNG_UP
 
             //Treppenstufen, vom Keller zum Dach
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W2, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 16 }, 1000*60*60*6);
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W4, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 17 }, 30000 );
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W6, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 18 }, 30000);
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W2, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 16 }, 1000*60*60* 6 /*Verzögerung siehe Wand*/);
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W4, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 17 }, 1000*120 );
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W6, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 18 }, 1000 * 120);
 
             //Wandlampen, vom Keller zum Dach
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W1, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 19 }, 30000 );
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W3, ID.STDBY_L2_CORR_24V,new List<ushort> { BUS0 + I2C + 20 }, 30000 );
-            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W5, ID.STDBY_L2_CORR_24V,new List<ushort> { BUS0 + I2C + 21 }, 30000 );
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W1, ID.STDBY_L2_CORR_24V, new List<ushort> { BUS0 + I2C + 19 }, 1000 * 60 * 60 * 6 /*Verzögerung siehe Treppe*/);
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W3, ID.STDBY_L2_CORR_24V,new List<ushort> { BUS0 + I2C + 20 }, 1000 * 120);
+            SNSCT_L1_LVNG_UP.Applications.AddPWMApplication(ID.PWM___LS_STRS_W5, ID.STDBY_L2_CORR_24V,new List<ushort> { BUS0 + I2C + 21 }, 1000 * 120);
 
             #endregion
 

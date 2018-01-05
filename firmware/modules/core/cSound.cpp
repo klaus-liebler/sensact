@@ -45,9 +45,6 @@ static void send_func ()
 	HAL_UART_Transmit(&BSP::BELL, send_buf, 10, 1000);
 }
 
-
-
-
 static void mp3_send_cmd (uint8_t cmd, uint16_t arg)
 {
 	send_buf[3] = cmd;
@@ -237,10 +234,14 @@ void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	//mp3_stop();
 	//volumeSchedule->DoEachCycle(std::chrono::system_clock::now());
-	//uint32_t vol = volumeSchedule->GetCurrentValue();
+	uint32_t vol = 15;
+	if(this->volumeSchedule!=NULL)
+	{
+		vol = volumeSchedule->GetCurrentValue();
+	}
 	BSP::SetDigitalOutput(this->output, BSP::ACTIVE);
-	this->autoOffTime=now+30000;
-	mp3_set_volume(8);
+	this->autoOffTimeMs=now+30000;
+	mp3_set_volume(vol);
 	HAL_Delay(20);
 	mp3_play(signal);
 }
@@ -253,7 +254,7 @@ void cSound::OnSTARTCommand(Time_t now)
 
 eAppCallResult cSound::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *statusBufferLength)
 {
-	if(now>this->autoOffTime)
+	if(now>this->autoOffTimeMs)
 	{
 		BSP::SetDigitalOutput(this->output, BSP::INACTIVE);
 	}

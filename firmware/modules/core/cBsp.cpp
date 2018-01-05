@@ -82,7 +82,7 @@ const uint16_t BSP::PredefinedInputs[] = {45, 34, 35, 36,0,1,2,3,4,5,6,7,36,17,1
 #endif
 
 #ifdef SENSACTHS08
-const char BSP::SystemString[] = "sensactHS08 2017-05-11, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
+const char BSP::SystemString[] = "sensactHS08 (Lochblech) 2017-05-11, (c) Dr.-Ing. Klaus M. Liebler, compiled " __DATE__ " " __TIME__"\r\n";
 const char BSP::gimmick[] ="";
 I2C_HandleTypeDef BSP::i2c1;
 I2C_HandleTypeDef BSP::i2c2;

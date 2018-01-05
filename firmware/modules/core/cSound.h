@@ -10,7 +10,7 @@ class cSound: public cApplication {
 private:
 	uint16_t const output;
 	cWeeklySchedule * const volumeSchedule;
-	Time_t autoOffTime;
+	Time_t autoOffTimeMs;
 public:
 	eAppCallResult Setup() override;
 	eAppType GetAppType() override;
@@ -18,7 +18,7 @@ public:
 #include <SoundApplication.hinc>
 
 	cSound(eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule) :
-			cApplication(id), output(output), volumeSchedule(volumeSchedule), autoOffTime(TIME_MAX) {
+			cApplication(id), output(output), volumeSchedule(volumeSchedule), autoOffTimeMs(TIME_MAX) {
 	}
 };
 }

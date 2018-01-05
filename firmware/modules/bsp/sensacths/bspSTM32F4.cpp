@@ -209,16 +209,11 @@ void BSP::Init(void) {
 	HAL_GPIO_Init(GPIOE, &gi);
 
 	ReInitI2C();
-
-	/**CAN2 GPIO Configuration
-	 PB12     ------> CAN2_RX
-	 PB13     ------> CAN2_TX
-	 */
 	gi.Pin = CAN_PINS;
 	gi.Mode = GPIO_MODE_AF_PP;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_LOW;
-	gi.Alternate = GPIO_AF9_CAN1; //GPIO_AF9_CAN2 has the same value!
+	gi.Alternate = GPIO_AF9_CAN2;
 	HAL_GPIO_Init(CAN_PORT, &gi);
 	InitCAN();
 
@@ -265,7 +260,5 @@ void BSP::DoEachCycle(Time_t now) {
 		}
 		nextLedToggle += 1000;
 	}
-
-
 }
 }

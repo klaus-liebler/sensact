@@ -1,6 +1,5 @@
 #pragma once
 #include <common.h>
-#include <bsp_features.h>
 
 #ifdef STM32F0
 #include <stm32f0xx_hal.h>
@@ -13,6 +12,8 @@
 #include <stm32f4xx_hal.h>
 #include <stm32f4xx_ll_gpio.h>
 #endif
+
+#define RGBLED_SIZE 0
 
 #ifdef SENSACTUP03
 #define CONSOLE_USART USART1
@@ -78,12 +79,28 @@
 #define CAN_PORT GPIOD
 #define DCF77_PORT GPIOC
 #define DCF77_PIN GPIO_PIN_4
-#define BUS_CNT 2
+#define BUS_CNT 1
 #endif
+
+#define INTI 0x0000
+#define BUS0 0x4000
+#define BUS1 0x8000
+#define BUS2 0xC000
+#define BUS3 0xF000
+#define I2C  0x0000
+#define OW0  0x0400
+#define OW1  0x0800
+#define OW2  0x0C00
+#define OW3  0x1000
 
 
 namespace sensact {
 
+enum struct eRotaryEncoder
+	:uint8_t
+	{
+		ROTARYENCODER_1, CNT = 1
+};
 
 
 class BSP {

@@ -202,8 +202,6 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 	eAppCallResult ret = eAppCallResult::OK;
 
 	switch (autoDimDirection) {
-		case eDirection::STOP:
-			break;
 		case eDirection::UP:
 			if(targetLevel==0)
 			{
@@ -220,6 +218,7 @@ eAppCallResult cPWM::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *stat
 				targetLevel--;
 			}
 			break;
+		case eDirection::STOP:
 		default:
 			break;
 	}

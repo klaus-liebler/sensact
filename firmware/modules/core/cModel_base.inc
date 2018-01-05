@@ -36,10 +36,10 @@ static const sensact::sScheduleEntry schedule[]
 												  };
 	cWeeklySchedule MODEL::volumeSchedule(0, schedule, 14);
 */
-#ifdef SENSACTUP
-	const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
-	const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
-#endif
+
+const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
+const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
+
 #ifdef MASTERNODE
 	uint8_t MODEL::applicationStatus[(uint16_t)eApplicationID::CNT][8];
 #endif
@@ -157,16 +157,38 @@ static const sensact::sScheduleEntry schedule[]
 #endif
 
 #ifdef NODE_SNSCT_L0_TECH_HS_1
-	const uint8_t MODEL::sensactWi_RelayAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_RelayAddressesCnt=0;
-
-	const uint8_t MODEL::sensactWi_InputAddresses[][6]={};
-	const uint8_t MODEL::sensactWi_InputAddressesCnt=0;
-
-	const uint8_t MODEL::ds18b20_Addresses[][6]={};
-	const uint8_t MODEL::ds18b20_AddressesCnt=0;
 	const bool MODEL::TRACE_COMMANDS=true;
 	const bool MODEL::TRACE_EVENTS=true;
+
+	static const uint8_t OWID1[6] = {0,0,0,0,0,0};
+	static drivers::cDS2482 ds2482(&BSP::i2c1, drivers::eDS2482Device::Dev0);
+	static cSensactSENode sensactSE1(OWID1);
+	static cDS1820Node ds1820_1(OWID1);
+	static cDS2413Node ds2413_1(OWID1);
+	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
+	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
+
+#define BUS0_I2C &BSP::i2c1
+
+	static drivers::cPCA9555 B0_9555_00(BUS0_I2C, drivers::ePCA9555Device::Dev0, 0xFFFF);
+	static drivers::cPCA9555 B0_9555_01(BUS0_I2C, drivers::ePCA9555Device::Dev1, 0xFFFF);
+	static drivers::cPCA9555 B0_9555_02(BUS0_I2C, drivers::ePCA9555Device::Dev2, 0xFFFF);
+	static drivers::cPCA9555 B0_9555_03(BUS0_I2C, drivers::ePCA9555Device::Dev3, 0xFFFF);
+
+	#define BB_9555_LEN 4
+	static drivers::cPCA9555 * const BUS0_9555[BB_9555_LEN] = {&B0_9555_00, &B0_9555_01, &B0_9555_02, &B0_9555_03};
+	static const uint16_t BUS0_interruptlines[3]={64+13,64+14,64+15};
+	static const cBusmaster bus0_master(
+			"Bus0",
+			BUS0_I2C,
+			BUS0_interruptlines,
+			BUS0_9555,
+			BB_9555_LEN,
+			0xF,
+			0,
+			0
+			);
+	cBusmaster const * const MODEL::busses[] = {&bus0_master};
 #endif
 
 #ifdef NODE_SNSCT_L0_TECH_HS_2

@@ -1,11 +1,3 @@
-/*
- * homeconrol_master.c
- *
- *  Created on: 31.03.2015
- *      Author: Klaus Liebler
- *	   Contact: mail@klaus-liebler.de
- *     Licence: none
- */
 #include <cMaster.h>
 #include "console.h"
 #include "cModel.h"
@@ -88,7 +80,7 @@ uint32_t cMaster::subscriberIndex;
  */
 void cMaster::BufferHeartbeat(eApplicationID target, Time_t now)
 {
-	for(uint i=0;i<COUNTOF(heartbeatBuffer);i++)
+	for(uint8_t i=0;i<COUNTOF(heartbeatBuffer);i++)
 	{
 		if(heartbeatBuffer[i] == eApplicationID::NO_APPLICATION)
 		{
@@ -269,7 +261,7 @@ void cMaster::Run(void) {
 		CanBusProcess();
 		BSP::DoEachCycle(now);
 		//Reset heartbeat buffer;
-		for(uint i=0;i<COUNTOF(heartbeatBuffer);i++)
+		for(uint8_t i=0;i<COUNTOF(heartbeatBuffer);i++)
 		{
 			if(heartbeatBuffer[i]== eApplicationID::NO_APPLICATION) break;
 			LOGD("Flushing heartbeat buffer with target %s", cApplication::N4I((uint32_t const)heartbeatBuffer[i]));
