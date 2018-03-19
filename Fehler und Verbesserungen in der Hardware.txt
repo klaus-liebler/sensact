@@ -3,7 +3,11 @@ Allgemein: Mehr Pufferkondensatoren? - Ein paar u1 noch am Spannungsreglerausgan
 
 sensactHS mini:
 3V3 on board
-5V, 12V über Steckmodule (hochkant)
-Ehternet über Steckmodul (Hochkant)
-MP3 über Steckmodul (nicht hochkant, aber mit Möglichkeit zum Tausch der microSD-Karte)
+3V3, 5V, 12V über Steckmodule (hochkank, https://www.aliexpress.com/item/6pcs-DC-DC-Step-Down-Buck-Converter-Adjustable-4-5V-24V-to-5V-3A-97-5/32805900484.html)
+Ehternet über Steckmodul (hochkant, https://www.aliexpress.com/item/Smart-Electronics-LAN8720-module-network-module-Ethernet-transceiver-RMII-interface-development-board-for-arduino/32825970761.html)
+
+MP3 über Steckmodul (nicht hochkant, aber mit Möglichkeit zum Tausch der microSD-Karte, https://www.aliexpress.com/item/Mini-MP3-Player-Module-TF-Card-U-Disk-Mini-MP3-Player-Audio-Voice-Module-Board-For/32787671319.html)
+Verstärker über Steckmodul (https://www.aliexpress.com/item/Free-Shipping-TPA3110-PBTL-30W-Digital-Mono-Amplifier-Module-Board-Power-AMP-DC-8-26V/32728398487.html)
+
+2 Busanschlüsse
 

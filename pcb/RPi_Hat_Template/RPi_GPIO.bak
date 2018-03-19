@@ -1,0 +1,306 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:sensact
+LIBS:stm32
+LIBS:RPi_Hat-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RPi_GPIO J1
+U 1 1 5516AE26
+P 7500 2700
+F 0 "J1" H 8250 2950 60  0000 C CNN
+F 1 "RPi_GPIO" H 8250 2850 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x20_Pitch2.54mm" H 7500 2700 60  0001 C CNN
+F 3 "" H 7500 2700 60  0000 C CNN
+	1    7500 2700
+	1    0    0    -1  
+$EndComp
+Text GLabel 6500 3450 0    60   Output ~ 0
+CAN_SI
+Text GLabel 7050 3550 0    60   Input ~ 0
+CAN_SO
+Text GLabel 6500 3900 0    60   Output ~ 0
+CAN_SCK
+Text GLabel 9250 3900 2    60   Output ~ 0
+CAN_CS
+Text GLabel 9250 3400 2    60   Input ~ 0
+CAN_INT
+Text GLabel 7250 2800 0    60   Output ~ 0
+SCL1
+Text GLabel 7250 2900 0    60   BiDi ~ 0
+SDA1
+NoConn ~ 7300 2700
+NoConn ~ 7300 3500
+$Comp
+L +5V #PWR034
+U 1 1 5AA0633D
+P 9250 2750
+F 0 "#PWR034" H 9250 2600 50  0001 C CNN
+F 1 "+5V" H 9250 2890 50  0000 C CNN
+F 2 "" H 9250 2750 50  0000 C CNN
+F 3 "" H 9250 2750 50  0000 C CNN
+	1    9250 2750
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR035
+U 1 1 5AA0636A
+P 9300 2900
+F 0 "#PWR035" H 9300 2650 50  0001 C CNN
+F 1 "GND" H 9300 2750 50  0000 C CNN
+F 2 "" H 9300 2900 50  0000 C CNN
+F 3 "" H 9300 2900 50  0000 C CNN
+	1    9300 2900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR036
+U 1 1 5AA06380
+P 9250 3300
+F 0 "#PWR036" H 9250 3050 50  0001 C CNN
+F 1 "GND" H 9250 3150 50  0000 C CNN
+F 2 "" H 9250 3300 50  0000 C CNN
+F 3 "" H 9250 3300 50  0000 C CNN
+	1    9250 3300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR037
+U 1 1 5AA06396
+P 9250 3600
+F 0 "#PWR037" H 9250 3350 50  0001 C CNN
+F 1 "GND" H 9250 3450 50  0000 C CNN
+F 2 "" H 9250 3600 50  0000 C CNN
+F 3 "" H 9250 3600 50  0000 C CNN
+	1    9250 3600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR038
+U 1 1 5AA063AC
+P 9250 4100
+F 0 "#PWR038" H 9250 3850 50  0001 C CNN
+F 1 "GND" H 9250 3950 50  0000 C CNN
+F 2 "" H 9250 4100 50  0000 C CNN
+F 3 "" H 9250 4100 50  0000 C CNN
+	1    9250 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR039
+U 1 1 5AA063C2
+P 9250 4300
+F 0 "#PWR039" H 9250 4050 50  0001 C CNN
+F 1 "GND" H 9250 4150 50  0000 C CNN
+F 2 "" H 9250 4300 50  0000 C CNN
+F 3 "" H 9250 4300 50  0000 C CNN
+	1    9250 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR040
+U 1 1 5AA063D8
+P 7250 4600
+F 0 "#PWR040" H 7250 4350 50  0001 C CNN
+F 1 "GND" H 7250 4450 50  0000 C CNN
+F 2 "" H 7250 4600 50  0000 C CNN
+F 3 "" H 7250 4600 50  0000 C CNN
+	1    7250 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR041
+U 1 1 5AA063EE
+P 7250 3900
+F 0 "#PWR041" H 7250 3650 50  0001 C CNN
+F 1 "GND" H 7250 3750 50  0000 C CNN
+F 2 "" H 7250 3900 50  0000 C CNN
+F 3 "" H 7250 3900 50  0000 C CNN
+	1    7250 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR042
+U 1 1 5AA06404
+P 7250 3100
+F 0 "#PWR042" H 7250 2850 50  0001 C CNN
+F 1 "GND" H 7250 2950 50  0000 C CNN
+F 2 "" H 7250 3100 50  0000 C CNN
+F 3 "" H 7250 3100 50  0000 C CNN
+	1    7250 3100
+	0    1    1    0   
+$EndComp
+Text GLabel 9250 4000 2    60   Output ~ 0
+ID_SC
+Text GLabel 7250 4000 0    60   BiDi ~ 0
+ID_SD
+Text GLabel 9250 3800 2    60   Output ~ 0
+LCD_CS
+Wire Wire Line
+	9200 3900 9250 3900
+Wire Wire Line
+	7250 4000 7300 4000
+Wire Wire Line
+	9200 4000 9250 4000
+Wire Wire Line
+	7250 3100 7300 3100
+Wire Wire Line
+	7250 3900 7300 3900
+Wire Wire Line
+	7250 4600 7300 4600
+Wire Wire Line
+	9200 4300 9250 4300
+Wire Wire Line
+	9200 4100 9250 4100
+Wire Wire Line
+	9200 3600 9250 3600
+Wire Wire Line
+	9200 3300 9250 3300
+Wire Wire Line
+	9200 2900 9300 2900
+Connection ~ 9250 2750
+Wire Wire Line
+	9250 2800 9200 2800
+Wire Wire Line
+	9250 2700 9250 2800
+Wire Wire Line
+	9200 2700 9250 2700
+Wire Wire Line
+	7250 2900 7300 2900
+Wire Wire Line
+	7250 2800 7300 2800
+Wire Wire Line
+	9200 3800 9250 3800
+Wire Wire Line
+	9200 3700 9250 3700
+Text GLabel 6500 3600 0    60   Output ~ 0
+LCD_MOSI
+Text GLabel 6500 3750 0    60   Output ~ 0
+LCD_SCLK
+Text GLabel 7100 3700 0    60   Input ~ 0
+LCD_MISO
+Wire Wire Line
+	7250 4400 7300 4400
+Text GLabel 9250 3100 2    60   Input ~ 0
+TX
+Text GLabel 9250 3000 2    60   Output ~ 0
+RX
+Wire Wire Line
+	9200 3000 9250 3000
+Wire Wire Line
+	9200 3100 9250 3100
+Wire Wire Line
+	9200 4500 9250 4500
+Wire Wire Line
+	9200 4600 9250 4600
+Wire Wire Line
+	9200 4400 9250 4400
+Text GLabel 9250 3500 2    60   Output ~ 0
+NRST
+Text GLabel 8900 5150 2    60   Output ~ 0
+BOOT0
+Wire Wire Line
+	9200 3400 9250 3400
+Wire Wire Line
+	9200 3500 9250 3500
+Text GLabel 9200 3200 2    60   Output ~ 0
+AUDIO_BCK
+Wire Wire Line
+	6500 3450 7200 3450
+Wire Wire Line
+	6550 3750 6550 3900
+Wire Wire Line
+	6550 3750 6500 3750
+Connection ~ 6550 3800
+Text GLabel 9250 4600 2    60   Output ~ 0
+AUDIO_DATA
+Wire Wire Line
+	6550 3800 7300 3800
+Wire Wire Line
+	7300 3600 7200 3600
+Wire Wire Line
+	7200 3600 7200 3450
+Wire Wire Line
+	7300 3700 7100 3700
+Wire Wire Line
+	6550 3900 6500 3900
+Wire Wire Line
+	7050 3550 7150 3550
+Wire Wire Line
+	7150 3550 7150 3700
+Connection ~ 7150 3700
+Wire Wire Line
+	6500 3600 6550 3600
+Wire Wire Line
+	6550 3600 6550 3450
+Connection ~ 6550 3450
+Text GLabel 7250 4400 0    60   Output ~ 0
+AUDIO_LCK
+Text GLabel 7250 4500 0    60   Output ~ 0
+LCD_RES
+Text GLabel 7250 4300 0    60   Output ~ 0
+LCD_DC
+Text GLabel 7300 3000 0    60   BiDi ~ 0
+1Wire
+Text GLabel 9250 4400 2    60   Output ~ 0
+LCD_PWM
+Wire Wire Line
+	7300 3300 7250 3300
+Wire Wire Line
+	7300 4500 7250 4500
+Text GLabel 7250 3400 0    60   Input ~ 0
+INT1_1
+Text GLabel 7250 3200 0    60   Input ~ 0
+INT1_2
+Text GLabel 7250 3300 0    60   Input ~ 0
+INT1_3
+Wire Wire Line
+	7300 3200 7250 3200
+Wire Wire Line
+	7300 3400 7250 3400
+NoConn ~ 9250 4500
+NoConn ~ 9550 4450
+Wire Wire Line
+	7300 4300 7250 4300
+$EndSCHEMATC

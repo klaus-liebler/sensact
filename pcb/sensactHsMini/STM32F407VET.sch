@@ -59,19 +59,11 @@ F 3 "" H 5900 3800 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10400 5000 10850 5000
-Wire Wire Line
 	10400 4200 10850 4200
 Wire Wire Line
 	10400 4300 10850 4300
 Wire Wire Line
-	10400 4900 10850 4900
-Wire Wire Line
-	10400 3800 10850 3800
-Wire Wire Line
 	10400 4100 10850 4100
-Wire Wire Line
-	10400 1400 10850 1400
 Wire Wire Line
 	10400 5100 10850 5100
 Wire Wire Line
@@ -89,35 +81,17 @@ Wire Wire Line
 Wire Wire Line
 	10400 2700 10850 2700
 Wire Wire Line
-	10400 3000 10850 3000
-Wire Wire Line
-	10400 3100 10850 3100
-Wire Wire Line
 	10400 3200 10850 3200
-Wire Wire Line
-	10400 4000 10850 4000
-Text Label 10600 4900 0    60   ~ 0
-TXD2
-Text Label 10600 5000 0    60   ~ 0
-TXC
 Text Label 10600 5100 0    60   ~ 0
-RXD0
+ETH_RX0
 Text Label 10600 5200 0    60   ~ 0
-RXD1
+ETH_RX1
 Text Label 10600 4300 0    60   ~ 0
-TXD1
-Text Label 10600 4200 0    60   ~ 0
-TXD0
+ETH_TX1
+Text Label 10450 4200 0    60   ~ 0
+ETH_TX0
 Text Label 10600 4100 0    60   ~ 0
-TXEN
-Text Label 10600 4000 0    60   ~ 0
-RXER
-Text Label 10600 3800 0    60   ~ 0
-TXD3
-Text Label 10600 3100 0    60   ~ 0
-RXD3
-Text Label 10600 3000 0    60   ~ 0
-RXD2
+ETH_TXEN
 Text Label 10600 2700 0    60   ~ 0
 SWCLK
 Text Label 10600 2600 0    60   ~ 0
@@ -126,26 +100,18 @@ Text Label 10600 2500 0    60   ~ 0
 USBP
 Text Label 10600 2400 0    60   ~ 0
 USBM
-Text Label 10600 2000 0    60   ~ 0
-RXDV
-Text Label 10600 1500 0    60   ~ 0
-MDIO
-Text Label 10600 1400 0    60   ~ 0
-RXC
+Text Label 10450 1500 0    60   ~ 0
+ETH_MDIO
 Text Label 10600 3200 0    60   ~ 0
 BOOT1
 Wire Wire Line
 	10400 1300 10850 1300
-Text Label 10600 1300 0    60   ~ 0
-CRS
-Wire Wire Line
-	10400 1600 10850 1600
-Text Label 10600 1600 0    60   ~ 0
-COL
+Text Label 10450 1300 0    60   ~ 0
+ETH_CRS
 Wire Wire Line
 	10400 4800 10850 4800
 Text Label 10600 4800 0    60   ~ 0
-MDC
+ETH_MDC
 Wire Wire Line
 	10400 2100 10850 2100
 Wire Wire Line
@@ -274,23 +240,12 @@ Wire Wire Line
 	850  7350 850  7200
 Connection ~ 850  7200
 Wire Wire Line
-	800  6900 2200 6900
+	800  6900 2950 6900
 Connection ~ 1000 6900
 Connection ~ 1200 6900
 Connection ~ 1400 6900
 Connection ~ 1600 6900
 Connection ~ 1800 6900
-$Comp
-L Ferrite_Bead L1
-U 1 1 58852C1C
-P 2350 6900
-F 0 "L1" V 2200 6925 50  0000 C CNN
-F 1 "Ferrite_Bead" V 2500 6900 50  0000 C CNN
-F 2 "Resistors_SMD:R_1206_HandSoldering" V 2280 6900 50  0001 C CNN
-F 3 "" H 2350 6900 50  0000 C CNN
-	1    2350 6900
-	0    1    1    0   
-$EndComp
 $Comp
 L C C12
 U 1 1 58852C5D
@@ -314,8 +269,6 @@ F 3 "" H 2950 7050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 2000 6900
-Wire Wire Line
-	2500 6900 2950 6900
 Connection ~ 2750 6900
 Connection ~ 2000 7200
 Connection ~ 2750 7200
@@ -369,21 +322,10 @@ F 3 "" H 1150 2300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	600  2300 1250 2300
+	1050 2300 1250 2300
 Connection ~ 1150 2300
-$Comp
-L +3V3 #PWR04
-U 1 1 5885335A
-P 1300 1700
-F 0 "#PWR04" H 1300 1550 50  0001 C CNN
-F 1 "+3V3" H 1300 1840 50  0000 C CNN
-F 2 "" H 1300 1700 50  0000 C CNN
-F 3 "" H 1300 1700 50  0000 C CNN
-	1    1300 1700
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	1400 1700 1300 1700
+	850  1700 1400 1700
 Wire Wire Line
 	1400 1300 1000 1300
 Text Label 1000 1300 0    60   ~ 0
@@ -403,10 +345,10 @@ Connection ~ 5800 800
 Connection ~ 5900 800 
 Connection ~ 6000 800 
 $Comp
-L +3V3 #PWR05
+L +3V3 #PWR04
 U 1 1 58853F25
 P 5550 800
-F 0 "#PWR05" H 5550 650 50  0001 C CNN
+F 0 "#PWR04" H 5550 650 50  0001 C CNN
 F 1 "+3V3" H 5550 940 50  0000 C CNN
 F 2 "" H 5550 800 50  0000 C CNN
 F 3 "" H 5550 800 50  0000 C CNN
@@ -420,10 +362,10 @@ Connection ~ 5800 6700
 Connection ~ 5900 6700
 Connection ~ 6000 6700
 $Comp
-L GND #PWR06
+L GND #PWR05
 U 1 1 5885425E
 P 5650 6700
-F 0 "#PWR06" H 5650 6450 50  0001 C CNN
+F 0 "#PWR05" H 5650 6450 50  0001 C CNN
 F 1 "GND" H 5650 6550 50  0000 C CNN
 F 2 "" H 5650 6700 50  0000 C CNN
 F 3 "" H 5650 6700 50  0000 C CNN
@@ -437,67 +379,50 @@ Text Label 10450 5600 0    60   ~ 0
 SDA2
 Wire Wire Line
 	10400 5600 10850 5600
-$Comp
-L Crystal Y1
-U 1 1 58855A14
-P 1150 2750
-F 0 "Y1" H 1150 2900 50  0000 C CNN
-F 1 "8MHz" H 1150 2600 50  0000 C CNN
-F 2 "Crystals:Crystal_HC49-U_Vertical" H 1150 2750 50  0001 C CNN
-F 3 "" H 1150 2750 50  0000 C CNN
-	1    1150 2750
-	0    1    1    0   
-$EndComp
 Wire Wire Line
 	1400 2600 1400 2700
 Wire Wire Line
-	900  2600 1400 2600
+	850  2600 1400 2600
 Wire Wire Line
 	1400 2900 1400 2800
 Wire Wire Line
-	900  2900 1400 2900
+	850  2900 1050 2900
 $Comp
 L C C1
 U 1 1 58855B04
-P 750 2600
-F 0 "C1" H 775 2700 50  0000 L CNN
-F 1 "22p" H 775 2500 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 788 2450 50  0001 C CNN
-F 3 "" H 750 2600 50  0000 C CNN
-	1    750  2600
+P 700 2600
+F 0 "C1" H 725 2700 50  0000 L CNN
+F 1 "22p" H 725 2500 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 738 2450 50  0001 C CNN
+F 3 "" H 700 2600 50  0000 C CNN
+	1    700  2600
 	0    1    1    0   
 $EndComp
 $Comp
 L C C2
 U 1 1 58855B43
-P 750 2900
-F 0 "C2" H 775 3000 50  0000 L CNN
-F 1 "22p" H 775 2800 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805_HandSoldering" H 788 2750 50  0001 C CNN
-F 3 "" H 750 2900 50  0000 C CNN
-	1    750  2900
+P 700 2900
+F 0 "C2" H 725 3000 50  0000 L CNN
+F 1 "22p" H 725 2800 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 738 2750 50  0001 C CNN
+F 3 "" H 700 2900 50  0000 C CNN
+	1    700  2900
 	0    1    1    0   
 $EndComp
-Connection ~ 1150 2600
-Connection ~ 1150 2900
+Connection ~ 1000 2600
+Connection ~ 1000 2900
 Wire Wire Line
-	600  2300 600  2900
+	550  2600 550  3100
 Connection ~ 1050 2300
-Connection ~ 600  2600
+Connection ~ 550  2600
 Text GLabel 900  4700 0    60   Input ~ 0
 CANR
 Text GLabel 900  4800 0    60   Output ~ 0
 CANT
-Text GLabel 10850 1300 2    60   BiDi ~ 0
-CRS
-Text GLabel 10850 1400 2    60   BiDi ~ 0
-RXC
+Text GLabel 10850 1300 2    60   Input ~ 0
+ETH_CRS
 Text GLabel 10850 1500 2    60   BiDi ~ 0
-MDIO
-Text GLabel 10850 1600 2    60   BiDi ~ 0
-COL
-Text GLabel 10850 2000 2    60   BiDi ~ 0
-RXDV
+ETH_MDIO
 Text GLabel 10850 2100 2    60   Output ~ 0
 SCL2
 Text GLabel 10850 2200 2    60   Output ~ 0
@@ -512,36 +437,24 @@ Text GLabel 10850 2600 2    60   BiDi ~ 0
 SWDIO
 Text GLabel 10850 2700 2    60   BiDi ~ 0
 SWCLK
-Text GLabel 10850 3000 2    60   BiDi ~ 0
-RXD2
-Text GLabel 10850 3100 2    60   BiDi ~ 0
-RXD3
 Text GLabel 10850 3200 2    60   BiDi ~ 0
 BOOT1
 Text GLabel 10850 3600 2    60   Output ~ 0
 SCL1
 Text GLabel 10850 3700 2    60   BiDi ~ 0
 SDA1
-Text GLabel 10850 3800 2    60   BiDi ~ 0
-TXD3
-Text GLabel 10850 4000 2    60   BiDi ~ 0
-RXER
 Text GLabel 10850 4100 2    60   BiDi ~ 0
-TXEN
-Text GLabel 10850 4200 2    60   BiDi ~ 0
-TXD0
-Text GLabel 10850 4300 2    60   BiDi ~ 0
-TXD1
-Text GLabel 10850 4800 2    60   BiDi ~ 0
-MDC
-Text GLabel 10850 4900 2    60   BiDi ~ 0
-TXD2
-Text GLabel 10850 5000 2    60   BiDi ~ 0
-TXC
+ETH_TXEN
+Text GLabel 10850 4200 2    60   Output ~ 0
+ETH_TX0
+Text GLabel 10850 4300 2    60   Output ~ 0
+ETH_TX1
+Text GLabel 10850 4800 2    60   Output ~ 0
+ETH_MDC
 Text GLabel 10850 5100 2    60   BiDi ~ 0
-RXD0
+ETH_RX0
 Text GLabel 10850 5200 2    60   BiDi ~ 0
-RXD1
+ETH_RX1
 Text GLabel 10850 5600 2    60   BiDi ~ 0
 SDA2
 Wire Wire Line
@@ -556,43 +469,293 @@ Wire Wire Line
 	10500 5800 10400 5800
 Text GLabel 1000 1300 0    60   Input ~ 0
 RST
-Wire Wire Line
-	10400 3300 10850 3300
-Wire Wire Line
-	10400 3400 10850 3400
-Wire Wire Line
-	10400 3500 10850 3500
-Text GLabel 10850 3300 2    60   BiDi ~ 0
+Text GLabel 10450 4500 2    60   BiDi ~ 0
 INT1_3
-Text GLabel 10850 3400 2    60   BiDi ~ 0
+Text GLabel 10450 4400 2    60   BiDi ~ 0
 INT1_2
-Text GLabel 10850 3500 2    60   BiDi ~ 0
+Text GLabel 10450 4000 2    60   BiDi ~ 0
 INT1_1
-Wire Wire Line
-	1400 4900 1300 4900
-Wire Wire Line
-	1400 5000 1300 5000
-Wire Wire Line
-	1400 5100 1300 5100
-Text GLabel 1300 4900 0    60   Input ~ 0
+Text GLabel 10550 5500 2    60   Input ~ 0
 INT2_1
-Text GLabel 1300 5000 0    60   Input ~ 0
+Text GLabel 10550 5400 2    60   Input ~ 0
 INT2_2
-Text GLabel 1300 5100 0    60   Input ~ 0
+Text GLabel 10550 5300 2    60   Input ~ 0
 INT2_3
 $Comp
-L +3V3 #PWR?
+L +3V3 #PWR06
 U 1 1 58919782
-P 10450 4600
-F 0 "#PWR?" H 10450 4450 50  0001 C CNN
-F 1 "+3V3" H 10450 4740 50  0000 C CNN
-F 2 "" H 10450 4600 50  0000 C CNN
-F 3 "" H 10450 4600 50  0000 C CNN
-	1    10450 4600
+P 11700 4450
+F 0 "#PWR06" H 11700 4300 50  0001 C CNN
+F 1 "+3V3" H 11700 4590 50  0000 C CNN
+F 2 "" H 11700 4450 50  0000 C CNN
+F 3 "" H 11700 4450 50  0000 C CNN
+	1    11700 4450
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	10450 4600 10400 4600
+	1000 2650 1000 2600
 Wire Wire Line
-	10400 4600 10400 4700
+	1000 2900 1000 2850
+$Comp
+L R R1
+U 1 1 5A8453D5
+P 1200 2900
+F 0 "R1" V 1280 2900 50  0000 C CNN
+F 1 "K22" V 1200 2900 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 1130 2900 50  0001 C CNN
+F 3 "" H 1200 2900 50  0000 C CNN
+	1    1200 2900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1350 2900 1400 2900
+$Comp
+L GND #PWR07
+U 1 1 5A84551D
+P 1200 2750
+F 0 "#PWR07" H 1200 2500 50  0001 C CNN
+F 1 "GND" H 1200 2600 50  0000 C CNN
+F 2 "" H 1200 2750 50  0000 C CNN
+F 3 "" H 1200 2750 50  0000 C CNN
+	1    1200 2750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR08
+U 1 1 5A845551
+P 550 3100
+F 0 "#PWR08" H 550 2850 50  0001 C CNN
+F 1 "GND" H 550 2950 50  0000 C CNN
+F 2 "" H 550 3100 50  0000 C CNN
+F 3 "" H 550 3100 50  0000 C CNN
+	1    550  3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Crystal_GND24 Y1
+U 1 1 5A845712
+P 1000 2750
+F 0 "Y1" H 1125 2950 50  0000 L CNN
+F 1 "Crystal_GND24" H 1125 2875 50  0000 L CNN
+F 2 "sensact:quartz3225" H 1000 2750 50  0001 C CNN
+F 3 "" H 1000 2750 50  0000 C CNN
+	1    1000 2750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	550  2750 800  2750
+Connection ~ 550  2750
+Connection ~ 550  2900
+Text Label 1100 1900 0    60   ~ 0
+VCAP1
+Text Label 1300 2000 0    60   ~ 0
+VCAP2
+$Comp
+L GND #PWR09
+U 1 1 5A8954C0
+P 1350 1500
+F 0 "#PWR09" H 1350 1250 50  0001 C CNN
+F 1 "GND" H 1350 1350 50  0000 C CNN
+F 2 "" H 1350 1500 50  0000 C CNN
+F 3 "" H 1350 1500 50  0000 C CNN
+	1    1350 1500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1250 1500 1400 1500
+$Comp
+L CONN_01X02 P9
+U 1 1 5A89565C
+P 650 1650
+F 0 "P9" H 650 1800 50  0000 C CNN
+F 1 "BACKUP" V 750 1650 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 650 1650 50  0001 C CNN
+F 3 "" H 650 1650 50  0000 C CNN
+	1    650  1650
+	-1   0    0    1   
+$EndComp
+$Comp
+L D D2
+U 1 1 5A895881
+P 850 1850
+F 0 "D2" H 850 1950 50  0000 C CNN
+F 1 "D" H 850 1750 50  0000 C CNN
+F 2 "sensact:sod123_handsolder" H 850 1850 50  0001 C CNN
+F 3 "" H 850 1850 50  0000 C CNN
+	1    850  1850
+	0    1    1    0   
+$EndComp
+Connection ~ 850  1700
+$Comp
+L C C14
+U 1 1 5A8958D4
+P 1150 1550
+F 0 "C14" H 1175 1650 50  0000 L CNN
+F 1 "u1" H 1175 1450 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 1188 1400 50  0001 C CNN
+F 3 "" H 1150 1550 50  0000 C CNN
+	1    1150 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1250 1400 1250 1500
+Wire Wire Line
+	1050 1400 1250 1400
+Connection ~ 1350 1500
+Wire Wire Line
+	850  1600 1050 1600
+Wire Wire Line
+	1050 1600 1050 1400
+Connection ~ 1150 1400
+$Comp
+L +3V3 #PWR010
+U 1 1 5A895A2D
+P 850 2050
+F 0 "#PWR010" H 850 1900 50  0001 C CNN
+F 1 "+3V3" H 850 2190 50  0000 C CNN
+F 2 "" H 850 2050 50  0000 C CNN
+F 3 "" H 850 2050 50  0000 C CNN
+	1    850  2050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	850  2050 850  2000
+Text Label 1200 1700 0    60   ~ 0
+VBAT
+Connection ~ 1150 1700
+Text GLabel 10500 3500 2    60   Output ~ 0
+LCD_MOSI
+Wire Wire Line
+	10400 3400 10500 3400
+Wire Wire Line
+	10400 3500 10500 3500
+Text GLabel 10500 3300 2    60   Output ~ 0
+LCD_SCK
+Wire Wire Line
+	10400 3300 10500 3300
+Text GLabel 10500 3400 2    60   Output ~ 0
+LCD_LED
+Text GLabel 10500 3800 2    60   Output ~ 0
+LCD_A0
+Text GLabel 10500 3900 2    60   Output ~ 0
+LCD_RESET
+Wire Wire Line
+	10400 3800 10500 3800
+Wire Wire Line
+	10400 3900 10500 3900
+Text GLabel 1350 3000 0    60   Output ~ 0
+LCD_CS
+Wire Wire Line
+	1400 3000 1350 3000
+Wire Wire Line
+	10550 5500 10400 5500
+Wire Wire Line
+	10550 5400 10400 5400
+Wire Wire Line
+	10550 5300 10400 5300
+Wire Wire Line
+	1400 5500 1300 5500
+Wire Wire Line
+	10450 4400 10400 4400
+Wire Wire Line
+	10450 4500 10400 4500
+NoConn ~ 10400 5000
+NoConn ~ 10400 4900
+NoConn ~ 10400 6200
+NoConn ~ 10400 6100
+NoConn ~ 10400 6000
+NoConn ~ 10400 5900
+NoConn ~ 1400 6200
+NoConn ~ 1400 6100
+NoConn ~ 1400 6000
+NoConn ~ 1400 5900
+NoConn ~ 1400 5800
+NoConn ~ 1400 5400
+NoConn ~ 1400 5300
+NoConn ~ 1400 5200
+NoConn ~ 1400 5100
+NoConn ~ 1400 5000
+NoConn ~ 1400 4900
+NoConn ~ 1400 4500
+NoConn ~ 1400 4400
+NoConn ~ 1400 4300
+NoConn ~ 1400 4200
+NoConn ~ 1400 4100
+NoConn ~ 1400 4000
+NoConn ~ 1400 3900
+NoConn ~ 1400 3800
+NoConn ~ 1400 3700
+NoConn ~ 1400 3600
+NoConn ~ 1400 3500
+NoConn ~ 1400 3400
+NoConn ~ 1400 3300
+NoConn ~ 1400 3100
+NoConn ~ 10400 3100
+NoConn ~ 10400 3000
+NoConn ~ 10400 2800
+NoConn ~ 10400 1900
+NoConn ~ 10400 1800
+NoConn ~ 10400 1700
+NoConn ~ 10400 1600
+NoConn ~ 10400 1400
+Wire Wire Line
+	10400 4000 10450 4000
+Text GLabel 1300 5500 0    60   Output ~ 0
+LIN_TX
+Text GLabel 1300 5600 0    60   Input ~ 0
+LIN_RX
+Wire Wire Line
+	1400 5600 1300 5600
+Text GLabel 1300 5700 0    60   Output ~ 0
+LIN_SLP
+Wire Wire Line
+	1400 5700 1300 5700
+NoConn ~ 10400 4700
+Text Label 1150 2600 2    60   ~ 0
+OSC_IN
+Text Label 1400 2850 2    60   ~ 0
+OSC_OUT
+Text Label 900  2900 2    60   ~ 0
+OSC_OUT_X
+$Comp
+L LED D3
+U 1 1 5A92B90F
+P 900 3450
+F 0 "D3" H 900 3550 50  0000 C CNN
+F 1 "LED" H 900 3350 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 900 3450 50  0001 C CNN
+F 3 "" H 900 3450 50  0000 C CNN
+	1    900  3450
+	0    1    1    0   
+$EndComp
+$Comp
+L R R2
+U 1 1 5A92B972
+P 900 3800
+F 0 "R2" V 980 3800 50  0000 C CNN
+F 1 "k1" V 900 3800 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 830 3800 50  0001 C CNN
+F 3 "" H 900 3800 50  0000 C CNN
+	1    900  3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3V3 #PWR011
+U 1 1 5A92B9E8
+P 900 4000
+F 0 "#PWR011" H 900 3850 50  0001 C CNN
+F 1 "+3V3" H 900 4140 50  0000 C CNN
+F 2 "" H 900 4000 50  0000 C CNN
+F 3 "" H 900 4000 50  0000 C CNN
+	1    900  4000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	900  4000 900  3950
+Wire Wire Line
+	900  3650 900  3600
+Wire Wire Line
+	1400 3200 900  3200
+Wire Wire Line
+	900  3200 900  3300
 $EndSCHEMATC
