@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:/sensact/pcb/sensactUp/sensactUp.sch)
-    (date "09.12.2017 14:34:42")
+    (date "28.03.2018 09:26:31")
     (tool "Eeschema 4.0.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
