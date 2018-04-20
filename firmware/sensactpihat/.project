@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sensactF0</name>
+	<name>sensactpihat</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,9 +26,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>core</name>
+			<name>USB_CORE</name>
 			<type>2</type>
-			<location>C:/sensact/firmware/modules/core</location>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.9.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src</location>
+		</link>
+		<link>
+			<name>USB_HID</name>
+			<type>2</type>
+			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F0_V1.9.0/Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src</location>
 		</link>
 		<link>
 			<name>cubemx</name>
@@ -39,11 +44,6 @@
 			<name>drivers</name>
 			<type>2</type>
 			<location>C:/sensact/firmware/modules/drivers</location>
-		</link>
-		<link>
-			<name>generated</name>
-			<type>2</type>
-			<location>C:/sensact/firmware/modules/generated</location>
 		</link>
 	</linkedResources>
 </projectDescription>
