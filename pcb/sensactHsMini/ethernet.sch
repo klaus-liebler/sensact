@@ -32,6 +32,7 @@ LIBS:stm32
 LIBS:sensact
 LIBS:w_connectors
 LIBS:w_device
+LIBS:relays
 LIBS:sensactHsMini-cache
 EELAYER 25 0
 EELAYER END

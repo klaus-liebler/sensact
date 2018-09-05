@@ -15,6 +15,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 USBD_HandleTypeDef hUsbDeviceFS;
+int blinkingDelay=500;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -53,8 +54,10 @@ int main(void)
 
   /* USER CODE END WHILE */
 
-  /* USER CODE BEGIN 3 */
 
+  /* USER CODE BEGIN 3 */
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+	  HAL_Delay(blinkingDelay);
   }
   /* USER CODE END 3 */
 
@@ -281,6 +284,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(INT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : B1 -LED */
+   GPIO_InitStruct.Pin = GPIO_PIN_1;
+   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 
 }
 

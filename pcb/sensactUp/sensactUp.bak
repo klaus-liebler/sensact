@@ -2213,9 +2213,9 @@ F 3 "" H 2850 2750 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 Text GLabel 2850 2650 0    60   BiDi ~ 0
-SCL1
+SCL
 Text GLabel 2850 2550 0    60   BiDi ~ 0
-SDA1
+SDA
 Wire Wire Line
 	2900 2650 2850 2650
 Wire Wire Line

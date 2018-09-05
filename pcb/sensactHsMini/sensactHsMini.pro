@@ -1,4 +1,4 @@
-update=29.04.2017 13:32:45
+update=23.05.2018 22:43:17
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,6 +25,16 @@ version=1
 NetIExt=net
 [general]
 version=1
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
 [eeschema]
 version=1
 LibDir=
@@ -62,13 +72,4 @@ LibName30=stm32
 LibName31=C:/sensact/pcb/kicad-libs/sensact
 LibName32=C:/sensact/pcb/kicad-libs/w_connectors
 LibName33=C:/sensact/pcb/kicad-libs/w_device
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
+LibName34=relays

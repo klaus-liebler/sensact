@@ -1,0 +1,18 @@
+24V unten ganz links (Schraubklemmen
+Violettes CAN-Buskabel in/out unten links (8pol Federklemmen)
+I2C-Bus oben ganz links (10pol IDC)
+1Wire-Bus oben links (1Wire + 24V + GND + 5V, 4pol Federklemme)
+LIN-Bus oben rechts (LIN+24V+GND+5V, 4pol Kabelverbinder)
+Lautsprecher oben ganz rechts (4pol Kabelverbinder)
+
+Per Verbinder
+CANRX, CANTX oder CANH/CANL (bevorzugt!)
+24V
+3V3
+GND
+I2C+3 Interrupt-Leitungen
+
+Implementierung: Über SENSACT-Bus-Connector + 2 separate Leitunngen für CAN
+
+Auf der Linken Seite nur Stromversorgung und Anschlüsse, ggf Verstärker, wenn der nicht gut
+rechts reinpasst. Dann werden ja auch nur zwei zusätzliche Audio-Leitungen benötigt

@@ -689,7 +689,6 @@ NoConn ~ 1400 3600
 NoConn ~ 1400 3500
 NoConn ~ 1400 3400
 NoConn ~ 1400 3300
-NoConn ~ 1400 3200
 NoConn ~ 1400 3100
 NoConn ~ 10400 3100
 NoConn ~ 10400 3000
@@ -718,4 +717,45 @@ Text Label 1400 2850 2    60   ~ 0
 OSC_OUT
 Text Label 900  2900 2    60   ~ 0
 OSC_OUT_X
+$Comp
+L LED D3
+U 1 1 5A92B90F
+P 900 3450
+F 0 "D3" H 900 3550 50  0000 C CNN
+F 1 "LED" H 900 3350 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 900 3450 50  0001 C CNN
+F 3 "" H 900 3450 50  0000 C CNN
+	1    900  3450
+	0    1    1    0   
+$EndComp
+$Comp
+L R R2
+U 1 1 5A92B972
+P 900 3800
+F 0 "R2" V 980 3800 50  0000 C CNN
+F 1 "k1" V 900 3800 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 830 3800 50  0001 C CNN
+F 3 "" H 900 3800 50  0000 C CNN
+	1    900  3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3V3 #PWR011
+U 1 1 5A92B9E8
+P 900 4000
+F 0 "#PWR011" H 900 3850 50  0001 C CNN
+F 1 "+3V3" H 900 4140 50  0000 C CNN
+F 2 "" H 900 4000 50  0000 C CNN
+F 3 "" H 900 4000 50  0000 C CNN
+	1    900  4000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	900  4000 900  3950
+Wire Wire Line
+	900  3650 900  3600
+Wire Wire Line
+	1400 3200 900  3200
+Wire Wire Line
+	900  3200 900  3300
 $EndSCHEMATC

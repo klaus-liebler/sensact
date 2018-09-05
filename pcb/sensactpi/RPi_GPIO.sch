@@ -1,0 +1,328 @@
+EESchema Schematic File Version 4
+LIBS:sensactpi-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RPi_GPIO J1
+U 1 1 5516AE26
+P 7500 2700
+F 0 "J1" H 8250 2950 60  0000 C CNN
+F 1 "RPi_GPIO" H 8250 2850 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x20_Pitch2.54mm" H 7500 2700 60  0001 C CNN
+F 3 "" H 7500 2700 60  0000 C CNN
+	1    7500 2700
+	1    0    0    -1  
+$EndComp
+Text GLabel 6500 3450 0    60   Output ~ 0
+CAN_SI
+Text GLabel 7050 3550 0    60   Input ~ 0
+CAN_SO
+Text GLabel 6500 3900 0    60   Output ~ 0
+CAN_SCK
+Text GLabel 9250 3900 2    60   Output ~ 0
+CAN_CS
+Text GLabel 9250 3400 2    60   Input ~ 0
+CAN_INT
+Text GLabel 7250 2800 0    60   Output ~ 0
+SCL1
+Text GLabel 7250 2900 0    60   BiDi ~ 0
+SDA1
+NoConn ~ 7300 2700
+$Comp
+L power:+5V #PWR049
+U 1 1 5AA0633D
+P 9600 2700
+F 0 "#PWR049" H 9600 2550 50  0001 C CNN
+F 1 "+5V" H 9600 2840 50  0000 C CNN
+F 2 "" H 9600 2700 50  0000 C CNN
+F 3 "" H 9600 2700 50  0000 C CNN
+	1    9600 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR050
+U 1 1 5AA0636A
+P 9300 2900
+F 0 "#PWR050" H 9300 2650 50  0001 C CNN
+F 1 "GND" H 9300 2750 50  0000 C CNN
+F 2 "" H 9300 2900 50  0000 C CNN
+F 3 "" H 9300 2900 50  0000 C CNN
+	1    9300 2900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR051
+U 1 1 5AA06380
+P 9250 3300
+F 0 "#PWR051" H 9250 3050 50  0001 C CNN
+F 1 "GND" H 9250 3150 50  0000 C CNN
+F 2 "" H 9250 3300 50  0000 C CNN
+F 3 "" H 9250 3300 50  0000 C CNN
+	1    9250 3300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR052
+U 1 1 5AA06396
+P 9250 3600
+F 0 "#PWR052" H 9250 3350 50  0001 C CNN
+F 1 "GND" H 9250 3450 50  0000 C CNN
+F 2 "" H 9250 3600 50  0000 C CNN
+F 3 "" H 9250 3600 50  0000 C CNN
+	1    9250 3600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR053
+U 1 1 5AA063AC
+P 9250 4100
+F 0 "#PWR053" H 9250 3850 50  0001 C CNN
+F 1 "GND" H 9250 3950 50  0000 C CNN
+F 2 "" H 9250 4100 50  0000 C CNN
+F 3 "" H 9250 4100 50  0000 C CNN
+	1    9250 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR054
+U 1 1 5AA063C2
+P 9250 4300
+F 0 "#PWR054" H 9250 4050 50  0001 C CNN
+F 1 "GND" H 9250 4150 50  0000 C CNN
+F 2 "" H 9250 4300 50  0000 C CNN
+F 3 "" H 9250 4300 50  0000 C CNN
+	1    9250 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR055
+U 1 1 5AA063D8
+P 7250 4600
+F 0 "#PWR055" H 7250 4350 50  0001 C CNN
+F 1 "GND" H 7250 4450 50  0000 C CNN
+F 2 "" H 7250 4600 50  0000 C CNN
+F 3 "" H 7250 4600 50  0000 C CNN
+	1    7250 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR056
+U 1 1 5AA063EE
+P 7250 3900
+F 0 "#PWR056" H 7250 3650 50  0001 C CNN
+F 1 "GND" H 7250 3750 50  0000 C CNN
+F 2 "" H 7250 3900 50  0000 C CNN
+F 3 "" H 7250 3900 50  0000 C CNN
+	1    7250 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR057
+U 1 1 5AA06404
+P 7000 3100
+F 0 "#PWR057" H 7000 2850 50  0001 C CNN
+F 1 "GND" H 7000 2950 50  0000 C CNN
+F 2 "" H 7000 3100 50  0000 C CNN
+F 3 "" H 7000 3100 50  0000 C CNN
+	1    7000 3100
+	0    1    1    0   
+$EndComp
+Text GLabel 9250 4000 2    60   Output ~ 0
+ID_SC
+Text GLabel 7250 4000 0    60   BiDi ~ 0
+ID_SD
+Text GLabel 9250 3800 2    60   Output ~ 0
+LCD_CS
+Wire Wire Line
+	9200 3900 9250 3900
+Wire Wire Line
+	7250 4000 7300 4000
+Wire Wire Line
+	9200 4000 9250 4000
+Wire Wire Line
+	7000 3100 7300 3100
+Wire Wire Line
+	7250 3900 7300 3900
+Wire Wire Line
+	7250 4600 7300 4600
+Wire Wire Line
+	9200 4300 9250 4300
+Wire Wire Line
+	9200 4100 9250 4100
+Wire Wire Line
+	9200 3600 9250 3600
+Wire Wire Line
+	9200 3300 9250 3300
+Wire Wire Line
+	9200 2900 9300 2900
+Connection ~ 9500 2700
+Wire Wire Line
+	9200 2700 9600 2700
+Wire Wire Line
+	7250 2900 7300 2900
+Wire Wire Line
+	7250 2800 7300 2800
+Wire Wire Line
+	9200 3800 9250 3800
+Wire Wire Line
+	9200 3700 9250 3700
+Text GLabel 6500 3600 0    60   Output ~ 0
+LCD_MOSI
+Text GLabel 6500 3750 0    60   Output ~ 0
+LCD_SCLK
+Wire Wire Line
+	7250 4400 7300 4400
+Text GLabel 9250 3100 2    60   Input ~ 0
+TX
+Text GLabel 9250 3000 2    60   Output ~ 0
+RX
+Wire Wire Line
+	9200 3000 9250 3000
+Wire Wire Line
+	9200 3100 9250 3100
+Wire Wire Line
+	9200 4500 9250 4500
+Wire Wire Line
+	9200 4600 9250 4600
+Wire Wire Line
+	9200 4400 9250 4400
+Text GLabel 9250 3700 2    60   Output ~ 0
+NRST
+Text GLabel 8900 5150 2    60   Output ~ 0
+BOOT0
+Wire Wire Line
+	9200 3400 9250 3400
+Wire Wire Line
+	9200 3500 9250 3500
+Text GLabel 9200 3200 2    60   Output ~ 0
+AUDIO_BCK
+Wire Wire Line
+	6500 3450 7200 3450
+Wire Wire Line
+	6550 3750 6550 3900
+Wire Wire Line
+	6550 3750 6500 3750
+Connection ~ 6550 3800
+Text GLabel 9250 4600 2    60   Output ~ 0
+AUDIO_DATA
+Wire Wire Line
+	6550 3800 7300 3800
+Wire Wire Line
+	7300 3600 7200 3600
+Wire Wire Line
+	7200 3600 7200 3450
+Wire Wire Line
+	6550 3900 6500 3900
+Wire Wire Line
+	7050 3550 7150 3550
+Wire Wire Line
+	7150 3550 7150 3700
+Wire Wire Line
+	6500 3600 6550 3600
+Wire Wire Line
+	6550 3600 6550 3450
+Connection ~ 6550 3450
+Text GLabel 7250 4400 0    60   Output ~ 0
+AUDIO_LCK
+Text GLabel 7250 4300 0    60   Output ~ 0
+LCD_RES
+Text GLabel 9250 4400 2    60   Output ~ 0
+LCD_DC
+Text GLabel 7250 4500 0    60   Output ~ 0
+LCD_PWM
+Wire Wire Line
+	7300 3300 7250 3300
+Wire Wire Line
+	7300 4500 7250 4500
+Text GLabel 7250 3000 0    60   Input ~ 0
+INT1_1
+Text GLabel 7250 3200 0    60   Input ~ 0
+INT1_2
+Text GLabel 7250 3300 0    60   Input ~ 0
+INT1_3
+Wire Wire Line
+	7300 3200 7250 3200
+NoConn ~ 9250 4500
+Wire Wire Line
+	7300 4300 7250 4300
+Text GLabel 9200 4200 2    60   Output ~ 0
+SHUTDOWN
+Wire Wire Line
+	7300 3000 7250 3000
+Text GLabel 7250 4100 0    60   Output ~ 0
+BOOT0
+Wire Wire Line
+	7300 4100 7250 4100
+$Comp
+L Device:LED D4
+U 1 1 5AD99C6F
+P 6450 3150
+F 0 "D4" H 6450 3250 50  0000 C CNN
+F 1 "LED" H 6450 3050 50  0000 C CNN
+F 2 "sensact:LED_0805_handsolder" H 6450 3150 50  0001 C CNN
+F 3 "" H 6450 3150 50  0000 C CNN
+	1    6450 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R21
+U 1 1 5AD99C88
+P 6050 3150
+F 0 "R21" V 6130 3150 50  0000 C CNN
+F 1 "k22" V 6050 3150 50  0000 C CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" V 5980 3150 50  0001 C CNN
+F 3 "" H 6050 3150 50  0000 C CNN
+	1    6050 3150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5900 3350 5900 3150
+Wire Wire Line
+	6200 3150 6300 3150
+Wire Wire Line
+	7300 3500 7300 3450
+Wire Wire Line
+	7300 3450 7250 3450
+Wire Wire Line
+	7250 3450 7250 3400
+Wire Wire Line
+	7250 3400 6600 3400
+Wire Wire Line
+	6600 3400 6600 3150
+Wire Wire Line
+	7300 3400 7300 3350
+Wire Wire Line
+	7300 3350 5900 3350
+NoConn ~ 7300 4200
+NoConn ~ 9250 3500
+Connection ~ 6600 3150
+Wire Wire Line
+	7150 3700 7300 3700
+Wire Wire Line
+	9200 2800 9500 2800
+Wire Wire Line
+	9500 2800 9500 2700
+$Comp
+L power:PWR_FLAG #FLG058
+U 1 1 5AF18155
+P 6600 3150
+F 0 "#FLG058" H 6600 3245 50  0001 C CNN
+F 1 "PWR_FLAG" H 6600 3330 50  0000 C CNN
+F 2 "" H 6600 3150 50  0000 C CNN
+F 3 "" H 6600 3150 50  0000 C CNN
+	1    6600 3150
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
