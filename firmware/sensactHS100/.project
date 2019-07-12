@@ -27,17 +27,17 @@
 		<link>
 			<name>HAL</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
+			<location>C:/stm32/STM32Cube_FW_F4_V1.24.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
 		</link>
 		<link>
 			<name>LwIP</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F4_V1.16.0/Middlewares/Third_Party/LwIP/src</location>
+			<location>C:/stm32/STM32Cube_FW_F4_V1.24.0/Middlewares/Third_Party/LwIP/src</location>
 		</link>
 		<link>
 			<name>STM32_USB_Device_Library</name>
 			<type>2</type>
-			<location>C:/stm32tc/STM32CubeMX/STM32Cube_FW_F1_V1.4.0/Middlewares/ST/STM32_USB_Device_Library</location>
+			<location>C:/stm32/STM32Cube_FW_F4_V1.24.0/Middlewares/ST/STM32_USB_Device_Library</location>
 		</link>
 		<link>
 			<name>core</name>

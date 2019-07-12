@@ -108,8 +108,10 @@ class BSP {
 	static DMA_HandleTypeDef hdma_tim3_ch1_trig;
 	static UART_HandleTypeDef comm;
 	static CAN_HandleTypeDef hcan;
-	static CanTxMsgTypeDef TxMessage;
-	static CanRxMsgTypeDef RxMessage;
+	CAN_TxHeaderTypeDef   TxHeader;
+	CAN_RxHeaderTypeDef   RxHeader;
+	uint8_t               TxData[8];
+	uint8_t               RxData[8];
 
 
 	static TIM_HandleTypeDef htim_pwm;

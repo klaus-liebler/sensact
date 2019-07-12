@@ -14,7 +14,7 @@
 
 #if defined(NODE_SNSCT_L0_TECH_HS_1)
 #define SENSACTHS
-#define SENSACTHS08
+#define SENSACTHS07
 
 
 #elif defined NODE_SNSCT_L3_TECH_HS_1

@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name sensactUp-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactUp-rescue.lib)(options "")(descr ""))
+  (lib (name sensact)(type Legacy)(uri C:/sensact/pcb/kicad-libs/sensact.lib)(options "")(descr ""))
+)
