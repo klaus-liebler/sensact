@@ -100,8 +100,10 @@ const uint8_t OWI_ERROR=2;
 
 UART_HandleTypeDef BSP::comm;
 CAN_HandleTypeDef BSP::hcan;
-CanTxMsgTypeDef BSP::TxMessage;
-CanRxMsgTypeDef BSP::RxMessage;
+CAN_TxHeaderTypeDef   BSP::TxHeader;
+CAN_RxHeaderTypeDef   BSP::RxHeader;
+uint8_t               BSP::TxData[8];
+uint8_t               BSP::RxData[8];
 
 Time_t BSP::nextLedToggle = 0;
 
@@ -216,20 +218,16 @@ void BSP::InitCAN()
 	hcan.Instance = CAN;
 	hcan.Init.Prescaler = CAN_PRESCALER; //bei 36MHz -->2MHz Abtastrate
 	hcan.Init.Mode = CAN_MODE_NORMAL;
-	hcan.Init.SJW = CAN_SJW_2TQ;
-	hcan.Init.BS1 = CAN_BS1_13TQ;
-	hcan.Init.BS2 = CAN_BS2_2TQ;
-	hcan.Init.TTCM = DISABLE;
-	hcan.Init.ABOM = DISABLE;
-	hcan.Init.AWUM = DISABLE;
-	hcan.Init.NART = DISABLE;
-	hcan.Init.RFLM = DISABLE;
-	hcan.Init.TXFP = DISABLE;
-	hcan.pRxMsg = &RxMessage;
-	hcan.pTxMsg = &TxMessage;
-	hcan.pTxMsg->IDE = CAN_ID_EXT;
-	hcan.pTxMsg->RTR = CAN_RTR_DATA;
-	hcan.pTxMsg->StdId = 0;
+	hcan.Init.SyncJumpWidth = CAN_SJW_2TQ;
+	hcan.Init.TimeSeg1 = CAN_BS1_13TQ;
+	hcan.Init.TimeSeg2 = CAN_BS2_2TQ;
+	hcan.Init.TimeTriggeredMode = DISABLE;
+	hcan.Init.AutoBusOff = DISABLE;
+	hcan.Init.AutoWakeUp = DISABLE;
+	hcan.Init.AutoRetransmission = ENABLE;
+	hcan.Init.ReceiveFifoLocked = DISABLE;
+	hcan.Init.TransmitFifoPriority = DISABLE;
+
 	HAL_StatusTypeDef status=HAL_CAN_Init(&hcan);
 	if (status != HAL_OK) {
 		LOGE(NOT_SUCCESSFUL_STRING, "CAN");
@@ -237,30 +235,43 @@ void BSP::InitCAN()
 	}
 	LOGI(SUCCESSFUL_STRING, "CAN");
 
-	CAN_FilterConfTypeDef sFilterConfig;
+	CAN_FilterTypeDef sFilterConfig;
 
 	/*##-2- Configure the CAN Filter ###########################################*/
-	sFilterConfig.FilterNumber = 0;
-	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-	sFilterConfig.FilterIdHigh = 0x0000;
-	sFilterConfig.FilterIdLow = 0x0000;
-	sFilterConfig.FilterMaskIdHigh = 0x0000;
-	sFilterConfig.FilterMaskIdLow = 0x0000;
-	sFilterConfig.FilterFIFOAssignment = 0;
-	sFilterConfig.FilterActivation = ENABLE;
-	sFilterConfig.BankNumber = 14;
-	HAL_CAN_ConfigFilter(&hcan, &sFilterConfig);
-	sFilterConfig.FilterNumber = 14;
-	sFilterConfig.FilterFIFOAssignment = 0;
-	sFilterConfig.FilterActivation = ENABLE;
-	sFilterConfig.BankNumber = 14;
+	  sFilterConfig.FilterBank = 0;
+	  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	  sFilterConfig.FilterIdHigh = 0x0000;
+	  sFilterConfig.FilterIdLow = 0x0000;
+	  sFilterConfig.FilterMaskIdHigh = 0x0000;
+	  sFilterConfig.FilterMaskIdLow = 0x0000;
+	  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+	  sFilterConfig.FilterActivation = ENABLE;
+	  sFilterConfig.SlaveStartFilterBank = 14;
 	status = HAL_CAN_ConfigFilter(&hcan, &sFilterConfig);
 	if (status != HAL_OK) {
 		LOG->Error(NOT_SUCCESSFUL_STRING, "CAN filter");
 		return;
 	}
 	LOGI(SUCCESSFUL_STRING, "CAN filter");
+
+	/*##-3- Start the CAN peripheral ###########################################*/
+	status=HAL_CAN_Start(&hcan) ;
+	  if (status!= HAL_OK)
+	  {
+		  LOG->Error(NOT_SUCCESSFUL_STRING, "CAN peripheral");
+		  return;
+	  }
+		status=HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+	  /*##-4- Activate CAN RX notification #######################################*/
+	  if (status != HAL_OK)
+	  {
+		  LOG->Error(NOT_SUCCESSFUL_STRING, "CAN HAL_CAN_ActivateNotification");
+		  return;
+	  }
+	  BSP::TxHeader.RTR = CAN_RTR_DATA;
+	  BSP::TxHeader.IDE = CAN_ID_EXT;
+	  BSP::TxHeader.TransmitGlobalTime = DISABLE;
 }
 
 void Console::putcharX(char c) {
@@ -333,13 +344,13 @@ bool BSP::SetDigitalOutput(uint16_t output, uint16_t mask, uint16_t value)
 
 bool BSP::ReceiveCANMessage(CANMessage* m) {
 
-	if (HAL_CAN_Receive(&hcan, CAN_FIFO0, 0) == HAL_OK) {
-		m->Length = (uint8_t)RxMessage.DLC;
+	if (HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK) {
+		m->Length = (uint8_t)RxHeader.DLC;
 		int i = 0;
 		for (i = 0; i < m->Length; i++) {
-			m->Data[i] = RxMessage.Data[i];
+			m->Data[i] = RxData[i];
 		}
-		m->Id = RxMessage.ExtId;
+		m->Id = RxHeader.ExtId;
 		//LOGI("Traced CAN-Message for ID %d", m->Id);
 		return true;
 	}
@@ -353,13 +364,14 @@ bool BSP::SendCANMessage(uint32_t id, uint8_t const * const data, uint8_t len) {
 		return true;
 	}
 #endif
-	TxMessage.DLC = len;
+	TxHeader.DLC = len;
 	for (uint8_t i = 0; i < len; i++) {
-		TxMessage.Data[i] = data[i];
+		TxData[i] = data[i];
 	}
 
-	TxMessage.ExtId = id;
-	if (HAL_CAN_Transmit(&hcan, 20)==HAL_OK) {
+	TxHeader.ExtId = id;
+	uint32_t              TxMailbox;
+	if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox)==HAL_OK) {
 		LOGI("Sent CAN-Message with CanId %x", id); //not reference to ApplicationNames, because it can also be an event!
 		return true;
 	}
