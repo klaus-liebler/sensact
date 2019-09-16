@@ -15,8 +15,8 @@ foreach (ModelCppItem i in Items)
 }
 #>
 
-#include "common.h"
-#include "cModel.h"
+#include <modules/core/common.h>
+#include <modules/core/cModel.h>
 
 using namespace std;
 
@@ -46,7 +46,7 @@ const eNodeID MODEL::NodeID = eNodeID::<#=i.NodeId#>;
 
 const char MODEL::ModelString[] ="<#=i.ModelInfo#>";
 }//end namespace
-#include <cModel_base.inc>
+#include <modules/core/cModel_base.inc>
 namespace sensact{
 
 const eApplicationID MODEL::NodeMasterApplication = eApplicationID::<#=i.NodeId#>;

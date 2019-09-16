@@ -306,8 +306,6 @@ namespace Klli.Sensact.Config
             //TEST_HS07.Applications.AddBlindButtons("_XX_BLN_", InputPin.I01, InputPin.I02, "XX_XXX_1");
             //TEST_HS07.Applications.AddOnePushbuttonDimmer("_XX_PUB_1", InputPin.I03, "PWM___XX_XXX_1");
 
-
-
             Node TEST_UP04 = new Nodes.SensactUp04("TEST_UP04")
             {
                 Applications = new List<SensactApplication>
@@ -341,7 +339,6 @@ namespace Klli.Sensact.Config
             model.Nodes = new List<Node>(){
                 TEST_HS07,
                 TEST_UP04
-
             };
             return model;
         }

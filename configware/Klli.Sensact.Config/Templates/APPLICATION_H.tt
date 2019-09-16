@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <# RenderHeader("Application.h", "autogen", version, "Short", "Details"); #>
 #pragma once
-#include "common.h"
+#include <modules/core/common.h>
 #include "stddef.h"
 #define Name N()
 namespace sensact {
