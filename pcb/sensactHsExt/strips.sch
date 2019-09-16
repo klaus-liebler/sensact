@@ -1052,100 +1052,74 @@ $EndComp
 NoConn ~ 2750 1500
 $Comp
 L sensact:StripRow3 Z?
-U 1 1 5D832B3A
-P 2500 1600
-AR Path="/5D832B3A" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B3A" Ref="Z115"  Part="1" 
-F 0 "Z115" H 2500 1800 50  0001 C CNN
-F 1 "StripRow3" H 2500 1700 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 1600 50  0001 C CNN
-F 3 "" H 2500 1600 50  0001 C CNN
-	1    2500 1600
+U 1 1 5D686C09
+P 2950 900
+AR Path="/5D686C09" Ref="Z?"  Part="1" 
+AR Path="/5D7D1C35/5D686C09" Ref="Z3"  Part="1" 
+F 0 "Z3" H 2950 1100 50  0001 C CNN
+F 1 "StripRow3" H 2950 1000 50  0001 C CNN
+F 2 "sensact:StripRow3" H 2950 900 50  0001 C CNN
+F 3 "" H 2950 900 50  0001 C CNN
+	1    2950 900 
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2750 1600
 $Comp
 L sensact:StripRow3 Z?
-U 1 1 5D832B45
-P 2500 1700
-AR Path="/5D832B45" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B45" Ref="Z116"  Part="1" 
-F 0 "Z116" H 2500 1900 50  0001 C CNN
-F 1 "StripRow3" H 2500 1800 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 1700 50  0001 C CNN
-F 3 "" H 2500 1700 50  0001 C CNN
-	1    2500 1700
+U 1 1 5D686C14
+P 2950 1000
+AR Path="/5D686C14" Ref="Z?"  Part="1" 
+AR Path="/5D7D1C35/5D686C14" Ref="Z4"  Part="1" 
+F 0 "Z4" H 2950 1200 50  0001 C CNN
+F 1 "StripRow3" H 2950 1100 50  0001 C CNN
+F 2 "sensact:StripRow3" H 2950 1000 50  0001 C CNN
+F 3 "" H 2950 1000 50  0001 C CNN
+	1    2950 1000
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2750 1700
 $Comp
 L sensact:StripRow3 Z?
-U 1 1 5D832B50
-P 2500 1800
-AR Path="/5D832B50" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B50" Ref="Z117"  Part="1" 
-F 0 "Z117" H 2500 2000 50  0001 C CNN
-F 1 "StripRow3" H 2500 1900 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 1800 50  0001 C CNN
-F 3 "" H 2500 1800 50  0001 C CNN
-	1    2500 1800
+U 1 1 5D686C1F
+P 2950 1100
+AR Path="/5D686C1F" Ref="Z?"  Part="1" 
+AR Path="/5D7D1C35/5D686C1F" Ref="Z5"  Part="1" 
+F 0 "Z5" H 2950 1300 50  0001 C CNN
+F 1 "StripRow3" H 2950 1200 50  0001 C CNN
+F 2 "sensact:StripRow3" H 2950 1100 50  0001 C CNN
+F 3 "" H 2950 1100 50  0001 C CNN
+	1    2950 1100
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2750 1800
 $Comp
-L sensact:StripRow3 Z?
-U 1 1 5D832B5B
-P 2500 1900
-AR Path="/5D832B5B" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B5B" Ref="Z118"  Part="1" 
-F 0 "Z118" H 2500 2100 50  0001 C CNN
-F 1 "StripRow3" H 2500 2000 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 1900 50  0001 C CNN
-F 3 "" H 2500 1900 50  0001 C CNN
-	1    2500 1900
-	1    0    0    -1  
+L power:GND #PWR0105
+U 1 1 5D6C849F
+P 3200 1100
+F 0 "#PWR0105" H 3200 850 50  0001 C CNN
+F 1 "GND" V 3205 972 50  0000 R CNN
+F 2 "" H 3200 1100 50  0001 C CNN
+F 3 "" H 3200 1100 50  0001 C CNN
+	1    3200 1100
+	0    -1   -1   0   
 $EndComp
-NoConn ~ 2750 1900
 $Comp
-L sensact:StripRow3 Z?
-U 1 1 5D832B66
-P 2500 2000
-AR Path="/5D832B66" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B66" Ref="Z119"  Part="1" 
-F 0 "Z119" H 2500 2200 50  0001 C CNN
-F 1 "StripRow3" H 2500 2100 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 2000 50  0001 C CNN
-F 3 "" H 2500 2000 50  0001 C CNN
-	1    2500 2000
-	1    0    0    -1  
+L power:+24V #PWR0106
+U 1 1 5D6C8F86
+P 3200 1000
+F 0 "#PWR0106" H 3200 850 50  0001 C CNN
+F 1 "+24V" V 3215 1128 50  0000 L CNN
+F 2 "" H 3200 1000 50  0001 C CNN
+F 3 "" H 3200 1000 50  0001 C CNN
+	1    3200 1000
+	0    1    1    0   
 $EndComp
-NoConn ~ 2750 2000
 $Comp
-L sensact:StripRow3 Z?
-U 1 1 5D832B71
-P 2500 2100
-AR Path="/5D832B71" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B71" Ref="Z120"  Part="1" 
-F 0 "Z120" H 2500 2300 50  0001 C CNN
-F 1 "StripRow3" H 2500 2200 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2500 2100 50  0001 C CNN
-F 3 "" H 2500 2100 50  0001 C CNN
-	1    2500 2100
-	1    0    0    -1  
+L power:+3V3 #PWR0107
+U 1 1 5D6C986B
+P 3200 900
+F 0 "#PWR0107" H 3200 750 50  0001 C CNN
+F 1 "+3V3" V 3215 1028 50  0000 L CNN
+F 2 "" H 3200 900 50  0001 C CNN
+F 3 "" H 3200 900 50  0001 C CNN
+	1    3200 900 
+	0    1    1    0   
 $EndComp
-NoConn ~ 2750 2100
-$Comp
-L sensact:StripRow3 Z?
-U 1 1 5D832B7C
-P 2950 600
-AR Path="/5D832B7C" Ref="Z?"  Part="1" 
-AR Path="/5D7D1C35/5D832B7C" Ref="Z121"  Part="1" 
-F 0 "Z121" H 2950 800 50  0001 C CNN
-F 1 "StripRow3" H 2950 700 50  0001 C CNN
-F 2 "sensact:StripRow3" H 2950 600 50  0001 C CNN
-F 3 "" H 2950 600 50  0001 C CNN
-	1    2950 600 
-	1    0    0    -1  
-$EndComp
-NoConn ~ 3200 600 
 $EndSCHEMATC

@@ -134,7 +134,7 @@ Text Label 4100 4550 0    50   ~ 0
 SDA
 Wire Wire Line
 	4100 4450 4350 4450
-Text Label 5650 4250 0    50   ~ 0
+Text Label 6550 4150 0    50   ~ 0
 WS2812
 $Comp
 L Device:LED D1
@@ -523,17 +523,6 @@ Text GLabel 5650 3950 2    50   Output ~ 0
 SPI_CLK
 Text GLabel 5650 4150 2    50   Output ~ 0
 SPI_MOSI
-$Comp
-L sensact:Mitsumi_SIQ-02FVS3 SW3
-U 1 1 5D5BAE31
-P 9400 2550
-F 0 "SW3" H 9400 2917 50  0000 C CNN
-F 1 "Mitsumi_SIQ-02FVS3" H 9400 2826 50  0000 C CNN
-F 2 "sensact:Mitsumi_SIQ-02FVS3" H 9250 2710 50  0001 C CNN
-F 3 "~" H 9400 2810 50  0001 C CNN
-	1    9400 2550
-	1    0    0    -1  
-$EndComp
 Text GLabel 8200 2450 0    50   Output ~ 0
 ROTA
 Text GLabel 8300 2750 0    50   Output ~ 0
@@ -770,7 +759,7 @@ F 3 "https://www.usb.org/sites/default/files/documents/usb_type-c.zip" H 5800 66
 	1    5650 6650
 	1    0    0    -1  
 $EndComp
-Text GLabel 5650 4950 2    50   UnSpc ~ 0
+Text GLabel 5650 4250 2    50   UnSpc ~ 0
 VBUS
 $Comp
 L Device:R R5
@@ -1012,9 +1001,9 @@ Wire Wire Line
 	9900 4000 9250 4000
 Text Label 9250 4000 0    50   ~ 0
 NRST
-Text GLabel 5650 3450 2    50   Input ~ 0
-ROTA
 Text GLabel 5650 3550 2    50   Input ~ 0
+ROTA
+Text GLabel 5650 3450 2    50   Input ~ 0
 ROTB
 $Comp
 L sensact:SensactBusConnector J4
@@ -1033,7 +1022,7 @@ U 1 1 5D5E4950
 P 2150 6450
 F 0 "J6" H 2230 6442 50  0000 L CNN
 F 1 "LINKS2" H 2230 6351 50  0000 L CNN
-F 2 "sensact:PhoenixContact_FFKDS_1x08_P2.54mm" H 2150 6450 50  0001 C CNN
+F 2 "sensact:PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal" H 2150 6450 50  0001 C CNN
 F 3 "~" H 2150 6450 50  0001 C CNN
 	1    2150 6450
 	1    0    0    -1  
@@ -1541,10 +1530,8 @@ Text GLabel 4350 3050 0    50   Input ~ 0
 S
 Text GLabel 4350 2850 0    50   Output ~ 0
 LCDBL
-Text GLabel 4350 3150 0    50   Output ~ 0
+Text GLabel 5650 3750 2    50   Output ~ 0
 LCDRS
-Text GLabel 4350 3250 0    50   Output ~ 0
-LCDCS
 Text GLabel 3350 2750 3    50   Input ~ 0
 LED
 Text GLabel 5650 3650 2    50   Output ~ 0
@@ -1646,7 +1633,7 @@ Wire Wire Line
 	4350 3550 4000 3550
 Text Label 4000 3450 0    50   ~ 0
 INT1
-Text Label 5650 4050 0    50   ~ 0
+Text Label 5650 3850 0    50   ~ 0
 INT2
 $Comp
 L sensact:FP-096H09A U1
@@ -1665,7 +1652,7 @@ U 1 1 5D611311
 P 10050 5750
 F 0 "U5" H 10050 6431 50  0000 C CNN
 F 1 "MCP42010" H 10050 6340 50  0000 C CNN
-F 2 "" H 10050 5850 50  0001 C CNN
+F 2 "sensact:SOIC-14_3.9x8.7mm_P1.27mm_handsolder" H 10050 5850 50  0001 C CNN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/11195c.pdf" H 10050 5850 50  0001 C CNN
 	1    10050 5750
 	1    0    0    -1  
@@ -1720,17 +1707,6 @@ F 3 "" H 10050 6250 50  0001 C CNN
 	1    10050 6250
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:GND #PWR032
-U 1 1 5D621A05
-P 9550 5750
-F 0 "#PWR032" H 9550 5500 50  0001 C CNN
-F 1 "GND" H 9555 5577 50  0000 C CNN
-F 2 "" H 9550 5750 50  0001 C CNN
-F 3 "" H 9550 5750 50  0001 C CNN
-	1    9550 5750
-	0    1    1    0   
-$EndComp
 Text Label 9350 5950 0    50   ~ 0
 NRST
 Wire Wire Line
@@ -1749,14 +1725,261 @@ $EndComp
 Text GLabel 6500 5750 2    50   UnSpc ~ 0
 VBUS
 $Comp
-L Jumper:Jumper_2_Open JP?
+L Jumper:Jumper_2_Open JP1
 U 1 1 5D65AD13
 P 3500 6600
-F 0 "JP?" H 3500 6835 50  0000 C CNN
+F 0 "JP1" H 3500 6835 50  0000 C CNN
 F 1 "3V3_INT" H 3500 6744 50  0000 C CNN
-F 2 "" H 3500 6600 50  0001 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm" H 3500 6600 50  0001 C CNN
 F 3 "~" H 3500 6600 50  0001 C CNN
 	1    3500 6600
 	1    0    0    -1  
 $EndComp
+Text GLabel 4350 4750 0    50   Output ~ 0
+SPI2_CLK
+Text GLabel 4350 4950 0    50   Output ~ 0
+SPI2_MOSI
+Text GLabel 9550 5750 0    50   Input ~ 0
+SPI2_CS_POTI
+Text GLabel 4350 4650 0    50   Output ~ 0
+SPI2_CS_POTI
+Text GLabel 9900 4300 0    50   Input ~ 0
+SPI_CLK
+$Comp
+L Connector_Generic:Conn_01x01 J13
+U 1 1 5D6CD963
+P 5850 4950
+F 0 "J13" H 5930 4992 50  0000 L CNN
+F 1 "A15" H 5930 4901 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 5850 4950 50  0001 C CNN
+F 3 "~" H 5850 4950 50  0001 C CNN
+	1    5850 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J1
+U 1 1 5D6CF01D
+P 4150 3750
+F 0 "J1" H 4500 3750 50  0000 C CNN
+F 1 "B3" H 4300 3750 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 4150 3750 50  0001 C CNN
+F 3 "~" H 4150 3750 50  0001 C CNN
+	1    4150 3750
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J9
+U 1 1 5D6D4A35
+P 4150 3850
+F 0 "J9" H 4500 3850 50  0000 C CNN
+F 1 "B4" H 4300 3850 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 4150 3850 50  0001 C CNN
+F 3 "~" H 4150 3850 50  0001 C CNN
+	1    4150 3850
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J10
+U 1 1 5D6D4D00
+P 4150 3950
+F 0 "J10" H 4500 3950 50  0000 C CNN
+F 1 "B5" H 4300 3950 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 4150 3950 50  0001 C CNN
+F 3 "~" H 4150 3950 50  0001 C CNN
+	1    4150 3950
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J11
+U 1 1 5D6D4FCB
+P 4150 4050
+F 0 "J11" H 4500 4050 50  0000 C CNN
+F 1 "B6" H 4300 4050 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 4150 4050 50  0001 C CNN
+F 3 "~" H 4150 4050 50  0001 C CNN
+	1    4150 4050
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J12
+U 1 1 5D6D51CE
+P 4150 4150
+F 0 "J12" H 4500 4150 50  0000 C CNN
+F 1 "B7" H 4300 4150 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 4150 4150 50  0001 C CNN
+F 3 "~" H 4150 4150 50  0001 C CNN
+	1    4150 4150
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x04 J14
+U 1 1 5D7E5CD2
+P 4050 7400
+F 0 "J14" H 3968 7717 50  0000 C CNN
+F 1 "Conn_01x04" H 3968 7626 50  0000 C CNN
+F 2 "sensact:PhoenixContact_MC_0,5_4-G-2.5_1x04_P2.50mm_Horizontal" H 4050 7400 50  0001 C CNN
+F 3 "~" H 4050 7400 50  0001 C CNN
+	1    4050 7400
+	-1   0    0    -1  
+$EndComp
+Text Label 8650 5750 0    50   ~ 0
+CANH
+Text Label 8650 5850 0    50   ~ 0
+CANL
+Text Label 4250 7600 0    50   ~ 0
+CANL
+Text Label 4250 7500 0    50   ~ 0
+CANH
+$Comp
+L power:+24V #PWR0103
+U 1 1 5D7EC3FA
+P 4550 7300
+F 0 "#PWR0103" H 4550 7150 50  0001 C CNN
+F 1 "+24V" H 4565 7473 50  0000 C CNN
+F 2 "" H 4550 7300 50  0001 C CNN
+F 3 "" H 4550 7300 50  0001 C CNN
+	1    4550 7300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 5D7ED623
+P 4550 7400
+F 0 "#PWR0104" H 4550 7150 50  0001 C CNN
+F 1 "GND" H 4555 7227 50  0000 C CNN
+F 2 "" H 4550 7400 50  0001 C CNN
+F 3 "" H 4550 7400 50  0001 C CNN
+	1    4550 7400
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6000 4050 2    50   Output ~ 0
+LCDCS
+$Comp
+L Connector_Generic:Conn_01x01 J15
+U 1 1 5D646369
+P 10750 5450
+F 0 "J15" H 10850 5450 50  0000 L CNN
+F 1 "P0A" H 11000 5450 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 5450 50  0001 C CNN
+F 3 "~" H 10750 5450 50  0001 C CNN
+	1    10750 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J16
+U 1 1 5D64BCFF
+P 10750 5550
+F 0 "J16" H 10850 5550 50  0000 L CNN
+F 1 "P0W" H 11000 5550 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 5550 50  0001 C CNN
+F 3 "~" H 10750 5550 50  0001 C CNN
+	1    10750 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J17
+U 1 1 5D64C085
+P 10750 5650
+F 0 "J17" H 10850 5650 50  0000 L CNN
+F 1 "P0B" H 11000 5650 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 5650 50  0001 C CNN
+F 3 "~" H 10750 5650 50  0001 C CNN
+	1    10750 5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J18
+U 1 1 5D64E257
+P 10750 5850
+F 0 "J18" H 10850 5850 50  0000 L CNN
+F 1 "P1A" H 11000 5850 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 5850 50  0001 C CNN
+F 3 "~" H 10750 5850 50  0001 C CNN
+	1    10750 5850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J19
+U 1 1 5D64E261
+P 10750 5950
+F 0 "J19" H 10850 5950 50  0000 L CNN
+F 1 "P1W" H 11000 5950 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 5950 50  0001 C CNN
+F 3 "~" H 10750 5950 50  0001 C CNN
+	1    10750 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J20
+U 1 1 5D64E26B
+P 10750 6050
+F 0 "J20" H 10850 6050 50  0000 L CNN
+F 1 "P1B" H 11000 6050 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.5x2.5mm" H 10750 6050 50  0001 C CNN
+F 3 "~" H 10750 6050 50  0001 C CNN
+	1    10750 6050
+	1    0    0    -1  
+$EndComp
+Text Label 8800 1100 0    50   ~ 0
+CB
+Text Label 8800 1300 0    50   ~ 0
+SW
+Text Label 8800 1400 0    50   ~ 0
+FB
+$Comp
+L sensact:Mitsumi_SIQ-02FVS3 SW3
+U 1 1 5D5BAE31
+P 9400 2550
+F 0 "SW3" H 9400 2917 50  0000 C CNN
+F 1 "Mitsumi_SIQ-02FVS3" H 9400 2826 50  0000 C CNN
+F 2 "sensact:Mitsumi_SIQ-02FVS3" H 9250 2710 50  0001 C CNN
+F 3 "~" H 9400 2810 50  0001 C CNN
+	1    9400 2550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4250 7300 4400 7300
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5D6DDDE9
+P 4400 7300
+F 0 "#FLG0101" H 4400 7375 50  0001 C CNN
+F 1 "PWR_FLAG" H 4400 7473 50  0000 C CNN
+F 2 "" H 4400 7300 50  0001 C CNN
+F 3 "~" H 4400 7300 50  0001 C CNN
+	1    4400 7300
+	1    0    0    -1  
+$EndComp
+Connection ~ 4400 7300
+Wire Wire Line
+	4400 7300 4550 7300
+Wire Wire Line
+	4250 7400 4550 7400
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 5D6E3D2C
+P 4550 7400
+F 0 "#FLG0102" H 4550 7475 50  0001 C CNN
+F 1 "PWR_FLAG" H 4550 7573 50  0000 C CNN
+F 2 "" H 4550 7400 50  0001 C CNN
+F 3 "~" H 4550 7400 50  0001 C CNN
+	1    4550 7400
+	-1   0    0    1   
+$EndComp
+Connection ~ 4550 7400
+$Comp
+L power:PWR_FLAG #FLG0103
+U 1 1 5D6E54FA
+P 9750 1100
+F 0 "#FLG0103" H 9750 1175 50  0001 C CNN
+F 1 "PWR_FLAG" H 9750 1273 50  0000 C CNN
+F 2 "" H 9750 1100 50  0001 C CNN
+F 3 "~" H 9750 1100 50  0001 C CNN
+	1    9750 1100
+	1    0    0    -1  
+$EndComp
+NoConn ~ 4350 4850
+NoConn ~ 4350 2750
+NoConn ~ 4350 3250
+NoConn ~ 4350 3150
 $EndSCHEMATC

@@ -1,4 +1,4 @@
-update=28.08.2019 05:19:25
+update=03.09.2019 22:24:00
 version=1
 last_client=kicad
 [general]
@@ -15,7 +15,7 @@ LibDir=
 [pcbnew]
 version=1
 PageLayoutDescrFile=
-LastNetListRead=sensactHsExt.net
+LastNetListRead=sensactAudioExt.net
 CopperLayerCount=2
 BoardThickness=1.6
 AllowMicroVias=0
@@ -29,10 +29,11 @@ MinMicroViaDiameter=0.45
 MinMicroViaDrill=0.2
 MinHoleToHole=0.25
 TrackWidth1=0.2
-TrackWidth2=0.4
-TrackWidth3=0.8
-TrackWidth4=1.5
-TrackWidth5=2
+TrackWidth2=0.3
+TrackWidth3=0.4
+TrackWidth4=0.8
+TrackWidth5=1.5
+TrackWidth6=2
 ViaDiameter1=0.6
 ViaDrill1=0.3
 ViaDiameter2=1
@@ -246,7 +247,7 @@ dPairGap=0.25
 dPairViaGap=0.25
 [pcbnew/Netclasses/1]
 Name=HighVoltage
-Clearance=0.3
+Clearance=0.25
 TrackWidth=0.2
 ViaDiameter=0.6
 ViaDrill=0.3
