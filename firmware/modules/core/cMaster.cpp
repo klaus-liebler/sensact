@@ -1,7 +1,7 @@
-#include <cMaster.h>
+#include "cMaster.h"
 #include "console.h"
 #include "cModel.h"
-#define LOGLEVEL LEVEL_DEBUG
+#define LOGLEVEL LEVEL_INFO
 #include "shell.h"
 #define LOGNAME "MASTR"
 #include "cLog.h"
@@ -564,9 +564,9 @@ void cMaster::CanBusProcess() {
 				}
 				charbuf[2*rcvMessage.Length]='\0';
 #ifdef NEN_CANID
-				LOGX("ApplicationEvent to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+				LOGD("ApplicationEvent to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
 #else
-				LOGX("ApplicationEvent (old CAN-ID) to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
+				LOGD("ApplicationEvent (old CAN-ID) to id:%s; command:%d; len:%d; payload: 0x%s", MODEL::ApplicationNames[appId], commandOrEventId, rcvMessage.Length, charbuf);
 #endif
 			}
 			app = MODEL::Glo2locEvt[appId];

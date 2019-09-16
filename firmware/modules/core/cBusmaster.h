@@ -1,8 +1,8 @@
 #pragma once
 #include "cBsp.h"
-#include "ds2482.h"
-#include "PCA9555.h"
-#include "PCA9685.h"
+#include "../hardware/ds2482.h"
+#include "../hardware/PCA9555.h"
+#include "../hardware/PCA9685.h"
 
 namespace sensact
 {
@@ -12,7 +12,7 @@ struct cSensactSENode
 public:
 	uint8_t const * const owid;
 	uint8_t scratchpad[8]; //eine sensactSE-Node kann 4 Sensordaten aus der folgenden Menge
-	//ein byte Inputs, ein byte Luftqualität (0 ist schlecht, 255 is super, 256 ist nicht definiert), ein Byte Luftfeuchte (0...100%, 256 ist nicht definert), zwei Byte Temperatur, ein byte Payload-Spezifikation,  zwei Byte Payload
+	//ein byte Inputs, ein byte Luftqualitï¿½t (0 ist schlecht, 255 is super, 256 ist nicht definiert), ein Byte Luftfeuchte (0...100%, 256 ist nicht definert), zwei Byte Temperatur, ein byte Payload-Spezifikation,  zwei Byte Payload
 	//Payload: 0=nichts, 1=Helligkeit, 2=Druck, 3=Druckdifferenz
 	cSensactSENode(uint8_t const * const owid);
 };

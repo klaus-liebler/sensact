@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 #include "cBsp.h"
-#include "cApplication.h"
+#include "../generated/cApplication.h"
 
 namespace sensact{
 
@@ -13,7 +13,7 @@ namespace sensact{
 	public:
 		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
-#include <ForwarderApplication.hinc>
+#include "../generated/ForwarderApplication.hinc"
 
 
 		cForwarder(eApplicationID id, eApplicationID finalTarget);

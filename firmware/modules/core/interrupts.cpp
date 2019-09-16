@@ -1,15 +1,7 @@
 
-#ifdef STM32F4
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx.h"
-#endif
-#ifdef STM32F1
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx.h"
-#endif
-#include "interrupts.h"
+#include "stm32_hal.hpp"
 #include "dcf77.h"
-#include "cRCSwitch.h"
+#include "../hardware/cRCSwitch.h"
 #include "cBsp.h"
 #include "cMaster.h"
 #include "console.h"
@@ -25,8 +17,7 @@ static bool binaryMode=false;
 
 extern uint64_t systemClockMsecCnt;
 extern uint64_t steadyClockMsecCnt;
-//extern ADC_HandleTypeDef    AdcHandle;
-//extern __IO uint16_t uhADCxConvertedValue;
+
 
 extern "C" void SysTick_Handler(void)
 {
@@ -39,38 +30,19 @@ extern "C" void SysTick_Handler(void)
 	steadyClockMsecCnt++;
 }
 #if defined(SENSACTHS07) | defined(SENSACTHS08)
-void ADC_IRQHandler(void)
-{
-	//HAL_ADC_IRQHandler(&AdcHandle);
-}
+extern "C" void ADC_IRQHandler(void){}
 #endif
+
 #ifdef SENSACTUP02
 extern DMA_HandleTypeDef hdma_tim1_ch1;
-void DMA1_Channel2_IRQHandler(void)
-{
-	/* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
-
-	/* USER CODE END DMA1_Channel2_IRQn 0 */
-	HAL_DMA_IRQHandler(&hdma_tim1_ch1);
-	/* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
-
-	/* USER CODE END DMA1_Channel2_IRQn 1 */
-}
+extern "C" void DMA1_Channel2_IRQHandler(void){HAL_DMA_IRQHandler(&hdma_tim1_ch1);}
 #endif
 
-/*
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
-{
-  // Get the converted value of regular channel
-  uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
-}
- */
-void DMA2_Stream0_IRQHandler(void)
-{
-	//HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
-}
+
+extern "C" void DMA2_Stream0_IRQHandler(void){}
+
 #if defined(SENSACTHS07) | defined(SENSACTHS08)
-void EXTI9_5_IRQHandler(void)
+extern "C" void EXTI9_5_IRQHandler(void)
 {
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_5) != RESET)
 	{
@@ -80,17 +52,18 @@ void EXTI9_5_IRQHandler(void)
 }
 #endif
 #if defined(SENSACTHS07) | defined(SENSACTHS08)
-void USART3_IRQHandler(void)
+extern "C" void USART3_IRQHandler(void)
 {
 	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
 #endif
+
 #ifdef SENSACTUP02
-void USART1_IRQHandler(void)
+extern "C" void USART1_IRQHandler(void)
 {
 	if(READ_BIT(CONSOLE_USART->SR, USART_SR_RXNE))
 #endif
 #if defined(SENSACTUP03) or defined (SENSACTUP04)
-void USART1_IRQHandler(void)
+extern "C" void USART1_IRQHandler(void)
 {
 	if(READ_BIT(CONSOLE_USART->ISR, USART_ISR_RXNE))
 #endif
@@ -160,84 +133,14 @@ void USART1_IRQHandler(void)
 	//CONSOLE_USART->ICR = UINT32_MAX;//clear all flags
 }
 
-void NMI_Handler(void)
-{
-	sensact::Console::Writeln("NMI_Handler");
-	HAL_RCC_NMI_IRQHandler();
-}
-
-void HardFault_Handler(void)
-{
-	sensact::Console::Writeln("HardFault_Handler");
-	while (1)
-	{
-	}
-}
-
-void MemManage_Handler(void)
-{
-	sensact::Console::Writeln("MemManage_Handler");
-	while (1)
-	{
-	}
-}
-
-
-void BusFault_Handler(void)
-{
-	sensact::Console::Writeln("BusFault_Handler");
-	while (1)
-	{
-	}
-}
-
-void UsageFault_Handler(void)
-{
-	sensact::Console::Writeln("UsageFault_Handler");
-	while (1)
-	{
-	}
-}
-
-void SVC_Handler(void)
-{
-	sensact::Console::Writeln("SVC_Handler");
-	while (1)
-	{
-	}
-}
-
-void DebugMon_Handler(void)
-{
-	sensact::Console::Writeln("DebugMon_Handler");
-	while (1)
-	{
-	}
-}
-
-void PendSV_Handler(void)
-{
-	sensact::Console::Writeln("PendSV_Handler");
-	while (1)
-	{
-	}
-}
-
-
-
-void PVD_IRQHandler(void)
-{
-	sensact::Console::Writeln("PVD_IRQHandler");
-	//HAL_PWR_PVD_IRQHandler();
-}
-
-
-void FLASH_IRQHandler(void)
-{
-	sensact::Console::Writeln("FLASH_IRQHandler");
-	//HAL_FLASH_IRQHandler();
-}
-
-
-void RCC_IRQHandler(void)
-{}
+extern "C" void NMI_Handler       (void){}
+extern "C" void HardFault_Handler (void){while (1){__asm__ __volatile__ ("bkpt #0");}}
+extern "C" void MemManage_Handler (void){while (1){__asm__ __volatile__ ("bkpt #0");}}
+extern "C" void BusFault_Handler  (void){while (1){__asm__ __volatile__ ("bkpt #0");}}
+extern "C" void UsageFault_Handler(void){while (1){__asm__ __volatile__ ("bkpt #0");}}
+extern "C" void SVC_Handler       (void){}
+extern "C" void DebugMon_Handler  (void){}
+extern "C" void PendSV_Handler    (void){}
+extern "C" void PVD_IRQHandler(void){sensact::Console::Writeln("PVD_IRQHandler");}
+extern "C" void FLASH_IRQHandler(void){sensact::Console::Writeln("FLASH_IRQHandler");}
+extern "C" void RCC_IRQHandler(void){}

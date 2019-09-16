@@ -1,13 +1,13 @@
-#include <common.h>
-#include <cBsp.h>
-#include <stm32f4xx_hal.h>
-#include <cModel.h>
+#include <modules/core/common.h>
+#include <modules/core/cBsp.h>
+#include <modules/core/stm32_hal.hpp>
+#include <modules/core/cModel.h>
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "BRDSP"
-#include <cLog.h>
-#include <console.h>
-#include <cRCSwitch.h>
-#include <cBusmaster.h>
+#include <modules/core/cLog.h>
+#include <modules/core/console.h>
+#include <modules/hardware/cRCSwitch.h>
+#include <modules/core/cBusmaster.h>
 
 
 namespace sensact{
@@ -136,12 +136,12 @@ void BSP::Init(void) {
 	__HAL_RCC_USART1_CLK_ENABLE();
 
 
-	CRC_HandleTypeDef   CrcHandle;
-	CrcHandle.Instance = CRC;
+	//CRC_HandleTypeDef   CrcHandle;
+	//CrcHandle.Instance = CRC;
 	//HAL_CRC_Init(&CrcHandle);
 
 	GPIO_InitTypeDef gi;
-	HAL_StatusTypeDef status;
+	//HAL_StatusTypeDef status;
 
 	//Enable UART
 	/*
@@ -249,7 +249,7 @@ void BSP::DoEachCycle(Time_t now) {
 	{
 		MODEL::busses[i]->Process(now);
 	}
-	//StartConversion und 1 sek später reihum einsammeln
+	//StartConversion und 1 sek spï¿½ter reihum einsammeln
 	if (now > nextLedToggle) {
 		for(uint8_t i=0;i<COUNTOF(BSP::ErrorCounters);i++)
 		{

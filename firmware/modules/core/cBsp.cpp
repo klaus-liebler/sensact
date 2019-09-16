@@ -1,8 +1,8 @@
-#include <cBsp.h>
-#include <cModel.h>
+#include "cBsp.h"
+#include "cModel.h"
 #define LOGLEVEL LEVEL_INFO
 #define LOGNAME "BRDSP"
-#include <cLog.h>
+#include "cLog.h"
 #include "console.h"
 #include <chrono>
 #include <ctime>
@@ -330,8 +330,10 @@ bool BSP::SetDigitalOutput(uint16_t output, uint16_t mask, uint16_t value)
 			  theGPIO->BSRR = (uint32_t)GPIO_Pin << 16U;
 		  }
 		return true;
-#else
+#elif defined(STM32F1) || defined(STM32F0)
 		return false;
+#else
+#error("No known base architecture. Define STM32Fx")
 #endif
 	}
 	uint16_t bus = ((output&0xC000)>>14)-1;

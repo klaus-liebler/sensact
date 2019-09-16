@@ -1,7 +1,7 @@
 #pragma once
-#include <cBsp.h>
+#include "cBsp.h"
 #include "common.h"
-#include "cApplication.h"
+#include "../generated/cApplication.h"
 
 namespace sensact{
 
@@ -43,7 +43,7 @@ namespace sensact{
 		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <BlindApplication.hinc>
+#include "../generated/BlindApplication.hinc"
 
 		void RaiseEvent(eEventType evt);
 		cBlind(eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);

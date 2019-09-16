@@ -1,9 +1,9 @@
 #pragma once
 
-#include <appids.h>
-#include <commandAndEventTypes.h>
+#include <modules/generated/appids.h>
+#include <modules/generated/commandAndEventTypes.h>
 #include <stdint.h>
-#include <compileconfig.h>
+#include <modules/core/compileconfig.h>
 
 #define Time_t 		uint64_t
 #define TIME_MAX		UINT64_MAX

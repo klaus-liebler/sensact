@@ -1,17 +1,7 @@
 #pragma once
-#include <common.h>
+#include <modules/core/common.h>
+#include <modules/core/stm32_hal.hpp>
 
-#ifdef STM32F0
-#include <stm32f0xx_hal.h>
-#include <stm32f0xx_ll_gpio.h>
-#endif
-#ifdef STM32F1
-#include <stm32f1xx_hal.h>
-#endif
-#ifdef STM32F4
-#include <stm32f4xx_hal.h>
-#include <stm32f4xx_ll_gpio.h>
-#endif
 
 #define RGBLED_SIZE 0
 

@@ -1,8 +1,10 @@
 #pragma once
 #include "common.h"
-#include <cWs281x.h>
-#include <cBusmaster.h>
-#include "cApplication.h"
+#ifdef SENSACTUP
+	#include <modules/core/cWs281x.h>
+#endif
+#include "cBusmaster.h"
+#include "../generated/cApplication.h"
 //#include <cWeeklySchedule.h>
 
 

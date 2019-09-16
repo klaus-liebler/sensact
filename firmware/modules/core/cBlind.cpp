@@ -1,11 +1,11 @@
-#include <cBlind.h>
-#include <cMaster.h>
-#include <cModel.h>
+#include "cBlind.h"
+#include "cMaster.h"
+#include "cModel.h"
 
 #include "common.h"
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "BLIND"
-#include <cLog.h>
+#include "cLog.h"
 
 /*
  * Pressed - nichts!
@@ -189,7 +189,7 @@ void cBlind::OnDOWNCommand(uint8_t forced, Time_t now)
 	else
 	{
 		LOGD("%s: this->targetLevel = calculatePosition(now)", Name);
-		this->targetLevel = calculatePosition(now); //->führt zu einem Motorstop
+		this->targetLevel = calculatePosition(now); //->fï¿½hrt zu einem Motorstop
 	}
 }
 

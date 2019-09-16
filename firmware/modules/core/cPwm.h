@@ -1,7 +1,7 @@
 #pragma once
 #include "cBsp.h"
 #include "common.h"
-#include "cApplication.h"
+#include "../generated/cApplication.h"
 
 namespace sensact
 {
@@ -39,7 +39,7 @@ class cPWM: public cApplication
 		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <PwmApplication.hinc>
+#include "../generated/PwmApplication.hinc"
 			cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }

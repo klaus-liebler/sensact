@@ -1,5 +1,5 @@
-#include <cMaster.h>
-#include <cRCEvent.h>
+#include "cMaster.h"
+#include "cRCEvent.h"
 
 #include "common.h"
 #include "cBsp.h"
@@ -100,7 +100,7 @@ eAppCallResult cRCEvent::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *
 	else if(eventStart!=TIME_MAX && now-lastEvent > 1000)
 	{
 
-		//es gab einen Start, aber nun ist schon länger nichts mehr gekommen - Event ist beendet!
+		//es gab einen Start, aber nun ist schon lï¿½nger nichts mehr gekommen - Event ist beendet!
 		if (now - lastEvent < 2000) {
 			OnReleasedShort(now);
 		}

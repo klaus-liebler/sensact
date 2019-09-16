@@ -1,6 +1,6 @@
-#include <cApplication.h>
-#include <cLog.h>
-#include <cModel.h>
+#include "../generated/cApplication.h"
+#include "cLog.h"
+#include "cModel.h"
 
 namespace sensact {
 

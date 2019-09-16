@@ -1,12 +1,12 @@
-#include <cMaster.h>
-#include <cRgbw.h>
+#include "cMaster.h"
+#include "cRgbw.h"
 #define LOGLEVEL LEVEL_INFO
 #define LOGNAME "RGBW "
-#include <cLog.h>
+#include "cLog.h"
 namespace sensact {
 
 
-//targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
+//targetValue absolut setzen oder aktuellen targetValue verï¿½ndern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
 cRgbw::cRgbw(const eApplicationID id, uint16_t const outputR, uint16_t const outputG, uint16_t const outputB, uint16_t const outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
@@ -105,7 +105,7 @@ void cRgbw::OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, Time_t
 
 
 }
-//Payload enthält 16bit wellKnownColorIndex
+//Payload enthï¿½lt 16bit wellKnownColorIndex
 void cRgbw::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
 	UNUSED(now);

@@ -1,11 +1,11 @@
-#include <cMaster.h>
-#include <cModel.h>
-#include <cSound.h>
+#include "cMaster.h"
+#include "cModel.h"
+#include "cSound.h"
 #include <chrono>
 
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "SOUND"
-#include <cLog.h>
+#include "cLog.h"
 
 
 namespace sensact {

@@ -1,12 +1,3 @@
-/*
- *
- * 		Atollic TrueSTUDIO Minimal System calls file
- *
- * 		For more information about which c-functions
- * 		need which of these lowlevel functions
- * 		please consult the Newlib libc-manual
- *
- * */
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -18,6 +9,8 @@
 
 #undef errno
 extern int errno;
+extern int __io_putchar(int ch) __attribute__((weak));
+extern int __io_getchar(void) __attribute__((weak));
 
 uint64_t systemClockMsecCnt = 0;
 uint64_t steadyClockMsecCnt = 0;
@@ -71,42 +64,31 @@ void _exit (int status)
 	while (1) {}		/* Make sure we hang here */
 }
 
-int _write(int file, char *ptr, int len)
+
+__attribute__((weak)) int _read(int file, char *ptr, int len)
 {
 	(void)(file);
-	(void)(ptr);
-	int todo;
 
-	   for (todo = 0; todo < len; todo++)
-	   {
-	      //__io_putchar( *ptr++ );
-	   }
+	int DataIdx;
 
-	/* Implement your write code here, this is used by puts and printf for example */
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+	{
+		*ptr++ = __io_getchar();
+	}
+
 	return len;
 }
 
-caddr_t _sbrk(int incr)
+__attribute__((weak)) int _write(int file, char *ptr, int len)
 {
-	extern char end asm("end");
-	static char *heap_end;
-	char *prev_heap_end;
+	(void)(file);
+	int DataIdx;
 
-	if (heap_end == 0)
-		heap_end = &end;
-
-	prev_heap_end = heap_end;
-	if (heap_end + incr > stack_ptr)
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
 	{
-//		write(1, "Heap and stack collision\n", 25);
-//		abort();
-		errno = ENOMEM;
-		return (caddr_t) -1;
+		__io_putchar(*ptr++);
 	}
-
-	heap_end += incr;
-
-	return (caddr_t) prev_heap_end;
+	return len;
 }
 
 int _close(int file)
@@ -114,7 +96,6 @@ int _close(int file)
 	(void)(file);
 	return -1;
 }
-
 
 int _fstat(int file, struct stat *st)
 {
@@ -134,14 +115,6 @@ int _lseek(int file, int ptr, int dir)
 	(void)(file);
 	(void)(ptr);
 	(void)(dir);
-	return 0;
-}
-
-int _read(int file, char *ptr, int len)
-{
-	(void)(file);
-	(void)(ptr);
-	(void)(len);
 	return 0;
 }
 
@@ -214,3 +187,38 @@ int _execve(char *name, char **argv, char **env)
 	errno = ENOMEM;
 	return -1;
 }
+
+caddr_t _sbrk(int incr)
+{
+	extern char end asm("end");
+	static char *heap_end;
+	char *prev_heap_end;
+
+	if (heap_end == 0)
+		heap_end = &end;
+
+	prev_heap_end = heap_end;
+	if (heap_end + incr > stack_ptr)
+	{
+		errno = ENOMEM;
+		return (caddr_t) -1;
+	}
+
+	heap_end += incr;
+
+	return (caddr_t) prev_heap_end;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

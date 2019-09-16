@@ -1,10 +1,10 @@
-#include <common.h>
-#include <dcf77.h>
-#include <cBsp.h>
+#include "common.h"
+#include "dcf77.h"
+#include "cBsp.h"
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "DCF77"
-#include <cLog.h>
-#include <time.h>
+#include "cLog.h"
+#include "time.h"
 
 extern uint64_t epochtimer;
 
@@ -221,7 +221,7 @@ bool cDCF77::SetBit(uint8_t second, uint8_t bitValue)
 			}
 			else
 			{
-				//Zeitinformation wurde vollständig empfangen und wird jetzt übertragen
+				//Zeitinformation wurde vollstï¿½ndig empfangen und wird jetzt ï¿½bertragen
 				LOGI("Received %02d:%02d %02d.%02d.20%d", hourScratch, minScratch, calenderDayScratch, monthScratch, yearScratch);
 				struct tm t;
 				t.tm_year = yearScratch+100;

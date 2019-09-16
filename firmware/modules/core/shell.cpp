@@ -25,7 +25,7 @@
 #include <cmath>
 #include "date.h"
 #include "cBsp.h"
-#include "cApplication.h"
+#include "../generated/cApplication.h"
 
 extern uint64_t systemClockMsecCnt;
 //extern uint64_t steadyClockMsecCnt;
@@ -311,31 +311,31 @@ static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 	//std::chrono::system_clock::time_point dp = date::floor<date::days>(tp);
 	//date::time_of_day<std::chrono::seconds> time = date::make_time(std::chrono::duration_cast<std::chrono::seconds>(tp-dp));
 	Console::Writeln("Not yet implemented");
-	uint32_t secondsGMT = ((RTC->TR & RTC_TR_SU_Msk) >> RTC_TR_SU_Pos) + 10*((RTC->TR & RTC_TR_ST_Msk) >> RTC_TR_ST_Pos);
-	uint32_t hoursGMT = ((RTC->TR & RTC_TR_HU_Msk) >> RTC_TR_HU_Pos) + 10*((RTC->TR & RTC_TR_HT_Msk) >> RTC_TR_HT_Pos);
-	uint32_t minutesGMT = ((RTC->TR & RTC_TR_MNU_Msk) >> RTC_TR_MNU_Pos) + 10*((RTC->TR & RTC_TR_MNT_Msk) >> RTC_TR_MNT_Pos);
-	uint32_t dayGMT = ((RTC->DR & RTC_DR_DU_Msk) >> RTC_DR_DU_Pos) + 10*((RTC->DR & RTC_DR_DT_Msk) >> RTC_DR_DT_Pos);
-	uint32_t dayOfWeekGMT = ((RTC->DR & RTC_DR_WDU_Msk) >> RTC_DR_WDU_Pos); //0 forbidden, 1 Monday, 111 Sunday
-	uint32_t monthGMT = ((RTC->DR & RTC_DR_MU_Msk) >> RTC_DR_MU_Pos) +10 *((RTC->DR & RTC_DR_MT_Msk) >> RTC_DR_MT_Pos);
-	uint32_t yearGMT  = ((RTC->DR & RTC_DR_YU_Msk) >> RTC_DR_YU_Pos) +10 *((RTC->DR & RTC_DR_YT_Msk) >> RTC_DR_YT_Pos);
-	uint32_t hourOffset = 1; //Normalfall: 1 Stunde vor GMT, im Sommer 2 Stunden vor GMT
+//	uint32_t secondsGMT = ((RTC->TR & RTC_TR_SU_Msk) >> RTC_TR_SU_Pos) + 10*((RTC->TR & RTC_TR_ST_Msk) >> RTC_TR_ST_Pos);
+//	uint32_t hoursGMT = ((RTC->TR & RTC_TR_HU_Msk) >> RTC_TR_HU_Pos) + 10*((RTC->TR & RTC_TR_HT_Msk) >> RTC_TR_HT_Pos);
+//	uint32_t minutesGMT = ((RTC->TR & RTC_TR_MNU_Msk) >> RTC_TR_MNU_Pos) + 10*((RTC->TR & RTC_TR_MNT_Msk) >> RTC_TR_MNT_Pos);
+//	uint32_t dayGMT = ((RTC->DR & RTC_DR_DU_Msk) >> RTC_DR_DU_Pos) + 10*((RTC->DR & RTC_DR_DT_Msk) >> RTC_DR_DT_Pos);
+//	uint32_t dayOfWeekGMT = ((RTC->DR & RTC_DR_WDU_Msk) >> RTC_DR_WDU_Pos); //0 forbidden, 1 Monday, 111 Sunday
+//	uint32_t monthGMT = ((RTC->DR & RTC_DR_MU_Msk) >> RTC_DR_MU_Pos) +10 *((RTC->DR & RTC_DR_MT_Msk) >> RTC_DR_MT_Pos);
+//	uint32_t yearGMT  = ((RTC->DR & RTC_DR_YU_Msk) >> RTC_DR_YU_Pos) +10 *((RTC->DR & RTC_DR_YT_Msk) >> RTC_DR_YT_Pos);
+//	uint32_t hourOffset = 1; //Normalfall: 1 Stunde vor GMT, im Sommer 2 Stunden vor GMT
 	//Idee: Entweder passt schon der Monat oder es passt der Tag
 	//oder wenn es genau der Tag ist, dass muss die Stunde halt passen
 	//Testfall Sonntag ist der 25.3., also ist Mo1 der 26.
 	//Testfall Sonntag ist der 26.3., also ist Mo1 der 27.
 	//Testfall Sonntag ist der 31.3., also ist Mo1 der 25.
-	if(monthGMT > 3
-			|| ((monthGMT == 3) && (dayGMT - dayOfWeekGMT >= 25)	)
-			|| (monthGMT == 3 && dayGMT >= 25 && dayOfWeekGMT == RTC_WEEKDAY_SUNDAY && hoursGMT >=1))
-	{
-		hourOffset=2;
-	}
-	if(monthGMT > 10
-				|| ((monthGMT == 10) && (dayGMT - dayOfWeekGMT >= 25)	)
-				|| (monthGMT == 10 && dayGMT >= 25 && dayOfWeekGMT == RTC_WEEKDAY_SUNDAY && hoursGMT >=1))
-	{
-		hourOffset=1;
-	}
+//	if(monthGMT > 3
+//			|| ((monthGMT == 3) && (dayGMT - dayOfWeekGMT >= 25)	)
+//			|| (monthGMT == 3 && dayGMT >= 25 && dayOfWeekGMT == RTC_WEEKDAY_SUNDAY && hoursGMT >=1))
+//	{
+//		hourOffset=2;
+//	}
+//	if(monthGMT > 10
+//				|| ((monthGMT == 10) && (dayGMT - dayOfWeekGMT >= 25)	)
+//				|| (monthGMT == 10 && dayGMT >= 25 && dayOfWeekGMT == RTC_WEEKDAY_SUNDAY && hoursGMT >=1))
+//	{
+//		hourOffset=1;
+//	}
 
 	//rechne in epochSecond
 	//uint32_t epochSeconds = Common::Unixtime(yearGMT, monthGMT, dayGMT, hoursGMT, minutesGMT, secondsGMT);

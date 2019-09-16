@@ -1,16 +1,16 @@
-#include <cMaster.h>
+#include "cMaster.h"
 #include "cModel.h"
-#include <cPwm.h>
+#include "cPwm.h"
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "PWM  "
-#include <cLog.h>
+#include "cLog.h"
 namespace sensact {
 
 static const int MAXIMUM_LEVEL =UINT8_MAX;
 static const int TIME_TO_FORGET_DIM_DIRECTION=5000;
 static const int DIM_TO_TARGET_STEP=2;
 
-//targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
+//targetValue absolut setzen oder aktuellen targetValue verï¿½ndern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
 cPWM::cPWM(const eApplicationID id, uint16_t  const*const output, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :

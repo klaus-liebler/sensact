@@ -6,9 +6,9 @@
  *	   Contact: mail@klaus-liebler.de
  *     Licence: none
  */
-#include <cMaster.h>
-#include <cLightbarrier.h>
-#include <cModel.h>
+#include "cMaster.h"
+#include "cLightbarrier.h"
+#include "cModel.h"
 
 #include "common.h"
 #include "cBsp.h"

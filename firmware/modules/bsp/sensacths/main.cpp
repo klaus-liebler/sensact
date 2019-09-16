@@ -1,14 +1,13 @@
-#include <cMaster.h>
-#include "stm32f4xx_hal.h"
-#include <time.h>
-#include <date.h>
-#include <chrono>
+#include <modules/core/cMaster.h>
+#include "stm32_hal.hpp"
 
 void SystemClock_Config(void);
 void HAL_MspInit(void);
 int main(void);
 
-using namespace date;
+
+
+
 int main(void)
 {
 	HAL_Init();
@@ -18,8 +17,8 @@ int main(void)
 }
 
 void HAL_MspInit(void) {
-	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+	__HAL_RCC_PWR_CLK_ENABLE();
 }
 
 void SystemClock_Config(void)

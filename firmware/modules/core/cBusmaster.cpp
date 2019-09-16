@@ -2,8 +2,8 @@
 #include "common.h"
 #include "cBusmaster.h"
 #include "cBsp.h"
-#include "PCA9555.h"
-#include "PCA9685.h"
+#include "../hardware/PCA9555.h"
+#include "../hardware/PCA9685.h"
 #include "inttypes.h"
 #include "console.h"
 #define LOGLEVEL LEVEL_DEBUG
@@ -11,12 +11,12 @@
 #include "cLog.h"
 namespace sensact {
 
-//Die höchsten beiden Bits geben den Bus an
+//Die hï¿½chsten beiden Bits geben den Bus an
 //00=intern
 //01=Bus0
 //10=Bus1
 //11=Bus2
-//Inputs werden über einen 16bit-Wert angesprochen
+//Inputs werden ï¿½ber einen 16bit-Wert angesprochen
 //Interne Inputs: PA0 = 0, PA15=15, PB0=16, PB15=31 etc
 //dann ab 16384 geht es weiter mit den busmaster i2c1
 //bis Offset 1024: inputs per 9555, je 16, in der Reihenfolge der Array-Definition
@@ -540,7 +540,7 @@ bool cBusmaster::GetInput(uint16_t input, bool *inputState) const
 	return false;
 }
 
-//bei 01-Ausgängen bestimmt das oberste Bit, ob an oder aus
+//bei 01-Ausgï¿½ngen bestimmt das oberste Bit, ob an oder aus
 bool cBusmaster::SetOutput(uint16_t output, uint16_t sixteenMask, uint16_t value) const
 {
 	uint8_t i2cAddrOffset = (output & 0x03F0) >> 4;

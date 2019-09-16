@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 #include "cBsp.h"
-#include "cApplication.h"
+#include "../generated/cApplication.h"
 
 namespace sensact{
 
@@ -19,7 +19,7 @@ namespace sensact{
 		eAppCallResult Setup() override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-		#include <StandbyControllerApplication.hinc>
+		#include "../generated/StandbyControllerApplication.hinc"
 		/**
 		 * @param evt
 		 */
