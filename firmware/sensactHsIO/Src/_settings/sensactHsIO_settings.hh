@@ -1,0 +1,3 @@
+#pragma once
+#define SLAVE_OWN_ADDRESS 0x04
+#define SENSACTHSIO_I2C_BUFFER 16
