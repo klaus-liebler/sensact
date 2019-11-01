@@ -1,0 +1,172 @@
+                                _   _   _ ____     ___  _____ <\r><\n>
+  ___  ___ _ __  ___  __ _  ___| |_| | | / ___|   / _ \|___  |<\r><\n>
+ / __|/ _ \ '_ \/ __|/ _` |/ __| __| |_| \___ \  | | | |  / / <\r><\n>
+ \__ \  __/ | | \__ \ (_| | (__| |_|  _  |___) | | |_| | / /  <\r><\n>
+ |___/\___|_| |_|___/\__,_|\___|\__|_| |_|____/   \___(_)_/   <\r><\n>
+                                                              <\r><\n>
+<\r><\n>
+sensact (c)  Dr.-Ing. Klaus M. Liebler under Apache License 2.0<\r><\n>
+<\r><\n>
+sensactHS07 2015-11-16, (c) Dr.-Ing. Klaus M. Liebler, compiled Nov 13 2016 18:17:56<\r><\n>
+<\r><\n>
+NodeId SNSCT_L3_TECH_HS_1 created on 13.11.2016 17:34:43 using model Sattlerstra??e 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681<\r><\n>
+I NO RTC BRDSP :Setup of DWTCounter was successful<\r><\n>
+I NO RTC BRDSP :Setup of GPIO for LED was successful<\r><\n>
+I NO RTC BRDSP :Setup of UART4 for MP3-Module was successful<\r><\n>
+I NO RTC BRDSP :I2C1 configured for input buttons and pwm<\r><\n>
+I NO RTC BRDSP :Setup of i2c1 reset was successful<\r><\n>
+I NO RTC BRDSP :Setup of pca9685_U7 was successful<\r><\n>
+I NO RTC BRDSP :Setup of pca9685_U9 was successful<\r><\n>
+I NO RTC BRDSP :Setup of pca9555_U19 was successful<\r><\n>
+I NO RTC BRDSP :Setup of pca9555_U18 was successful<\r><\n>
+I NO RTC BRDSP :Setup of I2C2 for 1wire and external was successful<\r><\n>
+E NO RTC BRDSP :Setup of i2c2 reset was NOT successful<\r><\n>
+I NO RTC BRDSP :Searching i2c bus I2C2 for devices<\r><\n>
+I NO RTC BRDSP :Found device on address 24 (48)<\r><\n>
+I NO RTC BRDSP :1 devices found on i2c bus 'I2C2'<\r><\n>
+I NO RTC BRDSP :Setup of ds2482 was successful<\r><\n>
+I NO RTC BRDSP :Searching devices on 1wire bus <\r><\n>
+I NO RTC BRDSP :0 found on 1wire bus<\r><\n>
+I NO RTC BRDSP :Searching devices on 1wire bus with alarmOnly<\r><\n>
+I NO RTC BRDSP :0 found on 1wire bus<\r><\n>
+I NO RTC BRDSP :Setup of GPIO for Rotary Encoder was successful<\r><\n>
+I NO RTC BRDSP :Setup of TIM12 was successful<\r><\n>
+I NO RTC BRDSP :Setup of TIM8 was successful<\r><\n>
+I NO RTC BRDSP :Setup of TIM1 was successful<\r><\n>
+I NO RTC BRDSP :Setup of SPI for DRV8860 was successful<\r><\n>
+I NO RTC BRDSP :Setup of CAN was successful<\r><\n>
+I NO RTC BRDSP :Setup of CAN filter was successful<\r><\n>
+I NO RTC MASTR :App SNSCT_L3_TECH_HS_1 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 28 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BATH_B13 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 29 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BATH_B14 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 0 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 0 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 17 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_BATH_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 31 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B11 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 30 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B12 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 25 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B13 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 27 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B14 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 26 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B15 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 22 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B21 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 24 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B22 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 23 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B23 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 20 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B24 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 21 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B25 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 18 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B31 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 16 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B32 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 17 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B33 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 12 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B34 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 19 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B35 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 13 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_BEDR_B36 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 1 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 1 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 18 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_BEDR_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :I2C pwm output 8 requested.<\r><\n>
+I NO RTC BRDSP :I2C pwm output 9 requested.<\r><\n>
+I NO RTC MASTR :App PWM___L2_BEDR_S successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 10 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B11 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 15 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B21 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 14 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B31 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 8 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B41 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 9 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B42 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 11 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_CORR_B43 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 2 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 2 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 19 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_CORR_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 5 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID1_B11 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 7 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID1_B12 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 6 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID1_B13 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 1 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID1_B21 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 4 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID1_B22 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 15 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_L2_KID1_C1 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 0 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_L2_KID1_C2 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 3 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 3 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 20 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_KID1_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 3 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID2_B11 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 2 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID2_B12 successfully configured<\r><\n>
+I NO RTC BRDSP :i2c digital input 0 requested.<\r><\n>
+I NO RTC MASTR :App PUSHB_L2_KID2_B13 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 1 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_L2_KID2_C1 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 4 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 4 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 21 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_KID2_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 5 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 5 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 22 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L2_WORK_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :I2C pwm output 10 requested.<\r><\n>
+I NO RTC BRDSP :I2C pwm output 11 requested.<\r><\n>
+I NO RTC MASTR :App PWM___L2_WORK_S successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 2 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_L3_BEDR_C1 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 7 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 7 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 8 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L3_BEDR_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :I2C pwm output 12 requested.<\r><\n>
+I NO RTC MASTR :App PWM___L3_CORR_S successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 3 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_L3_TECH_C1 successfully configured<\r><\n>
+I NO RTC BRDSP :Build In powered output (power side) 6 requested.<\r><\n>
+I NO RTC BRDSP :Build In powered output (pwm side) 6 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 23 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L3_WORK_J1 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 16 requested.<\r><\n>
+I NO RTC BRDSP :SPI powered output 9 requested.<\r><\n>
+I NO RTC MASTR :App BLIND_L3_WORK_J2 successfully configured<\r><\n>
+I NO RTC BRDSP :I2C pwm output 13 requested.<\r><\n>
+I NO RTC BRDSP :I2C pwm output 14 requested.<\r><\n>
+I NO RTC BRDSP :I2C pwm output 15 requested.<\r><\n>
+I NO RTC MASTR :App PWM___L3_WORK_S successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 12 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_LS_STRS_W1 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 14 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_LS_STRS_W3 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 13 requested.<\r><\n>
+I NO RTC MASTR :App POWIT_LS_STRS_W5 successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 11 requested.<\r><\n>
+I NO RTC MASTR :App STDBY_L3_TECH_48V successfully configured<\r><\n>
+I NO RTC BRDSP :SPI powered output 10 requested.<\r><\n>
+I NO RTC MASTR :App STDBY_L3_ROOF_48V successfully configured<\r><\n>
+I NO RTC MASTR :56 local applications have been configured. Now, NodeId SNSCT_L3_TECH_HS_1 created on 13.11.2016 17:34:43 using model Sattlerstra??e 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681 is pleased to be at your service.<\r><\n>
+<\r><\n>
