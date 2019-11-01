@@ -1,24 +1,18 @@
-#include <common.h>
-#include <cBsp.h>
-#include <cModel.h>
+#include <modules/core/common.h>
+#include <modules/core/cBsp.h>
+#include <modules/core/stm32_hal.hpp>
+#include <modules/core/cModel.h>
 #define LOGLEVEL LEVEL_DEBUG
 #define LOGNAME "BRDSP"
-#include <cLog.h>
-#include <console.h>
-#include "bh1750.h"
-#include "cBrightnessSensor.h"
-#include "cWs281x.h"
-#include <cBusmaster.h>
+#include <modules/core/cLog.h>
+#include <modules/core/console.h>
+#include <modules/hardware/cRCSwitch.h>
+#include <modules/core/cBusmaster.h>
 
-#include "stm32f1xx_ll_bus.h"
-#include "stm32f1xx_ll_rcc.h"
-#include "stm32f1xx_ll_system.h"
-#include "stm32f1xx_ll_utils.h"
-#include "stm32f1xx_ll_cortex.h"
-#include "stm32f1xx_ll_gpio.h"
-#include "stm32f1xx_ll_exti.h"
-#include "stm32f1xx_ll_i2c.h"
-#include "stm32f1xx_ll_pwr.h"
+#include <modules/hardware/bh1750.h>
+#include <modules/core/cBrightnessSensor.h>
+
+
 #include "stm32f1xx_hal_gpio_ex.h"
 
 #define RGB_SUPPLY_PORT GPIOA
@@ -115,9 +109,9 @@ void BSP::ReInitI2C()
 
 	for(int i=0;i<10;i++)
 	{
-		LL_GPIO_ResetOutputPin(GPIOB, GPIO_PIN_10);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
 		BSP::DelayUs(50);
-		LL_GPIO_SetOutputPin(GPIOB, GPIO_PIN_10);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
 		BSP::DelayUs(50);
 	}
 
@@ -173,7 +167,7 @@ void BSP::Init(void) {
 
 
 
-	//Pullups für alle Inputs inc. der RotEnc-Buttons
+	//Pullups fï¿½r alle Inputs inc. der RotEnc-Buttons
 	gi.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
 	gi.Mode = GPIO_MODE_INPUT;
 	gi.Pull = GPIO_PULLUP;
@@ -250,14 +244,17 @@ void BSP::Init(void) {
 	 PA11     ------> CAN_RX
 	 PA12     ------> CAN_TX
 	 */
-	gi.Speed = GPIO_SPEED_FREQ_HIGH;
-	gi.Pin = GPIO_PIN_11;
-	gi.Mode = GPIO_MODE_INPUT;
-	gi.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOA, &gi);
-	gi.Pin = GPIO_PIN_12;
+	gi.Pin = CAN_PIN_TX;
 	gi.Mode = GPIO_MODE_AF_PP;
-	HAL_GPIO_Init(GPIOA, &gi);
+	gi.Speed = GPIO_SPEED_FREQ_HIGH;
+	gi.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(CAN_PORT, &gi);
+
+	gi.Pin = CAN_PIN_RX;
+	gi.Mode = GPIO_MODE_INPUT;
+	gi.Speed = GPIO_SPEED_FREQ_HIGH;
+	gi.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(CAN_PORT, &gi);
 	InitCAN();
 
 

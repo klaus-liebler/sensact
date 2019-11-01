@@ -310,6 +310,8 @@ static eShellError cmdGET_RTC(uint8_t *cmdBuffer, uint8_t size)
 	//std::chrono::system_clock::time_point tp = std::chrono::system_clock::now(); // tp is a C::system_clock::time_point
 	//std::chrono::system_clock::time_point dp = date::floor<date::days>(tp);
 	//date::time_of_day<std::chrono::seconds> time = date::make_time(std::chrono::duration_cast<std::chrono::seconds>(tp-dp));
+	UU(cmdBuffer);
+	UU(size);
 	Console::Writeln("Not yet implemented");
 //	uint32_t secondsGMT = ((RTC->TR & RTC_TR_SU_Msk) >> RTC_TR_SU_Pos) + 10*((RTC->TR & RTC_TR_ST_Msk) >> RTC_TR_ST_Pos);
 //	uint32_t hoursGMT = ((RTC->TR & RTC_TR_HU_Msk) >> RTC_TR_HU_Pos) + 10*((RTC->TR & RTC_TR_HT_Msk) >> RTC_TR_HT_Pos);

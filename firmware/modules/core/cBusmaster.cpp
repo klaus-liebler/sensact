@@ -261,7 +261,7 @@ void cBusmaster::Process(Time_t now) const
 				{
 					if(!pca9555[p]->Update())
 					{
-						LOGI("Bus %s: Error while accessing PCA9555, device offset %d ", name, pca9555[i]->GetDevice());
+						LOGI("Bus %s: Error while updating from PCA9555, device offset %d ", name, pca9555[i]->GetDevice());
 					}
 				}
 				p+=3;

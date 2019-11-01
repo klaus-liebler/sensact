@@ -10,11 +10,8 @@
 #define BUS_USART USART2
 #define CONSOLE_USART_IRQn USART1_IRQn
 #define UART_BUFFER_SIZE 100
-#define MP3_BELL_USART USART1
-//#define CAN CAN
+#define CAN CAN1
 #define CAN_PRESCALER 24
-#define DCF77_PORT GPIOC
-#define DCF77_PIN GPIO_PIN_4
 #define BUS_CNT 2
 #endif
 
@@ -23,11 +20,8 @@
 //#define BUS_USART USART2
 #define CONSOLE_USART_IRQn USART1_IRQn
 #define UART_BUFFER_SIZE 100
-//#define MP3_BELL_USART USART1
-//#define CAN CAN
+#define CAN CAN1
 #define CAN_PRESCALER 24
-//#define DCF77_PORT GPIOC
-//#define DCF77_PIN GPIO_PIN_4
 #define BUS_CNT 1
 #endif
 
@@ -38,12 +32,15 @@
 #define UART_BUFFER_SIZE 100
 #define CAN CAN1
 #define CAN_PRESCALER 18
+#define CAN_PIN_TX GPIO_PIN_12
+#define CAN_PIN_RX GPIO_PIN_11
+#define CAN_PORT GPIOA
 #define DCF77_PORT GPIOC
 #define DCF77_PIN GPIO_PIN_4
 #define BUS_CNT 1
 #endif
 
-#ifdef SENSACTHS07
+#ifdef SENSACTHS07 //Lochblech-Variante im Spitzboden
 #define CONSOLE_USART USART3
 #define CONSOLE_USART_IRQn USART1_IRQn
 #define MP3_BELL_USART USART4
@@ -57,7 +54,7 @@
 #define BUS_CNT 2
 #endif
 
-#ifdef SENSACTHS08
+#ifdef SENSACTHS08 //Lochblech
 #define CONSOLE_USART USART1
 #define CONSOLE_USART_IRQn USART1_IRQn
 #define MP3_BELL_USART USART4
@@ -89,7 +86,13 @@ namespace sensact {
 enum struct eRotaryEncoder
 	:uint8_t
 	{
-		ROTARYENCODER_1, CNT = 1
+#if defined (SENSACTUP02) || defined (SENSACTUP03) || defined(SENSACTUP04)
+		ROTARYENCODER_1, ROTARYENCODER_2, CNT = 2
+#elif defined (SENSACTHS08)
+		CNT = 0
+#else
+	#error ("Define Rotary Encoders for your hardware")
+#endif
 };
 
 

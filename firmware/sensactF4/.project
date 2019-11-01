@@ -44,12 +44,7 @@
 		<link>
 			<name>cubemx</name>
 			<type>2</type>
-			<location>C:/stm32/STM32Cube_FW_F4_V1.24.0/Drivers/STM32F4xx_HAL_Driver/Src</location>
-		</link>
-		<link>
-			<name>drivers</name>
-			<type>2</type>
-			<location>C:/sensact/firmware/modules/drivers</location>
+			<location>C:/stm32/hal_repo/STM32Cube_FW_F4_V1.24.1/Drivers/STM32F4xx_HAL_Driver</location>
 		</link>
 		<link>
 			<name>generated</name>
@@ -64,7 +59,7 @@
 		<link>
 			<name>sensacths/startup_stm32f407xx.S</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/stm32/STM32Cube_FW_F4_V1.24.0/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.S</locationURI>
+			<location>C:/stm32/hal_repo/STM32Cube_FW_F4_V1.24.1/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s</location>
 		</link>
 		<link>
 			<name>sensacths/system_stm32f4xx.c</name>

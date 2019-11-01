@@ -5,12 +5,12 @@
 #include <stdint.h>
 #include <modules/core/compileconfig.h>
 
-#define Time_t 		uint64_t
-#define TIME_MAX		UINT64_MAX
-#define NULL __null
-#define UU __attribute__((unused))
-#define AW __attribute__((weak))
-#define COUNTOF(__BUFFER__)   (sizeof(__BUFFER__) / sizeof(*(__BUFFER__)))
+#define Time_t 					uint64_t
+#define TIME_MAX				UINT64_MAX
+#define NULL 					__null
+#define UU(expr) do { (void)(expr); } while (0)
+#define AW 						__attribute__((weak))
+#define COUNTOF(__BUFFER__)   	(sizeof(__BUFFER__) / sizeof(*(__BUFFER__)))
 
 #define LEVEL_ALL 5
 #define LEVEL_DEBUG 4

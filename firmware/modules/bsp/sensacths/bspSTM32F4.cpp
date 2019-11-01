@@ -15,10 +15,14 @@ namespace sensact{
 
 void BSP::ReInitI2C()
 {
-
-	HAL_I2C_DeInit(&BSP::i2c1);
-	HAL_I2C_DeInit(&BSP::i2c2);
-
+	if(BSP::i2c1.Instance)
+	{
+		HAL_I2C_DeInit(&BSP::i2c1);
+	}
+	if(BSP::i2c2.Instance)
+	{
+		HAL_I2C_DeInit(&BSP::i2c2);
+	}
 	/*
 	PB08     ------> I2C1_SCL
 	PB09     ------> I2C1_SDA
@@ -175,10 +179,24 @@ void BSP::Init(void) {
 	gi.Alternate = 0;
 	gi.Pull = GPIO_NOPULL;
 	gi.Speed = GPIO_SPEED_LOW;
+#if defined (SENSACTHS07)
 	gi.Pin = GPIO_PIN_7;
 	HAL_GPIO_Init(GPIOB, &gi);
+
+#elif defined(SENSACTHS08)
+	gi.Pin = GPIO_PIN_6;
+	HAL_GPIO_Init(GPIOA, &gi);
+#endif
 	LOGI(BSP::SUCCESSFUL_STRING, "GPIO for LED");
 
+#if defined(SENSACTHS08)
+	gi.Mode = GPIO_MODE_INPUT;
+	gi.Alternate = 0;
+	gi.Pull = GPIO_PULLUP;
+	gi.Speed = GPIO_SPEED_LOW;
+	gi.Pin = GPIO_PIN_3|GPIO_PIN_4;
+	HAL_GPIO_Init(GPIOE, &gi);
+#endif
 	//MP3-Player
 	gi.Pin = GPIO_PIN_0 | GPIO_PIN_1; //A0=USART4_TX, A1=USART4_RX, Kerbe nach oben; ansicht von Pinseite, rechts von oben
 	//VCC, RX, TX, DACR, DACL, SPK1, GND, SPK2
@@ -207,13 +225,16 @@ void BSP::Init(void) {
 	gi.Speed = GPIO_SPEED_LOW;
 	gi.Alternate = 0;
 	HAL_GPIO_Init(GPIOE, &gi);
-
+	//Init i2c
 	ReInitI2C();
+
+	//Init can
 	gi.Pin = CAN_PINS;
 	gi.Mode = GPIO_MODE_AF_PP;
-	gi.Pull = GPIO_NOPULL;
-	gi.Speed = GPIO_SPEED_LOW;
-	gi.Alternate = GPIO_AF9_CAN2;
+
+	gi.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	gi.Pull = GPIO_PULLUP;
+	gi.Alternate = GPIO_AF9_CAN1;
 	HAL_GPIO_Init(CAN_PORT, &gi);
 	InitCAN();
 

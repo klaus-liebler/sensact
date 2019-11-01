@@ -22,7 +22,6 @@ extern uint64_t steadyClockMsecCnt;
 extern "C" void SysTick_Handler(void)
 {
 	HAL_IncTick();
-	HAL_SYSTICK_IRQHandler();
 #ifdef DCF77
 	sensact::cDCF77::CallEveryMillisecond(HAL_GetTick());
 #endif

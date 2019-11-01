@@ -156,17 +156,17 @@ const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
 	cBusmaster const * const MODEL::busses[] = {&mainBus};
 #endif
 
-#ifdef NODE_SNSCT_L0_TECH_HS_1
+#if defined(NODE_SNSCT_L0_TECH_HS_1) || defined(NODE_TEST_HS08)
 	const bool MODEL::TRACE_COMMANDS=true;
 	const bool MODEL::TRACE_EVENTS=true;
 
 	static const uint8_t OWID1[6] = {0,0,0,0,0,0};
-	static drivers::cDS2482 ds2482(&BSP::i2c1, drivers::eDS2482Device::Dev0);
-	static cSensactSENode sensactSE1(OWID1);
-	static cDS1820Node ds1820_1(OWID1);
-	static cDS2413Node ds2413_1(OWID1);
+	//static drivers::cDS2482 ds2482(&BSP::i2c1, drivers::eDS2482Device::Dev0);
+	//static cSensactSENode sensactSE1(OWID1);
+	//static cDS1820Node ds1820_1(OWID1);
+	//static cDS2413Node ds2413_1(OWID1);
 	//cOwSubbus(drivers::cDS2482 const * const driver, cSensactSENode const  *const sensactSENodes, uint32_t const sensactSENodesCnt,	cDS1820Node const  *const ds1820Nodes, uint32_t const ds1820NodesCnt, cDS2413Node const  * const ds2413Nodes, uint32_t const ds2413NodesCnt);
-	static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
+	//static cOwSubbus owSubbus1(&ds2482, &sensactSE1, 1,&ds1820_1, 1, &ds2413_1, 1);
 
 #define BUS0_I2C &BSP::i2c1
 
@@ -177,7 +177,7 @@ const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
 
 	#define BB_9555_LEN 4
 	static drivers::cPCA9555 * const BUS0_9555[BB_9555_LEN] = {&B0_9555_00, &B0_9555_01, &B0_9555_02, &B0_9555_03};
-	static const uint16_t BUS0_interruptlines[3]={64+13,64+14,64+15};
+	static const uint16_t BUS0_interruptlines[3]={64+0,64+1,48+6}; //E0, E1, D6
 	static const cBusmaster bus0_master(
 			"Bus0",
 			BUS0_I2C,

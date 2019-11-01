@@ -512,7 +512,6 @@ void cMaster::CanBusProcess() {
 	uint8_t commandOrEventId;
 	Time_t now = BSP::GetSteadyClock();
 	cApplication *app;
-	uint8_t buf[11];
 	while (BSP::ReceiveCANMessage(&rcvMessage))
 	{
 		eCanMessageType type = cCanIdUtils::ParseCanMessageType(rcvMessage.Id);
@@ -530,7 +529,7 @@ void cMaster::CanBusProcess() {
 				char charbuf[2*rcvMessage.Length+1];
 				for(int i=0;i<rcvMessage.Length;i++)
 				{
-					sprintf(&charbuf[2*i], "%02X, ", buf[i]);
+					sprintf(&charbuf[2*i], "%02X, ", rcvMessage.Data[i]);
 				}
 				charbuf[2*rcvMessage.Length]='\0';
 #ifdef NEN_CANID
@@ -560,7 +559,7 @@ void cMaster::CanBusProcess() {
 				char charbuf[2*rcvMessage.Length+1];
 				for(int i=0;i<rcvMessage.Length;i++)
 				{
-					sprintf(&charbuf[2*i], "%02X, ", buf[i]);
+					sprintf(&charbuf[2*i], "%02X, ", rcvMessage.Data[i]);
 				}
 				charbuf[2*rcvMessage.Length]='\0';
 #ifdef NEN_CANID
