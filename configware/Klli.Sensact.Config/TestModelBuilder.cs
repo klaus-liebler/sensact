@@ -306,7 +306,7 @@ namespace Klli.Sensact.Config
             //TEST_HS07.Applications.AddBlindButtons("_XX_BLN_", InputPin.I01, InputPin.I02, "XX_XXX_1");
             //TEST_HS07.Applications.AddOnePushbuttonDimmer("_XX_PUB_1", InputPin.I03, "PWM___XX_XXX_1");
 
-            Node TEST_UP04 = new Nodes.SensactUp04("TEST_UP04")
+            Node TEST_UP02 = new Nodes.SensactUp02("TEST_UP02")
             {
                 Applications = new List<SensactApplication>
                 {
@@ -338,7 +338,7 @@ namespace Klli.Sensact.Config
             };
             model.Nodes = new List<Node>(){
                 TEST_HS07,
-                TEST_UP04
+                TEST_UP02
             };
             return model;
         }
@@ -365,6 +365,184 @@ namespace Klli.Sensact.Config
             TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS1 + I2C + 24), (ushort)(BUS1 + I2C + 25), (ushort)(BUS1 + I2C + 26), (ushort)(BUS1 + I2C + 27)));
             TEST_HS07.Applications.Add(BuildInputForPWM((ushort)(BUS0 + I2C + 28), (ushort)(BUS1 + I2C + 28)));
             TEST_HS07.Applications.Add(BuildPWMOutput((ushort)(BUS1 + I2C + 28), (ushort)(BUS1 + I2C + 29), (ushort)(BUS1 + I2C + 30), (ushort)(BUS1 + I2C + 31)));
+            return model;
+        }
+
+        public static Model BuildMP3Demo()
+        {
+            Model model = new Model("TestMP3");
+
+            Node TEST_HS08 = new Nodes.SensactHs07("TEST_HS08");
+            TEST_HS08.Applications.Add(new SoundApplication
+            {
+                ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
+                StandbyOutput = (ushort)(INTI + 64u + 2u),//e2,
+                NameOfVoulumeScheduleOrNull = null,
+            });
+            TEST_HS08.Applications.Add(new PushButtonXApplication
+            {
+                ApplicationId = _(ID.PUSHB_LX_FRON_B1),
+                CommandsOnPressed = new List<Command>
+                {
+                    new Command
+                    {
+                        CommandType=CommandType.START,
+                        TargetAppId=_(ID.DEVCE_L0_TECH_AUDIO),
+                    }
+                },
+                InputRessource = (ushort)(INTI + 64u + 4u),//e4,
+            });
+            model.Nodes = new List<Node>(){
+                TEST_HS08,
+            };
+            return model;
+        }
+        public static Model BuildModelToTestAllAllI2CPinsAndCAN()
+        {
+            //Testet 4 Ausgangsbaugruppen und 4 Eingangsbaugruppen, also 64 Taster und 64 PWM-Outputs
+            //Die ersten beiden Taster sind Dimm-Taster (Up/Down) für LED0, Standby ist LED1. Diese beiden LED können auch per CAN eingestellt werden
+            //Die verbleibenden Taster schalten die
+
+            Model model = new Model("TestAllAllI2CPinsAndCAN");
+
+            Node TEST_HS08 = new Nodes.SensactHs07("TEST_HS08");
+            TEST_HS08.Applications.Add(new PWMApplication
+            {
+                ApplicationId = "PWM___XX_XXX_00",
+                InitialStoredTargetLevel = 255,
+                LowMeansLampOn = false,
+                MinimalOnLevel = 20,
+                OutputRessources = new List<ushort>() { BUS0 + I2C + 0 },
+                StandbyController = "STDBY_XX_XXX_00"
+            });
+            TEST_HS08.Applications.Add(new StandbyControllerApplication
+            { 
+                ApplicationId = "STDBY_XX_XXX_00",
+                OutputRessource = BUS0+I2C+1,
+                WaittimeInMsec = 10000
+            });
+
+            //UP-Button
+            TEST_HS08.Applications.Add(new PushButtonXApplication
+            {
+                ApplicationId = "PUSHB_XX_XXX_00",
+                InputRessource = BUS0 + I2C + 0,
+                CommandsOnReleasedShort = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.TOGGLE,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+
+                CommandsOnReleasedLong = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.STOP,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+                CommandsOnPressedShortAndHold = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.UP,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+            });
+            TEST_HS08.Applications.Add(new PushButtonXApplication
+            {
+                ApplicationId = "PUSHB_XX_XXX_01",
+                InputRessource = BUS0 + I2C + 1,
+                CommandsOnReleasedShort = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.TOGGLE,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+
+                CommandsOnReleasedLong = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.STOP,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+                CommandsOnPressedShortAndHold = new List<Command>()
+                {
+                    new Command()
+                    {
+                        CommandType=CommandType.DOWN,
+                        TargetAppId="PWM___XX_XXX_00",
+                    },
+                },
+            });
+
+            for (ushort i=2;i<63;i++)
+            {
+                TEST_HS08.Applications.Add(new PoweritemApplication
+                {
+                    ApplicationId = string.Format("POWIT_XX_XXX_{0:00}", i),
+                    OutputRessource = (ushort)(BUS0 + I2C + i)
+                }) ;
+                TEST_HS08.Applications.Add(new PushButtonXApplication
+                {
+                    ApplicationId = string.Format("PUSHB_XX_XXX_{0:00}", i),
+                    InputRessource = (ushort)(BUS0 + I2C + i),
+                    CommandsOnPressed = new List<Command>()
+                    {
+                        new Command()
+                        {
+                            CommandType=CommandType.TOGGLE,
+                            TargetAppId=string.Format("POWIT_XX_XXX_{0:00}", i),
+                        },
+                    }
+                });
+            }
+            
+
+            
+
+            Node TEST_UP = new Nodes.SensactUp02("TEST_UP02")
+            {
+                Applications = new List<SensactApplication>
+                {
+                    new RotaryEncoderApplication
+                    {
+                        ApplicationId="ROTAR_YY_YYY_1",
+                        InputRotaryRessource=RotaryEncoder.ROTARYENCODER_1,
+                        InputPushRessource=16+15,
+                        CommandsOnPressed=new List<Command>
+                        {
+                            new Command
+                            {
+                                TargetAppId="PWM___XX_XXX_00",
+                                CommandType=CommandType.TOGGLE,
+                            }
+                        },
+                        CommandsOnTurned=new List<Command>
+                        {
+                            new Command
+                            {
+                                TargetAppId="PWM___XX_XXX_00",
+                                CommandType=CommandType.STEP_VERTICAL,
+                            }
+                        }
+                    },
+
+                },
+
+            };
+            model.Nodes = new List<Node>(){
+                TEST_HS08,
+                TEST_UP
+            };
             return model;
         }
     }

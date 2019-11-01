@@ -56,10 +56,10 @@ namespace Klli.Sensact.Config
             //5V-Versorgung des OneWire
             //LED für Außensteckdosen im Tastermodul am Terassenausgang
             Model model = new Model("Sattlerstraße 16");
-            Node SNSCT_L0_TECH_HS_1 = new SensactHs07(ID.SNSCT_L0_TECH_HS_1);
+            Node SNSCT_L0_TECH_HS_1 = new SensactHs08(ID.SNSCT_L0_TECH_HS_1);
             model.Nodes.Add(SNSCT_L0_TECH_HS_1);
 
-            Node SNSCT_L3_TECH_HS_1 = new SensactHs07(ID.SNSCT_L3_TECH_HS_1);
+            Node SNSCT_L3_TECH_HS_1 = new SensactHs08(ID.SNSCT_L3_TECH_HS_1);
             model.Nodes.Add(SNSCT_L3_TECH_HS_1);
 
             Node SNSCT_L1_KTCH_UP = new SensactUp02(ID.SNSCT_L1_KTCH_UP);
@@ -307,14 +307,14 @@ namespace Klli.Sensact.Config
             //B13 I21
             //14 I17
             //
-            SNSCT_L0_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L1_LVNG_B11, ID.PUSHB_L1_LVNG_B12, BUS0 + I2C + 25, BUS0 + I2C + 24, ID.BLIND_LX_BACK_J1);
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B13, BUS0 + I2C + 23, ID.POWIT_LX_BACK_W2);
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B14, BUS0 + I2C + 19, ID.POWIT_LX_BACK_W3);
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B15, BUS0 + I2C + 18, ID.POWIT_LX_BACK_P1);//P1 sind die Außensteckdosen
-            SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B16, BUS0 + I2C + 17, ID.PWM___L1_LVNG_S);
+            SNSCT_L0_TECH_HS_1.Applications.AddBlindButtons(ID.PUSHB_L1_LVNG_B11, ID.PUSHB_L1_LVNG_B12, BUS0 + I2C + 25, BUS0 + I2C + 24, ID.BLIND_LX_BACK_J1);//72+70
+            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B13, BUS0 + I2C + 23, ID.POWIT_LX_BACK_W2);//69
+            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B14, BUS0 + I2C + 19, ID.POWIT_LX_BACK_W3);//60
+            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B15, BUS0 + I2C + 18, ID.POWIT_LX_BACK_P1);//58, P1 sind die Außensteckdosen
+            SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B16, BUS0 + I2C + 17, ID.PWM___L1_LVNG_S);//57
 
-            SNSCT_L0_TECH_HS_1.Applications.AddTwoDimButtons(ID.PUSHB_L1_LVNG_B21, ID.PUSHB_L1_LVNG_B22, BUS0 + I2C + 22, BUS0 + I2C + 21, ID.PWM___L1_LVNG_W4);
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B23, BUS0 + I2C + 20, ID.POWIT_LX_RGHT_W1);
+            SNSCT_L0_TECH_HS_1.Applications.AddTwoDimButtons(ID.PUSHB_L1_LVNG_B21, ID.PUSHB_L1_LVNG_B22, BUS0 + I2C + 22, BUS0 + I2C + 21, ID.PWM___L1_LVNG_W4);//68+66
+            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_L1_LVNG_B23, BUS0 + I2C + 20, ID.POWIT_LX_RGHT_W1);//65
 
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B51, BUS0 + I2C + 61, ID.PWM___L1_LVNG_S);//120
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_LVNG_B52, BUS0 + I2C + 60, ID.PWM___L1_KTCH_S1);//118

@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <# RenderHeader("Application.cpp", "autogen", version, "Short", "Details"); #>
 
-#include "cApplication.h"
+#include <modules/generated/cApplication.h>
 #include <modules/core/cLog.h>
 #include <modules/core/cModel.h>
 #include <modules/core/cMaster.h>
