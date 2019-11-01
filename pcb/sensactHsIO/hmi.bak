@@ -93,10 +93,6 @@ Text Label 2700 2050 0    50   ~ 0
 TX
 Text Label 2700 2150 0    50   ~ 0
 RX
-Text Label 2700 3850 0    50   ~ 0
-SCL
-Text Label 2700 3950 0    50   ~ 0
-SDA
 $Comp
 L Device:LED D1
 U 1 1 5D79D84F
@@ -942,10 +938,6 @@ F 3 "" H 1600 6650 50  0001 C CNN
 	1    1600 6650
 	0    1    1    0   
 $EndComp
-Text Label 1250 6750 0    50   ~ 0
-SCL
-Text Label 1250 6850 0    50   ~ 0
-SDA
 Wire Wire Line
 	1200 6750 1450 6750
 Wire Wire Line
@@ -986,7 +978,7 @@ Text GLabel 6100 1350 2    50   Output ~ 0
 S
 Text GLabel 650  2450 3    50   Input ~ 0
 LED
-Text GLabel 1300 3850 0    50   Output ~ 0
+Text GLabel 850  4400 0    50   Output ~ 0
 LED
 Wire Wire Line
 	1200 6950 1450 6950
@@ -1023,8 +1015,6 @@ Text GLabel 2700 4150 2    50   Output ~ 0
 SPIB_CLK
 Text GLabel 2700 4350 2    50   Output ~ 0
 SPIB_MOSI
-Text GLabel 2700 4050 2    50   Output ~ 0
-SPIB_CS
 Text GLabel 10100 2750 0    50   Input ~ 0
 LCD_CLK
 Text Label 7500 2300 0    50   ~ 0
@@ -1216,7 +1206,7 @@ Wire Wire Line
 	2100 4550 2200 4550
 Connection ~ 2100 4550
 Connection ~ 2200 4550
-Text GLabel 2700 3550 2    50   Output ~ 0
+Text GLabel 1300 2650 0    50   Output ~ 0
 LCD_BL
 $Comp
 L sensact:FP-096H09A U5
@@ -1229,7 +1219,7 @@ F 3 "" H 10400 2600 50  0001 C CNN
 	1    10400 2600
 	1    0    0    -1  
 $EndComp
-Text GLabel 2700 3450 2    50   Output ~ 0
+Text GLabel 1300 3950 0    50   Output ~ 0
 LCD_RS
 Text GLabel 2700 4250 2    50   Input ~ 0
 SPIB_MISO
@@ -1334,8 +1324,6 @@ $EndComp
 Wire Wire Line
 	10100 2850 9450 2850
 Connection ~ 9450 2850
-Text GLabel 1300 2650 0    50   Input ~ 0
-S
 $Comp
 L power:GND #PWR0109
 U 1 1 5D8A014C
@@ -1347,4 +1335,18 @@ F 3 "" H 10100 2950 50  0001 C CNN
 	1    10100 2950
 	1    0    0    -1  
 $EndComp
+Text GLabel 2700 3450 2    50   BiDi ~ 0
+SCL1
+Text GLabel 2700 3550 2    50   BiDi ~ 0
+SDA1
+Text GLabel 2700 3850 2    50   BiDi ~ 0
+SCL2
+Text GLabel 2700 3950 2    50   BiDi ~ 0
+SDA2
+Text GLabel 1450 6750 2    50   BiDi ~ 0
+SCL1
+Text GLabel 1450 6850 2    50   BiDi ~ 0
+SDA1
+Text GLabel 1300 3850 0    50   Input ~ 0
+S
 $EndSCHEMATC
