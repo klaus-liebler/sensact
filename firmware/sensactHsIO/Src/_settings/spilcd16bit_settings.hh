@@ -1,4 +1,0 @@
-#pragma once
-
-#define STRING_BUFFER_SIZE_CHARS 32
-#define BUFFER_SIZE_BYTES 256
