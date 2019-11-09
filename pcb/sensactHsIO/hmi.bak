@@ -1206,8 +1206,6 @@ Wire Wire Line
 	2100 4550 2200 4550
 Connection ~ 2100 4550
 Connection ~ 2200 4550
-Text GLabel 1300 2650 0    50   Output ~ 0
-LCD_BL
 $Comp
 L sensact:FP-096H09A U5
 U 1 1 5D79DB66
@@ -1219,8 +1217,6 @@ F 3 "" H 10400 2600 50  0001 C CNN
 	1    10400 2600
 	1    0    0    -1  
 $EndComp
-Text GLabel 1300 3950 0    50   Output ~ 0
-LCD_RS
 Text GLabel 2700 4250 2    50   Input ~ 0
 SPIB_MISO
 Text GLabel 1300 3350 0    50   Input ~ 0
@@ -1278,8 +1274,6 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    2000 2750
 	1    0    0    -1  
 $EndComp
-Text GLabel 1300 4050 0    50   Output ~ 0
-LCD_RST
 Text GLabel 10100 2450 0    50   Input ~ 0
 LCD_RST
 $Comp
@@ -1349,4 +1343,10 @@ Text GLabel 1450 6850 2    50   BiDi ~ 0
 SDA1
 Text GLabel 1300 3850 0    50   Input ~ 0
 S
+Text GLabel 1300 3950 0    50   Output ~ 0
+LCD_RS
+Text GLabel 1300 4050 0    50   Output ~ 0
+LCD_RST
+Text GLabel 1300 2650 0    50   Output ~ 0
+LCD_BL
 $EndSCHEMATC

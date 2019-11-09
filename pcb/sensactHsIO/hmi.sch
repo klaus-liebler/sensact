@@ -921,7 +921,7 @@ L sensact:SensactBusConnector J8
 U 1 1 5D79DA35
 P 900 7100
 F 0 "J8" H 958 7865 50  0000 C CNN
-F 1 "SensactBusConnector" H 958 7774 50  0000 C CNN
+F 1 "SensactBus" H 958 7774 50  0000 C CNN
 F 2 "Connector_IDC:IDC-Header_2x05_P2.54mm_Horizontal" H 900 7100 50  0001 C CNN
 F 3 "" H 900 7100 50  0001 C CNN
 	1    900  7100
