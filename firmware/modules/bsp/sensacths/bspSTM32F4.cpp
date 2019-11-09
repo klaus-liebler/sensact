@@ -220,7 +220,7 @@ void BSP::Init(void) {
 
 	//For Standby
 	gi.Pin = GPIO_PIN_2;
-	gi.Mode = GPIO_MODE_AF_OD;
+	gi.Mode = GPIO_MODE_OUTPUT_OD;
 	gi.Pull = GPIO_PULLUP;
 	gi.Speed = GPIO_SPEED_LOW;
 	gi.Alternate = 0;

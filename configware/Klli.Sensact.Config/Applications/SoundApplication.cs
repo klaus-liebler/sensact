@@ -10,6 +10,7 @@ namespace Klli.Sensact.Config.Applications
 
         public ushort StandbyOutput;
         public string NameOfVoulumeScheduleOrNull= "&MODEL::volumeSchedule";
+        public int DefaultVolume = 30;
 
         public override void OnSET_SIGNALCommand(ushort signal)
         {
@@ -31,8 +32,8 @@ namespace Klli.Sensact.Config.Applications
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// SOUND {0}" + Environment.NewLine, ApplicationId);
             //cBell DOORBELL("DOORBELL", eApplicationID::DOORBELL, &MODEL::volumeSchedule);
-            sb.AppendFormat("sensact::cSound {0}(eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, 
-                ApplicationId, StandbyOutput, NameOfVoulumeScheduleOrNull!=null?NameOfVoulumeScheduleOrNull: "NULL");
+            sb.AppendFormat("sensact::cSound {0}(eApplicationID::{0}, {1}, {2}, {3});" + Environment.NewLine + Environment.NewLine, 
+                ApplicationId, StandbyOutput, NameOfVoulumeScheduleOrNull!=null?NameOfVoulumeScheduleOrNull: "NULL", DefaultVolume);
             return sb.ToString();
         }
 

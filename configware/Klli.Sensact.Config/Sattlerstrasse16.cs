@@ -152,12 +152,13 @@ namespace Klli.Sensact.Config
                 ApplicationId = _(ID.DEVCE_L0_TECH_AUDIO),
                 StandbyOutput = (ushort)(INTI + 64u + 2u),//e2,
                 NameOfVoulumeScheduleOrNull=null,
+                DefaultVolume=17,
                 
                 
             });
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L0_TECH_PUMP, BUS0 + I2C + 45, 0, 5000); //sollte 5sek nach Start an gehen und dann auch an bleiben RL14
-            SNSCT_L0_TECH_HS_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = BB + I2C + 46, WaittimeInMsec = DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS });//RL15 K115
-            SNSCT_L0_TECH_HS_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = BB + I2C + 47, WaittimeInMsec = DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS });//RL17 K117
+            SNSCT_L0_TECH_HS_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L0_TECH_48V), OutputRessource = BB + I2C + 48, WaittimeInMsec = DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS });//RL15 K115
+            SNSCT_L0_TECH_HS_1.Applications.Add(new StandbyControllerApplication { ApplicationId = _(ID.STDBY_L2_CORR_24V), OutputRessource = BB + I2C + 49, WaittimeInMsec = DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS });//RL17 K117
             
             //TODO:Heizungsanlage
 
@@ -175,11 +176,11 @@ namespace Klli.Sensact.Config
             #endregion
             #region LX
             //Back
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_P1, BB + I2C + 60, 1000 * 60 * 360); //RL18 K118
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_P3, BB + I2C + 56, 1000 * 60 * 360); //RL32 K132//Nur für Lampe!!!
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W1, BB + I2C + 51, 1000 * 60 * 360); //RL27 K127
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W2, BB + I2C + 50, 1000 * 60 * 360); //RL26 K126
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W3, BB + I2C + 49, 1000 * 60 * 360); //RL25 K125
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_P1, BB + I2C + 59, 1000 * 60 * 360); //RL18 K118
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_P3, BB + I2C + 58, 1000 * 60 * 360); //RL32 K132//Nur für Lampe!!!
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W1, BB + I2C + 53, 1000 * 60 * 360); //RL27 K127
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W2, BB + I2C + 52, 1000 * 60 * 360); //RL26 K126
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_BACK_W3, BB + I2C + 51, 1000 * 60 * 360); //RL25 K125
 			
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ID.BLIND_LX_BACK_J1, 40,BB + I2C + 25,BB + I2C + 35, RelayMode.INTERLOCKED_ACTIVE_DOWN);//K19 K20
 
@@ -203,21 +204,21 @@ namespace Klli.Sensact.Config
                 InputRessource = BB + I2C + 63, //Relais-Kabel
                 ActiveSignalLevel = false,
                 BrightnessSensor = _(ID.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
-                // FinalTarget = _(ID.POWIT_LX_FRON_W1),
+                FinalTarget = _(ID.NO_APPLICATION),
             });
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, BB + I2C + 55, 1000 * 60 * 2);//RL31 K131
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_FRON_W1, BB + I2C + 57, 1000 * 60 * 2);//RL31 K131
 
             //GARA
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_LX_GARA_B11, BB + I2C + 2, ID.POWIT_LX_GARA_C1);//4
             //SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.PUSHB_LX_GARA_B21, BUS0 + I2C + 0, ID.BLIND_LX_GARA_J1); //2
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_GARA_C1, BB + I2C + 54, 1000 * 60 * 360); //RL30 K130
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_GARA_C1, BB + I2C + 56, 1000 * 60 * 360); //RL30 K130
             //SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.BLIND_LX_GARA_J1, OutputPin.O18, 500); //unbeschriftet
 
             //LEFT
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_LEFT_W1, BB + I2C + 53, 1000 * 60 * 360); //RL29 K129
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_LEFT_W1, BB + I2C + 55, 1000 * 60 * 360); //RL29 K129
 
             //RGHT
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_RGHT_W1, BB + I2C + 52, 1000 * 60 * 360);//RL28 K128
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_LX_RGHT_W1, BB + I2C + 54, 1000 * 60 * 360);//RL28 K128
 
             #endregion
             #region L1
@@ -282,7 +283,7 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_KTCH_B31, BUS0 + I2C + 27, ID.PWM___L1_KTCH_S2);//76
             SNSCT_L0_TECH_HS_1.Applications.AddOneDimButton(ID.PUSHB_L1_KTCH_B32, BUS0 + I2C + 26, ID.PWM___L1_KTCH_S1);//74
 			//TODO obsolet SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_CORR_W1);//RL24
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_KTCH_C1, BUS0 + I2C + 48);//RL23 K123
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_KTCH_C1, BUS0 + I2C + 50);//RL23 K123
             //TODO obsolet SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_KTCH_W1, BB + I2C + 49);//RL22
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ID.BLIND_L1_KTCH_J1, 40, BUS0 + I2C + 18, BUS0 + I2C + 28, RelayMode.INTERLOCKED_ACTIVE_UP );//K5 K6
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ID.BLIND_L1_KTCH_J2, 40, BUS0 + I2C + 17, BUS0 + I2C + 27, RelayMode.INTERLOCKED_ACTIVE_UP );//K3 K4
@@ -325,8 +326,8 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ID.BLIND_L1_LVNG_J3,40, BUS0 + I2C + 21, BUS0 + I2C + 31, RelayMode.INTERLOCKED_ACTIVE_UP);//K11 K12
 
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_C1, BUS0 + I2C + 44);//RL11
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_P4, BUS0 + I2C + 61);//RL19 K119
-            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_P1, BUS0 + I2C + 62);//RL20
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_P4, BUS0 + I2C + 60);//RL19 K119
+            SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ID.POWIT_L1_LVNG_P1, BUS0 + I2C + 61);//RL20
             //W2 ist parallel zu W1 geschaltet
             //W3 ist noch nicht existente Effektbeleuchtung, sowohl für die Kaminregale als auch für die Wohnwand
             SNSCT_L0_TECH_HS_1.Applications.AddPWMApplication(ID.PWM___L1_LVNG_W4,ID.STDBY_L0_TECH_48V,new List<ushort> { BB + I2C + 14 } ); //Grünes Spezialkabel, das im Schaltschrank oben raus geht

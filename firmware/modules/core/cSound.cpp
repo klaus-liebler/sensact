@@ -222,6 +222,7 @@ static void mp3_random_play () {
 */
 eAppCallResult cSound::Setup() {
 
+	mp3_set_volume(this->lastSetVolume);
 	return BSP::SetDigitalOutput(this->output, BSP::INACTIVE)?eAppCallResult::OK:eAppCallResult::BUS_ERROR;
 }
 
@@ -232,17 +233,20 @@ eAppType cSound::GetAppType()
 
 void cSound::OnSET_SIGNALCommand(uint16_t signal, Time_t now)
 {
-	//mp3_stop();
-	//volumeSchedule->DoEachCycle(std::chrono::system_clock::now());
-	uint32_t vol = 15;
+	uint32_t vol = lastSetVolume;
 	if(this->volumeSchedule!=NULL)
 	{
 		vol = volumeSchedule->GetCurrentValue();
 	}
+
 	BSP::SetDigitalOutput(this->output, BSP::ACTIVE);
 	this->autoOffTimeMs=now+30000;
-	mp3_set_volume(vol);
-	HAL_Delay(20);
+	if(vol!=lastSetVolume)
+	{
+		mp3_set_volume(vol);
+		HAL_Delay(20);
+		this->lastSetVolume=vol;
+	}
 	mp3_play(signal);
 }
 
@@ -257,6 +261,7 @@ eAppCallResult cSound::DoEachCycle(Time_t now, uint8_t *statusBuffer, size_t *st
 	if(now>this->autoOffTimeMs)
 	{
 		BSP::SetDigitalOutput(this->output, BSP::INACTIVE);
+		this->autoOffTimeMs=TIME_MAX;
 	}
 	UNUSED(statusBuffer);
 	*statusBufferLength=0;

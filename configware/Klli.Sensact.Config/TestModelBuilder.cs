@@ -484,7 +484,7 @@ namespace Klli.Sensact.Config
                 },
             });
 
-            for (ushort i=2;i<63;i++)
+            for (ushort i=2;i<64;i++)
             {
                 TEST_HS08.Applications.Add(new PoweritemApplication
                 {
