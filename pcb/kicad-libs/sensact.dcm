@@ -30,4 +30,9 @@ K rotary switch encoder pushbutton
 F ~
 $ENDCMP
 #
+$CMP dr-mag-l834-1g1t-91
+K RJ45 Magjack
+F https://www.belfuse.com/resources/drawings/magneticsolutions/dr-mag-l834-1g1t-91.pdf
+$ENDCMP
+#
 #End Doc Library

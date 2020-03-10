@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew "(5.1.2)-1")
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.5)-3")
 
   (general
     (thickness 1.6)
@@ -12,12 +12,12 @@
   (page A4)
   (layers
     (0 F.Cu signal)
-    (31 B.Cu signal)
+    (31 B.Cu signal hide)
     (32 B.Adhes user hide)
     (33 F.Adhes user hide)
     (34 B.Paste user hide)
     (35 F.Paste user hide)
-    (36 B.SilkS user)
+    (36 B.SilkS user hide)
     (37 F.SilkS user)
     (38 B.Mask user hide)
     (39 F.Mask user hide)
@@ -27,7 +27,7 @@
     (43 Eco2.User user hide)
     (44 Edge.Cuts user)
     (45 Margin user hide)
-    (46 B.CrtYd user)
+    (46 B.CrtYd user hide)
     (47 F.CrtYd user)
     (48 B.Fab user hide)
     (49 F.Fab user hide)
@@ -67,7 +67,7 @@
     (pad_to_mask_clearance 0.051)
     (solder_mask_min_width 0.25)
     (aux_axis_origin 0 0)
-    (visible_elements 7EFFB86F)
+    (visible_elements 7FFFBE6F)
     (pcbplotparams
       (layerselection 0x010f0_ffffffff)
       (usegerberextensions false)
@@ -2953,7 +2953,7 @@
     )
   )
 
-  (module sensact:PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal (layer B.Cu) (tedit 5D605F16) (tstamp 5D80ABB1)
+  (module sensact:PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal (layer B.Cu) (tedit 5D605F16) (tstamp 5E312997)
     (at 63.881 100.838 90)
     (descr "Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V")
     (tags "phoenix_contact connector MC_01x08_G_3.5mm")
@@ -4568,7 +4568,7 @@
     )
   )
 
-  (module Button_Switch_THT:SW_Tactile_SPST_Angled_PTS645Vx83-2LFS (layer B.Cu) (tedit 5A02FE31) (tstamp 5D6ED473)
+  (module Button_Switch_THT:SW_Tactile_SPST_Angled_PTS645Vx83-2LFS (layer B.Cu) (tedit 5A02FE31) (tstamp 5E091B29)
     (at 82.0928 36.7496 270)
     (descr "tactile switch SPST right angle, PTS645VL83-2 LFS")
     (tags "tactile switch SPST angled PTS645VL83-2 LFS C&K Button")
@@ -4877,7 +4877,7 @@
     )
   )
 
-  (module Connector_IDC:IDC-Header_2x05_P2.54mm_Horizontal (layer B.Cu) (tedit 59DE1F47) (tstamp 5DC7150E)
+  (module Connector_IDC:IDC-Header_2x05_P2.54mm_Horizontal (layer B.Cu) (tedit 59DE1F47) (tstamp 5E092355)
     (at 131.318 73.406)
     (descr "Through hole angled IDC box header, 2x05, 2.54mm pitch, double rows")
     (tags "Through hole IDC box header THT 2x05 2.54mm double row")
@@ -5068,7 +5068,7 @@
     )
   )
 
-  (module Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder (layer F.Cu) (tedit 5B36C52B) (tstamp 5D6E86FA)
+  (module Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder (layer F.Cu) (tedit 5B36C52B) (tstamp 5E091ABD)
     (at 84.1375 38.9255 270)
     (descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
     (tags "resistor handsolder")
@@ -5899,7 +5899,7 @@
   (gr_line (start 81 94) (end 87 94) (layer Dwgs.User) (width 0.15))
   (gr_line (start 81 100) (end 81 94) (layer Dwgs.User) (width 0.15))
   (gr_line (start 77.5 62) (end 77.5 56) (layer Dwgs.User) (width 0.15) (tstamp 5D6F4053))
-  (gr_line (start 145 63) (end 147 63) (layer Dwgs.User) (width 0.15))
+  (gr_line (start 145 63) (end 147 63) (layer Dwgs.User) (width 0.15) (tstamp 5E091D4B))
   (gr_line (start 55 106) (end 82.5 106) (layer Dwgs.User) (width 0.15) (tstamp 5D611273))
   (gr_line (start 86 39) (end 76.75 39) (layer Dwgs.User) (width 0.15))
   (gr_line (start 122.5 40.25) (end 123.25 40.25) (layer Dwgs.User) (width 0.15))

@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name sensactHs2-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactHs2-rescue.lib)(options "")(descr ""))
+)
