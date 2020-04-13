@@ -13,17 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L MCU_ST_STM32F0:STM32F072R8Tx U1
-U 1 1 5E28417F
-P 2000 2750
-F 0 "U1" H 2000 861 50  0000 C CNN
-F 1 "STM32F072R8Tx" H 2000 770 50  0000 C CNN
-F 2 "sensact:LQFP-64_10x10mm_P0.5mm_handsolder" H 1400 1050 50  0001 R CNN
-F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00090510.pdf" H 2000 2750 50  0001 C CNN
-	1    2000 2750
-	1    0    0    -1  
-$EndComp
 $Sheet
 S 3950 1550 700  450 
 U 5E2885AD
@@ -195,8 +184,6 @@ $EndComp
 Connection ~ 2200 4550
 Text Label 2950 6700 0    50   ~ 0
 SWDIO
-Text Label 2950 6300 0    50   ~ 0
-TX
 Text Label 2950 7200 0    50   ~ 0
 RX
 $Comp
@@ -438,7 +425,7 @@ F 3 "" H 1800 950 50  0001 C CNN
 	1    1800 950 
 	1    0    0    -1  
 $EndComp
-Text GLabel 2700 3150 2    50   Output ~ 0
+Text GLabel 1000 5800 2    50   Output ~ 0
 LCD_CLK
 Text GLabel 2700 3350 2    50   Output ~ 0
 LCD_MOSI
@@ -921,8 +908,6 @@ Text Label 2950 6600 0    50   ~ 0
 SWCLK
 Text Label 2950 6500 0    50   ~ 0
 SWCLK
-Text Label 2950 6200 0    50   ~ 0
-TX
 Text Label 2950 7100 0    50   ~ 0
 RX
 Wire Notes Line
@@ -1066,9 +1051,9 @@ Text GLabel 2700 1550 2    50   Output ~ 0
 DAC0
 Text GLabel 2700 1650 2    50   Output ~ 0
 DAC1
-Text GLabel 1300 2450 0    50   Input ~ 0
+Text GLabel 1300 2550 0    50   Input ~ 0
 I14
-Text GLabel 1300 2350 0    50   Input ~ 0
+Text GLabel 1300 2450 0    50   Input ~ 0
 I15
 Text GLabel 10100 2450 0    50   Input ~ 0
 LCD_RST
@@ -1202,8 +1187,6 @@ F 3 "" H 3800 7500 50  0001 C CNN
 	1    3800 7500
 	1    0    0    -1  
 $EndComp
-NoConn ~ 4400 7200
-NoConn ~ 4400 7100
 Connection ~ 4850 6250
 Wire Wire Line
 	4850 6300 4850 6250
@@ -1418,4 +1401,140 @@ F 3 "https://www.usb.org/sites/default/files/documents/usb_type-c.zip" H 2500 66
 	1    2350 6600
 	1    0    0    -1  
 $EndComp
+NoConn ~ 4400 7100
+NoConn ~ 4400 7200
+$Comp
+L MCU_ST_STM32F1:STM32F103R8Tx U1
+U 1 1 5E6D39DC
+P 2000 2750
+F 0 "U1" H 2000 861 50  0000 C CNN
+F 1 "STM32F103R8Tx" H 2000 770 50  0000 C CNN
+F 2 "sensact:LQFP-64_10x10mm_P0.5mm_handsolder" H 1400 1050 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00161566.pdf" H 2000 2750 50  0001 C CNN
+	1    2000 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L ESP8266:ESP-01v090 U8
+U 1 1 5E6DA2EE
+P 7700 4300
+F 0 "U8" H 7700 4815 50  0000 C CNN
+F 1 "ESP-01v090" H 7700 4724 50  0000 C CNN
+F 2 "ESP8266:ESP-01" H 7700 4300 50  0001 C CNN
+F 3 "http://l0l.org.uk/2014/12/esp8266-modules-hardware-guide-gotta-catch-em-all/" H 7700 4300 50  0001 C CNN
+	1    7700 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR091
+U 1 1 5E6DB405
+P 8650 4150
+F 0 "#PWR091" H 8650 3900 50  0001 C CNN
+F 1 "GND" V 8655 4022 50  0000 R CNN
+F 2 "" H 8650 4150 50  0001 C CNN
+F 3 "" H 8650 4150 50  0001 C CNN
+	1    8650 4150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3V3 #PWR090
+U 1 1 5E6DBE66
+P 6750 4450
+F 0 "#PWR090" H 6750 4300 50  0001 C CNN
+F 1 "+3V3" V 6765 4578 50  0000 L CNN
+F 2 "" H 6750 4450 50  0001 C CNN
+F 3 "" H 6750 4450 50  0001 C CNN
+	1    6750 4450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3V3 #PWR07
+U 1 1 5E6DCB65
+P 6750 4250
+F 0 "#PWR07" H 6750 4100 50  0001 C CNN
+F 1 "+3V3" V 6765 4378 50  0000 L CNN
+F 2 "" H 6750 4250 50  0001 C CNN
+F 3 "" H 6750 4250 50  0001 C CNN
+	1    6750 4250
+	0    -1   -1   0   
+$EndComp
+Text GLabel 8650 4250 2    50   BiDi ~ 0
+SCL1
+Text GLabel 8650 4350 2    50   BiDi ~ 0
+SDA1
+$Comp
+L power:+3V3 #PWR092
+U 1 1 5E6DD75D
+P 9950 3950
+F 0 "#PWR092" H 9950 3800 50  0001 C CNN
+F 1 "+3V3" V 9965 4078 50  0000 L CNN
+F 2 "" H 9950 3950 50  0001 C CNN
+F 3 "" H 9950 3950 50  0001 C CNN
+	1    9950 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R17
+U 1 1 5E6DDBFA
+P 9950 4100
+F 0 "R17" H 10020 4146 50  0000 L CNN
+F 1 "1k" H 10020 4055 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 9880 4100 50  0001 C CNN
+F 3 "~" H 9950 4100 50  0001 C CNN
+	1    9950 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R16
+U 1 1 5E6DE2A9
+P 9700 4100
+F 0 "R16" H 9770 4146 50  0000 L CNN
+F 1 "1k" H 9770 4055 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 9630 4100 50  0001 C CNN
+F 3 "~" H 9700 4100 50  0001 C CNN
+	1    9700 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9950 3950 9700 3950
+Connection ~ 9950 3950
+Text GLabel 9950 4250 3    50   BiDi ~ 0
+SDA1
+Text GLabel 9700 4250 3    50   BiDi ~ 0
+SCL1
+Text GLabel 4050 4250 2    50   Input ~ 0
+DAC0
+Text GLabel 4050 4350 2    50   Input ~ 0
+DAC1
+Text GLabel 4700 4450 2    50   Input ~ 0
+LCD_CLK
+$Comp
+L Device:R R18
+U 1 1 5E777A3D
+P 4550 4450
+F 0 "R18" V 4343 4450 50  0000 C CNN
+F 1 "22R" V 4434 4450 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4480 4450 50  0001 C CNN
+F 3 "~" H 4550 4450 50  0001 C CNN
+	1    4550 4450
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4400 4450 4050 4450
+Text GLabel 1000 5900 2    50   Output ~ 0
+SWO
+Text GLabel 2700 3150 2    50   Output ~ 0
+PB3
+Text GLabel 900  5850 0    50   Input ~ 0
+PB3
+Wire Wire Line
+	900  5800 1000 5800
+Wire Wire Line
+	900  5900 1000 5900
+Wire Wire Line
+	900  5800 900  5900
+Text GLabel 2950 6200 2    50   Input ~ 0
+SWO
+Text GLabel 2950 6300 2    50   Input ~ 0
+SWO
 $EndSCHEMATC
