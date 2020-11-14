@@ -425,7 +425,7 @@ F 3 "" H 1800 950 50  0001 C CNN
 	1    1800 950 
 	1    0    0    -1  
 $EndComp
-Text GLabel 1000 5800 2    50   Output ~ 0
+Text GLabel 1000 6000 2    50   Output ~ 0
 LCD_CLK
 Text GLabel 2700 3350 2    50   Output ~ 0
 LCD_MOSI
@@ -1506,33 +1506,29 @@ Text GLabel 4050 4250 2    50   Input ~ 0
 DAC0
 Text GLabel 4050 4350 2    50   Input ~ 0
 DAC1
-Text GLabel 4700 4450 2    50   Input ~ 0
-LCD_CLK
 $Comp
 L Device:R R18
 U 1 1 5E777A3D
-P 4550 4450
-F 0 "R18" V 4343 4450 50  0000 C CNN
-F 1 "22R" V 4434 4450 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4480 4450 50  0001 C CNN
-F 3 "~" H 4550 4450 50  0001 C CNN
-	1    4550 4450
+P 1150 5900
+F 0 "R18" V 943 5900 50  0000 C CNN
+F 1 "22R" V 1034 5900 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 1080 5900 50  0001 C CNN
+F 3 "~" H 1150 5900 50  0001 C CNN
+	1    1150 5900
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	4400 4450 4050 4450
-Text GLabel 1000 5900 2    50   Output ~ 0
+Text GLabel 1300 5900 2    50   Output ~ 0
 SWO
 Text GLabel 2700 3150 2    50   Output ~ 0
 PB3
-Text GLabel 900  5850 0    50   Input ~ 0
+Text GLabel 900  5950 0    50   Input ~ 0
 PB3
-Wire Wire Line
-	900  5800 1000 5800
 Wire Wire Line
 	900  5900 1000 5900
 Wire Wire Line
-	900  5800 900  5900
+	900  6000 1000 6000
+Wire Wire Line
+	900  5900 900  6000
 Text GLabel 2950 6200 2    50   Input ~ 0
 SWO
 Text GLabel 2950 6300 2    50   Input ~ 0

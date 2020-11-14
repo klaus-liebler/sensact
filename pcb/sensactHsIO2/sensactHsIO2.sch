@@ -1415,7 +1415,7 @@ F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/da
 	1    0    0    -1  
 $EndComp
 $Comp
-L ESP8266:ESP-01v090 U8
+L sensactHsIO2-rescue:ESP-01v090-ESP8266 U8
 U 1 1 5E6DA2EE
 P 7700 4300
 F 0 "U8" H 7700 4815 50  0000 C CNN

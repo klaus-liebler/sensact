@@ -1,0 +1,16 @@
+Zentrale:
+Hutschiene, senkrecht montiert
+ESP32 mit JTAG über SMD 1,27mm Connectors (siehe labathome::ptn)
+Spannungsversorgung via LMR14206 (sensactHs2 -->io.sch)
+TAS5806M
+CAN-Bus (sensactHS2 -->io.sch)
+1Wire-Bus
+Lin-Bus
+Sensact-Bus
+Netzwerk-Switch mit KSZ8863
+Betriebsanzeige über RGB-LED und I2C-Display im Edge-Connect-Verfahren
+Spezielle IOs, von denen man nur wenige Benötigt: hmm?
+
+Outputs via PCA9685; per Jumper wählbar, ob die Outputs direkt weiter geleitet werden oder ob ein nach Masse schaltender Mosfet aktiv ist
+
+Inputs über PCA9555 und ESD-Protection (sensactHS -->input)

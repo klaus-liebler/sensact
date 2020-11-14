@@ -1,0 +1,151 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L sensact:HR911105A J4
+U 1 1 5FA2473F
+P 1250 1550
+F 0 "J4" H 1428 1608 60  0000 L CNN
+F 1 "HR911105A" H 1428 1502 60  0000 L CNN
+F 2 "smopla:RJ45_Hanrun_HR911105Ax2" H 1250 1600 60  0001 C CNN
+F 3 "" H 1250 1600 60  0001 C CNN
+	1    1250 1550
+	-1   0    0    -1  
+$EndComp
+$Comp
+L smopla:KSZ8863RLL U2
+U 1 1 5FA24968
+P 3450 2550
+F 0 "U2" H 3450 2600 50  0000 L CNN
+F 1 "KSZ8863RLL" H 3450 2500 50  0000 L CNN
+F 2 "sensact:LQFP-48_7x7mm_P0.5mm_handsolder" H 3450 2550 50  0001 C CNN
+F 3 "" H 3450 2550 50  0001 C CNN
+	1    3450 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5FA27DB5
+P 2100 2500
+F 0 "R5" V 2000 2500 50  0000 C CNN
+F 1 "11K8" V 2100 2500 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 2030 2500 50  0001 C CNN
+F 3 "~" H 2100 2500 50  0001 C CNN
+	1    2100 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR013
+U 1 1 5FA28CFB
+P 1950 2500
+F 0 "#PWR013" H 1950 2250 50  0001 C CNN
+F 1 "GND" V 1955 2372 50  0000 R CNN
+F 2 "" H 1950 2500 50  0001 C CNN
+F 3 "" H 1950 2500 50  0001 C CNN
+	1    1950 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2350 2500 2250 2500
+Wire Wire Line
+	2350 2000 2350 1450
+Wire Wire Line
+	2350 1450 1650 1450
+Wire Wire Line
+	2350 2100 2250 2100
+Wire Wire Line
+	2250 2100 2250 1150
+Wire Wire Line
+	2250 1150 1650 1150
+Wire Wire Line
+	2350 2200 2150 2200
+Wire Wire Line
+	2150 2200 2150 1050
+Wire Wire Line
+	2150 1050 1650 1050
+Wire Wire Line
+	2350 2300 2050 2300
+Wire Wire Line
+	2050 2300 2050 950 
+Wire Wire Line
+	2050 950  1650 950 
+Wire Wire Line
+	2350 2700 1850 2700
+Wire Wire Line
+	2350 3000 1700 3000
+Wire Wire Line
+	2350 3100 1750 3100
+Wire Wire Line
+	2350 2800 1800 2800
+Text Label 3100 1850 1    50   ~ 0
+P2LED0
+Text Label 3200 1850 1    50   ~ 0
+P2LED1
+Text Label 3300 1850 1    50   ~ 0
+P1LED0
+Text Label 3400 1850 1    50   ~ 0
+P1LED1
+Text Label 1650 3250 0    50   ~ 0
+P2LED1
+Text Label 1650 1850 0    50   ~ 0
+P1LED0
+Text Label 1650 1950 0    50   ~ 0
+P1LED1
+Text GLabel 3900 3250 3    50   Output ~ 0
+ETH_REF_CLK
+Text GLabel 3200 3250 3    50   Output ~ 0
+ETH_CRS_DV
+Text GLabel 3500 3250 3    50   Output ~ 0
+ETH_RXD1
+Text GLabel 3600 3250 3    50   Output ~ 0
+ETH_RXD0
+Text GLabel 4550 3100 2    50   Input ~ 0
+ETH_TX_EN
+Text GLabel 4550 2800 2    50   Input ~ 0
+ETH_TXD1
+Text GLabel 4550 2700 2    50   Input ~ 0
+ETH_TXD0
+Text GLabel 4000 3250 3    50   Output ~ 0
+ETH_RX_ERR
+Text GLabel 4550 2000 2    50   BiDi ~ 0
+SCL1
+Text GLabel 4000 1850 1    50   BiDi ~ 0
+SDA1
+NoConn ~ 3900 1850
+NoConn ~ 3800 1850
+NoConn ~ 2900 1850
+NoConn ~ 3000 1850
+NoConn ~ 4550 2100
+Text GLabel 3300 3250 3    50   Input ~ 0
+ETH_POWER
+Wire Wire Line
+	1750 2250 1650 2250
+Wire Wire Line
+	1750 2250 1750 3100
+Wire Wire Line
+	1700 2350 1650 2350
+Wire Wire Line
+	1700 2350 1700 3000
+Wire Wire Line
+	1800 2450 1650 2450
+Wire Wire Line
+	1800 2450 1800 2800
+Wire Wire Line
+	1850 2700 1850 2750
+Wire Wire Line
+	1850 2750 1650 2750
+Text Label 1650 3150 0    50   ~ 0
+P2LED0
+$EndSCHEMATC
