@@ -1,0 +1,2 @@
+	void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx) override;
+	void OnSTARTCommand(SensactContext *ctx) override;

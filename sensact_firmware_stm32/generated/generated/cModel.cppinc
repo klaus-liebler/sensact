@@ -1,0 +1,5776 @@
+/*
+@file		hc_model.cpp
+@author		autogen
+@version	1.0
+@date		02/02/2021 22:29:40 (Rendered)
+@brief		Sattlerstraße 16 created from GIT Head SHA ea29f6371a5d33c7621cecf1e6bda050edf38681
+@details	All params and details about the home model
+@copyright	(c) 2015 mail at klaus - liebler . de === GNU GPL v3
+ */
+
+
+//Known Nodes are
+//NODE_SNSCT_L0_TECH_HS_1
+//NODE_SNSCT_L3_TECH_HS_1
+//NODE_SNSCT_L1_KTCH_UP
+//NODE_SNSCT_L1_LVNG_UP
+//NODE_SNSCT_L2_BATH_UP
+
+
+
+using namespace std;
+
+namespace sensactcore {
+
+const char * const MODEL::ApplicationNames[]={
+"NO_APPLICATION",
+"MASTER",
+"SNSCT_L0_TECH_HS_1",
+"SNSCT_L0_TECH_HS_2",
+"SNSCT_L3_TECH_HS_1",
+"SNSCT_L3_TECH_HS_2",
+"SNSCT_L1_LVNG_UP",
+"SNSCT_L1_KTCH_UP",
+"SNSCT_L2_BATH_UP",
+"PUSHB_L0_CORR_B11",
+"PUSHB_L0_CORR_B21",
+"PUSHB_L0_CORR_B31",
+"POWIT_L0_CORR_C1",
+"SCLIM_L0_CORR_AIR",
+"PUSHB_L0_PRTY_B11",
+"PUSHB_L0_PRTY_B12",
+"POWIT_L0_PRTY_P1",
+"POWIT_L0_PRTY_P2",
+"PWM___L0_PRTY_S",
+"STEMP_L0_PRTY_AIR",
+"VALVE_L0_PRTY_V1",
+"VALVE_L0_PRTY_V2",
+"PUSHB_L0_STO1_B11",
+"POWIT_L0_STO1_C1",
+"SCLIM_L0_STO1_AIR",
+"PUSHB_L0_TECH_B11",
+"POWIT_L0_TECH_C1",
+"DEVCE_L0_TECH_HEAT",
+"DEVCE_L0_TECH_PUMP",
+"POWIT_L0_TECH_PUMP",
+"POWIT_L0_TECH_P1",
+"POWIT_L0_TECH_P2",
+"SCLIM_L0_TECH_AIR",
+"VALVE_L0_TECH",
+"PUSHB_L0_WELL_B11",
+"PUSHB_L0_WELL_B12",
+"PUSHB_L0_WELL_B21",
+"PUSHB_L0_WELL_B22",
+"POWIT_L0_WELL_C1",
+"POWIT_L0_WELL_P1",
+"POWIT_L0_WELL_P2",
+"PWM___L0_WELL_S1",
+"PWM___L0_WELL_S2",
+"SCLIM_L0_WELL_AIR",
+"VALVE_L0_WELL",
+"PUSHB_L0_WORK_B11",
+"POWIT_L0_WORK_C1",
+"SCLIM_L0_WORK_AIR",
+"VALVE_L0_WORK",
+"PUSHB_L1_BATH_B11",
+"PUSHB_L1_BATH_B12",
+"PUSHB_L1_BATH_B13",
+"BLIND_L1_BATH_J1",
+"PWM___L1_BATH_S",
+"RGBW__L1_BATH_W1",
+"SCLIM_L1_BATH_AIR",
+"STEMP_L1_BATH_FLOOR",
+"SWIND_L1_BATH_W1",
+"VALVE_L1_BATH",
+"DEVCE_L0_TECH_AUDIO",
+"PUSHB_L1_CORR_B11",
+"PUSHB_L1_CORR_B21",
+"PUSHB_L1_CORR_B22",
+"PUSHB_L1_CORR_B23",
+"PUSHB_L1_CORR_B24",
+"PUSHB_L1_CORR_B25",
+"PUSHB_L1_CORR_B26",
+"POWIT_L1_CORR_P1",
+"POWIT_L1_CORR_P2",
+"PWM___L1_CORR_S",
+"POWIT_L1_CORR_W1",
+"PWM___L1_CORR_W1",
+"SCLIM_L1_CORR_AIR",
+"STEMP_L1_CORR_FLOOR",
+"SDOOR_L1_CORR",
+"VALVE_L1_CORR",
+"PUSHB_L1_KTCH_B11",
+"PUSHB_L1_KTCH_B12",
+"ROTAR_L1_KTCH_B21",
+"PUSHB_L1_KTCH_B22",
+"PUSHB_L1_KTCH_B23",
+"PUSHB_L1_KTCH_B24",
+"PUSHB_L1_KTCH_B25",
+"PUSHB_L1_KTCH_B26",
+"PUSHB_L1_KTCH_B27",
+"PUSHB_L1_KTCH_B28",
+"PUSHB_L1_KTCH_B31",
+"PUSHB_L1_KTCH_B32",
+"POWIT_L1_KTCH_C1",
+"PWM___L1_KTCH_C1",
+"BLIND_L1_KTCH_J1",
+"BLIND_L1_KTCH_J2",
+"BLIND_L1_KTCH_P1",
+"BLIND_L1_KTCH_P2",
+"PWM___L1_KTCH_S1",
+"PWM___L1_KTCH_S2",
+"POWIT_L1_KTCH_W1_Dummy",
+"PWM___L1_KTCH_W1",
+"SCLIM_L1_KTCH_AIR",
+"STEMP_L1_KTCH_FLOOR",
+"SWIND_L1_KTCH_W1",
+"SWIND_L1_KTCH_W2",
+"VALVE_L1_KTCH",
+"PUSHB_L1_LVNG_B11",
+"PUSHB_L1_LVNG_B12",
+"PUSHB_L1_LVNG_B13",
+"PUSHB_L1_LVNG_B14",
+"PUSHB_L1_LVNG_B15",
+"PUSHB_L1_LVNG_B16",
+"PUSHB_L1_LVNG_B21",
+"PUSHB_L1_LVNG_B22",
+"PUSHB_L1_LVNG_B23",
+"PUSHB_L1_LVNG_B31",
+"PUSHB_L1_LVNG_B32",
+"PUSHB_L1_LVNG_B33",
+"PUSHB_L1_LVNG_B34",
+"PUSHB_L1_LVNG_B35",
+"PUSHB_L1_LVNG_B36",
+"ROTAR_L1_LVNG_B41",
+"PUSHB_L1_LVNG_B42",
+"PUSHB_L1_LVNG_B43",
+"PUSHB_L1_LVNG_B44",
+"PUSHB_L1_LVNG_B51",
+"PUSHB_L1_LVNG_B52",
+"PUSHB_L1_LVNG_B53",
+"POWIT_L1_LVNG_C1",
+"PWM___L1_LVNG_C2",
+"BLIND_L1_LVNG_J1",
+"BLIND_L1_LVNG_J2",
+"BLIND_L1_LVNG_J3",
+"POWIT_L1_LVNG_P1",
+"POWIT_L1_LVNG_P2",
+"POWIT_L1_LVNG_P4",
+"POWIT_L1_LVNG_P5",
+"PWM___L1_LVNG_S",
+"POWIT_L1_LVNG_W1",
+"PWM___L1_LVNG_W1",
+"RGBW__L1_LVNG_W3",
+"PWM___L1_LVNG_W4",
+"SCLIM_L1_LVNG_AIR",
+"SCLIM_L1_LVNG_AIR2",
+"STEMP_L1_LVNG_FLOOR",
+"SWIND_L1_LVNG_W1",
+"SWIND_L1_LVNG_W2",
+"SWIND_L1_LVNG_W3",
+"VALVE_L1_LVNG",
+"PUSHB_L1_UTIL_B11",
+"PUSHB_L1_UTIL_B12",
+"PUSHB_L1_UTIL_B13",
+"PUSHB_L1_UTIL_B21",
+"PUSHB_L1_UTIL_B22",
+"PUSHB_L1_UTIL_B23",
+"PUSHB_L1_UTIL_B24",
+"POWIT_L1_UTIL_C1",
+"BLIND_L1_UTIL_J1",
+"SCLIM_L1_UTIL_AIR",
+"STEMP_L1_UTIL_FLOOR",
+"SWIND_L1_UTIL_W1",
+"SDOOR_L1_UTIL_D1",
+"VALVE_L1_UTIL",
+"PUSHB_L1_WORK_B11",
+"PUSHB_L1_WORK_B12",
+"PUSHB_L1_WORK_B13",
+"PUSHB_L1_WORK_B14",
+"PUSHB_L1_WORK_B15",
+"PUSHB_L1_WORK_B16",
+"PUSHB_L1_WORK_B17",
+"POWIT_L1_WORK_C1",
+"POWIT_L1_WORK_C2",
+"BLIND_L1_WORK_J1",
+"BLIND_L1_WORK_J2",
+"POWIT_L1_WORK_P1",
+"POWIT_L1_WORK_P2",
+"SCLIM_L1_WORK_AIR",
+"STEMP_L1_WORK_FLOOR",
+"SWIND_L1_WORK_W1",
+"SWIND_L1_WORK_W2",
+"VALVE_L1_WORK",
+"BLIND_LX_BACK_J1",
+"POWIT_LX_BACK_P1",
+"POWIT_LX_BACK_P2",
+"POWIT_LX_BACK_P3",
+"POWIT_LX_BACK_P4",
+"POWIT_LX_BACK_W1",
+"POWIT_LX_BACK_W2",
+"POWIT_LX_BACK_W3",
+"POWIT_LX_CARP_P1",
+"POWIT_LX_CARP_P2",
+"PUSHB_LX_FRON_B1",
+"LIBAR_LX_FRON_B2",
+"POWIT_LX_FRON_W1",
+"PUSHB_LX_GARA_B11",
+"PUSHB_LX_GARA_B21",
+"POWIT_LX_GARA_C1",
+"POWIT_LX_GARA_P1",
+"POWIT_LX_GARA_P2",
+"BLIND_LX_GARA_J1",
+"POWIT_LX_LEFT_W1",
+"POWIT_LX_RGHT_W1",
+"ROTAR_L2_BATH_B11",
+"ROTAR_L2_BATH_B12",
+"PUSHB_L2_BATH_B13",
+"PUSHB_L2_BATH_B14",
+"BLIND_L2_BATH_J1",
+"PWM___L2_BATH_S",
+"POWIT_L2_BATH_P1",
+"POWIT_L2_BATH_P2",
+"RGBW__L2_BATH_W",
+"SCLIM_L2_BATH_AIR",
+"STEMP_L2_BATH_FLOOR",
+"SWIND_L2_BATH",
+"VALVE_L2_BATH",
+"PUSHB_L2_BEDR_B11",
+"PUSHB_L2_BEDR_B12",
+"PUSHB_L2_BEDR_B13",
+"PUSHB_L2_BEDR_B14",
+"PUSHB_L2_BEDR_B15",
+"PUSHB_L2_BEDR_B21",
+"PUSHB_L2_BEDR_B22",
+"PUSHB_L2_BEDR_B23",
+"PUSHB_L2_BEDR_B24",
+"PUSHB_L2_BEDR_B25",
+"PUSHB_L2_BEDR_B31",
+"PUSHB_L2_BEDR_B32",
+"PUSHB_L2_BEDR_B33",
+"PUSHB_L2_BEDR_B34",
+"PUSHB_L2_BEDR_B35",
+"PUSHB_L2_BEDR_B36",
+"BLIND_L2_BEDR_J1",
+"POWIT_L2_BEDR_P1",
+"POWIT_L2_BEDR_P2",
+"POWIT_L2_BEDR_P3",
+"PWM___L2_BEDR_S",
+"SCLIM_L2_BEDR_AIR",
+"STEMP_L2_BEDR_FLOOR",
+"SWIND_L2_BEDR",
+"VALVE_L2_BEDR",
+"PUSHB_L2_CORR_B11",
+"PUSHB_L2_CORR_B21",
+"PUSHB_L2_CORR_B31",
+"PUSHB_L2_CORR_B41",
+"PUSHB_L2_CORR_B42",
+"PUSHB_L2_CORR_B43",
+"BLIND_L2_CORR_J1",
+"POWIT_L2_CORR_P1",
+"POWIT_L2_CORR_P2",
+"PWM___L2_CORR_S",
+"SCLIM_L2_CORR_AIR",
+"STEMP_L2_CORR_FLOOR",
+"SWIND_L2_CORR",
+"VALVE_L2_CORR",
+"PUSHB_L2_KID1_B11",
+"PUSHB_L2_KID1_B12",
+"PUSHB_L2_KID1_B13",
+"PUSHB_L2_KID1_B21",
+"PUSHB_L2_KID1_B22",
+"PWM___L2_KID1_C1",
+"POWIT_L2_KID1_C1",
+"POWIT_L2_KID1_C2",
+"BLIND_L2_KID1_J1",
+"POWIT_L2_KID1_P1",
+"POWIT_L2_KID1_P2",
+"SCLIM_L2_KID1_AIR",
+"STEMP_L2_KID1_FLOOR",
+"SWIND_L2_KID1",
+"VALVE_L2_KID1",
+"PUSHB_L2_KID2_B11",
+"PUSHB_L2_KID2_B12",
+"PUSHB_L2_KID2_B13",
+"PWM___L2_KID2_C1",
+"POWIT_L2_KID2_C1",
+"BLIND_L2_KID2_J1",
+"POWIT_L2_KID2_P1",
+"POWIT_L2_KID2_P2",
+"SCLIM_L2_KID2_AIR",
+"STEMP_L2_KID2_FLOOR",
+"SWIND_L2_KID2",
+"VALVE_L2_KID2",
+"PUSHB_L2_WORK_B11",
+"PUSHB_L2_WORK_B12",
+"PUSHB_L2_WORK_B13",
+"BLIND_L2_WORK_J1",
+"PWM___L2_WORK_S",
+"SCLIM_L2_WORK_AIR",
+"STEMP_L2_WORK_FLOOR",
+"SWIND_L2_WORK",
+"VALVE_L2_WORK",
+"PUSHB_L3_BEDR_B11",
+"PUSHB_L3_BEDR_B12",
+"PUSHB_L3_BEDR_B13",
+"PUSHB_L3_BEDR_B14",
+"POWIT_L3_BEDR_C1",
+"BLIND_L3_BEDR_J1",
+"SCLIM_L3_BEDR_AIR",
+"POWIT_L3_BEDR_P1",
+"POWIT_L3_BEDR_P2",
+"SWIND_L3_BEDR",
+"VALVE_L3_BEDR",
+"PUSHB_L3_CORR_Dummy1",
+"PUSHB_L3_CORR_Dummy2",
+"PUSHB_L3_CORR_Dummy3",
+"PWM___L3_CORR_S",
+"DEVCE_L3_TECH_VENT",
+"DEVCE_L3_TECH_SATI",
+"DEVCE_L3_TECH_DUMMY",
+"PUSHB_L3_WORK_B11",
+"PUSHB_L3_WORK_B12",
+"PUSHB_L3_WORK_B13",
+"PUSHB_L3_WORK_B14",
+"PUSHB_L3_WORK_B15",
+"PWM___L3_WORK_C1",
+"BLIND_L3_WORK_J1",
+"BLIND_L3_WORK_J2",
+"POWIT_L3_WORK_P1",
+"POWIT_L3_WORK_P2",
+"PWM___L3_WORK_S",
+"SCLIM_L3_WORK_AIR",
+"SWIND_L3_WORK_W1",
+"SWIND_L3_WORK_W2",
+"VALVE_L3_WORK",
+"LIBAR_LS_STRS_B11",
+"PUSHB_LS_STRS_B21",
+"PUSHB_LS_STRS_B22",
+"PUSHB_LS_STRS_B23",
+"LIBAR_LS_STRS_B31",
+"LIBAR_LS_STRS_B32",
+"PUSHB_LS_STRS_B41",
+"PUSHB_LS_STRS_B42",
+"PUSHB_LS_STRS_B43",
+"LIBAR_LS_STRS_B51",
+"LIBAR_LS_STRS_B52",
+"LIBAR_LS_STRS_B71",
+"PWM___LS_STRS_W1",
+"PWM___LS_STRS_W2",
+"PWM___LS_STRS_W3",
+"PWM___LS_STRS_W4",
+"PWM___LS_STRS_W5",
+"PWM___LS_STRS_W6",
+"STEMP_LX_ROOF",
+"SBRGH_LX_ROOF",
+"SPRES_LX_ROOF",
+"SWIND_LX_ROOF",
+"SANEM_LX_ROOF",
+"SMOKE_L0_CORR",
+"SMOKE_L0_LVNG",
+"SMOKE_L1_CORR",
+"SMOKE_L1_BEDR",
+"SMOKE_L1_KID1",
+"SMOKE_L1_KID2",
+"SMOKE_L3_BEDR",
+"SMOKE_L3_CORR",
+"STDBY_L0_TECH_48V",
+"STDBY_L2_CORR_24V",
+"STDBY_L3_TECH_48V",
+"STDBY_L3_ROOF_48V",
+"STDBY_L3_WORK_C1",
+	};
+
+
+#ifdef NODE_SNSCT_L0_TECH_HS_1
+
+const eNodeID MODEL::NodeID = eNodeID::SNSCT_L0_TECH_HS_1;
+
+
+
+const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+}//end namespace
+namespace sensactcore{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
+
+// PushButtonX PUSHB_L0_CORR_B11
+const Command PUSHB_L0_CORR_B11_OnPressed[2]={{eApplicationID::POWIT_L0_CORR_C1, eCommandType::TOGGLE, 0, 0, },{eApplicationID::PWM___LS_STRS_W2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_CORR_B11_OnReleased=0;
+const Command *const PUSHB_L0_CORR_B11_OnReleasedShort=0;
+const Command *const PUSHB_L0_CORR_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_CORR_B11_OnReleasedLong=0;
+const Command *const PUSHB_L0_CORR_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_CORR_B11_LocalEvents=0;
+eEventType *PUSHB_L0_CORR_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_CORR_B11(eApplicationID::PUSHB_L0_CORR_B11, 16397, PUSHB_L0_CORR_B11_LocalEvents, 0, PUSHB_L0_CORR_B11_BusEvents, 0, PUSHB_L0_CORR_B11_OnPressed, 2, PUSHB_L0_CORR_B11_OnReleased, 0, PUSHB_L0_CORR_B11_OnReleasedShort, 0, PUSHB_L0_CORR_B11_OnPressedShortAndHold, 0, PUSHB_L0_CORR_B11_OnReleasedLong, 0, PUSHB_L0_CORR_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L0_CORR_B21
+const Command PUSHB_L0_CORR_B21_OnPressed[2]={{eApplicationID::POWIT_L0_CORR_C1, eCommandType::TOGGLE, 0, 0, },{eApplicationID::PWM___LS_STRS_W2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_CORR_B21_OnReleased=0;
+const Command *const PUSHB_L0_CORR_B21_OnReleasedShort=0;
+const Command *const PUSHB_L0_CORR_B21_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_CORR_B21_OnReleasedLong=0;
+const Command *const PUSHB_L0_CORR_B21_OnDoubleclick=0;
+eEventType *PUSHB_L0_CORR_B21_LocalEvents=0;
+eEventType *PUSHB_L0_CORR_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_CORR_B21(eApplicationID::PUSHB_L0_CORR_B21, 16396, PUSHB_L0_CORR_B21_LocalEvents, 0, PUSHB_L0_CORR_B21_BusEvents, 0, PUSHB_L0_CORR_B21_OnPressed, 2, PUSHB_L0_CORR_B21_OnReleased, 0, PUSHB_L0_CORR_B21_OnReleasedShort, 0, PUSHB_L0_CORR_B21_OnPressedShortAndHold, 0, PUSHB_L0_CORR_B21_OnReleasedLong, 0, PUSHB_L0_CORR_B21_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L0_CORR_B31
+const Command PUSHB_L0_CORR_B31_OnPressed[2]={{eApplicationID::POWIT_L0_CORR_C1, eCommandType::TOGGLE, 0, 0, },{eApplicationID::PWM___LS_STRS_W2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_CORR_B31_OnReleased=0;
+const Command *const PUSHB_L0_CORR_B31_OnReleasedShort=0;
+const Command *const PUSHB_L0_CORR_B31_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_CORR_B31_OnReleasedLong=0;
+const Command *const PUSHB_L0_CORR_B31_OnDoubleclick=0;
+eEventType *PUSHB_L0_CORR_B31_LocalEvents=0;
+eEventType *PUSHB_L0_CORR_B31_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_CORR_B31(eApplicationID::PUSHB_L0_CORR_B31, 16395, PUSHB_L0_CORR_B31_LocalEvents, 0, PUSHB_L0_CORR_B31_BusEvents, 0, PUSHB_L0_CORR_B31_OnPressed, 2, PUSHB_L0_CORR_B31_OnReleased, 0, PUSHB_L0_CORR_B31_OnReleasedShort, 0, PUSHB_L0_CORR_B31_OnPressedShortAndHold, 0, PUSHB_L0_CORR_B31_OnReleasedLong, 0, PUSHB_L0_CORR_B31_OnDoubleclick, 0);
+
+// POWIT POWIT_L0_CORR_C1
+sensactapps::cPoweritem POWIT_L0_CORR_C1(eApplicationID::POWIT_L0_CORR_C1, 16424, 900000, 0);
+
+// PushButtonX PUSHB_L0_PRTY_B11
+const Command *const PUSHB_L0_PRTY_B11_OnPressed=0;
+const Command *const PUSHB_L0_PRTY_B11_OnReleased=0;
+const Command PUSHB_L0_PRTY_B11_OnReleasedShort[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L0_PRTY_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::UP, 0, 0, },};
+const Command PUSHB_L0_PRTY_B11_OnReleasedLong[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L0_PRTY_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_PRTY_B11_LocalEvents=0;
+eEventType *PUSHB_L0_PRTY_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_PRTY_B11(eApplicationID::PUSHB_L0_PRTY_B11, 16394, PUSHB_L0_PRTY_B11_LocalEvents, 0, PUSHB_L0_PRTY_B11_BusEvents, 0, PUSHB_L0_PRTY_B11_OnPressed, 0, PUSHB_L0_PRTY_B11_OnReleased, 0, PUSHB_L0_PRTY_B11_OnReleasedShort, 1, PUSHB_L0_PRTY_B11_OnPressedShortAndHold, 1, PUSHB_L0_PRTY_B11_OnReleasedLong, 1, PUSHB_L0_PRTY_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L0_PRTY_B12
+const Command *const PUSHB_L0_PRTY_B12_OnPressed=0;
+const Command *const PUSHB_L0_PRTY_B12_OnReleased=0;
+const Command PUSHB_L0_PRTY_B12_OnReleasedShort[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L0_PRTY_B12_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::DOWN, 0, 0, },};
+const Command PUSHB_L0_PRTY_B12_OnReleasedLong[1]={{eApplicationID::PWM___L0_PRTY_S, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L0_PRTY_B12_OnDoubleclick=0;
+eEventType *PUSHB_L0_PRTY_B12_LocalEvents=0;
+eEventType *PUSHB_L0_PRTY_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_PRTY_B12(eApplicationID::PUSHB_L0_PRTY_B12, 16393, PUSHB_L0_PRTY_B12_LocalEvents, 0, PUSHB_L0_PRTY_B12_BusEvents, 0, PUSHB_L0_PRTY_B12_OnPressed, 0, PUSHB_L0_PRTY_B12_OnReleased, 0, PUSHB_L0_PRTY_B12_OnReleasedShort, 1, PUSHB_L0_PRTY_B12_OnPressedShortAndHold, 1, PUSHB_L0_PRTY_B12_OnReleasedLong, 1, PUSHB_L0_PRTY_B12_OnDoubleclick, 0);
+
+// PWM PWM___L0_PRTY_S (Dimmer )
+uint16_t PWM___L0_PRTY_S_output=16394;
+sensactapps::cPWM PWM___L0_PRTY_S(eApplicationID::PWM___L0_PRTY_S, PWM___L0_PRTY_S_output, 4, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 0);
+
+// PushButtonX PUSHB_L0_STO1_B11
+const Command PUSHB_L0_STO1_B11_OnPressed[1]={{eApplicationID::POWIT_L0_STO1_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_STO1_B11_OnReleased=0;
+const Command *const PUSHB_L0_STO1_B11_OnReleasedShort=0;
+const Command *const PUSHB_L0_STO1_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_STO1_B11_OnReleasedLong=0;
+const Command *const PUSHB_L0_STO1_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_STO1_B11_LocalEvents=0;
+eEventType *PUSHB_L0_STO1_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_STO1_B11(eApplicationID::PUSHB_L0_STO1_B11, 16392, PUSHB_L0_STO1_B11_LocalEvents, 0, PUSHB_L0_STO1_B11_BusEvents, 0, PUSHB_L0_STO1_B11_OnPressed, 1, PUSHB_L0_STO1_B11_OnReleased, 0, PUSHB_L0_STO1_B11_OnReleasedShort, 0, PUSHB_L0_STO1_B11_OnPressedShortAndHold, 0, PUSHB_L0_STO1_B11_OnReleasedLong, 0, PUSHB_L0_STO1_B11_OnDoubleclick, 0);
+
+// POWIT POWIT_L0_STO1_C1
+sensactapps::cPoweritem POWIT_L0_STO1_C1(eApplicationID::POWIT_L0_STO1_C1, 16423, 900000, 0);
+
+// PushButtonX PUSHB_L0_TECH_B11
+const Command PUSHB_L0_TECH_B11_OnPressed[1]={{eApplicationID::POWIT_L0_TECH_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_TECH_B11_OnReleased=0;
+const Command *const PUSHB_L0_TECH_B11_OnReleasedShort=0;
+const Command *const PUSHB_L0_TECH_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_TECH_B11_OnReleasedLong=0;
+const Command *const PUSHB_L0_TECH_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_TECH_B11_LocalEvents=0;
+eEventType *PUSHB_L0_TECH_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_TECH_B11(eApplicationID::PUSHB_L0_TECH_B11, 16391, PUSHB_L0_TECH_B11_LocalEvents, 0, PUSHB_L0_TECH_B11_BusEvents, 0, PUSHB_L0_TECH_B11_OnPressed, 1, PUSHB_L0_TECH_B11_OnReleased, 0, PUSHB_L0_TECH_B11_OnReleasedShort, 0, PUSHB_L0_TECH_B11_OnPressedShortAndHold, 0, PUSHB_L0_TECH_B11_OnReleasedLong, 0, PUSHB_L0_TECH_B11_OnDoubleclick, 0);
+
+// POWIT POWIT_L0_TECH_C1
+sensactapps::cPoweritem POWIT_L0_TECH_C1(eApplicationID::POWIT_L0_TECH_C1, 16422, 900000, 0);
+
+// SOUND DEVCE_L0_TECH_AUDIO
+sensactapps::cSound DEVCE_L0_TECH_AUDIO(eApplicationID::DEVCE_L0_TECH_AUDIO, 66, NULL, 17);
+
+// POWIT POWIT_L0_TECH_PUMP
+sensactapps::cPoweritem POWIT_L0_TECH_PUMP(eApplicationID::POWIT_L0_TECH_PUMP, 16429, 0, 5000);
+
+// STDBY STDBY_L0_TECH_48V
+sensactapps::cStandbyController STDBY_L0_TECH_48V(eApplicationID::STDBY_L0_TECH_48V, 16432, 20000);
+
+// STDBY STDBY_L2_CORR_24V
+sensactapps::cStandbyController STDBY_L2_CORR_24V(eApplicationID::STDBY_L2_CORR_24V, 16433, 20000);
+
+// PushButtonX PUSHB_L0_WELL_B11
+const Command PUSHB_L0_WELL_B11_OnPressed[1]={{eApplicationID::POWIT_L0_WELL_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_WELL_B11_OnReleased=0;
+const Command *const PUSHB_L0_WELL_B11_OnReleasedShort=0;
+const Command *const PUSHB_L0_WELL_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_WELL_B11_OnReleasedLong=0;
+const Command *const PUSHB_L0_WELL_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_WELL_B11_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_WELL_B11(eApplicationID::PUSHB_L0_WELL_B11, 16390, PUSHB_L0_WELL_B11_LocalEvents, 0, PUSHB_L0_WELL_B11_BusEvents, 0, PUSHB_L0_WELL_B11_OnPressed, 1, PUSHB_L0_WELL_B11_OnReleased, 0, PUSHB_L0_WELL_B11_OnReleasedShort, 0, PUSHB_L0_WELL_B11_OnPressedShortAndHold, 0, PUSHB_L0_WELL_B11_OnReleasedLong, 0, PUSHB_L0_WELL_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L0_WELL_B12
+const Command *const PUSHB_L0_WELL_B12_OnPressed=0;
+const Command *const PUSHB_L0_WELL_B12_OnReleased=0;
+const Command PUSHB_L0_WELL_B12_OnReleasedShort[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L0_WELL_B12_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L0_WELL_B12_OnReleasedLong[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L0_WELL_B12_OnDoubleclick[1]={{eApplicationID::PWM___L0_WELL_S1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L0_WELL_B12_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_WELL_B12(eApplicationID::PUSHB_L0_WELL_B12, 16389, PUSHB_L0_WELL_B12_LocalEvents, 0, PUSHB_L0_WELL_B12_BusEvents, 0, PUSHB_L0_WELL_B12_OnPressed, 0, PUSHB_L0_WELL_B12_OnReleased, 0, PUSHB_L0_WELL_B12_OnReleasedShort, 1, PUSHB_L0_WELL_B12_OnPressedShortAndHold, 1, PUSHB_L0_WELL_B12_OnReleasedLong, 1, PUSHB_L0_WELL_B12_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L0_WELL_B21
+const Command *const PUSHB_L0_WELL_B21_OnPressed=0;
+const Command *const PUSHB_L0_WELL_B21_OnReleased=0;
+const Command PUSHB_L0_WELL_B21_OnReleasedShort[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L0_WELL_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::START, 0, 0, },};
+const Command PUSHB_L0_WELL_B21_OnReleasedLong[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L0_WELL_B21_OnDoubleclick[1]={{eApplicationID::PWM___L0_WELL_S2, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L0_WELL_B21_LocalEvents=0;
+eEventType *PUSHB_L0_WELL_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_WELL_B21(eApplicationID::PUSHB_L0_WELL_B21, 16388, PUSHB_L0_WELL_B21_LocalEvents, 0, PUSHB_L0_WELL_B21_BusEvents, 0, PUSHB_L0_WELL_B21_OnPressed, 0, PUSHB_L0_WELL_B21_OnReleased, 0, PUSHB_L0_WELL_B21_OnReleasedShort, 1, PUSHB_L0_WELL_B21_OnPressedShortAndHold, 1, PUSHB_L0_WELL_B21_OnReleasedLong, 1, PUSHB_L0_WELL_B21_OnDoubleclick, 1);
+
+// POWIT POWIT_L0_WELL_C1
+sensactapps::cPoweritem POWIT_L0_WELL_C1(eApplicationID::POWIT_L0_WELL_C1, 16421, 14400000, 0);
+
+// PWM PWM___L0_WELL_S1 (Dimmer )
+uint16_t PWM___L0_WELL_S1_output=16393;
+sensactapps::cPWM PWM___L0_WELL_S1(eApplicationID::PWM___L0_WELL_S1, PWM___L0_WELL_S1_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 1800000);
+
+// PWM PWM___L0_WELL_S2 (Dimmer )
+uint16_t PWM___L0_WELL_S2_output=16392;
+sensactapps::cPWM PWM___L0_WELL_S2(eApplicationID::PWM___L0_WELL_S2, PWM___L0_WELL_S2_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 1800000);
+
+// PushButtonX PUSHB_L0_WORK_B11
+const Command PUSHB_L0_WORK_B11_OnPressed[1]={{eApplicationID::POWIT_L0_WORK_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L0_WORK_B11_OnReleased=0;
+const Command *const PUSHB_L0_WORK_B11_OnReleasedShort=0;
+const Command *const PUSHB_L0_WORK_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L0_WORK_B11_OnReleasedLong=0;
+const Command *const PUSHB_L0_WORK_B11_OnDoubleclick=0;
+eEventType *PUSHB_L0_WORK_B11_LocalEvents=0;
+eEventType *PUSHB_L0_WORK_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L0_WORK_B11(eApplicationID::PUSHB_L0_WORK_B11, 16387, PUSHB_L0_WORK_B11_LocalEvents, 0, PUSHB_L0_WORK_B11_BusEvents, 0, PUSHB_L0_WORK_B11_OnPressed, 1, PUSHB_L0_WORK_B11_OnReleased, 0, PUSHB_L0_WORK_B11_OnReleasedShort, 0, PUSHB_L0_WORK_B11_OnPressedShortAndHold, 0, PUSHB_L0_WORK_B11_OnReleasedLong, 0, PUSHB_L0_WORK_B11_OnDoubleclick, 0);
+
+// POWIT POWIT_L0_WORK_C1
+sensactapps::cPoweritem POWIT_L0_WORK_C1(eApplicationID::POWIT_L0_WORK_C1, 16420, 14400000, 0);
+
+// POWIT POWIT_LX_BACK_P1
+sensactapps::cPoweritem POWIT_LX_BACK_P1(eApplicationID::POWIT_LX_BACK_P1, 16443, 21600000, 0);
+
+// POWIT POWIT_LX_BACK_P3
+sensactapps::cPoweritem POWIT_LX_BACK_P3(eApplicationID::POWIT_LX_BACK_P3, 16442, 21600000, 0);
+
+// POWIT POWIT_LX_BACK_W1
+sensactapps::cPoweritem POWIT_LX_BACK_W1(eApplicationID::POWIT_LX_BACK_W1, 16437, 21600000, 0);
+
+// POWIT POWIT_LX_BACK_W2
+sensactapps::cPoweritem POWIT_LX_BACK_W2(eApplicationID::POWIT_LX_BACK_W2, 16436, 21600000, 0);
+
+// POWIT POWIT_LX_BACK_W3
+sensactapps::cPoweritem POWIT_LX_BACK_W3(eApplicationID::POWIT_LX_BACK_W3, 16435, 21600000, 0);
+
+// Blind BLIND_LX_BACK_J1
+sensactapps::cBlind BLIND_LX_BACK_J1(eApplicationID::BLIND_LX_BACK_J1, 16409, 16419, eRelayMode::INTERLOCKED_ACTIVE_DOWN, 40);
+
+// PushButtonX PUSHB_LX_FRON_B1
+const Command PUSHB_LX_FRON_B1_OnPressed[1]={{eApplicationID::DEVCE_L0_TECH_AUDIO, eCommandType::START, 0, 0, },};
+const Command *const PUSHB_LX_FRON_B1_OnReleased=0;
+const Command *const PUSHB_LX_FRON_B1_OnReleasedShort=0;
+const Command *const PUSHB_LX_FRON_B1_OnPressedShortAndHold=0;
+const Command *const PUSHB_LX_FRON_B1_OnReleasedLong=0;
+const Command *const PUSHB_LX_FRON_B1_OnDoubleclick=0;
+eEventType *PUSHB_LX_FRON_B1_LocalEvents=0;
+eEventType *PUSHB_LX_FRON_B1_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LX_FRON_B1(eApplicationID::PUSHB_LX_FRON_B1, 16446, PUSHB_LX_FRON_B1_LocalEvents, 0, PUSHB_LX_FRON_B1_BusEvents, 0, PUSHB_LX_FRON_B1_OnPressed, 1, PUSHB_LX_FRON_B1_OnReleased, 0, PUSHB_LX_FRON_B1_OnReleasedShort, 0, PUSHB_LX_FRON_B1_OnPressedShortAndHold, 0, PUSHB_LX_FRON_B1_OnReleasedLong, 0, PUSHB_LX_FRON_B1_OnDoubleclick, 0);
+
+// Lightbarrier LIBAR_LX_FRON_B2
+sensactapps::cLightbarrier LIBAR_LX_FRON_B2(eApplicationID::LIBAR_LX_FRON_B2, 16447, false, eApplicationID::NO_APPLICATION, eApplicationID::NO_APPLICATION);
+
+// POWIT POWIT_LX_FRON_W1
+sensactapps::cPoweritem POWIT_LX_FRON_W1(eApplicationID::POWIT_LX_FRON_W1, 16441, 120000, 0);
+
+// PushButtonX PUSHB_LX_GARA_B11
+const Command PUSHB_LX_GARA_B11_OnPressed[1]={{eApplicationID::POWIT_LX_GARA_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_LX_GARA_B11_OnReleased=0;
+const Command *const PUSHB_LX_GARA_B11_OnReleasedShort=0;
+const Command *const PUSHB_LX_GARA_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_LX_GARA_B11_OnReleasedLong=0;
+const Command *const PUSHB_LX_GARA_B11_OnDoubleclick=0;
+eEventType *PUSHB_LX_GARA_B11_LocalEvents=0;
+eEventType *PUSHB_LX_GARA_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LX_GARA_B11(eApplicationID::PUSHB_LX_GARA_B11, 16386, PUSHB_LX_GARA_B11_LocalEvents, 0, PUSHB_LX_GARA_B11_BusEvents, 0, PUSHB_LX_GARA_B11_OnPressed, 1, PUSHB_LX_GARA_B11_OnReleased, 0, PUSHB_LX_GARA_B11_OnReleasedShort, 0, PUSHB_LX_GARA_B11_OnPressedShortAndHold, 0, PUSHB_LX_GARA_B11_OnReleasedLong, 0, PUSHB_LX_GARA_B11_OnDoubleclick, 0);
+
+// POWIT POWIT_LX_GARA_C1
+sensactapps::cPoweritem POWIT_LX_GARA_C1(eApplicationID::POWIT_LX_GARA_C1, 16440, 21600000, 0);
+
+// POWIT POWIT_LX_LEFT_W1
+sensactapps::cPoweritem POWIT_LX_LEFT_W1(eApplicationID::POWIT_LX_LEFT_W1, 16439, 21600000, 0);
+
+// POWIT POWIT_LX_RGHT_W1
+sensactapps::cPoweritem POWIT_LX_RGHT_W1(eApplicationID::POWIT_LX_RGHT_W1, 16438, 21600000, 0);
+
+// PushButtonX PUSHB_L1_BATH_B11
+const Command *const PUSHB_L1_BATH_B11_OnPressed=0;
+const Command PUSHB_L1_BATH_B11_OnReleased[2]={{eApplicationID::RGBW__L1_BATH_W1, eCommandType::TOGGLE, 0, 0, },{eApplicationID::PWM___L1_BATH_S, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_BATH_B11_OnReleasedShort=0;
+const Command *const PUSHB_L1_BATH_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_BATH_B11_OnReleasedLong=0;
+const Command *const PUSHB_L1_BATH_B11_OnDoubleclick=0;
+eEventType *PUSHB_L1_BATH_B11_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_BATH_B11(eApplicationID::PUSHB_L1_BATH_B11, 16422, PUSHB_L1_BATH_B11_LocalEvents, 0, PUSHB_L1_BATH_B11_BusEvents, 0, PUSHB_L1_BATH_B11_OnPressed, 0, PUSHB_L1_BATH_B11_OnReleased, 2, PUSHB_L1_BATH_B11_OnReleasedShort, 0, PUSHB_L1_BATH_B11_OnPressedShortAndHold, 0, PUSHB_L1_BATH_B11_OnReleasedLong, 0, PUSHB_L1_BATH_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_BATH_B12
+const Command *const PUSHB_L1_BATH_B12_OnPressed=0;
+const Command *const PUSHB_L1_BATH_B12_OnReleased=0;
+const uint8_t PUSHB_L1_BATH_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_BATH_B12_OnReleasedShort[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::UP, PUSHB_L1_BATH_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_BATH_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_BATH_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::UP, PUSHB_L1_BATH_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_BATH_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_BATH_B12_OnDoubleclick=0;
+eEventType *PUSHB_L1_BATH_B12_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_BATH_B12(eApplicationID::PUSHB_L1_BATH_B12, 16421, PUSHB_L1_BATH_B12_LocalEvents, 0, PUSHB_L1_BATH_B12_BusEvents, 0, PUSHB_L1_BATH_B12_OnPressed, 0, PUSHB_L1_BATH_B12_OnReleased, 0, PUSHB_L1_BATH_B12_OnReleasedShort, 1, PUSHB_L1_BATH_B12_OnPressedShortAndHold, 1, PUSHB_L1_BATH_B12_OnReleasedLong, 1, PUSHB_L1_BATH_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_BATH_B13
+const Command *const PUSHB_L1_BATH_B13_OnPressed=0;
+const Command *const PUSHB_L1_BATH_B13_OnReleased=0;
+const uint8_t PUSHB_L1_BATH_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_BATH_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::DOWN, PUSHB_L1_BATH_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_BATH_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_BATH_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::DOWN, PUSHB_L1_BATH_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_BATH_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L1_BATH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_BATH_B13_OnDoubleclick=0;
+eEventType *PUSHB_L1_BATH_B13_LocalEvents=0;
+eEventType *PUSHB_L1_BATH_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_BATH_B13(eApplicationID::PUSHB_L1_BATH_B13, 16420, PUSHB_L1_BATH_B13_LocalEvents, 0, PUSHB_L1_BATH_B13_BusEvents, 0, PUSHB_L1_BATH_B13_OnPressed, 0, PUSHB_L1_BATH_B13_OnReleased, 0, PUSHB_L1_BATH_B13_OnReleasedShort, 1, PUSHB_L1_BATH_B13_OnPressedShortAndHold, 1, PUSHB_L1_BATH_B13_OnReleasedLong, 1, PUSHB_L1_BATH_B13_OnDoubleclick, 0);
+
+// PWM PWM___L1_BATH_S (Dimmer )
+uint16_t PWM___L1_BATH_S_output=16387;
+sensactapps::cPWM PWM___L1_BATH_S(eApplicationID::PWM___L1_BATH_S, PWM___L1_BATH_S_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 3600000);
+
+// Blind BLIND_L1_BATH_J1
+sensactapps::cBlind BLIND_L1_BATH_J1(eApplicationID::BLIND_L1_BATH_J1, 16400, 16410, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// RGBW RGBW__L1_BATH_W1 (Full Color Light)
+sensactapps::cRgbw RGBW__L1_BATH_W1(eApplicationID::RGBW__L1_BATH_W1, 16391, 16390, 16389, 65535, true, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::STDBY_L0_TECH_48V, 3600000);
+
+// PushButtonX PUSHB_L1_CORR_B11
+const Command *const PUSHB_L1_CORR_B11_OnPressed=0;
+const Command *const PUSHB_L1_CORR_B11_OnReleased=0;
+const Command PUSHB_L1_CORR_B11_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_CORR_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_CORR_B11_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_CORR_B11_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_CORR_B11_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B11(eApplicationID::PUSHB_L1_CORR_B11, 16400, PUSHB_L1_CORR_B11_LocalEvents, 0, PUSHB_L1_CORR_B11_BusEvents, 0, PUSHB_L1_CORR_B11_OnPressed, 0, PUSHB_L1_CORR_B11_OnReleased, 0, PUSHB_L1_CORR_B11_OnReleasedShort, 1, PUSHB_L1_CORR_B11_OnPressedShortAndHold, 1, PUSHB_L1_CORR_B11_OnReleasedLong, 1, PUSHB_L1_CORR_B11_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_CORR_B21
+const Command *const PUSHB_L1_CORR_B21_OnPressed=0;
+const Command *const PUSHB_L1_CORR_B21_OnReleased=0;
+const Command PUSHB_L1_CORR_B21_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_CORR_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_CORR_B21_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_CORR_B21_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_CORR_B21_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B21(eApplicationID::PUSHB_L1_CORR_B21, 16419, PUSHB_L1_CORR_B21_LocalEvents, 0, PUSHB_L1_CORR_B21_BusEvents, 0, PUSHB_L1_CORR_B21_OnPressed, 0, PUSHB_L1_CORR_B21_OnReleased, 0, PUSHB_L1_CORR_B21_OnReleasedShort, 1, PUSHB_L1_CORR_B21_OnPressedShortAndHold, 1, PUSHB_L1_CORR_B21_OnReleasedLong, 1, PUSHB_L1_CORR_B21_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_CORR_B22
+const Command *const PUSHB_L1_CORR_B22_OnPressed=0;
+const Command *const PUSHB_L1_CORR_B22_OnReleased=0;
+const Command PUSHB_L1_CORR_B22_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_CORR_B22_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_CORR_B22_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_CORR_B22_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_CORR_B22_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B22(eApplicationID::PUSHB_L1_CORR_B22, 16418, PUSHB_L1_CORR_B22_LocalEvents, 0, PUSHB_L1_CORR_B22_BusEvents, 0, PUSHB_L1_CORR_B22_OnPressed, 0, PUSHB_L1_CORR_B22_OnReleased, 0, PUSHB_L1_CORR_B22_OnReleasedShort, 1, PUSHB_L1_CORR_B22_OnPressedShortAndHold, 1, PUSHB_L1_CORR_B22_OnReleasedLong, 1, PUSHB_L1_CORR_B22_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_CORR_B23
+const Command *const PUSHB_L1_CORR_B23_OnPressed=0;
+const Command *const PUSHB_L1_CORR_B23_OnReleased=0;
+const Command PUSHB_L1_CORR_B23_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_CORR_B23_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_CORR_B23_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_CORR_B23_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_CORR_B23_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B23_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B23(eApplicationID::PUSHB_L1_CORR_B23, 16417, PUSHB_L1_CORR_B23_LocalEvents, 0, PUSHB_L1_CORR_B23_BusEvents, 0, PUSHB_L1_CORR_B23_OnPressed, 0, PUSHB_L1_CORR_B23_OnReleased, 0, PUSHB_L1_CORR_B23_OnReleasedShort, 1, PUSHB_L1_CORR_B23_OnPressedShortAndHold, 1, PUSHB_L1_CORR_B23_OnReleasedLong, 1, PUSHB_L1_CORR_B23_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_CORR_B24
+const Command *const PUSHB_L1_CORR_B24_OnPressed=0;
+const Command *const PUSHB_L1_CORR_B24_OnReleased=0;
+const Command PUSHB_L1_CORR_B24_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_CORR_B24_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_CORR_B24_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_CORR_B24_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_W1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_CORR_B24_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B24_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B24(eApplicationID::PUSHB_L1_CORR_B24, 16416, PUSHB_L1_CORR_B24_LocalEvents, 0, PUSHB_L1_CORR_B24_BusEvents, 0, PUSHB_L1_CORR_B24_OnPressed, 0, PUSHB_L1_CORR_B24_OnReleased, 0, PUSHB_L1_CORR_B24_OnReleasedShort, 1, PUSHB_L1_CORR_B24_OnPressedShortAndHold, 1, PUSHB_L1_CORR_B24_OnReleasedLong, 1, PUSHB_L1_CORR_B24_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_CORR_B25
+const Command PUSHB_L1_CORR_B25_OnPressed[1]={{eApplicationID::POWIT_LX_FRON_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_CORR_B25_OnReleased=0;
+const Command *const PUSHB_L1_CORR_B25_OnReleasedShort=0;
+const Command *const PUSHB_L1_CORR_B25_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_CORR_B25_OnReleasedLong=0;
+const Command *const PUSHB_L1_CORR_B25_OnDoubleclick=0;
+eEventType *PUSHB_L1_CORR_B25_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B25_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B25(eApplicationID::PUSHB_L1_CORR_B25, 16415, PUSHB_L1_CORR_B25_LocalEvents, 0, PUSHB_L1_CORR_B25_BusEvents, 0, PUSHB_L1_CORR_B25_OnPressed, 1, PUSHB_L1_CORR_B25_OnReleased, 0, PUSHB_L1_CORR_B25_OnReleasedShort, 0, PUSHB_L1_CORR_B25_OnPressedShortAndHold, 0, PUSHB_L1_CORR_B25_OnReleasedLong, 0, PUSHB_L1_CORR_B25_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_CORR_B26
+const Command PUSHB_L1_CORR_B26_OnPressed[1]={{eApplicationID::POWIT_LX_LEFT_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_CORR_B26_OnReleased=0;
+const Command *const PUSHB_L1_CORR_B26_OnReleasedShort=0;
+const Command *const PUSHB_L1_CORR_B26_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_CORR_B26_OnReleasedLong=0;
+const Command *const PUSHB_L1_CORR_B26_OnDoubleclick=0;
+eEventType *PUSHB_L1_CORR_B26_LocalEvents=0;
+eEventType *PUSHB_L1_CORR_B26_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_CORR_B26(eApplicationID::PUSHB_L1_CORR_B26, 16414, PUSHB_L1_CORR_B26_LocalEvents, 0, PUSHB_L1_CORR_B26_BusEvents, 0, PUSHB_L1_CORR_B26_OnPressed, 1, PUSHB_L1_CORR_B26_OnReleased, 0, PUSHB_L1_CORR_B26_OnReleasedShort, 0, PUSHB_L1_CORR_B26_OnPressedShortAndHold, 0, PUSHB_L1_CORR_B26_OnReleasedLong, 0, PUSHB_L1_CORR_B26_OnDoubleclick, 0);
+
+// PWM PWM___L1_CORR_S (Dimmer )
+uint16_t PWM___L1_CORR_S_output=16384;
+sensactapps::cPWM PWM___L1_CORR_S(eApplicationID::PWM___L1_CORR_S, PWM___L1_CORR_S_output, 3, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 600000);
+
+// PWM PWM___L1_CORR_W1 (Dimmer )
+uint16_t PWM___L1_CORR_W1_output=16388;
+sensactapps::cPWM PWM___L1_CORR_W1(eApplicationID::PWM___L1_CORR_W1, PWM___L1_CORR_W1_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 14400000);
+
+// PushButtonX PUSHB_L1_KTCH_B11
+const Command PUSHB_L1_KTCH_B11_OnPressed[1]={{eApplicationID::POWIT_L1_KTCH_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B11_OnReleased=0;
+const Command *const PUSHB_L1_KTCH_B11_OnReleasedShort=0;
+const Command *const PUSHB_L1_KTCH_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_KTCH_B11_OnReleasedLong=0;
+const Command *const PUSHB_L1_KTCH_B11_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B11_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B11(eApplicationID::PUSHB_L1_KTCH_B11, 16413, PUSHB_L1_KTCH_B11_LocalEvents, 0, PUSHB_L1_KTCH_B11_BusEvents, 0, PUSHB_L1_KTCH_B11_OnPressed, 1, PUSHB_L1_KTCH_B11_OnReleased, 0, PUSHB_L1_KTCH_B11_OnReleasedShort, 0, PUSHB_L1_KTCH_B11_OnPressedShortAndHold, 0, PUSHB_L1_KTCH_B11_OnReleasedLong, 0, PUSHB_L1_KTCH_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B12
+const Command PUSHB_L1_KTCH_B12_OnPressed[1]={{eApplicationID::POWIT_LX_BACK_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B12_OnReleased=0;
+const Command *const PUSHB_L1_KTCH_B12_OnReleasedShort=0;
+const Command *const PUSHB_L1_KTCH_B12_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_KTCH_B12_OnReleasedLong=0;
+const Command *const PUSHB_L1_KTCH_B12_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B12_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B12(eApplicationID::PUSHB_L1_KTCH_B12, 16412, PUSHB_L1_KTCH_B12_LocalEvents, 0, PUSHB_L1_KTCH_B12_BusEvents, 0, PUSHB_L1_KTCH_B12_OnPressed, 1, PUSHB_L1_KTCH_B12_OnReleased, 0, PUSHB_L1_KTCH_B12_OnReleasedShort, 0, PUSHB_L1_KTCH_B12_OnPressedShortAndHold, 0, PUSHB_L1_KTCH_B12_OnReleasedLong, 0, PUSHB_L1_KTCH_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B31
+const Command *const PUSHB_L1_KTCH_B31_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B31_OnReleased=0;
+const Command PUSHB_L1_KTCH_B31_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_KTCH_B31_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_KTCH_B31_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_KTCH_B31_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_KTCH_B31_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B31_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B31(eApplicationID::PUSHB_L1_KTCH_B31, 16411, PUSHB_L1_KTCH_B31_LocalEvents, 0, PUSHB_L1_KTCH_B31_BusEvents, 0, PUSHB_L1_KTCH_B31_OnPressed, 0, PUSHB_L1_KTCH_B31_OnReleased, 0, PUSHB_L1_KTCH_B31_OnReleasedShort, 1, PUSHB_L1_KTCH_B31_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B31_OnReleasedLong, 1, PUSHB_L1_KTCH_B31_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_KTCH_B32
+const Command *const PUSHB_L1_KTCH_B32_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B32_OnReleased=0;
+const Command PUSHB_L1_KTCH_B32_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_KTCH_B32_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_KTCH_B32_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_KTCH_B32_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_KTCH_B32_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B32_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B32(eApplicationID::PUSHB_L1_KTCH_B32, 16410, PUSHB_L1_KTCH_B32_LocalEvents, 0, PUSHB_L1_KTCH_B32_BusEvents, 0, PUSHB_L1_KTCH_B32_OnPressed, 0, PUSHB_L1_KTCH_B32_OnReleased, 0, PUSHB_L1_KTCH_B32_OnReleasedShort, 1, PUSHB_L1_KTCH_B32_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B32_OnReleasedLong, 1, PUSHB_L1_KTCH_B32_OnDoubleclick, 1);
+
+// POWIT POWIT_L1_KTCH_C1
+sensactapps::cPoweritem POWIT_L1_KTCH_C1(eApplicationID::POWIT_L1_KTCH_C1, 16434, 0, 0);
+
+// Blind BLIND_L1_KTCH_J1
+sensactapps::cBlind BLIND_L1_KTCH_J1(eApplicationID::BLIND_L1_KTCH_J1, 16402, 16412, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// Blind BLIND_L1_KTCH_J2
+sensactapps::cBlind BLIND_L1_KTCH_J2(eApplicationID::BLIND_L1_KTCH_J2, 16401, 16411, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L1_LVNG_B11
+const Command *const PUSHB_L1_LVNG_B11_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B11_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B11_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B11_OnReleasedShort[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::UP, PUSHB_L1_LVNG_B11_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B11_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B11_OnPressedShortAndHold[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::UP, PUSHB_L1_LVNG_B11_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B11_OnReleasedLong[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B11_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B11_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B11(eApplicationID::PUSHB_L1_LVNG_B11, 16409, PUSHB_L1_LVNG_B11_LocalEvents, 0, PUSHB_L1_LVNG_B11_BusEvents, 0, PUSHB_L1_LVNG_B11_OnPressed, 0, PUSHB_L1_LVNG_B11_OnReleased, 0, PUSHB_L1_LVNG_B11_OnReleasedShort, 1, PUSHB_L1_LVNG_B11_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B11_OnReleasedLong, 1, PUSHB_L1_LVNG_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B12
+const Command *const PUSHB_L1_LVNG_B12_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B12_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B12_OnReleasedShort[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::DOWN, PUSHB_L1_LVNG_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::DOWN, PUSHB_L1_LVNG_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B12_OnReleasedLong[1]={{eApplicationID::BLIND_LX_BACK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B12_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B12_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B12(eApplicationID::PUSHB_L1_LVNG_B12, 16408, PUSHB_L1_LVNG_B12_LocalEvents, 0, PUSHB_L1_LVNG_B12_BusEvents, 0, PUSHB_L1_LVNG_B12_OnPressed, 0, PUSHB_L1_LVNG_B12_OnReleased, 0, PUSHB_L1_LVNG_B12_OnReleasedShort, 1, PUSHB_L1_LVNG_B12_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B12_OnReleasedLong, 1, PUSHB_L1_LVNG_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B13
+const Command PUSHB_L1_LVNG_B13_OnPressed[1]={{eApplicationID::POWIT_LX_BACK_W2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B13_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B13_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B13_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B13_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B13_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B13_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B13(eApplicationID::PUSHB_L1_LVNG_B13, 16407, PUSHB_L1_LVNG_B13_LocalEvents, 0, PUSHB_L1_LVNG_B13_BusEvents, 0, PUSHB_L1_LVNG_B13_OnPressed, 1, PUSHB_L1_LVNG_B13_OnReleased, 0, PUSHB_L1_LVNG_B13_OnReleasedShort, 0, PUSHB_L1_LVNG_B13_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B13_OnReleasedLong, 0, PUSHB_L1_LVNG_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B14
+const Command PUSHB_L1_LVNG_B14_OnPressed[1]={{eApplicationID::POWIT_LX_BACK_W3, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B14_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B14_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B14_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B14_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B14_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B14_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B14(eApplicationID::PUSHB_L1_LVNG_B14, 16403, PUSHB_L1_LVNG_B14_LocalEvents, 0, PUSHB_L1_LVNG_B14_BusEvents, 0, PUSHB_L1_LVNG_B14_OnPressed, 1, PUSHB_L1_LVNG_B14_OnReleased, 0, PUSHB_L1_LVNG_B14_OnReleasedShort, 0, PUSHB_L1_LVNG_B14_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B14_OnReleasedLong, 0, PUSHB_L1_LVNG_B14_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B15
+const Command PUSHB_L1_LVNG_B15_OnPressed[1]={{eApplicationID::POWIT_LX_BACK_P1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B15_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B15_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B15_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B15_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B15_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B15_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B15_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B15(eApplicationID::PUSHB_L1_LVNG_B15, 16402, PUSHB_L1_LVNG_B15_LocalEvents, 0, PUSHB_L1_LVNG_B15_BusEvents, 0, PUSHB_L1_LVNG_B15_OnPressed, 1, PUSHB_L1_LVNG_B15_OnReleased, 0, PUSHB_L1_LVNG_B15_OnReleasedShort, 0, PUSHB_L1_LVNG_B15_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B15_OnReleasedLong, 0, PUSHB_L1_LVNG_B15_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B16
+const Command *const PUSHB_L1_LVNG_B16_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B16_OnReleased=0;
+const Command PUSHB_L1_LVNG_B16_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B16_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_LVNG_B16_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B16_OnDoubleclick[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_LVNG_B16_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B16_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B16(eApplicationID::PUSHB_L1_LVNG_B16, 16401, PUSHB_L1_LVNG_B16_LocalEvents, 0, PUSHB_L1_LVNG_B16_BusEvents, 0, PUSHB_L1_LVNG_B16_OnPressed, 0, PUSHB_L1_LVNG_B16_OnReleased, 0, PUSHB_L1_LVNG_B16_OnReleasedShort, 1, PUSHB_L1_LVNG_B16_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B16_OnReleasedLong, 1, PUSHB_L1_LVNG_B16_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_LVNG_B21
+const Command *const PUSHB_L1_LVNG_B21_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B21_OnReleased=0;
+const Command PUSHB_L1_LVNG_B21_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::UP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B21_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B21_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B21_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B21(eApplicationID::PUSHB_L1_LVNG_B21, 16406, PUSHB_L1_LVNG_B21_LocalEvents, 0, PUSHB_L1_LVNG_B21_BusEvents, 0, PUSHB_L1_LVNG_B21_OnPressed, 0, PUSHB_L1_LVNG_B21_OnReleased, 0, PUSHB_L1_LVNG_B21_OnReleasedShort, 1, PUSHB_L1_LVNG_B21_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B21_OnReleasedLong, 1, PUSHB_L1_LVNG_B21_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B22
+const Command *const PUSHB_L1_LVNG_B22_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B22_OnReleased=0;
+const Command PUSHB_L1_LVNG_B22_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B22_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::DOWN, 0, 0, },};
+const Command PUSHB_L1_LVNG_B22_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_W4, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B22_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B22_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B22(eApplicationID::PUSHB_L1_LVNG_B22, 16405, PUSHB_L1_LVNG_B22_LocalEvents, 0, PUSHB_L1_LVNG_B22_BusEvents, 0, PUSHB_L1_LVNG_B22_OnPressed, 0, PUSHB_L1_LVNG_B22_OnReleased, 0, PUSHB_L1_LVNG_B22_OnReleasedShort, 1, PUSHB_L1_LVNG_B22_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B22_OnReleasedLong, 1, PUSHB_L1_LVNG_B22_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B23
+const Command PUSHB_L1_LVNG_B23_OnPressed[1]={{eApplicationID::POWIT_LX_RGHT_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B23_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B23_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B23_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B23_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B23_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B23_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B23_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B23(eApplicationID::PUSHB_L1_LVNG_B23, 16404, PUSHB_L1_LVNG_B23_LocalEvents, 0, PUSHB_L1_LVNG_B23_BusEvents, 0, PUSHB_L1_LVNG_B23_OnPressed, 1, PUSHB_L1_LVNG_B23_OnReleased, 0, PUSHB_L1_LVNG_B23_OnReleasedShort, 0, PUSHB_L1_LVNG_B23_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B23_OnReleasedLong, 0, PUSHB_L1_LVNG_B23_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B51
+const Command *const PUSHB_L1_LVNG_B51_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B51_OnReleased=0;
+const Command PUSHB_L1_LVNG_B51_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B51_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_LVNG_B51_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B51_OnDoubleclick[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_LVNG_B51_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B51_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B51(eApplicationID::PUSHB_L1_LVNG_B51, 16445, PUSHB_L1_LVNG_B51_LocalEvents, 0, PUSHB_L1_LVNG_B51_BusEvents, 0, PUSHB_L1_LVNG_B51_OnPressed, 0, PUSHB_L1_LVNG_B51_OnReleased, 0, PUSHB_L1_LVNG_B51_OnReleasedShort, 1, PUSHB_L1_LVNG_B51_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B51_OnReleasedLong, 1, PUSHB_L1_LVNG_B51_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_LVNG_B52
+const Command *const PUSHB_L1_LVNG_B52_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B52_OnReleased=0;
+const Command PUSHB_L1_LVNG_B52_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B52_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_LVNG_B52_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B52_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_LVNG_B52_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B52_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B52(eApplicationID::PUSHB_L1_LVNG_B52, 16444, PUSHB_L1_LVNG_B52_LocalEvents, 0, PUSHB_L1_LVNG_B52_BusEvents, 0, PUSHB_L1_LVNG_B52_OnPressed, 0, PUSHB_L1_LVNG_B52_OnReleased, 0, PUSHB_L1_LVNG_B52_OnReleasedShort, 1, PUSHB_L1_LVNG_B52_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B52_OnReleasedLong, 1, PUSHB_L1_LVNG_B52_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_LVNG_B53
+const Command PUSHB_L1_LVNG_B53_OnPressed[1]={{eApplicationID::POWIT_L1_KTCH_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B53_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B53_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B53_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B53_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B53_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B53_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B53_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B53(eApplicationID::PUSHB_L1_LVNG_B53, 16443, PUSHB_L1_LVNG_B53_LocalEvents, 0, PUSHB_L1_LVNG_B53_BusEvents, 0, PUSHB_L1_LVNG_B53_OnPressed, 1, PUSHB_L1_LVNG_B53_OnReleased, 0, PUSHB_L1_LVNG_B53_OnReleasedShort, 0, PUSHB_L1_LVNG_B53_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B53_OnReleasedLong, 0, PUSHB_L1_LVNG_B53_OnDoubleclick, 0);
+
+// Blind BLIND_L1_LVNG_J1
+sensactapps::cBlind BLIND_L1_LVNG_J1(eApplicationID::BLIND_L1_LVNG_J1, 16403, 16413, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// Blind BLIND_L1_LVNG_J2
+sensactapps::cBlind BLIND_L1_LVNG_J2(eApplicationID::BLIND_L1_LVNG_J2, 16404, 16414, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// Blind BLIND_L1_LVNG_J3
+sensactapps::cBlind BLIND_L1_LVNG_J3(eApplicationID::BLIND_L1_LVNG_J3, 16405, 16415, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// POWIT POWIT_L1_LVNG_C1
+sensactapps::cPoweritem POWIT_L1_LVNG_C1(eApplicationID::POWIT_L1_LVNG_C1, 16428, 0, 0);
+
+// POWIT POWIT_L1_LVNG_P4
+sensactapps::cPoweritem POWIT_L1_LVNG_P4(eApplicationID::POWIT_L1_LVNG_P4, 16444, 0, 0);
+
+// POWIT POWIT_L1_LVNG_P1
+sensactapps::cPoweritem POWIT_L1_LVNG_P1(eApplicationID::POWIT_L1_LVNG_P1, 16445, 0, 0);
+
+// PWM PWM___L1_LVNG_W4 (Dimmer )
+uint16_t PWM___L1_LVNG_W4_output=16398;
+sensactapps::cPWM PWM___L1_LVNG_W4(eApplicationID::PWM___L1_LVNG_W4, PWM___L1_LVNG_W4_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 0);
+
+// PushButtonX PUSHB_L1_UTIL_B11
+const Command *const PUSHB_L1_UTIL_B11_OnPressed=0;
+const Command *const PUSHB_L1_UTIL_B11_OnReleased=0;
+const uint8_t PUSHB_L1_UTIL_B11_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_UTIL_B11_OnReleasedShort[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::UP, PUSHB_L1_UTIL_B11_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_UTIL_B11_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_UTIL_B11_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::UP, PUSHB_L1_UTIL_B11_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_UTIL_B11_OnReleasedLong[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_UTIL_B11_OnDoubleclick=0;
+eEventType *PUSHB_L1_UTIL_B11_LocalEvents=0;
+eEventType *PUSHB_L1_UTIL_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_UTIL_B11(eApplicationID::PUSHB_L1_UTIL_B11, 16442, PUSHB_L1_UTIL_B11_LocalEvents, 0, PUSHB_L1_UTIL_B11_BusEvents, 0, PUSHB_L1_UTIL_B11_OnPressed, 0, PUSHB_L1_UTIL_B11_OnReleased, 0, PUSHB_L1_UTIL_B11_OnReleasedShort, 1, PUSHB_L1_UTIL_B11_OnPressedShortAndHold, 1, PUSHB_L1_UTIL_B11_OnReleasedLong, 1, PUSHB_L1_UTIL_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_UTIL_B12
+const Command *const PUSHB_L1_UTIL_B12_OnPressed=0;
+const Command *const PUSHB_L1_UTIL_B12_OnReleased=0;
+const uint8_t PUSHB_L1_UTIL_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_UTIL_B12_OnReleasedShort[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::DOWN, PUSHB_L1_UTIL_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_UTIL_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_UTIL_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::DOWN, PUSHB_L1_UTIL_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_UTIL_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L1_UTIL_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_UTIL_B12_OnDoubleclick=0;
+eEventType *PUSHB_L1_UTIL_B12_LocalEvents=0;
+eEventType *PUSHB_L1_UTIL_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_UTIL_B12(eApplicationID::PUSHB_L1_UTIL_B12, 16441, PUSHB_L1_UTIL_B12_LocalEvents, 0, PUSHB_L1_UTIL_B12_BusEvents, 0, PUSHB_L1_UTIL_B12_OnPressed, 0, PUSHB_L1_UTIL_B12_OnReleased, 0, PUSHB_L1_UTIL_B12_OnReleasedShort, 1, PUSHB_L1_UTIL_B12_OnPressedShortAndHold, 1, PUSHB_L1_UTIL_B12_OnReleasedLong, 1, PUSHB_L1_UTIL_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_UTIL_B13
+const Command *const PUSHB_L1_UTIL_B13_OnPressed=0;
+const Command *const PUSHB_L1_UTIL_B13_OnReleased=0;
+const Command PUSHB_L1_UTIL_B13_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_UTIL_B13_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_UTIL_B13_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_UTIL_B13_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_UTIL_B13_LocalEvents=0;
+eEventType *PUSHB_L1_UTIL_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_UTIL_B13(eApplicationID::PUSHB_L1_UTIL_B13, 16440, PUSHB_L1_UTIL_B13_LocalEvents, 0, PUSHB_L1_UTIL_B13_BusEvents, 0, PUSHB_L1_UTIL_B13_OnPressed, 0, PUSHB_L1_UTIL_B13_OnReleased, 0, PUSHB_L1_UTIL_B13_OnReleasedShort, 1, PUSHB_L1_UTIL_B13_OnPressedShortAndHold, 1, PUSHB_L1_UTIL_B13_OnReleasedLong, 1, PUSHB_L1_UTIL_B13_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_UTIL_B21
+const Command PUSHB_L1_UTIL_B21_OnPressed[1]={{eApplicationID::POWIT_L1_UTIL_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_UTIL_B21_OnReleased=0;
+const Command *const PUSHB_L1_UTIL_B21_OnReleasedShort=0;
+const Command *const PUSHB_L1_UTIL_B21_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_UTIL_B21_OnReleasedLong=0;
+const Command *const PUSHB_L1_UTIL_B21_OnDoubleclick=0;
+eEventType *PUSHB_L1_UTIL_B21_LocalEvents=0;
+eEventType *PUSHB_L1_UTIL_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_UTIL_B21(eApplicationID::PUSHB_L1_UTIL_B21, 16439, PUSHB_L1_UTIL_B21_LocalEvents, 0, PUSHB_L1_UTIL_B21_BusEvents, 0, PUSHB_L1_UTIL_B21_OnPressed, 1, PUSHB_L1_UTIL_B21_OnReleased, 0, PUSHB_L1_UTIL_B21_OnReleasedShort, 0, PUSHB_L1_UTIL_B21_OnPressedShortAndHold, 0, PUSHB_L1_UTIL_B21_OnReleasedLong, 0, PUSHB_L1_UTIL_B21_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_UTIL_B22
+const Command PUSHB_L1_UTIL_B22_OnPressed[1]={{eApplicationID::POWIT_LX_LEFT_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_UTIL_B22_OnReleased=0;
+const Command *const PUSHB_L1_UTIL_B22_OnReleasedShort=0;
+const Command *const PUSHB_L1_UTIL_B22_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_UTIL_B22_OnReleasedLong=0;
+const Command *const PUSHB_L1_UTIL_B22_OnDoubleclick=0;
+eEventType *PUSHB_L1_UTIL_B22_LocalEvents=0;
+eEventType *PUSHB_L1_UTIL_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_UTIL_B22(eApplicationID::PUSHB_L1_UTIL_B22, 16438, PUSHB_L1_UTIL_B22_LocalEvents, 0, PUSHB_L1_UTIL_B22_BusEvents, 0, PUSHB_L1_UTIL_B22_OnPressed, 1, PUSHB_L1_UTIL_B22_OnReleased, 0, PUSHB_L1_UTIL_B22_OnReleasedShort, 0, PUSHB_L1_UTIL_B22_OnPressedShortAndHold, 0, PUSHB_L1_UTIL_B22_OnReleasedLong, 0, PUSHB_L1_UTIL_B22_OnDoubleclick, 0);
+
+// POWIT POWIT_L1_UTIL_C1
+sensactapps::cPoweritem POWIT_L1_UTIL_C1(eApplicationID::POWIT_L1_UTIL_C1, 16425, 0, 0);
+
+// Blind BLIND_L1_UTIL_J1
+sensactapps::cBlind BLIND_L1_UTIL_J1(eApplicationID::BLIND_L1_UTIL_J1, 16406, 16416, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L1_WORK_B11
+const Command PUSHB_L1_WORK_B11_OnPressed[1]={{eApplicationID::POWIT_L1_WORK_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B11_OnReleased=0;
+const Command *const PUSHB_L1_WORK_B11_OnReleasedShort=0;
+const Command *const PUSHB_L1_WORK_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_WORK_B11_OnReleasedLong=0;
+const Command *const PUSHB_L1_WORK_B11_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B11_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B11(eApplicationID::PUSHB_L1_WORK_B11, 16425, PUSHB_L1_WORK_B11_LocalEvents, 0, PUSHB_L1_WORK_B11_BusEvents, 0, PUSHB_L1_WORK_B11_OnPressed, 1, PUSHB_L1_WORK_B11_OnReleased, 0, PUSHB_L1_WORK_B11_OnReleasedShort, 0, PUSHB_L1_WORK_B11_OnPressedShortAndHold, 0, PUSHB_L1_WORK_B11_OnReleasedLong, 0, PUSHB_L1_WORK_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B12
+const Command PUSHB_L1_WORK_B12_OnPressed[1]={{eApplicationID::POWIT_L1_WORK_C2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B12_OnReleased=0;
+const Command *const PUSHB_L1_WORK_B12_OnReleasedShort=0;
+const Command *const PUSHB_L1_WORK_B12_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_WORK_B12_OnReleasedLong=0;
+const Command *const PUSHB_L1_WORK_B12_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B12_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B12(eApplicationID::PUSHB_L1_WORK_B12, 16424, PUSHB_L1_WORK_B12_LocalEvents, 0, PUSHB_L1_WORK_B12_BusEvents, 0, PUSHB_L1_WORK_B12_OnPressed, 1, PUSHB_L1_WORK_B12_OnReleased, 0, PUSHB_L1_WORK_B12_OnReleasedShort, 0, PUSHB_L1_WORK_B12_OnPressedShortAndHold, 0, PUSHB_L1_WORK_B12_OnReleasedLong, 0, PUSHB_L1_WORK_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B13
+const Command *const PUSHB_L1_WORK_B13_OnPressed=0;
+const Command *const PUSHB_L1_WORK_B13_OnReleased=0;
+const uint8_t PUSHB_L1_WORK_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_WORK_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::UP, PUSHB_L1_WORK_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_WORK_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_WORK_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::UP, PUSHB_L1_WORK_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_WORK_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B13_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B13_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B13(eApplicationID::PUSHB_L1_WORK_B13, 16423, PUSHB_L1_WORK_B13_LocalEvents, 0, PUSHB_L1_WORK_B13_BusEvents, 0, PUSHB_L1_WORK_B13_OnPressed, 0, PUSHB_L1_WORK_B13_OnReleased, 0, PUSHB_L1_WORK_B13_OnReleasedShort, 1, PUSHB_L1_WORK_B13_OnPressedShortAndHold, 1, PUSHB_L1_WORK_B13_OnReleasedLong, 1, PUSHB_L1_WORK_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B14
+const Command *const PUSHB_L1_WORK_B14_OnPressed=0;
+const Command *const PUSHB_L1_WORK_B14_OnReleased=0;
+const uint8_t PUSHB_L1_WORK_B14_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_WORK_B14_OnReleasedShort[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::DOWN, PUSHB_L1_WORK_B14_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_WORK_B14_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_WORK_B14_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::DOWN, PUSHB_L1_WORK_B14_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_WORK_B14_OnReleasedLong[1]={{eApplicationID::BLIND_L1_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B14_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B14_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B14(eApplicationID::PUSHB_L1_WORK_B14, 16435, PUSHB_L1_WORK_B14_LocalEvents, 0, PUSHB_L1_WORK_B14_BusEvents, 0, PUSHB_L1_WORK_B14_OnPressed, 0, PUSHB_L1_WORK_B14_OnReleased, 0, PUSHB_L1_WORK_B14_OnReleasedShort, 1, PUSHB_L1_WORK_B14_OnPressedShortAndHold, 1, PUSHB_L1_WORK_B14_OnReleasedLong, 1, PUSHB_L1_WORK_B14_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B15
+const Command *const PUSHB_L1_WORK_B15_OnPressed=0;
+const Command *const PUSHB_L1_WORK_B15_OnReleased=0;
+const uint8_t PUSHB_L1_WORK_B15_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_WORK_B15_OnReleasedShort[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::UP, PUSHB_L1_WORK_B15_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_WORK_B15_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_WORK_B15_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::UP, PUSHB_L1_WORK_B15_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_WORK_B15_OnReleasedLong[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B15_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B15_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B15_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B15(eApplicationID::PUSHB_L1_WORK_B15, 16434, PUSHB_L1_WORK_B15_LocalEvents, 0, PUSHB_L1_WORK_B15_BusEvents, 0, PUSHB_L1_WORK_B15_OnPressed, 0, PUSHB_L1_WORK_B15_OnReleased, 0, PUSHB_L1_WORK_B15_OnReleasedShort, 1, PUSHB_L1_WORK_B15_OnPressedShortAndHold, 1, PUSHB_L1_WORK_B15_OnReleasedLong, 1, PUSHB_L1_WORK_B15_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B16
+const Command *const PUSHB_L1_WORK_B16_OnPressed=0;
+const Command *const PUSHB_L1_WORK_B16_OnReleased=0;
+const uint8_t PUSHB_L1_WORK_B16_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_WORK_B16_OnReleasedShort[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::DOWN, PUSHB_L1_WORK_B16_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_WORK_B16_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_WORK_B16_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::DOWN, PUSHB_L1_WORK_B16_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_WORK_B16_OnReleasedLong[1]={{eApplicationID::BLIND_L1_WORK_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B16_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B16_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B16_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B16(eApplicationID::PUSHB_L1_WORK_B16, 16433, PUSHB_L1_WORK_B16_LocalEvents, 0, PUSHB_L1_WORK_B16_BusEvents, 0, PUSHB_L1_WORK_B16_OnPressed, 0, PUSHB_L1_WORK_B16_OnReleased, 0, PUSHB_L1_WORK_B16_OnReleasedShort, 1, PUSHB_L1_WORK_B16_OnPressedShortAndHold, 1, PUSHB_L1_WORK_B16_OnReleasedLong, 1, PUSHB_L1_WORK_B16_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_WORK_B17
+const Command PUSHB_L1_WORK_B17_OnPressed[1]={{eApplicationID::POWIT_LX_RGHT_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_WORK_B17_OnReleased=0;
+const Command *const PUSHB_L1_WORK_B17_OnReleasedShort=0;
+const Command *const PUSHB_L1_WORK_B17_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_WORK_B17_OnReleasedLong=0;
+const Command *const PUSHB_L1_WORK_B17_OnDoubleclick=0;
+eEventType *PUSHB_L1_WORK_B17_LocalEvents=0;
+eEventType *PUSHB_L1_WORK_B17_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_WORK_B17(eApplicationID::PUSHB_L1_WORK_B17, 16432, PUSHB_L1_WORK_B17_LocalEvents, 0, PUSHB_L1_WORK_B17_BusEvents, 0, PUSHB_L1_WORK_B17_OnPressed, 1, PUSHB_L1_WORK_B17_OnReleased, 0, PUSHB_L1_WORK_B17_OnReleasedShort, 0, PUSHB_L1_WORK_B17_OnPressedShortAndHold, 0, PUSHB_L1_WORK_B17_OnReleasedLong, 0, PUSHB_L1_WORK_B17_OnDoubleclick, 0);
+
+// POWIT POWIT_L1_WORK_C1
+sensactapps::cPoweritem POWIT_L1_WORK_C1(eApplicationID::POWIT_L1_WORK_C1, 16427, 0, 0);
+
+// POWIT POWIT_L1_WORK_C2
+sensactapps::cPoweritem POWIT_L1_WORK_C2(eApplicationID::POWIT_L1_WORK_C2, 16426, 0, 0);
+
+// Blind BLIND_L1_WORK_J1
+sensactapps::cBlind BLIND_L1_WORK_J1(eApplicationID::BLIND_L1_WORK_J1, 16407, 16417, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// Blind BLIND_L1_WORK_J2
+sensactapps::cBlind BLIND_L1_WORK_J2(eApplicationID::BLIND_L1_WORK_J2, 16408, 16418, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// Sensact node management application SNSCT_L0_TECH_HS_1 
+sensactapps::cSensactNode SNSCT_L0_TECH_HS_1(eApplicationID::SNSCT_L0_TECH_HS_1);
+
+
+
+
+
+cApplication *const MODEL::Glo2locCmd[] = {
+    0,
+    0,
+    &SNSCT_L0_TECH_HS_1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L0_CORR_B11,
+    &PUSHB_L0_CORR_B21,
+    &PUSHB_L0_CORR_B31,
+    &POWIT_L0_CORR_C1,
+    0,
+    &PUSHB_L0_PRTY_B11,
+    &PUSHB_L0_PRTY_B12,
+    0,
+    0,
+    &PWM___L0_PRTY_S,
+    0,
+    0,
+    0,
+    &PUSHB_L0_STO1_B11,
+    &POWIT_L0_STO1_C1,
+    0,
+    &PUSHB_L0_TECH_B11,
+    &POWIT_L0_TECH_C1,
+    0,
+    0,
+    &POWIT_L0_TECH_PUMP,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L0_WELL_B11,
+    &PUSHB_L0_WELL_B12,
+    &PUSHB_L0_WELL_B21,
+    0,
+    &POWIT_L0_WELL_C1,
+    0,
+    0,
+    &PWM___L0_WELL_S1,
+    &PWM___L0_WELL_S2,
+    0,
+    0,
+    &PUSHB_L0_WORK_B11,
+    &POWIT_L0_WORK_C1,
+    0,
+    0,
+    &PUSHB_L1_BATH_B11,
+    &PUSHB_L1_BATH_B12,
+    &PUSHB_L1_BATH_B13,
+    &BLIND_L1_BATH_J1,
+    &PWM___L1_BATH_S,
+    &RGBW__L1_BATH_W1,
+    0,
+    0,
+    0,
+    0,
+    &DEVCE_L0_TECH_AUDIO,
+    &PUSHB_L1_CORR_B11,
+    &PUSHB_L1_CORR_B21,
+    &PUSHB_L1_CORR_B22,
+    &PUSHB_L1_CORR_B23,
+    &PUSHB_L1_CORR_B24,
+    &PUSHB_L1_CORR_B25,
+    &PUSHB_L1_CORR_B26,
+    0,
+    0,
+    &PWM___L1_CORR_S,
+    0,
+    &PWM___L1_CORR_W1,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_KTCH_B11,
+    &PUSHB_L1_KTCH_B12,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_KTCH_B31,
+    &PUSHB_L1_KTCH_B32,
+    &POWIT_L1_KTCH_C1,
+    0,
+    &BLIND_L1_KTCH_J1,
+    &BLIND_L1_KTCH_J2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_LVNG_B11,
+    &PUSHB_L1_LVNG_B12,
+    &PUSHB_L1_LVNG_B13,
+    &PUSHB_L1_LVNG_B14,
+    &PUSHB_L1_LVNG_B15,
+    &PUSHB_L1_LVNG_B16,
+    &PUSHB_L1_LVNG_B21,
+    &PUSHB_L1_LVNG_B22,
+    &PUSHB_L1_LVNG_B23,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_LVNG_B51,
+    &PUSHB_L1_LVNG_B52,
+    &PUSHB_L1_LVNG_B53,
+    &POWIT_L1_LVNG_C1,
+    0,
+    &BLIND_L1_LVNG_J1,
+    &BLIND_L1_LVNG_J2,
+    &BLIND_L1_LVNG_J3,
+    &POWIT_L1_LVNG_P1,
+    0,
+    &POWIT_L1_LVNG_P4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L1_LVNG_W4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_UTIL_B11,
+    &PUSHB_L1_UTIL_B12,
+    &PUSHB_L1_UTIL_B13,
+    &PUSHB_L1_UTIL_B21,
+    &PUSHB_L1_UTIL_B22,
+    0,
+    0,
+    &POWIT_L1_UTIL_C1,
+    &BLIND_L1_UTIL_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_WORK_B11,
+    &PUSHB_L1_WORK_B12,
+    &PUSHB_L1_WORK_B13,
+    &PUSHB_L1_WORK_B14,
+    &PUSHB_L1_WORK_B15,
+    &PUSHB_L1_WORK_B16,
+    &PUSHB_L1_WORK_B17,
+    &POWIT_L1_WORK_C1,
+    &POWIT_L1_WORK_C2,
+    &BLIND_L1_WORK_J1,
+    &BLIND_L1_WORK_J2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &BLIND_LX_BACK_J1,
+    &POWIT_LX_BACK_P1,
+    0,
+    &POWIT_LX_BACK_P3,
+    0,
+    &POWIT_LX_BACK_W1,
+    &POWIT_LX_BACK_W2,
+    &POWIT_LX_BACK_W3,
+    0,
+    0,
+    &PUSHB_LX_FRON_B1,
+    &LIBAR_LX_FRON_B2,
+    &POWIT_LX_FRON_W1,
+    &PUSHB_LX_GARA_B11,
+    0,
+    &POWIT_LX_GARA_C1,
+    0,
+    0,
+    0,
+    &POWIT_LX_LEFT_W1,
+    &POWIT_LX_RGHT_W1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &STDBY_L0_TECH_48V,
+    &STDBY_L2_CORR_24V,
+    0,
+    0,
+    0,
+
+};
+
+
+
+cApplication *const MODEL::Glo2locEvt[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+#endif
+
+#ifdef NODE_SNSCT_L3_TECH_HS_1
+
+const eNodeID MODEL::NodeID = eNodeID::SNSCT_L3_TECH_HS_1;
+
+
+
+const char MODEL::ModelString[] ="NodeId SNSCT_L3_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+}//end namespace
+#include <modules/core/cModel_base.inc>
+namespace sensact{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L3_TECH_HS_1;
+
+// PushButtonX PUSHB_L2_BATH_B13
+const Command *const PUSHB_L2_BATH_B13_OnPressed=0;
+const Command *const PUSHB_L2_BATH_B13_OnReleased=0;
+const uint8_t PUSHB_L2_BATH_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BATH_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::UP, PUSHB_L2_BATH_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BATH_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BATH_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::UP, PUSHB_L2_BATH_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BATH_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BATH_B13_OnDoubleclick=0;
+eEventType *PUSHB_L2_BATH_B13_LocalEvents=0;
+eEventType *PUSHB_L2_BATH_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BATH_B13(eApplicationID::PUSHB_L2_BATH_B13, 16385, PUSHB_L2_BATH_B13_LocalEvents, 0, PUSHB_L2_BATH_B13_BusEvents, 0, PUSHB_L2_BATH_B13_OnPressed, 0, PUSHB_L2_BATH_B13_OnReleased, 0, PUSHB_L2_BATH_B13_OnReleasedShort, 1, PUSHB_L2_BATH_B13_OnPressedShortAndHold, 1, PUSHB_L2_BATH_B13_OnReleasedLong, 1, PUSHB_L2_BATH_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BATH_B14
+const Command *const PUSHB_L2_BATH_B14_OnPressed=0;
+const Command *const PUSHB_L2_BATH_B14_OnReleased=0;
+const uint8_t PUSHB_L2_BATH_B14_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BATH_B14_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::DOWN, PUSHB_L2_BATH_B14_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BATH_B14_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BATH_B14_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::DOWN, PUSHB_L2_BATH_B14_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BATH_B14_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BATH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BATH_B14_OnDoubleclick=0;
+eEventType *PUSHB_L2_BATH_B14_LocalEvents=0;
+eEventType *PUSHB_L2_BATH_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BATH_B14(eApplicationID::PUSHB_L2_BATH_B14, 16384, PUSHB_L2_BATH_B14_LocalEvents, 0, PUSHB_L2_BATH_B14_BusEvents, 0, PUSHB_L2_BATH_B14_OnPressed, 0, PUSHB_L2_BATH_B14_OnReleased, 0, PUSHB_L2_BATH_B14_OnReleasedShort, 1, PUSHB_L2_BATH_B14_OnPressedShortAndHold, 1, PUSHB_L2_BATH_B14_OnReleasedLong, 1, PUSHB_L2_BATH_B14_OnDoubleclick, 0);
+
+// Blind BLIND_L2_BATH_J1
+sensactapps::cBlind BLIND_L2_BATH_J1(eApplicationID::BLIND_L2_BATH_J1, 32784, 32793, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L2_BEDR_B11
+const Command PUSHB_L2_BEDR_B11_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P3, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B11_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B11_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B11_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B11_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B11_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B11(eApplicationID::PUSHB_L2_BEDR_B11, 16387, PUSHB_L2_BEDR_B11_LocalEvents, 0, PUSHB_L2_BEDR_B11_BusEvents, 0, PUSHB_L2_BEDR_B11_OnPressed, 1, PUSHB_L2_BEDR_B11_OnReleased, 0, PUSHB_L2_BEDR_B11_OnReleasedShort, 0, PUSHB_L2_BEDR_B11_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B11_OnReleasedLong, 0, PUSHB_L2_BEDR_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B12
+const Command PUSHB_L2_BEDR_B12_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B12_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B12_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B12_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B12_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B12_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B12_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B12(eApplicationID::PUSHB_L2_BEDR_B12, 16386, PUSHB_L2_BEDR_B12_LocalEvents, 0, PUSHB_L2_BEDR_B12_BusEvents, 0, PUSHB_L2_BEDR_B12_OnPressed, 1, PUSHB_L2_BEDR_B12_OnReleased, 0, PUSHB_L2_BEDR_B12_OnReleasedShort, 0, PUSHB_L2_BEDR_B12_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B12_OnReleasedLong, 0, PUSHB_L2_BEDR_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B13
+const Command *const PUSHB_L2_BEDR_B13_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B13_OnReleased=0;
+const Command PUSHB_L2_BEDR_B13_OnReleasedShort[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_BEDR_B13_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_BEDR_B13_OnReleasedLong[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_BEDR_B13_OnDoubleclick[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_BEDR_B13_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B13(eApplicationID::PUSHB_L2_BEDR_B13, 16390, PUSHB_L2_BEDR_B13_LocalEvents, 0, PUSHB_L2_BEDR_B13_BusEvents, 0, PUSHB_L2_BEDR_B13_OnPressed, 0, PUSHB_L2_BEDR_B13_OnReleased, 0, PUSHB_L2_BEDR_B13_OnReleasedShort, 1, PUSHB_L2_BEDR_B13_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B13_OnReleasedLong, 1, PUSHB_L2_BEDR_B13_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_BEDR_B14
+const Command *const PUSHB_L2_BEDR_B14_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B14_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B14_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B14_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B14_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B14_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B14_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B14_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B14_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B14_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B14_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B14(eApplicationID::PUSHB_L2_BEDR_B14, 16389, PUSHB_L2_BEDR_B14_LocalEvents, 0, PUSHB_L2_BEDR_B14_BusEvents, 0, PUSHB_L2_BEDR_B14_OnPressed, 0, PUSHB_L2_BEDR_B14_OnReleased, 0, PUSHB_L2_BEDR_B14_OnReleasedShort, 1, PUSHB_L2_BEDR_B14_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B14_OnReleasedLong, 1, PUSHB_L2_BEDR_B14_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B15
+const Command *const PUSHB_L2_BEDR_B15_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B15_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B15_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B15_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B15_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B15_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B15_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B15_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B15_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B15_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B15_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B15_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B15(eApplicationID::PUSHB_L2_BEDR_B15, 16388, PUSHB_L2_BEDR_B15_LocalEvents, 0, PUSHB_L2_BEDR_B15_BusEvents, 0, PUSHB_L2_BEDR_B15_OnPressed, 0, PUSHB_L2_BEDR_B15_OnReleased, 0, PUSHB_L2_BEDR_B15_OnReleasedShort, 1, PUSHB_L2_BEDR_B15_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B15_OnReleasedLong, 1, PUSHB_L2_BEDR_B15_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B25
+const Command PUSHB_L2_BEDR_B25_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P3, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B25_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B25_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B25_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B25_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B25_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B25_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B25_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B25(eApplicationID::PUSHB_L2_BEDR_B25, 16394, PUSHB_L2_BEDR_B25_LocalEvents, 0, PUSHB_L2_BEDR_B25_BusEvents, 0, PUSHB_L2_BEDR_B25_OnPressed, 1, PUSHB_L2_BEDR_B25_OnReleased, 0, PUSHB_L2_BEDR_B25_OnReleasedShort, 0, PUSHB_L2_BEDR_B25_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B25_OnReleasedLong, 0, PUSHB_L2_BEDR_B25_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B24
+const Command PUSHB_L2_BEDR_B24_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B24_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B24_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B24_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B24_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B24_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B24_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B24_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B24(eApplicationID::PUSHB_L2_BEDR_B24, 16395, PUSHB_L2_BEDR_B24_LocalEvents, 0, PUSHB_L2_BEDR_B24_BusEvents, 0, PUSHB_L2_BEDR_B24_OnPressed, 1, PUSHB_L2_BEDR_B24_OnReleased, 0, PUSHB_L2_BEDR_B24_OnReleasedShort, 0, PUSHB_L2_BEDR_B24_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B24_OnReleasedLong, 0, PUSHB_L2_BEDR_B24_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B23
+const Command *const PUSHB_L2_BEDR_B23_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B23_OnReleased=0;
+const Command PUSHB_L2_BEDR_B23_OnReleasedShort[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_BEDR_B23_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_BEDR_B23_OnReleasedLong[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_BEDR_B23_OnDoubleclick[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_BEDR_B23_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B23_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B23(eApplicationID::PUSHB_L2_BEDR_B23, 16393, PUSHB_L2_BEDR_B23_LocalEvents, 0, PUSHB_L2_BEDR_B23_BusEvents, 0, PUSHB_L2_BEDR_B23_OnPressed, 0, PUSHB_L2_BEDR_B23_OnReleased, 0, PUSHB_L2_BEDR_B23_OnReleasedShort, 1, PUSHB_L2_BEDR_B23_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B23_OnReleasedLong, 1, PUSHB_L2_BEDR_B23_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_BEDR_B21
+const Command *const PUSHB_L2_BEDR_B21_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B21_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B21_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B21_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B21_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B21_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B21_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B21_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B21_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B21_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B21_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B21(eApplicationID::PUSHB_L2_BEDR_B21, 16392, PUSHB_L2_BEDR_B21_LocalEvents, 0, PUSHB_L2_BEDR_B21_BusEvents, 0, PUSHB_L2_BEDR_B21_OnPressed, 0, PUSHB_L2_BEDR_B21_OnReleased, 0, PUSHB_L2_BEDR_B21_OnReleasedShort, 1, PUSHB_L2_BEDR_B21_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B21_OnReleasedLong, 1, PUSHB_L2_BEDR_B21_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B22
+const Command *const PUSHB_L2_BEDR_B22_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B22_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B22_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B22_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B22_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B22_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B22_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B22_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B22_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B22_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B22_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B22(eApplicationID::PUSHB_L2_BEDR_B22, 16391, PUSHB_L2_BEDR_B22_LocalEvents, 0, PUSHB_L2_BEDR_B22_BusEvents, 0, PUSHB_L2_BEDR_B22_OnPressed, 0, PUSHB_L2_BEDR_B22_OnReleased, 0, PUSHB_L2_BEDR_B22_OnReleasedShort, 1, PUSHB_L2_BEDR_B22_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B22_OnReleasedLong, 1, PUSHB_L2_BEDR_B22_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B31
+const Command *const PUSHB_L2_BEDR_B31_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B31_OnReleased=0;
+const Command PUSHB_L2_BEDR_B31_OnReleasedShort[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_BEDR_B31_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::UP, 0, 0, },};
+const Command PUSHB_L2_BEDR_B31_OnReleasedLong[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B31_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B31_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B31_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B31(eApplicationID::PUSHB_L2_BEDR_B31, 16399, PUSHB_L2_BEDR_B31_LocalEvents, 0, PUSHB_L2_BEDR_B31_BusEvents, 0, PUSHB_L2_BEDR_B31_OnPressed, 0, PUSHB_L2_BEDR_B31_OnReleased, 0, PUSHB_L2_BEDR_B31_OnReleasedShort, 1, PUSHB_L2_BEDR_B31_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B31_OnReleasedLong, 1, PUSHB_L2_BEDR_B31_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B32
+const Command *const PUSHB_L2_BEDR_B32_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B32_OnReleased=0;
+const Command PUSHB_L2_BEDR_B32_OnReleasedShort[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_BEDR_B32_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::DOWN, 0, 0, },};
+const Command PUSHB_L2_BEDR_B32_OnReleasedLong[1]={{eApplicationID::PWM___L2_BEDR_S, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B32_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B32_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B32_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B32(eApplicationID::PUSHB_L2_BEDR_B32, 16397, PUSHB_L2_BEDR_B32_LocalEvents, 0, PUSHB_L2_BEDR_B32_BusEvents, 0, PUSHB_L2_BEDR_B32_OnPressed, 0, PUSHB_L2_BEDR_B32_OnReleased, 0, PUSHB_L2_BEDR_B32_OnReleasedShort, 1, PUSHB_L2_BEDR_B32_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B32_OnReleasedLong, 1, PUSHB_L2_BEDR_B32_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B33
+const Command PUSHB_L2_BEDR_B33_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B33_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B33_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B33_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B33_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B33_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B33_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B33_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B33(eApplicationID::PUSHB_L2_BEDR_B33, 16396, PUSHB_L2_BEDR_B33_LocalEvents, 0, PUSHB_L2_BEDR_B33_BusEvents, 0, PUSHB_L2_BEDR_B33_OnPressed, 1, PUSHB_L2_BEDR_B33_OnReleased, 0, PUSHB_L2_BEDR_B33_OnReleasedShort, 0, PUSHB_L2_BEDR_B33_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B33_OnReleasedLong, 0, PUSHB_L2_BEDR_B33_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B34
+const Command PUSHB_L2_BEDR_B34_OnPressed[1]={{eApplicationID::POWIT_L2_BEDR_P2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B34_OnReleased=0;
+const Command *const PUSHB_L2_BEDR_B34_OnReleasedShort=0;
+const Command *const PUSHB_L2_BEDR_B34_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_BEDR_B34_OnReleasedLong=0;
+const Command *const PUSHB_L2_BEDR_B34_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B34_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B34_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B34(eApplicationID::PUSHB_L2_BEDR_B34, 16401, PUSHB_L2_BEDR_B34_LocalEvents, 0, PUSHB_L2_BEDR_B34_BusEvents, 0, PUSHB_L2_BEDR_B34_OnPressed, 1, PUSHB_L2_BEDR_B34_OnReleased, 0, PUSHB_L2_BEDR_B34_OnReleasedShort, 0, PUSHB_L2_BEDR_B34_OnPressedShortAndHold, 0, PUSHB_L2_BEDR_B34_OnReleasedLong, 0, PUSHB_L2_BEDR_B34_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B35
+const Command *const PUSHB_L2_BEDR_B35_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B35_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B35_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B35_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B35_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B35_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B35_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::UP, PUSHB_L2_BEDR_B35_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B35_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B35_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B35_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B35_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B35(eApplicationID::PUSHB_L2_BEDR_B35, 16398, PUSHB_L2_BEDR_B35_LocalEvents, 0, PUSHB_L2_BEDR_B35_BusEvents, 0, PUSHB_L2_BEDR_B35_OnPressed, 0, PUSHB_L2_BEDR_B35_OnReleased, 0, PUSHB_L2_BEDR_B35_OnReleasedShort, 1, PUSHB_L2_BEDR_B35_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B35_OnReleasedLong, 1, PUSHB_L2_BEDR_B35_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_BEDR_B36
+const Command *const PUSHB_L2_BEDR_B36_OnPressed=0;
+const Command *const PUSHB_L2_BEDR_B36_OnReleased=0;
+const uint8_t PUSHB_L2_BEDR_B36_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_BEDR_B36_OnReleasedShort[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B36_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_BEDR_B36_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_BEDR_B36_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::DOWN, PUSHB_L2_BEDR_B36_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_BEDR_B36_OnReleasedLong[1]={{eApplicationID::BLIND_L2_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_BEDR_B36_OnDoubleclick=0;
+eEventType *PUSHB_L2_BEDR_B36_LocalEvents=0;
+eEventType *PUSHB_L2_BEDR_B36_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_BEDR_B36(eApplicationID::PUSHB_L2_BEDR_B36, 16400, PUSHB_L2_BEDR_B36_LocalEvents, 0, PUSHB_L2_BEDR_B36_BusEvents, 0, PUSHB_L2_BEDR_B36_OnPressed, 0, PUSHB_L2_BEDR_B36_OnReleased, 0, PUSHB_L2_BEDR_B36_OnReleasedShort, 1, PUSHB_L2_BEDR_B36_OnPressedShortAndHold, 1, PUSHB_L2_BEDR_B36_OnReleasedLong, 1, PUSHB_L2_BEDR_B36_OnDoubleclick, 0);
+
+// Blind BLIND_L2_BEDR_J1
+sensactapps::cBlind BLIND_L2_BEDR_J1(eApplicationID::BLIND_L2_BEDR_J1, 32785, 32794, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PWM PWM___L2_BEDR_S (Dimmer )
+uint16_t PWM___L2_BEDR_S_output=32769;
+sensactapps::cPWM PWM___L2_BEDR_S(eApplicationID::PWM___L2_BEDR_S, PWM___L2_BEDR_S_output, 2, 2, 255, false, eApplicationID::STDBY_L3_TECH_48V, 0);
+
+// POWIT POWIT_L2_BEDR_P1
+sensactapps::cPoweritem POWIT_L2_BEDR_P1(eApplicationID::POWIT_L2_BEDR_P1, 32812, 0, 0);
+
+// POWIT POWIT_L2_BEDR_P2
+sensactapps::cPoweritem POWIT_L2_BEDR_P2(eApplicationID::POWIT_L2_BEDR_P2, 32813, 0, 0);
+
+// POWIT POWIT_L2_BEDR_P3
+sensactapps::cPoweritem POWIT_L2_BEDR_P3(eApplicationID::POWIT_L2_BEDR_P3, 32814, 0, 0);
+
+// PushButtonX PUSHB_L2_CORR_B11
+const Command *const PUSHB_L2_CORR_B11_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B11_OnReleased=0;
+const Command PUSHB_L2_CORR_B11_OnReleasedShort[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_CORR_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_CORR_B11_OnReleasedLong[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_CORR_B11_OnDoubleclick[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_CORR_B11_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B11(eApplicationID::PUSHB_L2_CORR_B11, 16404, PUSHB_L2_CORR_B11_LocalEvents, 0, PUSHB_L2_CORR_B11_BusEvents, 0, PUSHB_L2_CORR_B11_OnPressed, 0, PUSHB_L2_CORR_B11_OnReleased, 0, PUSHB_L2_CORR_B11_OnReleasedShort, 1, PUSHB_L2_CORR_B11_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B11_OnReleasedLong, 1, PUSHB_L2_CORR_B11_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_CORR_B21
+const Command *const PUSHB_L2_CORR_B21_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B21_OnReleased=0;
+const Command PUSHB_L2_CORR_B21_OnReleasedShort[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_CORR_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_CORR_B21_OnReleasedLong[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_CORR_B21_OnDoubleclick[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_CORR_B21_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B21(eApplicationID::PUSHB_L2_CORR_B21, 16403, PUSHB_L2_CORR_B21_LocalEvents, 0, PUSHB_L2_CORR_B21_BusEvents, 0, PUSHB_L2_CORR_B21_OnPressed, 0, PUSHB_L2_CORR_B21_OnReleased, 0, PUSHB_L2_CORR_B21_OnReleasedShort, 1, PUSHB_L2_CORR_B21_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B21_OnReleasedLong, 1, PUSHB_L2_CORR_B21_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_CORR_B31
+const Command *const PUSHB_L2_CORR_B31_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B31_OnReleased=0;
+const Command PUSHB_L2_CORR_B31_OnReleasedShort[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_CORR_B31_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_CORR_B31_OnReleasedLong[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_CORR_B31_OnDoubleclick[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_CORR_B31_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B31_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B31(eApplicationID::PUSHB_L2_CORR_B31, 16402, PUSHB_L2_CORR_B31_LocalEvents, 0, PUSHB_L2_CORR_B31_BusEvents, 0, PUSHB_L2_CORR_B31_OnPressed, 0, PUSHB_L2_CORR_B31_OnReleased, 0, PUSHB_L2_CORR_B31_OnReleasedShort, 1, PUSHB_L2_CORR_B31_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B31_OnReleasedLong, 1, PUSHB_L2_CORR_B31_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_CORR_B41
+const Command *const PUSHB_L2_CORR_B41_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B41_OnReleased=0;
+const Command PUSHB_L2_CORR_B41_OnReleasedShort[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_CORR_B41_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_CORR_B41_OnReleasedLong[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_CORR_B41_OnDoubleclick[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_CORR_B41_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B41_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B41(eApplicationID::PUSHB_L2_CORR_B41, 16407, PUSHB_L2_CORR_B41_LocalEvents, 0, PUSHB_L2_CORR_B41_BusEvents, 0, PUSHB_L2_CORR_B41_OnPressed, 0, PUSHB_L2_CORR_B41_OnReleased, 0, PUSHB_L2_CORR_B41_OnReleasedShort, 1, PUSHB_L2_CORR_B41_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B41_OnReleasedLong, 1, PUSHB_L2_CORR_B41_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_CORR_B42
+const Command *const PUSHB_L2_CORR_B42_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B42_OnReleased=0;
+const uint8_t PUSHB_L2_CORR_B42_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_CORR_B42_OnReleasedShort[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::UP, PUSHB_L2_CORR_B42_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_CORR_B42_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_CORR_B42_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::UP, PUSHB_L2_CORR_B42_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_CORR_B42_OnReleasedLong[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_CORR_B42_OnDoubleclick=0;
+eEventType *PUSHB_L2_CORR_B42_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B42_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B42(eApplicationID::PUSHB_L2_CORR_B42, 16406, PUSHB_L2_CORR_B42_LocalEvents, 0, PUSHB_L2_CORR_B42_BusEvents, 0, PUSHB_L2_CORR_B42_OnPressed, 0, PUSHB_L2_CORR_B42_OnReleased, 0, PUSHB_L2_CORR_B42_OnReleasedShort, 1, PUSHB_L2_CORR_B42_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B42_OnReleasedLong, 1, PUSHB_L2_CORR_B42_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_CORR_B43
+const Command *const PUSHB_L2_CORR_B43_OnPressed=0;
+const Command *const PUSHB_L2_CORR_B43_OnReleased=0;
+const uint8_t PUSHB_L2_CORR_B43_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_CORR_B43_OnReleasedShort[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::DOWN, PUSHB_L2_CORR_B43_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_CORR_B43_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_CORR_B43_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::DOWN, PUSHB_L2_CORR_B43_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_CORR_B43_OnReleasedLong[1]={{eApplicationID::BLIND_L2_CORR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_CORR_B43_OnDoubleclick=0;
+eEventType *PUSHB_L2_CORR_B43_LocalEvents=0;
+eEventType *PUSHB_L2_CORR_B43_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_CORR_B43(eApplicationID::PUSHB_L2_CORR_B43, 16405, PUSHB_L2_CORR_B43_LocalEvents, 0, PUSHB_L2_CORR_B43_BusEvents, 0, PUSHB_L2_CORR_B43_OnPressed, 0, PUSHB_L2_CORR_B43_OnReleased, 0, PUSHB_L2_CORR_B43_OnReleasedShort, 1, PUSHB_L2_CORR_B43_OnPressedShortAndHold, 1, PUSHB_L2_CORR_B43_OnReleasedLong, 1, PUSHB_L2_CORR_B43_OnDoubleclick, 0);
+
+// Blind BLIND_L2_CORR_J1
+sensactapps::cBlind BLIND_L2_CORR_J1(eApplicationID::BLIND_L2_CORR_J1, 32786, 32795, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L2_KID1_B11
+const Command PUSHB_L2_KID1_B11_OnPressed[1]={{eApplicationID::POWIT_L2_KID1_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_KID1_B11_OnReleased=0;
+const Command *const PUSHB_L2_KID1_B11_OnReleasedShort=0;
+const Command *const PUSHB_L2_KID1_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_KID1_B11_OnReleasedLong=0;
+const Command *const PUSHB_L2_KID1_B11_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID1_B11_LocalEvents=0;
+eEventType *PUSHB_L2_KID1_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID1_B11(eApplicationID::PUSHB_L2_KID1_B11, 16410, PUSHB_L2_KID1_B11_LocalEvents, 0, PUSHB_L2_KID1_B11_BusEvents, 0, PUSHB_L2_KID1_B11_OnPressed, 1, PUSHB_L2_KID1_B11_OnReleased, 0, PUSHB_L2_KID1_B11_OnReleasedShort, 0, PUSHB_L2_KID1_B11_OnPressedShortAndHold, 0, PUSHB_L2_KID1_B11_OnReleasedLong, 0, PUSHB_L2_KID1_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID1_B12
+const Command *const PUSHB_L2_KID1_B12_OnPressed=0;
+const Command *const PUSHB_L2_KID1_B12_OnReleased=0;
+const uint8_t PUSHB_L2_KID1_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_KID1_B12_OnReleasedShort[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::UP, PUSHB_L2_KID1_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_KID1_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_KID1_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::UP, PUSHB_L2_KID1_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_KID1_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_KID1_B12_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID1_B12_LocalEvents=0;
+eEventType *PUSHB_L2_KID1_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID1_B12(eApplicationID::PUSHB_L2_KID1_B12, 16409, PUSHB_L2_KID1_B12_LocalEvents, 0, PUSHB_L2_KID1_B12_BusEvents, 0, PUSHB_L2_KID1_B12_OnPressed, 0, PUSHB_L2_KID1_B12_OnReleased, 0, PUSHB_L2_KID1_B12_OnReleasedShort, 1, PUSHB_L2_KID1_B12_OnPressedShortAndHold, 1, PUSHB_L2_KID1_B12_OnReleasedLong, 1, PUSHB_L2_KID1_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID1_B13
+const Command *const PUSHB_L2_KID1_B13_OnPressed=0;
+const Command *const PUSHB_L2_KID1_B13_OnReleased=0;
+const uint8_t PUSHB_L2_KID1_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_KID1_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::DOWN, PUSHB_L2_KID1_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_KID1_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_KID1_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::DOWN, PUSHB_L2_KID1_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_KID1_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L2_KID1_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_KID1_B13_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID1_B13_LocalEvents=0;
+eEventType *PUSHB_L2_KID1_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID1_B13(eApplicationID::PUSHB_L2_KID1_B13, 16408, PUSHB_L2_KID1_B13_LocalEvents, 0, PUSHB_L2_KID1_B13_BusEvents, 0, PUSHB_L2_KID1_B13_OnPressed, 0, PUSHB_L2_KID1_B13_OnReleased, 0, PUSHB_L2_KID1_B13_OnReleasedShort, 1, PUSHB_L2_KID1_B13_OnPressedShortAndHold, 1, PUSHB_L2_KID1_B13_OnReleasedLong, 1, PUSHB_L2_KID1_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID1_B21
+const Command PUSHB_L2_KID1_B21_OnPressed[1]={{eApplicationID::POWIT_L2_KID1_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_KID1_B21_OnReleased=0;
+const Command *const PUSHB_L2_KID1_B21_OnReleasedShort=0;
+const Command *const PUSHB_L2_KID1_B21_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_KID1_B21_OnReleasedLong=0;
+const Command *const PUSHB_L2_KID1_B21_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID1_B21_LocalEvents=0;
+eEventType *PUSHB_L2_KID1_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID1_B21(eApplicationID::PUSHB_L2_KID1_B21, 16412, PUSHB_L2_KID1_B21_LocalEvents, 0, PUSHB_L2_KID1_B21_BusEvents, 0, PUSHB_L2_KID1_B21_OnPressed, 1, PUSHB_L2_KID1_B21_OnReleased, 0, PUSHB_L2_KID1_B21_OnReleasedShort, 0, PUSHB_L2_KID1_B21_OnPressedShortAndHold, 0, PUSHB_L2_KID1_B21_OnReleasedLong, 0, PUSHB_L2_KID1_B21_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID1_B22
+const Command PUSHB_L2_KID1_B22_OnPressed[1]={{eApplicationID::POWIT_L2_KID1_C2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_KID1_B22_OnReleased=0;
+const Command *const PUSHB_L2_KID1_B22_OnReleasedShort=0;
+const Command *const PUSHB_L2_KID1_B22_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_KID1_B22_OnReleasedLong=0;
+const Command *const PUSHB_L2_KID1_B22_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID1_B22_LocalEvents=0;
+eEventType *PUSHB_L2_KID1_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID1_B22(eApplicationID::PUSHB_L2_KID1_B22, 16411, PUSHB_L2_KID1_B22_LocalEvents, 0, PUSHB_L2_KID1_B22_BusEvents, 0, PUSHB_L2_KID1_B22_OnPressed, 1, PUSHB_L2_KID1_B22_OnReleased, 0, PUSHB_L2_KID1_B22_OnReleasedShort, 0, PUSHB_L2_KID1_B22_OnPressedShortAndHold, 0, PUSHB_L2_KID1_B22_OnReleasedLong, 0, PUSHB_L2_KID1_B22_OnDoubleclick, 0);
+
+// POWIT POWIT_L2_KID1_C1
+sensactapps::cPoweritem POWIT_L2_KID1_C1(eApplicationID::POWIT_L2_KID1_C1, 32807, 0, 0);
+
+// POWIT POWIT_L2_KID1_C2
+sensactapps::cPoweritem POWIT_L2_KID1_C2(eApplicationID::POWIT_L2_KID1_C2, 32808, 360000, 0);
+
+// Blind BLIND_L2_KID1_J1
+sensactapps::cBlind BLIND_L2_KID1_J1(eApplicationID::BLIND_L2_KID1_J1, 32787, 32796, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L2_KID2_B11
+const Command PUSHB_L2_KID2_B11_OnPressed[1]={{eApplicationID::POWIT_L2_KID2_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L2_KID2_B11_OnReleased=0;
+const Command *const PUSHB_L2_KID2_B11_OnReleasedShort=0;
+const Command *const PUSHB_L2_KID2_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L2_KID2_B11_OnReleasedLong=0;
+const Command *const PUSHB_L2_KID2_B11_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID2_B11_LocalEvents=0;
+eEventType *PUSHB_L2_KID2_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID2_B11(eApplicationID::PUSHB_L2_KID2_B11, 16415, PUSHB_L2_KID2_B11_LocalEvents, 0, PUSHB_L2_KID2_B11_BusEvents, 0, PUSHB_L2_KID2_B11_OnPressed, 1, PUSHB_L2_KID2_B11_OnReleased, 0, PUSHB_L2_KID2_B11_OnReleasedShort, 0, PUSHB_L2_KID2_B11_OnPressedShortAndHold, 0, PUSHB_L2_KID2_B11_OnReleasedLong, 0, PUSHB_L2_KID2_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID2_B12
+const Command *const PUSHB_L2_KID2_B12_OnPressed=0;
+const Command *const PUSHB_L2_KID2_B12_OnReleased=0;
+const uint8_t PUSHB_L2_KID2_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_KID2_B12_OnReleasedShort[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::UP, PUSHB_L2_KID2_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_KID2_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_KID2_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::UP, PUSHB_L2_KID2_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_KID2_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_KID2_B12_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID2_B12_LocalEvents=0;
+eEventType *PUSHB_L2_KID2_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID2_B12(eApplicationID::PUSHB_L2_KID2_B12, 16414, PUSHB_L2_KID2_B12_LocalEvents, 0, PUSHB_L2_KID2_B12_BusEvents, 0, PUSHB_L2_KID2_B12_OnPressed, 0, PUSHB_L2_KID2_B12_OnReleased, 0, PUSHB_L2_KID2_B12_OnReleasedShort, 1, PUSHB_L2_KID2_B12_OnPressedShortAndHold, 1, PUSHB_L2_KID2_B12_OnReleasedLong, 1, PUSHB_L2_KID2_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_KID2_B13
+const Command *const PUSHB_L2_KID2_B13_OnPressed=0;
+const Command *const PUSHB_L2_KID2_B13_OnReleased=0;
+const uint8_t PUSHB_L2_KID2_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_KID2_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::DOWN, PUSHB_L2_KID2_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_KID2_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_KID2_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::DOWN, PUSHB_L2_KID2_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_KID2_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L2_KID2_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_KID2_B13_OnDoubleclick=0;
+eEventType *PUSHB_L2_KID2_B13_LocalEvents=0;
+eEventType *PUSHB_L2_KID2_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_KID2_B13(eApplicationID::PUSHB_L2_KID2_B13, 16413, PUSHB_L2_KID2_B13_LocalEvents, 0, PUSHB_L2_KID2_B13_BusEvents, 0, PUSHB_L2_KID2_B13_OnPressed, 0, PUSHB_L2_KID2_B13_OnReleased, 0, PUSHB_L2_KID2_B13_OnReleasedShort, 1, PUSHB_L2_KID2_B13_OnPressedShortAndHold, 1, PUSHB_L2_KID2_B13_OnReleasedLong, 1, PUSHB_L2_KID2_B13_OnDoubleclick, 0);
+
+// POWIT POWIT_L2_KID2_C1
+sensactapps::cPoweritem POWIT_L2_KID2_C1(eApplicationID::POWIT_L2_KID2_C1, 32809, 0, 0);
+
+// Blind BLIND_L2_KID2_J1
+sensactapps::cBlind BLIND_L2_KID2_J1(eApplicationID::BLIND_L2_KID2_J1, 32788, 32797, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PushButtonX PUSHB_L2_WORK_B11
+const Command *const PUSHB_L2_WORK_B11_OnPressed=0;
+const Command *const PUSHB_L2_WORK_B11_OnReleased=0;
+const Command PUSHB_L2_WORK_B11_OnReleasedShort[1]={{eApplicationID::PWM___L2_WORK_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L2_WORK_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_WORK_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L2_WORK_B11_OnReleasedLong[1]={{eApplicationID::PWM___L2_WORK_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L2_WORK_B11_OnDoubleclick[1]={{eApplicationID::PWM___L2_WORK_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L2_WORK_B11_LocalEvents=0;
+eEventType *PUSHB_L2_WORK_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_WORK_B11(eApplicationID::PUSHB_L2_WORK_B11, 16418, PUSHB_L2_WORK_B11_LocalEvents, 0, PUSHB_L2_WORK_B11_BusEvents, 0, PUSHB_L2_WORK_B11_OnPressed, 0, PUSHB_L2_WORK_B11_OnReleased, 0, PUSHB_L2_WORK_B11_OnReleasedShort, 1, PUSHB_L2_WORK_B11_OnPressedShortAndHold, 1, PUSHB_L2_WORK_B11_OnReleasedLong, 1, PUSHB_L2_WORK_B11_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L2_WORK_B12
+const Command *const PUSHB_L2_WORK_B12_OnPressed=0;
+const Command *const PUSHB_L2_WORK_B12_OnReleased=0;
+const uint8_t PUSHB_L2_WORK_B12_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_WORK_B12_OnReleasedShort[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::UP, PUSHB_L2_WORK_B12_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_WORK_B12_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_WORK_B12_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::UP, PUSHB_L2_WORK_B12_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_WORK_B12_OnReleasedLong[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_WORK_B12_OnDoubleclick=0;
+eEventType *PUSHB_L2_WORK_B12_LocalEvents=0;
+eEventType *PUSHB_L2_WORK_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_WORK_B12(eApplicationID::PUSHB_L2_WORK_B12, 16417, PUSHB_L2_WORK_B12_LocalEvents, 0, PUSHB_L2_WORK_B12_BusEvents, 0, PUSHB_L2_WORK_B12_OnPressed, 0, PUSHB_L2_WORK_B12_OnReleased, 0, PUSHB_L2_WORK_B12_OnReleasedShort, 1, PUSHB_L2_WORK_B12_OnPressedShortAndHold, 1, PUSHB_L2_WORK_B12_OnReleasedLong, 1, PUSHB_L2_WORK_B12_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L2_WORK_B13
+const Command *const PUSHB_L2_WORK_B13_OnPressed=0;
+const Command *const PUSHB_L2_WORK_B13_OnReleased=0;
+const uint8_t PUSHB_L2_WORK_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L2_WORK_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::DOWN, PUSHB_L2_WORK_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L2_WORK_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L2_WORK_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::DOWN, PUSHB_L2_WORK_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L2_WORK_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L2_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L2_WORK_B13_OnDoubleclick=0;
+eEventType *PUSHB_L2_WORK_B13_LocalEvents=0;
+eEventType *PUSHB_L2_WORK_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L2_WORK_B13(eApplicationID::PUSHB_L2_WORK_B13, 16416, PUSHB_L2_WORK_B13_LocalEvents, 0, PUSHB_L2_WORK_B13_BusEvents, 0, PUSHB_L2_WORK_B13_OnPressed, 0, PUSHB_L2_WORK_B13_OnReleased, 0, PUSHB_L2_WORK_B13_OnReleasedShort, 1, PUSHB_L2_WORK_B13_OnPressedShortAndHold, 1, PUSHB_L2_WORK_B13_OnReleasedLong, 1, PUSHB_L2_WORK_B13_OnDoubleclick, 0);
+
+// Blind BLIND_L2_WORK_J1
+sensactapps::cBlind BLIND_L2_WORK_J1(eApplicationID::BLIND_L2_WORK_J1, 32789, 32798, eRelayMode::INTERLOCKED_ACTIVE_UP, 40);
+
+// PWM PWM___L2_WORK_S (Dimmer )
+uint16_t PWM___L2_WORK_S_output[=32771;
+sensactapps::cPWM PWM___L2_WORK_S(eApplicationID::PWM___L2_WORK_S, PWM___L2_WORK_S_output, 2, 2, 255, false, eApplicationID::STDBY_L3_TECH_48V, 0);
+
+// PushButtonX PUSHB_L3_BEDR_B11
+const Command PUSHB_L3_BEDR_B11_OnPressed[1]={{eApplicationID::POWIT_L3_BEDR_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L3_BEDR_B11_OnReleased=0;
+const Command *const PUSHB_L3_BEDR_B11_OnReleasedShort=0;
+const Command *const PUSHB_L3_BEDR_B11_OnPressedShortAndHold=0;
+const Command *const PUSHB_L3_BEDR_B11_OnReleasedLong=0;
+const Command *const PUSHB_L3_BEDR_B11_OnDoubleclick=0;
+eEventType *PUSHB_L3_BEDR_B11_LocalEvents=0;
+eEventType *PUSHB_L3_BEDR_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_BEDR_B11(eApplicationID::PUSHB_L3_BEDR_B11, 16422, PUSHB_L3_BEDR_B11_LocalEvents, 0, PUSHB_L3_BEDR_B11_BusEvents, 0, PUSHB_L3_BEDR_B11_OnPressed, 1, PUSHB_L3_BEDR_B11_OnReleased, 0, PUSHB_L3_BEDR_B11_OnReleasedShort, 0, PUSHB_L3_BEDR_B11_OnPressedShortAndHold, 0, PUSHB_L3_BEDR_B11_OnReleasedLong, 0, PUSHB_L3_BEDR_B11_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L3_BEDR_B12
+const Command *const PUSHB_L3_BEDR_B12_OnPressed=0;
+const Command *const PUSHB_L3_BEDR_B12_OnReleased=0;
+const Command PUSHB_L3_BEDR_B12_OnReleasedShort[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L3_BEDR_B12_OnPressedShortAndHold[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::START, 0, 0, },};
+const Command PUSHB_L3_BEDR_B12_OnReleasedLong[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L3_BEDR_B12_OnDoubleclick[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L3_BEDR_B12_LocalEvents=0;
+eEventType *PUSHB_L3_BEDR_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_BEDR_B12(eApplicationID::PUSHB_L3_BEDR_B12, 16421, PUSHB_L3_BEDR_B12_LocalEvents, 0, PUSHB_L3_BEDR_B12_BusEvents, 0, PUSHB_L3_BEDR_B12_OnPressed, 0, PUSHB_L3_BEDR_B12_OnReleased, 0, PUSHB_L3_BEDR_B12_OnReleasedShort, 1, PUSHB_L3_BEDR_B12_OnPressedShortAndHold, 1, PUSHB_L3_BEDR_B12_OnReleasedLong, 1, PUSHB_L3_BEDR_B12_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L3_BEDR_B13
+const Command *const PUSHB_L3_BEDR_B13_OnPressed=0;
+const Command *const PUSHB_L3_BEDR_B13_OnReleased=0;
+const uint8_t PUSHB_L3_BEDR_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L3_BEDR_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::UP, PUSHB_L3_BEDR_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L3_BEDR_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L3_BEDR_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::UP, PUSHB_L3_BEDR_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L3_BEDR_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L3_BEDR_B13_OnDoubleclick=0;
+eEventType *PUSHB_L3_BEDR_B13_LocalEvents=0;
+eEventType *PUSHB_L3_BEDR_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_BEDR_B13(eApplicationID::PUSHB_L3_BEDR_B13, 16420, PUSHB_L3_BEDR_B13_LocalEvents, 0, PUSHB_L3_BEDR_B13_BusEvents, 0, PUSHB_L3_BEDR_B13_OnPressed, 0, PUSHB_L3_BEDR_B13_OnReleased, 0, PUSHB_L3_BEDR_B13_OnReleasedShort, 1, PUSHB_L3_BEDR_B13_OnPressedShortAndHold, 1, PUSHB_L3_BEDR_B13_OnReleasedLong, 1, PUSHB_L3_BEDR_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L3_BEDR_B14
+const Command *const PUSHB_L3_BEDR_B14_OnPressed=0;
+const Command *const PUSHB_L3_BEDR_B14_OnReleased=0;
+const uint8_t PUSHB_L3_BEDR_B14_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L3_BEDR_B14_OnReleasedShort[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::DOWN, PUSHB_L3_BEDR_B14_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L3_BEDR_B14_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L3_BEDR_B14_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::DOWN, PUSHB_L3_BEDR_B14_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L3_BEDR_B14_OnReleasedLong[1]={{eApplicationID::BLIND_L3_BEDR_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L3_BEDR_B14_OnDoubleclick=0;
+eEventType *PUSHB_L3_BEDR_B14_LocalEvents=0;
+eEventType *PUSHB_L3_BEDR_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_BEDR_B14(eApplicationID::PUSHB_L3_BEDR_B14, 16419, PUSHB_L3_BEDR_B14_LocalEvents, 0, PUSHB_L3_BEDR_B14_BusEvents, 0, PUSHB_L3_BEDR_B14_OnPressed, 0, PUSHB_L3_BEDR_B14_OnReleased, 0, PUSHB_L3_BEDR_B14_OnReleasedShort, 1, PUSHB_L3_BEDR_B14_OnPressedShortAndHold, 1, PUSHB_L3_BEDR_B14_OnReleasedLong, 1, PUSHB_L3_BEDR_B14_OnDoubleclick, 0);
+
+// POWIT POWIT_L3_BEDR_C1
+sensactapps::cPoweritem POWIT_L3_BEDR_C1(eApplicationID::POWIT_L3_BEDR_C1, 32810, 14400000, 0);
+
+// Blind BLIND_L3_BEDR_J1
+sensactapps::cBlind BLIND_L3_BEDR_J1(eApplicationID::BLIND_L3_BEDR_J1, 32791, 32800, eRelayMode::INTERLOCKED_ACTIVE_DOWN, 40);
+
+// PWM PWM___L3_CORR_S (Dimmer )
+uint16_t PWM___L3_CORR_S_output=32773;
+sensactapps::cPWM PWM___L3_CORR_S(eApplicationID::PWM___L3_CORR_S, PWM___L3_CORR_S_output, 1, 2, 255, false, eApplicationID::STDBY_L3_TECH_48V, 600000);
+
+// STDBY STDBY_L3_TECH_48V
+sensactapps::cStandbyController STDBY_L3_TECH_48V(eApplicationID::STDBY_L3_TECH_48V, 32803, 20000);
+
+// STDBY STDBY_L3_ROOF_48V
+sensactapps::cStandbyController STDBY_L3_ROOF_48V(eApplicationID::STDBY_L3_ROOF_48V, 32802, 20000);
+
+// PushButtonX PUSHB_L3_WORK_B11
+const Command *const PUSHB_L3_WORK_B11_OnPressed=0;
+const Command *const PUSHB_L3_WORK_B11_OnReleased=0;
+const Command PUSHB_L3_WORK_B11_OnReleasedShort[1]={{eApplicationID::PWM___L3_WORK_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L3_WORK_B11_OnPressedShortAndHold[1]={{eApplicationID::PWM___L3_WORK_C1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L3_WORK_B11_OnReleasedLong[1]={{eApplicationID::PWM___L3_WORK_C1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L3_WORK_B11_OnDoubleclick[1]={{eApplicationID::PWM___L3_WORK_C1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L3_WORK_B11_LocalEvents=0;
+eEventType *PUSHB_L3_WORK_B11_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_WORK_B11(eApplicationID::PUSHB_L3_WORK_B11, 16425, PUSHB_L3_WORK_B11_LocalEvents, 0, PUSHB_L3_WORK_B11_BusEvents, 0, PUSHB_L3_WORK_B11_OnPressed, 0, PUSHB_L3_WORK_B11_OnReleased, 0, PUSHB_L3_WORK_B11_OnReleasedShort, 1, PUSHB_L3_WORK_B11_OnPressedShortAndHold, 1, PUSHB_L3_WORK_B11_OnReleasedLong, 1, PUSHB_L3_WORK_B11_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L3_WORK_B12
+const Command *const PUSHB_L3_WORK_B12_OnPressed=0;
+const Command *const PUSHB_L3_WORK_B12_OnReleased=0;
+const Command PUSHB_L3_WORK_B12_OnReleasedShort[1]={{eApplicationID::PWM___L3_WORK_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L3_WORK_B12_OnPressedShortAndHold[1]={{eApplicationID::PWM___L3_WORK_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_L3_WORK_B12_OnReleasedLong[1]={{eApplicationID::PWM___L3_WORK_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L3_WORK_B12_OnDoubleclick[1]={{eApplicationID::PWM___L3_WORK_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L3_WORK_B12_LocalEvents=0;
+eEventType *PUSHB_L3_WORK_B12_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_WORK_B12(eApplicationID::PUSHB_L3_WORK_B12, 16424, PUSHB_L3_WORK_B12_LocalEvents, 0, PUSHB_L3_WORK_B12_BusEvents, 0, PUSHB_L3_WORK_B12_OnPressed, 0, PUSHB_L3_WORK_B12_OnReleased, 0, PUSHB_L3_WORK_B12_OnReleasedShort, 1, PUSHB_L3_WORK_B12_OnPressedShortAndHold, 1, PUSHB_L3_WORK_B12_OnReleasedLong, 1, PUSHB_L3_WORK_B12_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L3_WORK_B13
+const Command *const PUSHB_L3_WORK_B13_OnPressed=0;
+const Command *const PUSHB_L3_WORK_B13_OnReleased=0;
+const uint8_t PUSHB_L3_WORK_B13_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L3_WORK_B13_OnReleasedShort[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::UP, PUSHB_L3_WORK_B13_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L3_WORK_B13_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L3_WORK_B13_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::UP, PUSHB_L3_WORK_B13_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L3_WORK_B13_OnReleasedLong[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L3_WORK_B13_OnDoubleclick=0;
+eEventType *PUSHB_L3_WORK_B13_LocalEvents=0;
+eEventType *PUSHB_L3_WORK_B13_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_WORK_B13(eApplicationID::PUSHB_L3_WORK_B13, 16423, PUSHB_L3_WORK_B13_LocalEvents, 0, PUSHB_L3_WORK_B13_BusEvents, 0, PUSHB_L3_WORK_B13_OnPressed, 0, PUSHB_L3_WORK_B13_OnReleased, 0, PUSHB_L3_WORK_B13_OnReleasedShort, 1, PUSHB_L3_WORK_B13_OnPressedShortAndHold, 1, PUSHB_L3_WORK_B13_OnReleasedLong, 1, PUSHB_L3_WORK_B13_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L3_WORK_B14
+const Command *const PUSHB_L3_WORK_B14_OnPressed=0;
+const Command *const PUSHB_L3_WORK_B14_OnReleased=0;
+const uint8_t PUSHB_L3_WORK_B14_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L3_WORK_B14_OnReleasedShort[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::DOWN, PUSHB_L3_WORK_B14_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L3_WORK_B14_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L3_WORK_B14_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::DOWN, PUSHB_L3_WORK_B14_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L3_WORK_B14_OnReleasedLong[1]={{eApplicationID::BLIND_L3_WORK_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L3_WORK_B14_OnDoubleclick=0;
+eEventType *PUSHB_L3_WORK_B14_LocalEvents=0;
+eEventType *PUSHB_L3_WORK_B14_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_WORK_B14(eApplicationID::PUSHB_L3_WORK_B14, 16428, PUSHB_L3_WORK_B14_LocalEvents, 0, PUSHB_L3_WORK_B14_BusEvents, 0, PUSHB_L3_WORK_B14_OnPressed, 0, PUSHB_L3_WORK_B14_OnReleased, 0, PUSHB_L3_WORK_B14_OnReleasedShort, 1, PUSHB_L3_WORK_B14_OnPressedShortAndHold, 1, PUSHB_L3_WORK_B14_OnReleasedLong, 1, PUSHB_L3_WORK_B14_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L3_WORK_B15
+const Command *const PUSHB_L3_WORK_B15_OnPressed=0;
+const Command *const PUSHB_L3_WORK_B15_OnReleased=0;
+const Command PUSHB_L3_WORK_B15_OnReleasedShort[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L3_WORK_B15_OnPressedShortAndHold[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::START, 0, 0, },};
+const Command PUSHB_L3_WORK_B15_OnReleasedLong[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L3_WORK_B15_OnDoubleclick[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L3_WORK_B15_LocalEvents=0;
+eEventType *PUSHB_L3_WORK_B15_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L3_WORK_B15(eApplicationID::PUSHB_L3_WORK_B15, 16427, PUSHB_L3_WORK_B15_LocalEvents, 0, PUSHB_L3_WORK_B15_BusEvents, 0, PUSHB_L3_WORK_B15_OnPressed, 0, PUSHB_L3_WORK_B15_OnReleased, 0, PUSHB_L3_WORK_B15_OnReleasedShort, 1, PUSHB_L3_WORK_B15_OnPressedShortAndHold, 1, PUSHB_L3_WORK_B15_OnReleasedLong, 1, PUSHB_L3_WORK_B15_OnDoubleclick, 1);
+
+// Blind BLIND_L3_WORK_J1
+sensactapps::cBlind BLIND_L3_WORK_J1(eApplicationID::BLIND_L3_WORK_J1, 32790, 32799, eRelayMode::INTERLOCKED_ACTIVE_DOWN, 40);
+
+// PWM PWM___L3_WORK_S (Dimmer )
+uint16_t PWM___L3_WORK_S_output=32774;
+sensactapps::cPWM PWM___L3_WORK_S(eApplicationID::PWM___L3_WORK_S, PWM___L3_WORK_S_output, 3, 2, 255, false, eApplicationID::STDBY_L3_TECH_48V, 0);
+
+// STDBY STDBY_L3_WORK_C1
+sensactapps::cStandbyController STDBY_L3_WORK_C1(eApplicationID::STDBY_L3_WORK_C1, 32811, 20000);
+
+// PWM PWM___L3_WORK_C1 (Dimmer )
+uint16_t PWM___L3_WORK_C1_output=32768;
+sensactapps::cPWM PWM___L3_WORK_C1(eApplicationID::PWM___L3_WORK_C1, PWM___L3_WORK_C1_output, 1, 2, 255, false, eApplicationID::STDBY_L3_WORK_C1, 0);
+
+// PushButtonX PUSHB_LS_STRS_B21
+const Command *const PUSHB_LS_STRS_B21_OnPressed=0;
+const Command *const PUSHB_LS_STRS_B21_OnReleased=0;
+const Command PUSHB_LS_STRS_B21_OnReleasedShort[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_LS_STRS_B21_OnPressedShortAndHold[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::START, 0, 0, },};
+const Command PUSHB_LS_STRS_B21_OnReleasedLong[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_LS_STRS_B21_OnDoubleclick[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_LS_STRS_B21_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B21_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B21(eApplicationID::PUSHB_LS_STRS_B21, 16432, PUSHB_LS_STRS_B21_LocalEvents, 0, PUSHB_LS_STRS_B21_BusEvents, 0, PUSHB_LS_STRS_B21_OnPressed, 0, PUSHB_LS_STRS_B21_OnReleased, 0, PUSHB_LS_STRS_B21_OnReleasedShort, 1, PUSHB_LS_STRS_B21_OnPressedShortAndHold, 1, PUSHB_LS_STRS_B21_OnReleasedLong, 1, PUSHB_LS_STRS_B21_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_LS_STRS_B22
+const Command *const PUSHB_LS_STRS_B22_OnPressed=0;
+const Command *const PUSHB_LS_STRS_B22_OnReleased=0;
+const Command PUSHB_LS_STRS_B22_OnReleasedShort[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_LS_STRS_B22_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_LS_STRS_B22_OnReleasedLong[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_LS_STRS_B22_OnDoubleclick[1]={{eApplicationID::PWM___L1_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_LS_STRS_B22_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B22(eApplicationID::PUSHB_LS_STRS_B22, 16431, PUSHB_LS_STRS_B22_LocalEvents, 0, PUSHB_LS_STRS_B22_BusEvents, 0, PUSHB_LS_STRS_B22_OnPressed, 0, PUSHB_LS_STRS_B22_OnReleased, 0, PUSHB_LS_STRS_B22_OnReleasedShort, 1, PUSHB_LS_STRS_B22_OnPressedShortAndHold, 1, PUSHB_LS_STRS_B22_OnReleasedLong, 1, PUSHB_LS_STRS_B22_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_LS_STRS_B23
+const Command PUSHB_LS_STRS_B23_OnPressed[2]={{eApplicationID::POWIT_L0_CORR_C1, eCommandType::TOGGLE, 0, 0, },{eApplicationID::PWM___LS_STRS_W2, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_LS_STRS_B23_OnReleased=0;
+const Command *const PUSHB_LS_STRS_B23_OnReleasedShort=0;
+const Command *const PUSHB_LS_STRS_B23_OnPressedShortAndHold=0;
+const Command *const PUSHB_LS_STRS_B23_OnReleasedLong=0;
+const Command *const PUSHB_LS_STRS_B23_OnDoubleclick=0;
+eEventType *PUSHB_LS_STRS_B23_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B23_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B23(eApplicationID::PUSHB_LS_STRS_B23, 16430, PUSHB_LS_STRS_B23_LocalEvents, 0, PUSHB_LS_STRS_B23_BusEvents, 0, PUSHB_LS_STRS_B23_OnPressed, 2, PUSHB_LS_STRS_B23_OnReleased, 0, PUSHB_LS_STRS_B23_OnReleasedShort, 0, PUSHB_LS_STRS_B23_OnPressedShortAndHold, 0, PUSHB_LS_STRS_B23_OnReleasedLong, 0, PUSHB_LS_STRS_B23_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_LS_STRS_B41
+const Command *const PUSHB_LS_STRS_B41_OnPressed=0;
+const Command *const PUSHB_LS_STRS_B41_OnReleased=0;
+const Command PUSHB_LS_STRS_B41_OnReleasedShort[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_LS_STRS_B41_OnPressedShortAndHold[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::START, 0, 0, },};
+const Command PUSHB_LS_STRS_B41_OnReleasedLong[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_LS_STRS_B41_OnDoubleclick[1]={{eApplicationID::PWM___LS_STRS_W6, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_LS_STRS_B41_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B41_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B41(eApplicationID::PUSHB_LS_STRS_B41, 16439, PUSHB_LS_STRS_B41_LocalEvents, 0, PUSHB_LS_STRS_B41_BusEvents, 0, PUSHB_LS_STRS_B41_OnPressed, 0, PUSHB_LS_STRS_B41_OnReleased, 0, PUSHB_LS_STRS_B41_OnReleasedShort, 1, PUSHB_LS_STRS_B41_OnPressedShortAndHold, 1, PUSHB_LS_STRS_B41_OnReleasedLong, 1, PUSHB_LS_STRS_B41_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_LS_STRS_B42
+const Command *const PUSHB_LS_STRS_B42_OnPressed=0;
+const Command *const PUSHB_LS_STRS_B42_OnReleased=0;
+const Command PUSHB_LS_STRS_B42_OnReleasedShort[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_LS_STRS_B42_OnPressedShortAndHold[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::START, 0, 0, },};
+const Command PUSHB_LS_STRS_B42_OnReleasedLong[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_LS_STRS_B42_OnDoubleclick[1]={{eApplicationID::PWM___L2_CORR_S, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_LS_STRS_B42_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B42_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B42(eApplicationID::PUSHB_LS_STRS_B42, 16438, PUSHB_LS_STRS_B42_LocalEvents, 0, PUSHB_LS_STRS_B42_BusEvents, 0, PUSHB_LS_STRS_B42_OnPressed, 0, PUSHB_LS_STRS_B42_OnReleased, 0, PUSHB_LS_STRS_B42_OnReleasedShort, 1, PUSHB_LS_STRS_B42_OnPressedShortAndHold, 1, PUSHB_LS_STRS_B42_OnReleasedLong, 1, PUSHB_LS_STRS_B42_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_LS_STRS_B43
+const Command *const PUSHB_LS_STRS_B43_OnPressed=0;
+const Command *const PUSHB_LS_STRS_B43_OnReleased=0;
+const Command PUSHB_LS_STRS_B43_OnReleasedShort[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_LS_STRS_B43_OnPressedShortAndHold[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::START, 0, 0, },};
+const Command PUSHB_LS_STRS_B43_OnReleasedLong[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_LS_STRS_B43_OnDoubleclick[1]={{eApplicationID::PWM___LS_STRS_W4, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_LS_STRS_B43_LocalEvents=0;
+eEventType *PUSHB_LS_STRS_B43_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_LS_STRS_B43(eApplicationID::PUSHB_LS_STRS_B43, 16437, PUSHB_LS_STRS_B43_LocalEvents, 0, PUSHB_LS_STRS_B43_BusEvents, 0, PUSHB_LS_STRS_B43_OnPressed, 0, PUSHB_LS_STRS_B43_OnReleased, 0, PUSHB_LS_STRS_B43_OnReleasedShort, 1, PUSHB_LS_STRS_B43_OnPressedShortAndHold, 1, PUSHB_LS_STRS_B43_OnReleasedLong, 1, PUSHB_LS_STRS_B43_OnDoubleclick, 1);
+
+// Sensact node management application SNSCT_L3_TECH_HS_1 
+sensactapps::cSensactNode SNSCT_L3_TECH_HS_1(eApplicationID::SNSCT_L3_TECH_HS_1);
+
+
+
+
+
+cApplication *const MODEL::Glo2locCmd[] = {
+    0,
+    0,
+    0,
+    0,
+    &SNSCT_L3_TECH_HS_1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_BATH_B13,
+    &PUSHB_L2_BATH_B14,
+    &BLIND_L2_BATH_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_BEDR_B11,
+    &PUSHB_L2_BEDR_B12,
+    &PUSHB_L2_BEDR_B13,
+    &PUSHB_L2_BEDR_B14,
+    &PUSHB_L2_BEDR_B15,
+    &PUSHB_L2_BEDR_B21,
+    &PUSHB_L2_BEDR_B22,
+    &PUSHB_L2_BEDR_B23,
+    &PUSHB_L2_BEDR_B24,
+    &PUSHB_L2_BEDR_B25,
+    &PUSHB_L2_BEDR_B31,
+    &PUSHB_L2_BEDR_B32,
+    &PUSHB_L2_BEDR_B33,
+    &PUSHB_L2_BEDR_B34,
+    &PUSHB_L2_BEDR_B35,
+    &PUSHB_L2_BEDR_B36,
+    &BLIND_L2_BEDR_J1,
+    &POWIT_L2_BEDR_P1,
+    &POWIT_L2_BEDR_P2,
+    &POWIT_L2_BEDR_P3,
+    &PWM___L2_BEDR_S,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_CORR_B11,
+    &PUSHB_L2_CORR_B21,
+    &PUSHB_L2_CORR_B31,
+    &PUSHB_L2_CORR_B41,
+    &PUSHB_L2_CORR_B42,
+    &PUSHB_L2_CORR_B43,
+    &BLIND_L2_CORR_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_KID1_B11,
+    &PUSHB_L2_KID1_B12,
+    &PUSHB_L2_KID1_B13,
+    &PUSHB_L2_KID1_B21,
+    &PUSHB_L2_KID1_B22,
+    0,
+    &POWIT_L2_KID1_C1,
+    &POWIT_L2_KID1_C2,
+    &BLIND_L2_KID1_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_KID2_B11,
+    &PUSHB_L2_KID2_B12,
+    &PUSHB_L2_KID2_B13,
+    0,
+    &POWIT_L2_KID2_C1,
+    &BLIND_L2_KID2_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L2_WORK_B11,
+    &PUSHB_L2_WORK_B12,
+    &PUSHB_L2_WORK_B13,
+    &BLIND_L2_WORK_J1,
+    &PWM___L2_WORK_S,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L3_BEDR_B11,
+    &PUSHB_L3_BEDR_B12,
+    &PUSHB_L3_BEDR_B13,
+    &PUSHB_L3_BEDR_B14,
+    &POWIT_L3_BEDR_C1,
+    &BLIND_L3_BEDR_J1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L3_CORR_S,
+    0,
+    0,
+    0,
+    &PUSHB_L3_WORK_B11,
+    &PUSHB_L3_WORK_B12,
+    &PUSHB_L3_WORK_B13,
+    &PUSHB_L3_WORK_B14,
+    &PUSHB_L3_WORK_B15,
+    &PWM___L3_WORK_C1,
+    &BLIND_L3_WORK_J1,
+    0,
+    0,
+    0,
+    &PWM___L3_WORK_S,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_LS_STRS_B21,
+    &PUSHB_LS_STRS_B22,
+    &PUSHB_LS_STRS_B23,
+    0,
+    0,
+    &PUSHB_LS_STRS_B41,
+    &PUSHB_LS_STRS_B42,
+    &PUSHB_LS_STRS_B43,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &STDBY_L3_TECH_48V,
+    &STDBY_L3_ROOF_48V,
+    &STDBY_L3_WORK_C1,
+
+};
+
+
+
+cApplication *const MODEL::Glo2locEvt[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+#endif
+
+#ifdef NODE_SNSCT_L1_KTCH_UP
+
+const eNodeID MODEL::NodeID = eNodeID::SNSCT_L1_KTCH_UP;
+
+
+
+const char MODEL::ModelString[] ="NodeId SNSCT_L1_KTCH_UP created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+}//end namespace
+#include <modules/core/cModel_base.inc>
+namespace sensact{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L1_KTCH_UP;
+
+// RotaryEncoder ROTAR_L1_KTCH_B21
+const Command ROTAR_L1_KTCH_B21_OnPressed[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const ROTAR_L1_KTCH_B21_OnShortReleased=0;
+const Command *const ROTAR_L1_KTCH_B21_OnLongReleased=0;
+const Command ROTAR_L1_KTCH_B21_OnTurned[1]={{eApplicationID::PWM___L1_KTCH_S1, eCommandType::STEP_VERTICAL, 0, 0, },};
+eEventType *ROTAR_L1_KTCH_B21_LocalEvents=0;
+eEventType *ROTAR_L1_KTCH_B21_BusEvents=0;
+sensactapps::cROTAR ROTAR_L1_KTCH_B21(eApplicationID::ROTAR_L1_KTCH_B21, eRotaryEncoder::ROTARYENCODER_1, 31, ROTAR_L1_KTCH_B21_LocalEvents, 0, ROTAR_L1_KTCH_B21_BusEvents, 0, ROTAR_L1_KTCH_B21_OnPressed, 1, ROTAR_L1_KTCH_B21_OnShortReleased, 0, ROTAR_L1_KTCH_B21_OnLongReleased, 0, ROTAR_L1_KTCH_B21_OnTurned, 1 );
+
+// PushButtonX PUSHB_L1_KTCH_B22
+const Command PUSHB_L1_KTCH_B22_OnPressed[1]={{eApplicationID::POWIT_L1_KTCH_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B22_OnReleased=0;
+const Command *const PUSHB_L1_KTCH_B22_OnReleasedShort=0;
+const Command *const PUSHB_L1_KTCH_B22_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_KTCH_B22_OnReleasedLong=0;
+const Command *const PUSHB_L1_KTCH_B22_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B22_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B22_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B22(eApplicationID::PUSHB_L1_KTCH_B22, 19, PUSHB_L1_KTCH_B22_LocalEvents, 0, PUSHB_L1_KTCH_B22_BusEvents, 0, PUSHB_L1_KTCH_B22_OnPressed, 1, PUSHB_L1_KTCH_B22_OnReleased, 0, PUSHB_L1_KTCH_B22_OnReleasedShort, 0, PUSHB_L1_KTCH_B22_OnPressedShortAndHold, 0, PUSHB_L1_KTCH_B22_OnReleasedLong, 0, PUSHB_L1_KTCH_B22_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B23
+const Command *const PUSHB_L1_KTCH_B23_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B23_OnReleased=0;
+const Command PUSHB_L1_KTCH_B23_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_KTCH_B23_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_W1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_KTCH_B23_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_W1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_KTCH_B23_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_W1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_KTCH_B23_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B23_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B23(eApplicationID::PUSHB_L1_KTCH_B23, 16, PUSHB_L1_KTCH_B23_LocalEvents, 0, PUSHB_L1_KTCH_B23_BusEvents, 0, PUSHB_L1_KTCH_B23_OnPressed, 0, PUSHB_L1_KTCH_B23_OnReleased, 0, PUSHB_L1_KTCH_B23_OnReleasedShort, 1, PUSHB_L1_KTCH_B23_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B23_OnReleasedLong, 1, PUSHB_L1_KTCH_B23_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_KTCH_B24
+const Command *const PUSHB_L1_KTCH_B24_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B24_OnReleased=0;
+const Command PUSHB_L1_KTCH_B24_OnReleasedShort[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_KTCH_B24_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_KTCH_B24_OnReleasedLong[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_KTCH_B24_OnDoubleclick[1]={{eApplicationID::PWM___L1_KTCH_S2, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_KTCH_B24_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B24_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B24(eApplicationID::PUSHB_L1_KTCH_B24, 17, PUSHB_L1_KTCH_B24_LocalEvents, 0, PUSHB_L1_KTCH_B24_BusEvents, 0, PUSHB_L1_KTCH_B24_OnPressed, 0, PUSHB_L1_KTCH_B24_OnReleased, 0, PUSHB_L1_KTCH_B24_OnReleasedShort, 1, PUSHB_L1_KTCH_B24_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B24_OnReleasedLong, 1, PUSHB_L1_KTCH_B24_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_KTCH_B25
+const Command *const PUSHB_L1_KTCH_B25_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B25_OnReleased=0;
+const uint8_t PUSHB_L1_KTCH_B25_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_KTCH_B25_OnReleasedShort[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::UP, PUSHB_L1_KTCH_B25_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_KTCH_B25_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_KTCH_B25_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::UP, PUSHB_L1_KTCH_B25_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_KTCH_B25_OnReleasedLong[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B25_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B25_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B25_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B25(eApplicationID::PUSHB_L1_KTCH_B25, 6, PUSHB_L1_KTCH_B25_LocalEvents, 0, PUSHB_L1_KTCH_B25_BusEvents, 0, PUSHB_L1_KTCH_B25_OnPressed, 0, PUSHB_L1_KTCH_B25_OnReleased, 0, PUSHB_L1_KTCH_B25_OnReleasedShort, 1, PUSHB_L1_KTCH_B25_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B25_OnReleasedLong, 1, PUSHB_L1_KTCH_B25_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B26
+const Command *const PUSHB_L1_KTCH_B26_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B26_OnReleased=0;
+const uint8_t PUSHB_L1_KTCH_B26_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_KTCH_B26_OnReleasedShort[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::DOWN, PUSHB_L1_KTCH_B26_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_KTCH_B26_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_KTCH_B26_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::DOWN, PUSHB_L1_KTCH_B26_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_KTCH_B26_OnReleasedLong[1]={{eApplicationID::BLIND_L1_KTCH_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B26_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B26_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B26_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B26(eApplicationID::PUSHB_L1_KTCH_B26, 7, PUSHB_L1_KTCH_B26_LocalEvents, 0, PUSHB_L1_KTCH_B26_BusEvents, 0, PUSHB_L1_KTCH_B26_OnPressed, 0, PUSHB_L1_KTCH_B26_OnReleased, 0, PUSHB_L1_KTCH_B26_OnReleasedShort, 1, PUSHB_L1_KTCH_B26_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B26_OnReleasedLong, 1, PUSHB_L1_KTCH_B26_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B27
+const Command *const PUSHB_L1_KTCH_B27_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B27_OnReleased=0;
+const uint8_t PUSHB_L1_KTCH_B27_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_KTCH_B27_OnReleasedShort[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::UP, PUSHB_L1_KTCH_B27_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_KTCH_B27_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_KTCH_B27_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::UP, PUSHB_L1_KTCH_B27_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_KTCH_B27_OnReleasedLong[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B27_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B27_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B27_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B27(eApplicationID::PUSHB_L1_KTCH_B27, 4, PUSHB_L1_KTCH_B27_LocalEvents, 0, PUSHB_L1_KTCH_B27_BusEvents, 0, PUSHB_L1_KTCH_B27_OnPressed, 0, PUSHB_L1_KTCH_B27_OnReleased, 0, PUSHB_L1_KTCH_B27_OnReleasedShort, 1, PUSHB_L1_KTCH_B27_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B27_OnReleasedLong, 1, PUSHB_L1_KTCH_B27_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_KTCH_B28
+const Command *const PUSHB_L1_KTCH_B28_OnPressed=0;
+const Command *const PUSHB_L1_KTCH_B28_OnReleased=0;
+const uint8_t PUSHB_L1_KTCH_B28_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_KTCH_B28_OnReleasedShort[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::DOWN, PUSHB_L1_KTCH_B28_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_KTCH_B28_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_KTCH_B28_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::DOWN, PUSHB_L1_KTCH_B28_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_KTCH_B28_OnReleasedLong[1]={{eApplicationID::BLIND_L1_KTCH_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_KTCH_B28_OnDoubleclick=0;
+eEventType *PUSHB_L1_KTCH_B28_LocalEvents=0;
+eEventType *PUSHB_L1_KTCH_B28_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_KTCH_B28(eApplicationID::PUSHB_L1_KTCH_B28, 5, PUSHB_L1_KTCH_B28_LocalEvents, 0, PUSHB_L1_KTCH_B28_BusEvents, 0, PUSHB_L1_KTCH_B28_OnPressed, 0, PUSHB_L1_KTCH_B28_OnReleased, 0, PUSHB_L1_KTCH_B28_OnReleasedShort, 1, PUSHB_L1_KTCH_B28_OnPressedShortAndHold, 1, PUSHB_L1_KTCH_B28_OnReleasedLong, 1, PUSHB_L1_KTCH_B28_OnDoubleclick, 0);
+
+// PWM PWM___L1_KTCH_S1 (Dimmer )
+uint16_t PWM___L1_KTCH_S1_output=16384;
+sensactapps::cPWM PWM___L1_KTCH_S1(eApplicationID::PWM___L1_KTCH_S1, PWM___L1_KTCH_S1_output, 4, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 0);
+
+// PWM PWM___L1_KTCH_S2 (Dimmer )
+uint16_t PWM___L1_KTCH_S2_output=16388;
+sensactapps::cPWM PWM___L1_KTCH_S2(eApplicationID::PWM___L1_KTCH_S2, PWM___L1_KTCH_S2_output, 1, 2, 255, false, eApplicationID::STDBY_L0_TECH_48V, 0);
+
+// PWM PWM___L1_KTCH_W1 (Dimmer )
+uint16_t PWM___L1_KTCH_W1_output=16389;
+sensactapps::cPWM PWM___L1_KTCH_W1(eApplicationID::PWM___L1_KTCH_W1, PWM___L1_KTCH_W1_output, 1, 150, 255, false, eApplicationID::STDBY_L0_TECH_48V, 21600000);
+
+// Sensact node management application SNSCT_L1_KTCH_UP 
+sensactapps::cSensactNode SNSCT_L1_KTCH_UP(eApplicationID::SNSCT_L1_KTCH_UP);
+
+
+
+
+
+cApplication *const MODEL::Glo2locCmd[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &SNSCT_L1_KTCH_UP,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &ROTAR_L1_KTCH_B21,
+    &PUSHB_L1_KTCH_B22,
+    &PUSHB_L1_KTCH_B23,
+    &PUSHB_L1_KTCH_B24,
+    &PUSHB_L1_KTCH_B25,
+    &PUSHB_L1_KTCH_B26,
+    &PUSHB_L1_KTCH_B27,
+    &PUSHB_L1_KTCH_B28,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L1_KTCH_S1,
+    &PWM___L1_KTCH_S2,
+    0,
+    &PWM___L1_KTCH_W1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+
+
+
+cApplication *const MODEL::Glo2locEvt[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+#endif
+
+#ifdef NODE_SNSCT_L1_LVNG_UP
+
+const eNodeID MODEL::NodeID = eNodeID::SNSCT_L1_LVNG_UP;
+
+
+
+const char MODEL::ModelString[] ="NodeId SNSCT_L1_LVNG_UP created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+}//end namespace
+#include <modules/core/cModel_base.inc>
+namespace sensact{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L1_LVNG_UP;
+
+// PushButtonX PUSHB_L1_LVNG_B31
+const Command *const PUSHB_L1_LVNG_B31_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B31_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B31_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B31_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::UP, PUSHB_L1_LVNG_B31_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B31_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B31_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::UP, PUSHB_L1_LVNG_B31_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B31_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B31_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B31_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B31_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B31(eApplicationID::PUSHB_L1_LVNG_B31, 16, PUSHB_L1_LVNG_B31_LocalEvents, 0, PUSHB_L1_LVNG_B31_BusEvents, 0, PUSHB_L1_LVNG_B31_OnPressed, 0, PUSHB_L1_LVNG_B31_OnReleased, 0, PUSHB_L1_LVNG_B31_OnReleasedShort, 1, PUSHB_L1_LVNG_B31_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B31_OnReleasedLong, 1, PUSHB_L1_LVNG_B31_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B32
+const Command *const PUSHB_L1_LVNG_B32_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B32_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B32_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B32_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::DOWN, PUSHB_L1_LVNG_B32_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B32_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B32_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::DOWN, PUSHB_L1_LVNG_B32_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B32_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J1, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B32_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B32_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B32_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B32(eApplicationID::PUSHB_L1_LVNG_B32, 17, PUSHB_L1_LVNG_B32_LocalEvents, 0, PUSHB_L1_LVNG_B32_BusEvents, 0, PUSHB_L1_LVNG_B32_OnPressed, 0, PUSHB_L1_LVNG_B32_OnReleased, 0, PUSHB_L1_LVNG_B32_OnReleasedShort, 1, PUSHB_L1_LVNG_B32_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B32_OnReleasedLong, 1, PUSHB_L1_LVNG_B32_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B33
+const Command *const PUSHB_L1_LVNG_B33_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B33_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B33_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B33_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::UP, PUSHB_L1_LVNG_B33_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B33_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B33_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::UP, PUSHB_L1_LVNG_B33_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B33_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B33_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B33_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B33_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B33(eApplicationID::PUSHB_L1_LVNG_B33, 6, PUSHB_L1_LVNG_B33_LocalEvents, 0, PUSHB_L1_LVNG_B33_BusEvents, 0, PUSHB_L1_LVNG_B33_OnPressed, 0, PUSHB_L1_LVNG_B33_OnReleased, 0, PUSHB_L1_LVNG_B33_OnReleasedShort, 1, PUSHB_L1_LVNG_B33_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B33_OnReleasedLong, 1, PUSHB_L1_LVNG_B33_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B34
+const Command *const PUSHB_L1_LVNG_B34_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B34_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B34_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B34_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::DOWN, PUSHB_L1_LVNG_B34_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B34_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B34_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::DOWN, PUSHB_L1_LVNG_B34_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B34_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J2, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B34_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B34_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B34_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B34(eApplicationID::PUSHB_L1_LVNG_B34, 7, PUSHB_L1_LVNG_B34_LocalEvents, 0, PUSHB_L1_LVNG_B34_BusEvents, 0, PUSHB_L1_LVNG_B34_OnPressed, 0, PUSHB_L1_LVNG_B34_OnReleased, 0, PUSHB_L1_LVNG_B34_OnReleasedShort, 1, PUSHB_L1_LVNG_B34_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B34_OnReleasedLong, 1, PUSHB_L1_LVNG_B34_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B35
+const Command *const PUSHB_L1_LVNG_B35_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B35_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B35_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B35_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::UP, PUSHB_L1_LVNG_B35_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B35_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B35_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::UP, PUSHB_L1_LVNG_B35_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B35_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B35_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B35_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B35_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B35(eApplicationID::PUSHB_L1_LVNG_B35, 4, PUSHB_L1_LVNG_B35_LocalEvents, 0, PUSHB_L1_LVNG_B35_BusEvents, 0, PUSHB_L1_LVNG_B35_OnPressed, 0, PUSHB_L1_LVNG_B35_OnReleased, 0, PUSHB_L1_LVNG_B35_OnReleasedShort, 1, PUSHB_L1_LVNG_B35_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B35_OnReleasedLong, 1, PUSHB_L1_LVNG_B35_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B36
+const Command *const PUSHB_L1_LVNG_B36_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B36_OnReleased=0;
+const uint8_t PUSHB_L1_LVNG_B36_OnReleasedShort_0[1] = {0,};
+const Command PUSHB_L1_LVNG_B36_OnReleasedShort[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::DOWN, PUSHB_L1_LVNG_B36_OnReleasedShort_0, 1}, };
+const uint8_t PUSHB_L1_LVNG_B36_OnPressedShortAndHold_0[1] = {1,};
+const Command PUSHB_L1_LVNG_B36_OnPressedShortAndHold[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::DOWN, PUSHB_L1_LVNG_B36_OnPressedShortAndHold_0, 1}, };
+const Command PUSHB_L1_LVNG_B36_OnReleasedLong[1]={{eApplicationID::BLIND_L1_LVNG_J3, eCommandType::STOP, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B36_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B36_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B36_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B36(eApplicationID::PUSHB_L1_LVNG_B36, 5, PUSHB_L1_LVNG_B36_LocalEvents, 0, PUSHB_L1_LVNG_B36_BusEvents, 0, PUSHB_L1_LVNG_B36_OnPressed, 0, PUSHB_L1_LVNG_B36_OnReleased, 0, PUSHB_L1_LVNG_B36_OnReleasedShort, 1, PUSHB_L1_LVNG_B36_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B36_OnReleasedLong, 1, PUSHB_L1_LVNG_B36_OnDoubleclick, 0);
+
+// RotaryEncoder ROTAR_L1_LVNG_B41
+const Command ROTAR_L1_LVNG_B41_OnPressed[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::TOGGLE, 0, 0, },};
+const Command *const ROTAR_L1_LVNG_B41_OnShortReleased=0;
+const Command *const ROTAR_L1_LVNG_B41_OnLongReleased=0;
+const Command ROTAR_L1_LVNG_B41_OnTurned[1]={{eApplicationID::PWM___L1_LVNG_S, eCommandType::STEP_VERTICAL, 0, 0, },};
+eEventType *ROTAR_L1_LVNG_B41_LocalEvents=0;
+eEventType *ROTAR_L1_LVNG_B41_BusEvents=0;
+sensactapps::cROTAR ROTAR_L1_LVNG_B41(eApplicationID::ROTAR_L1_LVNG_B41, eRotaryEncoder::ROTARYENCODER_1, 31, ROTAR_L1_LVNG_B41_LocalEvents, 0, ROTAR_L1_LVNG_B41_BusEvents, 0, ROTAR_L1_LVNG_B41_OnPressed, 1, ROTAR_L1_LVNG_B41_OnShortReleased, 0, ROTAR_L1_LVNG_B41_OnLongReleased, 0, ROTAR_L1_LVNG_B41_OnTurned, 1 );
+
+// PushButtonX PUSHB_L1_LVNG_B42
+const Command PUSHB_L1_LVNG_B42_OnPressed[1]={{eApplicationID::POWIT_L1_LVNG_C1, eCommandType::TOGGLE, 0, 0, },};
+const Command *const PUSHB_L1_LVNG_B42_OnReleased=0;
+const Command *const PUSHB_L1_LVNG_B42_OnReleasedShort=0;
+const Command *const PUSHB_L1_LVNG_B42_OnPressedShortAndHold=0;
+const Command *const PUSHB_L1_LVNG_B42_OnReleasedLong=0;
+const Command *const PUSHB_L1_LVNG_B42_OnDoubleclick=0;
+eEventType *PUSHB_L1_LVNG_B42_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B42_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B42(eApplicationID::PUSHB_L1_LVNG_B42, 19, PUSHB_L1_LVNG_B42_LocalEvents, 0, PUSHB_L1_LVNG_B42_BusEvents, 0, PUSHB_L1_LVNG_B42_OnPressed, 1, PUSHB_L1_LVNG_B42_OnReleased, 0, PUSHB_L1_LVNG_B42_OnReleasedShort, 0, PUSHB_L1_LVNG_B42_OnPressedShortAndHold, 0, PUSHB_L1_LVNG_B42_OnReleasedLong, 0, PUSHB_L1_LVNG_B42_OnDoubleclick, 0);
+
+// PushButtonX PUSHB_L1_LVNG_B43
+const Command *const PUSHB_L1_LVNG_B43_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B43_OnReleased=0;
+const Command PUSHB_L1_LVNG_B43_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_W1, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B43_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_W1, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_LVNG_B43_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_W1, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B43_OnDoubleclick[1]={{eApplicationID::PWM___L1_LVNG_W1, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_LVNG_B43_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B43_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B43(eApplicationID::PUSHB_L1_LVNG_B43, 2, PUSHB_L1_LVNG_B43_LocalEvents, 0, PUSHB_L1_LVNG_B43_BusEvents, 0, PUSHB_L1_LVNG_B43_OnPressed, 0, PUSHB_L1_LVNG_B43_OnReleased, 0, PUSHB_L1_LVNG_B43_OnReleasedShort, 1, PUSHB_L1_LVNG_B43_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B43_OnReleasedLong, 1, PUSHB_L1_LVNG_B43_OnDoubleclick, 1);
+
+// PushButtonX PUSHB_L1_LVNG_B44
+const Command *const PUSHB_L1_LVNG_B44_OnPressed=0;
+const Command *const PUSHB_L1_LVNG_B44_OnReleased=0;
+const Command PUSHB_L1_LVNG_B44_OnReleasedShort[1]={{eApplicationID::PWM___L1_LVNG_C2, eCommandType::TOGGLE, 0, 0, },};
+const Command PUSHB_L1_LVNG_B44_OnPressedShortAndHold[1]={{eApplicationID::PWM___L1_LVNG_C2, eCommandType::START, 0, 0, },};
+const Command PUSHB_L1_LVNG_B44_OnReleasedLong[1]={{eApplicationID::PWM___L1_LVNG_C2, eCommandType::STOP, 0, 0, },};
+const Command PUSHB_L1_LVNG_B44_OnDoubleclick[1]={{eApplicationID::PWM___L1_LVNG_C2, eCommandType::ON, 0, 0, },};
+eEventType *PUSHB_L1_LVNG_B44_LocalEvents=0;
+eEventType *PUSHB_L1_LVNG_B44_BusEvents=0;
+sensactapps::cPushbuttonX PUSHB_L1_LVNG_B44(eApplicationID::PUSHB_L1_LVNG_B44, 3, PUSHB_L1_LVNG_B44_LocalEvents, 0, PUSHB_L1_LVNG_B44_BusEvents, 0, PUSHB_L1_LVNG_B44_OnPressed, 0, PUSHB_L1_LVNG_B44_OnReleased, 0, PUSHB_L1_LVNG_B44_OnReleasedShort, 1, PUSHB_L1_LVNG_B44_OnPressedShortAndHold, 1, PUSHB_L1_LVNG_B44_OnReleasedLong, 1, PUSHB_L1_LVNG_B44_OnDoubleclick, 1);
+
+// PWM PWM___L1_LVNG_S (Dimmer )
+uint16_t PWM___L1_LVNG_S_output12=16384;
+sensactapps::cPWM PWM___L1_LVNG_S(eApplicationID::PWM___L1_LVNG_S, PWM___L1_LVNG_S_output, 12, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 0);
+
+// PWM PWM___L1_LVNG_W1 (Dimmer )
+uint16_t PWM___L1_LVNG_W1_output1=16396;
+sensactapps::cPWM PWM___L1_LVNG_W1(eApplicationID::PWM___L1_LVNG_W1, PWM___L1_LVNG_W1_output, 1, 150, 255, false, eApplicationID::STDBY_L0_TECH_48V, 21600000);
+
+// PWM PWM___L1_LVNG_C2 (Dimmer )
+uint16_t PWM___L1_LVNG_C2_output=16397;
+sensactapps::cPWM PWM___L1_LVNG_C2(eApplicationID::PWM___L1_LVNG_C2, PWM___L1_LVNG_C2_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 0);
+
+// PWM PWM___LS_STRS_W2 (Dimmer )
+uint16_t PWM___LS_STRS_W2_output=16400;
+sensactapps::cPWM PWM___LS_STRS_W2(eApplicationID::PWM___LS_STRS_W2, PWM___LS_STRS_W2_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 21600000);
+
+// PWM PWM___LS_STRS_W4 (Dimmer )
+uint16_t PWM___LS_STRS_W4_output=16401;
+sensactapps::cPWM PWM___LS_STRS_W4(eApplicationID::PWM___LS_STRS_W4, PWM___LS_STRS_W4_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 120000);
+
+// PWM PWM___LS_STRS_W6 (Dimmer )
+uint16_t PWM___LS_STRS_W6_output=16402;
+sensactapps::cPWM PWM___LS_STRS_W6(eApplicationID::PWM___LS_STRS_W6, PWM___LS_STRS_W6_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 120000);
+
+// PWM PWM___LS_STRS_W1 (Dimmer )
+uint16_t PWM___LS_STRS_W1_output=16403;
+sensactapps::cPWM PWM___LS_STRS_W1(eApplicationID::PWM___LS_STRS_W1, PWM___LS_STRS_W1_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 21600000);
+
+// PWM PWM___LS_STRS_W3 (Dimmer )
+uint16_t PWM___LS_STRS_W3_output=16404,;
+sensactapps::cPWM PWM___LS_STRS_W3(eApplicationID::PWM___LS_STRS_W3, PWM___LS_STRS_W3_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 120000);
+
+// PWM PWM___LS_STRS_W5 (Dimmer )
+uint16_t PWM___LS_STRS_W5_output=16405;
+sensactapps::cPWM PWM___LS_STRS_W5(eApplicationID::PWM___LS_STRS_W5, PWM___LS_STRS_W5_output, 1, 2, 255, false, eApplicationID::STDBY_L2_CORR_24V, 120000);
+
+// Sensact node management application SNSCT_L1_LVNG_UP 
+sensactapps::cSensactNode SNSCT_L1_LVNG_UP(eApplicationID::SNSCT_L1_LVNG_UP);
+
+
+
+
+
+cApplication *const MODEL::Glo2locCmd[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &SNSCT_L1_LVNG_UP,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PUSHB_L1_LVNG_B31,
+    &PUSHB_L1_LVNG_B32,
+    &PUSHB_L1_LVNG_B33,
+    &PUSHB_L1_LVNG_B34,
+    &PUSHB_L1_LVNG_B35,
+    &PUSHB_L1_LVNG_B36,
+    &ROTAR_L1_LVNG_B41,
+    &PUSHB_L1_LVNG_B42,
+    &PUSHB_L1_LVNG_B43,
+    &PUSHB_L1_LVNG_B44,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L1_LVNG_C2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L1_LVNG_S,
+    0,
+    &PWM___L1_LVNG_W1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___LS_STRS_W1,
+    &PWM___LS_STRS_W2,
+    &PWM___LS_STRS_W3,
+    &PWM___LS_STRS_W4,
+    &PWM___LS_STRS_W5,
+    &PWM___LS_STRS_W6,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+
+
+
+cApplication *const MODEL::Glo2locEvt[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+#endif
+
+#ifdef NODE_SNSCT_L2_BATH_UP
+
+const eNodeID MODEL::NodeID = eNodeID::SNSCT_L2_BATH_UP;
+
+
+
+const char MODEL::ModelString[] ="NodeId SNSCT_L2_BATH_UP created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+}//end namespace
+#include <modules/core/cModel_base.inc>
+namespace sensact{
+
+const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L2_BATH_UP;
+
+// RotaryEncoder ROTAR_L2_BATH_B11
+const Command ROTAR_L2_BATH_B11_OnPressed[1]={{eApplicationID::PWM___L2_BATH_S, eCommandType::TOGGLE, 0, 0, },};
+const Command *const ROTAR_L2_BATH_B11_OnShortReleased=0;
+const Command *const ROTAR_L2_BATH_B11_OnLongReleased=0;
+const Command ROTAR_L2_BATH_B11_OnTurned[1]={{eApplicationID::PWM___L2_BATH_S, eCommandType::STEP_VERTICAL, 0, 0, },};
+eEventType *ROTAR_L2_BATH_B11_LocalEvents=0;
+eEventType *ROTAR_L2_BATH_B11_BusEvents=0;
+sensactapps::cROTAR ROTAR_L2_BATH_B11(eApplicationID::ROTAR_L2_BATH_B11, eRotaryEncoder::ROTARYENCODER_1, 31, ROTAR_L2_BATH_B11_LocalEvents, 0, ROTAR_L2_BATH_B11_BusEvents, 0, ROTAR_L2_BATH_B11_OnPressed, 1, ROTAR_L2_BATH_B11_OnShortReleased, 0, ROTAR_L2_BATH_B11_OnLongReleased, 0, ROTAR_L2_BATH_B11_OnTurned, 1 );
+
+// RotaryEncoder ROTAR_L2_BATH_B12
+const Command ROTAR_L2_BATH_B12_OnPressed[1]={{eApplicationID::RGBW__L2_BATH_W, eCommandType::TOGGLE, 0, 0, },};
+const Command *const ROTAR_L2_BATH_B12_OnShortReleased=0;
+const Command *const ROTAR_L2_BATH_B12_OnLongReleased=0;
+const Command ROTAR_L2_BATH_B12_OnTurned[1]={{eApplicationID::RGBW__L2_BATH_W, eCommandType::STEP_VERTICAL, 0, 0, },};
+eEventType *ROTAR_L2_BATH_B12_LocalEvents=0;
+eEventType *ROTAR_L2_BATH_B12_BusEvents=0;
+sensactapps::cROTAR ROTAR_L2_BATH_B12(eApplicationID::ROTAR_L2_BATH_B12, eRotaryEncoder::ROTARYENCODER_2, 19, ROTAR_L2_BATH_B12_LocalEvents, 0, ROTAR_L2_BATH_B12_BusEvents, 0, ROTAR_L2_BATH_B12_OnPressed, 1, ROTAR_L2_BATH_B12_OnShortReleased, 0, ROTAR_L2_BATH_B12_OnLongReleased, 0, ROTAR_L2_BATH_B12_OnTurned, 1 );
+
+// PWM PWM___L2_BATH_S (Dimmer )
+uint16_t PWM___L2_BATH_S_output=16384;
+sensactapps::cPWM PWM___L2_BATH_S(eApplicationID::PWM___L2_BATH_S, PWM___L2_BATH_S_output, 3, 2, 255, false, eApplicationID::STDBY_L3_ROOF_48V, 0);
+
+// RGBW RGBW__L2_BATH_W (Full Color Light)
+sensactapps::cRgbw RGBW__L2_BATH_W(eApplicationID::RGBW__L2_BATH_W, 16390, 16391, 16392, 16393, true, (uint8_t*)MODEL::wellKnownRGBWColors, MODEL::wellKnownRGBWColorsCnt, eApplicationID::STDBY_L3_ROOF_48V, 0);
+
+// PWM PWM___L2_CORR_S (Dimmer )
+uint16_t PWM___L2_CORR_S_output=16387;
+sensactapps::cPWM PWM___L2_CORR_S(eApplicationID::PWM___L2_CORR_S, PWM___L2_CORR_S_output, 3, 2, 255, false, eApplicationID::STDBY_L3_ROOF_48V, 14400000);
+
+// Sensact node management application SNSCT_L2_BATH_UP 
+sensactapps::cSensactNode SNSCT_L2_BATH_UP(eApplicationID::SNSCT_L2_BATH_UP);
+
+
+
+
+
+cApplication *const MODEL::Glo2locCmd[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &SNSCT_L2_BATH_UP,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &ROTAR_L2_BATH_B11,
+    &ROTAR_L2_BATH_B12,
+    0,
+    0,
+    0,
+    &PWM___L2_BATH_S,
+    0,
+    0,
+    &RGBW__L2_BATH_W,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &PWM___L2_CORR_S,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+
+
+
+cApplication *const MODEL::Glo2locEvt[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+};
+#endif
+
+
+}
+

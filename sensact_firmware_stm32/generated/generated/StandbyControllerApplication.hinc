@@ -1,0 +1,1 @@
+	void OnHEARTBEATCommand(uint32_t sender, SensactContext *ctx) override;

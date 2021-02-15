@@ -1,0 +1,104 @@
+/*
+@file		Application.h
+@author		autogen
+@version	1.0
+@date		02/02/2021 22:29:40 (Rendered)
+@brief		Short
+@details	Details
+@copyright	(c) 2015 mail at klaus - liebler . de === GNU GPL v3
+ */
+
+
+
+	virtual void OnNOPCommand(SensactContext *ctx);
+	static bool SendNOPCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnRESETCommand(SensactContext *ctx);
+	static bool SendRESETCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSTART_IAPCommand(SensactContext *ctx);
+	static bool SendSTART_IAPCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSTARTCommand(SensactContext *ctx);
+	static bool SendSTARTCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSTOPCommand(SensactContext *ctx);
+	static bool SendSTOPCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnUPCommand(uint8_t forced, SensactContext *ctx);
+	static bool SendUPCommand(eApplicationID destinationApp, uint8_t forced, SensactContext *ctx);
+
+	virtual void OnDOWNCommand(uint8_t forced, SensactContext *ctx);
+	static bool SendDOWNCommand(eApplicationID destinationApp, uint8_t forced, SensactContext *ctx);
+
+	virtual void OnFORWARDCommand(SensactContext *ctx);
+	static bool SendFORWARDCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnBACKWARDCommand(SensactContext *ctx);
+	static bool SendBACKWARDCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnLEFTCommand(SensactContext *ctx);
+	static bool SendLEFTCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnRIGHTCommand(SensactContext *ctx);
+	static bool SendRIGHTCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx);
+	static bool SendONCommand(eApplicationID destinationApp, uint32_t autoReturnToOffMsecs, SensactContext *ctx);
+
+	virtual void OnON_FILTERCommand(uint16_t targetApplicationId, uint32_t autoReturnToOffMsecs, SensactContext *ctx);
+	static bool SendON_FILTERCommand(eApplicationID destinationApp, uint16_t targetApplicationId, uint32_t autoReturnToOffMsecs, SensactContext *ctx);
+
+	virtual void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx);
+	static bool SendOFFCommand(eApplicationID destinationApp, uint32_t autoReturnToOnMsecs, SensactContext *ctx);
+
+	virtual void OnTOGGLECommand(SensactContext *ctx);
+	static bool SendTOGGLECommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnTOGGLE_FILTERCommand(uint16_t targetApplicationId, SensactContext *ctx);
+	static bool SendTOGGLE_FILTERCommand(eApplicationID destinationApp, uint16_t targetApplicationId, SensactContext *ctx);
+
+	virtual void OnTOGGLE_SPECIALCommand(SensactContext *ctx);
+	static bool SendTOGGLE_SPECIALCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSET_PARAMCommand(SensactContext *ctx);
+	static bool SendSET_PARAMCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSET_HORIZONTAL_TARGETCommand(uint16_t target, SensactContext *ctx);
+	static bool SendSET_HORIZONTAL_TARGETCommand(eApplicationID destinationApp, uint16_t target, SensactContext *ctx);
+
+	virtual void OnSTEP_HORIZONTALCommand(int16_t step, SensactContext *ctx);
+	static bool SendSTEP_HORIZONTALCommand(eApplicationID destinationApp, int16_t step, SensactContext *ctx);
+
+	virtual void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx);
+	static bool SendSET_VERTICAL_TARGETCommand(eApplicationID destinationApp, uint16_t target, SensactContext *ctx);
+
+	virtual void OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx);
+	static bool SendSTEP_VERTICALCommand(eApplicationID destinationApp, int16_t step, SensactContext *ctx);
+
+	virtual void OnSET_LATERAL_TARGETCommand(uint16_t target, SensactContext *ctx);
+	static bool SendSET_LATERAL_TARGETCommand(eApplicationID destinationApp, uint16_t target, SensactContext *ctx);
+
+	virtual void OnSTEP_LATERALCommand(int16_t step, SensactContext *ctx);
+	static bool SendSTEP_LATERALCommand(eApplicationID destinationApp, int16_t step, SensactContext *ctx);
+
+	virtual void OnHEARTBEATCommand(uint32_t sender, SensactContext *ctx);
+	static bool SendHEARTBEATCommand(eApplicationID destinationApp, uint32_t sender, SensactContext *ctx);
+
+	virtual void OnSEND_STATUSCommand(SensactContext *ctx);
+	static bool SendSEND_STATUSCommand(eApplicationID destinationApp, SensactContext *ctx);
+
+	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx);
+	static bool SendSET_RGBWCommand(eApplicationID destinationApp, uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx);
+
+	virtual void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx);
+	static bool SendSET_SIGNALCommand(eApplicationID destinationApp, uint16_t signal, SensactContext *ctx);
+
+	virtual void OnPINGCommand(uint32_t payload, SensactContext *ctx);
+	static bool SendPINGCommand(eApplicationID destinationApp, uint32_t payload, SensactContext *ctx);
+
+	virtual void OnDEMOCommand(uint32_t demostep, SensactContext *ctx);
+	static bool SendDEMOCommand(eApplicationID destinationApp, uint32_t demostep, SensactContext *ctx);
+
+	virtual void OnSET_PWMCommand(uint32_t bitmask, uint16_t value, SensactContext *ctx);
+	static bool SendSET_PWMCommand(eApplicationID destinationApp, uint32_t bitmask, uint16_t value, SensactContext *ctx);
