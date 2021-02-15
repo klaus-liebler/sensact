@@ -1,92 +1,624 @@
-20594836221709
-ESP8266
-ESP-01
-Module, ESP-8266, ESP-01, 8 pin
-Module ESP-8266 ESP8266
+142887306267786
+sensact
+AM2321
+
+
 0
+4
+4
+sensact
+CP_Elec_6.3x7.7_HandSolder
+SMD capacitor, aluminum electrolytic, Nichicon, 6.3x7.7mm
+capacitor electrolytic
+0
+2
+2
+sensact
+DCDC-Converter
+
+
+0
+4
+4
+sensact
+DFPlayerMini
+
+
+0
+16
+16
+sensact
+DHT22_flat
+
+
+0
+4
+3
+sensact
+EMW3162
+
+
+0
+7
+7
+sensact
+FPC1.0-2-8P
+
+
+0
+10
+9
+sensact
+FPC_TOP_1x08-1MP_P0.50mm_Horizontal
+
+
+0
+10
+9
+sensact
+HF41F_Form_A
+relay, 34.51series
+
+0
+4
+4
+sensact
+HF49FD
+
+
+0
+4
+4
+sensact
+HF49FD_1H1
+
+
+0
+4
+4
+sensact
+HLK-PM01
+
+
+0
+4
+4
+sensact
+HR911105A
+
+
+0
+16
+15
+sensact
+Inductor_CD54
+
+
+0
+2
+2
+sensact
+Inductor_CD75_handsolder
+
+
+0
+2
+2
+sensact
+Inductor_CD104
+
+
+0
+2
+2
+sensact
+Inductor_CD104_handsolder
+
+
+0
+2
+2
+sensact
+Inductor_CD127
+
+
+0
+2
+2
+sensact
+KF141R-2p
+
+
+0
+4
+2
+sensact
+KF141R-2p_1234
+
+
+0
+4
+4
+sensact
+KF141R-3p
+
+
+0
+6
+3
+sensact
+KF141R-8p
+
+
+0
+16
 8
-8
-ESP8266
-ESP-03
-Module, ESP-8266, ESP-03, 14 pad, SMD
-Module ESP-8266 ESP8266
+sensact
+KF141R-8p_removedPin4
+
+
+0
+13
+7
+sensact
+L834-1G1T-91
+
+
+0
+16
+11
+sensact
+LED_0805_handsolder
+LED 0805 smd package
+LED led 0805 SMD smd SMT smt smdled SMDLED smtled SMTLED
+0
+2
+2
+sensact
+LED_5730
+http://www.yujiintl.com/files/high-cri-led-datasheets/BC5730H-YUJI.pdf
+led 5730
+0
+3
+3
+sensact
+LM2596Board
+
+
+0
+4
+4
+sensact
+LQFP-48_7x7mm_P0.5mm_handsolder
+LQFP, 48 Pin (https://www.analog.com/media/en/technical-documentation/data-sheets/ltc2358-16.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+LQFP QFP
+0
+48
+48
+sensact
+LQFP-64_10x10mm_P0.5mm_handsolder
+LQFP, 64 Pin (https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+LQFP QFP
+0
+64
+64
+sensact
+LQFP-100_14x14mm_Pitch0.5mm_hnadsolder
+LQFP100: plastic low profile quad flat package; 100 leads; body 14 x 14 x 1.4 mm (see NXP sot407-1_po.pdf and sot407-1_fr.pdf)
+QFP 0.5
+0
+100
+100
+sensact
+MEANWELL_LDD_L
+
+
+0
+5
+5
+sensact
+MODULE_LAN8720
+Through hole angled pin header, 2x07, 2.54mm pitch, 6mm pin length, double rows
+Through hole angled pin header THT 2x07 2.54mm double row
 0
 14
 14
-ESP8266
-ESP-06
+sensact
+MODULE_PCM5102A
 
 
+0
+15
+15
+sensact
+MODULE_PCM5102A_removedPins
+
+
+0
+10
+10
+sensact
+MODULE_SI7021
+Through hole straight pin header, 1x04, 2.54mm pitch, single row
+Through hole pin header THT 1x04 2.54mm single row
+0
+4
+4
+sensact
+MODULE_ST7735_18
+Through hole straight pin header, 1x08, 2.54mm pitch, single row
+Through hole pin header THT 1x08 2.54mm single row
+0
+12
+12
+sensact
+MODULE_STEPDOWN
+Through hole straight pin header, 1x04, 2.54mm pitch, single row
+Through hole pin header THT 1x04 2.54mm single row
+0
+4
+4
+sensact
+MODULE_TPA3110stereo
+
+
+0
+9
+9
+sensact
+MODULE_TPA3110stereo_woScrewa
+
+
+0
+11
+11
+sensact
+MSK12C02
+
+
+0
+5
+4
+sensact
+MicroUsbVertical
+
+
+0
+7
+6
+sensact
+Mitsumi_SIQ-02FVS3
+
+
+0
+8
+5
+sensact
+PG-DSO-36
+
+
+0
+36
+36
+sensact
+PLCC4-5050
+
+
+0
+4
+4
+sensact
+PhoenixContact_FFKDS_1x08_P2.54mm
+
+
+0
+16
+8
+sensact
+PhoenixContact_MC_0,5_4-G-2.5_1x04_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+4
+4
+sensact
+PhoenixContact_MC_0,5_6-G-2.5_1x06_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+6
+6
+sensact
+PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+8
+8
+sensact
+QFN-24-1EP_4x4mm_P0.5mm_EP2.6x2.6mm_handsolder
+QFN, 24 Pin (http://ww1.microchip.com/downloads/en/PackagingSpec/00000049BQ.pdf#page=278), generated with kicad-footprint-generator ipc_dfn_qfn_generator.py
+QFN DFN_QFN
+0
+29
+25
+sensact
+RJE72-188-1411
+
+
+0
+14
+13
+sensact
+SLF7045
+
+
+0
+2
+2
+sensact
+SMD-solder-bridge
+
+
+0
+2
+2
+sensact
+SMD-solder-bridge-3pin
+
+
+0
+3
+3
+sensact
+SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder
+8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+8
+8
+sensact
+SOIC-8_3.9x4.9mm_Pitch1.27mm_pad_handsolder
+8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+9
+9
+sensact
+SOIC-14_3.9x8.7mm_P1.27mm_handsolder
+SOIC, 14 Pin (JEDEC MS-012AB, https://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/soic_narrow-r/r_14.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOIC SO
+0
+14
+14
+sensact
+SOIC-18_7.5x11.6mm_Pitch1.27mm_handsolder
+18-Lead Plastic Small Outline (SO) - Wide, 7.50 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+18
+18
+sensact
+SOIC-28_7.5x17.9mm_Pitch1.27mm_handsolder
+28-Lead Plastic Small Outline (SO) - Wide, 7.50 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+28
+28
+sensact
+SOIJ-8_5.3x5.3mm_Pitch1.27mm_handsolder
+8-Lead Plastic Small Outline (SM) - Medium, 5.28 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+8
+8
+sensact
+SOT-23-5_handsolder
+5-pin SOT23 package handsolder
+SOT-23-5
+0
+5
+5
+sensact
+SOT-23-6_handsolder
+6-pin SOT-23 package
+SOT-23-6
+0
+6
+6
+sensact
+SRR4028
+
+
+0
+2
+2
+sensact
+SSOP-24_3.9x8.7mm_P0.65mm_EP2.7x5.6mm
+SSOP24: plastic shrink small outline package; 24 leads; body width 3.9 mm; lead pitch 0.635; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot556-1_po.pdf)
+SSOP 0.635
+0
+25
+25
+sensact
+SW_SPST_2x4x3,5
+Light Touch Switch
+
+0
+4
+3
+sensact
+StripRow3
+
+
+0
+3
+1
+sensact
+TO7-PMOD
+
+
+0
+8
+7
+sensact
+TO7-PMOD-narrowPads
+
+
+0
+8
+7
+sensact
+TSOC6
+
+
+0
+6
+6
+sensact
+TSSOP-16_4.4x5mm_Pitch0.65mm_handsolder
+16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)
+SSOP 0.65
+0
+16
+16
+sensact
+TSSOP-16_4.4x5mm_Pitch0.65mm_narrowPad
+16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)
+SSOP 0.65
+0
+16
+16
+sensact
+TSSOP-20_4.4x6.5mm_Pitch0.65mm_handsolder
+TSSOP24: plastic thin shrink small outline package; 24 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot355-1_po.pdf)
+SSOP 0.65
 0
 20
 20
-ESP8266
-ESP-07S
-Module, ESP-8266, ESP-07S, 14 pad, SMD
-Module ESP-8266 ESP8266
+sensact
+TSSOP-24_4.4x7.8mm_Pitch0.65mm_handsolder
+TSSOP24: plastic thin shrink small outline package; 24 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot355-1_po.pdf)
+SSOP 0.65
 0
-16
-16
-ESP8266
-ESP-07v2
-Module, ESP-8266, ESP-07v2, 16 pad, SMD
-Module ESP-8266 ESP8266
+24
+24
+sensact
+TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder
+TSSOP28: plastic thin shrink small outline package; 28 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot361-1_po.pdf)
+SSOP 0.65
 0
-16
-16
-ESP8266
-ESP-12
-Module, ESP-8266, ESP-12, 16 pad, SMD
-Module ESP-8266 ESP8266
+28
+28
+sensact
+TSSOP-28_4.4x9.7mm_Pitch0.65mm_pad_handsolder
+TSSOP28: plastic thin shrink small outline package; 28 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot361-1_po.pdf)
+SSOP 0.65
 0
-16
-16
-ESP8266
-ESP-12E
-Module, ESP-8266, ESP-12, 16 pad, SMD
-Module ESP-8266 ESP8266
-0
-22
-22
-ESP8266
-ESP-12E_SMD
-Module, ESP-8266, ESP-12, 16 pad, SMD
-Module ESP-8266 ESP8266
-0
-22
-22
-ESP8266
-ESP-13-WROOM-02
-Module, ESP-8266, ESP-13-WROOM-02, 18 pad, SMD
-Module ESP-8266 ESP8266
-0
-19
-19
-ESP8266
-ESP-201
-Module, ESP-8266, ESP-201, 26 pin, through hole, 0.1 inch
-Module ESP-8266 ESP8266
-0
-26
-26
-ESP8266
-ESP12F-Devkit-V3
+29
+29
+sensact
+USBC_1x06_MP
 
 
 0
-30
-30
-ESP8266
-NodeMCU-LoLinV3
+10
+7
+sensact
+Xo53050uita
 
 
 0
-30
-30
-ESP8266
-NodeMCU1.0(12-E)
+4
+4
+sensact
+conn_2P
 
 
 0
-30
-30
+2
+2
+sensact
+conn_3P
+
+
+0
+3
+3
+sensact
+do214aa_handsolder
+DO214AA
+
+0
+2
+2
+sensact
+do214ac_handsolder
+DO214AC
+
+0
+2
+2
+sensact
+encoder_alps-ec12d_case
+12mm rotary encoder, Alps EC12D
+encoder
+0
+7
+6
+sensact
+mdip_4_handsolder
+SMD DIL4 x 0,3"
+SMD DIL
+0
+4
+4
+sensact
+miniusb_vert
+
+
+0
+7
+5
+sensact
+quartz3225
+crystal Epson Toyocom FA-238 and TSX-3225 series
+
+0
+4
+4
+sensact
+relay_43.61
+relay, 40.52
+
+0
+6
+4
+sensact
+rj45_2_smartprototyping
+RJ45 + led + 10/100BaseT mag + PoE, Wurth P/N 7499211122a
+
+0
+10
+9
+sensact
+rj45_aliexpress
+RJ45 + led + 10/100BaseT mag + PoE, Wurth P/N 7499211122a
+
+0
+10
+9
+sensact
+smd_push_handsolder
+SMD Pushbutton
+
+0
+2
+2
+sensact
+sod123_handsolder
+SOD123
+
+0
+2
+2

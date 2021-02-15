@@ -1,0 +1,214 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 4
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Regulator_Switching:LMR14206 U?
+U 1 1 5FF4D559
+P 3300 2750
+F 0 "U?" H 3300 3217 50  0000 C CNN
+F 1 "LMR14206" H 3300 3126 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6" H 3300 2250 50  0001 C CIN
+F 3 "http://www.ti.com/lit/ds/symlink/lmr14206.pdf" H 2900 3200 50  0001 C CNN
+	1    3300 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5FF4D55F
+P 3950 2550
+F 0 "C?" V 3698 2550 50  0000 C CNN
+F 1 "u1" V 3789 2550 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3988 2400 50  0001 C CNN
+F 3 "~" H 3950 2550 50  0001 C CNN
+	1    3950 2550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3800 2750 4100 2750
+Wire Wire Line
+	4100 2750 4100 2550
+$Comp
+L Device:L L?
+U 1 1 5FF4D567
+P 4250 2550
+F 0 "L?" V 4069 2550 50  0000 C CNN
+F 1 "150u" V 4160 2550 50  0000 C CNN
+F 2 "sensact:Inductor_CD75_handsolder" H 4250 2550 50  0001 C CNN
+F 3 "~" H 4250 2550 50  0001 C CNN
+	1    4250 2550
+	0    1    1    0   
+$EndComp
+Connection ~ 4100 2550
+$Comp
+L Device:R R?
+U 1 1 5FF4D56E
+P 4400 2700
+F 0 "R?" H 4470 2746 50  0000 L CNN
+F 1 "3k3" H 4470 2655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4330 2700 50  0001 C CNN
+F 3 "~" H 4400 2700 50  0001 C CNN
+	1    4400 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FF4D574
+P 4400 3000
+F 0 "R?" H 4470 3046 50  0000 L CNN
+F 1 "1k" H 4470 2955 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4330 3000 50  0001 C CNN
+F 3 "~" H 4400 3000 50  0001 C CNN
+	1    4400 3000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 2950 3800 2850
+Wire Wire Line
+	3800 2850 4400 2850
+Connection ~ 4400 2850
+$Comp
+L Device:C C?
+U 1 1 5FF4D57D
+P 4750 2850
+F 0 "C?" H 4865 2896 50  0000 L CNN
+F 1 "m1" H 4865 2805 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4788 2700 50  0001 C CNN
+F 3 "~" H 4750 2850 50  0001 C CNN
+	1    4750 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5FF4D583
+P 5100 2850
+F 0 "C?" H 5215 2896 50  0000 L CNN
+F 1 "u1" H 5215 2805 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 5138 2700 50  0001 C CNN
+F 3 "~" H 5100 2850 50  0001 C CNN
+	1    5100 2850
+	1    0    0    -1  
+$EndComp
+Connection ~ 4100 2750
+Wire Wire Line
+	3300 3150 4100 3150
+Wire Wire Line
+	4100 3150 4100 3050
+Wire Wire Line
+	4100 3150 4400 3150
+Connection ~ 4100 3150
+Wire Wire Line
+	4400 3150 4750 3150
+Wire Wire Line
+	4750 3150 4750 3000
+Connection ~ 4400 3150
+Wire Wire Line
+	4750 3150 5100 3150
+Wire Wire Line
+	5100 3150 5100 3000
+Connection ~ 4750 3150
+Wire Wire Line
+	4400 2550 4750 2550
+Wire Wire Line
+	4750 2550 4750 2700
+Connection ~ 4400 2550
+Wire Wire Line
+	4750 2550 5100 2550
+Wire Wire Line
+	5100 2550 5100 2700
+Connection ~ 4750 2550
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5FF4D59A
+P 5100 2550
+F 0 "#PWR?" H 5100 2400 50  0001 C CNN
+F 1 "+3V3" H 5115 2723 50  0000 C CNN
+F 2 "" H 5100 2550 50  0001 C CNN
+F 3 "" H 5100 2550 50  0001 C CNN
+	1    5100 2550
+	1    0    0    -1  
+$EndComp
+Connection ~ 5100 2550
+$Comp
+L Device:C C?
+U 1 1 5FF4D5A1
+P 2500 2700
+F 0 "C?" H 2615 2746 50  0000 L CNN
+F 1 "4u7" H 2615 2655 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2538 2550 50  0001 C CNN
+F 3 "~" H 2500 2700 50  0001 C CNN
+	1    2500 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2800 2550 2500 2550
+Wire Wire Line
+	3300 3150 2500 3150
+Connection ~ 3300 3150
+$Comp
+L power:GND #PWR?
+U 1 1 5FF4D5AA
+P 5100 3150
+F 0 "#PWR?" H 5100 2900 50  0001 C CNN
+F 1 "GND" H 5105 2977 50  0000 C CNN
+F 2 "" H 5100 3150 50  0001 C CNN
+F 3 "" H 5100 3150 50  0001 C CNN
+	1    5100 3150
+	1    0    0    -1  
+$EndComp
+Connection ~ 5100 3150
+$Comp
+L power:+24V #PWR?
+U 1 1 5FF4D5B1
+P 2500 2550
+F 0 "#PWR?" H 2500 2400 50  0001 C CNN
+F 1 "+24V" H 2515 2723 50  0000 C CNN
+F 2 "" H 2500 2550 50  0001 C CNN
+F 3 "" H 2500 2550 50  0001 C CNN
+	1    2500 2550
+	1    0    0    -1  
+$EndComp
+Connection ~ 2500 2550
+NoConn ~ 2800 2750
+$Comp
+L Device:D_Schottky D?
+U 1 1 5FF4D5B9
+P 4100 2900
+F 0 "D?" V 4054 2979 50  0000 L CNN
+F 1 "MBR0540" V 4145 2979 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123" H 4100 2900 50  0001 C CNN
+F 3 "~" H 4100 2900 50  0001 C CNN
+	1    4100 2900
+	0    1    1    0   
+$EndComp
+Text Label 3800 2550 0    50   ~ 0
+CB
+Text Label 3800 2750 0    50   ~ 0
+SW
+Text Label 3800 2850 0    50   ~ 0
+FB
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 5FF4D5C2
+P 4750 2550
+F 0 "#FLG?" H 4750 2625 50  0001 C CNN
+F 1 "PWR_FLAG" H 4750 2723 50  0000 C CNN
+F 2 "" H 4750 2550 50  0001 C CNN
+F 3 "~" H 4750 2550 50  0001 C CNN
+	1    4750 2550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 2850 2500 3150
+$EndSCHEMATC

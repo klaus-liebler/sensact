@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 3
+Sheet 2 4
 Title ""
 Date ""
 Rev ""
@@ -131,185 +131,6 @@ Text GLabel 2700 3650 2    50   Input ~ 0
 CAN_RX
 Text GLabel 2700 3750 2    50   Output ~ 0
 CAN_TX
-$Comp
-L Regulator_Switching:LMR14206 U4
-U 1 1 5D79D864
-P 7000 2500
-F 0 "U4" H 7000 2967 50  0000 C CNN
-F 1 "LMR14206" H 7000 2876 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-6" H 7000 2000 50  0001 C CIN
-F 3 "http://www.ti.com/lit/ds/symlink/lmr14206.pdf" H 6600 2950 50  0001 C CNN
-	1    7000 2500
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C31
-U 1 1 5D79D86A
-P 7650 2300
-F 0 "C31" V 7398 2300 50  0000 C CNN
-F 1 "u1" V 7489 2300 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 7688 2150 50  0001 C CNN
-F 3 "~" H 7650 2300 50  0001 C CNN
-	1    7650 2300
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	7500 2500 7800 2500
-Wire Wire Line
-	7800 2500 7800 2300
-$Comp
-L Device:L L5
-U 1 1 5D79D872
-P 7950 2300
-F 0 "L5" V 7769 2300 50  0000 C CNN
-F 1 "150u" V 7860 2300 50  0000 C CNN
-F 2 "sensact:Inductor_CD75_handsolder" H 7950 2300 50  0001 C CNN
-F 3 "~" H 7950 2300 50  0001 C CNN
-	1    7950 2300
-	0    1    1    0   
-$EndComp
-Connection ~ 7800 2300
-$Comp
-L Device:R R14
-U 1 1 5D79D879
-P 8100 2450
-F 0 "R14" H 8170 2496 50  0000 L CNN
-F 1 "3k3" H 8170 2405 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8030 2450 50  0001 C CNN
-F 3 "~" H 8100 2450 50  0001 C CNN
-	1    8100 2450
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R15
-U 1 1 5D79D87F
-P 8100 2750
-F 0 "R15" H 8170 2796 50  0000 L CNN
-F 1 "1k" H 8170 2705 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8030 2750 50  0001 C CNN
-F 3 "~" H 8100 2750 50  0001 C CNN
-	1    8100 2750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7500 2700 7500 2600
-Wire Wire Line
-	7500 2600 8100 2600
-Connection ~ 8100 2600
-$Comp
-L Device:C C33
-U 1 1 5D79D888
-P 8450 2600
-F 0 "C33" H 8565 2646 50  0000 L CNN
-F 1 "m1" H 8565 2555 50  0000 L CNN
-F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 8488 2450 50  0001 C CNN
-F 3 "~" H 8450 2600 50  0001 C CNN
-	1    8450 2600
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C35
-U 1 1 5D79D88E
-P 8800 2600
-F 0 "C35" H 8915 2646 50  0000 L CNN
-F 1 "u1" H 8915 2555 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 8838 2450 50  0001 C CNN
-F 3 "~" H 8800 2600 50  0001 C CNN
-	1    8800 2600
-	1    0    0    -1  
-$EndComp
-Connection ~ 7800 2500
-Wire Wire Line
-	7000 2900 7800 2900
-Wire Wire Line
-	7800 2900 7800 2800
-Wire Wire Line
-	7800 2900 8100 2900
-Connection ~ 7800 2900
-Wire Wire Line
-	8100 2900 8450 2900
-Wire Wire Line
-	8450 2900 8450 2750
-Connection ~ 8100 2900
-Wire Wire Line
-	8450 2900 8800 2900
-Wire Wire Line
-	8800 2900 8800 2750
-Connection ~ 8450 2900
-Wire Wire Line
-	8100 2300 8450 2300
-Wire Wire Line
-	8450 2300 8450 2450
-Connection ~ 8100 2300
-Wire Wire Line
-	8450 2300 8800 2300
-Wire Wire Line
-	8800 2300 8800 2450
-Connection ~ 8450 2300
-$Comp
-L power:+3V3 #PWR049
-U 1 1 5D79D8A5
-P 8800 2300
-F 0 "#PWR049" H 8800 2150 50  0001 C CNN
-F 1 "+3V3" H 8815 2473 50  0000 C CNN
-F 2 "" H 8800 2300 50  0001 C CNN
-F 3 "" H 8800 2300 50  0001 C CNN
-	1    8800 2300
-	1    0    0    -1  
-$EndComp
-Connection ~ 8800 2300
-$Comp
-L Device:C C29
-U 1 1 5D79D8AC
-P 6200 2450
-F 0 "C29" H 6315 2496 50  0000 L CNN
-F 1 "4u7" H 6315 2405 50  0000 L CNN
-F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 6238 2300 50  0001 C CNN
-F 3 "~" H 6200 2450 50  0001 C CNN
-	1    6200 2450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6500 2300 6200 2300
-Wire Wire Line
-	7000 2900 6200 2900
-Connection ~ 7000 2900
-$Comp
-L power:GND #PWR050
-U 1 1 5D79D8B6
-P 8800 2900
-F 0 "#PWR050" H 8800 2650 50  0001 C CNN
-F 1 "GND" H 8805 2727 50  0000 C CNN
-F 2 "" H 8800 2900 50  0001 C CNN
-F 3 "" H 8800 2900 50  0001 C CNN
-	1    8800 2900
-	1    0    0    -1  
-$EndComp
-Connection ~ 8800 2900
-$Comp
-L power:+24V #PWR042
-U 1 1 5D79D8BD
-P 6200 2300
-F 0 "#PWR042" H 6200 2150 50  0001 C CNN
-F 1 "+24V" H 6215 2473 50  0000 C CNN
-F 2 "" H 6200 2300 50  0001 C CNN
-F 3 "" H 6200 2300 50  0001 C CNN
-	1    6200 2300
-	1    0    0    -1  
-$EndComp
-Connection ~ 6200 2300
-NoConn ~ 6500 2500
-$Comp
-L Device:D_Schottky D2
-U 1 1 5D79D8C5
-P 7800 2650
-F 0 "D2" V 7754 2729 50  0000 L CNN
-F 1 "MBR0540" V 7845 2729 50  0000 L CNN
-F 2 "Diode_SMD:D_SOD-123" H 7800 2650 50  0001 C CNN
-F 3 "~" H 7800 2650 50  0001 C CNN
-	1    7800 2650
-	0    1    1    0   
-$EndComp
 $Comp
 L Device:C C24
 U 1 1 5D79D8D2
@@ -670,6 +491,8 @@ $Comp
 L Connector:USB_C_Receptacle_USB2.0 J12
 U 1 1 5D79D9A8
 P 5400 6600
+AR Path="/5D79D9A8" Ref="J12"  Part="1" 
+AR Path="/5D6D5F5C/5D79D9A8" Ref="J12"  Part="1" 
 F 0 "J12" H 5507 7467 50  0000 C CNN
 F 1 "USB_C_Receptacle_USB2.0" H 5507 7376 50  0000 C CNN
 F 2 "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12" H 5550 6600 50  0001 C CNN
@@ -1016,12 +839,6 @@ Text GLabel 2700 4350 2    50   Output ~ 0
 SPIB_MOSI
 Text GLabel 10100 2750 0    50   Input ~ 0
 LCD_CLK
-Text Label 7500 2300 0    50   ~ 0
-CB
-Text Label 7500 2500 0    50   ~ 0
-SW
-Text Label 7500 2600 0    50   ~ 0
-FB
 $Comp
 L sensact:Mitsumi_SIQ-02FVS3 SW7
 U 1 1 5D79DC04
@@ -1031,17 +848,6 @@ F 1 "Mitsumi_SIQ-02FVS3" H 8050 1476 50  0000 C CNN
 F 2 "sensact:Mitsumi_SIQ-02FVS3" H 7900 1360 50  0001 C CNN
 F 3 "~" H 8050 1460 50  0001 C CNN
 	1    8050 1200
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:PWR_FLAG #FLG03
-U 1 1 5D79DC1B
-P 8450 2300
-F 0 "#FLG03" H 8450 2375 50  0001 C CNN
-F 1 "PWR_FLAG" H 8450 2473 50  0000 C CNN
-F 2 "" H 8450 2300 50  0001 C CNN
-F 3 "~" H 8450 2300 50  0001 C CNN
-	1    8450 2300
 	1    0    0    -1  
 $EndComp
 Wire Notes Line
@@ -1060,6 +866,8 @@ $Comp
 L Connector:USB_C_Receptacle_USB2.0 J11
 U 1 1 5D70B874
 P 2350 6600
+AR Path="/5D70B874" Ref="J11"  Part="1" 
+AR Path="/5D6D5F5C/5D70B874" Ref="J11"  Part="1" 
 F 0 "J11" H 2457 7467 50  0000 C CNN
 F 1 "USB_C_Receptacle_USB2.0" H 2457 7376 50  0000 C CNN
 F 2 "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12" H 2500 6600 50  0001 C CNN
@@ -1178,8 +986,6 @@ Wire Wire Line
 	2200 950  2300 950 
 Wire Wire Line
 	1800 950  1900 950 
-Wire Wire Line
-	6200 2600 6200 2900
 Connection ~ 1800 950 
 Wire Wire Line
 	1900 950  2000 950 
