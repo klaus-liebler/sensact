@@ -7,17 +7,17 @@
 namespace sensactcore
 {
     enum class eApplicationID:uint16_t{
-        #include <generated/appids.hinc>
+        #include <common/applicationIds.inc>
     };
 
     enum struct eNodeID:uint16_t{
-        #include <generated/nodeids.hinc>
+        #include <common/nodeIds.inc>
     };
     enum class eCommandType:uint8_t{
-        #include <generated/commandTypes.hinc>
+        #include <common/commandTypes.inc>
     };
     enum class eEventType:uint8_t{
-        #include <generated/eventTypes.hinc>
+        #include <common/eventTypes.inc>
     };
 
     //used in multiple Apps...
@@ -126,7 +126,7 @@ class cApplication {
 public:
 	eApplicationID Id;
     
-    #include <generated/cApplication.hinc>
+    #include <common/commandDeclarations.inc>
 
 	virtual eAppType GetAppType()=0;
 	virtual eAppCallResult Setup(SensactContext *ctx)=0;

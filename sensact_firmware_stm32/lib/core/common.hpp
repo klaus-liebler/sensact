@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <compileconfig.h>
 
 #define Time_t uint64_t
 #define TIME_MAX UINT64_MAX

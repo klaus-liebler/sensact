@@ -14,10 +14,10 @@ static const int DIM_TO_TARGET_STEP=2;
 //targetValue absolut setzen oder aktuellen targetValue verändern mit einem sint16_t
 //oder ausschalten, sonst geht der targetLevel nicht auf 0
 
-cPWM::cPWM(const eApplicationID id, const uint16_t baseOutput, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
+cPWM::cPWM(const eApplicationID id, const uint16_t* const outputs, const uint8_t outputsLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs) :
 		cApplication(id),
-		baseOutput(baseOutput),
-		outputLength(outputLength),
+		outputs(outputs),
+		outputsLength(outputsLength),
 		minimalOnLevel(minimalLevel),
 		lowMeansLampOn(lowMeansLampOn),
 		standbyController(standbyController),
@@ -280,8 +280,8 @@ void cPWM::WriteCurrentLevelToOutput(SensactContext *ctx) {
 	{
 		val=UINT16_MAX-val;
 	}
-	for(int output=baseOutput; output<baseOutput+outputLength;output++){
-		ctx->node->SetU16Output(output, val);
+	for(int i=0; i<outputsLength;i++){
+		ctx->node->SetU16Output(outputs[i], val);
 	}
 }
 

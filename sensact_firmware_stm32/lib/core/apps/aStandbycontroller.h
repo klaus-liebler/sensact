@@ -16,7 +16,7 @@ namespace sensactapps {
 		eAppCallResult Setup(SensactContext *ctx) override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-		#include <generated/StandbyControllerApplication.hinc>
+		#include <application/StandbyControllerApplication.inc>
 		/**
 		 * @param evt
 		 */

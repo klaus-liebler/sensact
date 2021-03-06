@@ -1,4 +1,0 @@
-	void OnTOGGLECommand(SensactContext *ctx) override;
-	void OnTOGGLE_SPECIALCommand(SensactContext *ctx) override;
-	void OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx) override;
-	void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;

@@ -9,7 +9,7 @@ namespace sensactapps {
 	public:
 		eAppCallResult Setup(SensactContext *ctx) override;
 		eAppType GetAppType() override;
-#include <generated/ForwarderApplication.hinc>
+#include <application/ForwarderApplication.inc>
 
 
 		cForwarder(eApplicationID id, eApplicationID finalTarget);

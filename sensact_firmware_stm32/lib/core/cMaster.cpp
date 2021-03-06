@@ -69,7 +69,7 @@ namespace sensactcore
 		Console::Writeln("");
 		Console::Writeln(sensactstrings::LICENSE);
 		Console::Writeln(sensactstrings::SYSTEM);
-		Console::Writeln(MODEL::ModelString);
+		Console::Writeln(MODEL::NodeDescription);
 	}
 
 	void cMaster::BufferHeartbeat(eApplicationID target)
@@ -158,7 +158,10 @@ namespace sensactcore
 		size_t statusBufferLength = 0;
 		eAppCallResult appResult;
 
-		//start at "1" here, because "0" is the global master application, then starting at 1, the node applications start, then afterwards all other "normal" applications
+		//start at "1" here, because 
+		// -"0" is the global master application, 
+		// - "1" is the node's management application
+		// - "2" and above: all other "normal" applications
 		for (appId = 1; appId < (uint16_t)eApplicationID::CNT; appId++)
 		{
 			cApplication *const ap = MODEL::Glo2locCmd[appId];
@@ -183,7 +186,7 @@ namespace sensactcore
 #endif
 			appCnt++;
 		}
-		LOGI("%u local applications have been configured. Now, %s is pleased to be at your service.\r\n", appCnt, MODEL::ModelString);
+		LOGI("%u local applications have been configured. Now, %s is pleased to be at your service.\r\n", appCnt, MODEL::NodeDescription);
 		PublishNodeEvent(MODEL::NodeID, eNodeEventType::NODE_READY, 0, 0);
 
 		while (MODEL::Glo2locCmd[nextStatusApp] == 0)

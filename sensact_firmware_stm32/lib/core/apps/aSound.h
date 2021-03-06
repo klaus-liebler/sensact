@@ -17,7 +17,7 @@ public:
 	eAppCallResult Setup(SensactContext *ctx) override;
 	eAppType GetAppType() override;
 	eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <generated/SoundApplication.hinc>
+#include <application/SoundApplication.inc>
 
 	cSound(eApplicationID id, uint16_t const output, cWeeklySchedule * const volumeSchedule, const uint8_t defaultVolume) :
 			cApplication(id), output(output), volumeSchedule(volumeSchedule), lastSetVolume(defaultVolume), autoOffTimeMs(TIME_MAX) {

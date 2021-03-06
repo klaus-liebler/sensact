@@ -10,8 +10,8 @@ class cPWM: public cApplication
 {
 	private:
 
-		const uint16_t baseOutput;
-		const uint8_t outputLength;
+		const uint16_t* const outputs;
+		const uint8_t outputsLength;
 		const uint8_t minimalOnLevel;
 		const bool lowMeansLampOn;
 		const eApplicationID standbyController;
@@ -37,7 +37,7 @@ class cPWM: public cApplication
 		eAppCallResult Setup(SensactContext *ctx) override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <generated/PwmApplication.hinc>
-			cPWM(const eApplicationID id, const uint16_t  baseOutput, const uint8_t outputLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
+#include <application/PwmApplication.inc>
+			cPWM(const eApplicationID id, const uint16_t* const outputs, const uint8_t outputsLength, const uint8_t minimalLevel, const uint8_t initialStoredTargetLevel,  const bool lowMeansLampOn, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }

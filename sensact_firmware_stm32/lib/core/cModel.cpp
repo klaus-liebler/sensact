@@ -17,7 +17,6 @@
 #include "date.hpp"
 
 
-#include <generated/cModel.cppinc>
 
 namespace sensactcore{
 /*
@@ -42,8 +41,24 @@ static const sensact::sScheduleEntry schedule[]
 	cWeeklySchedule MODEL::volumeSchedule(0, schedule, 14);
 */
 
+#include <applicationInitializers.inc>
+
+
+
 const uint8_t MODEL::wellKnownRGBWColors[][4] = {{255, 0, 0, 0},{0, 255, 0, 0,},{0, 0, 255, 0,},{0, 0, 0, 255,}, {148,0,211,0,}};
 const uint8_t MODEL::wellKnownRGBWColorsCnt = 5;
+#include <nodeIdAndDescription.inc>
+const char *const MODEL::ApplicationNames[]={
+#include <common/applicationNames.inc>
+};
+cApplication *const MODEL::Glo2locEvt[]={
+#include <glo2LocEvents.inc>
+};
+
+cApplication *const MODEL::Glo2locCmd[]={
+#include <glo2LocPointers.inc>
+};
+
 
 #ifdef MASTERNODE
 	uint8_t MODEL::applicationStatus[(uint16_t)eApplicationID::CNT][8];

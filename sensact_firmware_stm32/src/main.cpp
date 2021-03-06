@@ -11,14 +11,7 @@ void SystemClock_Config(void);
 void HAL_MspInit(void);
 int main(void);
 
-
-
-
-int main(void)
-{
-	HAL_Init();
-	SystemClock_Config();
-	sensacthal::HAL_STM32F4<
+sensacthal::HAL_STM32F4<
 		sensacthal::DebugUSARTConfiguration::USART1_PA09_PA10,
 		sensacthal::OnBoardLEDMode::PB6,
 		sensacthal::CanConfiguration::CAN1_PD00_PD01,
@@ -29,6 +22,13 @@ int main(void)
 		sensacthal::RotaryEncoderCfg::NONE
 		>
 		hal;
+
+sensacthal::SensactHAL *hal_ptr = &hal;
+
+int main(void)
+{
+	HAL_Init();
+	SystemClock_Config();
 	hal.Init();
 	sensactcore::Console::SetHAL(&hal);
 	NODE_SNSCT_L3_TECH_HS_1 node(&hal);

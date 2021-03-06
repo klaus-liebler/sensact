@@ -35,7 +35,7 @@ namespace sensactapps {
 		eAppCallResult Setup(SensactContext *ctx) override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <generated/BlindApplication.hinc>
+#include <application/BlindApplication.inc>
 
 		void RaiseEvent(eEventType evt);
 		cBlind(eApplicationID id, uint16_t const relayUp, uint16_t const relayDownOrDirection, eRelayMode const relayMode, uint16_t fullStrokeTimeInSeconds);

@@ -2,7 +2,8 @@
 #include <cApplication.hpp>
 #define LOGLEVEL LEVEL_INFO
 #define LOGNAME "WS2812x"
-#include <cLog4hppFilesBegin.hpp>
+#include <cLog.hpp>
+
 #include <colors.hpp>
 
 using namespace sensactcore;
@@ -247,4 +248,3 @@ namespace sensactapps
 	};
 
 } // namespace sensactapps
-#include "cLog4hppFilesEnd.hpp"

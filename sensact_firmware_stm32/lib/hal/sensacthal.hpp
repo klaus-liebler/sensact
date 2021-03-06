@@ -115,10 +115,12 @@ namespace sensacthal
         virtual sensactcore::Error GetTimestamp(char* text, size_t maxLength)=0;
         virtual sensactcore::Error GetSteadyClock(Time_t * ptr) =0;
         virtual sensactcore::Error Write2Console(char c) =0;
-        virtual sensactcore::Error DoEachCycle()=0;
         virtual sensactcore::Error PlaySound(uint16_t soundId, uint16_t volume, Time_t maxDurationOfSound)=0;
         virtual sensactcore::Error UART_Transmit(sensacthal::UARTX uart, uint8_t *data, size_t len)=0;
+
         virtual void CallbackEachMillisecond()=0;
+        virtual sensactcore::Error CallbackEachCycle()=0;
+        virtual void CallbackUARTReceiveChar(uint8_t chartoreceive)=0;
 };
 
 

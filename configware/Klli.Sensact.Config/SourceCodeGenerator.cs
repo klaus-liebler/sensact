@@ -222,7 +222,7 @@ namespace Klli.Sensact.Config
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name + ", ");
                 }
-                sb.AppendLine("Time_t now)");
+                sb.AppendLine("SensactContext *ctx)");
                 sb.AppendLine("\t{");
                 sb.AppendLine("\t\tuint8_t buffer[8];");
                 int offset = 0;
@@ -253,7 +253,7 @@ namespace Klli.Sensact.Config
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" "+pi.Name+", ");
                 }
-                sb.AppendLine("Time_t now)");
+                sb.AppendLine("SensactContext *ctx)");
                 sb.AppendLine("\t{");
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
@@ -269,13 +269,13 @@ namespace Klli.Sensact.Config
 
         
 
-        //	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, Time_t now);
+        //	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx);
         //static bool CreateSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, uint8_t buffer, uint8_t* lenght);
 
         private static string HeaderForCommands()
         {
             StringBuilder sb = new StringBuilder();
-            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, SensactContext *ctx) override;
             foreach (MethodInfo m in typeof(SensactApplication).GetMethods())
             {
 
@@ -289,7 +289,7 @@ namespace Klli.Sensact.Config
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name + ", ");
                 }
-                sb.Append("Time_t now)");
+                sb.Append("SensactContext *ctx)");
                 sb.AppendLine(";");
                 sb.AppendFormat("\tstatic bool Send{0}Command(eApplicationID destinationApp, ", SensactApplication.ExtractCmdName(m));
                 foreach (ParameterInfo pi in m.GetParameters())
@@ -297,7 +297,7 @@ namespace Klli.Sensact.Config
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name + ", ");
                 }
-                sb.AppendLine("Time_t now);");
+                sb.AppendLine("SensactContext *ctx);");
                 sb.AppendLine();
             }
             return sb.ToString();
@@ -306,7 +306,7 @@ namespace Klli.Sensact.Config
         private static string HeaderForCommandsOfType(Type t)
         {
             StringBuilder sb = new StringBuilder();
-            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, Time_t now) override;
+            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, SensactContext *ctx) override;
             foreach (MethodInfo m in t.GetMethods())
             {
 
@@ -322,7 +322,7 @@ namespace Klli.Sensact.Config
                         sb.Append(CS2CPPType(pi.ParameterType));
                         sb.Append(" " + pi.Name + ", ");
                     }
-                    sb.AppendLine("Time_t now) override;");
+                    sb.AppendLine("SensactContext *ctx) override;");
                    
                 }
             }

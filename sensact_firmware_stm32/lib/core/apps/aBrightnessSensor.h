@@ -13,7 +13,7 @@ public:
 	eAppCallResult Setup(SensactContext *ctx) override;
 	eAppType GetAppType() override;
 	eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-#include <generated/BrightnessSensorApplication.hinc>
+#include <application/BrightnessSensorApplication.inc>
 	cBrightnessSensor(const eApplicationID id, drivers::cBH1750 *sensor, const uint16_t limitForPassingToggle);
 };
 

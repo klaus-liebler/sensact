@@ -1,6 +1,10 @@
 #pragma once
 
 #include <stm32f4xx_hal.h>
+#include <stm32f4xx_ll_bus.h>
+#include <stm32f4xx_ll_rcc.h>
+#include <stm32f4xx_ll_usart.h>
+
 #include <common.hpp>
 #include <sensacthal.hpp>
 #include "gpioF4.hpp"
@@ -27,9 +31,9 @@ namespace sensacthal
 		PE03_PE04,
 	};
 
-	constexpr uint8_t CAN_ERROR=0;
-	constexpr uint8_t I2C_ERROR=1;
-	constexpr uint8_t OWI_ERROR=2;
+	constexpr uint8_t CAN_ERROR = 0;
+	constexpr uint8_t I2C_ERROR = 1;
+	constexpr uint8_t OWI_ERROR = 2;
 
 	template <
 		DebugUSARTConfiguration debugUsartCfg,
@@ -51,13 +55,17 @@ namespace sensacthal
 		uint8_t canTxData[8]{0};
 		uint8_t canRxData[8]{0};
 		I2C_HandleTypeDef i2cBusses[2]{0};
-		uint8_t lastReceivedUARTChar = '\0';
+		Time_t lastReceivedUARTCharTimestamp{0};
 		Time_t steadyClockMsecCnt{0};
 		uint32_t ErrorCounters[16]{0};
 
 		uint16_t lastSetAudioVolume{0};
 		int16_t cyclesToDelayAudio{-1};
 		uint16_t soundId{0};
+		std::array<uint8_t, 100> UART_cmdBuffer{0};
+		size_t UART_buffer_pointer{0};
+		bool BufferHasMessage{false};
+		bool binaryMode{false};
 
 		sensactcore::Error Init(void)
 		{
@@ -71,31 +79,35 @@ namespace sensacthal
 			__HAL_RCC_CAN1_CLK_ENABLE();
 			__HAL_RCC_CRC_CLK_ENABLE();
 			__HAL_RCC_UART4_CLK_ENABLE();
-			__HAL_RCC_USART1_CLK_ENABLE();
 
-			//Init UART
-			comm.Init.BaudRate = DEBUG_BAUDRATE;
-			comm.Init.WordLength = UART_WORDLENGTH_8B;
-			comm.Init.StopBits = UART_STOPBITS_1;
-			comm.Init.Parity = UART_PARITY_NONE;
-			comm.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-			comm.Init.Mode = UART_MODE_TX_RX;
-			comm.Init.OverSampling = UART_OVERSAMPLING_16;
+		
 			if (debugUsartCfg == DebugUSARTConfiguration::USART1_PA09_PA10)
 			{
+				
 				Gpio::ConfigureAlternateFunction(Pin::PA09, GPIO_AF7_USART1, OutputType::PUSH_PULL, OutputSpeed::LOW, PullDirection::UP);
 				Gpio::ConfigureAlternateFunction(Pin::PA10, GPIO_AF7_USART1, OutputType::PUSH_PULL, OutputSpeed::LOW, PullDirection::UP);
-				comm.Instance = USART1;
-				HAL_UART_Init(&comm);
-				HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
-				HAL_NVIC_EnableIRQ(USART1_IRQn);
+				
+				//Init UART
+				NVIC_SetPriority(USART1_IRQn, 0);  
+  				NVIC_EnableIRQ(USART1_IRQn);
+
+				LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
+				LL_USART_SetTransferDirection(USART1, LL_USART_DIRECTION_TX_RX);
+				LL_USART_ConfigCharacter(USART1, LL_USART_DATAWIDTH_8B, LL_USART_PARITY_NONE, LL_USART_STOPBITS_1);
+				
+				LL_USART_SetBaudRate(USART1, SystemCoreClock/LL_RCC_GetAPB2Prescaler(), LL_USART_OVERSAMPLING_16, 115200);
+				LL_USART_Enable(USART1);
+				LL_USART_ClearFlag_ORE(USART1);
+				/* Enable RXNE and Error interrupts */
+				LL_USART_EnableIT_RXNE(USART1);
+				LL_USART_EnableIT_ERROR(USART1);
 			}
 			else
 			{
 				return sensactcore::Error::NOT_YET_IMPLEMENTED;
 			}
 
-			HAL_UART_Receive_IT(&comm, &lastReceivedUARTChar, 1);
+			
 
 			//Onboard LEDs
 			if (onBoardLED == OnBoardLEDMode::PB6)
@@ -138,46 +150,54 @@ namespace sensacthal
 			return Error::OK;
 		}
 
-		Error PlaySound(uint16_t soundId, uint16_t volume, Time_t maxDurationOfSound){
+		Error PlaySound(uint16_t soundId, uint16_t volume, Time_t maxDurationOfSound)
+		{
 			return Error::NOT_YET_IMPLEMENTED;
 		}
 
 		Error I2C_Mem_Write(SensactBus bus, uint8_t devAddr8bit, uint8_t regAddr, uint8_t *source, size_t len)
 		{
-			return HAL_I2C_Mem_Write(&this->i2cBusses[(size_t)bus], devAddr8bit, regAddr, I2C_MEMADD_SIZE_8BIT, source, len, 100) == HAL_OK?Error::OK:Error::I2C_BusError;
-			
+			return HAL_I2C_Mem_Write(&this->i2cBusses[(size_t)bus], devAddr8bit, regAddr, I2C_MEMADD_SIZE_8BIT, source, len, 100) == HAL_OK ? Error::OK : Error::I2C_BusError;
 		}
-		
+
 		Error I2C_Mem_Read(SensactBus bus, uint8_t devAddr8bit, uint8_t regAddr, uint8_t *target, size_t len)
 		{
-			return HAL_I2C_Mem_Read(&this->i2cBusses[(size_t)bus], devAddr8bit, regAddr, I2C_MEMADD_SIZE_8BIT, target, len, 100)==HAL_OK?Error::OK:Error::I2C_BusError;
+			return HAL_I2C_Mem_Read(&this->i2cBusses[(size_t)bus], devAddr8bit, regAddr, I2C_MEMADD_SIZE_8BIT, target, len, 100) == HAL_OK ? Error::OK : Error::I2C_BusError;
 		}
-		sensactcore::Error I2C_IsDeviceReady(SensactBus bus, uint8_t devAddr8bit) {
-			return HAL_I2C_IsDeviceReady(&this->i2cBusses[(size_t)bus], devAddr8bit, 3, 100)==HAL_OK?Error::OK:Error::I2C_BusError;
+		sensactcore::Error I2C_IsDeviceReady(SensactBus bus, uint8_t devAddr8bit)
+		{
+			return HAL_I2C_IsDeviceReady(&this->i2cBusses[(size_t)bus], devAddr8bit, 3, 100) == HAL_OK ? Error::OK : Error::I2C_BusError;
 		}
-		sensactcore::Error I2C_Master_Transmit(SensactBus bus, uint8_t devAddr8bit, uint8_t *data, size_t dataLen) {
-			return HAL_I2C_Master_Transmit(&this->i2cBusses[(size_t)bus], devAddr8bit, data, dataLen, 100)==HAL_OK?Error::OK:Error::I2C_BusError;
+		sensactcore::Error I2C_Master_Transmit(SensactBus bus, uint8_t devAddr8bit, uint8_t *data, size_t dataLen)
+		{
+			return HAL_I2C_Master_Transmit(&this->i2cBusses[(size_t)bus], devAddr8bit, data, dataLen, 100) == HAL_OK ? Error::OK : Error::I2C_BusError;
 		}
-		sensactcore::Error GetBOOLInput(uint8_t input, bool *value) {
-			*value=Gpio::Get((sensacthal::Pin)input);
+		sensactcore::Error GetBOOLInput(uint8_t input, bool *value)
+		{
+			*value = Gpio::Get((sensacthal::Pin)input);
 			return Error::OK;
 		}
-		sensactcore::Error SetBOOLOutput(uint8_t output, bool value) {
+		sensactcore::Error SetBOOLOutput(uint8_t output, bool value)
+		{
 			Gpio::Set((sensacthal::Pin)output, value);
 			return Error::OK;
 		}
-		sensactcore::Error GetU16Input(uint8_t input, uint16_t *value) {
+		sensactcore::Error GetU16Input(uint8_t input, uint16_t *value)
+		{
 			return Error::NOT_YET_IMPLEMENTED;
 		}
-		sensactcore::Error GetEncoderValue(uint16_t encoderId, uint16_t *value) {
-			*value=0;
+		sensactcore::Error GetEncoderValue(uint16_t encoderId, uint16_t *value)
+		{
+			*value = 0;
 			return Error::NOT_YET_IMPLEMENTED;
 		}
 
-		bool SampleDCF77Pin(){
+		bool SampleDCF77Pin()
+		{
 			return false;
 		}
-		sensactcore::Error SetU16Output(uint8_t output, uint16_t value) {
+		sensactcore::Error SetU16Output(uint8_t output, uint16_t value)
+		{
 			return Error::NOT_YET_IMPLEMENTED;
 		}
 		sensactcore::Error ReceiveCANMessage(sensactcore::CANMessage *m)
@@ -202,38 +222,43 @@ namespace sensacthal
 			//LOGI("Traced CAN-Message for ID %d", m->Id);
 			return Error::OK;
 		}
-		sensactcore::Error SendCANMessage(uint32_t id, uint8_t const *const data, size_t len){
+		sensactcore::Error SendCANMessage(uint32_t id, uint8_t const *const data, size_t len)
+		{
 #ifndef NEW_CANID
-			if(id>=0x400)
+			if (id >= 0x400)
 			{
 				LOGD("CAN-ID is 0x%04x > 0x0400 will not be sent due to ifndef NEW_CANID", id);
 				return Error::UNSPECIFIED_ERROR;
 			}
 #endif
 			canTxHeader.DLC = len;
-			for (uint8_t i = 0; i < len; i++) {
+			for (uint8_t i = 0; i < len; i++)
+			{
 				canTxData[i] = data[i];
 			}
 
 			canTxHeader.ExtId = id;
 			uint32_t TxMailbox{0};
-			if (HAL_CAN_AddTxMessage(&hcan, &canTxHeader, canTxData, &TxMailbox)!=HAL_OK) {
+			if (HAL_CAN_AddTxMessage(&hcan, &canTxHeader, canTxData, &TxMailbox) != HAL_OK)
+			{
 				LOGE("Failed to send CAN-Message for CanId %x", id); //not reference to ApplicationNames, because it can also be an event!
 				(ErrorCounters[CAN_ERROR])++;
 				return Error::CAN_BusError;
 			}
 			LOGI("Sent CAN-Message with CanId %x", id); //not reference to ApplicationNames, because it can also be an event!
 			return Error::OK;
-
 		}
-		sensactcore::Error GetTimestamp(char *text, size_t maxLength){
+		sensactcore::Error GetTimestamp(char *text, size_t maxLength)
+		{
 			return Error::NOT_YET_IMPLEMENTED;
 		}
-		sensactcore::Error GetSteadyClock(Time_t *ptr){
-			*ptr=steadyClockMsecCnt;
+		sensactcore::Error GetSteadyClock(Time_t *ptr)
+		{
+			*ptr = steadyClockMsecCnt;
 			return Error::OK;
 		}
-		sensactcore::Error Write2Console(char c) {
+		sensactcore::Error Write2Console(char c)
+		{
 #ifdef STM32F0
 			while (!(CONSOLE_USART->ISR & UART_FLAG_TXE))
 				;
@@ -249,18 +274,72 @@ namespace sensacthal
 #endif
 			return Error::OK;
 		}
-        sensactcore::Error DoEachCycle(){
+		sensactcore::Error CallbackEachCycle()
+		{
 			return Error::OK;
 		}
-        sensactcore::Error DelayAtLeastUs(uint32_t us){
+		sensactcore::Error DelayAtLeastUs(uint32_t us)
+		{
 			return Error::NOT_YET_IMPLEMENTED;
 		}
-		void CallbackEachMillisecond(){
+		void CallbackEachMillisecond()
+		{
 			steadyClockMsecCnt++;
 		}
 
-		sensactcore::Error UART_Transmit(sensacthal::UARTX uart, uint8_t* data, size_t size){
-			if(uart==UARTX::UART_4 && mp3Cfg==Mp3Cfg::UART4_PA00_PA01_StandbyPE02){
+		void CallbackUARTReceiveChar(uint8_t chartoreceive)
+		{
+			if (binaryMode && (steadyClockMsecCnt - lastReceivedUARTCharTimestamp > 10))
+			{
+				//reset binary mode after some time without data
+				binaryMode = false;
+				UART_buffer_pointer = 0;
+			}
+			lastReceivedUARTCharTimestamp = steadyClockMsecCnt;
+			if (UART_buffer_pointer == 0)
+			{
+				binaryMode = chartoreceive == 0x01;
+			}
+
+			if (binaryMode)
+			{
+				//Binary Format: (Multibyte: little endian!)
+				//0: 1 byte Binary Sign = "0x01"
+				//1: 1 byte payload Length
+				//2 message payload with a length of "payload length"
+				//3 byte "0x00" = 2+buffer[1]
+				if (UART_buffer_pointer < UART_cmdBuffer.size())
+				{
+					UART_cmdBuffer[UART_buffer_pointer] = chartoreceive;
+					if (UART_buffer_pointer > 2 && UART_buffer_pointer == 2 + UART_cmdBuffer[1])
+					{
+						BufferHasMessage = true;
+					}
+					UART_buffer_pointer++;
+				}
+			}
+			else
+			{
+				if (chartoreceive == '\r')
+				{
+					//do nothing
+				}
+				else if (chartoreceive == '\n')
+				{
+					BufferHasMessage = true;
+				}
+				else if (UART_buffer_pointer < UART_cmdBuffer.size())
+				{
+					UART_cmdBuffer[UART_buffer_pointer] = chartoreceive;
+					UART_buffer_pointer++;
+				}
+			}
+		}
+
+		sensactcore::Error UART_Transmit(sensacthal::UARTX uart, uint8_t *data, size_t size)
+		{
+			if (uart == UARTX::UART_4 && mp3Cfg == Mp3Cfg::UART4_PA00_PA01_StandbyPE02)
+			{
 				HAL_UART_Transmit(&BELL, data, size, 1000);
 				return Error::OK;
 			}
@@ -303,7 +382,6 @@ namespace sensacthal
 					Gpio::Set(Pin::PA08, true);
 					DelayAtLeastUs(50);
 				}
-
 
 				__I2C1_CLK_ENABLE();
 				__I2C3_CLK_ENABLE();

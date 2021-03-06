@@ -32,7 +32,7 @@ class cRgbw: public cApplication
 		eAppCallResult Setup(SensactContext *ctx) override;
 		eAppType GetAppType() override;
 		eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
-		#include <generated/RgbwApplication.hinc>
+		#include <application/RgbwApplication.inc>
 		cRgbw(const eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, const bool lowMeansLampOn, const uint8_t *const WellKnownColors, const uint8_t WellKnownColorsLength, const eApplicationID standbyController, const Time_t autoOffIntervalMsecs);
 	};
 }

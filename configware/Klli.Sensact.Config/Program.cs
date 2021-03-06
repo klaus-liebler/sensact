@@ -4,20 +4,6 @@ using Klli.Sensact.Config.Nodes;
 using System;
 using log4net;
 
-namespace KonCept.MMS.PDI.Plugin.PowerMacs4000API
-{
-    /// <summary>
-    ///this class contains the Parameters of a Station (Object)
-    ///in a PowerMACS System
-    /// </summary>
-    public class PowerMacsStation
-    {
-        private static readonly ILog LOG_STAT = LogManager.GetLogger(typeof(PowerMacsStation));
-        private static readonly ILog LOG_CYCLIC = LogManager.GetLogger(typeof(PowerMacsStation).FullName + ".Cyclic");
-        private static readonly ILog LOG_PROG = LogManager.GetLogger(typeof(Klli.Sensact.Config.Program));
-    }
-}
-
 namespace Klli.Sensact.Config
 {
 

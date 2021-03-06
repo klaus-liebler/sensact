@@ -698,7 +698,7 @@ AR Path="/5FF1F879/5FF6D695" Ref="J?"  Part="1"
 AR Path="/5FF6D695" Ref="J2"  Part="1" 
 F 0 "J2" H 4730 1142 50  0000 L CNN
 F 1 "LEFT" H 4730 1051 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_2x04_P1.27mm_Horizontal" H 4650 1150 50  0001 C CNN
+F 2 "sensact:PinHeader_2x04_P1.27mm_Horizontal_CenterRef" H 4650 1150 50  0001 C CNN
 F 3 "~" H 4650 1150 50  0001 C CNN
 	1    4650 1150
 	-1   0    0    -1  
@@ -711,31 +711,29 @@ AR Path="/5FF1F879/5FF6D69B" Ref="J?"  Part="1"
 AR Path="/5FF6D69B" Ref="J3"  Part="1" 
 F 0 "J3" H 5930 1142 50  0000 L CNN
 F 1 "RIGHT" H 5930 1051 50  0000 L CNN
-F 2 "Connector_PinHeader_1.27mm:PinHeader_2x04_P1.27mm_Horizontal" H 5850 1150 50  0001 C CNN
+F 2 "sensact:PinHeader_2x04_P1.27mm_Horizontal_CenterRef" H 5850 1150 50  0001 C CNN
 F 3 "~" H 5850 1150 50  0001 C CNN
 	1    5850 1150
 	-1   0    0    -1  
 $EndComp
-Text GLabel 6050 1350 2    50   Input ~ 0
-HMI_LEDx
-Text GLabel 4850 950  2    50   Input ~ 0
+Text GLabel 4850 1150 2    50   Input ~ 0
 HMI_BL_LCDx
 $Comp
 L power:+3.3V #PWR?
 U 1 1 5FF6D6AF
-P 6050 850
+P 6050 950
 AR Path="/5FF1F879/5FF6D6AF" Ref="#PWR?"  Part="1" 
 AR Path="/5FF6D6AF" Ref="#PWR010"  Part="1" 
-F 0 "#PWR010" H 6050 700 50  0001 C CNN
-F 1 "+3.3V" V 6065 978 50  0000 L CNN
-F 2 "" H 6050 850 50  0001 C CNN
-F 3 "" H 6050 850 50  0001 C CNN
-	1    6050 850 
+F 0 "#PWR010" H 6050 800 50  0001 C CNN
+F 1 "+3.3V" V 6065 1078 50  0000 L CNN
+F 2 "" H 6050 950 50  0001 C CNN
+F 3 "" H 6050 950 50  0001 C CNN
+	1    6050 950 
 	0    1    1    0   
 $EndComp
-Text GLabel 4850 1350 2    50   Output ~ 0
+Text GLabel 6050 850  2    50   Output ~ 0
 HMI_RESET_SWx
-Text GLabel 6050 1550 2    50   Input ~ 0
+Text GLabel 4850 1350 2    50   Input ~ 0
 HMI_RESET_LCDx
 Text GLabel 4850 1050 2    50   Input ~ 0
 HMI_SCL_LCDx
@@ -756,7 +754,7 @@ F 3 "" H 4850 1250 50  0001 C CNN
 	1    4850 1250
 	0    1    1    0   
 $EndComp
-Text GLabel 6050 1050 2    50   Output ~ 0
+Text GLabel 6050 1450 2    50   Output ~ 0
 HMI_SWx
 Text GLabel 2600 3200 2    50   BiDi ~ 0
 SCL
@@ -1340,17 +1338,6 @@ RS485_A
 Text GLabel 7200 850  0    50   BiDi ~ 0
 RS485_B
 $Comp
-L power:GND #PWR0109
-U 1 1 5FFB8E2F
-P 4850 1150
-F 0 "#PWR0109" H 4850 900 50  0001 C CNN
-F 1 "GND" V 4850 950 50  0000 C CNN
-F 2 "" H 4850 1150 50  0001 C CNN
-F 3 "" H 4850 1150 50  0001 C CNN
-	1    4850 1150
-	0    -1   -1   0   
-$EndComp
-$Comp
 L power:GND #PWR0110
 U 1 1 5FFB9539
 P 6050 1150
@@ -1364,19 +1351,8 @@ $EndComp
 $Comp
 L power:GND #PWR0111
 U 1 1 5FFB96FC
-P 6050 1450
-F 0 "#PWR0111" H 6050 1200 50  0001 C CNN
-F 1 "GND" V 6050 1250 50  0000 C CNN
-F 2 "" H 6050 1450 50  0001 C CNN
-F 3 "" H 6050 1450 50  0001 C CNN
-	1    6050 1450
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:GND #PWR0112
-U 1 1 5FFB99EA
 P 6050 1250
-F 0 "#PWR0112" H 6050 1000 50  0001 C CNN
+F 0 "#PWR0111" H 6050 1000 50  0001 C CNN
 F 1 "GND" V 6050 1050 50  0000 C CNN
 F 2 "" H 6050 1250 50  0001 C CNN
 F 3 "" H 6050 1250 50  0001 C CNN
@@ -1384,14 +1360,25 @@ F 3 "" H 6050 1250 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
+L power:GND #PWR0112
+U 1 1 5FFB99EA
+P 6050 1550
+F 0 "#PWR0112" H 6050 1300 50  0001 C CNN
+F 1 "GND" V 6050 1350 50  0000 C CNN
+F 2 "" H 6050 1550 50  0001 C CNN
+F 3 "" H 6050 1550 50  0001 C CNN
+	1    6050 1550
+	0    -1   -1   0   
+$EndComp
+$Comp
 L power:GND #PWR0113
 U 1 1 5FFB9E23
-P 6050 950
-F 0 "#PWR0113" H 6050 700 50  0001 C CNN
-F 1 "GND" V 6050 750 50  0000 C CNN
-F 2 "" H 6050 950 50  0001 C CNN
-F 3 "" H 6050 950 50  0001 C CNN
-	1    6050 950 
+P 6000 1950
+F 0 "#PWR0113" H 6000 1700 50  0001 C CNN
+F 1 "GND" V 6000 1750 50  0000 C CNN
+F 2 "" H 6000 1950 50  0001 C CNN
+F 3 "" H 6000 1950 50  0001 C CNN
+	1    6000 1950
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -1797,4 +1784,18 @@ Text GLabel 6750 3350 2    50   Output ~ 0
 S0
 Text GLabel 4550 3350 2    50   Output ~ 0
 S1
+$Comp
+L power:GND #PWR0109
+U 1 1 60346C9C
+P 4850 950
+F 0 "#PWR0109" H 4850 700 50  0001 C CNN
+F 1 "GND" V 4850 750 50  0000 C CNN
+F 2 "" H 4850 950 50  0001 C CNN
+F 3 "" H 4850 950 50  0001 C CNN
+	1    4850 950 
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 6050 1050
+Text GLabel 6050 1350 2    50   Output ~ 0
+HMI_SWx
 $EndSCHEMATC

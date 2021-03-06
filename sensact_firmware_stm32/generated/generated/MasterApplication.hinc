@@ -1,3 +1,0 @@
-	void OnPINGCommand(uint32_t payload, SensactContext *ctx) override;
-	void OnSTART_IAPCommand(SensactContext *ctx) override;
-	void OnSET_PWMCommand(uint32_t channelBitmask, uint16_t value, SensactContext *ctx) override;

@@ -1,3 +1,0 @@
-	void OnUPCommand(uint8_t forced, SensactContext *ctx) override;
-	void OnDOWNCommand(uint8_t forced, SensactContext *ctx) override;
-	void OnSTOPCommand(SensactContext *ctx) override;

@@ -1,3 +1,0 @@
-	void OnTOGGLE_FILTERCommand(uint16_t targetApplicationId, SensactContext *ctx) override;
-	void OnSEND_STATUSCommand(SensactContext *ctx) override;
-	void OnON_FILTERCommand(uint16_t targetApplicationId, uint32_t autoReturnToOffMsecs, SensactContext *ctx) override;

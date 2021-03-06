@@ -75,7 +75,8 @@
 			"memory_resource": "cpp",
 			"cinttypes": "cpp",
 			"mp3uartmodule hpp": "cpp",
-			"cerrno": "c"
+			"cerrno": "c",
+			"*.inc": "cpp"
 		}
 	}
 }
