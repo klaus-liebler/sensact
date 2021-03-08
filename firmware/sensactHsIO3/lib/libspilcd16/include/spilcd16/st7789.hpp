@@ -67,13 +67,13 @@ constexpr int16_t HeightFromRotationAndSize(const DisplayRotation rotation, cons
 	return 0;
 }
 
-template <uint32_t dmaChannel, Pin cs, Pin dc, Pin backlight, Pin rst, size_t STRING_BUFFER_SIZE_CHARS, size_t BUFFER_SIZE_BYTES> //dc HIGH -->DATA>
-class TFT_ST7789 : public SPILCD16<dmaChannel, cs, dc, backlight, rst, STRING_BUFFER_SIZE_CHARS, BUFFER_SIZE_BYTES>
+template <uint32_t dmaChannel, Pin cs, Pin dc, Pin backlight, Pin rst, size_t STRING_BUFFER_SIZE_CHARS, size_t BUFFER_SIZE_U16> //dc HIGH -->DATA>
+class TFT_ST7789 : public SPILCD16<dmaChannel, cs, dc, backlight, rst, STRING_BUFFER_SIZE_CHARS, BUFFER_SIZE_U16>
 {
 
 public:
 	TFT_ST7789(SPI_TypeDef *spi, const DisplayRotation rotation, const DiplaySize size) : 
-		SPILCD16<dmaChannel, cs, dc, backlight, rst, STRING_BUFFER_SIZE_CHARS, BUFFER_SIZE_BYTES>(spi, rotation, WidthFromRotationAndSize(rotation, size), HeightFromRotationAndSize(rotation, size))
+		SPILCD16<dmaChannel, cs, dc, backlight, rst, STRING_BUFFER_SIZE_CHARS, BUFFER_SIZE_U16>(spi, rotation, WidthFromRotationAndSize(rotation, size), HeightFromRotationAndSize(rotation, size))
 	{
 		switch (rotation)
 		{

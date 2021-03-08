@@ -72,7 +72,7 @@ void Configure_SPI1andDMA(void)
 
   //SPI itself
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_SPI1);
-  LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV8);
+  LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV4); //48MHz/4=12MHz, which is <15,1MHz (Max freq of ST7789)
   LL_SPI_SetTransferDirection(SPI1, LL_SPI_HALF_DUPLEX_TX);
   LL_SPI_SetClockPhase(SPI1, LL_SPI_PHASE_2EDGE);
   LL_SPI_SetClockPolarity(SPI1, LL_SPI_POLARITY_HIGH);
@@ -155,11 +155,11 @@ extern "C" int main(void)
   const int16_t HEIGHT_OF_SEGMENT=32;
   for (int i = 40; i < 200; i += HEIGHT_OF_SEGMENT)
   {
-    lcd.setColors(rgbWheel(i), BLACK);
+    lcd.setColors(hsv2rgb565(17*i, 1000, 1000), BLACK);
     lcd.fillRect(0, i, 240, HEIGHT_OF_SEGMENT);
-    lcd.setColors(BLACK, rgbWheel(i));
-    lcd.printString(10, i+HEIGHT_OF_SEGMENT-3, Anchor::BOTTOM_LEFT, "JONAS");
-    lcd.printString(200, i+HEIGHT_OF_SEGMENT-3, Anchor::BOTTOM_RIGHT, "%d", i);
+    lcd.setColors(BLACK, hsv2rgb565(17*i, 1000, 1000));
+    //lcd.printString(10, i+HEIGHT_OF_SEGMENT-3, Anchor::BOTTOM_LEFT, "JONAS");
+    //lcd.printString(200, i+HEIGHT_OF_SEGMENT-3, Anchor::BOTTOM_RIGHT, "%d", i);
     lcd.drawImage(210, i+2, &checkbox_checked_icon24, ColorDepth::ALPHA4);
   }
   lcd.setColors(BLUE, BLACK);
