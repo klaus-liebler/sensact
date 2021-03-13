@@ -4,10 +4,10 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
-Comp ""
+Title "sensactOutdoor"
+Date "2021-03-14"
+Rev "1"
+Comp "Liebler"
 Comment1 ""
 Comment2 ""
 Comment3 ""
@@ -2491,4 +2491,6 @@ Wire Notes Line
 	2100 1900 3700 1900
 Text Notes 2100 1900 0    50   ~ 0
 Ext. CC Module
+Text Notes 5600 5550 0    50   ~ 0
+CAN+1W & RF are\nmutual exclusive
 $EndSCHEMATC
