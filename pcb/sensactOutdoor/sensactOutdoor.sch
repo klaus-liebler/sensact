@@ -2493,4 +2493,46 @@ Text Notes 2100 1900 0    50   ~ 0
 Ext. CC Module
 Text Notes 5600 5550 0    50   ~ 0
 CAN+1W & RF are\nmutual exclusive
+$Comp
+L Connector_Generic:Conn_01x04 U7
+U 1 1 604E8F64
+P 4800 2650
+F 0 "U7" H 4880 2642 50  0000 L CNN
+F 1 "RX470B" H 4880 2551 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 4800 2650 50  0001 C CNN
+F 3 "~" H 4800 2650 50  0001 C CNN
+	1    4800 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR049
+U 1 1 604E9FE8
+P 4600 2550
+F 0 "#PWR049" H 4600 2300 50  0001 C CNN
+F 1 "GND" H 4605 2377 50  0000 C CNN
+F 2 "" H 4600 2550 50  0001 C CNN
+F 3 "" H 4600 2550 50  0001 C CNN
+	1    4600 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3V3 #PWR050
+U 1 1 604EA40E
+P 4600 2850
+F 0 "#PWR050" H 4600 2700 50  0001 C CNN
+F 1 "+3V3" V 4600 3100 50  0000 C CNN
+F 2 "" H 4600 2850 50  0001 C CNN
+F 3 "" H 4600 2850 50  0001 C CNN
+	1    4600 2850
+	0    -1   -1   0   
+$EndComp
+Text GLabel 4550 2700 0    50   Output ~ 0
+IRQ
+Wire Wire Line
+	4550 2700 4600 2700
+Wire Wire Line
+	4600 2700 4600 2650
+Wire Wire Line
+	4600 2700 4600 2750
+Connection ~ 4600 2700
 $EndSCHEMATC
