@@ -42,7 +42,7 @@ namespace Klli.Sensact.Config.Templates
 
 namespace sensact {
 eAppCallResult cApplication::OnCommand(eCommandType cmd, const uint8_t * const payload,
-		uint8_t payloadLength, Time_t now) {
+		uint8_t payloadLength, SensactContext *ctx) {
 	switch(cmd)
 	{
 ");

@@ -1,0 +1,44 @@
+
+*{
+  box-sizing: border-box;
+}
+      
+body{
+display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0px;
+}
+
+body>* {
+  padding: 5px;
+}
+
+body>header{
+  background-color: aqua;
+}
+
+
+body>footer {
+  background-color: burlywood;
+}
+
+body>main{
+  flex-grow: 1;
+  background-color: cornsilk;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  min-height: 350px;
+}
+
+main>div {
+  max-width: 800px;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap
+}
+input{
+  font-size: 24pt;
+}

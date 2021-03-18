@@ -48,8 +48,8 @@ namespace Klli.Sensact.Config.Templates
 	virtual eAppType GetAppType()=0;
 	virtual eAppCallResult Setup()=0;
 	virtual eAppCallResult DoEachCycle(Time_t time, uint8_t *statusBuffer, size_t *statusBufferLength)=0; //has to be called cyclically
-	eAppCallResult OnCommand(eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength, Time_t now);
-	virtual eAppCallResult OnEvent(eApplicationID sender, eEventType evt, const uint8_t * const payload, uint8_t payloadLength, Time_t now);
+	eAppCallResult OnCommand(eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength, SensactContext *ctx);
+	virtual eAppCallResult OnEvent(eApplicationID sender, eEventType evt, const uint8_t * const payload, uint8_t payloadLength, SensactContext *ctx);
 	cApplication(const eApplicationID id);
 	static char const* NN(eApplicationID appID);
 	char const* N();
