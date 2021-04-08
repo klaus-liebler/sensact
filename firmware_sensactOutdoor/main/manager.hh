@@ -1,36 +1,21 @@
 #pragma once
 #include "esp_log.h"
 #include "common.hh"
+#include "applicationBase.hh"
 #include <vector>
-#include "aBlind.hh"
-#define TAG "manager"
 
-static cBlind markise(eApplicationID::MARKISE, RELAY1, RELAY2);
-static cBlind rollo(eApplicationID::ROLLO, RELAY1, RELAY2);
-
-class Manager
+class Manager:public PostOffice
 {
 private:
-    HAL *hal;
+    HAL * const hal;
+    SensactContext ctx;
+    std::vector<cApplication *> apps;
+    ErrorCode ParseConfigAndInitApps(const char *buf, size_t len);
 public:
-    Manager(HAL *hal) : hal(hal)
-    {
-    }
-
-    ErrorCode WebUIEvent(uint32_t eApplicationId, uint32_t eventId, uint32_t* payload, size_t payloadLen)
-    {
-        return ErrorCode::OK;
-    }
-
-    ErrorCode Init()
-    {
-        //uint32_t nowMsSteady = hal->GetMillis();
-        return ErrorCode::OK;
-    }
-
-    ErrorCode Loop()
-    {
-        //uint32_t nowMsSteady = hal->GetMillis();
-        return ErrorCode::OK;
-    }
+    Manager(HAL *hal);
+    ErrorCode HandleWebUICommand(cJSON* json);
+    ErrorCode WebUIData(BinaryWriter *sw);
+    ErrorCode Init();
+    ErrorCode Loop();
+    ErrorCode PostCommand(uint32_t target, cJSON *json);
 };

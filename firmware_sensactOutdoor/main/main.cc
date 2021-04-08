@@ -21,14 +21,17 @@ static const char *TAG = "main";
 #include "esp_log.h"
 #include "hal_sensactOutdoorV1.hh"
 #include "manager.hh"
+#include "i2c_io.hh"
+#include "i2c_mem.hh"
 
 HAL *hal = new HAL_SensactOutdoorV1();
 Manager *manager=new Manager(hal);
+I2C_IO * const i2c_io = new I2C_IO();
+I2C_MemoryEmulation i2c_mem(I2C_NUM_0, i2c_io);
 
 extern "C"
 {
     void app_main();
-    void experimentTask(void *);
     void plcTask(void *);
 }
 

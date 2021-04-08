@@ -1,6 +1,7 @@
 #pragma once
+#include <inttypes.h>
 #include <vector>
-#include <spilcd16/spilcd16.hpp>
+#include <spilcd16/common.hpp>
 
 /*
 Hierachie: Menu-Submenu-Menuitem

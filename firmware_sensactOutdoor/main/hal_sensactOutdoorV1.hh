@@ -78,6 +78,15 @@ private:
 public:
     HAL_SensactOutdoorV1() {}
 
+    ErrorCode ConfigureIO(uint16_t io, IOMode mode){
+        //SensactOutdoor IOs are not configurable!
+        return ErrorCode::OK;
+    }
+
+    ErrorCode GetInputs(uint32_t *ptr){
+        *ptr=0;
+        return ErrorCode::OK;
+    }
     ErrorCode SetU16Output(uint16_t index, uint16_t state) override
     {
         if(index>=RELAY1 && index<=RELAY6){

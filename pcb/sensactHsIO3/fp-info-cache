@@ -1,4 +1,4 @@
-19273135759125399
+19284456623329509
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -83114,6 +83114,55 @@ Varistor
 RV_Disc_D21.5mm_W11.4mm_P10mm
 Varistor, diameter 21.5mm, width 11.4mm, pitch 10mm
 varistor SIOV
+0
+2
+2
+liebler_CONN
+SolderWirePad_1x01_SMD_2x4mm
+Wire Pad, Square, SMD Pad,  5mm x 10mm,
+MesurementPoint Square SMDPad 5mmx10mm 
+0
+1
+1
+liebler_CONN
+WAGO_250_203
+WAGO_250_203
+
+0
+3
+3
+liebler_IC
+SO-4_7.6x3.6mm_P2.54mm_handsolder
+4-Lead Plastic Small Outline (SO) (http://www.everlight.com/file/ProductFile/201407061745083848.pdf)
+SO SOIC 2.54
+0
+4
+4
+liebler_IC
+SOP-4_3.8x4.1mm_P2.54mm_handsolder
+SOP, 4 Pin (http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOP SO
+0
+4
+4
+liebler_MECH
+RELAY_ALDP105W
+
+
+0
+4
+4
+liebler_MODULES
+CONV_HLK-5M05
+
+
+0
+4
+4
+liebler_PASSIVES
+L_1040
+Inductor, Taiyo Yuden, NR series, Taiyo-Yuden_NR-10050, 9.8mmx10.0mm, https://ds.yuden.co.jp/TYCOMPAS/or/specSheet?pn=NR10050T1R3N
+inductor taiyo-yuden nr smd
 0
 2
 2

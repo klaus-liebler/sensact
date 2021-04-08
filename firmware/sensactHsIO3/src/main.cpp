@@ -15,7 +15,7 @@
 #include <spilcd16/Fonts/FreeSansBold12pt7b.h>
 #include <checkbox_checked_icon&24.h>
 
-TFT_ST7789<3, Pin::NO_PIN, ST7789_DC_Pin, ST7789_BL_Pin, ST7789_RST_Pin, 32, 480> lcd(SPI1, DisplayRotation::ROT0, DiplaySize::SIZE240x240);
+TFT_ST7789/*<3, Pin::NO_PIN, ST7789_DC_Pin, ST7789_BL_Pin, ST7789_RST_Pin, 32, 480>*/ lcd(SPI1, DisplayRotation::ROT0, DiplaySize::SIZE240x240);
 
 extern "C" void SysTick_Handler(void) {}
 extern "C" void DMA1_Channel2_3_IRQHandler(void)

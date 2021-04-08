@@ -28,7 +28,7 @@ function tsTranspileAndBundleAndMinify(cb)
     return browserify({
         basedir: ".",
         debug: true,
-        entries: ["webui/main.ts"],
+        entries: ["webui/Main.ts"],
         cache: {},
         packageCache: {},
       })
