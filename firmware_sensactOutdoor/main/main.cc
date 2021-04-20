@@ -17,12 +17,15 @@
 #include "http_handlers.hh"
 static const char *TAG = "main";
 
+#include "webui_core_comm_generated.h"
 #include "ws2812_strip.hh"
 #include "esp_log.h"
 #include "hal_sensactOutdoorV1.hh"
 #include "manager.hh"
 #include "i2c_io.hh"
 #include "i2c_mem.hh"
+
+using namespace MyGame::Sample; // Specified in the schema.
 
 HAL *hal = new HAL_SensactOutdoorV1();
 Manager *manager=new Manager(hal);
@@ -38,6 +41,7 @@ extern "C"
 void plcTask(void *pvParameters)
 {
     ESP_LOGI(TAG, "plcTask started");
+
     TickType_t xLastWakeTime;
     const TickType_t xFrequency = 10;
     // Initialise the xLastWakeTime variable with the current time.
@@ -74,20 +78,33 @@ static const httpd_uri_t get_root = {
     .user_ctx = manager,
 };
 
-static const httpd_uri_t put_webui = {
-    .uri       = "/webui",
+static const httpd_uri_t put_ioctrl = {
+    .uri       = "/iocmd",
     .method    = HTTP_PUT,
-    .handler   = handle_put_webui,
+    .handler   = handle_put_iocmd,
     .user_ctx = manager,
 };
 
-static const httpd_uri_t get_webui = {
-    .uri       = "/webui",
+static const httpd_uri_t get_ioctrl = {
+    .uri       = "/iocmd",
     .method    = HTTP_GET,
-    .handler   = handle_get_webui,
+    .handler   = handle_get_iocmd,
     .user_ctx = manager,
 };
 
+static const httpd_uri_t get_iocfg = {
+    .uri       = "/iocfg",
+    .method    = HTTP_GET,
+    .handler   = handle_get_iocfg,
+    .user_ctx = manager,
+};
+
+static const httpd_uri_t put_iocfg = {
+    .uri       = "/iocfg",
+    .method    = HTTP_PUT,
+    .handler   = handle_put_iocfg,
+    .user_ctx = manager,
+};
 
 static httpd_handle_t start_webserver(void)
 {
@@ -102,8 +119,10 @@ static httpd_handle_t start_webserver(void)
         esp_restart();
     }
     ESP_ERROR_CHECK(httpd_register_uri_handler(server, &get_root));
-    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &put_webui));
-    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &get_webui));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &put_ioctrl));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &get_ioctrl));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &put_iocfg));
+    ESP_ERROR_CHECK(httpd_register_uri_handler(server, &get_iocfg));
     return server;
 }
 

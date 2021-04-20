@@ -1,6 +1,8 @@
-import { AppManagement } from "./AppManagement";
-import { BlindsAndLEDController } from "./BlindsAndLEDController";
+import { AppManagement } from "./Interfaces";
+import { IOScreenController } from "./IOScreenController";
 import { ScreenController, ControllerState } from "./ScreenController";
+import { $ } from "./Utils";
+
 
 class AppController implements AppManagement {
   private screenControllers: ScreenController[];
@@ -10,7 +12,6 @@ class AppController implements AppManagement {
 
     this.screenControllers = [];
     this.activeControllerIndex = 0;
-
   }
 
   private setActiveScreen(newIndex: number) {
@@ -37,7 +38,9 @@ class AppController implements AppManagement {
   }
 
   public startup() {
-    this.screenControllers.push(new BlindsAndLEDController(this, <HTMLElement>document.querySelector("main[data-screenId='default'")));
+    let header = <HTMLElement>document.querySelector("header");
+    let outputsContollerContainer = $.HtmlAfter(header, "main", []);//<main data-screenId="default"></main>
+    this.screenControllers.push(new IOScreenController(this,outputsContollerContainer));
     this.setActiveScreen(0);
   }
 }

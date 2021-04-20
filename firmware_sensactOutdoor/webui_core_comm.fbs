@@ -1,0 +1,125 @@
+// Example IDL file for our monster's schema.
+namespace sensact.comm;
+
+enum eBlindState:byte{
+  STOP=0,
+	UP=1,
+	DOWN=2,
+  PREPARE=3,
+}
+
+enum eBlindCommand:byte{
+  STOP,
+  UP,
+  DOWN,
+}
+
+enum eSinglePwmCommand:byte{
+  TOGGLE,
+  CHANGE_INTENSITY,
+}
+
+enum eOnOffCommand:byte{
+  ON,
+  AUTO,
+  OFF,
+  TRIGGER,
+  TRIGGER_MSECS,
+}
+
+enum eOnOffState:byte{
+  MANUAL_OFF,
+  MANUAL_ON,
+  AUTO_OFF,
+  AUTO_ON,
+}
+
+table tBlindState{
+  position:uint16;
+  state:eBlindState;
+}
+
+table tSinglePwmState{
+  intensity0_100:uint8;
+  on:bool;
+}
+
+table tOnOffState{
+  state:eOnOffState;
+}
+
+union uState { tBlindState, tSinglePwmState, tOnOffState }
+table tStateWrapper{
+  applicationId:uint32;
+  state:uState;
+}
+table tState{
+  timestamp:uint32;
+  states:[tStateWrapper];
+}
+
+table tBlindCommand{
+  cmd:eBlindCommand;
+}
+
+table tSinglePwmCommand{
+  cmd:eSinglePwmCommand;
+  intensity0_100:uint8;
+}
+
+table tOnOffCommand{
+  cmd:eOnOffCommand;
+  msecs:uint32;
+}
+
+union uCommand{
+  tBlindCommand,
+  tSinglePwmCommand,
+  tOnOffCommand,
+}
+
+table tCommand{
+  applicationId:uint32;
+  command:uCommand;
+}
+
+enum eRelayInterlockMode:byte{
+  RELAY1_UP__RELAY2_DOWN,
+  RELAY1_DOWN__RELAY2_UP,
+  RELAY1_POWER__RELAY2_UP,
+  RELAY1_POWER__RELAY2_DOWN,
+  RELAY1_UP__RELAY2_POWER,
+  RELAY1_DOWN__RELAY2_POWER,
+}
+
+table tBlindConfig{
+  relay1:uint16;
+	relay2:uint16;
+  mode:eRelayInterlockMode;
+  time_up_msecs:uint32;
+  time_down_msecs:uint32;
+}
+
+table tSinglePwmConfig{
+  pwmFirst:uint16;
+  pwmLast:uint16;
+  idOfStandbyController:uint16;
+  autoOffMsecs:uint32;
+}
+
+table tOnOffConfig{
+  relay:uint16;
+	autoOffMsecs:uint32;
+	initialState:eOnOffState;
+}
+
+union uConfig { tBlindConfig, tSinglePwmConfig, tOnOffConfig}
+
+table tConfigWrapper{
+  config:uConfig;
+}
+
+table tIoConfig{
+  timestamp:uint32;
+  configs:[tConfigWrapper];
+}

@@ -6,7 +6,7 @@ constexpr uint16_t WAIT_PREPARE2GO = 900;
 constexpr uint16_t UP_TIME = 60000;
 constexpr uint16_t DOWN_TIME = 60000;
 
-cBlind::cBlind(uint32_t const id, uint16_t const relay1, uint16_t const relay2, const eRelayInterlockMode mode) : cApplication(id), relay1(relay1), relay2(relay2), mode(mode), lastChanged(0L), currentState(eBlindState::STOP), requestedState(eBlindState::STOP)
+cBlind::cBlind(uint32_t const id, uint16_t const relay1, uint16_t const relay2, const eRelayInterlockMode mode) : cApplication(id), relay1(relay1), relay2(relay2), mode(mode), lastChanged(0L), currentState(eBlindState::eBlindState_STOP), requestedState(eBlindState::eBlindState_STOP)
 {
 }
 
@@ -17,14 +17,14 @@ ErrorCode cBlind::Setup(SensactContext *ctx)
 
 void cBlind::prepareUp(SensactContext *ctx)
 {
-	this->currentState = eBlindState::PREPARE;
+	this->currentState = eBlindState::eBlindState_PREPARE;
 	this->lastChanged = ctx->now;
 	switch (this->mode)
 	{
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_UP:
 		ctx->node->SetU16Output(relay2, ACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_POWER:
 		ctx->node->SetU16Output(relay1, ACTIVE);
 		break;
 	default:
@@ -34,18 +34,18 @@ void cBlind::prepareUp(SensactContext *ctx)
 
 void cBlind::up(SensactContext *ctx)
 {
-	this->currentState = eBlindState::UP;
+	this->currentState = eBlindState::eBlindState_UP;
 	this->lastChanged = ctx->now;
 	switch (this->mode)
 	{
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_UP:
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_DOWN:
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_DOWN:
 		ctx->node->SetU16Output(relay1, ACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_UP:
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_POWER:
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_POWER:
 		ctx->node->SetU16Output(relay2, ACTIVE);
 		break;
 	default:
@@ -55,14 +55,14 @@ void cBlind::up(SensactContext *ctx)
 
 void cBlind::prepareDown(SensactContext *ctx)
 {
-	this->currentState = eBlindState::PREPARE;
+	this->currentState = eBlindState::eBlindState_PREPARE;
 	this->lastChanged = ctx->now;
 	switch (this->mode)
 	{
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_DOWN:
 		ctx->node->SetU16Output(relay2, ACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_POWER:
 		ctx->node->SetU16Output(relay1, ACTIVE);
 		break;
 	default:
@@ -72,18 +72,18 @@ void cBlind::prepareDown(SensactContext *ctx)
 
 void cBlind::down(SensactContext *ctx)
 {
-	this->currentState = eBlindState::DOWN;
+	this->currentState = eBlindState::eBlindState_DOWN;
 	this->lastChanged = ctx->now;
 	switch (this->mode)
 	{
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_UP:
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_DOWN:
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_UP:
 		ctx->node->SetU16Output(relay1, ACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_POWER:
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_POWER:
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_DOWN:
 		ctx->node->SetU16Output(relay2, ACTIVE);
 		break;
 	default:
@@ -92,20 +92,20 @@ void cBlind::down(SensactContext *ctx)
 }
 void cBlind::stop(SensactContext *ctx)
 {
-	this->currentState = eBlindState::STOP;
+	this->currentState = eBlindState::eBlindState_STOP;
 	this->lastChanged = ctx->now;
 	switch (this->mode)
 	{
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_UP:
-	case eRelayInterlockMode::RELAY1_POWER__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_POWER__RELAY2_DOWN:
 		ctx->node->SetU16Output(relay1, INACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_POWER:
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_POWER:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_POWER:
 		ctx->node->SetU16Output(relay2, INACTIVE);
 		break;
-	case eRelayInterlockMode::RELAY1_DOWN__RELAY2_UP:
-	case eRelayInterlockMode::RELAY1_UP__RELAY2_DOWN:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_DOWN__RELAY2_UP:
+	case eRelayInterlockMode::eRelayInterlockMode_RELAY1_UP__RELAY2_DOWN:
 		ctx->node->SetU16Output(relay1, INACTIVE);
 		ctx->node->SetU16Output(relay1, INACTIVE);
 		break;
@@ -114,19 +114,24 @@ void cBlind::stop(SensactContext *ctx)
 	}
 }
 
-ErrorCode cBlind::ProcessJsonCommand(cJSON *json)
+ErrorCode cBlind::ProcessCommand(const tCommand *msg)
 {
-	char *command = cJSON_GetObjectItem(json, "command")->valuestring;
-	switch (hashStr(command))
+	
+
+	if(msg->command_type()!=uCommand::uCommand_tBlindCommand){
+		return ErrorCode::INVALID_COMMAND;
+	}
+	auto cmd = msg->command_as_tBlindCommand();
+	switch (cmd->cmd())
 	{
-	case hashStr("upPressed"):
-		this->requestedState = eBlindState::UP;
+	case eBlindCommand_UP:
+		this->requestedState = eBlindState::eBlindState_UP;
 		return ErrorCode::OK;
-	case hashStr("stopPressed"):
-		this->requestedState = eBlindState::STOP;
+	case eBlindCommand_STOP:
+		this->requestedState = eBlindState::eBlindState_STOP;
 		return ErrorCode::OK;
-	case hashStr("downPressed"):
-		this->requestedState = eBlindState::DOWN;
+	case eBlindCommand_DOWN:
+		this->requestedState = eBlindState::eBlindState_DOWN;
 		return ErrorCode::OK;
 	default:
 		return ErrorCode::INVALID_COMMAND;
@@ -135,21 +140,21 @@ ErrorCode cBlind::ProcessJsonCommand(cJSON *json)
 
 ErrorCode cBlind::Loop(SensactContext *ctx)
 {
-	if ((this->currentState == eBlindState::UP  && ctx->now - lastChanged >= UP_TIME) || (this->currentState == eBlindState::DOWN  && ctx->now - lastChanged >= DOWN_TIME))
+	if ((this->currentState == eBlindState::eBlindState_UP  && ctx->now - lastChanged >= UP_TIME) || (this->currentState == eBlindState::eBlindState_DOWN  && ctx->now - lastChanged >= DOWN_TIME))
 	{
-		this->requestedState = eBlindState::STOP;
+		this->requestedState = eBlindState::eBlindState_STOP;
 	}
 	if (this->currentState == this->requestedState)
 	{
 		return ErrorCode::OK;
 	}
-	if (this->currentState == eBlindState::STOP && ctx->now - lastChanged >= WAIT_STOP2PREPARE)
+	if (this->currentState == eBlindState::eBlindState_STOP && ctx->now - lastChanged >= WAIT_STOP2PREPARE)
 	{//"Wendeautomatik Stufe 1"
-		if (this->requestedState == eBlindState::DOWN)
+		if (this->requestedState == eBlindState::eBlindState_DOWN)
 		{
 			prepareDown(ctx);
 		}
-		else if (this->requestedState == eBlindState::UP)
+		else if (this->requestedState == eBlindState::eBlindState_UP)
 		{
 			prepareUp(ctx);
 		}
@@ -159,13 +164,13 @@ ErrorCode cBlind::Loop(SensactContext *ctx)
 		}
 		return ErrorCode::OK;
 	}
-	if (this->currentState == eBlindState::PREPARE && ctx->now - lastChanged >= WAIT_PREPARE2GO)
+	if (this->currentState == eBlindState::eBlindState_PREPARE && ctx->now - lastChanged >= WAIT_PREPARE2GO)
 	{//"Wendeautomatik Stufe 2"
-		if (this->requestedState == eBlindState::DOWN)
+		if (this->requestedState == eBlindState::eBlindState_DOWN)
 		{
 			down(ctx);
 		}
-		else if (this->requestedState == eBlindState::UP)
+		else if (this->requestedState == eBlindState::eBlindState_UP)
 		{
 			up(ctx);
 		}
@@ -179,40 +184,19 @@ ErrorCode cBlind::Loop(SensactContext *ctx)
 	return ErrorCode::OK;
 }
 
-ErrorCode cBlind::FillStatus(BinaryWriter *w)
+ErrorCode cBlind::FillStatus(flatbuffers::FlatBufferBuilder *builder, std::vector<flatbuffers::Offset<tStateWrapper>> *status_vector)
 {
-	w->StartWriting(this->id, 1);
-	w->WriteU32((uint32_t)this->currentState);
-	w->EndWriting(this->id);
+	auto blindState = CreatetBlindState(*builder, 0, this->currentState);
+	auto state = CreatetStateWrapper(*builder, this->id, uState::uState_tBlindState, blindState.Union());
+	status_vector->push_back(state);
 	return ErrorCode::OK;
 }
 
-cBlind *cBlind::BuildFromJSON(uint32_t const id, cJSON *json)
+cBlind *cBlind::Build(uint32_t const id, const tConfigWrapper* cfg)
 {
-	uint16_t relay1 = cJSON_GetObjectItem(json, "relay1")->valueint;
-	uint16_t relay2 = cJSON_GetObjectItem(json, "relay2")->valueint;
-	const char *modeStr = cJSON_GetObjectItem(json, "mode")->valuestring;
-	eRelayInterlockMode mode{eRelayInterlockMode::UNDEFINED};
-	switch (hashStr(modeStr))
-	{
-	case hashStr("RELAY1_UP__RELAY2_DOWN"):
-		mode=eRelayInterlockMode::RELAY1_UP__RELAY2_DOWN;
-		break;
-	case hashStr("RELAY1_DOWN__RELAY2_UP"):
-		mode=eRelayInterlockMode::RELAY1_DOWN__RELAY2_UP;
-		break;
-	case hashStr("RELAY1_POWER__RELAY2_UP"):
-		mode=eRelayInterlockMode::RELAY1_POWER__RELAY2_UP;
-		break;
-	case hashStr("RELAY1_POWER__RELAY2_DOWN"):
-		mode=eRelayInterlockMode::RELAY1_POWER__RELAY2_DOWN;
-		break;
-	case hashStr("RELAY1_UP__RELAY2_POWER"):
-		mode=eRelayInterlockMode::RELAY1_UP__RELAY2_POWER;
-		break;
-	case hashStr("RELAY1_DOWN__RELAY2_POWER"):
-		mode=eRelayInterlockMode::RELAY1_DOWN__RELAY2_POWER;
-		break;
+	if(cfg->config_type() !=uConfig::uConfig_tBlindConfig){
+		return nullptr;
 	}
-	return new cBlind(id, relay1, relay2, mode);
+	auto x = cfg->config_as_tBlindConfig();
+	return new cBlind(id, x->relay1(), x->relay2(), x->mode());
 }

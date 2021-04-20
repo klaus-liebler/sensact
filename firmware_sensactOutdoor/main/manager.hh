@@ -10,12 +10,11 @@ private:
     HAL * const hal;
     SensactContext ctx;
     std::vector<cApplication *> apps;
-    ErrorCode ParseConfigAndInitApps(const char *buf, size_t len);
 public:
     Manager(HAL *hal);
-    ErrorCode HandleWebUICommand(cJSON* json);
-    ErrorCode WebUIData(BinaryWriter *sw);
+    ErrorCode HandleCommandFromWebUI(const sensact::comm::tCommand *cmd);
+    ErrorCode FillBuilderWithStateForWebUI(flatbuffers::FlatBufferBuilder *builder);
     ErrorCode Init();
     ErrorCode Loop();
-    ErrorCode PostCommand(uint32_t target, cJSON *json);
+    ErrorCode PostCommand(const tCommand* cmd);
 };

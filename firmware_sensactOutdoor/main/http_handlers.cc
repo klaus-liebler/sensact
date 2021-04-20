@@ -94,30 +94,30 @@ extern const char index_html_gz_start[] asm("_binary_index_html_gz_start");
 extern const char index_html_gz_end[] asm("_binary_index_html_gz_end");
 extern const size_t index_html_gz_size asm("index_html_gz_length");
 
-esp_err_t handle_get_root(httpd_req_t *req)
+esp_err_t handle_get_root(httpd_req_t *req)//browser get application itself
 {
     httpd_resp_set_type(req, "text/html");
     httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
     httpd_resp_send(req, index_html_gz_start, index_html_gz_size); // -1 = use strlen()
     return ESP_OK;
 }
-esp_err_t handle_get_webui(httpd_req_t *req)
+
+esp_err_t handle_get_iocmd(httpd_req_t *req) //brwoser gets state of IOs
 {
     Manager *manager = (Manager *)(req->user_ctx);
-    BinaryWriterImpl statusBuffer;
-    manager->WebUIData(&statusBuffer);
+    flatbuffers::FlatBufferBuilder builder(512);
+    manager->FillBuilderWithStateForWebUI(&builder);
     httpd_resp_set_type(req, "application/octet-stream");
-    httpd_resp_send(req, (const char *)statusBuffer.buf.data(), statusBuffer.nextBufferPtr * 4);
+    httpd_resp_send(req, (const char *)builder.GetBufferPointer(), builder.GetSize());
     return ESP_OK;
 }
 
-
-esp_err_t handle_put_webui(httpd_req_t *req)
+esp_err_t handle_put_iocmd(httpd_req_t *req) //browser sends commands to change IOs
 {
     Manager *manager = (Manager *)(req->user_ctx);
     int ret = 0;
     int remaining = req->content_len;
-    char buf[req->content_len+1];
+    uint8_t buf[req->content_len];
     while (remaining > 0)
     {
         // Read the data for the request
@@ -133,19 +133,18 @@ esp_err_t handle_put_webui(httpd_req_t *req)
         remaining -= ret;
     }
     // End response
-    buf[req->content_len]=0;
-    cJSON *root=cJSON_Parse(buf);
-    manager->HandleWebUICommand(root);
-    uint32_t retbuf[1];
-    retbuf[0] = 0;
+    // Get a pointer to the root object inside the buffer.
+    auto cmd = flatbuffers::GetRoot<tCommand>(buf);
+    manager->HandleCommandFromWebUI(cmd);
+    flatbuffers::FlatBufferBuilder builder(512);
+    manager->FillBuilderWithStateForWebUI(&builder);
     httpd_resp_set_type(req, "application/octet-stream");
-    httpd_resp_send(req, (const char *)retbuf, 1 * 4);
+    httpd_resp_send(req, (const char *)builder.GetBufferPointer(), builder.GetSize());
     return ESP_OK;
 }
 
-
-
-esp_err_t helper_get_fbd(httpd_req_t *req, const char *filepath){
+esp_err_t helper_get_iocfg(httpd_req_t *req, const char *filepath)//helper
+{
     FILE *fd = NULL;
     struct stat file_stat;
     ESP_LOGI(TAG, "helper_get_fbd : %s", filepath);
@@ -183,7 +182,8 @@ esp_err_t helper_get_fbd(httpd_req_t *req, const char *filepath){
     return ESP_OK;
 }
 
-esp_err_t helper_post_fbd(httpd_req_t *req, const char *filepath, bool overwrite){
+esp_err_t helper_put_iocfg(httpd_req_t *req, const char *filepath, bool overwrite)//helper
+{
     FILE *fd = NULL;
     struct stat file_stat;
     ESP_LOGI(TAG, "Trying to store : %s", filepath);
@@ -255,24 +255,22 @@ esp_err_t helper_post_fbd(httpd_req_t *req, const char *filepath, bool overwrite
     return ESP_OK;
 }
 
-esp_err_t handle_get_cfgstorejson(httpd_req_t *req)
+esp_err_t handle_get_iocfg(httpd_req_t *req)//browser gets configuration of IOs to draw the correct user interface
 {
     char filepath[Paths::FILE_PATH_MAX];
     const char *filename = strrchr(req->uri, '/') + 1;
     if (!filename)
     {
-        ESP_LOGE(TAG, "Filename is not defined correctly");
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Filename is not defined correctly");
-        return ESP_FAIL;
+        return helper_get_iocfg(req, Paths::DEFAULTCFG_PATH);
     }
-
     strcpy(filepath, Paths::CFGSTORE_BASE);
     strcpy(filepath + strlen(filepath), filename);
     strcpy(filepath + strlen(filepath), ".json");
-    return helper_get_fbd(req, filepath);
+    return helper_get_iocfg(req, filepath);
 }
 
-esp_err_t handle_post_fbdstorejson(httpd_req_t *req){
+esp_err_t handle_put_iocfg(httpd_req_t *req)//browser sends new configuraion of IOs
+{
     char filepath[Paths::FILE_PATH_MAX];
     const char *filename = strrchr(req->uri, '/')+1;
     if (!filename) {
@@ -283,5 +281,5 @@ esp_err_t handle_post_fbdstorejson(httpd_req_t *req){
     strcpy(filepath, Paths::CFGSTORE_BASE);
     strcpy(filepath+strlen(filepath), filename);
     strcpy(filepath+strlen(filepath), ".json");
-    return helper_post_fbd(req, filepath, false);
+    return helper_put_iocfg(req, filepath, false);
 }

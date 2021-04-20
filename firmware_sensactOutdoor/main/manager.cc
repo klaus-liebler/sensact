@@ -3,12 +3,13 @@
 #include <vector>
 #include "manager.hh"
 #include "aBlind.hh"
-#include "aRgbPwm.hh"
-#include "aWwcwPwm.hh"
 #include "aSinglePwm.hh"
-#include "aStandbycontroller.hh"
+#include "aOnOff.hh"
 #include "paths_and_files.hh"
 #include "cJSON.h"
+#include "../generated/webui_core_comm_generated.h"
+
+using namespace sensact::comm;
 
 #define TAG "manager"
 /*
@@ -30,22 +31,25 @@ Manager::Manager(HAL *hal) : hal(hal)
     ctx.now = hal->GetMillis();
 }
 
-ErrorCode Manager::HandleWebUICommand(cJSON* json)
+ErrorCode Manager::HandleCommandFromWebUI(const sensact::comm::tCommand *cmd)
 {
-    int applicationId = cJSON_GetObjectItem(json, "applicationid")->valueint;
-    cApplication* app = apps.at(applicationId-1);
+    cApplication* app = apps.at(cmd->applicationId()-1);
     if(!app){
         return ErrorCode::INVALID_APPLICATION_ID;
     }
-    return app->ProcessJsonCommand(json);
+    return app->ProcessCommand(cmd);
 }
 
-ErrorCode Manager::WebUIData(BinaryWriter *sw)
-{
+ErrorCode Manager::FillBuilderWithStateForWebUI(flatbuffers::FlatBufferBuilder *builder){
+    
+    std::vector<flatbuffers::Offset<tStateWrapper>> status_vector;
     for (const auto &app : apps)
     {
-        app->FillStatus(sw);
+        app->FillStatus(builder, &status_vector);
     }
+    auto states = builder->CreateVector(status_vector);
+    auto state_obj = CreatetState(*builder, hal->GetMillis(), states);
+    builder->Finish(state_obj);
     return ErrorCode::OK;
 }
 
@@ -54,27 +58,43 @@ ErrorCode Manager::Init()
     ctx.now = this->hal->GetMillis();
     FILE *fd = NULL;
     struct stat file_stat;
-    ESP_LOGI(TAG, "Trying to open %s", Paths::DEFAULTCFG_JSON_PATH);
-    if (stat(Paths::DEFAULTCFG_JSON_PATH, &file_stat) == -1) {
-        ESP_LOGI(TAG, "Default PLC file %s does not exist. Using factory default instead", Paths::DEFAULTCFG_JSON_PATH);
-        return ErrorCode::OK;
+    ESP_LOGI(TAG, "Trying to open %s", Paths::DEFAULTCFG_PATH);
+    if (stat(Paths::DEFAULTCFG_PATH, &file_stat) == -1) {
+        ESP_LOGI(TAG, "Default PLC file %s does not exist. Exiting..", Paths::DEFAULTCFG_PATH);
+        return ErrorCode::NO_CONFIGURATION_FOUND;
     }
-    fd = fopen(Paths::DEFAULTCFG_JSON_PATH, "r");
+    fd = fopen(Paths::DEFAULTCFG_PATH, "r");
     if (!fd) {
-        ESP_LOGE(TAG, "Failed to read existing file : %s", Paths::DEFAULTCFG_JSON_PATH);
+        ESP_LOGE(TAG, "Failed to read existing file : %s", Paths::DEFAULTCFG_PATH);
         return ErrorCode::FILE_SYSTEM_ERROR;
     }
-    char buf[file_stat.st_size+1];
-	buf[file_stat.st_size] = 0;
+    uint8_t buf[file_stat.st_size];
     size_t size_read = fread(buf, 1, file_stat.st_size, fd);
     if(size_read!=file_stat.st_size){
-        ESP_LOGE(TAG, "Unable to read file completely : %s", Paths::DEFAULTCFG_JSON_PATH);
+        ESP_LOGE(TAG, "Unable to read file completely : %s", Paths::DEFAULTCFG_PATH);
         return ErrorCode::FILE_SYSTEM_ERROR;
     }
-    ESP_LOGI(TAG, "Successfully read %s", Paths::DEFAULTCFG_JSON_PATH);
-    
-
-    return this->ParseConfigAndInitApps(buf, size_read);
+    ESP_LOGI(TAG, "Successfully read %s", Paths::DEFAULTCFG_PATH);
+    auto cfg = flatbuffers::GetRoot<tIoConfig>(buf);
+    auto cfg_vect = cfg->configs();
+    auto cfg_vect_size= cfg_vect->size();
+    this->apps.resize(cfg_vect_size);
+    for(int i=0;i<cfg_vect_size;i++){
+        int id=i+1;
+        auto x = cfg_vect->Get(i);
+        switch(x->config_type()){
+        case uConfig_tBlindConfig:
+            apps[i]=cBlind::Build(id, x);
+            break;
+        case uConfig_tOnOffConfig:
+            apps[i]=cOnOff::Build(id, x);
+            break;
+        case uConfig_tSinglePwmConfig:
+            apps[i]=cSinglePWM::Build(id, x);
+        default:
+            continue;
+        }
+    }
     for (const auto &app : apps)
     {
         app->Setup(&this->ctx);
@@ -83,33 +103,6 @@ ErrorCode Manager::Init()
 }
 
 
-
-ErrorCode Manager::ParseConfigAndInitApps(const char *buf, size_t len){
-    
-	cJSON *root = cJSON_Parse(buf);
-    int root_array_size = cJSON_GetArraySize(root);
-    this->apps.resize(root_array_size);
-    ESP_LOGI(TAG, "root_array_size=%d", root_array_size);
-	for (uint32_t i=0;i<root_array_size;i++) {
-        int id=i+1;
-		cJSON *arrayItem = cJSON_GetArrayItem(root,i);
-        char *type = cJSON_GetObjectItem(arrayItem,"type")->valuestring;
-        switch (hashStr(type))
-        {
-        case hashStr("BLIND"):
-            apps[i]=cBlind::BuildFromJSON(id, arrayItem);
-            break;
-        case hashStr("SINGLEPWM"):
-            apps[i]=cSinglePWM::BuildFromJSON(id, arrayItem);
-            break;
-        default:
-            break;
-        }
-		
-	}
-	cJSON_Delete(root);
-    return ErrorCode::OK;
-}
 
 ErrorCode Manager::Loop()
 {
@@ -121,15 +114,15 @@ ErrorCode Manager::Loop()
     return ErrorCode::OK;
 }
 
-ErrorCode Manager::PostCommand(uint32_t target, cJSON *json){
-    if(target==0){
+ErrorCode Manager::PostCommand(const tCommand *cmd){
+    if(cmd->applicationId()==0){
         return ErrorCode::OK;
     }
-    cApplication *app=this->apps.at(target-1);
+    cApplication *app=this->apps.at(cmd->applicationId()-1);
     if(!app){
         return ErrorCode::NONE_AVAILABLE;
     }
-    return app->ProcessJsonCommand(json);
+    return app->ProcessCommand(cmd);
 }
 
 

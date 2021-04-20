@@ -3,7 +3,7 @@
 #include <inttypes.h>
 #include "errorcodes.hh"
 #include "crgb.hh"
-#include "cJSON.h"
+#include "../generated/webui_core_comm_generated.h"
 
 #define CHECK_BIT(var, pos) ((var) & (1 << (pos)))
 
@@ -72,7 +72,7 @@ public:
 class PostOffice
 {
 public:
-    virtual ErrorCode PostCommand(uint32_t target, cJSON *json) = 0;
+    virtual ErrorCode PostCommand(const sensact::comm::tCommand* cmd)=0;
 };
 
 class BinaryWriter

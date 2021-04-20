@@ -20,5 +20,6 @@ enum class ErrorCode:int
     INVALID_EVENT_ID=15,
     INVALID_STATE=16,
     INVALID_COMMAND=17,
+    NO_CONFIGURATION_FOUND=18,
 
 };

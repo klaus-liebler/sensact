@@ -1,102 +1,109 @@
-import { ScreenController } from "./ScreenController";
-import { AppManagement } from "./AppManagement";
-import { SerializeContext } from "./SerializeContext";
-import {$} from "./Utils"
-export let DE_de = new Intl.NumberFormat('de-DE');
+import {WidgetContainer as WidgetManager } from "./Interfaces";
+import { flatbuffers } from 'flatbuffers'; // located in node_modules
+import * as C from '../generated/webui_core_comm_generated';
+import { $ } from "./Utils"
 export const UPDATE_EACH_INTERVAL = 2;
-
 declare var iro: any;
+
 const KELVIN_MAX = 6500;
 const KELVIN_MIN = 2700;
-export class Widget{
-  protected  http_put_webui(command:string, obj:any=null) {
-    if(!obj || obj===undefined){
-      obj=new Object();
-    }
-    obj["id"]=this.id;
-    obj["command"]=command;
-
-    let xhr = new XMLHttpRequest;
-    xhr.onerror = (e) => { console.log("Fehler beim XMLHttpRequest!"); };
-    xhr.open("PUT", "/webui", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify(obj));
-  }
-
-  protected updateButton(but: HTMLButtonElement, state: boolean) {
-    but.innerHTML = state? "An" : "Aus";
-  }
-  protected http_get_webui() {//nein, das wird auf Screen-Ebene für alle Widgets auf der Seite auf einmal gemacht!
-    let xhr = new XMLHttpRequest;
-    xhr.onerror = (e) => { console.log("Fehler beim XMLHttpRequest!"); };
-    xhr.open("GET", "/webui", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.onload = (e) => this.parseHTTPResult(xhr.responseText);
-    xhr.send(/*body is ignored with get*/);
-  }
-
-  protected parseHTTPResult(value:string){}
-
-  constructor(protected appManagement: AppManagement, protected container: HTMLDivElement, protected id:number){}
+export abstract class Widget {
+  public abstract processIoState(r: C.sensact.comm.tState, i: number): void;
+  public abstract renderWidgetAndHookHandlers(): void;
+  constructor(protected manager: WidgetManager, protected container: HTMLElement, protected id: number) { }
 }
+
+
+
 export class BlindsWidget extends Widget {
   private butBlindsUp!: HTMLButtonElement;
   private butBlindsStop!: HTMLButtonElement;
   private butBlindsDown!: HTMLButtonElement;
 
-  protected parseHTTPResult(value:string) {
-
+  public processIoState(r: C.sensact.comm.tState, i: number): void {
+    if (r.states(i)?.stateType() != C.sensact.comm.uState.tBlindState) {
+      return;
+    }
+    let state = r.states(i)!.state(new C.sensact.comm.tBlindState())!.state();
+    //let position = r.states(i)!.state(new C.sensact.comm.tBlindState())!.position();
+    switch (state) {
+      case C.sensact.comm.eBlindState.DOWN:
+        this.butBlindsDown.style.color = "green";
+        this.butBlindsUp.style.color = "black";
+        break;
+      case C.sensact.comm.eBlindState.UP:
+        this.butBlindsDown.style.color = "black";
+        this.butBlindsUp.style.color = "green";
+        break;
+      default:
+        this.butBlindsDown.style.color = "black";
+        this.butBlindsUp.style.color = "black";
+        break;
+    }
   }
 
-  public renderWidgetAndHookHHandlers(){
-    this.butBlindsUp=<HTMLButtonElement>$.Html(this.container, "button", [], ["updown"], "&#129153;");//<button id="blindsUp" class="updown" style="flex: 1 1 0;">&#129153;</button>
-    this.butBlindsUp.style.flex="1 1 0";
-    this.butBlindsStop=<HTMLButtonElement>$.Html(this.container, "button", [], [], "&#129153;");//<button id="blindsStop" style="flex: 1 1 0;"><svg class="icon"><use style="fill:black;" xlink:href="#icon-blinds"></use></svg></button>
-    this.butBlindsStop.style.flex="1 1 0";
-    $.SvgIcon( this.butBlindsStop, "blinds").style.fill="black";
-    this.butBlindsDown=<HTMLButtonElement>$.Html(this.container, "button", [], ["updown"], "&#129155;");//<button id="blindsDown" class="updown" style="flex: 1 1 0;">&#129155;</button>
-    this.butBlindsDown.style.flex="1 1 0";
-
-    this.butBlindsUp.onclick = (e) => this.http_put_webui("upPressed");
-    this.butBlindsStop.onclick = (e) => this.http_put_webui("stopPressed");
-    this.butBlindsDown.onclick = (e) => this.http_put_webui("downPressed");
+  private blindEventBuilder(e:C.sensact.comm.eBlindCommand):Uint8Array{
+    let builder = new flatbuffers.Builder(1024);
+    let evt = C.sensact.comm.tBlindCommand.createtBlindCommand(builder, e);
+    let ioCmd = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tBlindCommand, this.id, evt);
+    builder.finish(ioCmd);
+    return builder.asUint8Array();
   }
 
-  constructor(appManagement: AppManagement, container: HTMLDivElement, id:number) {
-    super(appManagement, container, id);
-    this.renderWidgetAndHookHHandlers();
+  public renderWidgetAndHookHandlers() {
+    this.butBlindsUp = <HTMLButtonElement>$.Html(this.container, "button", ["updown"], "🢁");//<button id="blindsUp" class="updown" style="flex: 1 1 0;">&#129153;</button>
+    this.butBlindsUp.style.flex = "1 1 0";
+    this.butBlindsStop = <HTMLButtonElement>$.Html(this.container, "button");//<button id="blindsStop" style="flex: 1 1 0;"><svg class="icon"><use style="fill:black;" xlink:href="#icon-blinds"></use></svg></button>
+    this.butBlindsStop.style.flex = "1 1 0";
+    $.SvgIcon(this.butBlindsStop, "blinds").style.fill = "black";
+    this.butBlindsDown = <HTMLButtonElement>$.Html(this.container, "button", ["updown"], "🢃");//<button id="blindsDown" class="updown" style="flex: 1 1 0;">&#129155;</button>
+    this.butBlindsDown.style.flex = "1 1 0";
+
+    this.butBlindsUp.onclick = (e) => {
+      this.manager.http_put_iocmd(this.blindEventBuilder(C.sensact.comm.eBlindCommand.UP));
+    }
+    this.butBlindsStop.onclick = (e) => {
+      this.manager.http_put_iocmd(this.blindEventBuilder(C.sensact.comm.eBlindCommand.STOP));
+    }
+    this.butBlindsDown.onclick = (e) => {
+      this.manager.http_put_iocmd(this.blindEventBuilder(C.sensact.comm.eBlindCommand.DOWN));
+    }
+  }
+
+  constructor(m: WidgetManager, container: HTMLElement, id: number) {
+    super(m, container, id);
   }
 }
+
+
 export class SinglePWMWidget extends Widget {
-
-
   private butSpotsOnOff!: HTMLButtonElement;
   private spotsPicker!: any;
+  private firstCallOfProcessIoCtrl=true;
 
-  protected parseHTTPResult(value:string){
-    let obj = JSON.parse(value);
-    this.updateButton(this.butSpotsOnOff, obj["on"]);
-    this.spotsPicker.color.value = obj["intensity"];
-    
+  public processIoState(r: C.sensact.comm.tState, i: number) {
+    if (r.states(i)?.stateType() != C.sensact.comm.uState.tSinglePwmState) {
+      return;
+    }
+    let on = r.states(i)!.state(new C.sensact.comm.tSinglePwmState())!.on();
+    let intensity_0_100 = r.states(i)!.state(new C.sensact.comm.tSinglePwmState())!.intensity0100();
+    this.butSpotsOnOff.style.backgroundColor=on?"green":"grey";
+    if(this.firstCallOfProcessIoCtrl){
+      this.spotsPicker.color.set(intensity_0_100);
+      this.firstCallOfProcessIoCtrl=false;
+    }
   }
-  /*
-<div id="spotsPicker" style="flex: 1 1 0; align-self: center;"></div>
-<button id="spotsOnOff" class="onoff" style="flex: 0 0 0;">
-    <svg class="icon icon-onoff">
-        <use style="fill:black;" xlink:href="#icon-spot"></use>
-    </svg>
-</button>
 
-  */
+ 
 
-  public renderWidgetAndHookHHandlers(){
-    
+  public renderWidgetAndHookHandlers() {
+
     let pickerContainer = $.Html(this.container, "div", []);
-    pickerContainer.style.flex="1 1 0";
-    pickerContainer.style.alignSelf="center";
-    this.butSpotsOnOff=<HTMLButtonElement>$.Html(this.container, "button", [], ["onoff"], "?");//<button id="blindsUp" class="updown" style="flex: 1 1 0;">&#129153;</button>
-    this.butSpotsOnOff.style.flex="0 0 0";
-    $.SvgIcon( this.butSpotsOnOff, "spot").style.fill="black";
+    pickerContainer.style.flex = "1 1 0";
+    pickerContainer.style.alignSelf = "center";
+    this.butSpotsOnOff = <HTMLButtonElement>$.Html(this.container, "button", ["onoff"]);//<button id="blindsUp" class="updown" style="flex: 1 1 0;">&#129153;</button>
+    this.butSpotsOnOff.style.flex = "0 0 0";
+    $.SvgIcon(this.butSpotsOnOff, "spot").style.fill = "black";
 
     let width = Math.min(400, 0.9 * pickerContainer.offsetWidth);
 
@@ -113,20 +120,134 @@ export class SinglePWMWidget extends Widget {
         },
       ]
     });
-    this.spotsPicker.on('input:change', (color: any, changes: any) =>{
-      let val=color.value;
-      console.info(val);
-      this.http_put_webui("intensityChanged", {intensity0_100:val});
+    this.spotsPicker.on('input:change', (color: any, changes: any) => {
+      let intensity0_100 = color.value;
+      console.info(intensity0_100);
+      let builder = new flatbuffers.Builder(1024);
+      let evt = C.sensact.comm.tSinglePwmCommand.createtSinglePwmCommand(builder, C.sensact.comm.eSinglePwmCommand.CHANGE_INTENSITY, intensity0_100);
+      let ioCmd = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tSinglePwmCommand, this.id, evt);
+      builder.finish(ioCmd);
+      this.manager.http_put_iocmd(builder.asUint8Array());
     });
-    this.butSpotsOnOff.onclick = (e) => this.http_put_webui("togglePressed");
-
+    this.butSpotsOnOff.onclick = (e) => {
+      let builder = new flatbuffers.Builder(1024);
+      C.sensact.comm.tSinglePwmCommand.starttSinglePwmCommand(builder);
+      C.sensact.comm.tSinglePwmCommand.addCmd(builder, C.sensact.comm.eSinglePwmCommand.TOGGLE);
+      let evt = C.sensact.comm.tSinglePwmCommand.endtSinglePwmCommand(builder);
+      let ioCmd = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tSinglePwmCommand, this.id, evt);
+      builder.finish(ioCmd);
+      this.manager.http_put_iocmd(builder.asUint8Array());
+    }
   }
 
- 
+  constructor(manager: WidgetManager, container: HTMLElement, id: number) {
+    super(manager, container, id);
+  }
+}
 
-  constructor(appManagement: AppManagement, container: HTMLElement) {
-    super(appManagement, container);
+export class StandbyControllerWidget extends Widget {
+  private butOn!: HTMLDivElement;
+  private butAuto!: HTMLDivElement;
+  private butOff!: HTMLDivElement;
+  private selector!: HTMLDivElement;
+  private state: C.sensact.comm.eOnOffState = C.sensact.comm.eOnOffState.AUTO_OFF;
 
-    
+  private updateUI(newState: C.sensact.comm.eOnOffState) {
+    this.state = newState;
+    switch (this.state) {
+      case C.sensact.comm.eOnOffState.AUTO_OFF:
+        this.selector.style.left = this.butOn.clientWidth + "px";
+        this.selector.style.width = this.butAuto.clientWidth + "px";
+        this.selector.innerHTML = "AUTO";
+        this.selector.style.backgroundColor = "black";
+        this.selector.style.color = "white";
+        this.selector.style.visibility = "visible";
+        break;
+      case C.sensact.comm.eOnOffState.AUTO_ON:
+        this.selector.style.left = this.butOn.clientWidth + "px";
+        this.selector.style.width = this.butAuto.clientWidth + "px";
+        this.selector.innerHTML = "AUTO";
+        this.selector.style.backgroundColor = "green";
+        this.selector.style.color = "black";
+        this.selector.style.visibility = "visible";
+        break;
+      case C.sensact.comm.eOnOffState.MANUAL_ON:
+        this.selector.style.left = "0px";
+        this.selector.style.width = this.butOn.clientWidth + "px";
+        this.selector.innerHTML = "ON";
+        this.selector.style.backgroundColor = "green";
+        this.selector.style.color = "black";
+        this.selector.style.visibility = "visible";
+        break;
+      case C.sensact.comm.eOnOffState.MANUAL_OFF:
+        this.selector.style.left = this.butOn.clientWidth + this.butAuto.clientWidth + 1 + "px";
+        this.selector.style.width = this.butOff.clientWidth + "px";
+        this.selector.innerHTML = "OFF";
+        this.selector.style.backgroundColor = "black";
+        this.selector.style.color = "white";
+        this.selector.style.visibility = "visible";
+        break;
+    }
+  }
+
+  public processIoState(r: C.sensact.comm.tState, i: number): void {
+    if (r.states(i)?.stateType() != C.sensact.comm.uState.tOnOffState) {
+      return;
+    }
+    let state = r.states(i)!.state(new C.sensact.comm.tOnOffState())!.state();
+    this.updateUI(state)
+  }
+
+  public renderWidgetAndHookHandlers() {
+
+    let subcontainer = <HTMLDivElement>$.Html(this.container, "div");//one single element
+    subcontainer.style.flex = "1 1 0";
+    subcontainer.style.position = "relative";
+    let itemscontainer = <HTMLDivElement>$.Html(subcontainer, "div", ["switch_3_ways_container"]);//one single element//noiw, a container for the items; with flex layout
+    itemscontainer.style.display = "flex";
+
+    //itemscontainer.style.flexFlow="row nowrap";//default!
+    //itemscontainer.style.justifyContent="flex-start";//default
+    //itemscontainer.style.alignItems="stretch";//default
+    this.butOn = <HTMLDivElement>$.Html(itemscontainer, "div", ["switch_3_ways_item"]);
+    $.Html(this.butOn, "span", [], "On");
+    this.butAuto = <HTMLDivElement>$.Html(itemscontainer, "div", ["switch_3_ways_item"]);
+    $.Html(this.butAuto, "span", [], "Auto");
+
+    this.butOff = <HTMLDivElement>$.Html(itemscontainer, "div", ["switch_3_ways_item"], "Off");
+    $.Html(this.butOff, "span", [], "Off");
+
+    this.selector = <HTMLDivElement>$.Html(subcontainer, "div", ["switch_3_ways_selector"]);
+    this.selector.style.visibility = "hidden";
+    $.Html(this.selector, "span", [], "");
+
+    this.butOn.onclick = (e) => {
+      let builder = new flatbuffers.Builder(1024);
+      let evt = C.sensact.comm.tOnOffCommand.createtOnOffCommand(builder, C.sensact.comm.eOnOffCommand.ON, 0);
+      let ioCmd = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tOnOffCommand, this.id, evt);
+      builder.finish(ioCmd);
+      let buf = builder.asUint8Array();
+      this.manager.http_put_iocmd(buf);
+    }
+    this.butAuto.onclick = (e) => {
+      let builder = new flatbuffers.Builder(1024);
+      let evt = C.sensact.comm.tOnOffCommand.createtOnOffCommand(builder, C.sensact.comm.eOnOffCommand.AUTO, 0);
+      let ioCtrl = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tOnOffCommand, this.id, evt);
+      builder.finish(ioCtrl);
+      let buf = builder.asUint8Array();
+      this.manager.http_put_iocmd(buf);
+    }
+    this.butOff.onclick = (e) => {
+      let builder = new flatbuffers.Builder(1024);
+      let evt = C.sensact.comm.tOnOffCommand.createtOnOffCommand(builder, C.sensact.comm.eOnOffCommand.OFF, 0);
+      let ioCmd = C.sensact.comm.tCommand.createtCommand(builder, C.sensact.comm.uCommand.tOnOffCommand, this.id, evt);
+      builder.finish(ioCmd);
+      let buf = builder.asUint8Array();
+      this.manager.http_put_iocmd(buf);
+    }
+  }
+
+  constructor(manager: WidgetManager, container: HTMLElement, id: number) {
+    super(manager, container, id);
   }
 }

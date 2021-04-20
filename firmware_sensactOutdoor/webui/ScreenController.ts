@@ -1,4 +1,4 @@
-import { AppManagement } from "./AppManagement";
+import { AppManagement } from "./Interfaces";
 
 export enum ControllerState {
     CREATED,

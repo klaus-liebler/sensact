@@ -28,8 +28,8 @@ export class $
     public static readonly XLINKNS = "http://www.w3.org/1999/xlink";
     public static readonly HTMLNS = "http://www.w3.org/1999/xhtml";
 
-    public static Svg(parent: Element, type:string,  attributes:string[], classes?: string[]):SVGElement {
-        return  parent.appendChild(<SVGElement>$.Elem($.SVGNS, type, attributes, classes));
+    public static Svg(parent: Element, type:string, classes?: string[],  attributes?:string[]):SVGElement {
+        return  parent.appendChild(<SVGElement>$.Elem($.SVGNS, type, classes, "", attributes));
     }
 
 
@@ -53,18 +53,22 @@ export class $
         return parseInt(colorString.substring(1), 16);
     }
 
-    public static Html(parent: Element, type:string,  attributes:string[], classes?: string[], textContent?:string):HTMLElement {
-        return parent.appendChild(<HTMLElement>$.Elem($.HTMLNS, type, attributes, classes, textContent));
+    public static Html(parent: Element, type:string,  classes?: string[], textContent?:string, attributes?:string[]):HTMLElement {
+        return parent.appendChild(<HTMLElement>$.Elem($.HTMLNS, type, classes, textContent, attributes));
     }
 
-    public static HtmlAsFirstChild(parent: Element, type:string,  attributes:string[], classes?: string[], textContent?:string):HTMLElement {
+    public static HtmlAfter(previous: HTMLElement, type:string,  classes?: string[], textContent?:string, attributes?:string[]):HTMLElement {
+        return previous.parentElement!.insertBefore(<HTMLElement>$.Elem($.HTMLNS, type, classes, textContent, attributes), previous.nextSibling);
+    }
+
+    public static HtmlAsFirstChild(parent: Element, type:string, classes?: string[], textContent?:string, attributes?:string[]):HTMLElement {
         if(parent.firstChild)
-            return parent.insertBefore(<HTMLElement>$.Elem($.HTMLNS, type, attributes, classes, textContent), parent.firstChild);
+            return parent.insertBefore(<HTMLElement>$.Elem($.HTMLNS, type, classes, textContent, attributes), parent.firstChild);
         else
-            return parent.appendChild(<HTMLElement>$.Elem($.HTMLNS, type, attributes, classes, textContent));
+            return parent.appendChild(<HTMLElement>$.Elem($.HTMLNS, type, classes, textContent, attributes));
     }
 
-    private static Elem(ns:string, type:string, attributes:string[], classes?: string[], textContent?:string):Element
+    private static Elem(ns:string, type:string, classes: string[]=[], textContent:string="", attributes:string[]=[]):Element
     {
         let element = document.createElementNS(ns, type);
         if(classes)
@@ -97,10 +101,10 @@ export class $
                 }
             }
         }
-        let tr=$.Html(table, "tr", [],["develop-propertygrid-tr"]);
-        $.Html(tr, "td", [],["develop-propertygrid-td"], key);
-        let inputContainer = $.Html(tr, "td", [],["develop-propertygrid-td"]);
-        return <HTMLInputElement>$.Html(inputContainer, "input", ["type", "number", "min", ""+Math.round(min), "max", ""+Math.round(max), "value", ""+Math.round(value),]);
+        let tr=$.Html(table, "tr", ["develop-propertygrid-tr"]);
+        $.Html(tr, "td", ["develop-propertygrid-td"], key);
+        let inputContainer = $.Html(tr, "td", ["develop-propertygrid-td"]);
+        return <HTMLInputElement>$.Html(inputContainer, "input", [], "", ["type", "number", "min", ""+Math.round(min), "max", ""+Math.round(max), "value", ""+Math.round(value),]);
     }
 
     public static InputSelect(table:HTMLTableSectionElement, displayValueAndKeyvalues:StringNumberTuple[], key:string, cfg:KeyValueTuple[]|null):HTMLSelectElement
@@ -115,13 +119,13 @@ export class $
                 }
             }
         }
-        let tr=$.Html(table, "tr", [],["develop-propertygrid-tr"]);
-        $.Html(tr, "td", [],["develop-propertygrid-td"], key);
-        let inputContainer = $.Html(tr, "td", [],["develop-propertygrid-td"]);
-        let select = <HTMLSelectElement>$.Html(inputContainer, "select", [], []);
+        let tr=$.Html(table, "tr", ["develop-propertygrid-tr"]);
+        $.Html(tr, "td", ["develop-propertygrid-td"], key);
+        let inputContainer = $.Html(tr, "td", ["develop-propertygrid-td"]);
+        let select = <HTMLSelectElement>$.Html(inputContainer, "select");
         for(let i=0;i<displayValueAndKeyvalues.length;i++)
         {
-            let option = $.Html(select, "option", ["value", ""+displayValueAndKeyvalues[i].n], [], displayValueAndKeyvalues[i].s);
+            let option = $.Html(select, "option", [], displayValueAndKeyvalues[i].s, ["value", ""+displayValueAndKeyvalues[i].n]);
             if(i==value){
                 option.setAttribute("selected", "");
             }
@@ -143,9 +147,9 @@ export class $
                 }
             }
         }
-        let tr=$.Html(table, "tr", [],["develop-propertygrid-tr"]);
-        $.Html(tr, "td", [],["develop-propertygrid-td"], key);
-        let inputContainer = $.Html(tr, "td", [],["develop-propertygrid-td"]);
-        return <HTMLInputElement>$.Html(inputContainer, "input", ["type", "color",  "value", value]);
+        let tr=$.Html(table, "tr", ["develop-propertygrid-tr"]);
+        $.Html(tr, "td", ["develop-propertygrid-td"], key);
+        let inputContainer = $.Html(tr, "td", ["develop-propertygrid-td"]);
+        return <HTMLInputElement>$.Html(inputContainer, "input", [], "", ["type", "color",  "value", value]);
     }
 }
