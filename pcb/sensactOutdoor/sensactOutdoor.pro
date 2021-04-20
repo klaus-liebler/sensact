@@ -1,4 +1,4 @@
-update=14.03.2021 00:08:29
+update=13.04.2021 12:58:10
 version=1
 last_client=kicad
 [general]
@@ -247,7 +247,7 @@ dPairGap=0.25
 dPairViaGap=0.25
 [pcbnew/Netclasses/1]
 Name=230V
-Clearance=0.2
+Clearance=1.5
 TrackWidth=2
 ViaDiameter=0.8
 ViaDrill=0.4
@@ -259,6 +259,17 @@ dPairViaGap=0.25
 [pcbnew/Netclasses/2]
 Name=48V
 Clearance=0.29
+TrackWidth=0.25
+ViaDiameter=0.8
+ViaDrill=0.4
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.2
+dPairGap=0.25
+dPairViaGap=0.25
+[pcbnew/Netclasses/3]
+Name=ISOLATED
+Clearance=0.4
 TrackWidth=0.25
 ViaDiameter=0.8
 ViaDrill=0.4
