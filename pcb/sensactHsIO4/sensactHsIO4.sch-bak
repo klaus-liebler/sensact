@@ -159,7 +159,7 @@ U 1 1 6057A19B
 P 9500 4250
 F 0 "U4" H 9500 4575 50  0000 C CNN
 F 1 "CPC1018N" H 9500 4484 50  0000 C CNN
-F 2 "liebler_IC:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 4050 50  0001 L CIN
+F 2 "liebler_SEMICONDUCTORS:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 4050 50  0001 L CIN
 F 3 "http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf" H 9450 4250 50  0001 L CNN
 	1    9500 4250
 	1    0    0    -1  
@@ -170,7 +170,7 @@ U 1 1 6057C1DC
 P 9500 4800
 F 0 "U5" H 9500 5125 50  0000 C CNN
 F 1 "CPC1018N" H 9500 5034 50  0000 C CNN
-F 2 "liebler_IC:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 4600 50  0001 L CIN
+F 2 "liebler_SEMICONDUCTORS:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 4600 50  0001 L CIN
 F 3 "http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf" H 9450 4800 50  0001 L CNN
 	1    9500 4800
 	1    0    0    -1  
@@ -181,7 +181,7 @@ U 1 1 6057D583
 P 9500 5350
 F 0 "U6" H 9500 5675 50  0000 C CNN
 F 1 "CPC1018N" H 9500 5584 50  0000 C CNN
-F 2 "liebler_IC:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 5150 50  0001 L CIN
+F 2 "liebler_SEMICONDUCTORS:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 5150 50  0001 L CIN
 F 3 "http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf" H 9450 5350 50  0001 L CNN
 	1    9500 5350
 	1    0    0    -1  
@@ -192,7 +192,7 @@ U 1 1 6057DF36
 P 9500 5900
 F 0 "U7" H 9500 6225 50  0000 C CNN
 F 1 "CPC1018N" H 9500 6134 50  0000 C CNN
-F 2 "liebler_IC:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 5700 50  0001 L CIN
+F 2 "liebler_SEMICONDUCTORS:SOP-4_3.8x4.1mm_P2.54mm_handsolder" H 9300 5700 50  0001 L CIN
 F 3 "http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf" H 9450 5900 50  0001 L CNN
 	1    9500 5900
 	1    0    0    -1  
