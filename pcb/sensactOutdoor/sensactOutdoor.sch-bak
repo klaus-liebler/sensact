@@ -189,13 +189,13 @@ Wire Wire Line
 $Comp
 L Connector_Generic:Conn_01x02 J5
 U 1 1 60495D26
-P 10750 800
-F 0 "J5" H 10830 792 50  0000 L CNN
-F 1 "LED CC" H 10830 701 50  0000 L CNN
-F 2 "liebler_CONN:PhoenixContact_MSTBV_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 10750 800 50  0001 C CNN
-F 3 "~" H 10750 800 50  0001 C CNN
-	1    10750 800 
-	1    0    0    1   
+P 10750 700
+F 0 "J5" H 10830 692 50  0000 L CNN
+F 1 "LED CC" H 10830 601 50  0000 L CNN
+F 2 "liebler_CONN:PhoenixContact_MSTBV_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 10750 700 50  0001 C CNN
+F 3 "~" H 10750 700 50  0001 C CNN
+	1    10750 700 
+	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R2
@@ -211,8 +211,6 @@ $EndComp
 Wire Wire Line
 	10050 1500 10200 1500
 Connection ~ 10050 1500
-Wire Wire Line
-	10550 800  10550 1200
 Wire Wire Line
 	10050 700  10550 700 
 Connection ~ 10050 700 
@@ -329,13 +327,13 @@ $EndComp
 $Comp
 L Connector_Generic:Conn_01x02 J1
 U 1 1 604B8398
-P 6100 1050
-F 0 "J1" H 6180 1042 50  0000 L CNN
-F 1 "48V" H 6180 951 50  0000 L CNN
-F 2 "liebler_CONN:PhoenixContact_MSTBV_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 6100 1050 50  0001 C CNN
-F 3 "~" H 6100 1050 50  0001 C CNN
-	1    6100 1050
-	1    0    0    -1  
+P 6100 1150
+F 0 "J1" H 6180 1142 50  0000 L CNN
+F 1 "48V" H 6180 1051 50  0000 L CNN
+F 2 "liebler_CONN:PhoenixContact_MSTBV_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 6100 1150 50  0001 C CNN
+F 3 "~" H 6100 1150 50  0001 C CNN
+	1    6100 1150
+	1    0    0    1   
 $EndComp
 $Comp
 L power:+48V #PWR01
@@ -1044,11 +1042,11 @@ $EndComp
 Text GLabel 850  5200 0    50   Input ~ 0
 K3
 Wire Wire Line
-	2000 3500 1450 3500
+	2000 3500 1700 3500
 Wire Wire Line
-	2000 4250 1450 4250
+	2000 4250 1700 4250
 Wire Wire Line
-	2000 5000 1450 5000
+	2000 5000 1700 5000
 $Comp
 L Transistor_BJT:BC847 Q9
 U 1 1 606C12F2
@@ -1085,7 +1083,7 @@ $EndComp
 Text GLabel 850  5950 0    50   Input ~ 0
 K4
 Wire Wire Line
-	2000 5750 1450 5750
+	2000 5750 1700 5750
 $Comp
 L power:GND #PWR020
 U 1 1 607006EA
@@ -1322,7 +1320,7 @@ $EndComp
 Text GLabel 850  6700 0    50   Input ~ 0
 K5
 Wire Wire Line
-	2000 6500 1450 6500
+	2000 6500 1700 6500
 $Comp
 L Transistor_BJT:BC847 Q11
 U 1 1 60552F06
@@ -1359,7 +1357,7 @@ $EndComp
 Text GLabel 850  7450 0    50   Input ~ 0
 K6
 Wire Wire Line
-	2000 7250 1450 7250
+	2000 7250 1700 7250
 Wire Notes Line
 	550  7750 3400 7750
 Wire Notes Line
@@ -1663,15 +1661,15 @@ LED_CC-
 $Comp
 L Connector:TestPoint TP3
 U 1 1 6056FADE
-P 2750 2100
-F 0 "TP3" H 2808 2218 50  0000 L CNN
-F 1 "EN" H 2808 2127 50  0000 L CNN
-F 2 "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm" H 2950 2100 50  0001 C CNN
-F 3 "~" H 2950 2100 50  0001 C CNN
-	1    2750 2100
+P 2200 2100
+F 0 "TP3" H 2258 2218 50  0000 L CNN
+F 1 "EN" H 2258 2127 50  0000 L CNN
+F 2 "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm" H 2400 2100 50  0001 C CNN
+F 3 "~" H 2400 2100 50  0001 C CNN
+	1    2200 2100
 	1    0    0    -1  
 $EndComp
-Text GLabel 2750 2100 3    50   Input ~ 0
+Text GLabel 2200 2100 3    50   Input ~ 0
 LED_CC_EN
 $Comp
 L RF:NRF24L01_Breakout U6
@@ -2071,73 +2069,14 @@ F 3 "" H 5200 3400 50  0001 C CNN
 	1    5200 3400
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:R R16
-U 1 1 6053F31B
-P 3950 3600
-F 0 "R16" V 4050 3600 50  0000 C CNN
-F 1 "3k3" V 3950 3600 50  0000 C CNN
-F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3880 3600 50  0001 C CNN
-F 3 "~" H 3950 3600 50  0001 C CNN
-	1    3950 3600
-	0    1    1    0   
-$EndComp
 Text Label 6800 3200 0    50   ~ 0
 N
 Text Label 3500 3600 0    50   ~ 0
 L
 Text GLabel 3950 5250 0    50   Input ~ 0
 MAINS
-$Comp
-L Device:R R28
-U 1 1 6053F353
-P 3650 3600
-F 0 "R28" V 3750 3600 50  0000 C CNN
-F 1 "3k3" V 3650 3600 50  0000 C CNN
-F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3580 3600 50  0001 C CNN
-F 3 "~" H 3650 3600 50  0001 C CNN
-	1    3650 3600
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R31
-U 1 1 6053F9EB
-P 3950 3900
-F 0 "R31" V 4050 3900 50  0000 C CNN
-F 1 "470K" V 3950 3900 50  0000 C CNN
-F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3880 3900 50  0001 C CNN
-F 3 "~" H 3950 3900 50  0001 C CNN
-	1    3950 3900
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:R R30
-U 1 1 6054144C
-P 3650 3900
-F 0 "R30" V 3750 3900 50  0000 C CNN
-F 1 "470K" V 3650 3900 50  0000 C CNN
-F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3580 3900 50  0001 C CNN
-F 3 "~" H 3650 3900 50  0001 C CNN
-	1    3650 3900
-	0    1    1    0   
-$EndComp
-$Comp
-L Device:C C23
-U 1 1 6054174E
-P 3800 4050
-F 0 "C23" V 3650 4100 50  0000 C CNN
-F 1 "22n/250V" V 3650 3800 50  0000 C CNN
-F 2 "Capacitor_THT:C_Rect_L11.0mm_W5.1mm_P10.00mm_MKT" H 3838 3900 50  0001 C CNN
-F 3 "~" H 3800 4050 50  0001 C CNN
-	1    3800 4050
-	0    -1   -1   0   
-$EndComp
 Wire Wire Line
 	3500 4050 3650 4050
-Wire Wire Line
-	4100 3900 4100 4050
-Wire Wire Line
-	4100 4050 3950 4050
 $Comp
 L Device:R R32
 U 1 1 6052AA7B
@@ -2235,7 +2174,7 @@ Wire Wire Line
 Wire Wire Line
 	7200 5350 7200 5550
 Wire Wire Line
-	2000 2900 1450 2900
+	2000 2900 1700 2900
 Connection ~ 2000 2900
 $Comp
 L Device:LED D7
@@ -2349,21 +2288,13 @@ Wire Notes Line
 Wire Notes Line
 	1250 2550 1250 2050
 Wire Notes Line
-	5500 3250 3450 3250
-Text Notes 3450 3250 0    50   ~ 0
-230V_DETECT
-Wire Notes Line
 	3450 3250 3450 4250
 Wire Notes Line
 	3450 4250 5500 4250
 Wire Notes Line
 	5500 4250 5500 3250
 Wire Notes Line
-	2100 2600 3500 2600
-Wire Notes Line
-	3500 2600 3500 1900
-Wire Notes Line
-	3500 1900 2100 1900
+	2700 2600 2700 1900
 Wire Notes Line
 	550  600  550  1900
 Wire Notes Line
@@ -2374,10 +2305,6 @@ Wire Notes Line
 	4350 1950 5550 1950
 Wire Notes Line
 	5550 1950 5550 3100
-Wire Notes Line
-	5550 3100 4350 3100
-Wire Notes Line
-	4350 3100 4350 1950
 Text Notes 4350 1950 0    50   ~ 0
 LEDs
 Wire Notes Line
@@ -2814,43 +2741,8 @@ F 3 "~" H 6700 6200 50  0001 C CNN
 	1    6700 6200
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:LED D1
-U 1 1 60E4A35D
-P 4250 3750
-F 0 "D1" V 4500 3800 50  0000 R CNN
-F 1 "MAINS" V 3950 3800 50  0000 R CNN
-F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4250 3750 50  0001 C CNN
-F 3 "~" H 4250 3750 50  0001 C CNN
-	1    4250 3750
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	4100 3600 4250 3600
-Wire Wire Line
-	4100 3900 4250 3900
-Connection ~ 4100 3900
-Connection ~ 4250 3900
-Wire Wire Line
-	4250 3900 4350 3900
-Wire Wire Line
-	4350 3700 4350 3600
-Wire Wire Line
-	4350 3600 4250 3600
-Connection ~ 4250 3600
 Wire Wire Line
 	3500 4050 3500 3900
-$Comp
-L Isolator:EL817 U8
-U 1 1 60DE2104
-P 4650 3800
-F 0 "U8" H 4650 4125 50  0000 C CNN
-F 1 "EL817" H 4650 4034 50  0000 C CNN
-F 2 "liebler_SEMICONDUCTORS:SO-4_7.6x3.6mm_P2.54mm_handsolder" H 4450 3600 50  0001 L CIN
-F 3 "http://www.everlight.com/file/ProductFile/EL817.pdf" H 4650 3800 50  0001 L CNN
-	1    4650 3800
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:C C24
 U 1 1 60DE4487
@@ -3025,4 +2917,266 @@ F 3 "" H 8550 4800 50  0001 C CNN
 	1    8550 4800
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	10550 800  10550 1200
+Wire Notes Line
+	2100 2600 2700 2600
+Wire Notes Line
+	2700 1900 2100 1900
+Text GLabel 3700 2150 0    50   BiDi ~ 0
+SCL
+Text GLabel 3700 2050 0    50   BiDi ~ 0
+SDA
+Text GLabel 3700 2250 0    50   Input ~ 0
+K6
+$Comp
+L power:GND #PWR057
+U 1 1 60E4BACB
+P 3700 2550
+F 0 "#PWR057" H 3700 2300 50  0001 C CNN
+F 1 "GND" V 3700 2350 50  0000 C CNN
+F 2 "" H 3700 2550 50  0001 C CNN
+F 3 "" H 3700 2550 50  0001 C CNN
+	1    3700 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR058
+U 1 1 60E4C05B
+P 3700 2650
+F 0 "#PWR058" H 3700 2500 50  0001 C CNN
+F 1 "+5V" V 3700 2850 50  0000 C CNN
+F 2 "" H 3700 2650 50  0001 C CNN
+F 3 "" H 3700 2650 50  0001 C CNN
+	1    3700 2650
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 3700 2350
+NoConn ~ 3700 2450
+$Comp
+L liebler_MODULES:MAX98357_MODULE U9
+U 1 1 60E148A4
+P 3800 2350
+F 0 "U9" H 3750 2750 50  0000 L CNN
+F 1 "MAX98357_MODULE" H 3450 2850 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical" H 3800 2550 50  0001 C CNN
+F 3 "" H 3800 2550 50  0001 C CNN
+	1    3800 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Isolator:EL817 U8
+U 1 1 60DE2104
+P 4650 3800
+F 0 "U8" H 4650 4125 50  0000 C CNN
+F 1 "EL817" H 4650 4034 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:SO-4_7.6x3.6mm_P2.54mm_handsolder" H 4450 3600 50  0001 L CIN
+F 3 "http://www.everlight.com/file/ProductFile/EL817.pdf" H 4650 3800 50  0001 L CNN
+	1    4650 3800
+	1    0    0    -1  
+$EndComp
+Connection ~ 4250 3600
+Wire Wire Line
+	4350 3600 4250 3600
+Wire Wire Line
+	4350 3700 4350 3600
+Wire Wire Line
+	4250 3900 4350 3900
+Connection ~ 4250 3900
+Connection ~ 4100 3900
+Wire Wire Line
+	4100 3900 4250 3900
+Wire Wire Line
+	4100 3600 4250 3600
+$Comp
+L Device:LED D1
+U 1 1 60E4A35D
+P 4250 3750
+F 0 "D1" V 4500 3800 50  0000 R CNN
+F 1 "MAINS" V 3950 3800 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4250 3750 50  0001 C CNN
+F 3 "~" H 4250 3750 50  0001 C CNN
+	1    4250 3750
+	0    1    1    0   
+$EndComp
+Wire Notes Line
+	4350 3100 4350 1950
+Wire Notes Line
+	5550 3100 4350 3100
+Text Notes 3450 3250 0    50   ~ 0
+230V_DETECT
+Wire Notes Line
+	5500 3250 3450 3250
+Wire Wire Line
+	4100 4050 3950 4050
+Wire Wire Line
+	4100 3900 4100 4050
+$Comp
+L Device:C C23
+U 1 1 6054174E
+P 3800 4050
+F 0 "C23" V 3650 4100 50  0000 C CNN
+F 1 "22n/250V" V 3650 3800 50  0000 C CNN
+F 2 "Capacitor_THT:C_Rect_L11.0mm_W5.1mm_P10.00mm_MKT" H 3838 3900 50  0001 C CNN
+F 3 "~" H 3800 4050 50  0001 C CNN
+	1    3800 4050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R30
+U 1 1 6054144C
+P 3650 3900
+F 0 "R30" V 3750 3900 50  0000 C CNN
+F 1 "470K" V 3650 3900 50  0000 C CNN
+F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3580 3900 50  0001 C CNN
+F 3 "~" H 3650 3900 50  0001 C CNN
+	1    3650 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R31
+U 1 1 6053F9EB
+P 3950 3900
+F 0 "R31" V 4050 3900 50  0000 C CNN
+F 1 "470K" V 3950 3900 50  0000 C CNN
+F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3880 3900 50  0001 C CNN
+F 3 "~" H 3950 3900 50  0001 C CNN
+	1    3950 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R28
+U 1 1 6053F353
+P 3650 3600
+F 0 "R28" V 3750 3600 50  0000 C CNN
+F 1 "3k3" V 3650 3600 50  0000 C CNN
+F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3580 3600 50  0001 C CNN
+F 3 "~" H 3650 3600 50  0001 C CNN
+	1    3650 3600
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R16
+U 1 1 6053F31B
+P 3950 3600
+F 0 "R16" V 4050 3600 50  0000 C CNN
+F 1 "3k3" V 3950 3600 50  0000 C CNN
+F 2 "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder" V 3880 3600 50  0001 C CNN
+F 3 "~" H 3950 3600 50  0001 C CNN
+	1    3950 3600
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:D D10
+U 1 1 60E4AE88
+P 1700 3200
+F 0 "D10" H 1700 2983 50  0000 C CNN
+F 1 "D" H 1700 3074 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 3200 50  0001 C CNN
+F 3 "~" H 1700 3200 50  0001 C CNN
+	1    1700 3200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1700 3050 1700 2900
+Wire Wire Line
+	1700 3350 1700 3500
+Connection ~ 1700 3500
+Wire Wire Line
+	1700 3500 1450 3500
+$Comp
+L Device:D D11
+U 1 1 60E62B4A
+P 1700 4100
+F 0 "D11" V 1600 4000 50  0000 C CNN
+F 1 "D" V 1700 4000 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 4100 50  0001 C CNN
+F 3 "~" H 1700 4100 50  0001 C CNN
+	1    1700 4100
+	0    1    1    0   
+$EndComp
+Connection ~ 1700 4250
+Wire Wire Line
+	1700 4250 1450 4250
+Wire Wire Line
+	1700 3950 1700 3650
+Wire Wire Line
+	1700 3650 2000 3650
+Connection ~ 2000 3650
+$Comp
+L Device:D D12
+U 1 1 60E6F457
+P 1700 4850
+F 0 "D12" V 1600 4750 50  0000 C CNN
+F 1 "D" V 1700 4750 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 4850 50  0001 C CNN
+F 3 "~" H 1700 4850 50  0001 C CNN
+	1    1700 4850
+	0    1    1    0   
+$EndComp
+Connection ~ 1700 5000
+Wire Wire Line
+	1700 5000 1450 5000
+$Comp
+L Device:D D13
+U 1 1 60E6F974
+P 1700 5600
+F 0 "D13" V 1600 5500 50  0000 C CNN
+F 1 "D" V 1700 5500 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 5600 50  0001 C CNN
+F 3 "~" H 1700 5600 50  0001 C CNN
+	1    1700 5600
+	0    1    1    0   
+$EndComp
+Connection ~ 1700 5750
+Wire Wire Line
+	1700 5750 1450 5750
+$Comp
+L Device:D D14
+U 1 1 60E6FE14
+P 1700 6350
+F 0 "D14" V 1600 6250 50  0000 C CNN
+F 1 "D" V 1700 6250 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 6350 50  0001 C CNN
+F 3 "~" H 1700 6350 50  0001 C CNN
+	1    1700 6350
+	0    1    1    0   
+$EndComp
+Connection ~ 1700 6500
+Wire Wire Line
+	1700 6500 1450 6500
+$Comp
+L Device:D D15
+U 1 1 60E70489
+P 1700 7100
+F 0 "D15" V 1600 7000 50  0000 C CNN
+F 1 "D" V 1700 7000 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 1700 7100 50  0001 C CNN
+F 3 "~" H 1700 7100 50  0001 C CNN
+	1    1700 7100
+	0    1    1    0   
+$EndComp
+Connection ~ 1700 7250
+Wire Wire Line
+	1700 7250 1450 7250
+Wire Wire Line
+	1700 6950 1700 6650
+Wire Wire Line
+	1700 6650 2000 6650
+Connection ~ 2000 6650
+Wire Wire Line
+	1700 6200 1700 5900
+Wire Wire Line
+	1700 5900 2000 5900
+Connection ~ 2000 5900
+Wire Wire Line
+	1700 5150 2000 5150
+Wire Wire Line
+	1700 5150 1700 5450
+Connection ~ 2000 5150
+Wire Wire Line
+	1700 4700 1700 4400
+Wire Wire Line
+	1700 4400 2000 4400
+Connection ~ 2000 4400
 $EndSCHEMATC

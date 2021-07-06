@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name sensactAudioExt-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactAudioExt-rescue.lib)(options "")(descr ""))
+)
