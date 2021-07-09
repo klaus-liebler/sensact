@@ -24,9 +24,9 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/8720a.pdf" H 5200 2800 50  
 	1    5400 3750
 	1    0    0    -1  
 $EndComp
-Text GLabel 3800 3200 0    50   Output ~ 0
+Text GLabel 3800 3450 0    50   Output ~ 0
 ETH_RX0
-Text GLabel 3800 3350 0    50   Output ~ 0
+Text GLabel 3800 3550 0    50   Output ~ 0
 ETH_RX1
 Text GLabel 4600 3150 0    50   Input ~ 0
 ETH_TX0
@@ -37,114 +37,76 @@ ETH_TXEN
 $Comp
 L Device:R R9
 U 1 1 5E0ADB54
-P 3950 3200
-F 0 "R9" V 3743 3200 50  0000 C CNN
-F 1 "33R" V 3834 3200 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3200 50  0001 C CNN
-F 3 "~" H 3950 3200 50  0001 C CNN
-	1    3950 3200
+P 3950 3450
+F 0 "R9" V 3850 3450 50  0000 C CNN
+F 1 "33R" V 3950 3450 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3450 50  0001 C CNN
+F 3 "~" H 3950 3450 50  0001 C CNN
+	1    3950 3450
 	0    1    1    0   
 $EndComp
-Text GLabel 3800 3650 0    50   Output ~ 0
-ETH_RXER
-$Comp
-L Device:R R11
-U 1 1 5E0AF160
-P 3950 3650
-F 0 "R11" V 3743 3650 50  0000 C CNN
-F 1 "33R" V 3834 3650 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3650 50  0001 C CNN
-F 3 "~" H 3950 3650 50  0001 C CNN
-	1    3950 3650
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	4600 3650 4100 3650
-Wire Wire Line
-	4600 3450 4150 3450
 $Comp
 L Device:R R10
 U 1 1 5E0AECDF
-P 3950 3350
-F 0 "R10" V 3743 3350 50  0000 C CNN
-F 1 "33R" V 3834 3350 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3350 50  0001 C CNN
-F 3 "~" H 3950 3350 50  0001 C CNN
-	1    3950 3350
+P 3950 3550
+F 0 "R10" V 3850 3550 50  0000 C CNN
+F 1 "33R" V 3950 3550 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3550 50  0001 C CNN
+F 3 "~" H 3950 3550 50  0001 C CNN
+	1    3950 3550
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	4150 3450 4150 3200
-Wire Wire Line
-	4150 3200 4100 3200
-Wire Wire Line
 	4600 3550 4100 3550
-Wire Wire Line
-	4100 3550 4100 3350
-Text GLabel 3800 3950 0    50   Output ~ 0
+Text GLabel 3800 3750 0    50   Output ~ 0
 ETH_CRS
 $Comp
 L Device:R R12
 U 1 1 5E0B0EC5
-P 3950 3950
-F 0 "R12" V 3743 3950 50  0000 C CNN
-F 1 "33R" V 3834 3950 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3950 50  0001 C CNN
-F 3 "~" H 3950 3950 50  0001 C CNN
-	1    3950 3950
+P 3950 3750
+F 0 "R12" V 3850 3750 50  0000 C CNN
+F 1 "33R" V 3950 3750 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 3750 50  0001 C CNN
+F 3 "~" H 3950 3750 50  0001 C CNN
+	1    3950 3750
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	4600 3750 4100 3750
-Wire Wire Line
-	4100 3750 4100 3950
 Text GLabel 4600 3850 0    50   BiDi ~ 0
 ETH_MDIO
 Text GLabel 4600 3950 0    50   BiDi ~ 0
 ETH_MDC
 Text GLabel 4600 4150 0    50   Input ~ 0
-NRST
+ETH_NRST
 $Comp
 L Oscillator:XO32 X1
 U 1 1 5E0B1BEF
 P 3050 4550
 F 0 "X1" H 3394 4596 50  0000 L CNN
-F 1 "XO32" H 3394 4505 50  0000 L CNN
+F 1 "50MHz" H 3394 4505 50  0000 L CNN
 F 2 "Oscillator:Oscillator_SMD_EuroQuartz_XO32-4Pin_3.2x2.5mm_HandSoldering" H 3750 4200 50  0001 C CNN
 F 3 "http://cdn-reichelt.de/documents/datenblatt/B400/XO32.pdf" H 2950 4550 50  0001 C CNN
 	1    3050 4550
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R13
-U 1 1 5E0B39D3
-P 3950 4250
-F 0 "R13" V 3743 4250 50  0000 C CNN
-F 1 "33R" V 3834 4250 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 4250 50  0001 C CNN
-F 3 "~" H 3950 4250 50  0001 C CNN
-	1    3950 4250
-	0    -1   -1   0   
-$EndComp
-$Comp
 L Device:R R8
 U 1 1 5E0B3D1A
 P 3800 4400
-F 0 "R8" V 3593 4400 50  0000 C CNN
-F 1 "33R" V 3684 4400 50  0000 C CNN
+F 0 "R8" V 3700 4400 50  0000 C CNN
+F 1 "k1" V 3800 4400 50  0000 C CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3730 4400 50  0001 C CNN
 F 3 "~" H 3800 4400 50  0001 C CNN
 	1    3800 4400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4600 4250 4100 4250
 $Comp
 L Device:R R14
 U 1 1 5E0B626A
 P 3950 4550
-F 0 "R14" V 3743 4550 50  0000 C CNN
-F 1 "33R" V 3834 4550 50  0000 C CNN
+F 0 "R14" V 3850 4550 50  0000 C CNN
+F 1 "k1" V 3950 4550 50  0000 C CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3880 4550 50  0001 C CNN
 F 3 "~" H 3950 4550 50  0001 C CNN
 	1    3950 4550
@@ -333,28 +295,28 @@ Wire Wire Line
 $Comp
 L Device:R R20
 U 1 1 5E0D46FF
-P 8150 4950
-F 0 "R20" V 7943 4950 50  0000 C CNN
-F 1 "K33" V 8034 4950 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 8080 4950 50  0001 C CNN
-F 3 "~" H 8150 4950 50  0001 C CNN
-	1    8150 4950
-	1    0    0    -1  
+P 8400 4450
+F 0 "R20" V 8300 4450 50  0000 C CNN
+F 1 "K33" V 8400 4450 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 8330 4450 50  0001 C CNN
+F 3 "~" H 8400 4450 50  0001 C CNN
+	1    8400 4450
+	0    1    1    0   
 $EndComp
 $Comp
 L Device:R R21
 U 1 1 5E0D5066
-P 8300 4950
-F 0 "R21" V 8093 4950 50  0000 C CNN
-F 1 "K33" V 8184 4950 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 8230 4950 50  0001 C CNN
-F 3 "~" H 8300 4950 50  0001 C CNN
-	1    8300 4950
-	-1   0    0    1   
+P 8400 5150
+F 0 "R21" V 8500 5150 50  0000 C CNN
+F 1 "K33" V 8400 5150 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 8330 5150 50  0001 C CNN
+F 3 "~" H 8400 5150 50  0001 C CNN
+	1    8400 5150
+	0    -1   -1   0   
 $EndComp
-Text Label 8300 5100 3    50   ~ 0
+Text Label 8250 5150 2    50   ~ 0
 LED2
-Text Label 8150 5100 3    50   ~ 0
+Text Label 8250 4450 2    50   ~ 0
 LED1
 Text Label 6100 4050 0    50   ~ 0
 LED1
@@ -436,7 +398,7 @@ L Device:Ferrite_Bead_Small FB1
 U 1 1 5E0DE16A
 P 5300 1700
 F 0 "FB1" V 5063 1700 50  0000 C CNN
-F 1 "Ferrite_Bead_Small" V 5154 1700 50  0000 C CNN
+F 1 "Bead" V 5154 1700 50  0000 C CNN
 F 2 "Inductor_SMD:L_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 5230 1700 50  0001 C CNN
 F 3 "~" H 5300 1700 50  0001 C CNN
 	1    5300 1700
@@ -570,24 +532,6 @@ Wire Wire Line
 Connection ~ 6250 3250
 Connection ~ 6550 3350
 Connection ~ 6850 3450
-Wire Wire Line
-	8150 4600 8150 4800
-$Comp
-L power:+3V3 #PWR023
-U 1 1 5E0A8EA3
-P 8200 4500
-F 0 "#PWR023" H 8200 4350 50  0001 C CNN
-F 1 "+3V3" H 8215 4673 50  0000 C CNN
-F 2 "" H 8200 4500 50  0001 C CNN
-F 3 "" H 8200 4500 50  0001 C CNN
-	1    8200 4500
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	8250 4500 8250 4700
-Wire Wire Line
-	8200 4500 8250 4500
-Connection ~ 8250 4500
 Text Label 6300 3250 0    50   ~ 0
 TX_P
 Text Label 6200 3350 0    50   ~ 0
@@ -607,7 +551,6 @@ F 3 "~" H 2500 4400 50  0001 C CNN
 	1    2500 4400
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2750 4550
 Wire Wire Line
 	3050 4250 2500 4250
 Connection ~ 3050 4250
@@ -636,7 +579,7 @@ F 3 "" H 9300 4450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 4600 4550
-Text GLabel 3800 4250 0    50   Output ~ 0
+Text GLabel 3700 4250 0    50   Output ~ 0
 ETH_CLK
 Wire Wire Line
 	6250 3250 7850 3250
@@ -690,24 +633,6 @@ F 11 "DIP RJ45 Connector;" H 10050 4050 50  0001 L BNN "DESCRIPTION"
 	1    10050 4050
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8550 4500 8550 4450
-Wire Wire Line
-	8250 4500 8550 4500
-Wire Wire Line
-	8550 4700 8550 4950
-Wire Wire Line
-	8250 4700 8550 4700
-Wire Wire Line
-	8550 4650 8550 4600
-Wire Wire Line
-	8150 4600 8550 4600
-Wire Wire Line
-	8550 5150 8450 5150
-Wire Wire Line
-	8450 5150 8450 4800
-Wire Wire Line
-	8450 4800 8300 4800
 $Comp
 L power:GND #PWR024
 U 1 1 60E678A2
@@ -730,4 +655,47 @@ F 3 "" H 8550 5350 50  0001 C CNN
 	1    8550 5350
 	0    1    1    0   
 $EndComp
+Text GLabel 2750 4550 0    50   Input ~ 0
+ETH_POWER
+NoConn ~ 4600 3650
+$Comp
+L power:GND #PWR0122
+U 1 1 60E62A0D
+P 8550 4650
+F 0 "#PWR0122" H 8550 4400 50  0001 C CNN
+F 1 "GND" H 8555 4477 50  0000 C CNN
+F 2 "" H 8550 4650 50  0001 C CNN
+F 3 "" H 8550 4650 50  0001 C CNN
+	1    8550 4650
+	0    1    1    0   
+$EndComp
+Text Label 8250 4900 0    50   ~ 0
+VDD2A
+Wire Wire Line
+	8250 4900 8550 4900
+Wire Wire Line
+	8550 4900 8550 4950
+Wire Wire Line
+	3800 4250 3700 4250
+Wire Wire Line
+	4100 3450 4600 3450
+Text Label 4150 3450 0    50   ~ 0
+RX0
+Text Label 4150 3550 0    50   ~ 0
+RX1
+Text Label 4200 3750 0    50   ~ 0
+CRS
+NoConn ~ 4600 4250
+Text Notes 4700 5500 0    50   ~ 0
+Strapping\nMODE0..2: don't care...configured in registers\nPHYAD0: floating -->internal pulldown -->0\nREGOFF: 0 --> 1.2V Regulator on\nnINTSEL: 1 -->IRQ-out (IRQ not used, but better EMI than 50MHz out ;-)
+Wire Notes Line
+	3800 3300 3800 3850
+Wire Notes Line
+	3800 3850 4100 3850
+Wire Notes Line
+	4100 3850 4100 3300
+Wire Notes Line
+	4100 3300 3800 3300
+Text Notes 3600 3300 0    50   ~ 0
+close to 8720!
 $EndSCHEMATC

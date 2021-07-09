@@ -2,7 +2,7 @@
 import sys
 import fileinput
 
-source = "sensactHsIO4.kicad_pcb";
+source = "sensactOutdoor.kicad_pcb";
 target = source+"-modified"
 sourceHandle=open(source, mode="r")
 sourceLines = sourceHandle.read().splitlines()
