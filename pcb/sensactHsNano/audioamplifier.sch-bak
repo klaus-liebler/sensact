@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 4
+Sheet 2 5
 Title ""
 Date ""
 Rev ""
@@ -25,7 +25,7 @@ F 3 "~" H 5250 2150 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L sensact:TAS5805M U1
+L sensactHsNano-rescue:TAS5805M-sensact U1
 U 1 1 5F9CF512
 P 4300 2950
 F 0 "U1" H 4300 4075 50  0000 C CNN
@@ -613,25 +613,12 @@ Text GLabel 3800 3650 0    50   BiDi ~ 0
 LRCLK
 Text GLabel 3800 3850 0    50   BiDi ~ 0
 SDIN
-$Comp
-L Connector_Generic:Conn_01x04 J5
-U 1 1 60EF2319
-P 6700 2500
-F 0 "J5" H 6618 2075 50  0000 C CNN
-F 1 "Audio" H 6618 2166 50  0000 C CNN
-F 2 "Connector_Phoenix_MC:PhoenixContact_MC_1,5_4-G-3.5_1x04_P3.50mm_Horizontal" H 6700 2500 50  0001 C CNN
-F 3 "~" H 6700 2500 50  0001 C CNN
-	1    6700 2500
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	6400 2250 6400 2400
 Wire Wire Line
 	6400 2400 6500 2400
 Wire Wire Line
 	5950 2750 6450 2750
-Wire Wire Line
-	5900 2150 6500 2150
 Wire Wire Line
 	6500 2650 6500 2600
 Wire Wire Line
@@ -644,4 +631,14 @@ Wire Wire Line
 	6500 2150 6500 2300
 Text GLabel 2300 3850 0    50   Input ~ 0
 AMP_PDN
+Wire Wire Line
+	5900 2150 6500 2150
+Text GLabel 6500 2300 2    50   BiDi ~ 0
+OUT_A+
+Text GLabel 6500 2400 2    50   BiDi ~ 0
+OUT_A-
+Text GLabel 6500 2500 2    50   BiDi ~ 0
+OUT_B-
+Text GLabel 6500 2600 2    50   BiDi ~ 0
+OUT_B+
 $EndSCHEMATC

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 4
+Sheet 4 5
 Title ""
 Date ""
 Rev ""
@@ -655,7 +655,7 @@ F 3 "" H 8550 5350 50  0001 C CNN
 	1    8550 5350
 	0    1    1    0   
 $EndComp
-Text GLabel 2750 4550 0    50   Input ~ 0
+Text GLabel 2200 4550 0    50   Input ~ 0
 ETH_POWER
 NoConn ~ 4600 3650
 $Comp
@@ -698,4 +698,34 @@ Wire Notes Line
 	4100 3300 3800 3300
 Text Notes 3600 3300 0    50   ~ 0
 close to 8720!
+$Comp
+L Device:R R42
+U 1 1 60F056E4
+P 2250 4700
+F 0 "R42" V 2043 4700 50  0000 C CNN
+F 1 "10k" V 2134 4700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 2180 4700 50  0001 C CNN
+F 3 "~" H 2250 4700 50  0001 C CNN
+	1    2250 4700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 4550 2500 4550
+Connection ~ 2250 4550
+Wire Wire Line
+	2250 4550 2200 4550
+Connection ~ 2500 4550
+Wire Wire Line
+	2500 4550 2250 4550
+$Comp
+L power:GND #PWR053
+U 1 1 60F07647
+P 2250 4850
+F 0 "#PWR053" H 2250 4600 50  0001 C CNN
+F 1 "GND" H 2255 4677 50  0000 C CNN
+F 2 "" H 2250 4850 50  0001 C CNN
+F 3 "" H 2250 4850 50  0001 C CNN
+	1    2250 4850
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

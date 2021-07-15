@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 4
+Sheet 3 5
 Title ""
 Date ""
 Rev ""
@@ -56,7 +56,7 @@ U 1 1 60E4A919
 P 3950 1300
 F 0 "L5" V 3769 1300 50  0000 C CNN
 F 1 "22u" V 3860 1300 50  0000 C CNN
-F 2 "Inductor_SMD:L_Taiyo-Yuden_NR-80xx_HandSoldering" H 3950 1300 50  0001 C CNN
+F 2 "liebler_PASSIVES:Inductor_CDRH104_handsolder" H 3950 1300 50  0001 C CNN
 F 3 "~" H 3950 1300 50  0001 C CNN
 	1    3950 1300
 	0    1    1    0   
