@@ -1,0 +1,201 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 7 7
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Regulator_Switching:LMR14206 U7
+U 1 1 60F5BBD1
+P 4200 2200
+F 0 "U7" H 4200 2667 50  0000 C CNN
+F 1 "LMR14206" H 4200 2576 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-6_Handsoldering" H 4200 1700 50  0001 C CIN
+F 3 "http://www.ti.com/lit/ds/symlink/lmr14206.pdf" H 3800 2650 50  0001 C CNN
+	1    4200 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C34
+U 1 1 60F5BF8A
+P 3250 2150
+F 0 "C34" H 3365 2196 50  0000 L CNN
+F 1 "2u2" H 3365 2105 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 3288 2000 50  0001 C CNN
+F 3 "~" H 3250 2150 50  0001 C CNN
+	1    3250 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C35
+U 1 1 60F5C356
+P 4850 2000
+F 0 "C35" V 4598 2000 50  0000 C CNN
+F 1 "220n" V 4689 2000 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 4888 1850 50  0001 C CNN
+F 3 "~" H 4850 2000 50  0001 C CNN
+	1    4850 2000
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:D_Schottky D2
+U 1 1 60F5CDDE
+P 5000 2350
+F 0 "D2" V 4954 2430 50  0000 L CNN
+F 1 "SD" V 5045 2430 50  0000 L CNN
+F 2 "liebler_SEMICONDUCTORS:D_SOD-123_handsolder" H 5000 2350 50  0001 C CNN
+F 3 "~" H 5000 2350 50  0001 C CNN
+	1    5000 2350
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:L L5
+U 1 1 60F5D764
+P 5300 2200
+F 0 "L5" V 5119 2200 50  0000 C CNN
+F 1 "15u" V 5210 2200 50  0000 C CNN
+F 2 "liebler_PASSIVES:L_0630" H 5300 2200 50  0001 C CNN
+F 3 "~" H 5300 2200 50  0001 C CNN
+	1    5300 2200
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4700 2200 5000 2200
+Connection ~ 5000 2200
+Wire Wire Line
+	5000 2200 5150 2200
+Wire Wire Line
+	5000 2000 5000 2200
+$Comp
+L Device:R R22
+U 1 1 60F5E716
+P 5800 2350
+F 0 "R22" H 5870 2396 50  0000 L CNN
+F 1 "3k3" H 5870 2305 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 5730 2350 50  0001 C CNN
+F 3 "~" H 5800 2350 50  0001 C CNN
+	1    5800 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R23
+U 1 1 60F5EE08
+P 5800 2650
+F 0 "R23" H 5870 2696 50  0000 L CNN
+F 1 "1k" H 5870 2605 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 5730 2650 50  0001 C CNN
+F 3 "~" H 5800 2650 50  0001 C CNN
+	1    5800 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 2800 5000 2800
+Wire Wire Line
+	4200 2800 4200 2600
+Wire Wire Line
+	5000 2500 5000 2800
+Connection ~ 5000 2800
+Wire Wire Line
+	5000 2800 4200 2800
+Wire Wire Line
+	5450 2200 5800 2200
+Wire Wire Line
+	4700 2500 4700 2400
+Connection ~ 5800 2500
+Wire Wire Line
+	4700 2500 5800 2500
+$Comp
+L Device:C C36
+U 1 1 60F5F54B
+P 6200 2350
+F 0 "C36" H 6315 2396 50  0000 L CNN
+F 1 "22u" H 6315 2305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 6238 2200 50  0001 C CNN
+F 3 "~" H 6200 2350 50  0001 C CNN
+	1    6200 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C37
+U 1 1 60F5FC7B
+P 6550 2350
+F 0 "C37" H 6665 2441 50  0000 L CNN
+F 1 "m1" H 6665 2350 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder" H 6665 2259 50  0000 L CNN
+F 3 "~" H 6550 2350 50  0001 C CNN
+	1    6550 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6550 2200 6200 2200
+Connection ~ 5800 2200
+Connection ~ 6200 2200
+Wire Wire Line
+	6200 2200 5800 2200
+Wire Wire Line
+	5800 2800 6200 2800
+Wire Wire Line
+	6200 2800 6200 2500
+Connection ~ 5800 2800
+Wire Wire Line
+	6200 2800 6550 2800
+Wire Wire Line
+	6550 2800 6550 2500
+Connection ~ 6200 2800
+Wire Wire Line
+	4200 2800 3250 2800
+Wire Wire Line
+	3250 2800 3250 2300
+Connection ~ 4200 2800
+Wire Wire Line
+	3700 2200 3700 2000
+Wire Wire Line
+	3700 2000 3250 2000
+Connection ~ 3700 2000
+$Comp
+L power:+24V #PWR0108
+U 1 1 60F60D7D
+P 3250 2000
+F 0 "#PWR0108" H 3250 1850 50  0001 C CNN
+F 1 "+24V" H 3265 2173 50  0000 C CNN
+F 2 "" H 3250 2000 50  0001 C CNN
+F 3 "" H 3250 2000 50  0001 C CNN
+	1    3250 2000
+	1    0    0    -1  
+$EndComp
+Connection ~ 3250 2000
+$Comp
+L power:+3V3 #PWR0110
+U 1 1 60F60FA3
+P 6550 2200
+F 0 "#PWR0110" H 6550 2050 50  0001 C CNN
+F 1 "+3V3" H 6565 2373 50  0000 C CNN
+F 2 "" H 6550 2200 50  0001 C CNN
+F 3 "" H 6550 2200 50  0001 C CNN
+	1    6550 2200
+	1    0    0    -1  
+$EndComp
+Connection ~ 6550 2200
+$Comp
+L power:GND #PWR0117
+U 1 1 60F6312D
+P 4200 2800
+F 0 "#PWR0117" H 4200 2550 50  0001 C CNN
+F 1 "GND" H 4205 2627 50  0000 C CNN
+F 2 "" H 4200 2800 50  0001 C CNN
+F 3 "" H 4200 2800 50  0001 C CNN
+	1    4200 2800
+	1    0    0    -1  
+$EndComp
+Text Label 4850 2200 0    50   ~ 0
+SW
+$EndSCHEMATC

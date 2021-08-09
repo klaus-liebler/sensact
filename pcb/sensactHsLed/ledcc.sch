@@ -1,0 +1,395 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 7
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:CP C1
+U 1 1 60F3A7F8
+P 2450 1150
+AR Path="/60F39BBC/60F3A7F8" Ref="C1"  Part="1" 
+AR Path="/60F4AF72/60F3A7F8" Ref="C7"  Part="1" 
+AR Path="/60F4C999/60F3A7F8" Ref="C13"  Part="1" 
+AR Path="/60F4DB84/60F3A7F8" Ref="C19"  Part="1" 
+AR Path="/60F4E7B9/60F3A7F8" Ref="C26"  Part="1" 
+AR Path="/60F4F950/60F3A7F8" Ref="C41"  Part="1" 
+F 0 "C13" H 2568 1196 50  0000 L CNN
+F 1 "47u" H 2568 1105 50  0000 L CNN
+F 2 "Capacitor_THT:C_Radial_D8.0mm_H11.5mm_P3.50mm" H 2488 1000 50  0001 C CNN
+F 3 "~" H 2450 1150 50  0001 C CNN
+	1    2450 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 60F3B23A
+P 2850 1150
+AR Path="/60F39BBC/60F3B23A" Ref="C2"  Part="1" 
+AR Path="/60F4AF72/60F3B23A" Ref="C8"  Part="1" 
+AR Path="/60F4C999/60F3B23A" Ref="C14"  Part="1" 
+AR Path="/60F4DB84/60F3B23A" Ref="C20"  Part="1" 
+AR Path="/60F4E7B9/60F3B23A" Ref="C27"  Part="1" 
+AR Path="/60F4F950/60F3B23A" Ref="C42"  Part="1" 
+F 0 "C14" H 2965 1196 50  0000 L CNN
+F 1 "2u2" H 2965 1105 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 2888 1000 50  0001 C CNN
+F 3 "~" H 2850 1150 50  0001 C CNN
+	1    2850 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C3
+U 1 1 60F3B736
+P 3300 1150
+AR Path="/60F39BBC/60F3B736" Ref="C3"  Part="1" 
+AR Path="/60F4AF72/60F3B736" Ref="C9"  Part="1" 
+AR Path="/60F4C999/60F3B736" Ref="C15"  Part="1" 
+AR Path="/60F4DB84/60F3B736" Ref="C21"  Part="1" 
+AR Path="/60F4E7B9/60F3B736" Ref="C28"  Part="1" 
+AR Path="/60F4F950/60F3B736" Ref="C43"  Part="1" 
+F 0 "C15" H 3415 1196 50  0000 L CNN
+F 1 "2u2" H 3415 1105 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 3338 1000 50  0001 C CNN
+F 3 "~" H 3300 1150 50  0001 C CNN
+	1    3300 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 60F3C77A
+P 3750 1100
+AR Path="/60F39BBC/60F3C77A" Ref="R2"  Part="1" 
+AR Path="/60F4AF72/60F3C77A" Ref="R8"  Part="1" 
+AR Path="/60F4C999/60F3C77A" Ref="R12"  Part="1" 
+AR Path="/60F4DB84/60F3C77A" Ref="R16"  Part="1" 
+AR Path="/60F4E7B9/60F3C77A" Ref="R19"  Part="1" 
+AR Path="/60F4F950/60F3C77A" Ref="R28"  Part="1" 
+F 0 "R12" V 3650 1100 50  0000 C CNN
+F 1 "47k" V 3750 1100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 3680 1100 50  0001 C CNN
+F 3 "~" H 3750 1100 50  0001 C CNN
+	1    3750 1100
+	0    1    1    0   
+$EndComp
+$Comp
+L liebler_SEMICONDUCTORS:A6211 U1
+U 1 1 60F3D493
+P 4450 1150
+AR Path="/60F39BBC/60F3D493" Ref="U1"  Part="1" 
+AR Path="/60F4AF72/60F3D493" Ref="U2"  Part="1" 
+AR Path="/60F4C999/60F3D493" Ref="U4"  Part="1" 
+AR Path="/60F4DB84/60F3D493" Ref="U6"  Part="1" 
+AR Path="/60F4E7B9/60F3D493" Ref="U8"  Part="1" 
+AR Path="/60F4F950/60F3D493" Ref="U9"  Part="1" 
+F 0 "U4" H 4450 1525 50  0000 C CNN
+F 1 "A6211" H 4450 1434 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:SOIC-8_3.9x4.9mm_Pitch1.27mm_pad_handsolder" H 4450 1150 50  0001 C CNN
+F 3 "" H 4450 1150 50  0001 C CNN
+	1    4450 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 1000 2850 1000
+Connection ~ 2850 1000
+Wire Wire Line
+	2850 1000 3300 1000
+Connection ~ 3300 1000
+Wire Wire Line
+	3300 1000 3600 1000
+Wire Wire Line
+	3950 1100 3900 1100
+Wire Wire Line
+	3600 1000 3600 1100
+Connection ~ 3600 1000
+Wire Wire Line
+	3600 1000 3950 1000
+Wire Wire Line
+	2450 1300 2850 1300
+Connection ~ 2850 1300
+Wire Wire Line
+	2850 1300 3300 1300
+Text HLabel 3950 1200 0    50   Input ~ 0
+EN
+$Comp
+L power:GND1 #PWR02
+U 1 1 60F3E938
+P 3300 1300
+AR Path="/60F39BBC/60F3E938" Ref="#PWR02"  Part="1" 
+AR Path="/60F4AF72/60F3E938" Ref="#PWR06"  Part="1" 
+AR Path="/60F4C999/60F3E938" Ref="#PWR010"  Part="1" 
+AR Path="/60F4DB84/60F3E938" Ref="#PWR014"  Part="1" 
+AR Path="/60F4E7B9/60F3E938" Ref="#PWR018"  Part="1" 
+AR Path="/60F4F950/60F3E938" Ref="#PWR022"  Part="1" 
+F 0 "#PWR018" H 3300 1050 50  0001 C CNN
+F 1 "GND1" H 3305 1127 50  0000 C CNN
+F 2 "" H 3300 1300 50  0001 C CNN
+F 3 "" H 3300 1300 50  0001 C CNN
+	1    3300 1300
+	1    0    0    -1  
+$EndComp
+Connection ~ 3300 1300
+$Comp
+L power:GND1 #PWR03
+U 1 1 60F3EA03
+P 4450 1450
+AR Path="/60F39BBC/60F3EA03" Ref="#PWR03"  Part="1" 
+AR Path="/60F4AF72/60F3EA03" Ref="#PWR07"  Part="1" 
+AR Path="/60F4C999/60F3EA03" Ref="#PWR011"  Part="1" 
+AR Path="/60F4DB84/60F3EA03" Ref="#PWR015"  Part="1" 
+AR Path="/60F4E7B9/60F3EA03" Ref="#PWR019"  Part="1" 
+AR Path="/60F4F950/60F3EA03" Ref="#PWR023"  Part="1" 
+F 0 "#PWR019" H 4450 1200 50  0001 C CNN
+F 1 "GND1" H 4455 1277 50  0000 C CNN
+F 2 "" H 4450 1450 50  0001 C CNN
+F 3 "" H 4450 1450 50  0001 C CNN
+	1    4450 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 60F3EF20
+P 4950 1450
+AR Path="/60F39BBC/60F3EF20" Ref="C4"  Part="1" 
+AR Path="/60F4AF72/60F3EF20" Ref="C10"  Part="1" 
+AR Path="/60F4C999/60F3EF20" Ref="C16"  Part="1" 
+AR Path="/60F4DB84/60F3EF20" Ref="C23"  Part="1" 
+AR Path="/60F4E7B9/60F3EF20" Ref="C29"  Part="1" 
+AR Path="/60F4F950/60F3EF20" Ref="C44"  Part="1" 
+F 0 "C16" H 5065 1496 50  0000 L CNN
+F 1 "u1" H 5065 1405 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 4988 1300 50  0001 C CNN
+F 3 "~" H 4950 1450 50  0001 C CNN
+	1    4950 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND1 #PWR04
+U 1 1 60F3F58F
+P 4950 1600
+AR Path="/60F39BBC/60F3F58F" Ref="#PWR04"  Part="1" 
+AR Path="/60F4AF72/60F3F58F" Ref="#PWR08"  Part="1" 
+AR Path="/60F4C999/60F3F58F" Ref="#PWR012"  Part="1" 
+AR Path="/60F4DB84/60F3F58F" Ref="#PWR016"  Part="1" 
+AR Path="/60F4E7B9/60F3F58F" Ref="#PWR020"  Part="1" 
+AR Path="/60F4F950/60F3F58F" Ref="#PWR024"  Part="1" 
+F 0 "#PWR020" H 4950 1350 50  0001 C CNN
+F 1 "GND1" H 4955 1427 50  0000 C CNN
+F 2 "" H 4950 1600 50  0001 C CNN
+F 3 "" H 4950 1600 50  0001 C CNN
+	1    4950 1600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4950 1200 5200 1200
+Wire Wire Line
+	5200 1200 5200 1600
+Wire Wire Line
+	5200 1600 4950 1600
+Connection ~ 4950 1600
+$Comp
+L Device:C C5
+U 1 1 60F3FCA1
+P 5100 950
+AR Path="/60F39BBC/60F3FCA1" Ref="C5"  Part="1" 
+AR Path="/60F4AF72/60F3FCA1" Ref="C11"  Part="1" 
+AR Path="/60F4C999/60F3FCA1" Ref="C17"  Part="1" 
+AR Path="/60F4DB84/60F3FCA1" Ref="C24"  Part="1" 
+AR Path="/60F4E7B9/60F3FCA1" Ref="C30"  Part="1" 
+AR Path="/60F4F950/60F3FCA1" Ref="C45"  Part="1" 
+F 0 "C17" H 5215 996 50  0000 L CNN
+F 1 "u1" H 5215 905 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 5138 800 50  0001 C CNN
+F 3 "~" H 5100 950 50  0001 C CNN
+	1    5100 950 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5100 800  4950 800 
+Wire Wire Line
+	4950 800  4950 1000
+Wire Wire Line
+	4950 1100 5100 1100
+$Comp
+L Device:L L1
+U 1 1 60F4203D
+P 5800 800
+AR Path="/60F39BBC/60F4203D" Ref="L1"  Part="1" 
+AR Path="/60F4AF72/60F4203D" Ref="L2"  Part="1" 
+AR Path="/60F4C999/60F4203D" Ref="L3"  Part="1" 
+AR Path="/60F4DB84/60F4203D" Ref="L4"  Part="1" 
+AR Path="/60F4E7B9/60F4203D" Ref="L6"  Part="1" 
+AR Path="/60F4F950/60F4203D" Ref="L7"  Part="1" 
+F 0 "L3" V 5619 800 50  0000 C CNN
+F 1 "47u" V 5710 800 50  0000 C CNN
+F 2 "liebler_PASSIVES:L_1040" H 5800 800 50  0001 C CNN
+F 3 "~" H 5800 800 50  0001 C CNN
+	1    5800 800 
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5450 1100 5450 1600
+Wire Wire Line
+	5450 1600 5200 1600
+Connection ~ 5200 1600
+Wire Wire Line
+	5100 800  5450 800 
+Connection ~ 5100 800 
+Connection ~ 5450 800 
+Wire Wire Line
+	5450 800  5650 800 
+$Comp
+L Device:C C6
+U 1 1 60F433E0
+P 5950 950
+AR Path="/60F39BBC/60F433E0" Ref="C6"  Part="1" 
+AR Path="/60F4AF72/60F433E0" Ref="C12"  Part="1" 
+AR Path="/60F4C999/60F433E0" Ref="C18"  Part="1" 
+AR Path="/60F4DB84/60F433E0" Ref="C25"  Part="1" 
+AR Path="/60F4E7B9/60F433E0" Ref="C31"  Part="1" 
+AR Path="/60F4F950/60F433E0" Ref="C46"  Part="1" 
+F 0 "C18" H 6065 996 50  0000 L CNN
+F 1 "2u2" H 6065 905 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 5988 800 50  0001 C CNN
+F 3 "~" H 5950 950 50  0001 C CNN
+	1    5950 950 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5950 1100 5950 1600
+Wire Wire Line
+	5950 1600 5450 1600
+Connection ~ 5450 1600
+$Comp
+L Device:R R4
+U 1 1 60F4419D
+P 6200 1450
+AR Path="/60F39BBC/60F4419D" Ref="R4"  Part="1" 
+AR Path="/60F4AF72/60F4419D" Ref="R9"  Part="1" 
+AR Path="/60F4C999/60F4419D" Ref="R14"  Part="1" 
+AR Path="/60F4DB84/60F4419D" Ref="R17"  Part="1" 
+AR Path="/60F4E7B9/60F4419D" Ref="R20"  Part="1" 
+AR Path="/60F4F950/60F4419D" Ref="R29"  Part="1" 
+F 0 "R14" H 6270 1496 50  0000 L CNN
+F 1 "r68" H 6270 1405 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 6130 1450 50  0001 C CNN
+F 3 "~" H 6200 1450 50  0001 C CNN
+	1    6200 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5950 1600 6200 1600
+Connection ~ 5950 1600
+Connection ~ 6200 1600
+Wire Wire Line
+	6200 1600 6450 1600
+$Comp
+L Device:Jumper_NO_Small JP2
+U 1 1 60F45EF9
+P 6450 1200
+AR Path="/60F39BBC/60F45EF9" Ref="JP2"  Part="1" 
+AR Path="/60F4AF72/60F45EF9" Ref="JP4"  Part="1" 
+AR Path="/60F4C999/60F45EF9" Ref="JP6"  Part="1" 
+AR Path="/60F4DB84/60F45EF9" Ref="JP8"  Part="1" 
+AR Path="/60F4E7B9/60F45EF9" Ref="JP10"  Part="1" 
+AR Path="/60F4F950/60F45EF9" Ref="JP12"  Part="1" 
+F 0 "JP6" V 6404 1248 50  0000 L CNN
+F 1 "i7" V 6495 1248 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x01_P2.54mm_Horizontal" H 6450 1200 50  0001 C CNN
+F 3 "~" H 6450 1200 50  0001 C CNN
+	1    6450 1200
+	0    1    1    0   
+$EndComp
+Text HLabel 6750 1100 2    50   Output ~ 0
+LED-
+Text HLabel 6750 1000 2    50   Output ~ 0
+LED+
+Wire Wire Line
+	5950 800  6550 800 
+Wire Wire Line
+	6550 800  6550 1000
+Wire Wire Line
+	6550 1000 6750 1000
+Connection ~ 5950 800 
+Wire Wire Line
+	6750 1100 6650 1100
+Wire Wire Line
+	6200 1100 6450 1100
+Connection ~ 6450 1100
+Wire Wire Line
+	6650 1100 6650 1900
+Wire Wire Line
+	6650 1900 3950 1900
+Wire Wire Line
+	3950 1900 3950 1300
+Connection ~ 6650 1100
+Wire Wire Line
+	6650 1100 6450 1100
+Text Label 6200 800  0    50   ~ 0
+LED+
+Text Label 4950 800  0    50   ~ 0
+SW
+$Comp
+L power:+48V #PWR01
+U 1 1 60F47EB3
+P 2450 1000
+AR Path="/60F39BBC/60F47EB3" Ref="#PWR01"  Part="1" 
+AR Path="/60F4AF72/60F47EB3" Ref="#PWR05"  Part="1" 
+AR Path="/60F4C999/60F47EB3" Ref="#PWR09"  Part="1" 
+AR Path="/60F4DB84/60F47EB3" Ref="#PWR013"  Part="1" 
+AR Path="/60F4E7B9/60F47EB3" Ref="#PWR017"  Part="1" 
+AR Path="/60F4F950/60F47EB3" Ref="#PWR021"  Part="1" 
+F 0 "#PWR017" H 2450 850 50  0001 C CNN
+F 1 "+48V" H 2465 1173 50  0000 C CNN
+F 2 "" H 2450 1000 50  0001 C CNN
+F 3 "" H 2450 1000 50  0001 C CNN
+	1    2450 1000
+	1    0    0    -1  
+$EndComp
+Connection ~ 2450 1000
+Wire Wire Line
+	6200 1100 6200 1300
+$Comp
+L Device:D_Schottky D5
+U 1 1 60F40DD9
+P 5450 950
+AR Path="/60F39BBC/60F40DD9" Ref="D5"  Part="1" 
+AR Path="/60F4AF72/60F40DD9" Ref="D6"  Part="1" 
+AR Path="/60F4C999/60F40DD9" Ref="D7"  Part="1" 
+AR Path="/60F4DB84/60F40DD9" Ref="D8"  Part="1" 
+AR Path="/60F4E7B9/60F40DD9" Ref="D9"  Part="1" 
+AR Path="/60F4F950/60F40DD9" Ref="D10"  Part="1" 
+F 0 "D7" V 5404 1030 50  0000 L CNN
+F 1 "2A" V 5495 1030 50  0000 L CNN
+F 2 "Diode_SMD:D_SMA_Handsoldering" H 5450 950 50  0001 C CNN
+F 3 "~" H 5450 950 50  0001 C CNN
+	1    5450 950 
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 60F448A7
+P 6450 1450
+AR Path="/60F39BBC/60F448A7" Ref="R5"  Part="1" 
+AR Path="/60F4AF72/60F448A7" Ref="R10"  Part="1" 
+AR Path="/60F4C999/60F448A7" Ref="R15"  Part="1" 
+AR Path="/60F4DB84/60F448A7" Ref="R18"  Part="1" 
+AR Path="/60F4E7B9/60F448A7" Ref="R21"  Part="1" 
+AR Path="/60F4F950/60F448A7" Ref="R30"  Part="1" 
+F 0 "R15" H 6520 1496 50  0000 L CNN
+F 1 "r51" H 6520 1405 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 6380 1450 50  0001 C CNN
+F 3 "~" H 6450 1450 50  0001 C CNN
+	1    6450 1450
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
