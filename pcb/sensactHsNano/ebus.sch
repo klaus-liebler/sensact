@@ -564,9 +564,9 @@ F 3 "https://www.holtek.com/documents/10179/116711/HT75xx-1v250.pdf" H 4750 1600
 	1    0    0    -1  
 $EndComp
 Text GLabel 7050 3250 2    50   BiDi ~ 0
-OUT_A-
+OUT_B+
 Text GLabel 7050 3350 2    50   BiDi ~ 0
-OUT_A+
+OUT_B-
 $Comp
 L Device:R R37
 U 1 1 60EACD53
