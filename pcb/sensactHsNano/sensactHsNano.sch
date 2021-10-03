@@ -54,7 +54,7 @@ F 3 "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d
 	1    2350 2400
 	1    0    0    -1  
 $EndComp
-Text GLabel 2950 2300 2    50   Output ~ 0
+Text GLabel 2950 1400 2    50   Output ~ 0
 ETH_POWER
 Text GLabel 2950 2500 2    50   Output ~ 0
 ETH_TX0
@@ -351,7 +351,7 @@ AR Path="/5F9C3C99/5FA4983B" Ref="R?"  Part="1"
 AR Path="/5FA4983B" Ref="R3"  Part="1" 
 F 0 "R3" H 1100 5100 50  0000 L CNN
 F 1 "4k7" V 1050 5150 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 980 5150 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 980 5150 50  0001 C CNN
 F 3 "~" H 1050 5150 50  0001 C CNN
 	1    1050 5150
 	1    0    0    -1  
@@ -518,7 +518,7 @@ AR Path="/5F9C3C99/60E59309" Ref="R?"  Part="1"
 AR Path="/60E59309" Ref="R25"  Part="1" 
 F 0 "R25" H 3050 850 50  0000 L CNN
 F 1 "10k" V 3000 900 50  0000 C CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 2930 900 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 2930 900 50  0001 C CNN
 F 3 "~" H 3000 900 50  0001 C CNN
 	1    3000 900 
 	1    0    0    -1  
@@ -550,9 +550,9 @@ Wire Wire Line
 Connection ~ 3000 1100
 Wire Wire Line
 	3000 1100 3000 1200
-Text GLabel 2950 2400 2    50   BiDi ~ 0
+Text GLabel 2950 1700 2    50   BiDi ~ 0
 ETH_MDIO
-Text GLabel 2950 2800 2    50   BiDi ~ 0
+Text GLabel 2950 2400 2    50   BiDi ~ 0
 ETH_MDC
 Text GLabel 900  1200 0    50   Input ~ 0
 EN
@@ -864,9 +864,9 @@ F 3 "~" H 3650 1950 50  0001 C CNN
 	1    3650 1950
 	1    0    0    -1  
 $EndComp
-Text GLabel 2950 1400 2    50   BiDi ~ 0
+Text GLabel 2950 2100 2    50   BiDi ~ 0
 SDA2
-Text GLabel 2950 1700 2    50   BiDi ~ 0
+Text GLabel 2950 2300 2    50   BiDi ~ 0
 SCL2
 $Comp
 L Diode:SM712_SOT23 D3
@@ -1013,8 +1013,6 @@ Wire Wire Line
 	1450 1400 1450 1800
 Wire Wire Line
 	1450 1400 1750 1400
-Wire Wire Line
-	2950 2100 3650 2100
 Wire Notes Line
 	3400 4050 4700 4050
 Wire Notes Line
@@ -1092,7 +1090,7 @@ U 1 1 60E866C2
 P 3850 6150
 F 0 "D4" H 3700 6100 50  0000 C CNN
 F 1 "2A" H 3700 6200 50  0000 C CNN
-F 2 "Diode_SMD:D_SMB" H 3850 6150 50  0001 C CNN
+F 2 "Diode_SMD:D_SMB_Handsoldering" H 3850 6150 50  0001 C CNN
 F 3 "~" H 3850 6150 50  0001 C CNN
 	1    3850 6150
 	1    0    0    -1  
@@ -1314,4 +1312,8 @@ Text GLabel 5000 3350 0    50   Output ~ 0
 SENSOR_VN
 Wire Wire Line
 	5000 3350 5000 3200
+Wire Wire Line
+	2950 2800 3650 2800
+Wire Wire Line
+	3650 2800 3650 2100
 $EndSCHEMATC
