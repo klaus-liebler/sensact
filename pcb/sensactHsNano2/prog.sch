@@ -1,0 +1,266 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 5 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:USB_C_Receptacle_USB2.0 J7
+U 1 1 617C4A35
+P 2150 2900
+F 0 "J7" H 2257 3767 50  0000 C CNN
+F 1 "USB_C_Receptacle_USB2.0" H 2257 3676 50  0000 C CNN
+F 2 "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12" H 2300 2900 50  0001 C CNN
+F 3 "https://www.usb.org/sites/default/files/documents/usb_type-c.zip" H 2300 2900 50  0001 C CNN
+	1    2150 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R30
+U 1 1 617C6752
+P 2900 2500
+F 0 "R30" V 2800 2500 50  0000 C CNN
+F 1 "5k1" V 2900 2500 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 2830 2500 50  0001 C CNN
+F 3 "~" H 2900 2500 50  0001 C CNN
+	1    2900 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R31
+U 1 1 617C738B
+P 2900 2600
+F 0 "R31" V 3000 2600 50  0000 C CNN
+F 1 "5k1" V 2900 2600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 2830 2600 50  0001 C CNN
+F 3 "~" H 2900 2600 50  0001 C CNN
+	1    2900 2600
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C41
+U 1 1 617C80C3
+P 3050 2300
+F 0 "C41" H 3165 2346 50  0000 L CNN
+F 1 "u1" H 3165 2255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3088 2150 50  0001 C CNN
+F 3 "~" H 3050 2300 50  0001 C CNN
+	1    3050 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L liebler_SEMICONDUCTORS:CH340K U6
+U 1 1 617C88C2
+P 3650 2900
+F 0 "U6" H 3650 3375 50  0000 C CNN
+F 1 "CH340K" H 3650 3284 50  0000 C CNN
+F 2 "liebler_SEMICONDUCTORS:SSOP-10_3.9x4.9mm_P1.00mm_EP" H 3650 2900 50  0001 C CNN
+F 3 "" H 3650 2900 50  0001 C CNN
+	1    3650 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C42
+U 1 1 617C9FEA
+P 4100 2500
+F 0 "C42" H 4215 2546 50  0000 L CNN
+F 1 "u1" H 4215 2455 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4138 2350 50  0001 C CNN
+F 3 "~" H 4100 2500 50  0001 C CNN
+	1    4100 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR044
+U 1 1 617CA383
+P 4100 2350
+F 0 "#PWR044" H 4100 2100 50  0001 C CNN
+F 1 "GND" H 4250 2300 50  0000 C CNN
+F 2 "" H 4100 2350 50  0001 C CNN
+F 3 "" H 4100 2350 50  0001 C CNN
+	1    4100 2350
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR041
+U 1 1 617CAA2F
+P 3050 2550
+F 0 "#PWR041" H 3050 2300 50  0001 C CNN
+F 1 "GND" V 3055 2422 50  0000 R CNN
+F 2 "" H 3050 2550 50  0001 C CNN
+F 3 "" H 3050 2550 50  0001 C CNN
+	1    3050 2550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3050 2600 3050 2550
+Connection ~ 3050 2500
+Wire Wire Line
+	3050 2500 3050 2450
+Connection ~ 3050 2550
+Wire Wire Line
+	3050 2550 3050 2500
+Wire Wire Line
+	3050 2150 2950 2150
+Wire Wire Line
+	2950 2150 2950 2300
+Wire Wire Line
+	4000 2650 4100 2650
+Text GLabel 4000 2750 2    50   Input ~ 0
+PROG_RX
+Text GLabel 4000 2850 2    50   Output ~ 0
+PROG_TX
+Wire Wire Line
+	4000 2950 4450 2950
+Wire Wire Line
+	4450 2950 4450 2150
+Wire Wire Line
+	4450 2150 3050 2150
+Connection ~ 3050 2150
+$Comp
+L Transistor_BJT:BC817 Q1
+U 1 1 617CCAC1
+P 4850 3050
+F 0 "Q1" H 5041 3096 50  0000 L CNN
+F 1 "BC817" H 5041 3005 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5050 2975 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 4850 3050 50  0001 L CNN
+	1    4850 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Transistor_BJT:BC817 Q2
+U 1 1 617CD2B3
+P 4850 3600
+F 0 "Q2" H 5041 3554 50  0000 L CNN
+F 1 "BC817" H 5041 3645 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5050 3525 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 4850 3600 50  0001 L CNN
+	1    4850 3600
+	1    0    0    1   
+$EndComp
+Text GLabel 4950 2850 0    50   BiDi ~ 0
+PROG_IO0
+Text GLabel 4950 3800 0    50   BiDi ~ 0
+PROG_EN
+$Comp
+L Device:R R33
+U 1 1 617CEF0B
+P 4500 3600
+F 0 "R33" V 4600 3600 50  0000 C CNN
+F 1 "10k" V 4500 3600 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4430 3600 50  0001 C CNN
+F 3 "~" H 4500 3600 50  0001 C CNN
+	1    4500 3600
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R32
+U 1 1 617CF69C
+P 4500 3050
+F 0 "R32" V 4600 3050 50  0000 C CNN
+F 1 "10k" V 4500 3050 50  0000 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4430 3050 50  0001 C CNN
+F 3 "~" H 4500 3050 50  0001 C CNN
+	1    4500 3050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4000 3050 4000 3400
+Wire Wire Line
+	4000 3400 4350 3400
+Wire Wire Line
+	3300 2950 3250 2950
+Wire Wire Line
+	3250 2950 3250 3400
+Wire Wire Line
+	3250 3400 3900 3400
+Wire Wire Line
+	3900 3400 3900 3250
+Wire Wire Line
+	4350 3050 4350 3400
+Connection ~ 4350 3400
+Wire Wire Line
+	3900 3250 4950 3250
+Wire Wire Line
+	4350 3600 3900 3600
+Wire Wire Line
+	3900 3600 3900 3400
+Connection ~ 3900 3400
+Wire Wire Line
+	4350 3400 4950 3400
+Text Label 4550 3400 0    50   ~ 0
+RTS
+Text Label 4550 3250 0    50   ~ 0
+DTR
+$Comp
+L power:GND #PWR043
+U 1 1 617D17DD
+P 3650 3200
+F 0 "#PWR043" H 3650 2950 50  0001 C CNN
+F 1 "GND" H 3655 3027 50  0000 C CNN
+F 2 "" H 3650 3200 50  0001 C CNN
+F 3 "" H 3650 3200 50  0001 C CNN
+	1    3650 3200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 3300 3050
+$Comp
+L power:GND #PWR042
+U 1 1 617D1EE5
+P 3300 2850
+F 0 "#PWR042" H 3300 2600 50  0001 C CNN
+F 1 "GND" V 3350 2800 50  0000 R CNN
+F 2 "" H 3300 2850 50  0001 C CNN
+F 3 "" H 3300 2850 50  0001 C CNN
+	1    3300 2850
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2750 3100 2750 3000
+Wire Wire Line
+	2750 2800 2750 2900
+Wire Wire Line
+	3300 2750 2750 2750
+Wire Wire Line
+	2750 2750 2750 2800
+Connection ~ 2750 2800
+Wire Wire Line
+	3050 2650 3050 3000
+Wire Wire Line
+	3050 3000 2750 3000
+Wire Wire Line
+	3050 2650 3300 2650
+Connection ~ 2750 3000
+NoConn ~ 2750 3500
+NoConn ~ 2750 3400
+$Comp
+L power:GND #PWR023
+U 1 1 617D4C85
+P 2000 3800
+F 0 "#PWR023" H 2000 3550 50  0001 C CNN
+F 1 "GND" V 2050 3750 50  0000 R CNN
+F 2 "" H 2000 3800 50  0001 C CNN
+F 3 "" H 2000 3800 50  0001 C CNN
+	1    2000 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1850 3800 2000 3800
+Connection ~ 2000 3800
+Wire Wire Line
+	2000 3800 2150 3800
+Wire Wire Line
+	2750 2300 2950 2300
+Text GLabel 4450 2150 2    50   Output ~ 0
+V_BUS_USB
+$EndSCHEMATC

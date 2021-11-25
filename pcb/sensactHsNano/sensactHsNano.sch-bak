@@ -54,7 +54,7 @@ F 3 "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32d
 	1    2350 2400
 	1    0    0    -1  
 $EndComp
-Text GLabel 2950 2300 2    50   Output ~ 0
+Text GLabel 2950 1400 2    50   Output ~ 0
 ETH_POWER
 Text GLabel 2950 2500 2    50   Output ~ 0
 ETH_TX0
@@ -550,9 +550,9 @@ Wire Wire Line
 Connection ~ 3000 1100
 Wire Wire Line
 	3000 1100 3000 1200
-Text GLabel 2950 2400 2    50   BiDi ~ 0
+Text GLabel 2950 1700 2    50   BiDi ~ 0
 ETH_MDIO
-Text GLabel 2950 2800 2    50   BiDi ~ 0
+Text GLabel 2950 2400 2    50   BiDi ~ 0
 ETH_MDC
 Text GLabel 900  1200 0    50   Input ~ 0
 EN
@@ -864,9 +864,9 @@ F 3 "~" H 3650 1950 50  0001 C CNN
 	1    3650 1950
 	1    0    0    -1  
 $EndComp
-Text GLabel 2950 1400 2    50   BiDi ~ 0
+Text GLabel 2950 2100 2    50   BiDi ~ 0
 SDA2
-Text GLabel 2950 1700 2    50   BiDi ~ 0
+Text GLabel 2950 2300 2    50   BiDi ~ 0
 SCL2
 $Comp
 L Diode:SM712_SOT23 D3
@@ -1013,8 +1013,6 @@ Wire Wire Line
 	1450 1400 1450 1800
 Wire Wire Line
 	1450 1400 1750 1400
-Wire Wire Line
-	2950 2100 3650 2100
 Wire Notes Line
 	3400 4050 4700 4050
 Wire Notes Line
@@ -1314,4 +1312,8 @@ Text GLabel 5000 3350 0    50   Output ~ 0
 SENSOR_VN
 Wire Wire Line
 	5000 3350 5000 3200
+Wire Wire Line
+	2950 2800 3650 2800
+Wire Wire Line
+	3650 2800 3650 2100
 $EndSCHEMATC

@@ -1,11 +1,3 @@
-/* Hello World Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <stdio.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -18,27 +10,10 @@
 #include <esp_log.h>
 #include <string.h>
 
-#include <lwip/err.h>
-#include <lwip/sys.h>
-#include "esp_tls.h"
-#include "esp_http_client.h"
-#include "esp_ota_ops.h"
-#include "esp_https_ota.h"
-#include "cJSON.h"
-
-#define TAG "main"
-
-
-
-#define MAX_HTTP_RECV_BUFFER 512
-#define MAX_HTTP_OUTPUT_BUFFER 2048
-
 esp_netif_t * wifi_netif = NULL;
 esp_netif_t * eth_netif = NULL;
 esp_ip4_addr_t s_ip_addr;
-int32_t software_version{0};
 SemaphoreHandle_t connectSemaphore = NULL;
-
 
 void on_wifi_start(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
@@ -102,7 +77,55 @@ void on_eth_any_event(void *arg, esp_event_base_t event_base, int32_t event_id, 
     }
 }
 
-void connect(bool wifi, bool eth){
+void startAP(char* ssid, char* password){
+    ESP_ERROR_CHECK(esp_netif_init()); //s1.1
+    ESP_ERROR_CHECK(esp_event_loop_create_default()); //s1.2
+    esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
+    assert(ap_netif);
+
+    esp_netif_ip_info_t ip_info;
+
+    /** NOTE: This is where you set the access point (AP) IP address
+         and gateway address. It has to be a class A internet address
+        otherwise the captive portal sign-in prompt won't show up	on
+        Android when you connect to the access point. */
+    IP4_ADDR(&ip_info.ip, 124, 213, 16, 29);
+    IP4_ADDR(&ip_info.gw, 124, 213, 16, 29);
+    IP4_ADDR(&ip_info.netmask, 255, 0, 0, 0);
+    esp_netif_dhcps_stop(ap_netif);
+    esp_netif_set_ip_info(ap_netif, &ip_info);
+    esp_netif_dhcps_start(ap_netif);
+
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    wifi_config_t wifi_config_ap = {
+      .ap = {
+          .ssid = CONFIG_EXAMPLE_WIFI_AP_SSID,
+          .ssid_len = strlen(CONFIG_EXAMPLE_WIFI_AP_SSID),
+          .channel = CONFIG_EXAMPLE_WIFI_AP_CHANNEL,
+          .password = CONFIG_EXAMPLE_WIFI_AP_PASSWORD,
+          .max_connection = CONFIG_EXAMPLE_MAX_AP_CONN,
+          .authmode = WIFI_AUTH_WPA_WPA2_PSK},
+    };
+    if (strlen(CONFIG_EXAMPLE_WIFI_AP_PASSWORD) == 0)
+    {
+        wifi_config_ap.ap.authmode = WIFI_AUTH_OPEN;
+    }
+
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config_ap));
+
+    ESP_LOGI(wifi_captive_portal_esp_idf_wifi_tag, "starting WiFi access point: SSID: %s password:%s channel: %d",
+            CONFIG_EXAMPLE_WIFI_AP_SSID, CONFIG_EXAMPLE_WIFI_AP_PASSWORD, CONFIG_EXAMPLE_WIFI_AP_CHANNEL);
+
+    /** Wifi captive portal DNS init. */
+    wifi_captive_portal_esp_idf_dns_init();
+    
+    
+}
+
+void connectSTA2AP(bool eth){
     connectSemaphore = xSemaphoreCreateBinary();
     ESP_ERROR_CHECK(esp_netif_init()); //s1.1
     ESP_ERROR_CHECK(esp_event_loop_create_default()); //s1.2
@@ -159,82 +182,4 @@ void connect(bool wifi, bool eth){
         ESP_ERROR_CHECK(esp_eth_start(eth_handle));
     }
     
-}
-
-
-
-
-extern "C" void app_main(void)
-{
-    esp_err_t err = nvs_flash_init();
-    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      err = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(err);
-    nvs_handle_t nvs_handle;
-    err = nvs_open("storage", NVS_READWRITE, &nvs_handle);
-    if (err != ESP_OK) {
-        printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
-        while (true);
-        
-    }
-
-    const esp_partition_t *running = esp_ota_get_running_partition();
-    esp_app_desc_t running_app_info;
-    if (esp_ota_get_partition_description(running, &running_app_info) == ESP_OK) {
-        ESP_LOGI(TAG, "Running firmware version: %s", running_app_info.version);
-        ESP_LOGI(TAG, "Running project name: %s", running_app_info.project_name);
-    }else{
-        ESP_LOGE(TAG, "Error while getting firmware info");
-    }
-
-
-
-    connect(true, true);
-    xSemaphoreTake( connectSemaphore, portMAX_DELAY);
-    ESP_LOGI(TAG, "Semaphore for connection is taken from main thread");
-
-    esp_http_client_config_t config = {};
-    config.url = "https://w-hs.sciebo.de/s/91RHVZjf8TOtLm3/download";
-    config.cert_pem = (const char*)sciebo_cer_start;
-    config.event_handler = _http_event_handler;
-    
-    esp_http_client_handle_t client = esp_http_client_init(&config);
-    err = esp_http_client_perform(client);
-
-    if (err == ESP_OK) {
-        ESP_LOGI(TAG, "HTTPS Status = %d, content_length = %d",
-                esp_http_client_get_status_code(client),
-                esp_http_client_get_content_length(client));
-    } else {
-        ESP_LOGE(TAG, "Error perform http request %s", esp_err_to_name(err));
-    }
-    esp_http_client_cleanup(client);
-    const char* downloadURL = "https://w-hs.sciebo.de/s/2x4L5Q8z982ZDUG/download";
-    
-    config.url = downloadURL;
-    config.event_handler = http_logging_event_handler;
-    config.keep_alive_enable = true;
-    esp_err_t ret = esp_https_ota(&config);
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "Firmware upgrade successful");
-        esp_restart();
-    } else {
-        ESP_LOGE(TAG, "Firmware upgrade failed");
-    }
-    while (1) {
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-
-
-
-
-    int secs = 0;
-    while (true)
-    {
-        ESP_LOGI(TAG, "Run %4d, Heap %6d", secs, esp_get_free_heap_size());
-        secs += 5;
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
-    }
 }
