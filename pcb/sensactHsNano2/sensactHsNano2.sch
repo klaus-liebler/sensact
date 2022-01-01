@@ -1465,7 +1465,7 @@ AR Path="/5F9C3C99/619443B9" Ref="C?"  Part="1"
 AR Path="/619443B9" Ref="C48"  Part="1" 
 F 0 "C48" H 13565 5746 50  0000 L CNN
 F 1 "u1" H 13565 5655 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13488 5550 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 13488 5550 50  0001 C CNN
 F 3 "~" H 13450 5700 50  0001 C CNN
 	1    13450 5700
 	-1   0    0    1   
@@ -4056,5 +4056,27 @@ F 2 "" H 15400 6300 50  0001 C CNN
 F 3 "" H 15400 6300 50  0001 C CNN
 	1    15400 6300
 	0    1    1    0   
+$EndComp
+$Comp
+L Mechanical:Fiducial FID1
+U 1 1 61A3C1D7
+P 7650 800
+F 0 "FID1" H 7735 846 50  0000 L CNN
+F 1 "Fiducial" H 7735 755 50  0000 L CNN
+F 2 "Fiducial:Fiducial_1.5mm_Mask3mm" H 7650 800 50  0001 C CNN
+F 3 "~" H 7650 800 50  0001 C CNN
+	1    7650 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:Fiducial FID2
+U 1 1 61A3DF02
+P 7650 1000
+F 0 "FID2" H 7735 1046 50  0000 L CNN
+F 1 "Fiducial" H 7735 955 50  0000 L CNN
+F 2 "Fiducial:Fiducial_1.5mm_Mask3mm" H 7650 1000 50  0001 C CNN
+F 3 "~" H 7650 1000 50  0001 C CNN
+	1    7650 1000
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
