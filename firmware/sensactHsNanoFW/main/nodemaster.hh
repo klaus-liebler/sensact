@@ -1,56 +1,114 @@
 #pragma once
 #include "common.hh"
+#include "busmaster.hh"
 #include "stdint.h"
 #include "stdbool.h"
+#include <stdio.h>
+#include "sdkconfig.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include "can_id_utils.hh"
 #include <chrono>
+#include <vector>
+#include "apps/sensactContext.hh"
+#include "hal.hh"
+#include "node_applicationHost.hh"
+#include "node_gateway.hh"
+#include "node_iohost.hh"
+
+//Frage: Wie kann eine Statusnachricht, die vom ApplicationHost per CAN versendet wird, noch vom Gateway abgefangen werden. Flag "localDistributionToOtherRoles"?
+
+namespace sensact
+{
+	class Nodemaster;
+	class NodemasterRoleRunner{
+		virtual ErrorCode Setup(tms_t now)=0;
+		virtual ErrorCode Loop(tms_t now)=0;
+		virtual ErrorCode OfferMessage(tms_t now, CANMessage* m)=0;
+	}
+
+	enum struct eMqttTopic;
+
+	extern "C" static void NodemasterTask(void *params);
+
+	class Nodemaster
+	{
+	private:
+		std::vector<NodeRole> nodeRoles;
+		HAL *const hal;
+		std::vector<AbstractBusmaster *> busmasters;
+		std::vector<NodemasterRoleRunner*> roleRunners;
+		const char *const mqttTopicNames[];
+		CANMessage rcvMessage;
+
+		ErrorCode PublishNodeEvent(Time_t now, eNodeID sourceNode, eNodeEventType event, uint8_t * payload, uint8_t payloadLength)
+		{
+			hal->TrySendCanMessage(CANMessenger::CreateNodeEventMessageId((u8)sourceNode, (u8)event), payload, payloadLength);
+		#ifdef MASTERNODE
+			cMaster::mqtt_publishOnTopic(eMqttTopic::NODE_EVENT, payload, payloadLength, 0, 1);
+		#endif
+		}
+			
+
+	public:
+		Nodemaster(std::vector<NodeRole> nodeRoles, HAL *hal, std::vector<AbstractBusmaster *> busmasters) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters) {
+
+		}
+		void RunEternalLoopInTask(void)
+		{
+			TaskHandle_t *const taskHandle = NULL;
+			xTaskCreate(NodemasterTask, "NodemasterTask", 4096 * 4, this, 6, taskHandle);
+		}
+
+		void EternalLoop()
+		{
+			tms_t now = hal->GetMillisS64();
+			hal->Setup();
+			PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
+			for(auto& role:nodeRoles){
+				switch (role)
+				{
+				case NodeRole::APPLICATION_HOST:
+					roleRunners.push_back(new ApplicationHostRunner());
+					break;
+				case NodeRole::GATEWAY:
+					roleRunners.push_back(new GatewayRunner());
+					break;
+				case NodeRole::IO_HOST:
+					roleRunners.push_back(new IoHostRunner());
+					break;
+				default:
+					LOGE(TAG, "NodeRole has no implementation");
+					break;
+				}
+			}
+			for(auto& rr:roleRunners){
+				rr->Setup(this);
+			}
+			PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_READY, 0, 0);
+			
+			while(true){
+				now = = hal->GetMillisS64();
+				hal->BeforeAppLoop();
+				CANMessage message;
+				while(hal->TryReceiveCANMessage(message)==ErrorCode::OK){
+					for(auto& rr:roleRunners) rr->OfferMessage(this, &message);
+				}
+				// TODO CONSOLEMessage! ->entweder im HAL in CANMessage transformieren oder zweiten TryReceive-Prozess aufsetzen
+				for(auto& rr:roleRunners){
+					rr->Loop(this);
+				}
+				hal->AfterAppLoop();//schreibe die Outputs
+			}
+		}
 
 
-namespace sensact {
+		static void OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now);
+	};
+	static void NodemasterTask(void *params)
+	{
+		Nodemaster *nm = (Nodemaster *)params;
+		nm->EternalLoop();
+	}
 
-enum struct eMqttTopic;
-
-typedef  void (*pIapPseudoFunction)(void);
-
-class Nodemaster {
-private:
-	static const char * const mqttTopicNames[];
-	static CANMessage rcvMessage;
-	static pIapPseudoFunction JumpToApplication;
-	static uint32_t JumpAddress;
-	static eApplicationID heartbeatBuffer[3];
-	static Time_t lastSentCANMessage;
-
-	static uint32_t inpub_id;
-#ifdef MASTERNODE
-	static mqtt_client_t client;
-	static struct mqtt_connect_client_info_t ci;
-	static uint32_t subscriberIndex;
-
-
-/* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
-	static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status);
-	static void mqtt_sub_request_cb(void *arg, err_t result);
-	static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len);
-	static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags);
-	static void mqtt_publishOnTopic(eMqttTopic topic, uint8_t *buf, size_t len, void *arg, uint8_t qos);
-	static void mqtt_pub_request_cb(void *arg, err_t result);
-#endif
-public:
-	static void MasterControlLoop(void);
-	static bool SendCommandToMessageBus(Time_t now, eApplicationID destinationApp, eCommandType cmd, const uint8_t * const payload, uint8_t payloadLength);
-	static void PublishApplicationEventFiltered(Time_t now, const eApplicationID, const eEventType evt, const eEventType *const localEvts, const uint8_t localEvtsLength, const eEventType *const busEvts, const uint8_t busEvtsLength, uint8_t* payload, uint8_t payloadLenght);
-	static void PublishNodeEvent(Time_t now, eNodeID sourceNode, eNodeEventType event, uint8_t * payload, uint8_t payloadLength);
-	static void PublishApplicationEvent(Time_t now, eApplicationID sourceNode, eEventType event, uint8_t * payload, uint8_t payloadLength);
-	static void PublishApplicationStatus(Time_t now, eApplicationID sourceApp, eApplicationStatus statusType, uint8_t * payload, uint8_t payloadLength);
-	static void CanBusProcess();
-	static void Run();
-	static Time_t Date2unixtimeMillis(uint16_t jahr, uint8_t monat, uint8_t tag, uint8_t stunde, uint8_t minute, uint8_t sekunde);
-	static std::chrono::hours cet_offset_utc(std::chrono::system_clock::time_point tp);
-	static std::chrono::hours utc_offset_cet(std::chrono::system_clock::time_point tp);
-	static void StartIAP(void);
-	static void BufferHeartbeat(eApplicationID target, Time_t now);
-	static void OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now);
-};
 }

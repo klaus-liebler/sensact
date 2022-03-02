@@ -3,9 +3,7 @@
 #include <driver/gpio.h>
 #include <list>
 
-class HAL_sensactHsNano2::public HAL{
-private:
-	std::list<cBusmaster*> busses;
+class HAL_sensactHsNano2:public HAL{
 
 	    
 public:

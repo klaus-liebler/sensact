@@ -6,30 +6,7 @@
 
 
 /*
-Jeder Input und jeder Output wird über eine 16bit ID angesprochen und liefert/erwartet einen 16bit-Wert. Inputs und Outputs leben im gleichen Namensraum. 
-Es gibt also keinen Input mit der gleichen ID wie ein Output.
-Die ID 0xFFFF steht für einen Input mit dauerhaft 1 (letzte Bits sind 1 (wie I=input)-1)
-Die ID 0xFFFE steht für einen Input mit dauerhaft 0 (letzte Bits sind 1 (wie I=input)-0)
-Die ID 0xFFFC steht für einen unbeschalteten Output
 
-Die höchsten beiden Bits geben den Bus an
-0b00=interner Input/Output
-0b01=Input/Output an Bus0
-0b10=Input/Output an Bus1
-0b11=Input/Output an Bus2
-
-
-Offsets für interne Inputs/Outputs:
-   STM32: PA0 = 0, PA15=15, PB0=16, PB15=31 etc.
-   ESP32: GPIO-num
-
-Offsets für I2C-Busse.
-Jeder Busmaster verwaltet eine Liste von InOut16-Membern (PCA9555, PCA9685, BME280/680-Membern) max 64 Member, also 1024 InOuts, also 0-1023
-Jeder Busmaster verwaltet eine Liste mit Subbussen(derzeit nur via Ds2482), max 4 Subbusse Jeder Subbus bekommt auch 1024 InOuts, also 1024-2047, 2048-...
-
-Offsets für OneWire-Subbusse mit dem DS2482
-Subbus verwaltet eine Liste (max 96 Einträge) von sensactSE-Devices (ein Device hat 8 InOuts), also 768 InOuts
-Subbus verwaltet eine Lists (max 128 Einträge) von DS2413-Devices (ein Device hat 2 InOuts) also 256 InOuts
 
 
 
@@ -46,16 +23,7 @@ Subbus verwaltet eine Lists (max 128 Einträge) von DS2413-Devices (ein Device h
 //uint8_t const cBusmaster::owsubbusCnt;
 */
 
-cBusmaster::cBusmaster(
-		char const * const name,
-		i2c_port_t i2c_num,
-		gpio_num_t interruptlines[3],
-        std::list<InOut16*> inOuts16,
-        std::list<cOwSubbus*> owsubbus
-        ):name(name), i2c_num(i2c_num), interruptlines(interruptlines), inOuts16(inOuts16), owsubbus(owsubbus)
-{
 
-}
 
 cDS2413Node::cDS2413Node(uint8_t const * const owid):owid(owid), inputs(0){}
 

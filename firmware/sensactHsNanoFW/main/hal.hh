@@ -1,43 +1,62 @@
 #pragma once
-#include "common.hh"
+#include "common_in_project.hh"
+#include "crgb.hh"
 
-//Das HAL soll in der Lage sein, die komplette Hardware incl aller lokalen Busse und der daran angeschlossenen Sensoren und aller Aktoren zu bedienen
-//Möglichst alles soll über die Standard UINT16-Inputs und Outputs abgebildet werden (inbes aller sensoren)
-//Frage: Könnte auch der Lautsprecher und der RotaryEncoder und die RGB-LEDs darüber abgebildet werden? Nein, das streben wir auch gar nicht an
-//HAL ist dreistufig: 
-//  Erste Stufe: Diese Interface-Beschreibung
-//  Zweite Stufe: Implementierung für eine konkrete Handware-Basis, aber noch ohne die Implementierung der SetConfigurationOfThisSpecificNode
-//  Dritte Stufe: Implementierung der SetConfigurationOfThisSpecificNode mit allen KOnfigurationsparametern (inbesondere die Belegung der Busse und Subbusse und der Bestückung optionaler Komponenten)
+/*
+Die HAL leifert einen Low-Level-Zugriff auf
+- Uhrzeiten / Timer
+- GPIOs
+- CAN-Schnittstellen (Senden und empfangen vordefinierter Nachrichtenstrukturen)
+- Ansteuerung der OnBoard-Leds
+- Ansteuerung der Ton-Wiedergabe
 
-class HAL_API{
-    public:
-        virtual ErrorCode SetAmplifierVolume(uint8_t volume0_255)=0;
-        virtual ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t &buf, size_t len)=0;
-        virtual int64_t GetMicrosI64()=0;
-        virtual uint32_t GetMillisU32()=0;
-        virtual int64_t GetMillisI64()=0;
-        virtual void GetTimestamp(char *buf, size_t maxLen);
-        virtual ErrorCode SetOnBoardLED(uint8_t LedIndex, CRGB color)=0;
-	    virtual ErrorCode SetDigitalOutput(InOutId output, uint16_t value)=0;
-	    virtual ErrorCode GetDigitalInput(InOutId input, bool& inputState)=0;
-        virtual ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t& value)=0;
+Leitgedanke: Mit einer entsprechend angepassten HAL muss die ganze Software auch auf einem anderen MIkroprozessor oder gar auf einem Windows-PC laufen können.
+
+*/
+
+
+enum class IOMode:uint8_t
+{
+    INPUT = 0,
+    OUTPUT_OPEN_DRAIN = 1,
+    OUTPUT_PUSH_PULL = 3,
 };
 
-class HAL::public HAL_API{
+
+
+
+
+
+class HAL{
     public:
-        virtual ErrorCode Init()=0;
+        virtual ErrorCode Setup()=0;
         virtual ErrorCode SetConfigurationOfThisSpecificNode()=0;
         virtual bool HasRole(NodeRole role)=0;
         virtual ErrorCode HardwareTest()=0;
-        virtual ErrorCode SensorLoop_ForInternalUseOnly()=0;
-        virtual void GetTimestamp(char *buf, size_t maxLen);
-	    virtual ErrorCode DoEachCycle(Time_t now)=0;
-	    static const char gimmick[];
-	    static const char LicenseString[];
-	    static const char SystemString[];
-	    static const char SUCCESSFUL_STRING[];
-	    static const char NOT_SUCCESSFUL_STRING[];
-	    virtual ErrorCode TryReceiveCANMessage(CANMessage &m)=0;
-	    virtual ErrorCode SendCANMessage(uint32_t id, uint8_t const*const data, uint8_t len)=0;
-        //Hier einige Basisfunktionen zum Handling von i2C etc hinschreiben...
+	    virtual ErrorCode AfterAppLoop() = 0;
+        virtual ErrorCode BeforeAppLoop() = 0;//fixiere die Inputs, leere die CAN-Queue, leere die Console-Queue
+        //virtual s64 GetMicrosS64()=0;
+        virtual tms_t GetMillisS64()=0;
+        virtual ErrorCode SetU16Output(uint16_t pinId, uint16_t state) = 0;
+        ErrorCode SetU16Output(uint16_t pinId, bool state){SetU16Output(pinId, state?ACTIVE:INACTIVE);return ErrorCode::OK;}
+        virtual ErrorCode GetU16Input(InOutId input, u16 &inputState)=0;
+        virtual ErrorCode GetBoolInputs(uint32_t *value) = 0;
+        virtual ErrorCode PrepareColorizeLed(uint8_t index, CRGB color) = 0;
+        virtual ErrorCode PrepareUnColorizeAllLed() = 0;
+        virtual ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value)=0;
+        virtual ErrorCode SetAmplifierVolume(uint8_t volume0_255)=0;
+        /**
+         * @brief 
+         * 
+         * @param volume0_255: Volume=0 means: Do not change current volume
+         * @param buf 
+         * @param len 
+         * @return ErrorCode 
+         */
+        virtual ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t &buf, size_t len)=0;
+        virtual ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t &buf, size_t len)=0;
+        virtual ErrorCode StopSound()=0;
+        virtual ErrorCode TryReceiveCANMessage(CANMessage& m)=0;
+        virtual ErrorCode TrySendCanMessage(uint32_t id, uint8_t const *const data, size_t dataLen, bool distributeLocalAsWell=false)=0;
+        
 };
