@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "main.cc" "nodemaster.cc" "busmaster.cc"
-    INCLUDE_DIRS ""
+    SRCS "model_node.cc" "model_applications.cc" "node_applicationhost.cc" "main.cc"
+    INCLUDE_DIRS "." "generated" "generated/SNSCT_L3_TECH_HS_1"
     EMBED_TXTFILES sciebo.cer
 )

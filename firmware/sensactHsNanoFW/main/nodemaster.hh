@@ -1,57 +1,62 @@
 #pragma once
-#include "common.hh"
+#include "common_in_project.hh"
 #include "busmaster.hh"
 #include "stdint.h"
-#include "stdbool.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include "sdkconfig.h"
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include "can_id_utils.hh"
 #include <chrono>
 #include <vector>
-#include "apps/sensactContext.hh"
-#include "hal.hh"
-#include "node_applicationHost.hh"
-#include "node_gateway.hh"
-#include "node_iohost.hh"
 
-//Frage: Wie kann eine Statusnachricht, die vom ApplicationHost per CAN versendet wird, noch vom Gateway abgefangen werden. Flag "localDistributionToOtherRoles"?
+#include "hal/hal.hh"
+#include "node_applicationhost.hh"
+#include "node_gatewayhost.hh"
+#include "node_iohost.hh"
+#include "interfaces.hh"
+#include "model_node.hh"
+
+#define TAG "NODEMSTR"
+
+/**
+ * @brief 
+ * Nodemaster ist die höchste Instanz. Weiß nichts von Apps! Macht grundlegende Kommunikation und CAN-Messaging. Nodemaster kann ausgehende CAN-Nachrichten an alls RoleRunner spiegeln
+ * 
+ * 
+ * 
+ */
 
 namespace sensact
 {
-	class Nodemaster;
-	class NodemasterRoleRunner{
-		virtual ErrorCode Setup(tms_t now)=0;
-		virtual ErrorCode Loop(tms_t now)=0;
-		virtual ErrorCode OfferMessage(tms_t now, CANMessage* m)=0;
-	}
 
-	enum struct eMqttTopic;
 
-	extern "C" static void NodemasterTask(void *params);
+	extern "C" void NodemasterTask(void *params);
 
-	class Nodemaster
+	class cNodemaster:public iHostContext
 	{
 	private:
 		std::vector<NodeRole> nodeRoles;
-		HAL *const hal;
+		sensact::hal::iHAL *const hal;
 		std::vector<AbstractBusmaster *> busmasters;
-		std::vector<NodemasterRoleRunner*> roleRunners;
-		const char *const mqttTopicNames[];
-		CANMessage rcvMessage;
+		aCANMessageBuilderParser* canMBP;
+		std::vector<iHost*> hosts;
+		iHost* currentRoleRunner{nullptr};
+		tms_t currentNow{0}; //das "jetzt" soll bei einem Aufruf konstant gehalten werden
 
-		ErrorCode PublishNodeEvent(Time_t now, eNodeID sourceNode, eNodeEventType event, uint8_t * payload, uint8_t payloadLength)
+		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t * payload, uint8_t payloadLength)
 		{
-			hal->TrySendCanMessage(CANMessenger::CreateNodeEventMessageId((u8)sourceNode, (u8)event), payload, payloadLength);
-		#ifdef MASTERNODE
-			cMaster::mqtt_publishOnTopic(eMqttTopic::NODE_EVENT, payload, payloadLength, 0, 1);
-		#endif
+			CANMessage m;
+			ErrorCode err=canMBP->BuildNodeEventMessage((u8)sourceNode, (u8)event, payload, payloadLength, m);
+			if(err!=ErrorCode::OK){
+				return err;
+			}
+			return hal->TrySendCanMessage(m);
 		}
 			
 
 	public:
-		Nodemaster(std::vector<NodeRole> nodeRoles, HAL *hal, std::vector<AbstractBusmaster *> busmasters) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters) {
+		cNodemaster(std::vector<NodeRole> nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> busmasters, aCANMessageBuilderParser* canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP) {
 
 		}
 		void RunEternalLoopInTask(void)
@@ -60,55 +65,96 @@ namespace sensact
 			xTaskCreate(NodemasterTask, "NodemasterTask", 4096 * 4, this, 6, taskHandle);
 		}
 
+		void PublishOnMessageBus(CANMessage& m, bool distributeLocally) override{
+			ErrorCode err = hal->TrySendCanMessage(m);
+			if(err!=ErrorCode::OK){
+				LOGE(TAG, "CAN Message couln't be sent out %02X", (int)err);
+			}
+			if(!distributeLocally) return;
+			for(auto& rr:hosts){
+				if(this->currentRoleRunner==rr) continue;
+				rr->OfferMessage(*this, m);
+			}
+		}
+
+		ErrorCode SetU16Output(u16 id, uint16_t value) override{
+			
+			u16 busmasterIndex = id>>14;
+			if(this->busmasters.size()<=busmasterIndex) return ErrorCode::INDEX_OUT_OF_BOUNDS;
+			u16 localIndex = id & 0x3FFF;
+			return this->busmasters[busmasterIndex]->SetOutput(localIndex, value);
+
+		}
+        ErrorCode GetU16Input(u16 id, u16 &value) override{
+			u16 busmasterIndex = id>>14;
+			if(this->busmasters.size()<=busmasterIndex) return ErrorCode::INDEX_OUT_OF_BOUNDS;
+			u16 localIndex = id & 0x3FFF;
+			return this->busmasters[busmasterIndex]->GetInput(localIndex, value);
+		}
+
+		tms_t Now() override{
+			return currentNow;
+		}
+
 		void EternalLoop()
 		{
-			tms_t now = hal->GetMillisS64();
+			this->currentNow = hal->GetMillisS64();
 			hal->Setup();
-			PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
+			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
 			for(auto& role:nodeRoles){
+				iHost * h;
 				switch (role)
 				{
 				case NodeRole::APPLICATION_HOST:
-					roleRunners.push_back(new ApplicationHostRunner());
+					h=new cApplicationHost(hal, this, this->canMBP);
+					hosts.push_back(h);
 					break;
 				case NodeRole::GATEWAY:
-					roleRunners.push_back(new GatewayRunner());
+					hosts.push_back(new cGatewayHost());
 					break;
 				case NodeRole::IO_HOST:
-					roleRunners.push_back(new IoHostRunner());
+					hosts.push_back(new cIoHost());
 					break;
 				default:
 					LOGE(TAG, "NodeRole has no implementation");
 					break;
 				}
 			}
-			for(auto& rr:roleRunners){
-				rr->Setup(this);
+			this->currentNow = hal->GetMillisS64();
+			for(auto& rr:hosts){
+				this->currentRoleRunner=rr;
+				rr->Setup(*this);
 			}
-			PublishNodeEvent(now, MODEL::NodeID, eNodeEventType::NODE_READY, 0, 0);
+			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_READY, 0, 0);
+
+			LOGI(TAG,"All Hosts have been configured. Now, %s is pleased to be at your service.\r\n", sensact::model::node::NodeDescription);
 			
 			while(true){
-				now = = hal->GetMillisS64();
+				currentNow = hal->GetMillisS64();
 				hal->BeforeAppLoop();
 				CANMessage message;
 				while(hal->TryReceiveCANMessage(message)==ErrorCode::OK){
-					for(auto& rr:roleRunners) rr->OfferMessage(this, &message);
+					for(auto& rr:hosts){
+						this->currentRoleRunner=rr;
+						rr->OfferMessage(*this, message);
+					}
 				}
 				// TODO CONSOLEMessage! ->entweder im HAL in CANMessage transformieren oder zweiten TryReceive-Prozess aufsetzen
-				for(auto& rr:roleRunners){
-					rr->Loop(this);
+				for(auto& rr:hosts){
+					this->currentRoleRunner=rr;
+					rr->Loop(*this);
 				}
 				hal->AfterAppLoop();//schreibe die Outputs
 			}
 		}
-
-
-		static void OnCommand(eCommandType command, uint8_t *data, uint8_t dataLenght, Time_t now);
 	};
-	static void NodemasterTask(void *params)
+
+	void NodemasterTask(void *params)
 	{
-		Nodemaster *nm = (Nodemaster *)params;
+		cNodemaster *nm = (cNodemaster *)params;
 		nm->EternalLoop();
 	}
 
 }
+
+#undef TAG

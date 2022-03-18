@@ -192,14 +192,17 @@ namespace Klli.Sensact.Config
             GenerateApplicationIds(mc);
             GenerateNodeIds(mc);
             GenerateApplicationNames(mc);
-            GenerateCmdParse();
-            GenerateCmdSend();
+            GenerateParseCommand();
+            GenerateSendCommandImplementation();
             GenerateCommandTypes(mc);
             GenerateEventTypes(mc);
             GenerateEmptyImplementationForCmdHandler();
-            GenerateCommandDeclarations();
+            GenerateCommandHandlerDeclarations(true);
+            GenerateCommandHandlerDeclarations(false);
+            GenerateSendCommandDeclarations(true);
+            GenerateSendCommandDeclarations(false);
             GenerateHeaderIncludesForApplications(mc);
-            GenerateApplicationInitializers(mc);
+            GenerateNodeSpecificFiles(mc);
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
@@ -222,7 +225,7 @@ namespace Klli.Sensact.Config
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
 
-        protected void GenerateCmdParse()
+        protected void GenerateParseCommand()
         {
             //case eCommandType::SET_SIGNAL: OnSET_SIGNALCommand(ParseUInt16(payload, 0), now); break;
             StringBuilder sb = new StringBuilder();
@@ -233,7 +236,7 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.AppendFormat("\tcase eCommandType::{0}: {1}(", SensactApplication.ExtractCmdName(mi), mi.Name);
+                sb.AppendFormat("\tcase sensact::eCommandType::{0}: app->{1}(", SensactApplication.ExtractCmdName(mi), mi.Name);
                 int offset = 0;
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
@@ -242,11 +245,11 @@ namespace Klli.Sensact.Config
                 }
                 sb.AppendLine("ctx); break;");
             }
-            WriteCommonFile("cmdParse", sb);
-            LOG.LogInformation("Successfully created cmdParse");
+            WriteCommonFile("parseCommand", sb);
+            LOG.LogInformation("Successfully created parseCommand");
         }
 
-        protected void GenerateCmdSend()
+        protected void GenerateSendCommandImplementation()
         {
             StringBuilder sb = new StringBuilder();
             foreach (MethodInfo mi in typeof(SensactApplication).GetMethods())
@@ -256,13 +259,14 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.AppendFormat("\tbool cApplication::Send{0}Command(eApplicationID destinationApp, ", SensactApplication.ExtractCmdName(mi));
+                sb.AppendFormat("\tvoid cApplicationHost::Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(mi));
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
+                    sb.Append(", ");
                     sb.Append(CS2CPPType(pi.ParameterType));
-                    sb.Append(" " + pi.Name + ", ");
+                    sb.Append(" " + pi.Name);
                 }
-                sb.AppendLine("SensactContext *ctx)");
+                sb.AppendLine(")");
                 sb.AppendLine("\t{");
                 sb.AppendLine("\t\tuint8_t buffer[8];");
                 int offset = 0;
@@ -271,11 +275,11 @@ namespace Klli.Sensact.Config
                     sb.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset));
 
                 }
-                sb.AppendFormat("\t\treturn ctx->master->SendCommandToMessageBus(destinationApp, eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset);
+                sb.AppendFormat("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset);
                 sb.AppendLine();
                 sb.AppendLine("\t}");
             }
-            WriteCommonFile("cmdSend", sb);
+            WriteCommonFile("sendCommandImplementation", sb);
             LOG.LogInformation("Successfully created cmdSend");
         }
         protected void GenerateEmptyImplementationForCmdHandler()
@@ -313,7 +317,7 @@ namespace Klli.Sensact.Config
         //	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx);
         //static bool CreateSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, uint8_t buffer, uint8_t* lenght);
 
-        private void GenerateCommandDeclarations()
+        private void GenerateCommandHandlerDeclarations(bool TrueIfVirtualFalseIfOverride)
         {
             StringBuilder sb = new StringBuilder();
             //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, SensactContext *ctx) override;
@@ -324,24 +328,66 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.Append("\tvirtual void " + m.Name + "(");
+                sb.Append("\t");
+                if(TrueIfVirtualFalseIfOverride){
+                    sb.Append("virtual ");
+                }
+                sb.Append("void " + m.Name + "(");
                 foreach (ParameterInfo pi in m.GetParameters())
                 {
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name + ", ");
                 }
                 sb.Append("SensactContext *ctx)");
-                sb.AppendLine(";");
-                sb.AppendFormat("\tstatic bool Send{0}Command(eApplicationID destinationApp, ", SensactApplication.ExtractCmdName(m));
+                 if(TrueIfVirtualFalseIfOverride){
+                    sb.AppendLine(" = 0;");
+                }else{
+                    sb.AppendLine(" override;");
+                }
+            }
+            if(TrueIfVirtualFalseIfOverride){
+                WriteCommonFile("commandHandlerDeclarationsVirtual", sb);
+            }else{
+                WriteCommonFile("commandHandlerDeclarationsOverride", sb);
+            }
+        }
+
+        private void GenerateSendCommandDeclarations(bool TrueIfVirtualFalseIfOverride)
+        {
+            StringBuilder sb = new StringBuilder();
+            //void OnSTOPCommand(uint8_t *payload, uint8_t payloadLength, SensactContext *ctx) override;
+            foreach (MethodInfo m in typeof(SensactApplication).GetMethods())
+            {
+                if (m.GetCustomAttribute<SensactCommandMethod>() == null)
+                {
+                    continue;
+                }
+                sb.Append("\t");
+                if(TrueIfVirtualFalseIfOverride){
+                    sb.Append("virtual ");
+                }
+                sb.AppendFormat("void Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(m));
+               
                 foreach (ParameterInfo pi in m.GetParameters())
                 {
+                    sb.Append(", ");
                     sb.Append(CS2CPPType(pi.ParameterType));
-                    sb.Append(" " + pi.Name + ", ");
+                    sb.Append(" " + pi.Name);
                 }
-                sb.AppendLine("SensactContext *ctx);");
-                sb.AppendLine();
+                if(TrueIfVirtualFalseIfOverride){
+                    sb.AppendLine(")=0;");
+                }else{
+                    sb.AppendLine(") override;");
+                }
+                
             }
-            WriteCommonFile("commandDeclarations", sb);
+
+            if(TrueIfVirtualFalseIfOverride){
+                WriteCommonFile("sendCommandDeclarationsVirtual", sb);
+            }else{
+                WriteCommonFile("sendCommandDeclarationsOverride", sb);
+            }
+            
         }
 
         private StringBuilder HeaderForCommandsOfType(Type t)
@@ -396,22 +442,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (t == typeof(int))
             {
-                ret = "Common::ParseInt32(payload, " + offset + ")";
+                ret = "ParseInt32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(uint))
             {
-                ret = "Common::ParseUInt32(payload, " + offset + ")";
+                ret = "ParseUInt32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(short))
             {
-                ret = "Common::ParseInt16(payload, " + offset + ")";
+                ret = "ParseInt16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(ushort))
             {
-                ret = "Common::ParseUInt16(payload, " + offset + ")";
+                ret = "ParseUInt16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(sbyte))
@@ -436,22 +482,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (pi.ParameterType == typeof(int))
             {
-                ret = "Common::WriteInt32(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteInt32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(uint))
             {
-                ret = "Common::WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(short))
             {
-                ret = "Common::WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(ushort))
             {
-                ret = "Common::WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(sbyte))
@@ -494,51 +540,55 @@ namespace Klli.Sensact.Config
             this.WriteCommonFile("applicationNames", sb);
         }
 
-        internal void GenerateApplicationInitializers(ModelContainer mc)
+        internal void GenerateNodeSpecificFiles(ModelContainer mc)
         {
             foreach (Node node in mc.Model.Nodes)
             {
                 StringBuilder sb = new StringBuilder();
-                //const eNodeID MODEL::NodeID = eNodeID::SNSCT_L0_TECH_HS_1;
-                sb.AFL("const eNodeID MODEL::NodeID = eNodeID::{0};", node.Id);
-                //const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
-                sb.AFL("const char MODEL::NodeDescription[] =\"NodeId {0} created on {1} using model {2}\";", node.Id, DateTime.Now, mc.Model.Name);
+
                 //const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
-                sb.AFL("const eApplicationID MODEL::NodeMasterApplication = eApplicationID::{0};", node.Id);
-                WriteFileInSubdirectory(node.Id, "nodeIdAndDescription", sb);
+                sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.Id);
+                WriteFileInSubdirectory(node.Id, "nodeMasterApplicationId", sb);
                 sb.Clear();
 
-                string[] Glo2LocPointers = new string[mc.NextFreeIndex];
+                //const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
+                sb.AFL("const char* const node::NodeDescription =\"NodeId {0} created on {1} using model {2}\";", node.Id, DateTime.Now, mc.Model.Name);
+                //const eNodeID MODEL::NodeID = eNodeID::SNSCT_L0_TECH_HS_1;
+                sb.AFL("const sensact::eNodeID node::NodeID = sensact::eNodeID::{0};", node.Id);
+                WriteFileInSubdirectory(node.Id, "nodeDescription", sb);
+                sb.Clear();
+
+                string[] Glo2LocCmd = new string[mc.NextFreeIndex];
                 for (int i = 0; i < mc.NextFreeIndex; i++)
                 {
-                    Glo2LocPointers[i] = "    0,";
+                    Glo2LocCmd[i] = "\tnullptr,";
                 }
                 //Static initializers
                 foreach (SensactApplication app in node.Applications)
                 {
                     sb.Append(app.GenerateInitializer(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
-                    Glo2LocPointers[appCont.Index] = "    &" + app.ApplicationId + ",";
+                    Glo2LocCmd[appCont.Index] = "    &" + app.ApplicationId + ",";
                 }
                 WriteFileInSubdirectory(node.Id, "applicationInitializers", sb);
                 sb.Clear();
-                for (int i = 0; i < Glo2LocPointers.Length; i++)
+                for (int i = 0; i < Glo2LocCmd.Length; i++)
                 {
-                    sb.AppendLine(Glo2LocPointers[i]);
+                    sb.AppendLine(Glo2LocCmd[i]);
                 }
-                WriteFileInSubdirectory(node.Id, "glo2LocPointers", sb);
+                WriteFileInSubdirectory(node.Id, "glo2LocCmd", sb);
                 sb.Clear();
                 string[] Glo2LocEvents = new string[mc.NextFreeIndex];
                 for (int i = 0; i < Glo2LocEvents.Length; i++)
                 {
-                    Glo2LocEvents[i] = "    0,";
+                    Glo2LocEvents[i] = "\tnullptr,";
                 }
-                for (int i = 0; i < Glo2LocPointers.Length; i++)
+                for (int i = 0; i < Glo2LocCmd.Length; i++)
                 {
                     sb.AppendLine(Glo2LocEvents[i]);
                 }
 
-                WriteFileInSubdirectory(node.Id, "glo2LocEvents", sb);
+                WriteFileInSubdirectory(node.Id, "glo2LocEvt", sb);
                 sb.Clear();
             }
             LOG.LogInformation("Successfully created all node specific files");

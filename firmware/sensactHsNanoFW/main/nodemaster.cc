@@ -1,11 +1,9 @@
-#include "nodemaster.hh"
-
 #include <esp_log.h>
 #define TAG "NDMSTR"
 
 
 
-namespace sensact {
+
 
 enum struct eMQTTState
 {
@@ -22,7 +20,7 @@ enum struct eMqttTopic
 	APP_STATUS = 2
 };
 
-const char * const cMaster::mqttTopicNames[]={
+const char * const mqttTopicNames[]={
 		"APP_EVENT",
 		"NODE_EVENT",
 		"APP_STATUS",
@@ -35,9 +33,7 @@ const char * const incomingMqttTopicNames[]={
 
 
 
-void Nodemaster::Run(HAL& hal, MODEL& model, MQTTClient& mqtt) {
 
-}
 #ifdef MASTERNODE
 void cMaster::mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
 {

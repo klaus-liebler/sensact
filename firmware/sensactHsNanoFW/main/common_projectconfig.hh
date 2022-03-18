@@ -1,5 +1,9 @@
 #pragma once
-#include "common.hh"
+#include "common_in_project.hh"
 
-
-constexpr CanIdMode CAN_ID_MODE = CanIdMode::OLD;
+namespace sensact::config{
+    constexpr bool USE_NEW_CAN_ID = false;
+    constexpr bool TRACE_COMMANDS = true;
+    constexpr bool TRACE_EVENTS = true;
+    
+}

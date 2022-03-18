@@ -1,5 +1,6 @@
 [Tt]emp/
-firmware/modules/generated/
+generated/
 configware/Klli.Sensact.Config/configgitkey.txt
 firmware_sensactOutdoor/sdkconfig
 firmware_sensactOutdoor/sdkconfig.old
+*-backups/

@@ -18,7 +18,7 @@ namespace Klli.Sensact.Config.Nodes
         {
 
         }
-        public SensactUp02(string appId) : base(appId)
+        public SensactUp02(string appId, int idAsNumber) : base(appId, idAsNumber)
         {
 
         }

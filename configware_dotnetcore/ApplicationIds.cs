@@ -356,7 +356,7 @@
         POWIT_L3_WORK_P1,
         POWIT_L3_WORK_P2,
         PWM___L3_WORK_S,
-        SCLIM_L3_WORK_AIR,
+        SCLIM_L3_WORK_AIR, //Klimaanlage; TODO: Auch für Kinderzimmer
         SWIND_L3_WORK_W1,
         SWIND_L3_WORK_W2,
         VALVE_L3_WORK,
@@ -397,7 +397,7 @@
         SBRGH_LX_ROOF, //Helligkeitssensor
         SPRES_LX_ROOF, //Luftdrucksensor
         SWIND_LX_ROOF, //Windrichtung und -Stärke
-        SANEM_LX_ROOF, //Regelmesser (Anemometer oder so)
+        SRAIN_LX_ROOF, //Regenmesser
         SMOKE_L0_CORR,
         SMOKE_L0_LVNG,
         SMOKE_L1_CORR,

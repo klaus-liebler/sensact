@@ -1,286 +1,74 @@
 #pragma once
 
-#include "nodemaster.hh"
-#include "can_messenger.hh"
+#include "can_message_builder_parser.hh"
+#include "applicationcontext.hh"
+#include "interfaces.hh"
+#include "hal/hal.hh"
 namespace sensact
 {
-    class ApplicationHostRunner : NodemasterRoleRunner, SensactContext
+    class cApplicationHost : public iHost, public SensactContext
     {
     private:
         u8 *statusBuffer{0};
         u16 nextStatusApp{0};
         u16 appCnt{0};
         size_t statusBufferLength{0};
-        HAL *hal;
-        tms_t lastSentCANMessage;
-		tms_t nowForCurrentLoop{0};
-        CANMessenger *messenger;
+        tms_t lastSentCANMessage{0};
+        tms_t nowForCurrentLoop{0};
+        sensact::hal::iHAL *hal;
+        iHostContext *hostCtx;
+        aCANMessageBuilderParser *canMBP;
 
-        void FindNextStatusApp()
-        {
-            do
-            {
-                nextStatusApp++;
-                if (nextStatusApp == (uint16_t)eApplicationID::CNT)
-                {
-                    nextStatusApp = 0;
-                }
-            } while (MODEL::Glo2locCmd[nextStatusApp] == 0);
-        }
-
-        ErrorCode PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, uint8_t * payload, uint8_t payloadLength)
-        {
-            lastSentCANMessage=now;
-            messenger->SendApplicationStatusMessage((u16)sourceApp, (u8)statusType, payload, payloadLength);
-        #ifdef MASTERNODE
-            uint8_t buf[11];
-            Common::WriteInt16((u16)sourceApp, buf, 0);
-            buf[2]=(u8)statusType;
-            for(int i=0;i<payloadLength;i++)
-            {
-                buf[i+3]=payload[i];
-            }
-            cMaster::mqtt_publishOnTopic(eMqttTopic::APP_STATUS, buf, 3+payloadLength, 0, 1);
-        #endif
-        }
-
-        
+        void FindNextStatusApp();
+        ErrorCode PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, uint8_t *payload, uint8_t payloadLength);
+        void SendApplicationCommandToMessageBus(eApplicationID destinationApp, eCommandType command, uint8_t *payload, uint8_t payloadLength);
+        ErrorCode OnApplicationCommand(cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength);
 
     public:
-        ApplicationHostRunner(HAL *hal) : hal(hal)
-        {
-            messenger=new CANMessenger(hal);
-        }
-
-        ErrorCode SetAmplifierVolume(uint8_t volume0_255) override
-        {
-            return hal->SetAmplifierVolume(volume0_255);
-        }
-        ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t &buf, size_t len) override
-        {
-            return hat - PlayMP3(volume0_255, buf, len);
-        }
-        ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t &buf, size_t len) override
-        {
-            return hat - PlayRTTTL(volume0_255, buf, len);
-        }
-        virtual ErrorCode StopSound() override
-        {
-            hal->StopSound();
-        }
-        tms_t GetNowMsS64() override
-        {
-            return nowForCurrentLoop;
-        }
-        void GetTimestamp(char *buf, size_t maxLen) override
-        {
-            return;
-        }
-        ErrorCode ColorizeLed(uint8_t index, CRGB color) override
-        {
-            return hal->PrepareColorizeLed(index, color);
-        }
-        ErrorCode UnColorizeAllLed() override
-        {
-            return hal->PrepareUnColorizeAllLed();
-        }
-
-        ErrorCode SetU16Output(InOutId pinId, u16 value) override
-        {
-            // TODO: Forward to correct busmaster
-            return hal->SetU16Output(pinId, value);
-        }
-        // TODO : virtual ErrorCode GetBoolInputs(InOutId pinId_last5bitsAreNotCosidered, uint32_t &value) = 0;
-        ErrorCode GetU16Input(InOutId input, u16 &inputState) override
-        {
-            // TODO: Forward to correct busmaster
-            return hal->GetU16Input(input, inputState);
-        }
-        ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value) override
-        {
-            return hal->GetRotaryEncoderValue(re, value);
-        }
-
-
-
-        ErrorCode PostEventFiltered(const eApplicationID sourceApp, const eEventType evt, std::vector<eEventType> localEvts, std::vector<eEventType> busEvts, uint8_t * payload, uint8_t payloadLength)
-        {
-            for(auto& test:localEvents)
-            {
-                if(evt==test)
-                {
-                    cApplication *app = MODEL::Glo2locEvt[(uint16_t)sourceApp];
-                    if (app != NULL) {
-                        app->OnEvent(sourceApp, evt, payload, payloadLength);
-                    }
-                    break;
-                }
-            }
-            for(auto& test:busEvents)
-            {
-                if(evt==test)
-                {
-                    PostEvent(sourceApp, evt, payload, payloadLength);
-                    break;
-                }
-            }
-
-        }
-
-        ErrorCode PostCommand(eApplicationID destinationApp, eCommandType cmd, const uint8_t *const payload, uint8_t payloadLength)
-        {
-            if (destinationApp == eApplicationID::NO_APPLICATION)
-            {
-                return ErrorCode::OK;
-            }
-            if ((uint16_t)destinationApp >= (uint16_t)eApplicationID::CNT)
-            {
-                LOGE(TAG, "Trying to send to an invalid application id %i", (uint16_t)destinationApp);
-                return ErrorCode::INVALID_APPLICATION_ID;
-            }
-
-            cApplication *const app = MODEL::Glo2locCmd[(uint16_t)destinationApp];
-            if (app != NULL)
-            {
-                // only in this case, the message can be processed local; no need to send it to the CAN bus
-                app->OnCommand(cmd, payload, payloadLength, now);
-                return ErrorCode::OK;
-            }
-            lastSentCANMessage = now;
-            return messenger->SendCommandMessage((u16)destinationApp, (u8)cmd, payload, payloadLength)
-        }
-
-        ErrorCode PostEvent(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength)
-        {
-	        lastSentCANMessage=now;
-            messenger->SendEventMessage((u16)sourceApp, (u8)event, payload, payloadLength);
-            #ifdef MASTERNODE
-                uint8_t buf[11];
-                Common::WriteInt16((u16)sourceApp, buf, 0);
-                buf[2]=(u8)event;
-                for(int i=0;i<payloadLength;i++)
-                {
-                    buf[i+3]=payload[i];
-                }
-                cMaster::mqtt_publishOnTopic(eMqttTopic::APP_EVENT, buf, 3+payloadLength, 0, 1);
-            #endif
-        }
-        
-        ErrorCode Setup(s64 now) override
-        {
-            // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project
-            for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
-            {
-                cApplication *const app = MODEL::Glo2locCmd[appId];
-                if (!app)
-                    continue;
-                appResult = app->Setup(this);
-                if ((uint8_t)appResult < (uint8_t)eAppCallResult::ERROR_GENERIC)
-                {
-                    LOGI(TAG, "App %s successfully configured", MODEL::ApplicationNames[appId]);
-                }
-                else
-                {
-                    LOGE(TAG, "Error while configuring App %s. Error is %u", MODEL::ApplicationNames[appId], appResult);
-                }
-                statusBuffer = malloc(8); // only for one single Application
-                statusBuffer[0] = (uint8_t)appResult;
-                PublishApplicationStatus(now, (eApplicationID)appId, eApplicationStatus::STARTED, statusBuffer, 8);
-                appCnt++;
-            }
-            FindNextStatusApp();
-            LOGI("%u local applications have been configured. Now, %s is pleased to be at your service.\r\n", appCnt, MODEL::ModelString);
-        }
-
-        ErrorCode OfferMessage(CANMessage *rcvMessage) {
-
-            uint16_t appId;
-            uint8_t commandId;
-            uint8_t eventId;
-            Time_t now = BSP::GetSteadyClock();
-            cApplication *app;
-            eCanMessageType type = CANMessenger::ParseCanMessageType(rcvMessage.Id);
-            switch(type)
-            {
-            case eCanMessageType::ApplicationCommand:
-                if(MODEL::TRACE_COMMANDS) CANMessenger::TraceCommandMessage(rcvMessage);
-                CANMessenger::ParseCommandMessageId(rcvMessage.Id, &appId, &commandId, rcvMessage.Data[0]);
-                if(appId >= (uint32_t)eApplicationID::CNT)
-                {
-                    LOGE(TAG, "Received ApplicationCommand. Unknown target applicationID %i", appId);
-                    return ErrorCode::INVALID_APPLICATION_ID;
-                }
-                app = MODEL::Glo2locCmd[appId];
-                if (app != NULL) {
- #ifdef NEW_CANID
-                    app->OnCommand((eCommandType)commandId, rcvMessage.Data, rcvMessage.Length);
-#else
-                    app->OnCommand((eCommandType)commandId, &rcvMessage.Data[1], rcvMessage.Length-1);
-#endif
-                }
-                return ErrorCode::OK;
-            case eCanMessageType::ApplicationEvent:
-                if(MODEL::TRACE_EVENTS) CANMessenger::TraceEventMessage(rcvMessage);
-                cCanIdUtils::ParseEventMessageId(rcvMessage.Id, &appId, &commandOrEventId);
-                if(appId >= (uint32_t)eApplicationID::CNT)
-                {
-                    LOGE(TAG, "Received ApplicationEvent. Unknown source applicationID %i", appId);
-                    return;
-                }
-                app = MODEL::Glo2locEvt[appId];
-                if (app != NULL) {
-                    app->OnEvent((eApplicationID) appId, (eEventType)commandOrEventId,  rcvMessage.Data, rcvMessage.Length);
-                }
-                return ErrorCode::OK;
-            default: 
-                return ErrorCode::OK_BUT_NOT_NEEDED;
-            }
-        }
-
-
-        
-        ErrorCode Loop(s64 now) override
-        {
-            this->nowForLoop=now;
-            for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
-            {
-                cApplication *const app = MODEL::Glo2locCmd[appId];
-                if (!app)
-                    continue;
-                eAppCallResult appResult = app->Loop(this);
-                if ((uint8_t)appResult >= (uint8_t)eAppCallResult::ERROR_GENERIC) // means: no severe error
-                {
-                    PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::ERROR_ON_CYCLIC, statusBuffer, 8);
-                    continue;
-                }
-                if (appResult != eAppCallResult::OK && statusBufferLength > 0) // TODO: Weshalb muss statusBufferLength (auch 5 Zeilen drunter) geprüft werden. Wenn es etwas interessantes gibt, dann muss das doch veröffentlicht werden, auch wenn es keinen Payload gibt!
-                {
-                    // Something interesting happened -->inform everybody!
-                    PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
-                }
-                if (now - lastSentCANMessage > 1000 && appId == nextStatusApp)
-                {
-                    if (statusBufferLength > 0)
-                    {
-                        PublishApplicationStatus( (eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
-                    }
-                    FindNextStatusApp();
-                }
-            }
-
-            // Reset heartbeat buffer;
-            for (uint8_t i = 0; i < COUNTOF(heartbeatBuffer); i++)
-            {
-                if (heartbeatBuffer[i] == eApplicationID::NO_APPLICATION)
-                    break;
-                LOGD("Flushing heartbeat buffer with target %s", cApplication::N4I((uint32_t const)heartbeatBuffer[i]));
-                cApplication::SendHEARTBEATCommand(heartbeatBuffer[i], (uint32_t)MODEL::NodeMasterApplication, now);
-                heartbeatBuffer[i] = eApplicationID::NO_APPLICATION;
-            }
-            while (BSP::GetSteadyClock() - now < 20)
-            {
-                CanBusProcess();
-            }
-        }
-    }
+        cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP);
+        ErrorCode Setup(iHostContext &ctx) override;
+        ErrorCode Loop(iHostContext &ctx) override;
+        ErrorCode OfferMessage(iHostContext &ctx, CANMessage &m) override;
+        tms_t Now() override;
+        void SetU16Output(InOutId id, u16 value) override;
+        void GetU16Input(InOutId id, u16 &value) override;
+        void SetRGBLed(uint8_t index, CRGB color) override;
+        void UnColorizeAllRGBLed() override;
+        void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value) override;
+        void SetAmplifierVolume(uint8_t volume0_255) override;
+        void PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override;
+        void StopSound() override;
+        //#include <common/sendCommandDeclarationsOverride.inc> TODO einkommentieren
+        void SendTOGGLECommand(sensact::eApplicationID destinationApp) override;
+        void SendTOGGLE_SPECIALCommand(sensact::eApplicationID destinationApp) override;
+        void SendONCommand(sensact::eApplicationID destinationApp, uint32_t autoReturnToOffMsecs) override;
+        void SendOFFCommand(sensact::eApplicationID destinationApp, uint32_t autoReturnToOnMsecs) override;
+        void SendNOPCommand(sensact::eApplicationID destinationApp) override;
+        void SendRESETCommand(sensact::eApplicationID destinationApp) override;
+        void SendSTART_IAPCommand(sensact::eApplicationID destinationApp) override;
+        void SendSTARTCommand(sensact::eApplicationID destinationApp) override;
+        void SendSTOPCommand(sensact::eApplicationID destinationApp) override;
+        void SendUPCommand(sensact::eApplicationID destinationApp, uint8_t forced) override;
+        void SendDOWNCommand(sensact::eApplicationID destinationApp, uint8_t forced) override;
+        void SendFORWARDCommand(sensact::eApplicationID destinationApp) override;
+        void SendBACKWARDCommand(sensact::eApplicationID destinationApp) override;
+        void SendLEFTCommand(sensact::eApplicationID destinationApp) override;
+        void SendRIGHTCommand(sensact::eApplicationID destinationApp) override;
+        void SendON_FILTERCommand(sensact::eApplicationID destinationApp, uint16_t targetApplicationId, uint32_t autoReturnToOffMsecs) override;
+        void SendTOGGLE_FILTERCommand(sensact::eApplicationID destinationApp, uint16_t targetApplicationId) override;
+        void SendSET_PARAMCommand(sensact::eApplicationID destinationApp) override;
+        void SendSET_HORIZONTAL_TARGETCommand(sensact::eApplicationID destinationApp, uint16_t target) override;
+        void SendSTEP_HORIZONTALCommand(sensact::eApplicationID destinationApp, int16_t step) override;
+        void SendSET_VERTICAL_TARGETCommand(sensact::eApplicationID destinationApp, uint16_t target) override;
+        void SendSTEP_VERTICALCommand(sensact::eApplicationID destinationApp, int16_t step) override;
+        void SendSET_LATERAL_TARGETCommand(sensact::eApplicationID destinationApp, uint16_t target) override;
+        void SendSTEP_LATERALCommand(sensact::eApplicationID destinationApp, int16_t step) override;
+        void SendHEARTBEATCommand(sensact::eApplicationID destinationApp, uint32_t sender) override;
+        void SendSEND_STATUSCommand(sensact::eApplicationID destinationApp) override;
+        void SendSET_RGBWCommand(sensact::eApplicationID destinationApp, uint8_t R, uint8_t G, uint8_t B, uint8_t W) override;
+        void SendSET_SIGNALCommand(sensact::eApplicationID destinationApp, uint16_t signal) override;
+        void SendPINGCommand(sensact::eApplicationID destinationApp, uint32_t payload) override;
+        void SendDEMOCommand(sensact::eApplicationID destinationApp, uint32_t demostep) override;
+        void SendSET_PWMCommand(sensact::eApplicationID destinationApp, uint32_t bitmask, uint16_t value) override;
+    };
 }

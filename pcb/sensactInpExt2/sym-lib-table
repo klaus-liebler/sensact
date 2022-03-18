@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name sensactInpExt-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactInpExt-rescue.lib)(options "")(descr ""))
-)
