@@ -11,7 +11,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("SNSCT" + REGEX_FLOOR_ROOM_SUFFIX);
+                return FLOOR_ROOM_Regex("SNSCT");
             }
         }
 

@@ -16,19 +16,19 @@ namespace Klli.Sensact.Config
             });
         }
 
-        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, int OpenCloseTimeInSeconds, ushort OutputResourcePower, ushort OutputResourceDirection, RelayMode relMode)
+        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, int OpenCloseTimeInSeconds, ushort OutputResourcePower, ushort OutputResourceDirection, RelayInterlockMode relMode)
         {
             list.Add(new BlindApplication { ApplicationId = appId.ToString(), OpenCloseTimeInSeconds= OpenCloseTimeInSeconds, OutputResourceUpOrPower=OutputResourcePower, OutputResourceDownOrDirection=OutputResourceDirection, RelayMode=relMode });
         }
 
         public static void AddPWMApplication(this List<SensactApplication> list, ApplicationId appId, ApplicationId standbyController, List<ushort> outputResources, int AutoOffIntervalMsecs= 0, int minimalOnLevel=DEFAULT_MIN_DIM_LEVEL)
         {
-            list.Add(new PWMApplication() { ApplicationId = appId.ToString(), MinimalOnLevel = minimalOnLevel, StandbyController = standbyController.ToString(), OutputRessources = outputResources, AutoOffIntervalMsecs= AutoOffIntervalMsecs });
+            list.Add(new SinglePWMApplication() { ApplicationId = appId.ToString(), MinimalOnLevel = minimalOnLevel, StandbyController = standbyController.ToString(), OutputRessources = outputResources, AutoOffIntervalMsecs= AutoOffIntervalMsecs });
         }
 
         public static void AddToggleButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
-            list.Add(new PushButtonXApplication()
+            list.Add(new PushButtonSingleApplication()
             {
                 ApplicationId = appId.ToString(),
                 InputRessource = inputRessource,
@@ -45,7 +45,7 @@ namespace Klli.Sensact.Config
 
         public static void AddOnIfDarkButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
-            list.Add(new PushButtonXApplication()
+            list.Add(new PushButtonSingleApplication()
             {
                 ApplicationId = appId.ToString(),
                 InputRessource = inputRessource,
@@ -61,14 +61,14 @@ namespace Klli.Sensact.Config
         }
 
 
-        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, ushort outputRessource, uint autoOffIntervalMsecs = 0, uint autoOnIntervalMsecs = 0)
+        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, ushort outputRessource, PowerState initialPowerState, uint autoOffIntervalMsecs = 0)
         {
-            list.Add(new PoweritemApplication()
+            list.Add(new OnOffApplication()
             {
                 ApplicationId = appId.ToString(),
                 OutputRessource = outputRessource,
+                InitialPowerState = initialPowerState,
                 AutoOffIntervalMsecs= autoOffIntervalMsecs,
-                AutoOnIntervalMsecs= autoOnIntervalMsecs
             });
         }
 
@@ -107,9 +107,9 @@ namespace Klli.Sensact.Config
         }
         
 
-        public static PushButtonXApplication BuildOnePushbuttonDimmer(ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
+        public static PushButtonSingleApplication BuildOnePushbuttonDimmer(ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
-            return new PushButtonXApplication()
+            return new PushButtonSingleApplication()
             {
                 ApplicationId = appId.ToString(),
                 InputRessource = inputRessource,
@@ -153,7 +153,7 @@ namespace Klli.Sensact.Config
 
         public static void AddTwoDimButtons(this List<SensactApplication> list, ApplicationId appIdUp, ApplicationId appIdDown, ushort inputPinUp, ushort inputPinDown, ApplicationId targetAppId)
         {
-            PushButtonXApplication up = new PushButtonXApplication
+            PushButtonSingleApplication up = new PushButtonSingleApplication
             {
                 ApplicationId = appIdUp.ToString(),
                 InputRessource = inputPinUp,
@@ -183,7 +183,7 @@ namespace Klli.Sensact.Config
                     },
                 },
             };
-            PushButtonXApplication down = new PushButtonXApplication
+            PushButtonSingleApplication down = new PushButtonSingleApplication
             {
                 ApplicationId = appIdDown.ToString(),
                 InputRessource = inputPinDown,
@@ -224,7 +224,7 @@ namespace Klli.Sensact.Config
 
         public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, string appIdDown, ushort inputPinUp, ushort inputPinDown, string targetAppId)
         {
-            PushButtonXApplication up = new PushButtonXApplication
+            PushButtonSingleApplication up = new PushButtonSingleApplication
             {
                 ApplicationId = appIdUp,
                 InputRessource = inputPinUp,
@@ -256,7 +256,7 @@ namespace Klli.Sensact.Config
                     },
                 },
             };
-            PushButtonXApplication down = new PushButtonXApplication
+            PushButtonSingleApplication down = new PushButtonSingleApplication
             {
                 ApplicationId = appIdDown,
                 InputRessource = inputPinDown,

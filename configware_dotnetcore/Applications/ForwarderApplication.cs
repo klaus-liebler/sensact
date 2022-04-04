@@ -108,7 +108,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("FRWRD"+REGEX_FLOOR_ROOM_SUFFIX);
+                return FLOOR_ROOM_Regex("FRWRD");
             }
         }
     }

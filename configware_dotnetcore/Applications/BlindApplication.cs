@@ -8,12 +8,14 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BlindApplication : ActorApplication
     {
-        public ushort OutputResourceUpOrPower;
-        public ushort OutputResourceDownOrDirection;
-        public RelayMode RelayMode;
+        public ushort OutputResource1;
+        public ushort OutputResource2;
+        public RelayInterlockMode RelayMode;
         public List<Event> FullyCloseEvents;
         public List<Event> FullyOpenEvents;
-        public long OpenCloseTimeInSeconds;
+        public long UpTimeInSeconds;
+        public long DownTimeInSeconds;
+        
 
         [SensactCommandMethod]
         public override void OnUPCommand(byte forced)
@@ -32,6 +34,12 @@ namespace Klli.Sensact.Config.Applications
         {
 
         }
+        
+        [SensactCommandMethod]
+        public override void OnSET_VERTICAL_TARGETCommand(ushort target)
+        {
+            
+        }
 
         public override HashSet<EventType> ICanSendTheseEvents()
         {
@@ -40,17 +48,17 @@ namespace Klli.Sensact.Config.Applications
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedOutputPins.Contains(OutputResourceDownOrDirection.ToString()))
+            if (usedOutputPins.Contains(OutputResource1.ToString()))
             {
-                return "OutputRessourceDown";
+                return "OutputResource1";
             }
-            if (usedOutputPins.Contains(OutputResourceUpOrPower.ToString()))
+            if (usedOutputPins.Contains(OutputResource2.ToString()))
             {
-                return "OutputRessourceUpOrPower";
+                return "OutputResource2";
             }
 
-            usedOutputPins.Add(OutputResourceDownOrDirection.ToString());
-            usedOutputPins.Add(OutputResourceUpOrPower.ToString());
+            usedOutputPins.Add(OutputResource1.ToString());
+            usedOutputPins.Add(OutputResource2.ToString());
             return null;
         }
 
@@ -62,7 +70,7 @@ namespace Klli.Sensact.Config.Applications
             }
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Blind {0}"+Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensactapps::cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayMode::{3}, {4});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputResourceUpOrPower, OutputResourceDownOrDirection, RelayMode, OpenCloseTimeInSeconds);
+            sb.AppendFormat("sensact::apps::cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayInterlockMode::{3}, {4}, {5});"+Environment.NewLine+Environment.NewLine, ApplicationId, OutputResource1, OutputResource2, RelayMode, UpTimeInSeconds*1000, DownTimeInSeconds*1000);
             return sb.ToString();
         }
 
@@ -70,7 +78,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("BLIND"+REGEX_FLOOR_ROOM_SUFFIX);
+                return FLOOR_ROOM_Regex("BLIND");
             }
         }
     }

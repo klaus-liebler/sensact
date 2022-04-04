@@ -31,10 +31,10 @@ namespace sensact
         PRESSED = 1
     };
     
-    enum class ePowerState : uint8_t
+    enum class ePowerState : uint16_t
     {
         INACTIVE = 0,
-        ACTIVE = 1
+        ACTIVE = 0xFFFF,
     };
 
     enum class eDirection : uint8_t
@@ -138,8 +138,12 @@ namespace sensact::magic
     constexpr InOutId INPUT1 = 0x3FFF;      // steht für einen Input mit dauerhaft 1 (letzte Bits sind 1 (wie I=input)-1)
     constexpr InOutId INPUT0 = 0x3FFE;      // steht für einen Input mit dauerhaft 0 (letzte Bits sind 1 (wie I=input)-0)
     constexpr InOutId OUTPUT_NULL = 0x3FFC; // steht für einen unbeschalteten Output
-    constexpr time_t SHORT_PRESS = 400;
-    constexpr time_t LONG_PRESS = 4000;
+    constexpr tms_t SHORT_PRESS = 400;
+    constexpr tms_t DOUBLE_PRESS = 600;
+    constexpr tms_t HEARTBEAT_STANDBY_SENDER{5555};
+    constexpr tms_t HEARTBEAT_STANDBY_RECEIVER{30000};
+    constexpr tms_t TIME_MAX = INT64_MAX;
+    
     constexpr uint16_t ACTIVE = UINT16_MAX;
     constexpr uint16_t INACTIVE = 0;
 }

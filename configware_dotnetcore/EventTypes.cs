@@ -20,5 +20,6 @@
         ALARM,
         WARN,
         IAP_READY,
+        DOUBLE_CLICKED,
     }
 }

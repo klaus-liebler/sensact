@@ -75,9 +75,9 @@ namespace Klli.Sensact.Config.Nodes
         [XmlArrayItem(typeof(BlindApplication))]
         [XmlArrayItem(typeof(BrightnessSensorApplication))]
         [XmlArrayItem(typeof(SoundApplication))]
-        [XmlArrayItem(typeof(PoweritemApplication))]
-        [XmlArrayItem(typeof(PushButtonXApplication))]
-        [XmlArrayItem(typeof(PWMApplication))]
+        [XmlArrayItem(typeof(OnOffApplication))]
+        [XmlArrayItem(typeof(PushButtonSingleApplication))]
+        [XmlArrayItem(typeof(SinglePWMApplication))]
         [XmlArrayItem(typeof(RgbwApplication))]
         [XmlArrayItem(typeof(RotaryEncoderApplication))]
         [XmlArrayItem(typeof(StandbyControllerApplication))]
@@ -105,10 +105,21 @@ namespace Klli.Sensact.Config.Nodes
         public string ApplicationId;
     }
 
-    public enum RelayMode
+    public enum RelayInterlockMode
     {
-        TWO_PHASES = 0, INTERLOCKED_ACTIVE_DOWN = 1, INTERLOCKED_ACTIVE_UP=2
-    }
+        R1_UP__R2_DOWN = 0,
+        R1_DOWN__R2_UP = 1,
+        R1_POWER__R2_UP = 2,
+        R1_POWER__R2_DOWN = 3,
+        R1_UP__R2_POWER = 4,
+        R1_DOWN__R2_POWER = 5,
+
+    };
+
+    public enum PowerState{
+        INACTIVE = 0,
+        ACTIVE = 0xFFFF,
+    };
 
 
 }

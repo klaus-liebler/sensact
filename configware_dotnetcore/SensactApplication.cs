@@ -18,8 +18,11 @@ namespace Klli.Sensact.Config
     }
     public abstract class SensactApplication
     {
-        public const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
+        private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
 
+        public Regex FLOOR_ROOM_Regex(string prefix){
+            return new Regex("^"+prefix+REGEX_FLOOR_ROOM_SUFFIX+"$");
+        }
         public string ApplicationId;
         
 
@@ -175,24 +178,15 @@ namespace Klli.Sensact.Config
             return payloads.ToString();
         }
 
-        protected string ResourcesInitializer(string collectionName, ICollection<ushort> cmds, ModelContainer m)
+        protected string VectorOfInOutIds(ICollection<ushort> cmds, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("uint16_t {0}{1}_{2}", (cmds == null || cmds.Count == 0) ? "*" : "", ApplicationId, collectionName);
-            if (cmds != null && cmds.Count > 0)
+            sb.Append("{");
+            foreach (ushort cmd in cmds)
             {
-                sb.Append("[" + cmds.Count + "]={");
-                foreach (ushort cmd in cmds)
-                {
-                    sb.Append(Convert.ToString(cmd) + ",");
-                }
-                sb.Append("}");
+                sb.Append(Convert.ToString(cmd) + ",");
             }
-            else
-            {
-                sb.Append("=0");
-            }
-            sb.AppendLine(";");
+            sb.Append("}");
             return sb.ToString();
         }
 
@@ -316,9 +310,6 @@ namespace Klli.Sensact.Config
         public byte[] Payload;
     }
 
-    
-
-    //Jede Application kann Commands bei internen Events versenden und auf externe Events reagieren
 
     public abstract class SensorApplication:SensactApplication
     {
@@ -335,16 +326,4 @@ namespace Klli.Sensact.Config
     {
         // . . .
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

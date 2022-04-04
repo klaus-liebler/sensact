@@ -1,58 +1,91 @@
 #include <algorithm> // std::max
-#include "aOnOff.hh"
+#include "onoff.hh"
+#include "model_applications.hh"
 #define TAG "ONOFF"
-using namespace sensact::comm;
 
-namespace sensactapps
+
+namespace sensact::apps
 {
 
-	cOnOff::cOnOff(eApplicationId id, InOutId relay, eOnOffState initialState, uint32_t autoOffMsecs) : cApplication(id), relay(relay), autoOffMsecs(autoOffMsecs), state(initialState), lastHeartbeat(INT64_MIN), triggered(false)
+	cOnOff::cOnOff(eApplicationID id, InOutId relay, ePowerState initialState, tms_t autoOffMsecs) : cApplication(id), relay(relay), autoOffCfg(autoOffMsecs), 
+		autoOffCalc(initialState==ePowerState::INACTIVE?0:autoOffMsecs==0?sensact::magic::TIME_MAX:0)//wenn initialState=Aus, dann aus. wenn initialState=An und das automatische Ausschalten deaktiviert ist, dann erst in ferner Zukunft ausschalten. Ansonsten direkt ausschalten (Annahme: das Anschalten lag in ferner Vergangenheit)
 	{
 	}
 
-	ErrorCode cOnOff::Setup(SensactContext *ctx)
+	eAppType cOnOff::GetAppType()
 	{
-		return ctx->io->SetU16Output(this->relay, INACTIVE);
+		return eAppType::POWIT;
 	}
 
-	ErrorCode cOnOff::Loop(SensactContext *ctx)
+	eAppCallResult cOnOff::Setup(SensactContext *ctx)
 	{
-		if (triggered)
-		{
-			lastHeartbeat = ctx->now;
-			triggered = false;
-		}
-		if (this->state == eOnOffState_MANUAL_ON)
-		{
-			ctx->io->SetU16Output(relay, ACTIVE);
-			return ErrorCode::OK;
-		}
-		if (this->state == eOnOffState_MANUAL_OFF)
-		{
-			ctx->io->SetU16Output(relay, INACTIVE);
-			return ErrorCode::OK;
-		}
-		if (ctx->now - lastHeartbeat > autoOffMsecs && this->state == eOnOffState_AUTO_ON)
-		{
-			ctx->io->SetU16Output(relay, INACTIVE);
-			this->state = eOnOffState_AUTO_OFF;
-		}
-		else if (ctx->now - lastHeartbeat <= autoOffMsecs && this->state == eOnOffState_AUTO_OFF)
-		{
-			ctx->io->SetU16Output(relay, ACTIVE);
-			this->state = eOnOffState_AUTO_ON;
-		}
-		return ErrorCode::OK;
+		ctx->SetU16Output(this->relay, sensact::magic::INACTIVE);
+		return eAppCallResult::OK;
 	}
 
-	ErrorCode cOnOff::FillStatus(flatbuffers::FlatBufferBuilder *builder, std::vector<flatbuffers::Offset<tStateWrapper>> *status_vector)
+	void cOnOff::OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
 	{
-		auto onOffState = CreatetOnOffState(*builder, this->state);
-		auto state = CreatetStateWrapper(*builder, this->id, uState::uState_tOnOffState, onOffState.Union());
-		status_vector->push_back(state);
-		return ErrorCode::OK;
+		if(autoReturnToOffMsecs!=0){
+			this->autoOffCalc=ctx->Now()+autoReturnToOffMsecs;
+		}
+		else if(autoOffCfg!=0){
+			this->autoOffCalc=ctx->Now()+autoOffCfg;
+		}
+		LOGI(TAG, "%s OnONCommand called", N());
 	}
 
+	void cOnOff::OnOFFCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	{
+		this->autoOffCalc=0;
+		LOGI(TAG, "%s OnOFFCommand called", N());
+	}
+
+	void cOnOff::OnHEARTBEATCommand(uint32_t sender, SensactContext *ctx)
+	{
+
+		if(autoOffCfg==0){
+			this->autoOffCalc=ctx->Now()+sensact::magic::HEARTBEAT_STANDBY_RECEIVER;
+		}
+		else{
+			this->autoOffCalc=ctx->Now()+autoOffCfg;
+		}
+		LOGI(TAG, "%s OnHEARTBEATCommand called ", N());
+	}
+
+	void cOnOff::OnTOGGLE_SPECIALCommand(SensactContext *ctx)
+	{
+		this->OnTOGGLECommand(ctx);
+	}
+
+	void cOnOff::OnTOGGLECommand(SensactContext *ctx)
+	{
+		if(this->autoOffCalc >ctx->Now()){
+			this->autoOffCalc=0;
+		}
+		else if(autoOffCfg==0){
+			this->autoOffCalc=sensact::magic::TIME_MAX;
+		}
+		else{
+			this->autoOffCalc=ctx->Now()+autoOffCfg;
+		}
+		LOGI(TAG, "%s OnTOGGLECommand called ", N());
+	}
+
+	eAppCallResult cOnOff::Loop(SensactContext *ctx)
+	{
+		if (autoOffCalc < ctx->Now())
+		{
+			ctx->SetU16Output(relay, sensact::magic::INACTIVE);
+		}else{
+			ctx->SetU16Output(relay, sensact::magic::ACTIVE);
+		}
+		return eAppCallResult::OK;
+	}
+
+
+
+
+/*
 	ErrorCode cOnOff::ProcessCommand(const tCommand *msg)
 	{
 		if (msg->command_type() != uCommand::uCommand_tOnOffCommand)
@@ -82,15 +115,6 @@ namespace sensactapps
 			return ErrorCode::INVALID_COMMAND;
 		}
 		return ErrorCode::OK;
-	}S
-	cOnOff *cOnOff::Build(uint32_t const id, const tConfigWrapper *cfg)
-	{
-		if (cfg->config_type() != uConfig::uConfig_tOnOffConfig)
-		{
-			return nullptr;
-		}
-		LOGI(TAG, "Build uConfig_tOnOffConfig for id %d", id);
-		auto x = cfg->config_as_tOnOffConfig();
-		return new cOnOff(id, x->relay(), x->initialState(), x->autoOffMsecs());
 	}
+	*/
 }

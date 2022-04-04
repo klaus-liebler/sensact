@@ -20,6 +20,10 @@
 		},
 		{
 			"path": "..\\..\\..\\espidf-components\\common"
+		},
+		{
+			"name": "esp32arduino-fusb302",
+			"path": "..\\..\\..\\esp32arduino-fusb302"
 		}
 	],
 	"settings": {

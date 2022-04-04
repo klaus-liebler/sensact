@@ -21,6 +21,7 @@ namespace sensact
         eApplicationID const id;
         #include <common/commandHandlerDeclarationsVirtual.inc>
         cApplication(eApplicationID id) : id(id) {}
+        virtual eAppType GetAppType()=0;
         virtual eAppCallResult Setup(SensactContext *ctx) = 0;
         virtual eAppCallResult Loop(SensactContext *ctx) = 0;
         //virtual eAppCallResult FillStatus(flatbuffers::FlatBufferBuilder *builder, std::vector<flatbuffers::Offset<tStateWrapper>> *status_vector) = 0;

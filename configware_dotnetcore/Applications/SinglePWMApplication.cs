@@ -6,19 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config.Applications
 {
-    public class PWMApplication : ActorApplication
+    public class SinglePWMApplication : ActorApplication
     {
         public List<ushort> OutputRessources;
         public int MinimalOnLevel;
         public int InitialStoredTargetLevel;
         public bool LowMeansLampOn;
-        public string StandbyController = "NO_APPLICATION";
         public int AutoOffIntervalMsecs;
+        public string StandbyController = "NO_APPLICATION";
+        
 
-        public override void OnSTOPCommand()
-        {
-            base.OnSTOPCommand();
-        }
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
@@ -36,32 +33,14 @@ namespace Klli.Sensact.Config.Applications
             return null;
         }
 
-        public override void OnSTARTCommand()
-        {
-            base.OnSTARTCommand();
-        }
-
-        public override void OnUPCommand(byte forced)
-        {
-            base.OnUPCommand(forced);
-        }
-
-        public override void OnDOWNCommand(byte forced)
-        {
-            base.OnDOWNCommand(forced);
-        }
-
-        public override void OnSTEP_VERTICALCommand(short step)
-        {
-            base.OnSTEP_VERTICALCommand(step);
-        }
-
-        public override void OnSET_VERTICAL_TARGETCommand(ushort target)
-        {
-            base.OnSET_VERTICAL_TARGETCommand(target);
-        }
-
+        [SensactCommandMethod]
         public override void OnONCommand(uint autoReturnToOffMsecs)
+        {
+            base.OnONCommand(autoReturnToOffMsecs);
+        }
+
+        [SensactCommandMethod]
+        public override void OnOFFCommand(uint autoReturnToOffMsecs)
         {
             base.OnONCommand(autoReturnToOffMsecs);
         }
@@ -70,9 +49,43 @@ namespace Klli.Sensact.Config.Applications
         {
             base.OnTOGGLECommand();
         }
+        
+        [SensactCommandMethod]
+        public override void OnSET_VERTICAL_TARGETCommand(ushort target)
+        {
+            base.OnSET_VERTICAL_TARGETCommand(target);
+        }
 
+        [SensactCommandMethod]
+        public override void OnSTEP_VERTICALCommand(short step)
+        {
+            base.OnSTEP_VERTICALCommand(step);
+        }
+        
+        [SensactCommandMethod]
+        public override void OnSTARTCommand()
+        {
+            base.OnSTARTCommand();
+        }
 
+        [SensactCommandMethod]
+        public override void OnSTOPCommand()
+        {
+            base.OnSTOPCommand();
+        }
 
+        [SensactCommandMethod]
+        public override void OnUPCommand(byte forced)
+        {
+            base.OnUPCommand(forced);
+        }
+
+        [SensactCommandMethod]
+        public override void OnDOWNCommand(byte forced)
+        {
+            base.OnDOWNCommand(forced);
+        }
+       
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();
@@ -94,9 +107,8 @@ namespace Klli.Sensact.Config.Applications
             }
             AutoOffIntervalMsecs = Math.Max(0, AutoOffIntervalMsecs);
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// PWM {0} (Dimmer )" + Environment.NewLine, ApplicationId);
-            sb.Append(ResourcesInitializer("output", this.OutputRessources, m));
-            sb.AppendFormat("sensactapps::cPWM {0}(eApplicationID::{0}, {0}_output, {1}, {2}, {3}, {4}, eApplicationID::{5}, {6});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessources.Count, MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),StandbyController, AutoOffIntervalMsecs);
+            sb.AppendFormat("// PWM {0} (Dimmer)" + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("sensactapps::cPWM {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, eApplicationID::{5}, {6});" + Environment.NewLine + Environment.NewLine, ApplicationId, VectorOfInOutIds(this.OutputRessources, m), MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),AutoOffIntervalMsecs, StandbyController);
             return sb.ToString();
         }
 
@@ -105,7 +117,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return new Regex("PWM__"+REGEX_FLOOR_ROOM_SUFFIX);
+                return FLOOR_ROOM_Regex("PWM__");
             }
         }
     }

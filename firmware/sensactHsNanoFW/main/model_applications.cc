@@ -1,6 +1,12 @@
 #include "common_in_project.hh"
 #include "application.hh"
 #include "model_applications.hh"
+#include "apps/pushbutton.hh"
+#include "apps/blind.hh"
+#include "apps/onoff.hh"
+#include "apps/rotaryencoder.hh"
+#include "apps/singlepwm.hh"
+
 namespace sensact::model
 {
     const char * const applications::ApplicationNames[]{
@@ -10,11 +16,11 @@ namespace sensact::model
 #include <nodeMasterApplicationId.inc>
     //#include <applicationInitializers.inc>
 
-    constexpr sensact::cApplication * applications::Glo2locCmd[]{
+    constexpr cApplication * applications::Glo2locCmd[]{
         //#include <glo2LocCmd.inc>
         nullptr,
     };
-    constexpr sensact::cApplication *applications::Glo2locEvt[]{
+    constexpr cApplication *applications::Glo2locEvt[]{
         //#include <glo2LocEvt.inc>
         nullptr, nullptr
     };

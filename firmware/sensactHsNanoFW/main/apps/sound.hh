@@ -4,10 +4,11 @@
 using namespace std;
 namespace sensact::apps
 {
-	class cSinglePWM : public cApplication
+	class cSound : public cApplication
 	{
 	private:
-		vector<InOutId> pwmOutputs;
+		InOutId amplifierEnable;
+		tms_t settingTimeAfterAmplifierEnable;
 		u8 minimalLevel;
 		u8 storedLevel;//Helligkeit der Lampe, als diese zuletzt eingeschaltet war (quasi als targetLevel das letzte Mal > 0 war
 		bool lowMeansLampOn;

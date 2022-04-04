@@ -1,133 +1,211 @@
 #pragma once
-#include "application.hh"
+#include <application.hh>
 
-namespace sensactapps
+namespace sensact::apps
 {
-	class cPushbutton : public cApplication
-	{
-		cPushbutton()
-	};
-
-	class cPushbuttonSingle2OnOff : public cPushbutton
+	class cPushbutton
 	{
 	private:
 		InOutId const input;
 
-	public:
-		cPushbuttonSingle2OnOff(const uint32_t id) : id(id) {}
-		virtual eAppCallResult Setup(SensactContext *ctx) = 0;
-		virtual eAppCallResult Loop(SensactContext *ctx) = 0;
-		virtual eAppCallResult FillStatus(flatbuffers::FlatBufferBuilder *builder, std::vector<flatbuffers::Offset<tStateWrapper>> *status_vector) = 0;
-		virtual eAppCallResult ProcessCommand(const tCommand *cmd) = 0;
-	};
-	class cPushButtonSpecial : public cPushbutton
-	{
-		const eEventType *const localEvents;
-		const uint8_t localEventsLength;
-		const eEventType *const busEvents;
-		const uint8_t busEventsLength;
+		bool isPressedOld{false};
+		bool holdShortSent{false};
+
+		tms_t lastPress;
+		tms_t lastRelease;
 
 	protected:
-		Time_t lastChange;
-		ePushState state;
-		bool holdShortSent;
-		bool holdMediumSent;
-		Time_t lastRelease;
+		cPushbutton(InOutId const input) : input(input)
+		{
+		}
+		virtual void OnPressed(SensactContext *ctx){};
+		virtual void OnReleasedShort(SensactContext *ctx){};
+		virtual void OnReleasedLong(SensactContext *ctx){};
+		virtual void OnReleased(SensactContext *ctx){};
+		virtual void OnDoubleclick(SensactContext *ctx){};
+		virtual void OnPressedShortAndHold(SensactContext *ctx){};
 
 	public:
-		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppType GetAppType() override;
+		void ButtonLoop(SensactContext *ctx)
+		{
+			u16 inputValue;
 
-		eAppCallResult DoEachCycle(SensactContext *ctx, uint8_t *statusBuffer, size_t *statusBufferLength) override;
+			tms_t now = ctx->Now();
+			ctx->GetU16Input(input, inputValue);
+			bool isPressed = inputValue == 0; // because all buttons are connected to GND
+			if (!isPressedOld && isPressed)
+			{
+				this->holdShortSent = false;
+				OnPressed(ctx);
+				this->lastPress = now;
+			}
+			else if (isPressedOld && !isPressed)
+			{
+				if (now - this->lastPress < sensact::magic::SHORT_PRESS)
+				{
+					OnReleasedShort(ctx);
+				}
+				else
+				{
+					OnReleasedLong(ctx);
+				}
 
-		virtual void OnPressed(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
-		virtual void OnReleased(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
-		virtual void OnReleasedShort(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
-		virtual void OnPressedShortAndHold(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
-		virtual void OnReleasedMedium(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
-		virtual void OnPressedMediumAndHold(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
+				OnReleased(ctx);
 
-		virtual void OnReleasedLong(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
-		}
+				if (now - lastRelease < sensact::magic::DOUBLE_PRESS)
+				{
+					OnDoubleclick(ctx);
+				}
 
-		virtual void OnDoubleclick(SensactContext *ctx)
-		{
-			(void)ctx;
-			return;
+				this->lastRelease = now;
+			}
+			else if (isPressedOld && isPressed)
+			{
+				if (!this->holdShortSent && now - lastPress >= sensact::magic::SHORT_PRESS)
+				{
+					OnPressedShortAndHold(ctx);
+					this->holdShortSent = true;
+				}
+			}
+			this->isPressedOld = isPressed;
 		}
-
-		cPushbutton(const eApplicationID id, uint16_t const input,
-					const eEventType *const localEvents, const uint8_t localEventsLength,
-					const eEventType *const busEvents, const uint8_t busEventsLength);
 	};
 
-	class cPushbuttonX : public cPushbutton
+	class cPushbuttonSingle2OnOff : public cApplication, public cPushbutton
 	{
 	private:
-		const Command *const pressedCommands;
-		const uint8_t pressedCommandsLength;
-		const Command *const releasedCommands;
-		const uint8_t releasedCommandsLength;
-		const Command *const releasedShortCommands;
-		const uint8_t releasedShortCommandsLength;
-		const Command *const pressedShortAndHoldCommands;
-		const uint8_t pressedShortAndHoldCommandsLength;
-		const Command *const releasedLongCommands;
-		const uint8_t releasedLongCommandsLength;
-		const Command *const doubleclickCommands;
-		const uint8_t doubleclickCommandsLength;
+		eApplicationID target;
+
+	protected:
+		void OnPressed(SensactContext *ctx) override { ctx->SendONCommand(target, 0); }
 
 	public:
-		cPushbuttonX(const eApplicationID id, uint16_t const input,
-					 const eEventType *const localEvents, const uint8_t localEventsLength,
-					 const eEventType *const busEvents, const uint8_t busEventsLength,
-					 const Command *const pressedCommands, const uint8_t pressedCommandsLength,
-					 const Command *const releasedCommands, const uint8_t releasedCommandsLength,
-					 const Command *const releasedShortCommands, const uint8_t releasedShortCommandsLength,
-					 const Command *const pressedShortAndHoldCommands, const uint8_t pressedShortAndHoldCommandsLength,
-					 const Command *const releasedLongCommands, const uint8_t releasedLongCommandsLength,
-					 const Command *const doubleclickCommands, const uint8_t doubleclickCommandsLength) : cPushbutton(id, input, localEvents, localEventsLength, busEvents, busEventsLength),
-																										  pressedCommands(pressedCommands), pressedCommandsLength(pressedCommandsLength),
-																										  releasedCommands(releasedCommands), releasedCommandsLength(releasedCommandsLength),
-																										  releasedShortCommands(releasedShortCommands), releasedShortCommandsLength(releasedShortCommandsLength),
-																										  pressedShortAndHoldCommands(pressedShortAndHoldCommands), pressedShortAndHoldCommandsLength(pressedShortAndHoldCommandsLength),
-																										  releasedLongCommands(releasedLongCommands), releasedLongCommandsLength(releasedLongCommandsLength),
-																										  doubleclickCommands(doubleclickCommands), doubleclickCommandsLength(doubleclickCommandsLength)
+		cPushbuttonSingle2OnOff(eApplicationID const id, InOutId const input, eApplicationID target) : cApplication(id), cPushbutton(input), target(target)
 		{
 		}
-		void OnPressed(SensactContext *ctx) override;
-		void OnReleased(SensactContext *ctx) override;
-		void OnReleasedShort(SensactContext *ctx) override;
-		void OnReleasedMedium(SensactContext *ctx) override;
-		void OnReleasedLong(SensactContext *ctx) override;
-		void OnPressedShortAndHold(SensactContext *ctx) override;
-		void OnDoubleclick(SensactContext *ctx) override;
+
+		eAppCallResult Loop(SensactContext *ctx) override
+		{
+			this->ButtonLoop(ctx);
+			return eAppCallResult::OK;
+		}
+	};
+
+	class cPushbuttonSingle2PwmSingle : public cApplication, public cPushbutton
+	{
+	private:
+		eApplicationID target;
+
+	protected:
+		void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+		void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendSTARTCommand(target); }
+		void OnDoubleclick(SensactContext *ctx) override { ctx->SendONCommand(target, 0); }
+
+	public:
+		cPushbuttonSingle2PwmSingle(eApplicationID const id, InOutId const input, eApplicationID target) : cApplication(id), cPushbutton(input), target(target)
+		{
+		}
+
+		eAppCallResult Loop(SensactContext *ctx) override
+		{
+			this->ButtonLoop(ctx);
+			return eAppCallResult::OK;
+		}
+	};
+
+	class cPushbuttonDual2Blind : public cApplication
+	{
+		class cPushbuttonUP : public cPushbutton
+		{
+		private:
+			eApplicationID target;
+
+		public:
+			cPushbuttonUP(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
+			void OnReleasedShort(SensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
+			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendUPCommand(target, 1); }
+			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		};
+
+		class cPushbuttonDOWN : public cPushbutton
+		{
+		private:
+			eApplicationID target;
+
+		public:
+			cPushbuttonDOWN(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
+			void OnReleasedShort(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
+			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 1); }
+			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		};
+
+	private:
+		cPushbuttonUP *up;
+		cPushbuttonDOWN *down;
+
+	public:
+		cPushbuttonDual2Blind(eApplicationID const id, InOutId const inputUp, InOutId const inputDown, eApplicationID target) : cApplication(id)
+		{
+			up = new cPushbuttonUP(inputUp, target);
+			down = new cPushbuttonDOWN(inputUp, target);
+		}
+
+		eAppCallResult Loop(SensactContext *ctx) override
+		{
+			down->ButtonLoop(ctx);
+			up->ButtonLoop(ctx);
+			return eAppCallResult::OK;
+		}
+	};
+
+	class cPushbuttonDual2PWM : public cApplication
+	{
+		class cPushbuttonUP : public cPushbutton
+		{
+		private:
+			eApplicationID target;
+
+		public:
+			cPushbuttonUP(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
+			void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
+			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		};
+
+		class cPushbuttonDOWN : public cPushbutton
+		{
+		private:
+			eApplicationID target;
+
+		public:
+			cPushbuttonDOWN(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
+			void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
+			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		};
+
+	private:
+		cPushbuttonUP *up;
+		cPushbuttonDOWN *down;
+
+	public:
+		cPushbuttonDual2PWM(eApplicationID const id, InOutId const inputUp, InOutId const inputDown, eApplicationID target) : cApplication(id)
+		{
+			up = new cPushbuttonUP(inputUp, target);
+			down = new cPushbuttonDOWN(inputUp, target);
+		}
+
+		eAppType GetAppType() override
+		{
+			return eAppType::PSHBT;
+		}
+
+		eAppCallResult Loop(SensactContext *ctx) override
+		{
+			down->ButtonLoop(ctx);
+			up->ButtonLoop(ctx);
+			return eAppCallResult::OK;
+		}
 	};
 }
