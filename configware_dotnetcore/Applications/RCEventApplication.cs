@@ -8,6 +8,9 @@ namespace Klli.Sensact.Config.Applications
 {
     public class RCEventApplication : SensorApplication
     {
+        public RCEventApplication(string ApplicationID):base(ApplicationID){
+
+        }
         public List<Command> CommandsOnPressed;
         public List<Command> CommandsOnReleased;
         public List<Command> CommandsOnReleasedShort;

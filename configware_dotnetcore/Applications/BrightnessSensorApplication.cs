@@ -8,6 +8,11 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BrightnessSensorApplication : ActorApplication
     {
+        public BrightnessSensorApplication(string ApplicationId, string sensorName, string ToggleTarget, int LimitForPassingToggle):base(ApplicationId){
+            this.SensorName=sensorName;
+            this.ToggleTarget=ToggleTarget;
+            this.LimitForPassingToggle=LimitForPassingToggle;
+        }
         public string SensorName;
         public string ToggleTarget;
         public int LimitForPassingToggle;

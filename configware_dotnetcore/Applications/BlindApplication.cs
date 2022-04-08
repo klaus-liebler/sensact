@@ -8,13 +8,20 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BlindApplication : ActorApplication
     {
-        public ushort OutputResource1;
-        public ushort OutputResource2;
-        public RelayInterlockMode RelayMode;
-        public List<Event> FullyCloseEvents;
-        public List<Event> FullyOpenEvents;
-        public long UpTimeInSeconds;
-        public long DownTimeInSeconds;
+        public BlindApplication(string ApplicationId, ushort OutputResource1, ushort OutputResource2, RelayInterlockMode RelayMode, long UpTimeInSeconds, long DownTimeInSeconds):base(ApplicationId){
+            this.OutputResource1=OutputResource1;
+            this.OutputResource2=OutputResource2;
+            this.RelayMode=RelayMode;
+            this.UpTimeInSeconds=UpTimeInSeconds;
+            this.DownTimeInSeconds=DownTimeInSeconds;
+        }
+        public ushort OutputResource1{get;}
+        public ushort OutputResource2{get;}
+        public RelayInterlockMode RelayMode{get;}
+        public List<Event> FullyCloseEvents{get;}
+        public List<Event> FullyOpenEvents{get;}
+        public long UpTimeInSeconds{get;}
+        public long DownTimeInSeconds{get;}
         
 
         [SensactCommandMethod]

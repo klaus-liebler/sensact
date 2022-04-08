@@ -69,6 +69,15 @@ namespace sensact
         NOT_IMPLEMENTED = 255,
     };
 
+    enum class eRelayInterlockMode{
+		eRelayInterlockMode_R1_POWER__R2_UP,
+		eRelayInterlockMode_R1_POWER__R2_DOWN,
+		eRelayInterlockMode_R1_UP__R2_POWER,
+		eRelayInterlockMode_R1_DOWN__R2_POWER,
+		eRelayInterlockMode_R1_DOWN__R2_UP,
+		eRelayInterlockMode_R1_UP__R2_DOWN,
+	};
+
     enum class eAppType : uint8_t
     {
         UNDEFINED,
@@ -87,6 +96,7 @@ namespace sensact
         LIBAR,
         SNSCT,
         FRWRD,
+        PUMP,
     };
     
     const char *const eAppType2Name[] = {

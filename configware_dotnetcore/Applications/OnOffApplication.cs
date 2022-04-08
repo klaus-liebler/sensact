@@ -8,12 +8,17 @@ namespace Klli.Sensact.Config.Applications
 {
     public class OnOffApplication : ActorApplication
     {
-        public ushort OutputRessource;
-        public PowerState InitialPowerState;
-        public uint AutoOffIntervalMsecs;
-        public List<Event> ToggleEvents;
-        public List<Event> OffEvents;
-        public List<Event> OnEvents;
+        public OnOffApplication(string ApplicationId, ushort OutputRessource, PowerState InitialPowerState, uint AutoOffIntervalMsecs):base(ApplicationId){
+            this.OutputRessource=OutputRessource;
+            this.InitialPowerState=InitialPowerState;
+            this.AutoOffIntervalMsecs=AutoOffIntervalMsecs;
+        }
+        public ushort OutputRessource{get;}
+        public PowerState InitialPowerState{get;}
+        public uint AutoOffIntervalMsecs{get;}
+        public List<Event> ToggleEvents{get;}
+        public List<Event> OffEvents{get;}
+        public List<Event> OnEvents{get;}
 
        
 
@@ -21,7 +26,7 @@ namespace Klli.Sensact.Config.Applications
         {
             if (usedOutputPins.Contains(OutputRessource.ToString()))
             {
-                return "OutputRessource";
+                return "OutputRessource of "+ApplicationId;
             }
             usedOutputPins.Add(OutputRessource.ToString());
             return null;
@@ -71,7 +76,7 @@ namespace Klli.Sensact.Config.Applications
             
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// ONOFF {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensactapps::cOnOff {0}(eApplicationID::{0}, {1}, {2}, ePowerState::{3}, {4});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, InitialPowerState.ToString(), AutoOffIntervalMsecs);
+            sb.AppendFormat("sensact::apps::cOnOff {0}(eApplicationID::{0}, {1}, ePowerState::{2}, {3});" + Environment.NewLine + Environment.NewLine, ApplicationId, OutputRessource, InitialPowerState.ToString(), AutoOffIntervalMsecs);
             return sb.ToString();
         }
 
@@ -79,7 +84,7 @@ namespace Klli.Sensact.Config.Applications
         {
             get
             {
-                return FLOOR_ROOM_Regex("POWIT");
+                return FLOOR_ROOM_Regex("(POWIT)|(STDBY)");
             }
         }
     }

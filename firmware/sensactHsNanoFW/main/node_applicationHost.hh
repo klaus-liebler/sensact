@@ -34,7 +34,7 @@ namespace sensact
         void GetU16Input(InOutId id, u16 &value) override;
         void SetRGBLed(uint8_t index, CRGB color) override;
         void UnColorizeAllRGBLed() override;
-        void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value) override;
+        void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override;
         void SetAmplifierVolume(uint8_t volume0_255) override;
         void PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override;
         void StopSound() override;

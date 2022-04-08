@@ -7,7 +7,10 @@ namespace Klli.Sensact.Config.Applications
 {
     public class ForwarderApplication : ActorApplication
     {
-        public ApplicationId FinalTarget;
+        public ForwarderApplication(string ApplicationId, ApplicationId finalTarget):base(ApplicationId){
+            this.FinalTarget=finalTarget;
+        }
+        public ApplicationId FinalTarget{get;}
 
 
         [SensactCommandMethod]

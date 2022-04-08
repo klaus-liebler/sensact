@@ -1,6 +1,7 @@
 ﻿using Klli.Sensact.Config.Applications;
 using Klli.Sensact.Config.Nodes;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Klli.Sensact.Config
 {
@@ -10,96 +11,41 @@ namespace Klli.Sensact.Config
 
         public static void AddPlaceholder(this List<SensactApplication> list, ApplicationId appId)
         {
-            list.Add(new PlaceholderApplication()
-            {
-                ApplicationId = appId.ToString(),
-            });
+            list.Add(new PlaceholderApplication(appId.ToString()));
         }
 
-        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, int OpenCloseTimeInSeconds, ushort OutputResourcePower, ushort OutputResourceDirection, RelayInterlockMode relMode)
+        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, ushort Relay1, ushort Relay2, RelayInterlockMode relMode, uint time_up_secs, uint time_down_secs)
         {
-            list.Add(new BlindApplication { ApplicationId = appId.ToString(), OpenCloseTimeInSeconds= OpenCloseTimeInSeconds, OutputResourceUpOrPower=OutputResourcePower, OutputResourceDownOrDirection=OutputResourceDirection, RelayMode=relMode });
+            list.Add(new BlindApplication(appId.ToString(), Relay1, Relay2, relMode, time_up_secs, time_down_secs));
         }
 
-        public static void AddPWMApplication(this List<SensactApplication> list, ApplicationId appId, ApplicationId standbyController, List<ushort> outputResources, int AutoOffIntervalMsecs= 0, int minimalOnLevel=DEFAULT_MIN_DIM_LEVEL)
+        public static void AddPWMApplication(this List<SensactApplication> list, ApplicationId appId, ApplicationId StandbyController, ISet<ushort> outputResources, uint AutoOffIntervalMsecs = 0, byte minimalOnLevel=DEFAULT_MIN_DIM_LEVEL, byte initialStoredTargetLevel=byte.MaxValue)
         {
-            list.Add(new SinglePWMApplication() { ApplicationId = appId.ToString(), MinimalOnLevel = minimalOnLevel, StandbyController = standbyController.ToString(), OutputRessources = outputResources, AutoOffIntervalMsecs= AutoOffIntervalMsecs });
+            list.Add(new SinglePWMApplication(appId.ToString(), outputResources, minimalOnLevel, initialStoredTargetLevel, AutoOffIntervalMsecs, StandbyController.ToString()));
+        }
+
+        public static void AddToggleButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ISet<ApplicationId> targetAppId)
+        {
+            list.Add(new PushButtonSingle2ToggleApplication(appId.ToString(), inputRessource,targetAppId.Select(x=>x.ToString()).ToHashSet()));
         }
 
         public static void AddToggleButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
-            list.Add(new PushButtonSingleApplication()
-            {
-                ApplicationId = appId.ToString(),
-                InputRessource = inputRessource,
-                CommandsOnPressed = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-            });
+            list.Add(new PushButtonSingle2ToggleApplication(appId.ToString(), inputRessource, new HashSet<string>{targetAppId.ToString()}));
         }
 
-        public static void AddOnIfDarkButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
+        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, ushort outputRessource, uint autoOffIntervalMsecs = 0, PowerState initialPowerState=PowerState.INACTIVE)
         {
-            list.Add(new PushButtonSingleApplication()
-            {
-                ApplicationId = appId.ToString(),
-                InputRessource = inputRessource,
-                CommandsOnPressed = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-            });
+            list.Add(new OnOffApplication(appId.ToString(), outputRessource, initialPowerState, autoOffIntervalMsecs));
         }
 
-
-        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, ushort outputRessource, PowerState initialPowerState, uint autoOffIntervalMsecs = 0)
+        public static void AddRotaryEncoder(this List<SensactApplication> list, ApplicationId appId, RotaryEncoder rotEnc, ApplicationId targetAppId)
         {
-            list.Add(new OnOffApplication()
-            {
-                ApplicationId = appId.ToString(),
-                OutputRessource = outputRessource,
-                InitialPowerState = initialPowerState,
-                AutoOffIntervalMsecs= autoOffIntervalMsecs,
-            });
+            list.Add(BuildRotaryEncoder(appId, rotEnc, targetAppId));
         }
-
-        public static void AddRotaryEncoder(this List<SensactApplication> list, ApplicationId appId, RotaryEncoder rotEnc, ushort inputRessource, ApplicationId targetAppId)
+        public static RotaryEncoder2PWMApplication BuildRotaryEncoder(ApplicationId appId, RotaryEncoder rotEnc, ApplicationId targetAppId)
         {
-            list.Add(BuildRotaryEncoder(appId, rotEnc, inputRessource, targetAppId));
-        }
-        public static RotaryEncoderApplication BuildRotaryEncoder(ApplicationId appId, RotaryEncoder rotEnc, ushort inputRessource, ApplicationId targetAppId)
-        {
-            return new RotaryEncoderApplication
-            {
-                ApplicationId = appId.ToString(),
-                InputRotaryRessource = rotEnc,
-                InputPushRessource = inputRessource,
-                CommandsOnPressed = new List<Command>
-                {
-                    new Command
-                    {
-                        TargetAppId=targetAppId.ToString(),
-                        CommandType=CommandType.TOGGLE,
-                    }
-                },
-                CommandsOnTurned = new List<Command>
-                {
-                    new Command
-                    {
-                        TargetAppId=targetAppId.ToString(),
-                        CommandType=CommandType.STEP_VERTICAL,
-                    }
-                }
-            };
+            return new RotaryEncoder2PWMApplication(appId.ToString(), rotEnc, targetAppId.ToString());
         }
         public static void AddOneDimButton(this List<SensactApplication> list, ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
@@ -109,187 +55,23 @@ namespace Klli.Sensact.Config
 
         public static PushButtonSingleApplication BuildOnePushbuttonDimmer(ApplicationId appId, ushort inputRessource, ApplicationId targetAppId)
         {
-            return new PushButtonSingleApplication()
-            {
-                ApplicationId = appId.ToString(),
-                InputRessource = inputRessource,
-                CommandsOnReleasedShort = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-
-                CommandsOnPressedShortAndHold = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.START,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-                CommandsOnDoubleclick = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.ON,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-
-            };
+            return new PushButtonSingle2PwmSingleApplication(appId.ToString(), inputRessource, targetAppId.ToString());
         }
 
-        public static void AddTwoDimButtons(this List<SensactApplication> list, ApplicationId appIdUp, ApplicationId appIdDown, ushort inputPinUp, ushort inputPinDown, ApplicationId targetAppId)
+        public static void AddTwoDimButtons(this List<SensactApplication> list, ApplicationId appIdUp, ushort inputPinUp, ushort inputPinDown, ApplicationId targetAppId)
         {
-            PushButtonSingleApplication up = new PushButtonSingleApplication
-            {
-                ApplicationId = appIdUp.ToString(),
-                InputRessource = inputPinUp,
-                CommandsOnReleasedShort = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
+            list.Add(new PushButtonDual2PWMApplication(appIdUp.ToString(), inputPinUp, inputPinDown, targetAppId.ToString()));
+        }
+    
 
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-                CommandsOnPressedShortAndHold = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.UP,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-            };
-            PushButtonSingleApplication down = new PushButtonSingleApplication
-            {
-                ApplicationId = appIdDown.ToString(),
-                InputRessource = inputPinDown,
-                CommandsOnReleasedShort = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.TOGGLE,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-                CommandsOnPressedShortAndHold = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.DOWN,
-                        TargetAppId=targetAppId.ToString(),
-                    },
-                },
-            };
-            list.Add(up);
-            list.Add(down);
+        public static void AddBlindButtons(this List<SensactApplication> list, ApplicationId appIdUp, ushort inputPinUp, ushort inputPinDown, ApplicationId targetAppId)
+        {
+            list.AddBlindButtons(appIdUp.ToString(), inputPinUp, inputPinDown, targetAppId.ToString());
         }
 
-        public static void AddBlindButtons(this List<SensactApplication> list, ApplicationId appIdUp, ApplicationId appIdDown, ushort inputPinUp, ushort inputPinDown, ApplicationId targetAppId)
+        public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, ushort inputPinUp, ushort inputPinDown, string targetAppId)
         {
-            list.AddBlindButtons(appIdUp.ToString(), appIdDown.ToString(), inputPinUp, inputPinDown, targetAppId.ToString());
-        }
-
-        public static void AddBlindButtons(this List<SensactApplication> list, string appIdUp, string appIdDown, ushort inputPinUp, ushort inputPinDown, string targetAppId)
-        {
-            PushButtonSingleApplication up = new PushButtonSingleApplication
-            {
-                ApplicationId = appIdUp,
-                InputRessource = inputPinUp,
-                CommandsOnReleasedShort = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.UP,
-                        TargetAppId=targetAppId,
-                        Payload=new byte[]{0},
-                    },
-                },
-                CommandsOnPressedShortAndHold= new List<Command>()
-                {
-                     new Command()
-                    {
-                        CommandType=CommandType.UP,
-                        TargetAppId=targetAppId,
-                        Payload=new byte[]{1},
-                    },
-                },
-
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId,
-                    },
-                },
-            };
-            PushButtonSingleApplication down = new PushButtonSingleApplication
-            {
-                ApplicationId = appIdDown,
-                InputRessource = inputPinDown,
-                CommandsOnReleasedShort = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.DOWN,
-                        TargetAppId=targetAppId,
-                        Payload=new byte[]{0},
-                    },
-                },
-                CommandsOnPressedShortAndHold = new List<Command>()
-                {
-                     new Command()
-                    {
-                        CommandType=CommandType.DOWN,
-                        TargetAppId=targetAppId,
-                        Payload=new byte[]{1},
-                    },
-                },
-
-                CommandsOnReleasedLong = new List<Command>()
-                {
-                    new Command()
-                    {
-                        CommandType=CommandType.STOP,
-                        TargetAppId=targetAppId,
-                    },
-                },
-            };
-            list.Add(up);
-            list.Add(down);
+            list.Add(new PushButtonDual2BlindApplication(appIdUp.ToString(), inputPinUp, inputPinDown, targetAppId));
         }
     }
 }

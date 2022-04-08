@@ -10,7 +10,6 @@ namespace sensact::apps
 		vector<InOutId> pwmOutputs;
 		u8 minimalLevel;
 		u8 storedLevel;//Helligkeit der Lampe, als diese zuletzt eingeschaltet war (quasi als targetLevel das letzte Mal > 0 war
-		bool lowMeansLampOn;
 		tms_t autoOffCfg; //die konfigurierte AutoOff-Zeit
 		eApplicationID idOfStandbyController;
 		
@@ -31,7 +30,7 @@ namespace sensact::apps
 		void WriteCurrentLevelToOutput(SensactContext *ctx);
 
 	public:
-		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, bool lowMeansLampOn, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
+		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
 		eAppType GetAppType() override;
 		eAppCallResult Setup(SensactContext *ctx) override;
         eAppCallResult Loop(SensactContext *ctx) override;

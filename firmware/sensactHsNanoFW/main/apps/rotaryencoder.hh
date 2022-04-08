@@ -11,14 +11,13 @@ namespace sensact::apps
 	{
 	private:
 		eRotaryEncoder encoder; 
-		InOutId const input;
 		eApplicationID target;
 		bool isPressedOld{false};
 		uint16_t lastRotaryValue;
 		tms_t lastEdge{0};
 		tms_t lastRotary{0};
 	public:
-		cRotaryEncoder2PWM(eApplicationID const id, eRotaryEncoder encoder, InOutId const input, eApplicationID target):cApplication(id), encoder(encoder), input(input), target(target){
+		cRotaryEncoder2PWM(eApplicationID const id, eRotaryEncoder encoder, eApplicationID target):cApplication(id), encoder(encoder), target(target){
 		}
 
 		eAppType GetAppType() override
@@ -27,16 +26,16 @@ namespace sensact::apps
 		}
 
 		eAppCallResult Setup(SensactContext *ctx) override{
-			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue);
+			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue, isPressedOld);
 			return eAppCallResult::OK;
 
 		}
 		eAppCallResult Loop(SensactContext *ctx) override
 		{
-			u16 inputValue;
-			ctx->GetU16Input(input, inputValue);
+			uint16_t currentRotaryValue;
+			bool isPressed;
+			ctx->GetRotaryEncoderValue(encoder, currentRotaryValue, isPressed);
 			tms_t now=ctx->Now();
-			bool isPressed = inputValue == 0; // because all buttons are connected to GND
 			if (!isPressedOld && isPressed)
 			{
 				ctx->SendTOGGLECommand(target);
@@ -44,8 +43,8 @@ namespace sensact::apps
 			}
 			this->isPressedOld = isPressed;
 
-			uint16_t currentRotaryValue;
-			ctx->GetRotaryEncoderValue(encoder, currentRotaryValue);
+			
+			
 			int rotaryChange = currentRotaryValue - lastRotaryValue;
 			if(rotaryChange!=0){
 				if(now - lastRotary < DEAD_TIME_FOR_TURN_AFTER_TURN  && now-lastEdge > DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE)

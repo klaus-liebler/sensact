@@ -65,10 +65,7 @@ namespace Klli.Sensact.Config
             mc.index2app[0] = masterApp;
             foreach (Node n in mc.Model.Nodes)
             {
-                n.Applications.Add(new SensactNodeApplication
-                {
-                    ApplicationId = n.Id,
-                });
+                n.Applications.Add(new SensactNodeApplication(n.Id));
                 HashSet<string> usedInputPins = new HashSet<string>();
                 HashSet<string> usedOutputPins = new HashSet<string>();
                 foreach (SensactApplication app in n.Applications)
@@ -340,7 +337,7 @@ namespace Klli.Sensact.Config
                 }
                 sb.Append("SensactContext *ctx)");
                  if(TrueIfVirtualFalseIfOverride){
-                    sb.AppendLine(" = 0;");
+                    sb.AppendLine("{return;}");
                 }else{
                     sb.AppendLine(" override;");
                 }

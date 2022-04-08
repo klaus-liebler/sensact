@@ -40,7 +40,7 @@ namespace sensact::apps
 		SINGLE_BUTTON_MODE
 	};
 
-	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, bool lowMeansLampOn, tms_t autoOffMsecs, eApplicationID idOfStandbyController) : cApplication(id), pwmOutputs(pwmOutputs), minimalLevel(minimalLevel), storedLevel(initialLevel), lowMeansLampOn(lowMeansLampOn), autoOffCfg(autoOffMsecs), idOfStandbyController(idOfStandbyController)
+	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController) : cApplication(id), pwmOutputs(pwmOutputs), minimalLevel(minimalLevel), storedLevel(initialLevel), autoOffCfg(autoOffMsecs), idOfStandbyController(idOfStandbyController)
 	{
 		// LOGI(TAG, "Build cSinglePWM for id:%d, pwmFirst:%d autoOffMsecs:%d idOfStandbyController:%d", id, pwmFirst, autoOffMsecs, idOfStandbyController);
 	}
@@ -188,10 +188,7 @@ namespace sensact::apps
 	void cSinglePWM::WriteCurrentLevelToOutput(SensactContext *ctx)
 	{
 		uint16_t val = level2pwm[currentLevel];
-		if (!lowMeansLampOn)
-		{
-			val = UINT16_MAX - val;
-		}
+
 		for (auto &io : this->pwmOutputs)
 		{
 			ctx->SetU16Output(io, val);

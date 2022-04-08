@@ -73,14 +73,18 @@ namespace Klli.Sensact.Config.Nodes
         /// Beim einlesen prüfen, ob jede App genau eine! Node hat und ob Ressourcen nur einmal genutzt werden
         /// </summary>
         [XmlArrayItem(typeof(BlindApplication))]
-        [XmlArrayItem(typeof(BrightnessSensorApplication))]
-        [XmlArrayItem(typeof(SoundApplication))]
         [XmlArrayItem(typeof(OnOffApplication))]
-        [XmlArrayItem(typeof(PushButtonSingleApplication))]
         [XmlArrayItem(typeof(SinglePWMApplication))]
         [XmlArrayItem(typeof(RgbwApplication))]
-        [XmlArrayItem(typeof(RotaryEncoderApplication))]
-        [XmlArrayItem(typeof(StandbyControllerApplication))]
+        [XmlArrayItem(typeof(SoundApplication))]
+        [XmlArrayItem(typeof(PumpApplication))]
+        [XmlArrayItem(typeof(PushButtonSingle2PwmSingleApplication))]
+        [XmlArrayItem(typeof(PushButtonSingle2ToggleApplication))]
+        [XmlArrayItem(typeof(PushButtonDual2BlindApplication))]
+        [XmlArrayItem(typeof(PushButtonDual2PWMApplication))]
+        [XmlArrayItem(typeof(RotaryEncoder2PWMApplication))]
+        [XmlArrayItem(typeof(BrightnessSensorApplication))]
+        
         public List<SensactApplication> Applications;
 
     }

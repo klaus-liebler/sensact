@@ -8,25 +8,44 @@ namespace Klli.Sensact.Config.Applications
 {
     public class SinglePWMApplication : ActorApplication
     {
-        public List<ushort> OutputRessources;
-        public int MinimalOnLevel;
-        public int InitialStoredTargetLevel;
-        public bool LowMeansLampOn;
-        public int AutoOffIntervalMsecs;
-        public string StandbyController = "NO_APPLICATION";
+        public SinglePWMApplication(string applicationId, ISet<ushort> OutputResources,  int MinimalOnLevel, int InitialStoredTargetLevel, uint AutoOffIntervalMsecs, string StandbyController="NO_APPLICATION"):base(applicationId){
+            if(MinimalOnLevel<1)
+            {
+                MinimalOnLevel = 1;
+            }
+            if(MinimalOnLevel>Byte.MaxValue)
+            {
+                MinimalOnLevel = Byte.MaxValue;
+            }
+            if (InitialStoredTargetLevel<MinimalOnLevel || InitialStoredTargetLevel>Byte.MaxValue)
+            {
+                InitialStoredTargetLevel = Byte.MaxValue;
+            }
+            AutoOffIntervalMsecs = Math.Max(0, AutoOffIntervalMsecs);
+            this.OutputResources=OutputResources;
+            this.MinimalOnLevel=MinimalOnLevel;
+            this.InitialStoredTargetLevel=InitialStoredTargetLevel;
+            this.AutoOffIntervalMsecs=AutoOffIntervalMsecs;
+            this.StandbyController=StandbyController;
+        }
+        public ISet<ushort> OutputResources{get;}
+        public int MinimalOnLevel{get;}
+        public int InitialStoredTargetLevel{get;}
+        public uint AutoOffIntervalMsecs{get;}
+        public string StandbyController{get;}
         
 
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            foreach(ushort pwm in OutputRessources)
+            foreach(ushort pwm in OutputResources)
             {
                 if (usedOutputPins.Contains(pwm.ToString()))
                 {
                     return pwm.ToString();
                 }
             }
-            foreach (ushort pwm in OutputRessources)
+            foreach (ushort pwm in OutputResources)
             {
                 usedOutputPins.Add(pwm.ToString());
             }
@@ -93,22 +112,9 @@ namespace Klli.Sensact.Config.Applications
 
         public override string GenerateInitializer(ModelContainer m)
         {
-            if(MinimalOnLevel<1)
-            {
-                MinimalOnLevel = 1;
-            }
-            if(MinimalOnLevel>Byte.MaxValue)
-            {
-                MinimalOnLevel = Byte.MaxValue;
-            }
-            if (InitialStoredTargetLevel<MinimalOnLevel || InitialStoredTargetLevel>255)
-            {
-                InitialStoredTargetLevel = Byte.MaxValue;
-            }
-            AutoOffIntervalMsecs = Math.Max(0, AutoOffIntervalMsecs);
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// PWM {0} (Dimmer)" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensactapps::cPWM {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, eApplicationID::{5}, {6});" + Environment.NewLine + Environment.NewLine, ApplicationId, VectorOfInOutIds(this.OutputRessources, m), MinimalOnLevel, InitialStoredTargetLevel, LowMeansLampOn.ToString().ToLower(),AutoOffIntervalMsecs, StandbyController);
+            sb.AppendFormat("// cSinglePWM {0} (Dimmer for one color)" + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("sensact::apps::cSinglePWM {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, eApplicationID::{5});" + Environment.NewLine + Environment.NewLine, ApplicationId, VectorOfInOutIds(this.OutputResources, m), MinimalOnLevel, InitialStoredTargetLevel, AutoOffIntervalMsecs, StandbyController);
             return sb.ToString();
         }
 

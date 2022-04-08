@@ -8,6 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class PlaceholderApplication : ActorApplication
     {
+        public PlaceholderApplication(string ApplicationId):base(ApplicationId){}
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

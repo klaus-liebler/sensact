@@ -18,12 +18,16 @@ namespace Klli.Sensact.Config
     }
     public abstract class SensactApplication
     {
+        public SensactApplication(string ApplicationId){
+            this.ApplicationId=ApplicationId;
+        }
         private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
 
         public Regex FLOOR_ROOM_Regex(string prefix){
             return new Regex("^"+prefix+REGEX_FLOOR_ROOM_SUFFIX+"$");
         }
-        public string ApplicationId;
+        public string ApplicationId{get;}
+        
         
 
         [XmlIgnore]
@@ -190,6 +194,19 @@ namespace Klli.Sensact.Config
             return sb.ToString();
         }
 
+        protected string VectorOfApplicationIds(ICollection<string> ids, ModelContainer m)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach (string id in ids)
+            {
+                sb.Append("eApplicationID::"+Convert.ToString(id) + ",");
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
+
+
         protected string EventInitializer(string prefix, ICollection<EventType> evts, ModelContainer m)
         {
             //eEventType PUSHB_EG_WOZ_G0S0_BusEvent[2] = {eEventType::PRESSED, eEventType::RELEASED, eEventType::END_OF_EVENTS};
@@ -313,12 +330,12 @@ namespace Klli.Sensact.Config
 
     public abstract class SensorApplication:SensactApplication
     {
-
+        public SensorApplication(string ApplicationId):base(ApplicationId){}
     }
 
     public abstract class ActorApplication:SensactApplication
     {
-
+        public ActorApplication(string ApplicationId):base(ApplicationId){}
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited =true)]

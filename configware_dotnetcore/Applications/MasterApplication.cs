@@ -5,9 +5,8 @@ namespace Klli.Sensact.Config.Applications
 {
     public class MasterApplication : SensactNodeApplication
     {
-        public MasterApplication()
+        public MasterApplication():base("MASTER")
         {
-            this.ApplicationId = "MASTER";
         }
 
         internal override Regex AppIdRegex

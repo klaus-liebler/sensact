@@ -8,11 +8,16 @@ namespace Klli.Sensact.Config.Applications
 {
     public class LightbarrierApplication : SensorApplication
     {
-
-        public ushort InputRessource;
-        public string FinalTarget;
-        public string BrightnessSensor;
-        public bool ActiveSignalLevel;
+        public LightbarrierApplication(string ApplicationId, ushort InputRessource, string FinalTarget, string BrightnessSensor, bool ActiveSignalLevel):base(ApplicationId){
+            this.InputRessource=InputRessource;
+            this.FinalTarget=FinalTarget;
+            this.BrightnessSensor=BrightnessSensor;
+            this.ActiveSignalLevel=ActiveSignalLevel;
+        }
+        public ushort InputRessource{get;}
+        public string FinalTarget{get;}
+        public string BrightnessSensor{get;}
+        public bool ActiveSignalLevel{get;}
 
 
         public override HashSet<EventType> ICanSendTheseEvents()

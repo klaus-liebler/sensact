@@ -36,6 +36,7 @@ namespace sensact::hal::SensactHsNano2
     protected:
         TAS580x::M *tas580x;
         MP3Player *mp3player;
+
         ErrorCode SetupSound()
         {
             tas580x = new TAS580x::M(I2C_INTERNAL, TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
@@ -67,6 +68,7 @@ namespace sensact::hal::SensactHsNano2
         }
         ErrorCode AfterAppLoop() override
         {
+            tas580x->Mute(!mp3player->IsEmittingSamples());
             return ErrorCode::OK;
         }
         ErrorCode BeforeAppLoop() override
@@ -86,7 +88,7 @@ namespace sensact::hal::SensactHsNano2
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
-        ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value) override
+        ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
@@ -109,6 +111,7 @@ namespace sensact::hal::SensactHsNano2
                 this->tas580x->SetVolume(volume0_255);
             }
             mp3player->Play(buf, len);
+            this->tas580x->Mute(false);
             return ErrorCode::OK;
         }
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
@@ -117,6 +120,7 @@ namespace sensact::hal::SensactHsNano2
         }
         ErrorCode StopSound() override
         {
+            this->tas580x->Mute(true);
             mp3player->Stop();
             return ErrorCode::OK;
         }

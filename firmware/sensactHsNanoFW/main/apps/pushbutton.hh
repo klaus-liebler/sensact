@@ -71,16 +71,21 @@ namespace sensact::apps
 		}
 	};
 
-	class cPushbuttonSingle2OnOff : public cApplication, public cPushbutton
+	class cPushbuttonSingle2Toggle : public cApplication, public cPushbutton
 	{
 	private:
-		eApplicationID target;
+		std::vector<eApplicationID> targets;
 
 	protected:
-		void OnPressed(SensactContext *ctx) override { ctx->SendONCommand(target, 0); }
+		void OnPressed(SensactContext *ctx) override {
+			for(auto& target:targets){
+				ctx->SendTOGGLECommand(target); 
+			}
+		}
+			
 
 	public:
-		cPushbuttonSingle2OnOff(eApplicationID const id, InOutId const input, eApplicationID target) : cApplication(id), cPushbutton(input), target(target)
+		cPushbuttonSingle2Toggle(eApplicationID const id, InOutId const input, std::vector<eApplicationID> targets) : cApplication(id), cPushbutton(input), targets(targets)
 		{
 		}
 

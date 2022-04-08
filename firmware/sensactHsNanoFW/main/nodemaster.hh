@@ -144,7 +144,7 @@ namespace sensact
 					this->currentRoleRunner=rr;
 					rr->Loop(*this);
 				}
-				hal->AfterAppLoop();//schreibe die Outputs
+				hal->AfterAppLoop();
 			}
 		}
 	};

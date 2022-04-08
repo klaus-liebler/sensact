@@ -7,6 +7,9 @@ namespace Klli.Sensact.Config.Applications
 {
     public class SensactNodeApplication : SensactApplication
     {
+        public SensactNodeApplication(string ApplicationId):base(ApplicationId){
+
+        }
         internal override Regex AppIdRegex
         {
             get

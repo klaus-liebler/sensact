@@ -8,6 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public abstract class PushButtonApplication : SensorApplication
     {
+        protected PushButtonApplication(string ApplicationId):base(ApplicationId){}
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>
@@ -32,51 +33,61 @@ namespace Klli.Sensact.Config.Applications
     
     public abstract class PushButtonSingleApplication : PushButtonApplication
     {
-        public ushort InputRessource;
+        protected PushButtonSingleApplication(string ApplicationID, ushort InputResource):base(ApplicationID){
+            this.InputResource=InputResource;
+        }
+        public ushort InputResource;
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedInputPins.Contains(InputRessource.ToString()))
+            if (usedInputPins.Contains(InputResource.ToString()))
             {
                 return "InputRessource of Button "+ApplicationId;
             }
 
-            usedInputPins.Add(InputRessource.ToString());
+            usedInputPins.Add(InputResource.ToString());
             return null;
         }
     }
 
     public abstract class PushButtonDualApplication : PushButtonApplication
     {
-        public ushort InputRessource1;
-        public ushort InputRessource2;
+        protected PushButtonDualApplication(string ApplicationID, ushort InputResource1, ushort InputResource2):base(ApplicationID){
+            this.InputResource1=InputResource1;
+            this.InputResource2=InputResource2;
+        }
+        public ushort InputResource1;
+        public ushort InputResource2;
         
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedInputPins.Contains(InputRessource1.ToString()) || usedInputPins.Contains(InputRessource2.ToString())
+            if (usedInputPins.Contains(InputResource1.ToString()) || usedInputPins.Contains(InputResource2.ToString()))
             {
                 return "InputRessource of Button "+ApplicationId;
             }
 
-            usedInputPins.Add(InputRessource1.ToString());
-            usedInputPins.Add(InputRessource2.ToString());
+            usedInputPins.Add(InputResource1.ToString());
+            usedInputPins.Add(InputResource2.ToString());
             return null;
         }
     }
 
 
-    public class PushButtonSingle2OnOffApplication :PushButtonSingleApplication{
+    public class PushButtonSingle2ToggleApplication :PushButtonSingleApplication{
         
-        public string TargetApplicationId; 
+        public PushButtonSingle2ToggleApplication(string applicationId, ushort InputResource, ICollection<string> TargetApplicationIds):base(applicationId, InputResource){
+            this.TargetApplicationIds=TargetApplicationIds;
+        }
+        public ICollection<string> TargetApplicationIds; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// cPushbuttonSingle2OnOff {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::apps::cPushbuttonSingle2OnOff {0}(eApplicationID::{0}, {1}, eApplicationID::{2});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("// cPushbuttonSingle2Toggle {0}" + Environment.NewLine, ApplicationId);
+            sb.AppendFormat("sensact::apps::cPushbuttonSingleToggle {0}(eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId,
-                InputRessource, 
-                TargetApplicationId
+                InputResource, 
+                VectorOfApplicationIds(TargetApplicationIds, m)
                 );
 
             return sb.ToString();
@@ -85,15 +96,18 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonSingle2PwmSingleApplication :PushButtonSingleApplication{
         
-        public string targetApplicationId; 
+        public PushButtonSingle2PwmSingleApplication(string applicationId, ushort InputResource, string TargetApplicationIds):base(applicationId, InputResource){
+            this.TargetApplicationId=TargetApplicationIds;
+        }
+        public string TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// cPushbuttonSingle2PwmSingle {0}" + Environment.NewLine, ApplicationId);
             sb.AppendFormat("sensact::apps::cPushbuttonSingle2PwmSingle {0}(eApplicationID::{0}, {1}, eApplicationID::{2});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId,
-                InputRessource, 
-                targetApplicationId
+                InputResource, 
+                TargetApplicationId
                 );
 
             return sb.ToString();
@@ -102,16 +116,19 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonDual2BlindApplication :PushButtonDualApplication{
         
-        public string targetApplicationId; 
+        public PushButtonDual2BlindApplication(string applicationId, ushort InputResource1, ushort InputResource2, string TargetApplicationIds):base(applicationId, InputResource1, InputResource2){
+            this.TargetApplicationId=TargetApplicationIds;
+        }
+        public string TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// cPushbuttonDual2Blind {0}" + Environment.NewLine, ApplicationId);
             sb.AppendFormat("sensact::apps::cPushbuttonDual2Blind {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId,
-                InputRessource1,
-                InputRessource2,
-                targetApplicationId
+                InputResource1,
+                InputResource2,
+                TargetApplicationId
                 );
 
             return sb.ToString();
@@ -120,16 +137,19 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonDual2PWMApplication :PushButtonDualApplication{
         
-        public string targetApplicationId; 
+        public PushButtonDual2PWMApplication(string applicationId, ushort InputResource1, ushort InputResource2, string TargetApplicationIds):base(applicationId, InputResource1, InputResource2){
+            this.TargetApplicationId=TargetApplicationIds;
+        }
+        public string TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// cPushbuttonDual2PWM {0}" + Environment.NewLine, ApplicationId);
             sb.AppendFormat("sensact::apps::cPushbuttonDual2PWM {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId,
-                InputRessource1,
-                InputRessource2,
-                targetApplicationId
+                InputResource1,
+                InputResource2,
+                TargetApplicationId
                 );
 
             return sb.ToString();

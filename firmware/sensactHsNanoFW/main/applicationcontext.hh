@@ -13,7 +13,7 @@ namespace sensact
         virtual void GetU16Input(InOutId id, u16 &value) = 0;
         virtual void SetRGBLed(uint8_t index, CRGB color) = 0;
         virtual void UnColorizeAllRGBLed() = 0;
-        virtual void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value) = 0;
+        virtual void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) = 0;
         virtual void SetAmplifierVolume(uint8_t volume0_255) = 0;
         virtual void PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
         virtual void StopSound() = 0;

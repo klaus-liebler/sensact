@@ -48,7 +48,7 @@ namespace sensact::hal
         virtual ErrorCode StageRGBLed(uint8_t index, CRGB color) = 0;
         virtual ErrorCode StageUnColorizeAllRGBLed() = 0;
         virtual ErrorCode CommitRGBLed() = 0;
-        virtual ErrorCode GetRotaryEncoderValue(sensact::eRotaryEncoder re, uint16_t &value) = 0;
+        virtual ErrorCode GetRotaryEncoderValue(sensact::eRotaryEncoder re, uint16_t &value, bool &isPressed) = 0;
         virtual ErrorCode SetAmplifierVolume(uint8_t volume0_255) = 0;
         /**
          * @brief

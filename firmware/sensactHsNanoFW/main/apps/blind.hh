@@ -4,16 +4,7 @@
 
 namespace sensact::apps
 {
-	enum class eRelayInterlockMode{
-		eRelayInterlockMode_R1_POWER__R2_UP,
-		eRelayInterlockMode_R1_POWER__R2_DOWN,
-		eRelayInterlockMode_R1_UP__R2_POWER,
-		eRelayInterlockMode_R1_DOWN__R2_POWER,
-		eRelayInterlockMode_R1_DOWN__R2_UP,
-		eRelayInterlockMode_R1_UP__R2_DOWN,
-	};
-	
-	class cBlind : public cApplication
+		class cBlind : public cApplication
 	{
 		enum class eCurrentBlindState
 		{

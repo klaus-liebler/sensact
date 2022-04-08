@@ -6,23 +6,23 @@ using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config.Applications
 {
-    public class RotaryEncoderApplication : SensorApplication
+    public class RotaryEncoder2PWMApplication : SensorApplication
     {
-        public List<Command> CommandsOnPressed;
-        public List<Command> CommandsOnShortReleased;
-        public List<Command> CommandsOnLongReleased;
-        public List<Command> CommandsOnTurned;
-        public RotaryEncoder InputRotaryRessource;
-        public ushort InputPushRessource;
+         public RotaryEncoder2PWMApplication(string ApplicationID, RotaryEncoder InputRotaryRessource, string targetApplication):base(ApplicationID){
+            this.InputRotaryRessource=InputRotaryRessource;
+            this.TargetApplication=targetApplication;
+        }
+        public RotaryEncoder InputRotaryRessource{get;}
+        public string TargetApplication{get;}
 
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
         {
-            if (usedInputPins.Contains(InputPushRessource.ToString()))
+            if (usedInputPins.Contains(InputRotaryRessource.ToString()))
             {
-                return "InputPushRessource";
+                return "InputPushRessource of "+ApplicationId;
             }
-            usedInputPins.Add(InputPushRessource.ToString());
+            usedInputPins.Add(InputRotaryRessource.ToString());
             return null;
         }
 
@@ -43,21 +43,9 @@ namespace Klli.Sensact.Config.Applications
         {
             //Command op_a1[1] = {{eApplicationID::POWIT_EG_WOZ_L1, eCommandType::BACKWARD }};
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// RotaryEncoder {0}" + Environment.NewLine, ApplicationId);
-            sb.Append(CommandInitializer("OnPressed", CommandsOnPressed, m));
-            sb.Append(CommandInitializer("OnShortReleased", CommandsOnShortReleased, m));
-            sb.Append(CommandInitializer("OnLongReleased", CommandsOnLongReleased, m));
-            sb.Append(CommandInitializer("OnTurned", CommandsOnTurned, m));
-            HashSet<EventType> locEvts = new HashSet<EventType>();
-            m.id2localEvents.TryGetValue(ApplicationId, out locEvts);
-            HashSet<EventType> busEvts = new HashSet<EventType>();
-            m.id2busEvents.TryGetValue(ApplicationId, out busEvts);
-
-            sb.Append(EventInitializer("Local", locEvts, m));
-            sb.Append(EventInitializer("Bus", busEvts, m));
-            //homecontrol::cRotaryEncoder ROT_G0S0(eApplicationID::ROT_G0S0, sensact::eRotaryEncoder::ROTARYENCODER_1, sensact::eInput::I00, ROT_LocalEvents, 0, PUSHB_EG_WOZ_G0S0_BusEvents, 0, PUSHB_EG_WOZ_G0S0_OnPressed, 1, PUSHB_EG_WOZ_G0S0_OnShortReleased, 1, PUSHB_EG_WOZ_G0S0_OnLongReleased, 1, ROT_OnTurned, 1);
-
-            sb.AppendFormat("sensactapps::cROTAR {0}(eApplicationID::{0}, eRotaryEncoder::{1}, {2}, {0}_LocalEvents, {3}, {0}_BusEvents, {4}, {0}_OnPressed, {5}, {0}_OnShortReleased, {6}, {0}_OnLongReleased, {7}, {0}_OnTurned, {8} );" + Environment.NewLine + Environment.NewLine, ApplicationId, InputRotaryRessource, InputPushRessource, locEvts == null ? 0 : locEvts.Count, busEvts == null ? 0 : busEvts.Count, CommandsOnPressed == null ? 0 : CommandsOnPressed.Count, CommandsOnShortReleased == null ? 0 : CommandsOnShortReleased.Count, CommandsOnLongReleased == null ? 0 :CommandsOnLongReleased.Count, CommandsOnTurned == null ? 0 : CommandsOnTurned.Count);
+            sb.AppendFormat("// RotaryEncoder2PWM {0}" + Environment.NewLine, ApplicationId);
+            
+            sb.AppendFormat("sensact::apps::cRotaryEncoder2PWM {0}(eApplicationID::{0}, eRotaryEncoder::{1}, {2});" + Environment.NewLine + Environment.NewLine, ApplicationId, InputRotaryRessource, this.TargetApplication);
 
             return sb.ToString();
         }

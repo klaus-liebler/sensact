@@ -139,14 +139,16 @@ namespace sensact
             LOGE(TAG, "GetU16Input raised error %02X", (int)err);
         }
     }
-    void cApplicationHost::GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value)
+    void cApplicationHost::GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed)
     {
-        ErrorCode err = hal->GetRotaryEncoderValue(re, value);
+        ErrorCode err = hal->GetRotaryEncoderValue(re, value, isPressed);
         if (err != ErrorCode::OK)
         {
             LOGE(TAG, "GetRotaryEncoderValue raised error %02X", (int)err);
         }
     }
+
+   
     /*
     ErrorCode cApplicationHost::PostEventFiltered(const MODEL::eApplicationID sourceApp, const MODEL::eEventType evt, std::vector<eEventType> localEvts, std::vector<eEventType> busEvts, uint8_t *payload, uint8_t payloadLength)
     {
