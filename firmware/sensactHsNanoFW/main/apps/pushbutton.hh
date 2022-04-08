@@ -94,6 +94,15 @@ namespace sensact::apps
 			this->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
+
+		eAppCallResult Setup(SensactContext *ctx) override
+		{
+			return eAppCallResult::OK;
+		}
+
+		eAppType GetAppType() override{
+			return eAppType::PSHBT;
+		}
 	};
 
 	class cPushbuttonSingle2PwmSingle : public cApplication, public cPushbutton
@@ -116,6 +125,15 @@ namespace sensact::apps
 		{
 			this->ButtonLoop(ctx);
 			return eAppCallResult::OK;
+		}
+
+		eAppCallResult Setup(SensactContext *ctx) override
+		{
+			return eAppCallResult::OK;
+		}
+
+		eAppType GetAppType() override{
+			return eAppType::PSHBT;
 		}
 	};
 
@@ -162,6 +180,15 @@ namespace sensact::apps
 			up->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
+
+		eAppCallResult Setup(SensactContext *ctx) override
+		{
+			return eAppCallResult::OK;
+		}
+
+		eAppType GetAppType() override{
+			return eAppType::PSHBT;
+		}
 	};
 
 	class cPushbuttonDual2PWM : public cApplication
@@ -201,16 +228,20 @@ namespace sensact::apps
 			down = new cPushbuttonDOWN(inputUp, target);
 		}
 
-		eAppType GetAppType() override
-		{
-			return eAppType::PSHBT;
-		}
-
 		eAppCallResult Loop(SensactContext *ctx) override
 		{
 			down->ButtonLoop(ctx);
 			up->ButtonLoop(ctx);
 			return eAppCallResult::OK;
+		}
+
+		eAppCallResult Setup(SensactContext *ctx) override
+		{
+			return eAppCallResult::OK;
+		}
+
+		eAppType GetAppType() override{
+			return eAppType::PSHBT;
 		}
 	};
 }

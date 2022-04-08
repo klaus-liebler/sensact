@@ -84,7 +84,7 @@ namespace Klli.Sensact.Config.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// cPushbuttonSingle2Toggle {0}" + Environment.NewLine, ApplicationId);
-            sb.AppendFormat("sensact::apps::cPushbuttonSingleToggle {0}(eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::apps::cPushbuttonSingle2Toggle {0}(eApplicationID::{0}, {1}, {2});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationId,
                 InputResource, 
                 VectorOfApplicationIds(TargetApplicationIds, m)

@@ -41,5 +41,11 @@ class cRgbw: public cApplication
 		eAppType GetAppType() override;
 		eAppCallResult Setup(SensactContext *ctx) override;
         eAppCallResult Loop(SensactContext *ctx) override;
+		void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;
+		void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx) override;
+		void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx) override;
+		void OnTOGGLECommand(SensactContext *ctx) override;
+		void OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx) override;
+		
 	};
 }

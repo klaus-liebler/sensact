@@ -53,10 +53,10 @@ namespace sensact::apps
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
 		{
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_UP:
+		case eRelayInterlockMode::R1_POWER__R2_UP:
 			ctx->SetU16Output(relay2, sensact::magic::ACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_POWER:
+		case eRelayInterlockMode::R1_UP__R2_POWER:
 			ctx->SetU16Output(relay1, sensact::magic::ACTIVE);
 			break;
 		default:
@@ -71,14 +71,14 @@ namespace sensact::apps
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
 		{
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_UP:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_DOWN:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_DOWN:
+		case eRelayInterlockMode::R1_POWER__R2_UP:
+		case eRelayInterlockMode::R1_POWER__R2_DOWN:
+		case eRelayInterlockMode::R1_UP__R2_DOWN:
 			ctx->SetU16Output(relay1, sensact::magic::ACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_UP:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_POWER:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_POWER:
+		case eRelayInterlockMode::R1_DOWN__R2_UP:
+		case eRelayInterlockMode::R1_UP__R2_POWER:
+		case eRelayInterlockMode::R1_DOWN__R2_POWER:
 			ctx->SetU16Output(relay2, sensact::magic::ACTIVE);
 			break;
 		default:
@@ -93,10 +93,10 @@ namespace sensact::apps
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
 		{
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_DOWN:
+		case eRelayInterlockMode::R1_POWER__R2_DOWN:
 			ctx->SetU16Output(relay2, sensact::magic::ACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_POWER:
+		case eRelayInterlockMode::R1_DOWN__R2_POWER:
 			ctx->SetU16Output(relay1,sensact::magic::ACTIVE);
 			break;
 		default:
@@ -111,14 +111,14 @@ namespace sensact::apps
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
 		{
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_UP:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_DOWN:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_UP:
+		case eRelayInterlockMode::R1_POWER__R2_UP:
+		case eRelayInterlockMode::R1_POWER__R2_DOWN:
+		case eRelayInterlockMode::R1_DOWN__R2_UP:
 			ctx->SetU16Output(relay1, sensact::magic::ACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_POWER:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_POWER:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_DOWN:
+		case eRelayInterlockMode::R1_UP__R2_POWER:
+		case eRelayInterlockMode::R1_DOWN__R2_POWER:
+		case eRelayInterlockMode::R1_UP__R2_DOWN:
 			ctx->SetU16Output(relay2, sensact::magic::ACTIVE);
 			break;
 		default:
@@ -135,16 +135,16 @@ namespace sensact::apps
 		currentPosition = currentPosition < FULL_DOWN ? FULL_DOWN : currentPosition;
 		switch (this->mode)
 		{
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_UP:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_POWER__R2_DOWN:
+		case eRelayInterlockMode::R1_POWER__R2_UP:
+		case eRelayInterlockMode::R1_POWER__R2_DOWN:
 			ctx->SetU16Output(relay1, sensact::magic::INACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_POWER:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_POWER:
+		case eRelayInterlockMode::R1_UP__R2_POWER:
+		case eRelayInterlockMode::R1_DOWN__R2_POWER:
 			ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
 			break;
-		case eRelayInterlockMode::eRelayInterlockMode_R1_DOWN__R2_UP:
-		case eRelayInterlockMode::eRelayInterlockMode_R1_UP__R2_DOWN:
+		case eRelayInterlockMode::R1_DOWN__R2_UP:
+		case eRelayInterlockMode::R1_UP__R2_DOWN:
 			ctx->SetU16Output(relay1, sensact::magic::INACTIVE);
 			ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
 			break;

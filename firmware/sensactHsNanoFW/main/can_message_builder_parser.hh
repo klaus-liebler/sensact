@@ -86,7 +86,7 @@ namespace sensact
 		virtual ErrorCode BuildNodeCommandMessage(uint8_t destinationNodeId, uint8_t commandId, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
 		virtual ErrorCode BuildNodeEventMessage(uint8_t sourceNodeId, uint8_t eventId, uint8_t * payload, uint8_t payloadLength, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
 		virtual ErrorCode BuildNodeCommandAcknowledgeMessage(uint8_t acknowledgingNodeId, uint8_t commandId, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
-		virtual ErrorCode BuildApplicationEventMessage(uint16_t sourceAppId, uint8_t eventId, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
+		virtual ErrorCode BuildApplicationEventMessage(uint16_t sourceAppId, uint8_t eventId, const uint8_t *const payload, uint8_t payloadLength, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
 		virtual ErrorCode BuildApplicationStatusMessage(uint16_t sourceAppId, uint8_t statusId, const uint8_t *const payload, uint8_t payloadLength, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
 		virtual ErrorCode BuildApplicationCommandMessage(uint16_t destinationAppId, uint8_t commandId, const uint8_t *const payload, uint8_t payloadLength, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
 		virtual ErrorCode BuildCommandAcknowledgeMessage(uint16_t acknowledgingdestinationAppId, uint8_t commandId, CANMessage &m){m.DataLen=0; return ErrorCode::INVALID_STATE;}
@@ -180,10 +180,13 @@ namespace sensact
 			m.DataLen=0;
 			return ErrorCode::OK;
 		}
-		ErrorCode BuildApplicationEventMessage(uint16_t sourceAppId, uint8_t eventId, CANMessage &m)override
+		ErrorCode BuildApplicationEventMessage(uint16_t sourceAppId, uint8_t eventId, const uint8_t *const payload, uint8_t payloadLength, CANMessage &m)override
 		{
 			m.Id = (uint32_t)eCanMessageType::ApplicationEvent | ((uint32_t)sourceAppId) << 8 | ((uint32_t)eventId) << 0;
-			m.DataLen=0;
+			for(int i=0;i<payloadLength;i++){
+				m.Data[i]=payload[i];
+			}
+			m.DataLen=payloadLength;
 			return ErrorCode::OK;
 		}
 		ErrorCode BuildApplicationStatusMessage(uint16_t sourceAppId, uint8_t statusId, const uint8_t *const payload, uint8_t payloadLength, CANMessage &m)override

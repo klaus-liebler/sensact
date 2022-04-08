@@ -190,14 +190,21 @@ namespace Klli.Sensact.Config
             GenerateNodeIds(mc);
             GenerateApplicationNames(mc);
             GenerateParseCommand();
-            GenerateSendCommandImplementation();
+            
             GenerateCommandTypes(mc);
             GenerateEventTypes(mc);
             GenerateEmptyImplementationForCmdHandler();
             GenerateCommandHandlerDeclarations(true);
             GenerateCommandHandlerDeclarations(false);
+            
             GenerateSendCommandDeclarations(true);
             GenerateSendCommandDeclarations(false);
+            GenerateSendCommandImplementation();
+            
+            GeneratePublishEventDeclarations(true);
+            GeneratePublishEventDeclarations(false);
+            GeneratePublishEventImplementation();
+
             GenerateHeaderIncludesForApplications(mc);
             GenerateNodeSpecificFiles(mc);
         }
@@ -277,7 +284,23 @@ namespace Klli.Sensact.Config
                 sb.AppendLine("\t}");
             }
             WriteCommonFile("sendCommandImplementation", sb);
-            LOG.LogInformation("Successfully created cmdSend");
+            LOG.LogInformation("Successfully created sendCommandImplementation");
+        }
+
+        protected void GeneratePublishEventImplementation()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (EventType e in Enum.GetValues(typeof(EventType)))
+            {
+                sb.AppendFormat("\tvoid cApplicationHost::Publish{0}Event(sensact::eApplicationID sourceApp, const uint8_t *const payload, uint8_t payloadLength", e.ToString());
+                sb.AppendLine(")");
+                sb.AppendLine("\t{");
+                sb.AppendFormat("\t\tthis->PublishApplicationEventToMessageBus(sourceApp, sensact::eEventType::{0}, payload, payloadLength);", e.ToString());
+                sb.AppendLine();
+                sb.AppendLine("\t}");
+            }
+            WriteCommonFile("publishEventImplementation", sb);
+            LOG.LogInformation("Successfully created publishEventImplementation");
         }
         protected void GenerateEmptyImplementationForCmdHandler()
         {
@@ -311,9 +334,6 @@ namespace Klli.Sensact.Config
 
 
 
-        //	virtual void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx);
-        //static bool CreateSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, uint8_t buffer, uint8_t* lenght);
-
         private void GenerateCommandHandlerDeclarations(bool TrueIfVirtualFalseIfOverride)
         {
             StringBuilder sb = new StringBuilder();
@@ -346,6 +366,30 @@ namespace Klli.Sensact.Config
                 WriteCommonFile("commandHandlerDeclarationsVirtual", sb);
             }else{
                 WriteCommonFile("commandHandlerDeclarationsOverride", sb);
+            }
+        }
+
+        private void GeneratePublishEventDeclarations(bool TrueIfVirtualFalseIfOverride)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(EventType e in Enum.GetValues(typeof(EventType))){
+                sb.Append("\t");
+                if(TrueIfVirtualFalseIfOverride){
+                    sb.Append("virtual ");
+                }
+                sb.AppendFormat("void Publish{0}Event(sensact::eApplicationID sourceApp, const uint8_t *const payload, uint8_t payloadLength", e.ToString());
+                if(TrueIfVirtualFalseIfOverride){
+                    sb.AppendLine(")=0;");
+                }else{
+                    sb.AppendLine(") override;");
+                }
+                
+            }
+
+            if(TrueIfVirtualFalseIfOverride){
+                WriteCommonFile("publishEventDeclarationsVirtual", sb);
+            }else{
+                WriteCommonFile("publishEventDeclarationsOverride", sb);
             }
         }
 

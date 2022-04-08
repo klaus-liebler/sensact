@@ -11,6 +11,7 @@ namespace sensact
 {
 
 #include <generated/common/sendCommandImplementation.inc>
+#include <generated/common/publishEventImplementation.inc>
 
     ErrorCode cApplicationHost::OnApplicationCommand(cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength)
     {
@@ -68,6 +69,24 @@ namespace sensact
         CANMessage m;
         canMBP->BuildApplicationCommandMessage((u16)destinationApp, (u8)commmandType, payload, payloadLength, m);
         hostCtx->PublishOnMessageBus(m, true);
+    }
+
+    void cApplicationHost::PublishApplicationEventToMessageBus(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength)
+    {
+        if (sourceApp == eApplicationID::NO_APPLICATION)
+        {
+            return;
+        }
+        if ((uint16_t)sourceApp >= (uint16_t)eApplicationID::CNT)
+        {
+            LOGE(TAG, "Trying to send to an invalid application id %i", (uint16_t)sourceApp);
+            return;
+        }
+        this->lastSentCANMessage =  hal->GetMillisS64();
+        CANMessage m;
+        if(canMBP->BuildApplicationEventMessage((u16)sourceApp, (u8)event, payload, payloadLength,  m)!=ErrorCode::OK)
+            return;
+        hostCtx->PublishOnMessageBus(m, false);
     }
 
     cApplicationHost::cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP) : hal(hal), hostCtx(hostCtx), canMBP(canMBP)
@@ -149,7 +168,7 @@ namespace sensact
     }
 
    
-    /*
+/*
     ErrorCode cApplicationHost::PostEventFiltered(const MODEL::eApplicationID sourceApp, const MODEL::eEventType evt, std::vector<eEventType> localEvts, std::vector<eEventType> busEvts, uint8_t *payload, uint8_t payloadLength)
     {
         for (auto &test : localEvents)
@@ -173,26 +192,8 @@ namespace sensact
             }
         }
     }
+    */
 
-
-
-
-    ErrorCode cApplicationHost::PostEvent(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength)
-    {
-        lastSentCANMessage = now;
-        messenger->SendEventMessage((u16)sourceApp, (u8)event, payload, payloadLength);
-#ifdef MASTERNODE
-        uint8_t buf[11];
-        Common::WriteInt16((u16)sourceApp, buf, 0);
-        buf[2] = (u8)event;
-        for (int i = 0; i < payloadLength; i++)
-        {
-            buf[i + 3] = payload[i];
-        }
-        cMaster::mqtt_publishOnTopic(eMqttTopic::APP_EVENT, buf, 3 + payloadLength, 0, 1);
-#endif
-    }
-*/
     ErrorCode cApplicationHost::Setup(iHostContext &ctx)
     {
         // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project

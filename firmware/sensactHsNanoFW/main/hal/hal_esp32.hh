@@ -7,7 +7,7 @@
 #include "mbcontroller.h"
 #include <i2c.hh>
 #include <vector>
-#include <connect.hh>
+#include <network.hh>
 
 #define TAG "HAL"
 
@@ -46,12 +46,12 @@ namespace sensact::hal
 		}
 
 		ErrorCode SetupNetworkCommon(){
-			startNetifAndEventLoop();
+			initNetIfandEventLoop();
 			return ErrorCode::OK;
 		}
 
 		ErrorCode SetupWIFI(){
-			connectSTA2AP();
+			connectSTA2AP(CONFIG_NETWORK_WIFI_SSID, CONFIG_NETWORK_WIFI_PASSWORD, "sensact-%02X-%02X-%02X");
 			return ErrorCode::OK;
 		}
 

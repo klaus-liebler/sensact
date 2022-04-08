@@ -70,12 +70,12 @@ namespace sensact
     };
 
     enum class eRelayInterlockMode{
-		eRelayInterlockMode_R1_POWER__R2_UP,
-		eRelayInterlockMode_R1_POWER__R2_DOWN,
-		eRelayInterlockMode_R1_UP__R2_POWER,
-		eRelayInterlockMode_R1_DOWN__R2_POWER,
-		eRelayInterlockMode_R1_DOWN__R2_UP,
-		eRelayInterlockMode_R1_UP__R2_DOWN,
+		R1_POWER__R2_UP,
+		R1_POWER__R2_DOWN,
+		R1_UP__R2_POWER,
+		R1_DOWN__R2_POWER,
+		R1_DOWN__R2_UP,
+		R1_UP__R2_DOWN,
 	};
 
     enum class eAppType : uint8_t

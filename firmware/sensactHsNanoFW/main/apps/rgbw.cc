@@ -32,7 +32,7 @@ namespace sensact::apps
 	{
 		index %= wellKnownColors.size();
 		lastColorIndex = index;
-		LOGD(TAG, "Showing Color ID %d", lastColor);
+		LOGD(TAG, "Showing Color ID %d", lastColorIndex);
 		showColorOfRGBW(ctx, wellKnownColors[index]);
 	}
 	void cRgbw::showColorOfRGBW(SensactContext *ctx, Color c)
@@ -100,9 +100,10 @@ namespace sensact::apps
 	{
 		if (standbyController != eApplicationID::NO_APPLICATION && state == ePowerState::ACTIVE && ctx->Now() - lastHeartbeatToStandbycontroller > 10000)
 		{
-			cMaster::SendCommandToMessageBus(now, standbyController, eCommandType::HEARTBEAT, 0, 0);
-			lastHeartbeatToStandbycontroller = now;
+			ctx->SendHEARTBEATCommand(standbyController, (uint32_t)this->id);
+			lastHeartbeatToStandbycontroller = ctx->Now();
 		}
+		/*
 		Common::WriteInt16(outputR, statusBuffer, 0);
 		Common::WriteInt16(outputG, statusBuffer, 2);
 		Common::WriteInt16(outputB, statusBuffer, 4);
@@ -110,7 +111,8 @@ namespace sensact::apps
 		*statusBufferLength = 8;
 		eAppCallResult ret = changeRecorded ? eAppCallResult::OK_CHANGED : eAppCallResult::OK;
 		changeRecorded = false;
-		return ret;
+		*/
+		return eAppCallResult::OK;
 	}
 
 	eAppCallResult cRgbw::Setup(SensactContext *ctx)

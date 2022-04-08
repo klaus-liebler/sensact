@@ -24,7 +24,7 @@ namespace sensact::apps
 		}
 
 		void OnTOGGLECommand(SensactContext *ctx) override{
-			OnSET_SIGNALCommand(this->defaultSignalOnToggle);
+			OnSET_SIGNALCommand(this->defaultSignalOnToggle, ctx);
 		}
 		void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx) override{
 			ctx->PlayMP3(this->currentVolume, Alarm_ding_mp3, sizeof(Alarm_ding_mp3));
