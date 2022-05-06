@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class RCEventApplication : SensorApplication
     {
-        public RCEventApplication(string ApplicationID):base(ApplicationID){
+        public RCEventApplication(ushort ApplicationId, string ApplicationName):base(ApplicationId, ApplicationName){
 
         }
         public List<Command> CommandsOnPressed;
@@ -35,7 +35,7 @@ namespace Klli.Sensact.Config.Applications
 
 
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

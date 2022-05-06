@@ -14,11 +14,12 @@ namespace Klli.Sensact.Config.Nodes
         public const int IO6 = 5;
         public const int IO7 = 2;
         public const int IO8 = 3;
-        public SensactUp02(ApplicationId appId) : base(appId)
+                public SensactUp02(ApplicationId appId) : base((ushort)appId, appId.ToString())
         {
 
         }
-        public SensactUp02(string appId, int idAsNumber) : base(appId, idAsNumber)
+
+        public SensactUp02(ushort nodeId, string nodeName) : base(nodeId, nodeName)
         {
 
         }

@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BlindApplication : ActorApplication
     {
-        public BlindApplication(string ApplicationId, ushort OutputResource1, ushort OutputResource2, RelayInterlockMode RelayMode, long UpTimeInSeconds, long DownTimeInSeconds):base(ApplicationId){
+        public BlindApplication(ushort ApplicationId, string ApplicationName,  ushort OutputResource1, ushort OutputResource2, RelayInterlockMode RelayMode, long UpTimeInSeconds, long DownTimeInSeconds):base(ApplicationId, ApplicationName){
             this.OutputResource1=OutputResource1;
             this.OutputResource2=OutputResource2;
             this.RelayMode=RelayMode;
@@ -81,7 +81,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

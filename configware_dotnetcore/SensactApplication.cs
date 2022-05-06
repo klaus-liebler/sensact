@@ -11,37 +11,48 @@ namespace Klli.Sensact.Config
 {
     public class SensactApplicationContainer
     {
-        public Node Node;
-        public int Index;
-        public SensactApplication Application;
+        public SensactApplicationContainer(Node Node, SensactApplication Application)
+        {
+            this.Node = Node;
+            this.Application = Application;
+        }
+        public Node Node { get; }
+        public SensactApplication Application { get; }
 
     }
     public abstract class SensactApplication
     {
-        public SensactApplication(string ApplicationId){
-            this.ApplicationId=ApplicationId;
+        public SensactApplication(ushort ApplicationId, string ApplicationName)
+        {
+            this.ApplicationId = ApplicationId;
+            this.ApplicationName = ApplicationName;
         }
         private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
 
-        public Regex FLOOR_ROOM_Regex(string prefix){
-            return new Regex("^"+prefix+REGEX_FLOOR_ROOM_SUFFIX+"$");
+        public Regex FLOOR_ROOM_Regex(string prefix)
+        {
+            return new Regex("^" + prefix + REGEX_FLOOR_ROOM_SUFFIX + "$");
         }
-        public string ApplicationId{get;}
-        
-        
+        public ushort ApplicationId { get; private set; }
+        public string ApplicationName { get; private set; }
+
+        public void SetApplicationId_BeCareful(ushort id)
+        {
+            this.ApplicationId = id;
+        }
 
         [XmlIgnore]
-        internal abstract Regex AppIdRegex { get; }
+        internal abstract Regex AppNameRegex { get; }
 
 
 
         public static SensactApplication MergeInHigherPrioVal(SensactApplication higherPrio, SensactApplication lowerPrio)
         {
-            
-            foreach(FieldInfo f in lowerPrio.GetType().GetFields())
+
+            foreach (FieldInfo f in lowerPrio.GetType().GetFields())
             {
                 object lowerPrioVal = f.GetValue(lowerPrio);
-                if(f.GetValue(higherPrio)==null && lowerPrioVal!=null)
+                if (f.GetValue(higherPrio) == null && lowerPrioVal != null)
                 {
                     f.SetValue(higherPrio, lowerPrioVal);
                 }
@@ -49,9 +60,14 @@ namespace Klli.Sensact.Config
             return higherPrio;
         }
 
+        public virtual void AddJSONDescriptionToList(IList<object> list)
+        {
+            return;
+        }
+
         internal bool HasValidAppId()
         {
-            return this.AppIdRegex.IsMatch(this.ApplicationId.ToString());
+            return this.AppNameRegex.IsMatch(this.ApplicationName);
         }
 
         public HashSet<Event> IReactOnTheseEvents()
@@ -112,13 +128,13 @@ namespace Klli.Sensact.Config
             foreach (FieldInfo pi in this.GetType().GetRuntimeFields())
             {
                 Type type = pi.FieldType;
-                if (type.IsGenericType && type.GetGenericTypeDefinition()== typeof(List<>))
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    Type itemType = type.GetGenericArguments()[0]; 
+                    Type itemType = type.GetGenericArguments()[0];
                     if (itemType == typeof(Command) && pi.Name.StartsWith("Command"))
                     {
                         var val = pi.GetValue(this);
-                        if(val!=null)
+                        if (val != null)
                         {
                             List<Command> cmds = val as List<Command>;
                             ret.UnionWith(cmds);
@@ -140,7 +156,7 @@ namespace Klli.Sensact.Config
             {
                 sb.Append(b + ",");
             }
-            sb.Append("};"+Environment.NewLine);
+            sb.Append("};" + Environment.NewLine);
             return sb.ToString();
         }
 
@@ -156,11 +172,11 @@ namespace Klli.Sensact.Config
                 foreach (Command cmd in cmds)
                 {
                     sb.Append("{eApplicationID::" + cmd.TargetAppId + ", eCommandType::" + cmd.CommandType + ", ");
-                    if(cmd.Payload!=null && cmd.Payload.Length>0)
+                    if (cmd.Payload != null && cmd.Payload.Length > 0)
                     {
                         string nameOfArray = string.Format("{0}_{1}_{2}", ApplicationId, collectionName, cmdIndex);
                         payloads.Append(BuildUint8Array(nameOfArray, cmd.Payload));
-                        sb.Append(nameOfArray+", " + cmd.Payload.Length + "}, ");
+                        sb.Append(nameOfArray + ", " + cmd.Payload.Length + "}, ");
                     }
                     else
                     {
@@ -194,13 +210,13 @@ namespace Klli.Sensact.Config
             return sb.ToString();
         }
 
-        protected string VectorOfApplicationIds(ICollection<string> ids, ModelContainer m)
+        protected string VectorOfApplicationIds(ICollection<ushort> ids, ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
-            foreach (string id in ids)
+            foreach (ushort id in ids)
             {
-                sb.Append("eApplicationID::"+Convert.ToString(id) + ",");
+                sb.Append(id + ",");
             }
             sb.Append("}");
             return sb.ToString();
@@ -322,23 +338,25 @@ namespace Klli.Sensact.Config
 
     public class Command
     {
-        public string TargetAppId;
+        public ushort TargetAppId;
         public CommandType CommandType; //TODO: Prüfung: Kann die DestinationApp auf dieses Event reagieren?
         public byte[] Payload;
     }
 
 
-    public abstract class SensorApplication:SensactApplication
+    public abstract class SensorApplication : SensactApplication
     {
-        public SensorApplication(string ApplicationId):base(ApplicationId){}
+        public SensorApplication(ushort ApplicationId, string ApplicationName) : base(ApplicationId, ApplicationName) { }
+
+
     }
 
-    public abstract class ActorApplication:SensactApplication
+    public abstract class ActorApplication : SensactApplication
     {
-        public ActorApplication(string ApplicationId):base(ApplicationId){}
+        public ActorApplication(ushort ApplicationId, string ApplicationName) : base(ApplicationId, ApplicationName) { }
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited =true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class SensactCommandMethod : Attribute
     {
         // . . .

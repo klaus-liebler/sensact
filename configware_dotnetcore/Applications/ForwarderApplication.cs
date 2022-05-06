@@ -7,10 +7,10 @@ namespace Klli.Sensact.Config.Applications
 {
     public class ForwarderApplication : ActorApplication
     {
-        public ForwarderApplication(string ApplicationId, ApplicationId finalTarget):base(ApplicationId){
+        public ForwarderApplication(ushort ApplicationId, string ApplicationName,  ushort finalTarget):base(ApplicationId, ApplicationName){
             this.FinalTarget=finalTarget;
         }
-        public ApplicationId FinalTarget{get;}
+        public ushort FinalTarget{get;}
 
 
         [SensactCommandMethod]
@@ -107,7 +107,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

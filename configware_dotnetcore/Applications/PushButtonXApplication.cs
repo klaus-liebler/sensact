@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public abstract class PushButtonApplication : SensorApplication
     {
-        protected PushButtonApplication(string ApplicationId):base(ApplicationId){}
+        protected PushButtonApplication(ushort ApplicationId, string ApplicationName):base(ApplicationId, ApplicationName){}
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>
@@ -22,7 +22,7 @@ namespace Klli.Sensact.Config.Applications
             };
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {
@@ -33,7 +33,7 @@ namespace Klli.Sensact.Config.Applications
     
     public abstract class PushButtonSingleApplication : PushButtonApplication
     {
-        protected PushButtonSingleApplication(string ApplicationID, ushort InputResource):base(ApplicationID){
+        protected PushButtonSingleApplication(ushort ApplicationId, string ApplicationName, ushort InputResource):base(ApplicationId, ApplicationName){
             this.InputResource=InputResource;
         }
         public ushort InputResource;
@@ -52,7 +52,7 @@ namespace Klli.Sensact.Config.Applications
 
     public abstract class PushButtonDualApplication : PushButtonApplication
     {
-        protected PushButtonDualApplication(string ApplicationID, ushort InputResource1, ushort InputResource2):base(ApplicationID){
+        protected PushButtonDualApplication(ushort ApplicationId, string ApplicationName, ushort InputResource1, ushort InputResource2):base(ApplicationId, ApplicationName){
             this.InputResource1=InputResource1;
             this.InputResource2=InputResource2;
         }
@@ -76,10 +76,19 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonSingle2ToggleApplication :PushButtonSingleApplication{
         
-        public PushButtonSingle2ToggleApplication(string applicationId, ushort InputResource, ICollection<string> TargetApplicationIds):base(applicationId, InputResource){
+        public PushButtonSingle2ToggleApplication(ushort ApplicationId, string ApplicationName, ushort InputResource, ICollection<ushort> TargetApplicationIds):base(ApplicationId, ApplicationName, InputResource){
             this.TargetApplicationIds=TargetApplicationIds;
         }
-        public ICollection<string> TargetApplicationIds; 
+
+        public class JSON{
+
+        }
+
+        public override void AddJSONDescriptionToList(IList<object> list){
+            list.Add(new JSONAppDescriptionMultipleTarget(ApplicationId, ApplicationName, this.GetType().Name, TargetApplicationIds));
+        }
+
+        public ICollection<ushort> TargetApplicationIds; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
@@ -96,10 +105,10 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonSingle2PwmSingleApplication :PushButtonSingleApplication{
         
-        public PushButtonSingle2PwmSingleApplication(string applicationId, ushort InputResource, string TargetApplicationIds):base(applicationId, InputResource){
-            this.TargetApplicationId=TargetApplicationIds;
+        public PushButtonSingle2PwmSingleApplication(ushort ApplicationId, string ApplicationName, ushort InputResource, ushort TargetApplicationId):base(ApplicationId, ApplicationName, InputResource){
+            this.TargetApplicationId=TargetApplicationId;
         }
-        public string TargetApplicationId; 
+        public ushort TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
@@ -116,10 +125,10 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonDual2BlindApplication :PushButtonDualApplication{
         
-        public PushButtonDual2BlindApplication(string applicationId, ushort InputResource1, ushort InputResource2, string TargetApplicationIds):base(applicationId, InputResource1, InputResource2){
-            this.TargetApplicationId=TargetApplicationIds;
+        public PushButtonDual2BlindApplication(ushort ApplicationId, string ApplicationName, ushort InputResource1, ushort InputResource2, ushort TargetApplicationId):base(ApplicationId, ApplicationName, InputResource1, InputResource2){
+            this.TargetApplicationId=TargetApplicationId;
         }
-        public string TargetApplicationId; 
+        public ushort TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();
@@ -137,10 +146,10 @@ namespace Klli.Sensact.Config.Applications
 
     public class PushButtonDual2PWMApplication :PushButtonDualApplication{
         
-        public PushButtonDual2PWMApplication(string applicationId, ushort InputResource1, ushort InputResource2, string TargetApplicationIds):base(applicationId, InputResource1, InputResource2){
+        public PushButtonDual2PWMApplication(ushort ApplicationId, string ApplicationName, ushort InputResource1, ushort InputResource2, ushort TargetApplicationIds):base(ApplicationId, ApplicationName, InputResource1, InputResource2){
             this.TargetApplicationId=TargetApplicationIds;
         }
-        public string TargetApplicationId; 
+        public ushort TargetApplicationId; 
         public override string GenerateInitializer(ModelContainer m)
         {
             StringBuilder sb = new StringBuilder();

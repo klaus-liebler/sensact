@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
     public class SoundApplication : ActorApplication
     {
 
-        public SoundApplication(string applicationId, byte initialVolume=100, ushort defaultSignalOnToggle=0):base(applicationId){
+        public SoundApplication(ushort ApplicationId, string ApplicationName, byte initialVolume=100, ushort defaultSignalOnToggle=0):base(ApplicationId, ApplicationName){
             this.DefaultVolume=initialVolume;
             this.defaultSignalOnToggle=defaultSignalOnToggle;
         }
@@ -71,7 +71,7 @@ namespace Klli.Sensact.Config.Applications
             return null;
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

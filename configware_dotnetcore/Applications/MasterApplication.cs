@@ -5,11 +5,11 @@ namespace Klli.Sensact.Config.Applications
 {
     public class MasterApplication : SensactNodeApplication
     {
-        public MasterApplication():base("MASTER")
+        public MasterApplication():base((ushort)Nodes.ApplicationId.MASTER, Nodes.ApplicationId.MASTER.ToString())
         {
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

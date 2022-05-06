@@ -9,7 +9,7 @@ namespace Klli.Sensact.Config.Applications
 
     public class RgbwApplication : ActorApplication
     {
-         public RgbwApplication(string ApplicationId, ushort OutputRessourceR, ushort OutputRessourceG, ushort OutputRessourceB, ushort OutputRessourceW, uint AutoOffIntervalMsecs, string idOfStandbyController="NO_APPLICATION"):base(ApplicationId){
+         public RgbwApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessourceR, ushort OutputRessourceG, ushort OutputRessourceB, ushort OutputRessourceW, uint AutoOffIntervalMsecs, ushort idOfStandbyController=(ushort)Nodes.ApplicationId.NO_APPLICATION):base(ApplicationId, ApplicationName){
             this.OutputRessourceR=OutputRessourceR;
             this.OutputRessourceG=OutputRessourceG;
             this.OutputRessourceB=OutputRessourceB;
@@ -21,7 +21,7 @@ namespace Klli.Sensact.Config.Applications
         public ushort OutputRessourceG{get;}
         public ushort OutputRessourceB{get;}
         public ushort OutputRessourceW{get;}
-        public string IdOfStandbyController{get;}
+        public ushort IdOfStandbyController{get;}
         public uint AutoOffIntervalMsecs{get;}
 
         public override void OnSET_RGBWCommand(byte R, byte G, byte B, byte W)
@@ -88,7 +88,7 @@ namespace Klli.Sensact.Config.Applications
         }
 
         //PWM PushButton
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

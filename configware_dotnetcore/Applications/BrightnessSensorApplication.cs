@@ -8,13 +8,13 @@ namespace Klli.Sensact.Config.Applications
 {
     public class BrightnessSensorApplication : ActorApplication
     {
-        public BrightnessSensorApplication(string ApplicationId, string sensorName, string ToggleTarget, int LimitForPassingToggle):base(ApplicationId){
+        public BrightnessSensorApplication(ushort ApplicationId, string ApplicationName, string sensorName, Klli.Sensact.Config.Nodes.ApplicationId ToggleTarget, int LimitForPassingToggle):base(ApplicationId, ApplicationName){
             this.SensorName=sensorName;
             this.ToggleTarget=ToggleTarget;
             this.LimitForPassingToggle=LimitForPassingToggle;
         }
         public string SensorName;
-        public string ToggleTarget;
+        public Klli.Sensact.Config.Nodes.ApplicationId ToggleTarget;
         public int LimitForPassingToggle;
 
         public override void OnTOGGLE_FILTERCommand(ushort targetApplicationId)
@@ -53,7 +53,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

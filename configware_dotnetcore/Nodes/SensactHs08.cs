@@ -5,12 +5,12 @@ namespace Klli.Sensact.Config.Nodes
 {
     public class SensactHs08 : SensactHs07
     {
-        public SensactHs08(ApplicationId appId) : base(appId)
+        public SensactHs08(ApplicationId appId) : base((ushort)appId, appId.ToString())
         {
 
         }
 
-        public SensactHs08(string appId, int idAsNumber) : base(appId, idAsNumber)
+        public SensactHs08(ushort nodeId, string nodeName) : base(nodeId, nodeName)
         {
 
         }

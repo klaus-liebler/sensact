@@ -116,8 +116,8 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ApplicationId.PUSHB_L0_TECH_B11, BB + I2C + 7, ApplicationId.POWIT_L0_TECH_C1);//24
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ApplicationId.POWIT_L0_TECH_C1, BB + I2C + 38, T_30m__ms);//RL5
             //SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I14, ID.NO_APPLICATION);//56
-            SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication(_(ApplicationId.DEVCE_L0_TECH_AUDIO), 17));
-            SNSCT_L0_TECH_HS_1.Applications.Add(new PumpApplication(_(ApplicationId.POWIT_L0_TECH_PUMP), BUS0 + I2C + 45, T_5m__ms, T_2h__ms)); // RL14
+            SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication((ushort)ApplicationId.SOUND_L0_TECH_AUDIO, ApplicationId.SOUND_L0_TECH_AUDIO.ToString(), 17));
+            SNSCT_L0_TECH_HS_1.Applications.Add(new PumpApplication((ushort)ApplicationId.PUMP__L0_TECH_PUMP, ApplicationId.PUMP__L0_TECH_PUMP.ToString(), BUS0 + I2C + 45, T_5m__ms, T_2h__ms)); // RL14
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ApplicationId.STDBY_L0_TECH_48V, BB + I2C + 48, DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS);//RL15 K115
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ApplicationId.STDBY_L2_CORR_24V, BB + I2C + 49, DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS );//RL17 K117
             
@@ -146,12 +146,13 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ApplicationId.BLIND_LX_BACK_J1, BB + I2C + 25,BB + I2C + 35, RelayInterlockMode.R1_POWER__R2_DOWN, 60, 60);//K19 K20
 
             //Front (Klingelknopf, Licht, Bewegungsmelder)
-            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ApplicationId.PUSHB_LX_FRON_B1, BB + I2C + 62, ApplicationId.DEVCE_L0_TECH_AUDIO);
+            SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ApplicationId.PUSHB_LX_FRON_B1, BB + I2C + 62, ApplicationId.SOUND_L0_TECH_AUDIO);
             SNSCT_L0_TECH_HS_1.Applications.Add(new LightbarrierApplication(
-                _(ApplicationId.LIBAR_LX_FRON_B2),
+                (ushort)ApplicationId.LIBAR_LX_FRON_B2,
+                ApplicationId.LIBAR_LX_FRON_B2.ToString(),
                 BB + I2C + 63, //Relais-Kabel
-                _(ApplicationId.NO_APPLICATION), 
-                _(ApplicationId.NO_APPLICATION),//_(ID.SBRGH_LX_ROOF),
+                (ushort)ApplicationId.NO_APPLICATION, 
+                (ushort)ApplicationId.NO_APPLICATION,//_(ID.SBRGH_LX_ROOF),
                 false));
             SNSCT_L0_TECH_HS_1.Applications.AddPowIt(ApplicationId.POWIT_LX_FRON_W1, BB + I2C + 57, 1000 * 60 * 2);//RL31 K131
 
@@ -178,7 +179,7 @@ namespace Klli.Sensact.Config
             SNSCT_L0_TECH_HS_1.Applications.AddPWMApplication (ApplicationId.PWM___L1_BATH_S, ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 3 }, 1000 * 60 * 60); //128
             SNSCT_L0_TECH_HS_1.Applications.AddBlindApplication(ApplicationId.BLIND_L1_BATH_J1, BB + I2C + 16, BUS0 + I2C + 26, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);//K1 K2
             //Dekoleuchten werden aus dem 48V-Netzteil + Spannungswandler versorgt
-            SNSCT_L0_TECH_HS_1.Applications.Add(new RgbwApplication(_(ApplicationId.RGBW__L1_BATH_W1), BUS0 + I2C + 7, BB + I2C + 6, BB + I2C + 5, OUTPUT_NULL, T_2h__ms, _(ApplicationId.STDBY_L0_TECH_48V)));
+            SNSCT_L0_TECH_HS_1.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L1_BATH_W1, ApplicationId.RGBW__L1_BATH_W1.ToString(), BUS0 + I2C + 7, BB + I2C + 6, BB + I2C + 5, OUTPUT_NULL, T_2h__ms, (ushort)ApplicationId.STDBY_L0_TECH_48V));
 
 
             //CORR
@@ -293,7 +294,7 @@ namespace Klli.Sensact.Config
             SNSCT_L3_TECH_HS_1.Applications.AddBlindButtons(ApplicationId.PUSHB_L2_BATH_B13, BB + I2C + 1,  BB + I2C + 0, ApplicationId.BLIND_L2_BATH_J1);//4 2
             //End "be careful"
             SNSCT_L2_BATH_UP.Applications.AddPWMApplication(ApplicationId.PWM___L2_BATH_S, ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 });
-            SNSCT_L2_BATH_UP.Applications.Add(new RgbwApplication(_(ApplicationId.RGBW__L2_BATH_W), /*Nach L2.Corr!*/BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8 , BUS0 + I2C + 9, T_2h__ms, _(ApplicationId.STDBY_L3_ROOF_48V)));
+            SNSCT_L2_BATH_UP.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), /*Nach L2.Corr!*/BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8 , BUS0 + I2C + 9, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
             SNSCT_L3_TECH_HS_1.Applications.AddBlindApplication(ApplicationId.BLIND_L2_BATH_J1, RB + I2C + 16, RB + I2C + 25, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
 
 

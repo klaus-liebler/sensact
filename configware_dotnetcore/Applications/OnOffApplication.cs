@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class OnOffApplication : ActorApplication
     {
-        public OnOffApplication(string ApplicationId, ushort OutputRessource, PowerState InitialPowerState, uint AutoOffIntervalMsecs):base(ApplicationId){
+        public OnOffApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessource, PowerState InitialPowerState, uint AutoOffIntervalMsecs):base(ApplicationId, ApplicationName){
             this.OutputRessource=OutputRessource;
             this.InitialPowerState=InitialPowerState;
             this.AutoOffIntervalMsecs=AutoOffIntervalMsecs;
@@ -80,7 +80,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using Klli.Sensact.Config.Applications;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Klli.Sensact.Config
 {
@@ -55,29 +57,35 @@ namespace Klli.Sensact.Config
 
         public bool CheckAndPrepare(ModelContainer mc)
         {
-
-            //preFill predefined indices
-            mc.PrefillPredefinedIndices(Enum.GetValues(typeof(Klli.Sensact.Config.Nodes.ApplicationId)));
-
-            HashSet<string> alreadyDefinedAppIds = new HashSet<string>();
-            SensactApplicationContainer masterApp = new SensactApplicationContainer() { Application = new Applications.MasterApplication(), Index = mc.GetIndex("MASTER"), Node = null };
+            HashSet<ushort> predefinedAppIds = Enum.GetValues<Nodes.ApplicationId>().Select(x=>(ushort)x).ToHashSet();
+            mc.NextFreeIndex = predefinedAppIds.Where(x=>x!=(ushort)Nodes.ApplicationId.NO_APPLICATION).Max();
+            mc.NextFreeIndex++;
+            SensactApplicationContainer masterApp = new SensactApplicationContainer(null, new Applications.MasterApplication());
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
-            mc.index2app[0] = masterApp;
+    
             foreach (Node n in mc.Model.Nodes)
-            {
-                n.Applications.Add(new SensactNodeApplication(n.Id));
+            {  
                 HashSet<string> usedInputPins = new HashSet<string>();
                 HashSet<string> usedOutputPins = new HashSet<string>();
+                
                 foreach (SensactApplication app in n.Applications)
                 {
-                    if (alreadyDefinedAppIds.Contains(app.ApplicationId))
+                    if(app.ApplicationName==null){
+                        LOG.LogError("An App in Node {0} has no name", n.NodeName);
+                        return false;
+                    }
+                    if(app.ApplicationId==0 && app.ApplicationName!=null){
+                        app.SetApplicationId_BeCareful(mc.NextFreeIndex++);
+                    }
+                    
+                    if (mc.id2app.ContainsKey(app.ApplicationId))
                     {
                         LOG.LogError("AppId {0} is defined at least two times in node applications", app.ApplicationId);
                         return false;
                     }
                     if (!app.HasValidAppId())
                     {
-                        LOG.LogWarning("AppId {0} does not fulfill the recommendations for application name. This is ok, but maybe it is an error...", app.ApplicationId, n.Id);
+                        LOG.LogWarning("AppId {0} with name {1} in node {2} does not fulfill the regex pattern {3} for application name. This is ok, but maybe it is an error...", app.ApplicationId, app.ApplicationName, n.NodeName, app.AppNameRegex);
                         app.HasValidAppId();
                     }
                     string errorMessage = app.CheckAndAddUsedPins(usedInputPins, usedOutputPins);
@@ -86,17 +94,23 @@ namespace Klli.Sensact.Config
                         LOG.LogError("AppId {0} uses pins that have been reserved by another app:\n{1}", app.ApplicationId, errorMessage);
                         return false;
                     }
-                    alreadyDefinedAppIds.Add(app.ApplicationId);
-                    SensactApplicationContainer cont = new SensactApplicationContainer
-                    {
-                        Application = app,
-                        Index = mc.GetIndex(app.ApplicationId),
-                        Node = n,
-                    };
-
+                    SensactApplicationContainer cont = new SensactApplicationContainer(n, app);
                     mc.id2app[cont.Application.ApplicationId] = cont;
-                    mc.index2app[cont.Index] = cont;
                 }
+
+                //Sanity: Check, whether node application has already been added
+                if(mc.id2app.ContainsKey(n.NodeId)){
+                    //Es wurde eine Application mit der ID der Node angelegt
+                    if(!mc.id2app[n.NodeId].Application.ApplicationName.Equals(n.NodeName)){
+                        //mit dem Namen gibt es ein Problem
+                        LOG.LogError("There is a predefined node app for node {0}, but its name is not correct:", n.NodeName);
+                        return false;
+                    }
+                }else{
+                    SensactApplicationContainer nodeAppContainer = new SensactApplicationContainer(n, new SensactNodeApplication(n.NodeId, n.NodeName));
+                    n.Applications.Add(nodeAppContainer.Application);
+                    mc.id2app.Add(nodeAppContainer.Application.ApplicationId, nodeAppContainer);
+                }                
             }
 
             //Find out which events should be fired by each application because there is a listener for the event
@@ -152,7 +166,7 @@ namespace Klli.Sensact.Config
                         SensactApplicationContainer target;
                         if (!mc.id2app.TryGetValue(cmd.TargetAppId, out target))
                         {
-                            if (cmd.TargetAppId != Nodes.ApplicationId.NO_APPLICATION.ToString())
+                            if (cmd.TargetAppId != (ushort)Nodes.ApplicationId.NO_APPLICATION)
                             {
                                 LOG.LogError("AppId {0} sends command to AppId {1}, but this app does not exist.", app.ApplicationId, cmd.TargetAppId);
                                 return false;
@@ -207,19 +221,21 @@ namespace Klli.Sensact.Config
 
             GenerateHeaderIncludesForApplications(mc);
             GenerateNodeSpecificFiles(mc);
+
+            GenerateJSONDescription(mc);
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
-            StringBuilder pageContent = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             //mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             //page.Nodes.Add("CNT");
 
-            foreach (var kv in mc.predefinedIndices)
+            foreach (var id in Enum.GetValues<Nodes.ApplicationId>())
             {
-                pageContent.AppendLine(kv.Key + "=" + kv.Value + ",");
+                sb.AppendLine(id.ToString() + "=" + (ushort)id + ",");
             }
-            pageContent.AppendLine("CNT,");
-            this.WriteCommonFile("applicationIds", pageContent);
+            sb.AppendLine("CNT,");
+            this.WriteCommonFile("applicationIds", sb);
             LOG.LogInformation("Successfully created appids");
             return;
         }
@@ -562,17 +578,27 @@ namespace Klli.Sensact.Config
             foreach (Node n in mc.Model.Nodes)
             {
 
-                sb.AppendLine(n.Id+",");
+                sb.AppendLine(n.NodeName+",");
             }
             WriteCommonFile("nodeIds", sb);
         }
         internal void GenerateApplicationNames(ModelContainer mc)
         {
             var ApplicationNames = new string[mc.NextFreeIndex];
-            foreach (var kv in mc.predefinedIndices)
+            foreach (var kv in Enum.GetValues<Nodes.ApplicationId>().Where(x=>x!=Nodes.ApplicationId.NO_APPLICATION))
             {
-                ApplicationNames[kv.Value] = kv.Key;
+                ApplicationNames[(ushort)kv] = kv.ToString();
+                //Alle vordefinierten Indizes müssen bekannt sein, auch wenn die App (noch) nicht definiert ist
             }
+            foreach(var appc in mc.id2app.Values){
+                //Sanity check
+                if(ApplicationNames[appc.Application.ApplicationId]!=null && !ApplicationNames[appc.Application.ApplicationId].Equals(appc.Application.ApplicationName)){
+                    throw new Exception("Implementation error!");
+                }
+                ApplicationNames[appc.Application.ApplicationId]=appc.Application.ApplicationName;
+                //Auch alle Apps, die keinen vordefinierten Index verwenden, müssen bekannt sein
+            }
+
             StringBuilder sb = new StringBuilder();
             foreach (var name in ApplicationNames)
             {
@@ -588,15 +614,15 @@ namespace Klli.Sensact.Config
                 StringBuilder sb = new StringBuilder();
 
                 //const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
-                sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.Id);
-                WriteFileInSubdirectory(node.Id, "nodeMasterApplicationId", sb);
+                sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
+                WriteFileInSubdirectory(node.NodeName, "nodeMasterApplicationId", sb);
                 sb.Clear();
 
                 //const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
-                sb.AFL("const char* const node::NodeDescription =\"NodeId {0} created on {1} using model {2}\";", node.Id, DateTime.Now, mc.Model.Name);
+                sb.AFL("const char* const node::NodeDescription =\"NodeId {0} created on {1} using model {2}\";", node.NodeName, DateTime.Now, mc.Model.Name);
                 //const eNodeID MODEL::NodeID = eNodeID::SNSCT_L0_TECH_HS_1;
-                sb.AFL("const sensact::eNodeID node::NodeID = sensact::eNodeID::{0};", node.Id);
-                WriteFileInSubdirectory(node.Id, "nodeDescription", sb);
+                sb.AFL("const sensact::eNodeID node::NodeID = sensact::eNodeID::{0};", node.NodeName);
+                WriteFileInSubdirectory(node.NodeName, "nodeDescription", sb);
                 sb.Clear();
 
                 string[] Glo2LocCmd = new string[mc.NextFreeIndex];
@@ -609,15 +635,15 @@ namespace Klli.Sensact.Config
                 {
                     sb.Append(app.GenerateInitializer(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
-                    Glo2LocCmd[appCont.Index] = "    &" + app.ApplicationId + ",";
+                    Glo2LocCmd[appCont.Application.ApplicationId] = "    &" + app.ApplicationId + ",";
                 }
-                WriteFileInSubdirectory(node.Id, "applicationInitializers", sb);
+                WriteFileInSubdirectory(node.NodeName, "applicationInitializers", sb);
                 sb.Clear();
                 for (int i = 0; i < Glo2LocCmd.Length; i++)
                 {
                     sb.AppendLine(Glo2LocCmd[i]);
                 }
-                WriteFileInSubdirectory(node.Id, "glo2LocCmd", sb);
+                WriteFileInSubdirectory(node.NodeName, "glo2LocCmd", sb);
                 sb.Clear();
                 string[] Glo2LocEvents = new string[mc.NextFreeIndex];
                 for (int i = 0; i < Glo2LocEvents.Length; i++)
@@ -629,11 +655,27 @@ namespace Klli.Sensact.Config
                     sb.AppendLine(Glo2LocEvents[i]);
                 }
 
-                WriteFileInSubdirectory(node.Id, "glo2LocEvt", sb);
+                WriteFileInSubdirectory(node.NodeName, "glo2LocEvt", sb);
                 sb.Clear();
             }
-            LOG.LogInformation("Successfully created all node specific files");
+            LOG.LogInformation("Successfully created all node specific .inc files");
             return;
+        }
+
+        private void GenerateJSONDescription(ModelContainer mc){
+            
+            foreach (Node node in mc.Model.Nodes)
+            {
+                List<object> list = new List<object>();
+                foreach(var app in node.Applications){
+                    app.AddJSONDescriptionToList(list);
+                }
+                string directory = Path.Combine(this.options.BasePath, node.NodeName);
+                Directory.CreateDirectory(directory);
+                string path = Path.Combine(directory, "app_descriptor.json");
+                File.WriteAllText(path, JsonSerializer.Serialize<object>(list));
+            }
+            LOG.LogInformation("Successfully created all node specific .json files");
         }
 
         protected void WriteFileInSubdirectory(string subdir, string filenameWithoutExtension, StringBuilder content)

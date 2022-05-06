@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class SinglePWMApplication : ActorApplication
     {
-        public SinglePWMApplication(string applicationId, ISet<ushort> OutputResources,  int MinimalOnLevel, int InitialStoredTargetLevel, uint AutoOffIntervalMsecs, string StandbyController="NO_APPLICATION"):base(applicationId){
+        public SinglePWMApplication(ushort ApplicationId, string ApplicationName, ISet<ushort> OutputResources,  int MinimalOnLevel, int InitialStoredTargetLevel, uint AutoOffIntervalMsecs, ushort StandbyController=(ushort)Nodes.ApplicationId.NO_APPLICATION):base(ApplicationId, ApplicationName){
             if(MinimalOnLevel<1)
             {
                 MinimalOnLevel = 1;
@@ -32,7 +32,7 @@ namespace Klli.Sensact.Config.Applications
         public int MinimalOnLevel{get;}
         public int InitialStoredTargetLevel{get;}
         public uint AutoOffIntervalMsecs{get;}
-        public string StandbyController{get;}
+        public ushort StandbyController{get;}
         
 
 
@@ -119,7 +119,7 @@ namespace Klli.Sensact.Config.Applications
         }
 
         //PWM PushButton
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

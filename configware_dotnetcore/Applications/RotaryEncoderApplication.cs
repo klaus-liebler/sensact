@@ -8,12 +8,12 @@ namespace Klli.Sensact.Config.Applications
 {
     public class RotaryEncoder2PWMApplication : SensorApplication
     {
-         public RotaryEncoder2PWMApplication(string ApplicationID, RotaryEncoder InputRotaryRessource, string targetApplication):base(ApplicationID){
+         public RotaryEncoder2PWMApplication(ushort ApplicationId, string ApplicationName, RotaryEncoder InputRotaryRessource, ushort targetApplication):base(ApplicationId, ApplicationName){
             this.InputRotaryRessource=InputRotaryRessource;
             this.TargetApplication=targetApplication;
         }
         public RotaryEncoder InputRotaryRessource{get;}
-        public string TargetApplication{get;}
+        public ushort TargetApplication{get;}
 
 
         internal override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)
@@ -50,7 +50,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

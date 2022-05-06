@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class PlaceholderApplication : ActorApplication
     {
-        public PlaceholderApplication(string ApplicationId):base(ApplicationId){}
+        public PlaceholderApplication(ushort ApplicationId, string ApplicationName):base(ApplicationId, ApplicationName){}
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();
@@ -24,7 +24,7 @@ namespace Klli.Sensact.Config.Applications
             return null;
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

@@ -8,7 +8,7 @@ namespace Klli.Sensact.Config.Applications
 {
     public class PumpApplication : ActorApplication
     {
-        public PumpApplication(string ApplicationId, ushort OutputRessource,  uint OnIntervalMsecs, uint OffIntervalMsecs):base(ApplicationId){
+        public PumpApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessource,  uint OnIntervalMsecs, uint OffIntervalMsecs):base(ApplicationId, ApplicationName){
             this.OutputRessource=OutputRessource;
             this.OnIntervalMsecs=OnIntervalMsecs;
             this.OffIntervalMsecs=OffIntervalMsecs;
@@ -46,7 +46,7 @@ namespace Klli.Sensact.Config.Applications
             return sb.ToString();
         }
 
-        internal override Regex AppIdRegex
+        internal override Regex AppNameRegex
         {
             get
             {

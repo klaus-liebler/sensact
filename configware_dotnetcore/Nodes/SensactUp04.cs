@@ -18,7 +18,9 @@ namespace Klli.Sensact.Config.Nodes
         {
 
         }
-        public SensactUp04(string appId, int idAsNumber) : base(appId, idAsNumber)
+           
+
+        public SensactUp04(ushort nodeId, string nodeName) : base(nodeId, nodeName)
         {
 
         }

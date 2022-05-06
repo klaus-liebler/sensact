@@ -8,15 +8,15 @@ namespace Klli.Sensact.Config.Nodes
     public abstract class Node
     {
 
-        public Node(ApplicationId appId):this(appId.ToString(), (int)appId)
+        public Node(ApplicationId appId):this((ushort)appId, appId.ToString())
         {
            
         }
 
-        public Node(string appId, int idAsNumber)
+        public Node(ushort nodeId,  string nodeName)
         {
-            this.Id = appId;
-            this.IdAsNumber=idAsNumber;
+            this.NodeId = nodeId;
+            this.NodeName=nodeName;
             this.Applications = new List<SensactApplication>();
         }
 
@@ -25,8 +25,8 @@ namespace Klli.Sensact.Config.Nodes
             
         }
 
-        public string Id;
-        public int IdAsNumber;
+        public string NodeName{get;}
+        public ushort NodeId{get;}
 
 
         public abstract STM32Chip Chip { get; }

@@ -2,7 +2,6 @@
 {
     public enum ApplicationId
     {
-        NO_APPLICATION,
         MASTER,
         //Sensact-Geräte
         SNSCT_L0_TECH_HS_1,
@@ -36,7 +35,7 @@
         POWIT_L0_TECH_C1,
         DEVCE_L0_TECH_HEAT,
         DEVCE_L0_TECH_PUMP, //Störsignal Hebepumpe
-        POWIT_L0_TECH_PUMP, //Power für Zirkulationspumpe
+        PUMP__L0_TECH_PUMP, //Power für Zirkulationspumpe
         POWIT_L0_TECH_P1,
         POWIT_L0_TECH_P2,
         SCLIM_L0_TECH_AIR,
@@ -69,7 +68,7 @@
         SWIND_L1_BATH_W1,
         VALVE_L1_BATH,
 
-        DEVCE_L0_TECH_AUDIO, //auch gleichzeitig DEVCE_L1_CORR_Audio
+        SOUND_L0_TECH_AUDIO, //auch gleichzeitig DEVCE_L1_CORR_Audio
         PUSHB_L1_CORR_B11, //für Spots
         PUSHB_L1_CORR_B21, //S
         PUSHB_L1_CORR_B22, //W1
@@ -412,5 +411,6 @@
         STDBY_L3_TECH_48V,
         STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
         STDBY_L3_WORK_C1, //ist die Stromversorgung fur die Deckenlampe im Arbeitszimmer
+        NO_APPLICATION=0xFFFF
     }
 }
