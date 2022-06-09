@@ -45,18 +45,6 @@ extern "C" void app_main(void)
             ;
     }
 
-    const esp_partition_t *running = esp_ota_get_running_partition();
-    esp_app_desc_t running_app_info;
-    if (esp_ota_get_partition_description(running, &running_app_info) == ESP_OK)
-    {
-        ESP_LOGI(TAG, "Running firmware version: %s", running_app_info.version);
-        ESP_LOGI(TAG, "Running project name: %s", running_app_info.project_name);
-    }
-    else
-    {
-        ESP_LOGE(TAG, "Error while getting firmware info");
-    }
-
     xSemaphoreTake(connectSemaphore, portMAX_DELAY);
     ESP_LOGI(TAG, "Semaphore for connection is taken from main thread");
     aCANMessageBuilderParser* canMBP;
