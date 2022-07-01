@@ -4,4 +4,6 @@ configware/Klli.Sensact.Config/configgitkey.txt
 firmware_sensactOutdoor/sdkconfig
 firmware_sensactOutdoor/sdkconfig.old
 **/*-backups
+/pcb/**/gerber
+/pcb/**/assembly
 
