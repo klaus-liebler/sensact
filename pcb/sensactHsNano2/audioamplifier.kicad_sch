@@ -1866,7 +1866,7 @@
     (uuid 00000000-0000-0000-0000-000061306266)
     (property "Reference" "U1" (id 0) (at 109.22 46.355 0))
     (property "Value" "TAS5805M" (id 1) (at 109.22 48.6664 0))
-    (property "Footprint" "liebler_SEMICONDUCTORS:TSSOP-28_4.4x9.7mm_Pitch0.65mm_pad_handsolder" (id 2) (at 109.22 62.23 0)
+    (property "Footprint" "Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm_ThermalVias" (id 2) (at 109.22 62.23 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 109.22 62.23 0)

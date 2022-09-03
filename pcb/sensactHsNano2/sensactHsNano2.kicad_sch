@@ -3016,10 +3016,10 @@
       (effects (font (size 1.27 1.27)) hide)
     )
   )
-  (global_label "CAN_RX" (shape input) (at 74.93 86.36 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left))
+  (global_label "CAN_RX" (shape input) (at 44.45 38.1 270) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right))
     (uuid bb5d2eae-a96e-45dd-89aa-125fe22cc2fa)
-    (property "Intersheet References" "${INTERSHEET_REFS}" (id 0) (at 0 -2.54 0)
+    (property "Intersheet References" "${INTERSHEET_REFS}" (id 0) (at 133.35 -36.83 0)
       (effects (font (size 1.27 1.27)) hide)
     )
   )
@@ -3170,11 +3170,11 @@
       (effects (font (size 1.27 1.27)) (justify right) hide)
     )
   )
-  (global_label "SW1" (shape input) (at 44.45 38.1 270) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
+  (global_label "SW1" (shape input) (at 74.93 86.36 0) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify left))
     (uuid fcfaa515-692e-443b-b978-4d720c170424)
-    (property "Intersheet References" "${INTERSHEET_REFS}" (id 0) (at 44.3706 44.2947 90)
-      (effects (font (size 1.27 1.27)) (justify right) hide)
+    (property "Intersheet References" "${INTERSHEET_REFS}" (id 0) (at 81.1247 86.4394 0)
+      (effects (font (size 1.27 1.27)) (justify left) hide)
     )
   )
   (global_label "SCLK" (shape output) (at 74.93 55.88 0) (fields_autoplaced)
@@ -5506,14 +5506,11 @@
     (path "/00000000-0000-0000-0000-00005f9c3c99/00000000-0000-0000-0000-000061002c22"
       (reference "#PWR012") (unit 1) (value "GND") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e10cb5e"
+    (path "/00000000-0000-0000-0000-00006181a2e2/3a9196e9-edcd-4f47-bb3f-07f82e25dbdc"
       (reference "#PWR013") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e0b806e"
       (reference "#PWR014") (unit 1) (value "+3V3") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e0b73e9"
-      (reference "#PWR015") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e0dad05"
       (reference "#PWR016") (unit 1) (value "GND") (footprint "")
@@ -5544,9 +5541,6 @@
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-000060e67f2e"
       (reference "#PWR025") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e10d619"
-      (reference "#PWR026") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000060e5a575"
       (reference "#PWR027") (unit 1) (value "+3V3") (footprint "")
@@ -5785,6 +5779,9 @@
     (path "/6d0bf4b7-6e70-4b1b-96da-87185b6b1511"
       (reference "#PWR0151") (unit 1) (value "+3V3") (footprint "")
     )
+    (path "/00000000-0000-0000-0000-000060e30b7a/e7cb7bc1-2d67-4af7-b28d-d561be0de79a"
+      (reference "#PWR0152") (unit 1) (value "GND") (footprint "")
+    )
     (path "/00000000-0000-0000-0000-00005f9c3c99/00000000-0000-0000-0000-00005f9dd337"
       (reference "C1") (unit 1) (value "470u") (footprint "Capacitor_THT:CP_Radial_D10.0mm_P3.50mm")
     )
@@ -5846,7 +5843,7 @@
       (reference "C20") (unit 1) (value "u1") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e109cd1"
-      (reference "C21") (unit 1) (value "u1") (footprint "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder")
+      (reference "C21") (unit 1) (value "u1") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-00005fa43ad6"
       (reference "C22") (unit 1) (value "u1") (footprint "Capacitor_SMD:C_0402_1005Metric")
@@ -5960,7 +5957,7 @@
       (reference "J6") (unit 1) (value "Conn_01x03") (footprint "liebler_CONN:KF141R-3p")
     )
     (path "/00000000-0000-0000-0000-00006181a2e2/eb914753-4ad8-44fc-93fd-14f530d0ab5b"
-      (reference "J7") (unit 1) (value "PROG") (footprint "liebler_CONN:USB_C_Receptacle_HRO_TYPE-C-31-M-12_IMPROVED")
+      (reference "J7") (unit 1) (value "PROG") (footprint "liebler_CONN:USB_C_Receptacle_HRO_TYPE-C-31-M-12_smaller")
     )
     (path "/00000000-0000-0000-0000-000061938435"
       (reference "J8") (unit 1) (value "Conn_01x10") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical")
@@ -5998,11 +5995,14 @@
     (path "/00000000-0000-0000-0000-00005f9c3c99/00000000-0000-0000-0000-0000610023a8"
       (reference "NT1") (unit 1) (value "Net-Tie_2") (footprint "NetTie:NetTie-2_SMD_Pad2.0mm")
     )
+    (path "/00000000-0000-0000-0000-000060e30b7a/c83ee589-2a8a-4166-bee2-d2f600b8d91e"
+      (reference "NT2") (unit 1) (value "NetTie_2") (footprint "NetTie:NetTie-2_SMD_Pad0.5mm")
+    )
     (path "/00000000-0000-0000-0000-00006181a2e2/dd64bd92-873a-41e2-947c-df9be8b62d94"
-      (reference "Q1") (unit 1) (value "BC817") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q1") (unit 1) (value "BC817") (footprint "liebler_SEMICONDUCTORS:SOT-23_smaller")
     )
     (path "/00000000-0000-0000-0000-00006181a2e2/32659d89-6784-4859-9fd1-5b6349b2ee2a"
-      (reference "Q2") (unit 1) (value "BC817") (footprint "Package_TO_SOT_SMD:SOT-23")
+      (reference "Q2") (unit 1) (value "BC817") (footprint "liebler_SEMICONDUCTORS:SOT-23_smaller")
     )
     (path "/00000000-0000-0000-0000-00005fa49518"
       (reference "R1") (unit 1) (value "4k7") (footprint "Resistor_SMD:R_0402_1005Metric")
@@ -6134,7 +6134,7 @@
       (reference "SW4") (unit 1) (value "PROG_PWR") (footprint "liebler_MECH:SW_SPDT_PCM12_handsolder")
     )
     (path "/00000000-0000-0000-0000-00005f9c3c99/00000000-0000-0000-0000-000061306266"
-      (reference "U1") (unit 1) (value "TAS5805M") (footprint "liebler_SEMICONDUCTORS:TSSOP-28_4.4x9.7mm_Pitch0.65mm_pad_handsolder")
+      (reference "U1") (unit 1) (value "TAS5805M") (footprint "Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm_ThermalVias")
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00006124e6ff"
       (reference "U2") (unit 1) (value "LAN8720A") (footprint "Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.6x2.6mm")
@@ -6172,11 +6172,11 @@
     (path "/00000000-0000-0000-0000-000061a218e6"
       (reference "U11") (unit 1) (value "L78L15_SOT89") (footprint "Package_TO_SOT_SMD:SOT-89-3_Handsoldering")
     )
-    (path "/00000000-0000-0000-0000-00006181a2e2/f00e656c-e83a-4766-909c-2e0d3eea4f0e"
-      (reference "U13") (unit 1) (value "CH340C") (footprint "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm")
+    (path "/00000000-0000-0000-0000-00006181a2e2/e46ba44c-f9ee-428c-a18c-f36ebf366e7e"
+      (reference "U12") (unit 1) (value "CH340K") (footprint "liebler_SEMICONDUCTORS:SSOP-10_3.9x4.9mm_P1.00mm_EP")
     )
     (path "/00000000-0000-0000-0000-000060e30b7a/00000000-0000-0000-0000-00005e0b1bef"
-      (reference "X1") (unit 1) (value "50MHz") (footprint "Oscillator:Oscillator_SMD_EuroQuartz_XO32-4Pin_3.2x2.5mm_HandSoldering")
+      (reference "X1") (unit 1) (value "50MHz") (footprint "Oscillator:Oscillator_SMD_SeikoEpson_SG8002CE-4Pin_3.2x2.5mm")
     )
   )
 )
