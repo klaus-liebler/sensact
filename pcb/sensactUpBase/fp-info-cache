@@ -1,0 +1,337 @@
+79785700144974
+liebler_SEMICONDUCTORS
+AHT21
+
+
+0
+6
+6
+liebler_SEMICONDUCTORS
+AM612
+
+
+0
+6
+6
+liebler_SEMICONDUCTORS
+AMS_LGA-10-1EP_2.7x4mm_P0.6mm
+LGA-10, http://ams.com/eng/content/download/951091/2269479/471718
+lga land grid array
+0
+11
+11
+liebler_SEMICONDUCTORS
+D_SMA
+Diode SMA (DO-214AC)
+Diode SMA (DO-214AC)
+0
+2
+2
+liebler_SEMICONDUCTORS
+D_SMA_Handsoldering
+Diode SMA (DO-214AC) Handsoldering
+Diode SMA (DO-214AC) Handsoldering
+0
+2
+2
+liebler_SEMICONDUCTORS
+D_SOD-123F_smaller
+D_SOD-123F
+D_SOD-123F
+0
+2
+2
+liebler_SEMICONDUCTORS
+D_SOD-123_handsolder
+SOD-123
+SOD-123
+0
+2
+2
+liebler_SEMICONDUCTORS
+LQFP-48_7x7mm_P0.5mm_handsolder
+LQFP, 48 Pin (https://www.analog.com/media/en/technical-documentation/data-sheets/ltc2358-16.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+LQFP QFP
+0
+48
+48
+liebler_SEMICONDUCTORS
+LQFP-64_10x10mm_P0.5mm_handsolder
+LQFP, 64 Pin (https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+LQFP QFP
+0
+64
+64
+liebler_SEMICONDUCTORS
+LQFP-100_14x14mm_Pitch0.5mm_hnadsolder
+LQFP100: plastic low profile quad flat package; 100 leads; body 14 x 14 x 1.4 mm (see NXP sot407-1_po.pdf and sot407-1_fr.pdf)
+QFP 0.5
+0
+100
+100
+liebler_SEMICONDUCTORS
+MAX98357AETE
+
+
+0
+17
+17
+liebler_SEMICONDUCTORS
+MEMS-Mikro
+Infineon_PG-LLGA-5-1 StepUp generated footprint, https://www.infineon.com/cms/en/product/packages/PG-LLGA/PG-LLGA-5-1/
+infineon mems microphone
+0
+15
+5
+liebler_SEMICONDUCTORS
+MIC_ICS-43432
+
+
+0
+7
+7
+liebler_SEMICONDUCTORS
+MIC_ICS-43434
+
+
+0
+6
+6
+liebler_SEMICONDUCTORS
+MSM261D4030H1CPM
+
+
+0
+8
+8
+liebler_SEMICONDUCTORS
+PG-DSO-36
+
+
+0
+36
+36
+liebler_SEMICONDUCTORS
+PLCC4-5050
+
+
+0
+4
+4
+liebler_SEMICONDUCTORS
+QFN-24-1EP_4x4mm_P0.5mm_EP2.6x2.6mm_handsolder
+QFN, 24 Pin (http://ww1.microchip.com/downloads/en/PackagingSpec/00000049BQ.pdf#page=278), generated with kicad-footprint-generator ipc_dfn_qfn_generator.py
+QFN DFN_QFN
+0
+29
+25
+liebler_SEMICONDUCTORS
+RP2040-QFN-56
+QFN, 56 Pin (http://www.cypress.com/file/416486/download#page=40), generated with kicad-footprint-generator ipc_dfn_qfn_generator.py
+QFN DFN_QFN
+0
+70
+57
+liebler_SEMICONDUCTORS
+SO-4_7.6x3.6mm_P2.54mm_handsolder
+4-Lead Plastic Small Outline (SO) (http://www.everlight.com/file/ProductFile/201407061745083848.pdf)
+SO SOIC 2.54
+0
+4
+4
+liebler_SEMICONDUCTORS
+SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder
+8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+8
+8
+liebler_SEMICONDUCTORS
+SOIC-8_3.9x4.9mm_Pitch1.27mm_pad_handsolder
+8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+9
+9
+liebler_SEMICONDUCTORS
+SOIC-14_3.9x8.7mm_P1.27mm_handsolder
+SOIC, 14 Pin (JEDEC MS-012AB, https://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/soic_narrow-r/r_14.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOIC SO
+0
+14
+14
+liebler_SEMICONDUCTORS
+SOIC-18_7.5x11.6mm_Pitch1.27mm_handsolder
+18-Lead Plastic Small Outline (SO) - Wide, 7.50 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+18
+18
+liebler_SEMICONDUCTORS
+SOIC-28_7.5x17.9mm_Pitch1.27mm_handsolder
+28-Lead Plastic Small Outline (SO) - Wide, 7.50 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+28
+28
+liebler_SEMICONDUCTORS
+SOIJ-8_5.3x5.3mm_Pitch1.27mm_handsolder
+8-Lead Plastic Small Outline (SM) - Medium, 5.28 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
+SOIC 1.27
+0
+8
+8
+liebler_SEMICONDUCTORS
+SOP-4_3.8x4.1mm_P2.54mm_handsolder
+SOP, 4 Pin (http://www.ixysic.com/home/pdfs.nsf/www/CPC1017N.pdf/$file/CPC1017N.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOP SO
+0
+4
+4
+liebler_SEMICONDUCTORS
+SOP-8_6.62x9.15mm_P2.54mm_handsolder
+SOP, 8 Pin (http://www.ti.com/lit/ds/symlink/iso1050.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOP SO
+0
+8
+8
+liebler_SEMICONDUCTORS
+SOT-23-6-spezial
+SOT, 6 Pin (https://www.jedec.org/sites/default/files/docs/Mo-178c.PDF variant AB), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOT TO_SOT_SMD
+0
+6
+6
+liebler_SEMICONDUCTORS
+SOT-23-6_smaller
+SOT, 3 Pin (https://www.jedec.org/system/files/docs/to-236h.pdf variant AB), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOT TO_SOT_SMD
+0
+6
+6
+liebler_SEMICONDUCTORS
+SOT-23_smaller
+SOT, 3 Pin (https://www.jedec.org/system/files/docs/to-236h.pdf variant AB), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOT TO_SOT_SMD
+0
+3
+3
+liebler_SEMICONDUCTORS
+SOT-223-3_TabPin2_HANDSOLDER
+module CMS SOT223 4 pins
+CMS SOT
+0
+4
+3
+liebler_SEMICONDUCTORS
+SOT26
+
+
+0
+6
+6
+liebler_SEMICONDUCTORS
+SOT583
+
+
+0
+8
+8
+liebler_SEMICONDUCTORS
+SSOP-10_3.9x4.9mm_P1.00mm_EP
+10-Lead SSOP, 3.9 x 4.9mm body, 1.00mm pitch (http://www.st.com/resource/en/datasheet/viper01.pdf)
+SSOP 3.9 4.9 1.00
+0
+18
+11
+liebler_SEMICONDUCTORS
+SSOP-24_3.9x8.7mm_P0.65mm_EP2.7x5.6mm
+SSOP24: plastic shrink small outline package; 24 leads; body width 3.9 mm; lead pitch 0.635; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot556-1_po.pdf)
+SSOP 0.635
+0
+25
+25
+liebler_SEMICONDUCTORS
+TO7-PMOD
+
+
+0
+8
+7
+liebler_SEMICONDUCTORS
+TO7-PMOD-narrowPads
+
+
+0
+8
+7
+liebler_SEMICONDUCTORS
+TSOC6
+
+
+0
+6
+6
+liebler_SEMICONDUCTORS
+TSSOP-16_4.4x5mm_Pitch0.65mm_handsolder
+16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)
+SSOP 0.65
+0
+16
+16
+liebler_SEMICONDUCTORS
+TSSOP-16_4.4x5mm_Pitch0.65mm_narrowPad
+16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)
+SSOP 0.65
+0
+16
+16
+liebler_SEMICONDUCTORS
+TSSOP-20_4.4x6.5mm_Pitch0.65mm_handsolder
+TSSOP24: plastic thin shrink small outline package; 24 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot355-1_po.pdf)
+SSOP 0.65
+0
+20
+20
+liebler_SEMICONDUCTORS
+TSSOP-24_4.4x7.8mm_Pitch0.65mm_handsolder
+TSSOP24: plastic thin shrink small outline package; 24 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot355-1_po.pdf)
+SSOP 0.65
+0
+24
+24
+liebler_SEMICONDUCTORS
+TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder
+TSSOP28: plastic thin shrink small outline package; 28 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot361-1_po.pdf)
+SSOP 0.65
+0
+28
+28
+liebler_SEMICONDUCTORS
+TSSOP-28_4.4x9.7mm_Pitch0.65mm_pad_handsolder
+TSSOP28: plastic thin shrink small outline package; 28 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot361-1_po.pdf)
+SSOP 0.65
+0
+29
+29
+liebler_SEMICONDUCTORS
+do214aa_handsolder
+DO214AA
+
+0
+2
+2
+liebler_SEMICONDUCTORS
+do214ac_handsolder
+DO214AC
+
+0
+2
+2
+liebler_SEMICONDUCTORS
+mdip_4_handsolder
+SMD DIL4 x 0,3"
+SMD DIL
+0
+4
+4

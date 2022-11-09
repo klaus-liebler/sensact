@@ -31,20 +31,17 @@
       1,
       2,
       3,
-      4,
       5,
       6,
-      7,
-      8,
       9,
       10,
       11,
       12,
-      13,
       14,
       15,
       16,
       17,
+      18,
       19,
       20,
       21,
@@ -63,11 +60,11 @@
       35,
       36
     ],
-    "visible_layers": "0009120_80000001",
+    "visible_layers": "000d170_80000001",
     "zone_display_mode": 0
   },
   "meta": {
-    "filename": "sensactUp2.kicad_prl",
+    "filename": "sensactUp.kicad_prl",
     "version": 3
   },
   "project": {

@@ -2,7 +2,7 @@
   "board": {
     "design_settings": {
       "defaults": {
-        "board_outline_line_width": 0.049999999999999996,
+        "board_outline_line_width": 0.09999999999999999,
         "copper_line_width": 0.19999999999999998,
         "copper_text_italic": false,
         "copper_text_size_h": 1.5,
@@ -33,11 +33,11 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 1.0,
-          "height": 1.6,
-          "width": 1.8
+          "drill": 1.1,
+          "height": 1.85,
+          "width": 1.85
         },
-        "silk_line_width": 0.12,
+        "silk_line_width": 0.15,
         "silk_text_italic": false,
         "silk_text_size_h": 1.0,
         "silk_text_size_v": 1.0,
@@ -45,7 +45,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.19999999999999998
+          "min_clearance": 0.30479999999999996
         }
       },
       "diff_pair_dimensions": [],
@@ -94,33 +94,30 @@
         "zone_has_empty_net": "error",
         "zones_intersect": "error"
       },
-      "rule_severitieslegacy_courtyards_overlap": true,
-      "rule_severitieslegacy_no_courtyard_defined": false,
       "rules": {
         "allow_blind_buried_vias": false,
-        "allow_microvias": false,
+        "allow_microvias": true,
         "max_error": 0.005,
         "min_clearance": 0.0,
-        "min_copper_edge_clearance": 0.024999999999999998,
+        "min_copper_edge_clearance": 0.049999999999999996,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
-        "min_microvia_diameter": 0.6,
-        "min_microvia_drill": 0.3,
+        "min_microvia_diameter": 0.6095999999999999,
+        "min_microvia_drill": 0.30479999999999996,
         "min_silk_clearance": 0.0,
-        "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.19999999999999998,
+        "min_through_hole_diameter": 0.30479999999999996,
+        "min_track_width": 0.0,
         "min_via_annular_width": 0.049999999999999996,
-        "min_via_diameter": 0.6,
+        "min_via_diameter": 0.6095999999999999,
         "use_height_for_length_calcs": true
       },
       "track_widths": [
         0.0,
-        0.2,
-        0.3,
-        0.4,
-        0.6,
-        0.8,
-        1.5
+        0.2032,
+        0.3048,
+        0.4064,
+        0.8128,
+        1.6256
       ],
       "via_dimensions": [
         {
@@ -128,8 +125,12 @@
           "drill": 0.0
         },
         {
-          "diameter": 1.6,
-          "drill": 1.0
+          "diameter": 0.6096,
+          "drill": 0.3048
+        },
+        {
+          "diameter": 1.2192,
+          "drill": 0.6096
         }
       ],
       "zones_allow_external_fillets": false,
@@ -351,49 +352,56 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "sensactUp2.kicad_pro",
+    "filename": "sensactUp.kicad_pro",
     "version": 1
   },
   "net_settings": {
     "classes": [
       {
         "bus_width": 12.0,
-        "clearance": 0.199,
+        "clearance": 0.1778,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
         "line_style": 0,
-        "microvia_diameter": 0.6,
-        "microvia_drill": 0.3,
+        "microvia_diameter": 0.6096,
+        "microvia_drill": 0.3048,
         "name": "Default",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
-        "via_diameter": 0.6,
-        "via_drill": 0.3,
+        "track_width": 0.2032,
+        "via_diameter": 0.6096,
+        "via_drill": 0.3048,
         "wire_width": 6.0
       },
       {
         "bus_width": 12.0,
-        "clearance": 0.299,
+        "clearance": 0.3,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
         "line_style": 0,
-        "microvia_diameter": 0.6,
-        "microvia_drill": 0.3,
-        "name": "HighVoltage",
+        "microvia_diameter": 0.6096,
+        "microvia_drill": 0.3048,
+        "name": "HIGHER_VOLTAGE",
         "nets": [
           "+24V",
-          "/psu/SW",
-          "CANH",
-          "CANL"
+          "/24VX",
+          "/24Vin",
+          "/CANH_LIN",
+          "/CANL_5V",
+          "/O24_1",
+          "/O24_2",
+          "/O24_3",
+          "/O24_4",
+          "/SW3V",
+          "/SW5V"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
-        "via_diameter": 0.6,
-        "via_drill": 0.3,
+        "track_width": 0.2032,
+        "via_diameter": 0.6096,
+        "via_drill": 0.3048,
         "wire_width": 6.0
       }
     ],
@@ -406,7 +414,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "sensactUp2.net",
+      "netlist": "",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
@@ -417,7 +425,7 @@
     "annotate_start_num": 0,
     "drawing": {
       "default_line_thickness": 6.0,
-      "default_text_size": 50.0,
+      "default_text_size": 60.0,
       "field_names": [],
       "intersheets_ref_own_page": false,
       "intersheets_ref_prefix": "",
@@ -434,7 +442,7 @@
     "meta": {
       "version": 1
     },
-    "net_format_name": "",
+    "net_format_name": "Pcbnew",
     "ngspice": {
       "fix_include_paths": true,
       "fix_passive_vals": false,
@@ -451,19 +459,6 @@
     "subpart_first_id": 65,
     "subpart_id_separator": 0
   },
-  "sheets": [
-    [
-      "c6dbb099-0a61-4bdc-b01a-fb9e5275bc7a",
-      ""
-    ],
-    [
-      "00000000-0000-0000-0000-000060fc7d97",
-      "analog_amp"
-    ],
-    [
-      "00000000-0000-0000-0000-000060fcaf4f",
-      "psu"
-    ]
-  ],
+  "sheets": [],
   "text_variables": {}
 }

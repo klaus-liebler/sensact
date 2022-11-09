@@ -22344,7 +22344,7 @@
   (zone (net 0) (net_name "") (layer "F.Cu") (tstamp 6cf20e27-7864-4fae-a682-3232f226ee9b) (name "SW-") (hatch edge 0.508)
     (connect_pads yes (clearance 0))
     (min_thickness 0.2)
-    (keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed ) (copperpour not_allowed) (footprints allowed))
+    (keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed) (copperpour not_allowed) (footprints allowed))
     (fill (thermal_gap 0.3) (thermal_bridge_width 0.4))
     (polygon
       (pts
@@ -22365,7 +22365,7 @@
   (zone (net 0) (net_name "") (layer "F.Cu") (tstamp de0dfac2-a7cb-4e7e-bebc-435b7a8f5d0a) (hatch edge 0.508)
     (connect_pads (clearance 0))
     (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (pads allowed ) (copperpour not_allowed) (footprints allowed))
+    (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed) (footprints allowed))
     (fill (thermal_gap 0.508) (thermal_bridge_width 0.508))
     (polygon
       (pts
@@ -30705,7 +30705,7 @@
   (zone (net 0) (net_name "") (layer "B.Cu") (tstamp 06ed2385-3821-47d1-97c8-db6bf16c8dab) (hatch edge 0.508)
     (connect_pads (clearance 0))
     (min_thickness 0.254)
-    (keepout (tracks allowed) (vias allowed) (pads allowed ) (copperpour not_allowed) (footprints allowed))
+    (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed) (footprints allowed))
     (fill (thermal_gap 0.508) (thermal_bridge_width 0.508))
     (polygon
       (pts
@@ -30724,7 +30724,7 @@
   (zone (net 0) (net_name "") (layer "B.Cu") (tstamp 5e02ebe9-699c-4d9e-b622-ff10c3c6bc1f) (name "SW-1") (hatch edge 0.508)
     (connect_pads yes (clearance 0))
     (min_thickness 0.2)
-    (keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed ) (copperpour not_allowed) (footprints allowed))
+    (keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed) (copperpour not_allowed) (footprints allowed))
     (fill (thermal_gap 0.3) (thermal_bridge_width 0.4))
     (polygon
       (pts
