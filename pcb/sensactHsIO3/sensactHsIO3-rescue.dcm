@@ -1,3 +1,11 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP ALPS_SKRHABE010-smopla
+F http://www.alps.com/prod/info/E/HTML/MultiControl/Switch/SKRH/SKRHABE010.html
+$ENDCMP
+#
+$CMP MAX98357AETE+T-MAX98357AETE
+F http://datasheets.maximintegrated.com/en/ds/MAX98357A-MAX98357B.pdf
+$ENDCMP
+#
 #End Doc Library

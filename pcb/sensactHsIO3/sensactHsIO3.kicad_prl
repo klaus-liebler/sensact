@@ -1,6 +1,6 @@
 {
   "board": {
-    "active_layer": 37,
+    "active_layer": 31,
     "active_layer_preset": "",
     "auto_track_width": true,
     "hidden_nets": [],
@@ -33,6 +33,7 @@
       3,
       4,
       5,
+      6,
       8,
       9,
       10,
@@ -62,11 +63,11 @@
       35,
       36
     ],
-    "visible_layers": "8003122_ffffffff",
+    "visible_layers": "0009000_80000001",
     "zone_display_mode": 0
   },
   "meta": {
-    "filename": "sensactUp3.kicad_prl",
+    "filename": "sensactHsIO3.kicad_prl",
     "version": 3
   },
   "project": {
