@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-set(EXTRA_COMPONENT_DIRS "C:/repos/espidf-components" "c:\repos\espidf-component-smopla")
+set(EXTRA_COMPONENT_DIRS "C:/repos/espidf-components" "C:/repos/sensact/espidf-components")
+set(EXCLUDE_COMPONENTS "C:/repos/espidf-components/esp32-owb")
+set(NODE_ID "SNSCT_L3_TECH_HS_1" CACHE STRING "Enter the node ID")
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(sensactHsNanoFW)

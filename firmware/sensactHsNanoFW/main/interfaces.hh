@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common_in_project.hh"
+#include <sensact_commons.hh>
 
 namespace sensact{
     class iHostContext{
     public:
-        virtual tms_t Now();
+        virtual tms_t Now()=0;
         virtual void PublishOnMessageBus(CANMessage& m, bool distributeLocally)=0;
         virtual ErrorCode SetU16Output(u16 id, u16 value) = 0;
         virtual ErrorCode GetU16Input(u16 id, u16 &value) = 0;

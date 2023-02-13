@@ -4,45 +4,26 @@
 			"path": "."
 		},
 		{
-			"path": "..\\..\\..\\espidf-components\\i2c"
+			"path": "../../espidf-components/sensactcommon"
 		},
 		{
-			"path": "..\\..\\..\\espidf-components\\tas580x"
-		},
-		{
-			"path": "..\\..\\..\\espidf-components\\mp3"
-		},
-		{
-			"path": "..\\..\\..\\espidf-components\\espidf-ccs811"
-		},
-		{
-			"path": "..\\..\\..\\espidf-components\\ws2812"
-		},
-		{
-			"path": "..\\..\\..\\espidf-components\\common"
-		},
-		{
-			"name": "esp32arduino-fusb302",
-			"path": "..\\..\\..\\esp32arduino-fusb302"
+			"path": "../../espidf-components/generated"
 		}
 	],
 	"settings": {
 		"files.associations": {
+			"vector": "cpp",
 			"array": "cpp",
 			"atomic": "cpp",
+			"strstream": "cpp",
 			"*.tcc": "cpp",
 			"bitset": "cpp",
 			"cctype": "cpp",
-			"cfenv": "cpp",
-			"charconv": "cpp",
 			"chrono": "cpp",
-			"cinttypes": "cpp",
 			"clocale": "cpp",
 			"cmath": "cpp",
 			"codecvt": "cpp",
-			"complex": "cpp",
 			"condition_variable": "cpp",
-			"csetjmp": "cpp",
 			"csignal": "cpp",
 			"cstdarg": "cpp",
 			"cstddef": "cpp",
@@ -51,15 +32,12 @@
 			"cstdlib": "cpp",
 			"cstring": "cpp",
 			"ctime": "cpp",
-			"cuchar": "cpp",
 			"cwchar": "cpp",
 			"cwctype": "cpp",
 			"deque": "cpp",
-			"forward_list": "cpp",
 			"list": "cpp",
 			"unordered_map": "cpp",
 			"unordered_set": "cpp",
-			"vector": "cpp",
 			"exception": "cpp",
 			"algorithm": "cpp",
 			"functional": "cpp",
@@ -90,30 +68,45 @@
 			"mutex": "cpp",
 			"new": "cpp",
 			"ostream": "cpp",
-			"scoped_allocator": "cpp",
-			"shared_mutex": "cpp",
 			"sstream": "cpp",
 			"stdexcept": "cpp",
 			"streambuf": "cpp",
 			"thread": "cpp",
-			"typeindex": "cpp",
+			"cinttypes": "cpp",
 			"typeinfo": "cpp",
-			"valarray": "cpp",
-			"*.ipp": "cpp",
+			"*.inc": "cpp",
+			"bit": "cpp",
+			"charconv": "cpp",
+			"compare": "cpp",
+			"complex": "cpp",
+			"concepts": "cpp",
+			"format": "cpp",
+			"forward_list": "cpp",
 			"ios": "cpp",
+			"locale": "cpp",
+			"numbers": "cpp",
+			"queue": "cpp",
+			"semaphore": "cpp",
+			"shared_mutex": "cpp",
+			"span": "cpp",
+			"stack": "cpp",
+			"stop_token": "cpp",
 			"xfacet": "cpp",
+			"xhash": "cpp",
 			"xiosbase": "cpp",
 			"xlocale": "cpp",
+			"xlocbuf": "cpp",
 			"xlocinfo": "cpp",
+			"xlocmes": "cpp",
+			"xlocmon": "cpp",
 			"xlocnum": "cpp",
+			"xloctime": "cpp",
 			"xmemory": "cpp",
-			"xmemory0": "cpp",
 			"xstddef": "cpp",
 			"xstring": "cpp",
 			"xtr1common": "cpp",
-			"xutility": "cpp",
-			"*.inc": "cpp",
-			"strstream": "cpp"
+			"xtree": "cpp",
+			"xutility": "cpp"
 		}
 	}
 }

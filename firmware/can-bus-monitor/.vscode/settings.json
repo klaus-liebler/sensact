@@ -1,0 +1,27 @@
+{
+    "C_Cpp.intelliSenseEngine": "Default",
+    "idf.adapterTargetName": "esp32s3",
+    "idf.customExtraPaths": "C:\\Users\\KlausLiebler\\.espressif\\tools\\xtensa-esp-elf-gdb\\11.2_20220823\\xtensa-esp-elf-gdb\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\riscv32-esp-elf-gdb\\11.2_20220823\\riscv32-esp-elf-gdb\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\xtensa-esp32-elf\\esp-2022r1-11.2.0\\xtensa-esp32-elf\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\xtensa-esp32s2-elf\\esp-2022r1-11.2.0\\xtensa-esp32s2-elf\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\xtensa-esp32s3-elf\\esp-2022r1-11.2.0\\xtensa-esp32s3-elf\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\riscv32-esp-elf\\esp-2022r1-11.2.0\\riscv32-esp-elf\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\esp32ulp-elf\\2.35_20220830\\esp32ulp-elf\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\cmake\\3.24.0\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\openocd-esp32\\v0.11.0-esp32-20221026\\openocd-esp32\\bin;C:\\Users\\KlausLiebler\\.espressif\\tools\\ninja\\1.10.2;C:\\Users\\KlausLiebler\\.espressif\\tools\\idf-exe\\1.0.3;C:\\Users\\KlausLiebler\\.espressif\\tools\\ccache\\4.6.2\\ccache-4.6.2-windows-x86_64;C:\\Users\\KlausLiebler\\.espressif\\tools\\dfu-util\\0.9\\dfu-util-0.9-win64",
+    "idf.customExtraVars": "{\"OPENOCD_SCRIPTS\":\"C:\\\\Users\\\\KlausLiebler\\\\.espressif\\\\tools\\\\openocd-esp32\\\\v0.11.0-esp32-20221026/openocd-esp32/share/openocd/scripts\",\"IDF_CCACHE_ENABLE\":\"1\"}",
+    "idf.espIdfPathWin": "C:\\Users\\KlausLiebler\\esp\\esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-bridge.cfg"
+    ],
+    "idf.pythonBinPathWin": "C:\\Users\\KlausLiebler\\.espressif\\python_env\\idf5.0_py3.8_env\\Scripts\\python.exe",
+    "idf.toolsPathWin": "C:\\Users\\KlausLiebler\\.espressif",
+    "files.associations": {
+        "vector": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
+    },
+    "idf.portWin": "COM3",
+    "idf.flashType": "UART"
+}

@@ -3,7 +3,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <esp_system.h>
-#include <esp_spi_flash.h>
+#include <spi_flash_mmap.h>
 #include <esp_wifi.h>
 #include <esp_event.h>
 #include <esp_log.h>
@@ -22,7 +22,7 @@
 #include "nodemaster.hh"
 #include "busmaster.hh"
 #include "can_message_builder_parser.hh"
-#include "common_projectconfig.hh"
+#include "sensact_projectconfig.hh"
 
 #define TAG "main"
 using namespace sensact;
@@ -45,7 +45,6 @@ extern "C" void app_main(void)
             ;
     }
 
-    xSemaphoreTake(connectSemaphore, portMAX_DELAY);
     ESP_LOGI(TAG, "Semaphore for connection is taken from main thread");
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
@@ -54,12 +53,15 @@ extern "C" void app_main(void)
         canMBP = new cCANMessageBuilderParserOld();
     }
     iHAL* hal = new sensact::hal::SensactHsNano2::L3::cHAL();
-    //TODO Busmasters auch in den Namespace packen
-    PCA9555Device pca9555_0(SensactHsNano2::I2C_EXTERNAL, PCA9555::Device::Dev0);
-    PCA9685Device pca9685_0(SensactHsNano2::I2C_EXTERNAL, PCA9685::Device::Dev00, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::OpenDrain);
+    //Problem: Die Hardwarekonfiguration einer Node muss hier noch hard-codiert werden. Das ist nicht schön
+    //Problem 2: Die PCA9xxxDevices verwenden intern eine allgemeine Implementierung für das esp-idf. Dort wird nicht über das hier implementierte HAL auf den I2C-Bus zugegriffen, sondern sehr direkt.
+    //Das ganze ist also nicht hardwareunabhängig. Erste IDee: Wir implementieren für die PCA9xxxx devices noch komplett HAL-BAsierte Treiber, doppeln aber damit Code
+    //Außerdem werden dort nicht die im HAL
+    PCA9555Device pca9555_0(hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), PCA9555_HAL::Device::Dev0);
+    PCA9685Device pca9685_0(hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), PCA9685_HAL::Device::Dev00, PCA9685_HAL::InvOutputs::NotInvOutputs, PCA9685_HAL::OutputDriver::OpenDrain);
     std::vector<sensact::InOut16 *> inOuts16{&pca9555_0, &pca9685_0};
     std::vector<sensact::AbstractSubBusmaster *> subbusses{};
-    I2CBusmaster i2cBusmaster("SensactBus", SensactHsNano2::I2C_EXTERNAL, SensactHsNano2::INTERRUPT_LINES, inOuts16, subbusses);
+    I2CBusmaster i2cBusmaster("SensactBus", hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), SensactHsNano2::INTERRUPT_LINES, inOuts16, subbusses);
     std::vector<AbstractBusmaster*> busmasters{&i2cBusmaster};
     
     cNodemaster* nodemaster = new cNodemaster(hal::SensactHsNano2::L3::nodeRoles, hal, busmasters, canMBP);
@@ -67,7 +69,7 @@ extern "C" void app_main(void)
     int secs = 0;
     while (true)
     {
-        ESP_LOGI(TAG, "Run %4d, Heap %6d", secs, esp_get_free_heap_size());
+        ESP_LOGI(TAG, "Run %4d, Heap %6lu", secs, esp_get_free_heap_size());
         secs += 5;
         vTaskDelay(5000 / portTICK_PERIOD_MS);
     }

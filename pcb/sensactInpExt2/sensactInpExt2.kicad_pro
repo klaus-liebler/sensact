@@ -119,12 +119,17 @@
       },
       "track_widths": [
         0.0,
+        0.25,
         0.4
       ],
       "via_dimensions": [
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.3
         }
       ],
       "zones_allow_external_fillets": false,
@@ -427,10 +432,6 @@
     [
       "9340c285-5767-42d5-8b6d-63fe2a40ddf3",
       ""
-    ],
-    [
-      "d7091432-8a63-4678-ac50-70b2db4b49da",
-      "input4"
     ]
   ],
   "text_variables": {}

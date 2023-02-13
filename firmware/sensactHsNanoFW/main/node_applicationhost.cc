@@ -1,19 +1,20 @@
 
-#include "common_in_project.hh"
+#include <sensact_commons.hh>
+#include <sensact_projectconfig.hh>
 #include "node_applicationHost.hh"
 #include "model_applications.hh"
 #include "application.hh"
 #include "applicationcontext.hh"
-
+#include <sensact_logger.hh>
 #define TAG "APPHOST"
 
 namespace sensact
 {
 
-#include <generated/common/sendCommandImplementation.inc>
-#include <generated/common/publishEventImplementation.inc>
+#include <common/sendCommandImplementation.inc>
+#include <common/publishEventImplementation.inc>
 
-    ErrorCode cApplicationHost::OnApplicationCommand(cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength)
+    ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength)
     {
         SensactContext *ctx = this;
         switch (command)
@@ -34,7 +35,7 @@ namespace sensact
             {
                 nextStatusApp = 0;
             }
-        } while (sensact::model::applications::Glo2locCmd[nextStatusApp] == 0);
+        } while (sensact::apps::applications::Glo2locCmd[nextStatusApp] == 0);
     }
 
     ErrorCode cApplicationHost::PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, uint8_t *payload, uint8_t payloadLength)
@@ -57,7 +58,7 @@ namespace sensact
             return;
         }
 
-        cApplication *const app = sensact::model::applications::Glo2locCmd[(uint16_t)destinationApp];
+        sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[(uint16_t)destinationApp];
         if (app != NULL)
         {
             // only in this case, the message can be processed local; no need to send it to the CAN bus
@@ -199,17 +200,17 @@ namespace sensact
         // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project
         for (uint16_t appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
-            cApplication *const app = sensact::model::applications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[appId];
             if (!app)
                 continue;
             sensact::eAppCallResult appResult = app->Setup(this);
             if ((uint8_t)appResult < (uint8_t)eAppCallResult::ERROR_GENERIC)
             {
-                LOGI(TAG, "App %s successfully configured", sensact::model::applications::ApplicationNames[appId]);
+                LOGI(TAG, "App %s successfully configured", sensact::ApplicationNames[appId]);
             }
             else
             {
-                LOGE(TAG, "Error while configuring App %s. Error is %u", sensact::model::applications::ApplicationNames[appId], (int)appResult);
+                LOGE(TAG, "Error while configuring App %s. Error is %u", sensact::ApplicationNames[appId], (int)appResult);
             }
             statusBuffer = (uint8_t *)malloc(8); // only for one single Application
             statusBuffer[0] = (uint8_t)appResult;
@@ -226,7 +227,7 @@ namespace sensact
         uint16_t appId;
         uint8_t commandType;
         uint8_t eventId;
-        cApplication *app;
+        sensact::apps::cApplication *app;
         eCanMessageType type;
         ErrorCode err = canMBP->ParseCanMessageType(m, type);
         if (err != ErrorCode::OK)
@@ -246,7 +247,7 @@ namespace sensact
                 LOGE(TAG, "Received ApplicationCommand. Unknown target applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            app = sensact::model::applications::Glo2locCmd[appId];
+            app = sensact::apps::applications::Glo2locCmd[appId];
             if (app != NULL)
             {
                 // Es ist natürlich kein Fehler, wenn hier an der Node eine Nachricht ankommt, für die lokal keine App hinterlegt ist - eine andere Node wird die schon empfangen...
@@ -262,7 +263,7 @@ namespace sensact
                 LOGE(TAG, "Received ApplicationEvent. Unknown source applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            app = sensact::model::applications::Glo2locEvt[appId];
+            app = sensact::apps::applications::Glo2locEvt[appId];
             if (app != NULL)
             {
                 LOGE(TAG, "Received ApplicationEvent, but this is not yet implemented");
@@ -280,7 +281,7 @@ namespace sensact
         this->nowForCurrentLoop = ctx.Now();
         for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
-            cApplication *const app = sensact::model::applications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[appId];
             if (!app)
                 continue;
             eAppCallResult appResult = app->Loop(this);

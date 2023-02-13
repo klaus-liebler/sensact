@@ -1,16 +1,17 @@
 #pragma once
 #include "hal_ESP32.hh"
 #include <MP3Player.hh>
-#include <Alarm.mp3.h>
 #include <tas580x.hh>
 
 namespace sensact::hal::SensactHsNano2
 {
-    constexpr i2c_port_t I2C_EXTERNAL{I2C_NUM_0};
+    constexpr i2c_port_t I2C_EXTERNAL_IDF{I2C_NUM_0};
+    constexpr sensact::hal::I2CPort I2C_EXTERNAL{sensact::hal::I2CPort::I2C_0};
     constexpr gpio_num_t I2C_EXTERNAL_SCL{GPIO_NUM_16};
     constexpr gpio_num_t I2C_EXTERNAL_SDA{GPIO_NUM_4};
 
-    constexpr i2c_port_t I2C_INTERNAL{I2C_NUM_1};
+    constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_1};
+    constexpr sensact::hal::I2CPort I2C_INTERNAL{sensact::hal::I2CPort::I2C_1};
     constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_17};
     constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_15};
 
@@ -35,12 +36,13 @@ namespace sensact::hal::SensactHsNano2
     {
     protected:
         TAS580x::M *tas580x;
-        MP3Player *mp3player;
+        MP3::Player *mp3player;
+        I2CBus* i2c_bus[2];
 
         ErrorCode SetupSound()
         {
-            tas580x = new TAS580x::M(I2C_INTERNAL, TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
-            mp3player = new MP3Player();
+            tas580x = new TAS580x::M(GetI2CBus(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
+            mp3player = new MP3::Player();
             mp3player->InitExternalI2SDAC(I2S_PORT, I2S_SCLK, I2S_LRCLK, I2S_DIN);
             tas580x->Init(100);
             return ErrorCode::OK;
@@ -52,11 +54,18 @@ namespace sensact::hal::SensactHsNano2
             this->SetupNetworkCommon();
             this->SetupWIFI();
             this->SetupETH(ETH_MDC, ETH_MDIO, ETH_POWER);
-            this->SetupI2C(I2C_EXTERNAL, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA);
-            this->SetupI2C(I2C_INTERNAL, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA);
+            ESP_ERROR_CHECK(I2C::Init(I2C_EXTERNAL_IDF, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA));
+            ESP_ERROR_CHECK(I2C::Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA));
+            i2c_bus[(uint8_t)I2C_EXTERNAL] = new I2CBus(I2C_EXTERNAL_IDF);
+            i2c_bus[(uint8_t)I2C_INTERNAL] = new I2CBus(I2C_INTERNAL_IDF);
+            
             this->SetupCAN(CAN_TX, CAN_RX);
             this->SetupSound();
             return ErrorCode::OK;
+        }
+
+        iI2CBus* GetI2CBus(I2CPort portIndex) override{
+            return i2c_bus[((uint8_t)portIndex)%2];
         }
         bool HasRole(NodeRole role) override
         {
@@ -94,7 +103,7 @@ namespace sensact::hal::SensactHsNano2
         }
         ErrorCode SetAmplifierVolume(uint8_t volume0_255) override
         {
-            return this->tas580x->SetVolume(volume0_255)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+            return this->tas580x->SetVolume(volume0_255);
         }
         /**
          * @brief

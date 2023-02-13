@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../model/common"
+		},
+		{
+			"path": "../../model/sattlerstrasse"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

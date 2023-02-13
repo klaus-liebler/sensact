@@ -6184,7 +6184,7 @@
     (property "Reference" "J3" (id 0) (at 125.73 95.2499 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "C B A G" (id 1) (at 125.73 97.7899 0)
+    (property "Value" "G C B A" (id 1) (at 125.73 97.7899 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" (id 2) (at 123.19 95.25 0)
@@ -7194,7 +7194,7 @@
       (reference "J2") (unit 1) (value "BaseConnect") (footprint "Connector_IDC:IDC-Header_2x05_P2.54mm_Vertical")
     )
     (path "/bc881ffb-fb08-4f8a-b981-c60d8925e1c0"
-      (reference "J3") (unit 1) (value "C B A G") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+      (reference "J3") (unit 1) (value "G C B A") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
     )
     (path "/fd0dd92f-f693-4de4-963c-a63e33c80fd6"
       (reference "J4") (unit 1) (value "PROG") (footprint "liebler_CONN:IDC_2x03_P1.27mm_Vertical")

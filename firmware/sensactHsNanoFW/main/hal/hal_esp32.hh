@@ -1,13 +1,13 @@
 #pragma once
 #include "hal.hh"
-#include <esp_log.h>
+#include <sensact_logger.hh>
 #include <driver/gpio.h>
 #include <driver/twai.h>
 #include <driver/uart.h>
-#include "mbcontroller.h"
+#include "modbusmaster.hh"
 #include <i2c.hh>
 #include <vector>
-#include <network.hh>
+#include <wifimanager.hh>
 
 #define TAG "HAL"
 
@@ -21,24 +21,45 @@ using namespace sensact::hal;
 using namespace sensact;
 namespace sensact::hal
 {
+	class I2CBus:public iI2CBus{
+		private:
+		i2c_port_t i2c_port;
+		public:
+		I2CBus(i2c_port_t i2c_port):i2c_port(i2c_port){
+
+		}
+		ErrorCode ReadReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
+			return I2C::ReadReg(this->i2c_port, address7bit, reg_addr, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode ReadReg16(uint8_t address7bit, uint16_t reg_addr16, uint8_t *reg_data, size_t len)override{
+			return I2C::ReadReg16(this->i2c_port, address7bit, reg_addr16, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode Read(uint8_t address7bit, uint8_t *data, size_t len)override{
+			return I2C::Read(this->i2c_port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode WriteReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
+			return I2C::WriteReg(this->i2c_port, address7bit, reg_addr, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode WriteSingleReg(uint8_t address7bit, uint8_t reg_addr, uint8_t reg_data){
+			return I2C::WriteSingleReg(this->i2c_port, address7bit, reg_addr, reg_data)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode Write(uint8_t address7bit, uint8_t *data, size_t len)override{
+			return I2C::Write(this->i2c_port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+    	ErrorCode IsAvailable(uint8_t address7bit)override{
+			return I2C::IsAvailable(this->i2c_port, address7bit)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+	};
+	
+	
 	class cESP32 : public iHAL
 	{
+	
 	protected:
-
 		void* modbus_master_handler = NULL;
 		ErrorCode SetupCAN(gpio_num_t tx, gpio_num_t rx)
 		{
-			twai_general_config_t g_config = {};
-			g_config.mode = TWAI_MODE_NORMAL;
-			g_config.tx_io = tx;
-			g_config.rx_io = rx;
-			g_config.clkout_io = TWAI_IO_UNUSED;
-			g_config.bus_off_io = TWAI_IO_UNUSED;
-			g_config.tx_queue_len = 5;
-			g_config.rx_queue_len = 5;
-			g_config.alerts_enabled = TWAI_ALERT_NONE;
-			g_config.clkout_divider = 0;
-			g_config.intr_flags = 0;
+			twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(tx, rx, TWAI_MODE_NORMAL);
 			twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 			twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
@@ -46,36 +67,23 @@ namespace sensact::hal
 		}
 
 		ErrorCode SetupNetworkCommon(){
-			initNetIfandEventLoop();
+			//TODO initNetIfandEventLoop();
 			return ErrorCode::OK;
 		}
 
 		ErrorCode SetupWIFI(){
-			connectSTA2AP(CONFIG_NETWORK_WIFI_SSID, CONFIG_NETWORK_WIFI_PASSWORD, "sensact-%02X-%02X-%02X");
+			//TODO connect(CONFIG_NETWORK_WIFI_SSID, CONFIG_NETWORK_WIFI_PASSWORD, "sensact-%02X-%02X-%02X");
 			return ErrorCode::OK;
 		}
 
 		ErrorCode SetupETH(gpio_num_t mdc, gpio_num_t mdio, gpio_num_t reset){
-			connectETH(mdc, mdio, reset);
-			return ErrorCode::OK;;
-		}
-
-		ErrorCode SetupI2C(i2c_port_t i2c_port, gpio_num_t scl, gpio_num_t sda){
-			i2c_config_t conf;
-        	conf.mode = I2C_MODE_MASTER;
-        	conf.sda_io_num = sda;
-        	conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-        	conf.scl_io_num = scl;
-        	conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-        	conf.master.clk_speed = 100000;
-        	conf.clk_flags=0;
-        	i2c_param_config(i2c_port, &conf);
-        	ESP_ERROR_CHECK(i2c_driver_install(i2c_port, conf.mode, 0, 0, 0));
-        	ESP_ERROR_CHECK(I2C::Init());
+			//TODO W5500!!! initEth(mdc, mdio, reset);
 			return ErrorCode::OK;
 		}
 
 		ErrorCode SetupModbusMaster(uart_port_t uartPort, int baudrate, gpio_num_t tx, gpio_num_t rx, gpio_num_t rts){
+			/*
+			TODO
 			mb_communication_info_t comm = {};
 			comm.port=uartPort;
             comm.mode = MB_MODE_RTU;
@@ -101,6 +109,7 @@ namespace sensact::hal
 			MASTER_CHECK((err == ESP_OK), ErrorCode::GENERIC_ERROR, "mb serial set mode failure, uart_set_mode() returned (0x%x).", (uint32_t)err);
 
     		vTaskDelay(5);
+			*/
 			return ErrorCode::OK;
 		}
 
@@ -146,27 +155,7 @@ namespace sensact::hal
 
 
 
-		ErrorCode ReadReg(I2CPort port, uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
-			return I2C::ReadReg((i2c_port_t)port, address7bit, reg_addr, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode ReadReg16(I2CPort port, uint8_t address7bit, uint16_t reg_addr16, uint8_t *reg_data, size_t len)override{
-			return I2C::ReadReg16((i2c_port_t)port, address7bit, reg_addr16, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode Read(I2CPort port, uint8_t address7bit, uint8_t *data, size_t len)override{
-			return I2C::Read((i2c_port_t)port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode WriteReg(I2CPort port, uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
-			return I2C::WriteReg((i2c_port_t)port, address7bit, reg_addr, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode WriteSingleReg(I2CPort port, uint8_t address7bit, uint8_t reg_addr, uint8_t reg_data){
-			return I2C::WriteSingleReg((i2c_port_t)port, address7bit, reg_addr, reg_data)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode Write(I2CPort port, uint8_t address7bit, uint8_t *data, size_t len)override{
-			return I2C::Write((i2c_port_t)port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-    	ErrorCode IsAvailable(I2CPort port, uint8_t address7bit)override{
-			return I2C::IsAvailable((i2c_port_t)port, address7bit)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
-		}
+
 
 		ErrorCode TryReceiveCANMessage(CANMessage &m) override
 		{
@@ -175,7 +164,7 @@ namespace sensact::hal
 			{
 				return ErrorCode::NONE_AVAILABLE;
 			}
-			LOGI(TAG, "Received id %d", rx_msg.identifier);
+			LOGI(TAG, "Received id %lu", rx_msg.identifier);
 			m.Id = rx_msg.identifier;
 			m.DataLen = rx_msg.data_length_code;
 			for (int i = 0; i < rx_msg.data_length_code; i++)
@@ -197,7 +186,7 @@ namespace sensact::hal
 			{
 				return ErrorCode::QUEUE_OVERLOAD;
 			}
-			LOGI(TAG, "Enqueued id %d", tx_msg.identifier);
+			LOGI(TAG, "Enqueued id %lu", tx_msg.identifier);
 			return ErrorCode::OK;
 		}
 

@@ -1,18 +1,16 @@
 #pragma once
 #include <stdio.h>
-#include <esp_types.h>
-#include <esp_log.h>
 #include <atomic>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <array>
 #include <vector>
-#include <common_in_project.hh>
-#include <driver/i2c.h>
-#include <i2c.hh>
-#include <pca9555.hh>
-#include <pca9685.hh>
-#include <ds2482.hh>
+#include <sensact_commons.hh>
+#include <hal.hh>
+#include <sensact_logger.hh>
+
+#include <pca9555-hal.hh>
+#include <pca9685-hal.hh>
 
 #define TAG "BUSMSTR"
 
@@ -83,13 +81,13 @@ namespace sensact
 	class PCA9555Device : public InOut16
 	{
 	private:
-		PCA9555::M *drv;
+		PCA9555_HAL::M *drv;
 		u16 val{0xFFFF};
 
 	public:
-		PCA9555Device(i2c_port_t i2c_num, PCA9555::Device device)
+		PCA9555Device(sensact::hal::iI2CBus* i2c_num, PCA9555_HAL::Device device)
 		{
-			drv = new PCA9555::M(i2c_num, device, 0xFFFF);
+			drv = new PCA9555_HAL::M(i2c_num, device, 0xFFFF);
 		}
 		ErrorCode Setup() override { return drv->Setup(); }
 		ErrorCode Loop() override { return drv->Update(); }
@@ -118,15 +116,15 @@ namespace sensact
 	class PCA9685Device : public InOut16
 	{
 	private:
-		PCA9685::M *drv;
+		PCA9685_HAL::M *drv;
 		u16 val[16]{0};
 		u16 written[16]{0};
 		std::atomic_bool dirty[16];
 
 	public:
-		PCA9685Device(i2c_port_t i2c_num, PCA9685::Device device, PCA9685::InvOutputs inv, PCA9685::OutputDriver outdrv)
+		PCA9685Device(sensact::hal::iI2CBus* i2c_num, PCA9685_HAL::Device device, PCA9685_HAL::InvOutputs inv, PCA9685_HAL::OutputDriver outdrv)
 		{
-			this->drv = new PCA9685::M(i2c_num, device, inv, outdrv, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_200Hz);
+			this->drv = new PCA9685_HAL::M(i2c_num, device, inv, outdrv, PCA9685_HAL::OutputWhen_OE_High::OUTPUT_0, PCA9685_HAL::Frequency::Frequency_200Hz);
 			for(int i=0;i<16;i++){
 				dirty[i]=false;
 			}
@@ -140,7 +138,7 @@ namespace sensact
 			{
 				if (dirty[i].exchange(false))
 				{
-					this->drv->SetDutyCycleForOutput((PCA9685::Output)i, written[i]);
+					this->drv->SetDutyCycleForOutput((PCA9685_HAL::Output)i, written[i]);
 				}
 			}
 			return ErrorCode::OK;
@@ -174,6 +172,7 @@ namespace sensact
 			return ErrorCode::OK;
 		}
 	};
+	
 	// TODO: This is just a empty dummy implementation
 	class OneWireSubBusmaster : public AbstractSubBusmaster
 	{
@@ -203,7 +202,7 @@ namespace sensact
 	class cOwSubbus : public AbstractSubBusmaster
 	{
 	private:
-		DS2482::M *const driver;
+		//DS2482::M *const driver;
 		std::vector<cSensactSENode *> sensactSENodes;
 		std::vector<cDS1820Node *> ds1820Nodes;
 		std::vector<cDS2413Node *> ds2413Nodes;
@@ -213,39 +212,35 @@ namespace sensact
 		ErrorCode Discover(void);
 		ErrorCode Process(tms_t now);
 
-		cOwSubbus(DS2482::M *const driver, std::vector<cSensactSENode *> sensactSENodes, std::vector<cDS1820Node *> ds1820Nodes, std::vector<cDS2413Node *> ds2413Nodes);
+		cOwSubbus(/*DS2482::M *const driver, std::vector<cSensactSENode *> sensactSENodes, std::vector<cDS1820Node *> ds1820Nodes, std::vector<cDS2413Node *> ds2413Nodes*/);
 	};
-
-	extern "C" void I2CBusmasterTask(void *params);
 
 	class I2CBusmaster : public AbstractBusmaster
 	{
 	private:
 		const char * name;
-		const i2c_port_t i2c_num;
+		sensact::hal::iI2CBus* i2c_num;
 		const std::array<gpio_num_t, 3> interruptlines; // array with 3 elements!
 		std::vector<InOut16 *> inOuts16;
 		std::vector<AbstractSubBusmaster *> subbusses;
 
-	public:
-		I2CBusmaster(
-			const char * name,
-			i2c_port_t i2c_num,
-			std::array<gpio_num_t, 3> interruptlines,
-			std::vector<InOut16 *> inOuts16,
-			std::vector<AbstractSubBusmaster *> subbusses) : name(name), i2c_num(i2c_num), interruptlines(interruptlines), inOuts16(inOuts16), subbusses(subbusses)
+		static void Task(void *pvParameters)
 		{
+			I2CBusmaster* myself = static_cast<I2CBusmaster*>(pvParameters);
+			//Setup'ed is already: HAL and I2C
+			ESP_LOGI(TAG, "I2CBusmaster task started");
+			TickType_t xLastWakeTime{0};
+			const TickType_t xTimeIncrement = pdMS_TO_TICKS(100);
+			xLastWakeTime = xTaskGetTickCount();
+			while (true)
+			{
+				vTaskDelayUntil(&xLastWakeTime, xTimeIncrement);
+				myself->Loop();
+			}
 		}
 
-		ErrorCode Setup() const override
-		{
-			PCA9685::M::SoftwareReset(this->i2c_num);
-			TaskHandle_t * taskHandle = NULL;
-			xTaskCreate(I2CBusmasterTask, "I2CBusmasterTask", 4096 * 4, (void*)this, 6, taskHandle);
-			return ErrorCode::OK;
-		}
 
-		void TaskLoop()
+		void Loop()
 		{
 			while (true)
 			{
@@ -255,6 +250,24 @@ namespace sensact
 				}
 			}
 		}
+
+	public:
+		I2CBusmaster(
+			const char * name,
+			sensact::hal::iI2CBus* i2c_num,
+			std::array<gpio_num_t, 3> interruptlines,
+			std::vector<InOut16 *> inOuts16,
+			std::vector<AbstractSubBusmaster *> subbusses) : name(name), i2c_num(i2c_num), interruptlines(interruptlines), inOuts16(inOuts16), subbusses(subbusses)
+		{
+		}
+
+		ErrorCode Setup() const override
+		{
+			PCA9685_HAL::M::SoftwareReset(this->i2c_num);
+			xTaskCreate(I2CBusmaster::Task, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
+			return ErrorCode::OK;
+		}
+
 
 		ErrorCode GetInput(u16 id, u16 &value) const override{
 			id&=0x3FFF; //clear two MSB
@@ -331,9 +344,9 @@ namespace sensact
 			int cnt = 0;
 			for (u8 addr = 0; addr < 128; addr++)
 			{
-				if (I2C::IsAvailable(i2c_num, addr))
+				if (i2c_num->IsAvailable(addr)==ErrorCode::OK)
 				{
-					if (addr == PCA9685::ALL_CALL)
+					if (addr == PCA9685_HAL::ALL_CALL)
 					{
 						LOGI(TAG, "Bus %s: Found probably PCA9685 'allcall'  0x%02X ", name, addr);
 					}
@@ -364,11 +377,6 @@ namespace sensact
 		}
 	};
 
-	void I2CBusmasterTask(void *params)
-	{
-		I2CBusmaster *bm = (I2CBusmaster *)params;
-		bm->TaskLoop();
-	}
 
 	class DirectGPIOBusmaster : AbstractBusmaster
 	{

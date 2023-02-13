@@ -3,10 +3,11 @@
 #include "can_message_builder_parser.hh"
 #include "applicationcontext.hh"
 #include "interfaces.hh"
-#include "hal/hal.hh"
+#include "hal.hh"
+#include <application.hh>
 namespace sensact
 {
-    class cApplicationHost : public iHost, public SensactContext
+    class cApplicationHost : public iHost, public sensact::apps::SensactContext
     {
     private:
         u8 *statusBuffer{0};
@@ -23,7 +24,7 @@ namespace sensact
         ErrorCode PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, uint8_t *payload, uint8_t payloadLength);
         void SendApplicationCommandToMessageBus(eApplicationID destinationApp, eCommandType command, uint8_t *payload, uint8_t payloadLength);
         void PublishApplicationEventToMessageBus(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength);
-        ErrorCode OnApplicationCommand(cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength);
+        ErrorCode OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength);
 
     public:
         cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP);

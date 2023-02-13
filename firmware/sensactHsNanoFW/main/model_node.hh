@@ -1,16 +1,6 @@
 #pragma once
 #include <stdint.h>
-
-namespace sensact
-{
-
-    enum class eNodeID : uint16_t
-    {
-#include <common/nodeIds.inc>
-    };
-
-   
-}
+#include <applicationmodel_enums_and_structs.hh>
 
 namespace sensact::model
 {
