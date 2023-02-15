@@ -1,0 +1,24 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C1,u1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,96.9,-79.4,180.0,top
+C2,22u,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,54.2,-98.4,0.0,top
+C3,u1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,53.6,-96.2,0.0,top
+C4,u1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,54.7,-86.9,180.0,top
+C5,22u,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,54.2,-84.6,180.0,top
+D1,NUP2105,SOT-23_Handsoldering,79.4,-66.4,0.0,bottom
+J1,SensactBusConnector,IDC-Header_2x05_P2.54mm_Horizontal,61.3,-62.3,90.0,top
+J2,CAN,"PhoenixContact_MC_1,5_5-G-3.81_1x05_P3.81mm_Horizontal",82.935,-59.8175,180.0,top
+J3,CAN,"PhoenixContact_MC_1,5_5-G-3.81_1x05_P3.81mm_Horizontal",138.0,-140.0,0.0,top
+J4,Speaker,"PhoenixContact_MC_1,5_5-G-3.81_1x05_P3.81mm_Horizontal",138.0,-60.0,180.0,top
+J5,24V,"PhoenixContact_MC_1,5_2-G-3.5_1x02_P3.50mm_Horizontal",59.75,-140.25,0.0,top
+M1,W5500_mini,W5500-mini,115.8,-130.8,180.0,top
+R1,4k7,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,94.5,-69.0,90.0,top
+R2,K12,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,88.6,-66.0,0.0,bottom
+R3,4k7,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,54.25,-66.75,90.0,bottom
+R4,4k7,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,57.5,-70.0,180.0,bottom
+SW1,TERM ON,Switch_SS12D00,95.75,-62.25,-90.0,top
+U1,ESP32-S3-DevKitC,AIthinker_ESP32_S3,81.0,-110.4,0.0,top
+U2,SN65HVD230,SOIC-8_3.9x4.9mm_P1.27mm,96.7,-74.6,90.0,top
+U3,MODULE_TPA3110,TPA3110_module,135.0,-97.25,90.0,top
+U4,MODULE_PCM5102,MODULE_PCM5102A,110.675,-88.075,90.0,top
+U5,DCDC_MP2315,MODULE_STEPDOWN,60.81,-110.3,-90.0,top
+U6,AMS1117,SOT-223-3_TabPin2_HANDSOLDER,57.2,-91.5,0.0,top

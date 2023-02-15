@@ -9,6 +9,8 @@ SW_Push,"SW24,SW25,SW26,SW27,SW28,SW29,SW30,SW31",SW_SPST_TL3342_smaller,C318884
 SRV05-4,"U1,U3,U4,U6",SOT-23-6,C558418
 Inp,"SW10,SW11,SW12,SW13,SW14,SW15,SW8,SW9","Button_2x4x3,5",C778159
 DS2482,U5,SOIC-8_3.9x4.9mm_P1.27mm,
+SDA,JP2,SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm,
+SCL,JP1,SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm,
 LED_Dual_KAKA,D8,Dialight-5530123F-0,
 LED_Dual_KAKA,D6,Dialight-5530123F-0,
 LED_Dual_KAKA,D4,Dialight-5530123F-0,
@@ -36,3 +38,8 @@ IN1-IN8,J2,"PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal",
 0 A2 1,SW1,Switch_SS12D00,
 0 AD0 1,SW7,Switch_SS12D00,
 0 AD1 1,SW6,Switch_SS12D00,
+Jumper_3_Open,JP7,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
+Jumper_3_Open,JP6,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
+Jumper_3_Open,JP5,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
+Jumper_3_Open,JP3,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
+Jumper_3_Open,JP4,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,

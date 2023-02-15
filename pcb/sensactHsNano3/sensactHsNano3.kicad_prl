@@ -59,7 +59,7 @@
       35
     ],
     "visible_layers": "ffc9010_ffffffff",
-    "zone_display_mode": 0
+    "zone_display_mode": 1
   },
   "meta": {
     "filename": "sensactHsNano3.kicad_prl",

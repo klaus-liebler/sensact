@@ -1273,11 +1273,6 @@
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid aa8988e2-958d-446d-b4ba-13230325f02d)
   )
-  (polyline (pts (xy 175.26 13.97) (xy 237.49 13.97))
-    (stroke (width 0) (type default) (color 0 0 0 0))
-    (uuid ae11d70c-d3ef-4933-8512-7ea06c32ba2e)
-  )
-
   (wire (pts (xy 247.65 161.29) (xy 247.65 167.64))
     (stroke (width 0) (type default) (color 0 0 0 0))
     (uuid aff50233-6746-4371-a14c-eaea28630912)
@@ -1347,10 +1342,6 @@
     (uuid f6c3fb33-5e74-46a8-8f1c-407fecadfdf8)
   )
 
-  (text "USBC" (at 175.26 13.97 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 1ef6e5b4-9e90-4428-971a-f6b35a6bd4d3)
-  )
   (text "Pulling" (at 21.59 124.46 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 5ae9f844-f89e-4d91-acbc-111f2b9a2ce9)
@@ -2601,7 +2592,7 @@
     (property "Value" "PCA9685PW" (id 1) (at 205.2194 97.79 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm" (id 2) (at 203.835 145.415 0)
+    (property "Footprint" "liebler_SEMICONDUCTORS:TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder" (id 2) (at 203.835 145.415 0)
       (effects (font (size 1.27 1.27)) (justify left) hide)
     )
     (property "Datasheet" "http://www.nxp.com/documents/data_sheet/PCA9685.pdf" (id 3) (at 193.04 102.87 0)
@@ -3284,7 +3275,7 @@
       (reference "U1") (unit 3) (value "LM358") (footprint "")
     )
     (path "/cc4977b3-e7ef-435e-8010-c5cd5bdc849f"
-      (reference "U3") (unit 1) (value "PCA9685PW") (footprint "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm")
+      (reference "U3") (unit 1) (value "PCA9685PW") (footprint "liebler_SEMICONDUCTORS:TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder")
     )
     (path "/a0b02f09-8641-4f79-aff6-95db9b534d2d"
       (reference "U4") (unit 1) (value "L78L15_SOT89") (footprint "Package_TO_SOT_SMD:SOT-89-3_Handsoldering")

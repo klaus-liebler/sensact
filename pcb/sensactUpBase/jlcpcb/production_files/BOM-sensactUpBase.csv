@@ -1,0 +1,10 @@
+Comment,Designator,Footprint,LCSC
+Conn_01x04,J5,PinHeader_1x04_P2.54mm_Vertical,
+GND T0 T1,J3,KF250-3.5-3P-A,
+T11 T10 T9 T8 T7 T6 T5 T4 T3 T2,J9,WAGO_250-210,
+BaseConnect,J1,IDC-Header_2x05_P2.54mm_Vertical,
+A RS485 B,J4,KF250-3.5-3P-A,
+24 GN CH CL 24 GN CH CL,J10,WAGO_250-208,
+u1,C1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,
+PCA9555PW,U1,TSSOP-24_4.4x7.8mm_Pitch0.65mm_handsolder,
+u1,C2,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,
