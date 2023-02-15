@@ -2,33 +2,71 @@
 #include "hal_ESP32.hh"
 #include <MP3Player.hh>
 #include <tas580x.hh>
+#include <driver/spi_master.h>
+#include <eth.hh>
 
 namespace sensact::hal::SensactHsNano2
 {
-    constexpr i2c_port_t I2C_EXTERNAL_IDF{I2C_NUM_0};
-    constexpr sensact::hal::I2CPort I2C_EXTERNAL{sensact::hal::I2CPort::I2C_0};
-    constexpr gpio_num_t I2C_EXTERNAL_SCL{GPIO_NUM_16};
-    constexpr gpio_num_t I2C_EXTERNAL_SDA{GPIO_NUM_4};
+    constexpr gpio_num_t MON{GPIO_NUM_1};
+    constexpr gpio_num_t SW{GPIO_NUM_2};
+    constexpr gpio_num_t RS485_DE{GPIO_NUM_3};
 
-    constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_1};
-    constexpr sensact::hal::I2CPort I2C_INTERNAL{sensact::hal::I2CPort::I2C_1};
-    constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_17};
-    constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_15};
+    constexpr i2s_port_t AMP_I2S_PORT{I2S_NUM_0};
+    constexpr gpio_num_t AMP_I2S_DATA{GPIO_NUM_4};
+    constexpr gpio_num_t AMP_I2S_SCLK{GPIO_NUM_5};
+    constexpr gpio_num_t AMP_I2S_LRCLK{GPIO_NUM_6};
+    constexpr gpio_num_t AMP_POWERDOWN{GPIO_NUM_39};
+    
+    constexpr gpio_num_t CAN_TX{GPIO_NUM_7};
+    constexpr gpio_num_t CAN_RX{GPIO_NUM_15};
+    
+    constexpr spi_host_device_t LCD_SPI_HOST{SPI3_HOST};
+    constexpr gpio_num_t LCD_SCLK{GPIO_NUM_8};
+    constexpr gpio_num_t LCD_RS{GPIO_NUM_9};
+    constexpr gpio_num_t LCD_MOSI{GPIO_NUM_18};
+    constexpr gpio_num_t LCD_BACKLIGHT{GPIO_NUM_45};
+    constexpr gpio_num_t LCD_BUZZER{GPIO_NUM_46};
 
-    constexpr i2s_port_t I2S_PORT{I2S_NUM_0};
-    constexpr gpio_num_t I2S_DIN{GPIO_NUM_14};
-    constexpr gpio_num_t I2S_SCLK{GPIO_NUM_12};
-    constexpr gpio_num_t I2S_LRCLK{GPIO_NUM_13};
-    constexpr gpio_num_t AMP_POWERDOWN{GPIO_NUM_33};
+    constexpr spi_host_device_t ETH_SPI_HOST{SPI2_HOST};
+    constexpr gpio_num_t ETH_CS{GPIO_NUM_10};
+    constexpr gpio_num_t ETH_MOSI{GPIO_NUM_11};
+    constexpr gpio_num_t ETH_CLK{GPIO_NUM_12};
+    constexpr gpio_num_t ETH_MISO{GPIO_NUM_13};
+    constexpr gpio_num_t ETH_INT{GPIO_NUM_14};
+    constexpr gpio_num_t ETH_RESET{GPIO_NUM_21};
 
-    constexpr gpio_num_t ETH_POWER{GPIO_NUM_2};
-    constexpr gpio_num_t ETH_MDC{GPIO_NUM_18};
-    constexpr gpio_num_t ETH_MDIO{GPIO_NUM_5};
+    constexpr gpio_num_t RS485_RO{GPIO_NUM_16};
+    constexpr gpio_num_t RS485_DIO{GPIO_NUM_17};
 
-    constexpr gpio_num_t CAN_TX{GPIO_NUM_32};
-    constexpr gpio_num_t CAN_RX{GPIO_NUM_35};
+    constexpr gpio_num_t USB_DP{GPIO_NUM_20};
+    constexpr gpio_num_t USB_DM{GPIO_NUM_19};
 
-    constexpr gpio_num_t LED{GPIO_NUM_23};
+    //constexpr gpio_num_t U0TXD{GPIO_NUM_43};
+    //constexpr gpio_num_t U0RXD{GPIO_NUM_44};
+
+    constexpr gpio_num_t COMMON_RESET{GPIO_NUM_48};
+    constexpr gpio_num_t RF24_CS{GPIO_NUM_47};
+    constexpr gpio_num_t RF24_MISO{GPIO_NUM_35};
+
+    constexpr gpio_num_t ANALOG_OUT_A{GPIO_NUM_40};
+    constexpr gpio_num_t ANALOG_OUT_B{GPIO_NUM_36};
+
+    constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
+    constexpr sensact::hal::I2CPort I2C_INTERNAL{sensact::hal::I2CPort::I2C_0};
+    constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_42};
+    constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_41};
+
+    constexpr i2c_port_t I2C_EXTERNAL_IDF{I2C_NUM_1};
+    constexpr sensact::hal::I2CPort I2C_EXTERNAL{sensact::hal::I2CPort::I2C_1};
+    constexpr gpio_num_t I2C_EXTERNAL_SCL{GPIO_NUM_38};
+    constexpr gpio_num_t I2C_EXTERNAL_SDA{GPIO_NUM_37};
+
+
+
+
+
+
+
 
     constexpr std::array<gpio_num_t, 3U> INTERRUPT_LINES{GPIO_NUM_NC, GPIO_NUM_NC,GPIO_NUM_NC,};
 
@@ -43,7 +81,7 @@ namespace sensact::hal::SensactHsNano2
         {
             tas580x = new TAS580x::M(GetI2CBus(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
             mp3player = new MP3::Player();
-            mp3player->InitExternalI2SDAC(I2S_PORT, I2S_SCLK, I2S_LRCLK, I2S_DIN);
+            mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA);
             tas580x->Init(100);
             return ErrorCode::OK;
         }
@@ -51,9 +89,7 @@ namespace sensact::hal::SensactHsNano2
     public:
         ErrorCode Setup() override
         {
-            this->SetupNetworkCommon();
-            this->SetupWIFI();
-            this->SetupETH(ETH_MDC, ETH_MDIO, ETH_POWER);
+            WIFI_ETH::initETH(false, SPI2_HOST, GPIO_NUM_13, GPIO_NUM_11, GPIO_NUM_12, SPI_MASTER_FREQ_20M, GPIO_NUM_NC, GPIO_NUM_10, GPIO_NUM_14, 1);
             ESP_ERROR_CHECK(I2C::Init(I2C_EXTERNAL_IDF, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA));
             ESP_ERROR_CHECK(I2C::Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA));
             i2c_bus[(uint8_t)I2C_EXTERNAL] = new I2CBus(I2C_EXTERNAL_IDF);

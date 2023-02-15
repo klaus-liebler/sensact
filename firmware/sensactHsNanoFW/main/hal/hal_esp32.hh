@@ -66,21 +66,6 @@ namespace sensact::hal
 			return ErrorCode::OK;
 		}
 
-		ErrorCode SetupNetworkCommon(){
-			//TODO initNetIfandEventLoop();
-			return ErrorCode::OK;
-		}
-
-		ErrorCode SetupWIFI(){
-			//TODO connect(CONFIG_NETWORK_WIFI_SSID, CONFIG_NETWORK_WIFI_PASSWORD, "sensact-%02X-%02X-%02X");
-			return ErrorCode::OK;
-		}
-
-		ErrorCode SetupETH(gpio_num_t mdc, gpio_num_t mdio, gpio_num_t reset){
-			//TODO W5500!!! initEth(mdc, mdio, reset);
-			return ErrorCode::OK;
-		}
-
 		ErrorCode SetupModbusMaster(uart_port_t uartPort, int baudrate, gpio_num_t tx, gpio_num_t rx, gpio_num_t rts){
 			/*
 			TODO
