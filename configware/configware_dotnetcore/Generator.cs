@@ -41,11 +41,13 @@ namespace Klli.Sensact.Config
         public bool CheckAndPrepare(ModelContainer mc)
         {
             HashSet<ushort> predefinedAppIds = Enum.GetValues<Model.ApplicationId>().Select(x=>(ushort)x).ToHashSet();
-            mc.NextFreeIndex = predefinedAppIds.Where(x=>x!=(ushort)Model.ApplicationId.NO_APPLICATION).Max();
-            mc.NextFreeIndex++;
+            mc.NextFreeIndex = (ushort)(1+predefinedAppIds.Where(x=>x!=(ushort)Model.ApplicationId.NO_APPLICATION).Max());
+
             SensactApplicationContainer masterApp = new SensactApplicationContainer(null, new Sensact.Model.Common.Applications.MasterApplication((ushort)Model.ApplicationId.MASTER, Model.ApplicationId.MASTER.ToString()));
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
-    
+            Model.Common.Nodes.Node monitoring_node= new Model.Common.Nodes.Monitoring(ushort.MaxValue, "MONITORING");
+            mc.Model.Nodes.Add(monitoring_node);
+            
             foreach (Sensact.Model.Common.Nodes.Node n in mc.Model.Nodes)
             {  
                 HashSet<string> usedInputPins = new HashSet<string>();
@@ -89,7 +91,7 @@ namespace Klli.Sensact.Config
                         LOG.LogError("There is a predefined node app for node {0}, but its name is not correct:", n.NodeName);
                         return false;
                     }
-                }else{
+                }else if(n!=monitoring_node){//add a special node app if it is not the monitoring node
                     SensactApplicationContainer nodeAppContainer = new SensactApplicationContainer(n, new SensactNodeApplication(n.NodeId, n.NodeName));
                     n.Applications.Add(nodeAppContainer.Application);
                     mc.id2app.Add(nodeAppContainer.Application.ApplicationId, nodeAppContainer);
@@ -581,9 +583,18 @@ namespace Klli.Sensact.Config
             }
             foreach(var appc in mc.id2app.Values){
                 //Sanity check
-                if(ApplicationNames[appc.Application.ApplicationId]!=null && !ApplicationNames[appc.Application.ApplicationId].Equals(appc.Application.ApplicationName)){
+                try
+                {
+                    if(ApplicationNames[appc.Application.ApplicationId]!=null && !ApplicationNames[appc.Application.ApplicationId].Equals(appc.Application.ApplicationName)){
                     throw new Exception("Implementation error!");
                 }
+                }
+                catch (System.Exception)
+                {
+                    
+                    throw;
+                }
+                
                 ApplicationNames[appc.Application.ApplicationId]=appc.Application.ApplicationName;
                 //Auch alle Apps, die keinen vordefinierten Index verwenden, müssen bekannt sein
             }
@@ -630,12 +641,16 @@ namespace Klli.Sensact.Config
 
         internal void GenerateNodeSpecificFiles(ModelContainer mc)
         {
+            
+            StringBuilder sb = new StringBuilder();
             foreach (Klli.Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
             {
-                StringBuilder sb = new StringBuilder();
-
                 //const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
-                sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
+                if(node.NodeHasANodeApplication){
+                    sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
+                }else{//2023-02-15: the only use case for this: The "MONITORING" node has no application
+                    sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::NO_APPLICATION;", node.NodeName);
+                }
                 WriteFileInSubdirectory(node.NodeName, "nodeMasterApplicationId", sb);
                 sb.Clear();
 

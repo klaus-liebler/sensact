@@ -17,8 +17,7 @@
 #include "esp_http_client.h"
 #include "esp_ota_ops.h"
 #include "esp_https_ota.h"
-#include "cJSON.h"
-#include "hal/hal_sensactHsNano2_L3.hh"
+#include <hwinc.inc>
 #include "nodemaster.hh"
 #include "busmaster.hh"
 #include "can_message_builder_parser.hh"
@@ -45,32 +44,21 @@ extern "C" void app_main(void)
             ;
     }
 
-    ESP_LOGI(TAG, "Semaphore for connection is taken from main thread");
+    
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
         canMBP = new cCANMessageBuilderParserNew();
     } else{
         canMBP = new cCANMessageBuilderParserOld();
     }
-    iHAL* hal = new sensact::hal::SensactHsNano2::L3::cHAL();
-    //Problem: Die Hardwarekonfiguration einer Node muss hier noch hard-codiert werden. Das ist nicht schön
-    //Problem 2: Die PCA9xxxDevices verwenden intern eine allgemeine Implementierung für das esp-idf. Dort wird nicht über das hier implementierte HAL auf den I2C-Bus zugegriffen, sondern sehr direkt.
-    //Das ganze ist also nicht hardwareunabhängig. Erste IDee: Wir implementieren für die PCA9xxxx devices noch komplett HAL-BAsierte Treiber, doppeln aber damit Code
-    //Außerdem werden dort nicht die im HAL
-    PCA9555Device pca9555_0(hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), PCA9555_HAL::Device::Dev0);
-    PCA9685Device pca9685_0(hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), PCA9685_HAL::Device::Dev00, PCA9685_HAL::InvOutputs::NotInvOutputs, PCA9685_HAL::OutputDriver::OpenDrain);
-    std::vector<sensact::InOut16 *> inOuts16{&pca9555_0, &pca9685_0};
-    std::vector<sensact::AbstractSubBusmaster *> subbusses{};
-    I2CBusmaster i2cBusmaster("SensactBus", hal->GetI2CBus(SensactHsNano2::I2C_EXTERNAL), SensactHsNano2::INTERRUPT_LINES, inOuts16, subbusses);
-    std::vector<AbstractBusmaster*> busmasters{&i2cBusmaster};
     
-    cNodemaster* nodemaster = new cNodemaster(hal::SensactHsNano2::L3::nodeRoles, hal, busmasters, canMBP);
+    #include <hwcfg.inc>
+    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, hal, &busmasters, canMBP);
     nodemaster->RunEternalLoopInTask();
-    int secs = 0;
+
     while (true)
     {
-        ESP_LOGI(TAG, "Run %4d, Heap %6lu", secs, esp_get_free_heap_size());
-        secs += 5;
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        ESP_LOGI(TAG, "Heap %6lu nodemaster tells: %s", esp_get_free_heap_size(), nodemaster->GetStatusMessage());
+        vTaskDelay(pdMS_TO_TICKS(10000));
     }
 }

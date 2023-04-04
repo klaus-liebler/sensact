@@ -143,7 +143,6 @@ namespace sensact
 
     void cApplicationHost::SetU16Output(InOutId id, u16 value)
     {
-        // TODO: Forward to correct busmaster
         ErrorCode err = this->hostCtx->SetU16Output(id, value);
         if (err != ErrorCode::OK)
         {
@@ -305,6 +304,10 @@ namespace sensact
             }
         }
         return ErrorCode::OK;
+    }
+
+    int cApplicationHost::GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen){
+        return snprintf(buffer, remainingLen, "\tApplicationHost ok!\n");
     }
 
 }

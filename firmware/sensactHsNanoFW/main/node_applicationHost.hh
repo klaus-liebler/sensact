@@ -31,6 +31,7 @@ namespace sensact
         ErrorCode Setup(iHostContext &ctx) override;
         ErrorCode Loop(iHostContext &ctx) override;
         ErrorCode OfferMessage(iHostContext &ctx, CANMessage &m) override;
+        int GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen) override;
         tms_t Now() override;
         void SetU16Output(InOutId id, u16 value) override;
         void GetU16Input(InOutId id, u16 &value) override;

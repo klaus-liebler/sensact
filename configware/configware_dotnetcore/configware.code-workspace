@@ -4,10 +4,10 @@
 			"path": "../../model/common"
 		},
 		{
-			"path": "../../model/sattlerstrasse"
+			"path": "."
 		},
 		{
-			"path": "."
+			"path": "../../model/testmodel"
 		}
 	],
 	"settings": {}

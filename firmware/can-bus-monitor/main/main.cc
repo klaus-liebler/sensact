@@ -1,24 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <sys/socket.h>
-
+#include <sys/reent.h>
+#include "esp_log.h"
+#include "esp_vfs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "freertos/event_groups.h"
+
+#include "tinyusb.h"
+#include "tusb_cdc_acm.h"
+#include "tusb_console.h"
+#include "sdkconfig.h"
+
+#include "driver/twai.h"
+
+#include <sys/socket.h>
+#include "lwip/err.h"
+#include "lwip/sys.h"
+
 #include "esp_system.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
-#include "esp_log.h"
-#include "nvs_flash.h"
 
-#include "lwip/err.h"
-#include "lwip/sys.h"
+#include "nvs_flash.h"
 #include "esp_err.h"
-#include "esp_log.h"
-#include "driver/twai.h"
+
 #include <vector>
 #include <array>
 #include <cstring>
@@ -30,7 +38,7 @@
 constexpr twai_filter_config_t f_config  = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 constexpr twai_timing_config_t t_config  = TWAI_TIMING_CONFIG_125KBITS();
 
-constexpr twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_35, GPIO_NUM_36, TWAI_MODE_NORMAL);
+constexpr twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(GPIO_NUM_7, GPIO_NUM_15, TWAI_MODE_NORMAL);
 
 sensact::aCANMessageBuilderParser* canMBP = new sensact::cCANMessageBuilderParserOld();
 static EventGroupHandle_t s_wifi_event_group;
@@ -173,6 +181,23 @@ void wifi_init_sta(void)
 
 extern "C" void app_main(void)
 {
+        /* Setting TinyUSB up */
+    ESP_LOGI(TAG, "USB initialization");
+
+    tinyusb_config_t tusb_cfg = {};
+    tusb_cfg.device_descriptor = NULL;
+    tusb_cfg.string_descriptor = NULL;
+    tusb_cfg.external_phy = false; // In the most cases you need to use a `false` value
+    tusb_cfg.configuration_descriptor = NULL;
+    
+
+    ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
+
+    tinyusb_config_cdcacm_t acm_cfg = {}; // the configuration uses default values
+    ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
+    ESP_LOGI(TAG, "log -> USB");
+    esp_tusb_init_console(TINYUSB_CDC_ACM_0); // log to usb
+    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());

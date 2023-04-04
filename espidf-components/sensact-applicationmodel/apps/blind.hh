@@ -8,6 +8,7 @@ namespace sensact::apps
 	{
 		enum class eCurrentBlindState
 		{
+			ENERGY_SAVE,
 			STOP,
 			PREPARE_UP,
 			PREPARE_DOWN,
@@ -19,10 +20,12 @@ namespace sensact::apps
 		const InOutId relay1;
 		const InOutId relay2;
 		const eRelayInterlockMode mode;
-		const u32 time_up_msecs;
-		const u32 time_down_msecs;
-		const u32 millisteps_up;
-		const u32 millisteps_down;
+		const s32 time_up_msecs;
+		const s32 time_down_msecs;
+		const s32 millisteps_up;
+		const s32 millisteps_down;
+		const s32 significant_steps_up;
+		const s32 significant_steps_down;
 
 		time_t lastChanged;
 		time_t lastPositionCalculation;
@@ -32,6 +35,7 @@ namespace sensact::apps
 		void up(SensactContext *ctx);
 		void down(SensactContext *ctx);
 		void stop(SensactContext *ctx);
+		void energySave(SensactContext *ctx);
 		void prepareUp(SensactContext *ctx);
 		void prepareDown(SensactContext *ctx);
 		void updatePosition(SensactContext *ctx);

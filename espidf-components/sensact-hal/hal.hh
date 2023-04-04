@@ -1,6 +1,7 @@
 #pragma once
 #include <sensact_commons.hh>
 #include "crgb.hh"
+#include <i2c.hh>
 
 /*
 Die HAL leifert einen Low-Level-Zugriff auf
@@ -22,21 +23,10 @@ namespace sensact::hal
         OUTPUT_PUSH_PULL = 3,
     };
 
-    enum class I2CPort : uint8_t
+    enum class I2CPortIndex : uint8_t
     {
         I2C_0=0,
         I2C_1=1,
-    };
-
-    class iI2CBus{
-        public:
-        virtual ErrorCode ReadReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len) = 0;
-        virtual ErrorCode ReadReg16(uint8_t address7bit, uint16_t reg_addr16, uint8_t *reg_data, size_t len) = 0;
-        virtual ErrorCode Read(uint8_t address7bit, uint8_t *data, size_t len) = 0;
-        virtual ErrorCode WriteReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len) = 0;
-        virtual ErrorCode WriteSingleReg(uint8_t address7bit, uint8_t reg_addr, uint8_t reg_data) = 0;
-        virtual ErrorCode Write(uint8_t address7bit, uint8_t *data, size_t len) = 0;
-        virtual ErrorCode IsAvailable(uint8_t adress7bit) = 0;
     };
 
     class iHAL
@@ -49,7 +39,7 @@ namespace sensact::hal
         virtual ErrorCode AfterAppLoop() = 0;
         virtual ErrorCode BeforeAppLoop() = 0;
         virtual tms_t GetMillisS64() = 0;
-        virtual iI2CBus* GetI2CBus(I2CPort portIndex)=0;
+        virtual iI2CPort* GetI2CPort(I2CPortIndex portIndex)=0;
         virtual ErrorCode SetU16Output(uint16_t id, uint16_t value) = 0;
         ErrorCode SetU16Output(uint16_t id, bool state)
         {

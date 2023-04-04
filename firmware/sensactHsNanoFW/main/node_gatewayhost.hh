@@ -27,6 +27,10 @@ namespace sensact
             return ErrorCode::OK;
         }
 
+        int GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen){
+            return snprintf(buffer, remainingLen, "\tGatewayHost ok!\n");
+        }
+
         ErrorCode OfferMessage(iHostContext &ctx, CANMessage &m)
         {
             return ErrorCode::OK;

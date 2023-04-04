@@ -31,16 +31,18 @@
 
 namespace sensact
 {
+	constexpr size_t STATUS_MESSAGE_BUFLEN{256};
 	class cNodemaster : public iHostContext
 	{
 	private:
-		std::vector<NodeRole> nodeRoles;
+		std::vector<NodeRole> *nodeRoles;
 		sensact::hal::iHAL *const hal;
-		std::vector<AbstractBusmaster *> busmasters;
+		std::vector<AbstractBusmaster *> *busmasters;
 		aCANMessageBuilderParser *canMBP;
 		std::vector<iHost *> hosts;
 		iHost *currentRoleRunner{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
+		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{
@@ -57,8 +59,14 @@ namespace sensact
 		{
 			this->currentNow = hal->GetMillisS64();
 			hal->Setup();
+			for (auto &bm : *this->busmasters)
+			{
+				if(bm->Setup()!=ErrorCode::OK){
+					LOGE(TAG, "Busmaster reported error on Setup");
+				}
+			}
 			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
-			for (auto &role : nodeRoles)
+			for (auto &role : *nodeRoles)
 			{
 				iHost *h;
 				switch (role)
@@ -87,7 +95,8 @@ namespace sensact
 			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_READY, 0, 0);
 
 			LOGI(TAG, "All Hosts have been configured. Now, %s is pleased to be at your service.\r\n", sensact::model::node::NodeDescription);
-
+			TickType_t xLastWakeTime=xTaskGetTickCount();
+			const TickType_t xFrequency = pdMS_TO_TICKS(100);
 			while (true)
 			{
 				currentNow = hal->GetMillisS64();
@@ -108,6 +117,7 @@ namespace sensact
 					rr->Loop(*this);
 				}
 				hal->AfterAppLoop();
+				xTaskDelayUntil(&xLastWakeTime, xFrequency);
 			}
 		}
 
@@ -119,7 +129,7 @@ namespace sensact
 		}
 
 	public:
-		cNodemaster(std::vector<NodeRole> nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP)
+		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP)
 		{
 		}
 		void RunEternalLoopInTask(void)
@@ -133,6 +143,8 @@ namespace sensact
 			if (err != ErrorCode::OK)
 			{
 				LOGE(TAG, "CAN Message couln't be sent out %02X", (int)err);
+			}else{
+				LOGD(TAG, "Message successfully sent out %lu", m.Id);
 			}
 			if (!distributeLocally)
 				return;
@@ -146,25 +158,37 @@ namespace sensact
 
 		ErrorCode SetU16Output(u16 id, uint16_t value) override
 		{
-
 			u16 busmasterIndex = id >> 14;
-			if (this->busmasters.size() <= busmasterIndex)
+			if (this->busmasters->size() <= busmasterIndex)
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
 			u16 localIndex = id & 0x3FFF;
-			return this->busmasters[busmasterIndex]->SetOutput(localIndex, value);
+			return this->busmasters->at(busmasterIndex)->SetOutput(localIndex, value);
 		}
 		ErrorCode GetU16Input(u16 id, u16 &value) override
 		{
 			u16 busmasterIndex = id >> 14;
-			if (this->busmasters.size() <= busmasterIndex)
+			if (this->busmasters->size() <= busmasterIndex)
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
 			u16 localIndex = id & 0x3FFF;
-			return this->busmasters[busmasterIndex]->GetInput(localIndex, value);
+			return this->busmasters->at(busmasterIndex)->GetInput(localIndex, value);
 		}
 
 		tms_t Now() override
 		{
 			return currentNow;
+		}
+
+		char* GetStatusMessage(){
+			char* pointer=statusMessageBuffer;
+			size_t remainingLen=STATUS_MESSAGE_BUFLEN;
+			for (auto &host : hosts)
+			{
+				int size= host->GetStatusMessage(*this, pointer, remainingLen);
+				pointer+=size;
+				remainingLen-=size;
+			}
+			*pointer='\0';
+			return statusMessageBuffer;
 		}
 	};
 }

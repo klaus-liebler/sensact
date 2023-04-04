@@ -199,6 +199,8 @@ namespace sensact::apps
 	eAppCallResult cSinglePWM::Setup(SensactContext *ctx)
 	{
 		currentLevel = 0;
+		targetLevel = 0;
+		autoOffCalc = sensact::magic::TIME_MAX;
 		WriteCurrentLevelToOutput(ctx);
 		return eAppCallResult::OK;
 	}

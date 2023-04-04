@@ -16,5 +16,6 @@ namespace sensact{
 		virtual ErrorCode Setup(iHostContext& ctx)=0;
 		virtual ErrorCode Loop(iHostContext& ctx)=0;
 		virtual ErrorCode OfferMessage(iHostContext& ctx, CANMessage& m)=0;
+        virtual int GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen)=0;
 	};
 }

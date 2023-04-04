@@ -1,148 +1,414 @@
-34834713293743
-Jumper
-SolderJumper-2_P1.3mm_Bridged2Bar_Pad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, bridged with 2 copper strips
-net tie solder jumper bridged
+98215742388173
+liebler_CONN
+Banana_2mm
+
+
+0
+1
+1
+liebler_CONN
+Banana_RECESSED
+
+
+0
+1
+1
+liebler_CONN
+FFC_FPC_10_P0.50mm_Horizontal
+Hirose FH12, FFC/FPC connector, FH12-10S-0.5SH, 10 Pins per row (https://www.hirose.com/product/en/products/FH12/FH12-24S-0.5SH(55)/), generated with kicad-footprint-generator
+connector Hirose FH12 horizontal
+0
+12
+11
+liebler_CONN
+FPC1.0-2-8P
+
+
+0
+10
+9
+liebler_CONN
+FPC_TOP_1x08-1MP_P0.50mm_Horizontal
+
+
+0
+10
+9
+liebler_CONN
+GT-USB-7051A
+
+
+0
+20
+17
+liebler_CONN
+IDC-Header_2x05_P2.54mm_Horizontal_tightCrtYd
+Through hole IDC box header, 2x05, 2.54mm pitch, DIN 41651 / IEC 60603-13, double rows, https://docs.google.com/spreadsheets/d/16SsEcesNF15N3Lb4niX7dcUr-NY5_MFPQhobNuNppn4/edit#gid=0
+Through hole horizontal IDC box header THT 2x05 2.54mm double row
+0
+10
+10
+liebler_CONN
+IDC_2x03_P1.27mm_Vertical
+Through hole straight pin header, 2x03, 1.27mm pitch, double rows
+Through hole pin header THT 2x03 1.27mm double row
+0
+6
+6
+liebler_CONN
+Jumper 2x2.54
+Through hole straight pin header, 1x02, 2.54mm pitch, single row
+Through hole pin header THT 1x02 2.54mm single row
 0
 2
 2
-Jumper
-SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, bridged with 2 copper strips
-net tie solder jumper bridged
+liebler_CONN
+Jumper_Trace_025x150x015
+
+
 0
 2
 2
-Jumper
-SolderJumper-2_P1.3mm_Bridged_Pad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, bridged with 1 copper strip
-net tie solder jumper bridged
+liebler_CONN
+KF128-5,00-2P
+
+
 0
 2
 2
-Jumper
-SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, bridged with 1 copper strip
-net tie solder jumper bridged
+liebler_CONN
+KF128-5,00-3P
+
+
+0
+3
+3
+liebler_CONN
+KF128-7,50-2P
+
+
 0
 2
 2
-Jumper
-SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, open
-solder jumper open
+liebler_CONN
+KF128-7,50-3P
+
+
 0
+3
+3
+liebler_CONN
+KF141R-2p
+
+
+0
+4
 2
-2
-Jumper
-SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm, rounded Pads, 0.3mm gap, open
-solder jumper open
+liebler_CONN
+KF141R-2p_1234
+
+
 0
-2
-2
-Jumper
-SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm Triangular Pads, 0.3mm gap, open
-solder jumper open
+4
+4
+liebler_CONN
+KF141R-3p
+
+
 0
-2
-2
-Jumper
-SolderJumper-3_P1.3mm_Bridged2Bar12_Pad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm Pads, 0.3mm gap, pads 1-2 Bridged2Bar with 2 copper strip
-net tie solder jumper bridged
+6
+3
+liebler_CONN
+KF141R-8p
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged2Bar12_Pad1.0x1.5mm_NumberLabels
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, pads 1-2 Bridged2Bar with 2 copper strip, labeled with numbers
-net tie solder jumper bridged
+16
+8
+liebler_CONN
+KF141R-8p_removedPin4
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, pads 1-2 Bridged2Bar with 2 copper strip
-net tie solder jumper bridged
-0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm_NumberLabels
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, pads 1-2 Bridged2Bar with 2 copper strip, labeled with numbers
-net tie solder jumper bridged
+13
+7
+liebler_CONN
+KF250-3.5-3P-A
+
+
 0
 3
 3
-Jumper
-SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm Pads, 0.3mm gap, pads 1-2 bridged with 1 copper strip
-net tie solder jumper bridged
+liebler_CONN
+L834-1G1T-91
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged12_Pad1.0x1.5mm_NumberLabels
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, pads 1-2 bridged with 1 copper strip, labeled with numbers
-net tie solder jumper bridged
+16
+11
+liebler_CONN
+MJ88-B011-JRVS1-P
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, pads 1-2 bridged with 1 copper strip
-net tie solder jumper bridged
+10
+9
+liebler_CONN
+MicroUsbVertical
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm_NumberLabels
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, pads 1-2 bridged with 1 copper strip, labeled with numbers
-net tie solder jumper bridged
+7
+6
+liebler_CONN
+Molex 503960-0696
+
+
 0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm Pads, 0.3mm gap, open
-solder jumper open
-0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Open_Pad1.0x1.5mm_NumberLabels
-SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, open, labeled with numbers
-solder jumper open
-0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, open
-solder jumper open
-0
-3
-3
-Jumper
-SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels
-SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, open, labeled with numbers
-solder jumper open
-0
-3
-3
-Jumper
-SolderJumper-3_P2.0mm_Open_TrianglePad1.0x1.5mm
-SMD Solder Jumper, 1x1.5mm Triangular Pads, 0.3mm gap, open
-solder jumper open
+14
+12
+liebler_CONN
+PJ-327A
+
+
 0
 5
-3
-Jumper
-SolderJumper-3_P2.0mm_Open_TrianglePad1.0x1.5mm_NumberLabels
-SMD Solder Jumper, 1x1.5mm Triangular Pads, 0.3mm gap, open, labeled with numbers
-solder jumper open
+4
+liebler_CONN
+PhoenixContact_FFKDS_1x08_P2.54mm
+
+
 0
-5
+16
+8
+liebler_CONN
+PhoenixContact_MCV_0,5_8-G-2.5_1x08_P2.50mm_vertical
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+8
+8
+liebler_CONN
+PhoenixContact_MC_0,5_4-G-2.5_1x04_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+4
+4
+liebler_CONN
+PhoenixContact_MC_0,5_6-G-2.5_1x06_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+6
+6
+liebler_CONN
+PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal
+Generic Phoenix Contact connector footprint for: MC_1,5/8-G-3.5; number of pins: 08; pin pitch: 3.50mm; Angled || order number: 1844278 8A 160V
+phoenix_contact connector MC_01x08_G_3.5mm
+0
+8
+8
+liebler_CONN
+PhoenixContact_MC_1,5_2-G-3.5_1x02_P3.50mm_Horizontal_smallerCourtyard
+Generic Phoenix Contact connector footprint for: MC_1,5/4-G-3.5; number of pins: 04; pin pitch: 3.50mm; Angled || order number: 1844236 8A 160V
+phoenix_contact connector MC_01x04_G_3.5mm
+0
+2
+2
+liebler_CONN
+PhoenixContact_MC_1,5_2-G-3.81_1x02_P3.81mm_Horizontal_smaller
+Generic Phoenix Contact connector footprint for: MC_1,5/2-G-3.81; number of pins: 02; pin pitch: 3.81mm; Angled || order number: 1803277 8A 160V
+phoenix_contact connector MC_01x02_G_3.81mm
+0
+2
+2
+liebler_CONN
+PhoenixContact_MC_1,5_4-G-3.5_1x04_P3.50mm_Horizontal_smallerCourtyard
+Generic Phoenix Contact connector footprint for: MC_1,5/4-G-3.5; number of pins: 04; pin pitch: 3.50mm; Angled || order number: 1844236 8A 160V
+phoenix_contact connector MC_01x04_G_3.5mm
+0
+4
+4
+liebler_CONN
+PhoenixContact_MSTBV_2,5_2-G-5,08_1x02_P5.08mm_Vertical
+Generic Phoenix Contact connector footprint for: MSTBVA_2,5/2-G-5,08; number of pins: 02; pin pitch: 5.08mm; Vertical || order number: 1755736 12A || order number: 1924305 16A (HC)
+phoenix_contact connector MSTBVA_01x02_G_5.08mm
+0
+2
+2
+liebler_CONN
+Phoenix_5mm_2P
+
+
+0
+2
+2
+liebler_CONN
+Phoenix_5mm_3P
+
+
+0
 3
+3
+liebler_CONN
+PinHeader_2x04_P1.27mm_Horizontal_CenterRef
+Through hole angled pin header, 2x04, 1.27mm pitch, 4.0mm pin length, double rows
+Through hole angled pin header THT 2x04 1.27mm double row
+0
+8
+8
+liebler_CONN
+PinSocket_2x04_P1.27mm_Vertical_SMD_WithoutPin3
+surface-mounted straight socket strip, 2x04, 1.27mm pitch, double cols (from Kicad 4.0.7!), script generated
+Surface mounted socket strip SMD 2x04 1.27mm double row
+0
+7
+7
+liebler_CONN
+PinSocket_2x04_P1.27mm_Vertical_SMD_withoutPad6
+surface-mounted straight socket strip, 2x04, 1.27mm pitch, double cols (from Kicad 4.0.7!), script generated
+Surface mounted socket strip SMD 2x04 1.27mm double row
+0
+7
+7
+liebler_CONN
+RJ45_2_smartprototyping
+RJ45 + led + 10/100BaseT mag + PoE, Wurth P/N 7499211122a
+
+0
+10
+9
+liebler_CONN
+RJ45_HANRUN_HR911105A
+http://www.kosmodrom.com.ua/pdf/HR911105A.pdf
+RJ45 Magjack
+0
+14
+13
+liebler_CONN
+RJ45_Hanrun_HR911105Ax2
+http://www.kosmodrom.com.ua/pdf/HR911105A.pdf
+RJ45 Magjack
+0
+27
+25
+liebler_CONN
+RJ45_RJE72-188-1411
+
+
+0
+14
+13
+liebler_CONN
+RJ45_aliexpress
+RJ45 + led + 10/100BaseT mag + PoE, Wurth P/N 7499211122a
+
+0
+10
+9
+liebler_CONN
+SolderWirePad_1x01_SMD_2x4mm
+Wire Pad, Square, SMD Pad,  5mm x 10mm,
+MesurementPoint Square SMDPad 5mmx10mm 
+0
+1
+1
+liebler_CONN
+SolderWirePad_1x01_SMD_3x5mm
+Wire Pad, Square, SMD Pad,  5mm x 10mm,
+MesurementPoint Square SMDPad 5mmx10mm 
+0
+1
+1
+liebler_CONN
+Steckzunge_4_8mm
+
+
+0
+1
+1
+liebler_CONN
+TE_2041307-1
+
+
+0
+10
+9
+liebler_CONN
+TE_2041411-1
+
+
+0
+14
+14
+liebler_CONN
+USB-C-HANBO-MC-307_C961709
+USB Type-C receptacle for USB 2.0 and PD, http://www.krhro.com/uploads/soft/180320/1-1P320120243.pdf
+usb usb-c 2.0 pd
+0
+20
+17
+liebler_CONN
+USBC_1x06_MP
+
+
+0
+10
+7
+liebler_CONN
+USB_C_Receptacle_HANDSOLDER
+USB Type-C receptacle for USB 2.0 and PD, http://www.krhro.com/uploads/soft/180320/1-1P320120243.pdf
+usb usb-c 2.0 pd
+0
+20
+17
+liebler_CONN
+USB_C_Receptacle_HRO_TYPE-C-31-M-12_IMPROVED
+USB Type-C receptacle for USB 2.0 and PD, http://www.krhro.com/uploads/soft/180320/1-1P320120243.pdf
+usb usb-c 2.0 pd
+0
+20
+17
+liebler_CONN
+USB_C_Receptacle_HRO_TYPE-C-31-M-12_smaller
+USB Type-C receptacle for USB 2.0 and PD, http://www.krhro.com/uploads/soft/180320/1-1P320120243.pdf
+usb usb-c 2.0 pd
+0
+20
+17
+liebler_CONN
+WAGO_250-208
+
+250-208 
+0
+8
+8
+liebler_CONN
+WAGO_250-210
+
+250-210 
+0
+10
+10
+liebler_CONN
+WAGO_250_203
+WAGO_250_203
+
+0
+3
+3
+liebler_CONN
+WR_MJ_Modular_Jack_Vertical_Plastic_6P6C
+
+
+0
+6
+6
+liebler_CONN
+miniusb_vert
+
+
+0
+7
+5

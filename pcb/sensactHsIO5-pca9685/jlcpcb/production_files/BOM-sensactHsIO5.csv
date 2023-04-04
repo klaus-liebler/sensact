@@ -1,13 +1,14 @@
 Comment,Designator,Footprint,LCSC
 u47,C8,C_0805_2012Metric,C13967
 u1,"C11,C2,C9",C_0402_1005Metric,C1525
+K15,"R12,R13,R15,R16,R17,R18,R19,R21,R22,R23,R24,R25,R3,R5,R6,R9",R_0805_2012Metric,C17471
 4k7,R11,R_1206_3216Metric,C17936
 ULN2803A,"U8,U9",SOIC-18W_7.5x11.6mm_P1.27mm,C181731
-K15,"R12,R13,R15,R16,R17,R18,R19,R21,R22,R23,R24,R25,R3,R5,R6,R9",R_0402_1005Metric,C25082
 k22,"R20,R69,R70,R71,R72,R73,R74,R75,R76,R77,R78,R79,R80,R81,R82,R83,R84",R_0402_1005Metric,C25091
 10k,"R10,R4",R_0402_1005Metric,C25744
 22k,"R14,R8",R_0402_1005Metric,C25768
 4k7,R7,R_0402_1005Metric,C25900
+PCA9685PW,U3,TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder,C2678753
 22u,C7,C_0603_1608Metric,C59461
 LM358,U1,SOIC-8_3.9x4.9mm_P1.27mm,C7950
 24V active,"D1,D10,D11,D12,D13,D14,D15,D16,D17,D18,D19,D2,D20,D5,D6,D7,D8,D9",LED_1606,C965863
@@ -22,7 +23,6 @@ A0,JP3,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
 24V LED,JP24,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
 SDA,JP34,SolderJumper-2_P1.3mm_Bridged2Bar_RoundedPad1.0x1.5mm,
 A3,JP6,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
-PCA9685PW,U3,TSSOP-28_4.4x9.7mm_Pitch0.65mm_handsolder,
 A2,JP5,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm_NumberLabels,
 3V LED,JP25,SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,
 Auto Manu,SW7,SW_SPDT_PCM12_handsolder,
@@ -50,3 +50,6 @@ ULN_CPU,JP21,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
 ULN_CPU,JP12,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
 ULN_CPU,JP22,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
 ULN_CPU,JP23,SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm,
+Conn_01x08,J3,"PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal",
+Conn_01x08,J1,"PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal",
+Conn_01x08,J2,"PhoenixContact_MC_0,5_8-G-2.5_1x08_P2.50mm_Horizontal",

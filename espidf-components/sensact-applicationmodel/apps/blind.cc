@@ -10,6 +10,7 @@ namespace sensact::apps
 	namespace BLIND{
 		constexpr u16 WAIT_STOP2PREPARE = 500;
 		constexpr u16 WAIT_PREPARE2GO = 200;
+		constexpr u16 WAIT_STOP2ENERGYSAVE = 500;
 		constexpr s32 STOP = 0;
 		constexpr s32 PERMANENT_DOWN = 1;
 		constexpr s32 SAFE_DOWN = 0.1 * INT32_MAX;
@@ -27,11 +28,13 @@ namespace sensact::apps
 																																														time_up_msecs(time_up_msecs),
 																																														time_down_msecs(time_down_msecs),
 																																														millisteps_up((FULL_UP - FULL_DOWN) / time_up_msecs),
-																																														millisteps_down(-(FULL_UP - FULL_DOWN) / time_down_msecs),
+																																														millisteps_down((FULL_UP - FULL_DOWN) / time_down_msecs),//positive number
+																																														significant_steps_up(1000*millisteps_up),
+																																														significant_steps_down(1000*millisteps_down),
 																																														lastChanged(0L),
 																																														lastPositionCalculation(0L),
-																																														currentState(eCurrentBlindState::STOP),
-																																														targetPosition(FULL_UP),
+																																														currentState(eCurrentBlindState::ENERGY_SAVE),
+																																														targetPosition(BLIND::STOP),
 																																														currentPosition(FULL_UP)
 	{
 	}
@@ -43,13 +46,18 @@ namespace sensact::apps
 
 	eAppCallResult cBlind::Setup(SensactContext *ctx)
 	{
-		stop(ctx);
+		ctx->SetU16Output(relay1, sensact::magic::INACTIVE);
+		ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
+		LOGI(TAG, "%s Setup sigUp:%ld sigDown:%ld", N(), this->significant_steps_up, this->significant_steps_down);
 		return eAppCallResult::OK;
 	}
 
 	void cBlind::prepareUp(SensactContext *ctx)
 	{
-		LOGI(TAG, "%s prepareUp", N());
+		if(this->currentState==eCurrentBlindState::PREPARE_UP){
+			return;
+		}
+		LOGI(TAG, "%s prepareUp %ld->%ld", N(), this->currentPosition, this->targetPosition);
 		this->currentState = eCurrentBlindState::PREPARE_UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -67,7 +75,10 @@ namespace sensact::apps
 
 	void cBlind::up(SensactContext *ctx)
 	{
-		LOGI(TAG, "%s up", N());
+		if(this->currentState==eCurrentBlindState::UP){
+			return;
+		}
+		LOGI(TAG, "%s up %ld->%ld", N(), this->currentPosition, this->targetPosition);
 		this->currentState = eCurrentBlindState::UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -89,7 +100,10 @@ namespace sensact::apps
 
 	void cBlind::prepareDown(SensactContext *ctx)
 	{
-		LOGI(TAG, "%s prepareDown", N());
+		if(this->currentState==eCurrentBlindState::PREPARE_DOWN){
+			return;
+		}
+		LOGI(TAG, "%s prepareDown %ld->%ld", N(), this->currentPosition, this->targetPosition);
 		this->currentState = eCurrentBlindState::PREPARE_DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -107,7 +121,10 @@ namespace sensact::apps
 
 	void cBlind::down(SensactContext *ctx)
 	{
-		LOGI(TAG, "%s down", N());
+		if(this->currentState==eCurrentBlindState::DOWN){
+			return;
+		}
+		LOGI(TAG, "%s down %ld->%ld", N(), this->currentPosition, this->targetPosition);
 		this->currentState = eCurrentBlindState::DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -129,8 +146,12 @@ namespace sensact::apps
 
 	void cBlind::stop(SensactContext *ctx)
 	{
-		LOGI(TAG, "%s stop", N());
+		if(this->currentState==eCurrentBlindState::STOP){
+			return;
+		}
+		LOGI(TAG, "%s stop %ld->%ld", N(), this->currentPosition, this->targetPosition);
 		this->currentState = eCurrentBlindState::STOP;
+		this->targetPosition=BLIND::STOP;
 		this->lastChanged = ctx->Now();
 		currentPosition = currentPosition > FULL_UP ? FULL_UP : currentPosition;
 		currentPosition = currentPosition < FULL_DOWN ? FULL_DOWN : currentPosition;
@@ -154,32 +175,44 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::OnDOWNCommand(uint8_t forced, SensactContext *ctx){
-		LOGI(TAG, "%s OnDOWNCommand called ", N());
-		if(forced){
-			this->targetPosition=BLIND::PERMANENT_DOWN;
+	void cBlind::energySave(SensactContext *ctx)
+	{
+		if(this->currentState==eCurrentBlindState::ENERGY_SAVE){
 			return;
 		}
-		if (this->targetPosition == 0)
-		{
-			this->targetPosition = SAFE_DOWN;
+		LOGI(TAG, "%s energy save", N());
+		this->currentState = eCurrentBlindState::ENERGY_SAVE;
+		this->targetPosition=BLIND::STOP;
+		this->lastChanged = ctx->Now();
+		ctx->SetU16Output(relay1, sensact::magic::INACTIVE);
+		ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
+	}
+
+	void cBlind::OnDOWNCommand(uint8_t forced, SensactContext *ctx){
+		
+		if(forced){
+			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::PERMANENT_DOWN", N());
+			this->targetPosition=BLIND::PERMANENT_DOWN;
+		} else if (this->targetPosition == 0){
+			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::SAFE_DOWN", N());
+			this->targetPosition = BLIND::SAFE_DOWN;
 		}
-		else
-		{
+		else{
+			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::STOP", N());
 			this->targetPosition = BLIND::STOP;
 		}
 	}
 	void cBlind::OnUPCommand(uint8_t forced, SensactContext *ctx) {
+		
 		if(forced){
+			LOGI(TAG, "%s OnUPCommand called, target BLIND::PERMANENT_UP", N());
 			this->targetPosition=BLIND::PERMANENT_UP;
-			return;
+		}else if (this->targetPosition == BLIND::STOP){
+			LOGI(TAG, "%s OnUPCommand called, target BLIND::SAFE_UP", N());
+			this->targetPosition = BLIND::SAFE_UP;
 		}
-		if (this->targetPosition == 0)
-		{
-			this->targetPosition = SAFE_UP;
-		}
-		else
-		{
+		else{
+			LOGI(TAG, "%s OnUPCommand called, target BLIND::STOP", N());
 			this->targetPosition = BLIND::STOP;
 		}
 	}
@@ -259,55 +292,57 @@ namespace sensact::apps
 
 	eAppCallResult cBlind::Loop(SensactContext *ctx)
 	{
-		
 		updatePosition(ctx);
-		if (this->targetPosition==BLIND::STOP)
-		{
-			stop(ctx);
-		}
-		else if (this->currentState == eCurrentBlindState::STOP && ctx->Now() - lastChanged >= WAIT_STOP2PREPARE)
-		{
-			if (targetPosition - currentPosition > + (millisteps_down << 10))
-				{
-					prepareDown(ctx);
-				}
-			else if (targetPosition - currentPosition < -(millisteps_up << 10))
+		if (this->targetPosition==BLIND::STOP){
+			switch (currentState)
 			{
+			case eCurrentBlindState::ENERGY_SAVE:
+				//das ist der Zielzustand - wenn wir da drin sind, dann ist nichts mehr zu machen..
+				break;
+			case eCurrentBlindState::STOP:
+				if(ctx->Now() - lastChanged >= WAIT_STOP2ENERGYSAVE) energySave(ctx);
+				break;
+			default:
+				stop(ctx);
+			}
+			
+		}else if(this->targetPosition-this->currentPosition>significant_steps_up){//targetPosition DEUTLICH größer als currentPosition -->es geht nach oben
+			switch (currentState)
+			{
+			case eCurrentBlindState::ENERGY_SAVE:
 				prepareUp(ctx);
+				break;
+			case eCurrentBlindState::STOP:
+				if(ctx->Now() - lastChanged >= WAIT_STOP2PREPARE) prepareUp(ctx);
+				break;
+			case eCurrentBlindState::PREPARE_UP:
+				if(ctx->Now() - lastChanged >= WAIT_PREPARE2GO)	up(ctx);
+				break;
+			case eCurrentBlindState::UP:
+				break;
+			default:
+				stop(ctx);
+				break;
 			}
-			else
+		}else if(this->targetPosition-this->currentPosition<-significant_steps_down){//millisteps und significant_steps sind positive Zahlen
+			switch (currentState)
 			{
-				stop(ctx); // passiert, wenn während der "Umpolphase" ein neuer anderslautender Befehl kommt
+			case eCurrentBlindState::ENERGY_SAVE:
+				prepareDown(ctx);
+				break;
+			case eCurrentBlindState::STOP:
+				if(ctx->Now() - lastChanged >= WAIT_STOP2PREPARE) prepareDown(ctx);
+				break;
+			case eCurrentBlindState::PREPARE_DOWN:
+				if(ctx->Now() - lastChanged >= WAIT_PREPARE2GO)	down(ctx);
+				break;
+			case eCurrentBlindState::DOWN:
+				break;
+			default:
+				stop(ctx);
+				break;
 			}
-		}
-		else if (this->currentState == eCurrentBlindState::PREPARE_DOWN && ctx->Now()- lastChanged >= WAIT_PREPARE2GO)
-		{
-			if (targetPosition - currentPosition > +(millisteps_down << 10))
-				{
-					down(ctx);
-				}
-			else
-			{
-				stop(ctx); // passiert, wenn während der "Umpolphase" ein neuer anderslautender Befehl kommt
-			}
-		}
-		else if (this->currentState == eCurrentBlindState::PREPARE_UP && ctx->Now() - lastChanged >= WAIT_PREPARE2GO)
-		{
-			if (targetPosition - currentPosition < -(millisteps_up << 10))
-			{
-				up(ctx);
-			}
-			else
-			{
-				stop(ctx); // passiert, wenn während der "Umpolphase" ein neuer anderslautender Befehl kommt
-			}
-		}
-		else if (this->currentState == eCurrentBlindState::UP && currentPosition <= targetPosition)
-		{
-			stop(ctx);
-		}
-		else if (this->currentState == eCurrentBlindState::DOWN && currentPosition >= targetPosition)
-		{
+		}else{
 			stop(ctx);
 		}
 		return eAppCallResult::OK;

@@ -1,6 +1,5 @@
 #include <algorithm> // std::max
 #include "rgbw.hh"
-#include "model_applications.hh"
 #define TAG "RGBW"
 #include <sensact_logger.hh>
 namespace sensact::apps

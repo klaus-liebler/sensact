@@ -14,10 +14,10 @@ namespace Klli.Sensact.Config
     {
         private static Klli.Sensact.Model.Common.Model GetModel()
         {
-            //return TestModelBuilder.BuildRGBWDemo();
+            return TestModelBuilder.TwoNodesDemo();
             //return TestModelBuilder.BuildModelToTestAllPins();
             //Model model = TestModelBuilder.BuildLIBARDemo();
-            return Sensact.Model.Sattlerstrasse16.Build();
+            //return Sensact.Model.Sattlerstrasse16.Build();
             //return Sattlerstrasse16Classic.Build();
             //return TestModelBuilder.BuildModelToTestAllAllI2CPinsAndCAN();
             //return TestModelBuilder.BuildMP3Demo();

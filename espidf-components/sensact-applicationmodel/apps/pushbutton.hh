@@ -1,4 +1,6 @@
 #pragma once
+#define TAG "PUSHB"
+#include <sensact_logger.hh>
 #include <application.hh>
 
 namespace sensact::apps
@@ -11,8 +13,8 @@ namespace sensact::apps
 		bool isPressedOld{false};
 		bool holdShortSent{false};
 
-		tms_t lastPress;
-		tms_t lastRelease;
+		tms_t lastPress{0};
+		tms_t lastRelease{0};
 
 	protected:
 		cPushbutton(InOutId const input) : input(input)
@@ -29,13 +31,13 @@ namespace sensact::apps
 		void ButtonLoop(SensactContext *ctx)
 		{
 			u16 inputValue;
-
 			tms_t now = ctx->Now();
 			ctx->GetU16Input(input, inputValue);
-			bool isPressed = inputValue == 0; // because all buttons are connected to GND
+			bool isPressed = inputValue != 0;
 			if (!isPressedOld && isPressed)
 			{
 				this->holdShortSent = false;
+				LOGI(TAG, "OnPressed");
 				OnPressed(ctx);
 				this->lastPress = now;
 			}
@@ -43,17 +45,20 @@ namespace sensact::apps
 			{
 				if (now - this->lastPress < sensact::magic::SHORT_PRESS)
 				{
+					LOGI(TAG, "OnReleasedShort");
 					OnReleasedShort(ctx);
 				}
 				else
 				{
+					LOGI(TAG, "OnReleasedLong");
 					OnReleasedLong(ctx);
 				}
-
+				LOGI(TAG, "OnReleased");
 				OnReleased(ctx);
 
 				if (now - lastRelease < sensact::magic::DOUBLE_PRESS)
 				{
+					LOGI(TAG, "OnDoubleclick");
 					OnDoubleclick(ctx);
 				}
 
@@ -63,6 +68,7 @@ namespace sensact::apps
 			{
 				if (!this->holdShortSent && now - lastPress >= sensact::magic::SHORT_PRESS)
 				{
+					LOGI(TAG, "OnPressedShortAndHold");
 					OnPressedShortAndHold(ctx);
 					this->holdShortSent = true;
 				}
@@ -171,7 +177,7 @@ namespace sensact::apps
 		cPushbuttonDual2Blind(eApplicationID const id, InOutId const inputUp, InOutId const inputDown, eApplicationID target) : cApplication(id)
 		{
 			up = new cPushbuttonUP(inputUp, target);
-			down = new cPushbuttonDOWN(inputUp, target);
+			down = new cPushbuttonDOWN(inputDown, target);
 		}
 
 		eAppCallResult Loop(SensactContext *ctx) override
@@ -225,7 +231,7 @@ namespace sensact::apps
 		cPushbuttonDual2PWM(eApplicationID const id, InOutId const inputUp, InOutId const inputDown, eApplicationID target) : cApplication(id)
 		{
 			up = new cPushbuttonUP(inputUp, target);
-			down = new cPushbuttonDOWN(inputUp, target);
+			down = new cPushbuttonDOWN(inputDown, target);
 		}
 
 		eAppCallResult Loop(SensactContext *ctx) override
@@ -245,3 +251,4 @@ namespace sensact::apps
 		}
 	};
 }
+#undef TAG

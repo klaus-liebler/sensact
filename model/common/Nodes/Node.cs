@@ -6,10 +6,11 @@ namespace Klli.Sensact.Model.Common.Nodes
 
     public abstract class Node
     {
-        public Node(ushort nodeId,  string nodeName)
+        public Node(ushort nodeId,  string nodeName, bool NodeHasANodeApplication=true)
         {
             this.NodeId = nodeId;
             this.NodeName=nodeName;
+            this.NodeHasANodeApplication=NodeHasANodeApplication;
             this.Applications = new List<SensactApplication>();
         }
 
@@ -17,42 +18,8 @@ namespace Klli.Sensact.Model.Common.Nodes
         public string NodeName{get;}
         public ushort NodeId{get;}
 
+        public bool NodeHasANodeApplication{get;}
 
-        public abstract STM32Chip Chip { get; }
-
-        public abstract List<CubeMXModule> CubeMXModules { get; }
-
-        public abstract List<Driver> Drivers { get; }
-
-        public abstract int HSEValue { get; }
-
-        public string BoardType
-        {
-            get
-            {
-                string boardId = this.GetType().Name.ToLower();
-                return boardId.Substring(0, boardId.Length - 2);
-            }
-        }
-
-        public virtual int VersionMajor
-        {
-            get
-            {
-                string boardId = this.GetType().Name;
-                return boardId[boardId.Length - 2] - 0x30;
-            }
-
-        }
-        public virtual int VersionMinor
-        {
-            get
-            {
-                string boardId = this.GetType().Name;
-                return boardId[boardId.Length - 1] - 0x30;
-            }
-
-        }
 
         /// <summary>
         /// Idee: Die Applications hier und in der Top-Node sind gleichberechtigt.

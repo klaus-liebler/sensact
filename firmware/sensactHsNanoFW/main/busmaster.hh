@@ -5,18 +5,18 @@
 #include <freertos/task.h>
 #include <array>
 #include <vector>
+#include <i2c.hh>
 #include <sensact_commons.hh>
 #include <hal.hh>
 #include <sensact_logger.hh>
 
-#include <pca9555-hal.hh>
-#include <pca9685-hal.hh>
+#include <pca9555.hh>
+#include <pca9685.hh>
 
 #define TAG "BUSMSTR"
 
 namespace sensact
 {
-
 	struct cSensactSENode
 	{
 	public:
@@ -38,13 +38,10 @@ namespace sensact
 		uint16_t inputs[2];
 	};
 
-	
-
 	class AbstractBusmaster
 	{
 	public:
 		virtual ErrorCode Setup() const = 0;
-		virtual ErrorCode Discover() const = 0;
 		virtual ErrorCode GetInput(u16 input, u16 &value) const = 0;
 		virtual ErrorCode SetOutput(u16 output, u16 value) const = 0;
 		virtual ErrorCode CommitInputs() const = 0;
@@ -67,112 +64,7 @@ namespace sensact
 		virtual ErrorCode CommitOutputs() const = 0;
 	};
 
-	class InOut16
-	{
-	public:
-		virtual ErrorCode Setup() = 0;
-		virtual ErrorCode Loop() = 0;
-		virtual ErrorCode GetInput(u16 inputId, u16 &value) = 0;
-		virtual ErrorCode SetOutput(u16 outputId, u16 value) = 0;
-		virtual ErrorCode CommitInputs() = 0;
-		virtual ErrorCode CommitOutputs() = 0;
-	};
 
-	class PCA9555Device : public InOut16
-	{
-	private:
-		PCA9555_HAL::M *drv;
-		u16 val{0xFFFF};
-
-	public:
-		PCA9555Device(sensact::hal::iI2CBus* i2c_num, PCA9555_HAL::Device device)
-		{
-			drv = new PCA9555_HAL::M(i2c_num, device, 0xFFFF);
-		}
-		ErrorCode Setup() override { return drv->Setup(); }
-		ErrorCode Loop() override { return drv->Update(); }
-		ErrorCode GetInput(u16 input, u16 &inputState) override
-		{
-
-			int localIndex = input & 0x0F;
-			inputState = GetBitIdx(this->val, localIndex);
-			return ErrorCode::OK;
-		}
-		ErrorCode SetOutput(u16 output, u16 value) override
-		{
-			return ErrorCode::OK;
-		}
-		ErrorCode CommitInputs() override
-		{
-			this->val = drv->GetCachedInput();
-			return ErrorCode::OK;
-		}
-		ErrorCode CommitOutputs() override
-		{
-			return ErrorCode::OK;
-		}
-	};
-
-	class PCA9685Device : public InOut16
-	{
-	private:
-		PCA9685_HAL::M *drv;
-		u16 val[16]{0};
-		u16 written[16]{0};
-		std::atomic_bool dirty[16];
-
-	public:
-		PCA9685Device(sensact::hal::iI2CBus* i2c_num, PCA9685_HAL::Device device, PCA9685_HAL::InvOutputs inv, PCA9685_HAL::OutputDriver outdrv)
-		{
-			this->drv = new PCA9685_HAL::M(i2c_num, device, inv, outdrv, PCA9685_HAL::OutputWhen_OE_High::OUTPUT_0, PCA9685_HAL::Frequency::Frequency_200Hz);
-			for(int i=0;i<16;i++){
-				dirty[i]=false;
-			}
-		}
-		ErrorCode Setup() override {
-			return drv->Setup();
-		}
-		ErrorCode Loop() override
-		{
-			for (int i = 0; i < 16; i++)
-			{
-				if (dirty[i].exchange(false))
-				{
-					this->drv->SetDutyCycleForOutput((PCA9685_HAL::Output)i, written[i]);
-				}
-			}
-			return ErrorCode::OK;
-		}
-		ErrorCode GetInput(u16 input, u16 &value) override
-		{
-			int localIndex = input & 0x0F;
-			value = val[localIndex];
-			return ErrorCode::OK;
-		}
-		ErrorCode SetOutput(u16 output, u16 value) override
-		{
-			int localIndex = output & 0x0F;
-			val[localIndex] = value;
-			return ErrorCode::OK;
-		}
-		ErrorCode CommitInputs() override
-		{
-			return ErrorCode::OK;
-		}
-		ErrorCode CommitOutputs() override
-		{
-			for (int i = 0; i < 16; i++)
-			{
-				u16 myval = val[i];
-				if (myval == written[i])
-					continue;
-				written[i] = myval;
-				dirty[i] = true;
-			}
-			return ErrorCode::OK;
-		}
-	};
-	
 	// TODO: This is just a empty dummy implementation
 	class OneWireSubBusmaster : public AbstractSubBusmaster
 	{
@@ -219,167 +111,170 @@ namespace sensact
 	{
 	private:
 		const char * name;
-		sensact::hal::iI2CBus* i2c_num;
+		iI2CPort* i2c_num;
 		const std::array<gpio_num_t, 3> interruptlines; // array with 3 elements!
-		std::vector<InOut16 *> inOuts16;
-		std::vector<AbstractSubBusmaster *> subbusses;
+		std::vector<PCA9555::M *> pca9555_vec;
+		std::vector<PCA9685::M *> pca9685_vec;
 
 		static void Task(void *pvParameters)
 		{
 			I2CBusmaster* myself = static_cast<I2CBusmaster*>(pvParameters);
-			//Setup'ed is already: HAL and I2C
-			ESP_LOGI(TAG, "I2CBusmaster task started");
-			TickType_t xLastWakeTime{0};
-			const TickType_t xTimeIncrement = pdMS_TO_TICKS(100);
-			xLastWakeTime = xTaskGetTickCount();
-			while (true)
-			{
-				vTaskDelayUntil(&xLastWakeTime, xTimeIncrement);
-				myself->Loop();
-			}
+			myself->Loop();
 		}
 
 
 		void Loop()
 		{
+			//Setup'ed is already: HAL and I2C
+			ESP_LOGI(TAG, "I2CBusmaster task started");
+			ERRORCODE_CHECK(i2c_num->Discover());
+			//Not setup'ed: all devices
+			PCA9685::M::SoftwareReset(this->i2c_num);
+			for (auto &pca9685 : this->pca9685_vec)
+			{
+				ERRORCODE_CHECK(pca9685->Setup());
+			}
+			for (auto &pca9555 : this->pca9555_vec)
+			{
+				ERRORCODE_CHECK(pca9555->Setup());
+			}
+		
+			TickType_t xLastWakeTime{0};
+			const TickType_t xTimeIncrement = pdMS_TO_TICKS(100);
+			xLastWakeTime = xTaskGetTickCount();
 			while (true)
 			{
-				for (auto &inOut : this->inOuts16)
+				for (auto &pca9685 : this->pca9685_vec)
 				{
-					inOut->Loop();
+					pca9685->Loop();
 				}
+				for (auto &pca9555 : this->pca9555_vec)
+				{
+					pca9555->Update();
+				}
+				vTaskDelayUntil(&xLastWakeTime, xTimeIncrement);
 			}
 		}
 
 	public:
 		I2CBusmaster(
 			const char * name,
-			sensact::hal::iI2CBus* i2c_num,
+			iI2CPort* i2c_num,
 			std::array<gpio_num_t, 3> interruptlines,
-			std::vector<InOut16 *> inOuts16,
-			std::vector<AbstractSubBusmaster *> subbusses) : name(name), i2c_num(i2c_num), interruptlines(interruptlines), inOuts16(inOuts16), subbusses(subbusses)
+			std::vector<PCA9555::M *> pca9555_vec,
+			std::vector<PCA9685::M *> pca9685_vec) : name(name), i2c_num(i2c_num), interruptlines(interruptlines), pca9555_vec(pca9555_vec), pca9685_vec(pca9685_vec)
 		{
 		}
 
 		ErrorCode Setup() const override
 		{
-			PCA9685_HAL::M::SoftwareReset(this->i2c_num);
 			xTaskCreate(I2CBusmaster::Task, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
 			return ErrorCode::OK;
 		}
 
 
 		ErrorCode GetInput(u16 id, u16 &value) const override{
-			id&=0x3FFF; //clear two MSB
-			if(id<1024){
-				int io16Index = id>>4;
-				
-				if(this->inOuts16.size()<=io16Index){
-					return ErrorCode::INDEX_OUT_OF_BOUNDS;
-				}
-				InOut16* io16 = this->inOuts16[io16Index];
-				int locIndex=id & 0x0F;
-				return io16->GetInput(locIndex, value);
-			}
-			int subbusIndex = (id>>10)-1;
-			if(this->subbusses.size()<=subbusIndex){
+			id&=0x3FFF; //clear two MSB as they are for selecting one of four busses
+			if(id>=1024){
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
 			}
-			AbstractSubBusmaster* sbmstr = this->subbusses[subbusIndex];
-			int locIndex=id & 0x03FF;
-			return sbmstr->GetInput(locIndex, value);
+			int io16Index = id>>4;
+			if(io16Index>=this->pca9555_vec.size()){
+				return ErrorCode::INDEX_OUT_OF_BOUNDS;
+			}
+			PCA9555::M* pca9555 = this->pca9555_vec[io16Index];
+			if(pca9555==nullptr){
+				return ErrorCode::GENERIC_ERROR;
+			}
+			uint16_t val=pca9555->GetCachedInput();
+			int locIndex=id & 0x0F;
+			value= GetBitIdx(val, locIndex)?0xFFFF:0;
+			return ErrorCode::OK;
+			
 			
 		}
 		ErrorCode SetOutput(u16 id, u16 value) const override{
-			id&=0x3FFF; //clear two MSB
-			if(id<1024){
-				int io16Index = id>>4;
-				
-				if(this->inOuts16.size()<=io16Index){
-					return ErrorCode::INDEX_OUT_OF_BOUNDS;
-				}
-				InOut16* io16 = this->inOuts16[io16Index];
-				int locIndex=id & 0x0F;
-				return io16->SetOutput(locIndex, value);
-			}
-			int subbusIndex = (id>>10)-1;
-			if(this->subbusses.size()<=subbusIndex){
+			id&=0x3FFF; //clear two MSB  as they are for selecting one of four busses
+			if(id>=1024){
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
 			}
-			AbstractSubBusmaster* sbmstr = this->subbusses[subbusIndex];
-			int locIndex=id & 0x03FF;
-			return sbmstr->SetOutput(locIndex, value);
+			int io16Index = id>>4;
+			if(io16Index>=this->pca9685_vec.size()){
+				return ErrorCode::INDEX_OUT_OF_BOUNDS;
+			}
+			PCA9685::M* pca9685 = this->pca9685_vec[io16Index];
+			if(pca9685==nullptr){
+				return ErrorCode::GENERIC_ERROR;
+			}
+			int locIndex=id & 0x0F;
+			return pca9685->SetOutput(locIndex, value);
 		}
 
 		ErrorCode CommitInputs() const override
 		{
-			for (auto &inOut : this->inOuts16)
-			{
-				inOut->CommitInputs();
-			}
-
-			for (auto &subbus : this->subbusses)
-			{
-				subbus->CommitInputs();
-			}
 			return ErrorCode::OK;
 		}
 
 		ErrorCode CommitOutputs() const override
 		{
-			for (auto &inOut : this->inOuts16)
-			{
-				inOut->CommitOutputs();
-			}
-
-			for (auto &subbus : this->subbusses)
-			{
-				subbus->CommitOutputs();
-			}
-			return ErrorCode::OK;
-		}
-
-		ErrorCode Discover() const override
-		{
-			int cnt = 0;
-			for (u8 addr = 0; addr < 128; addr++)
-			{
-				if (i2c_num->IsAvailable(addr)==ErrorCode::OK)
-				{
-					if (addr == PCA9685_HAL::ALL_CALL)
-					{
-						LOGI(TAG, "Bus %s: Found probably PCA9685 'allcall'  0x%02X ", name, addr);
-					}
-					else if (addr >= 0x80)
-					{
-						LOGI(TAG, "Bus %s: Found probably PCA9685 on 8bit address 0x%02X (Base + offset %d)", name, addr, addr - 0x80);
-						cnt++;
-					}
-					else if (addr >= 0x40 && addr < 0x50)
-					{
-						LOGI(TAG, "Bus %s: Found probably PCA9555 on 8bit address 0x%02X (Base + offset %d)", name, addr, addr - 0x40);
-						cnt++;
-					}
-					else if (addr >= 0x50 && addr < 0x58)
-					{
-						LOGI(TAG, "Bus %s: Found probably DS2482 on 8bit address 0x%02X (Base + offset %d)", name, addr, addr - 0x50);
-						cnt++;
-					}
-					else
-					{
-						LOGI(TAG, "Bus %s: Found unknown device on address 0x%02X", name, addr);
-						cnt++;
-					}
-				}
-			}
-			LOGI(TAG, "Bus %s: %d devices found", name, cnt);
 			return ErrorCode::OK;
 		}
 	};
 
-
-	class DirectGPIOBusmaster : AbstractBusmaster
+	class DirectGPIOBusmaster : public AbstractBusmaster
 	{
+		private:
+			const char * name;
+			sensact::hal::iHAL *hal;
+		public:
+		DirectGPIOBusmaster(const char * name, sensact::hal::iHAL * hal):
+		name(name), hal(hal)
+		{
+		}
+
+		ErrorCode Setup() const override
+		{
+			return ErrorCode::OK;
+		}
+
+
+		ErrorCode GetInput(u16 id, u16 &value) const override{
+			id&=0x3FFF; //clear two MSB
+			switch (id)
+			{
+			case sensact::magic::INPUT1:
+				value=sensact::magic::ACTIVE;
+				return ErrorCode::OK;
+			case sensact::magic::INPUT0:
+				value=sensact::magic::INACTIVE;
+				return ErrorCode::OK;
+			default:
+				return hal->GetU16Input(id, value);
+				break;
+			}			
+		}
+		ErrorCode SetOutput(u16 id, u16 value) const override{
+			id&=0x3FFF; //clear two MSB
+			switch (id)
+			{
+			case sensact::magic::OUTPUT_NULL:
+				return ErrorCode::OK;
+			default:
+				return hal->SetU16Output(id, value);
+				break;
+			}			
+		}
+
+		ErrorCode CommitInputs() const override
+		{
+			return ErrorCode::OK;
+		}
+
+		ErrorCode CommitOutputs() const override
+		{
+			
+			return ErrorCode::OK;
+		}
 	};
 
 	class CANBusmaster : AbstractBusmaster

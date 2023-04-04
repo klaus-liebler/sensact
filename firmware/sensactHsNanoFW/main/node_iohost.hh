@@ -24,5 +24,9 @@ namespace sensact
         {
             return ErrorCode::OK;
         }
+
+        int GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen){
+            return snprintf(buffer, remainingLen, "\tIoHost ok!\n");
+        }
     };
 }

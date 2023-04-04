@@ -11,21 +11,15 @@
 
 #define TAG "HAL"
 
-#define MASTER_CHECK(a, ret_val, str, ...) \
-    if (!(a)) { \
-        ESP_LOGE(TAG, "%s(%u): " str, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
-        return (ret_val); \
-    }
-
 using namespace sensact::hal;
 using namespace sensact;
 namespace sensact::hal
 {
-	class I2CBus:public iI2CBus{
+	class MyI2CPort:public iI2CPort{
 		private:
 		i2c_port_t i2c_port;
 		public:
-		I2CBus(i2c_port_t i2c_port):i2c_port(i2c_port){
+		MyI2CPort(i2c_port_t i2c_port):i2c_port(i2c_port){
 
 		}
 		ErrorCode ReadReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
@@ -37,17 +31,20 @@ namespace sensact::hal
     	ErrorCode Read(uint8_t address7bit, uint8_t *data, size_t len)override{
 			return I2C::Read(this->i2c_port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
 		}
-    	ErrorCode WriteReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len)override{
+    	ErrorCode WriteReg(uint8_t address7bit, uint8_t reg_addr, const uint8_t *reg_data, size_t len)override{
 			return I2C::WriteReg(this->i2c_port, address7bit, reg_addr, reg_data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
 		}
     	ErrorCode WriteSingleReg(uint8_t address7bit, uint8_t reg_addr, uint8_t reg_data){
 			return I2C::WriteSingleReg(this->i2c_port, address7bit, reg_addr, reg_data)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
 		}
-    	ErrorCode Write(uint8_t address7bit, uint8_t *data, size_t len)override{
+    	ErrorCode Write(uint8_t address7bit, const uint8_t *data, size_t len)override{
 			return I2C::Write(this->i2c_port, address7bit, data, len)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
 		}
     	ErrorCode IsAvailable(uint8_t address7bit)override{
 			return I2C::IsAvailable(this->i2c_port, address7bit)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
+		}
+		ErrorCode Discover()override{
+			return I2C::Discover(this->i2c_port)==ESP_OK?ErrorCode::OK:ErrorCode::DEVICE_NOT_RESPONDING;
 		}
 	};
 	
@@ -60,6 +57,7 @@ namespace sensact::hal
 		ErrorCode SetupCAN(gpio_num_t tx, gpio_num_t rx)
 		{
 			twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(tx, rx, TWAI_MODE_NORMAL);
+			g_config.intr_flags=ESP_INTR_FLAG_LOWMED;
 			twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 			twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
@@ -97,8 +95,6 @@ namespace sensact::hal
 			*/
 			return ErrorCode::OK;
 		}
-
-
 
 	public:
 		tms_t GetMillisS64() override{
@@ -138,10 +134,6 @@ namespace sensact::hal
 			return gpio_set_level((gpio_num_t )id, value) == ESP_OK ? ErrorCode::OK : ErrorCode::PIN_NOT_AVAILABLE;
 		}
 
-
-
-
-
 		ErrorCode TryReceiveCANMessage(CANMessage &m) override
 		{
 			twai_message_t rx_msg;
@@ -168,10 +160,9 @@ namespace sensact::hal
 				tx_msg.data[i] = m.Data[i];
 			}
 			if (twai_transmit(&tx_msg, 1) != ESP_OK)
-			{
+			{	
 				return ErrorCode::QUEUE_OVERLOAD;
 			}
-			LOGI(TAG, "Enqueued id %lu", tx_msg.identifier);
 			return ErrorCode::OK;
 		}
 
