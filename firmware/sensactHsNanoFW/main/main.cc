@@ -10,6 +10,10 @@
 #include <nvs_flash.h>
 #include <esp_log.h>
 #include <string.h>
+#include "lvgl.h"
+#include "ui/ui.h"
+#include "encoder_adc.hh"
+#include "lcd_manager.hh"
 
 #include <lwip/err.h>
 #include <lwip/sys.h>
@@ -26,6 +30,27 @@
 #define TAG "main"
 using namespace sensact;
 
+lv_group_t *groupHome{nullptr};
+lv_group_t *groupSettings{nullptr};
+lv_indev_t *encoder_indev{nullptr};
+iHAL* halobj{nullptr};
+
+extern "C" void encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
+{
+    static bool previousIsPressed{false};
+    data->enc_diff = EncoderADC::GetChangesSinceLastCallOfThisFunction();
+    data->state = EncoderADC::GetButtonPressed() ? LV_INDEV_STATE_PRESSED : LV_INDEV_STATE_RELEASED;
+    if (data->enc_diff != 0)
+        //ESP_LOGI(TAG, "Encoder %i", data->enc_diff);
+    if (data->state == LV_INDEV_STATE_PRESSED && !previousIsPressed)
+    {
+        //ESP_LOGI(TAG, "Encoder pressed");
+        previousIsPressed = true;
+    }
+    if (data->state == LV_INDEV_STATE_RELEASED)
+        previousIsPressed = false;
+}
+
 extern "C" void app_main(void)
 {
     esp_err_t err = nvs_flash_init();
@@ -39,11 +64,24 @@ extern "C" void app_main(void)
     err = nvs_open("storage", NVS_READWRITE, &nvs_handle);
     if (err != ESP_OK)
     {
-        printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error (%s) opening NVS handle!", esp_err_to_name(err));
         while (true)
             ;
     }
 
+    LCD::InitLCD();
+    EncoderADC::InitEncoder(GPIO_NUM_2, true); 
+    lv_indev_drv_t indev_drv;
+    lv_indev_drv_init(&indev_drv);          /*Basic initialization*/
+    indev_drv.type = LV_INDEV_TYPE_ENCODER; /*See below.*/
+    indev_drv.read_cb = encoder_read;       /*See below.*/
+    /*Register the driver in LVGL and save the created input device object*/
+    encoder_indev = lv_indev_drv_register(&indev_drv);
+    assert(encoder_indev!=NULL);
+
+    
+
+    
     
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
@@ -53,12 +91,26 @@ extern "C" void app_main(void)
     }
     
     #include <hwcfg.inc>
-    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, hal, &busmasters, canMBP);
+    if(!halobj){
+        ESP_LOGE(TAG, "HAL has not been created in <hwcfg.inc>");
+        esp_restart();
+    }
+    groupHome = lv_group_create();
+    lv_group_add_obj(groupHome, ui_sldVolume);
+    lv_group_add_obj(groupHome, ui_btnNext);
+    lv_indev_set_group(encoder_indev, groupHome);
+    groupSettings = lv_group_create();
+    lv_group_add_obj(groupSettings, ui_btnPrev);
+    LCD::StartLVGLTask();
+    
+    
+    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, halobj, &busmasters, canMBP);
     nodemaster->RunEternalLoopInTask();
 
     while (true)
     {
         ESP_LOGI(TAG, "Heap %6lu nodemaster tells: %s", esp_get_free_heap_size(), nodemaster->GetStatusMessage());
         vTaskDelay(pdMS_TO_TICKS(10000));
+        lv_label_set_text_fmt()
     }
 }

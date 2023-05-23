@@ -1,0 +1,22 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C1,u1,C_0402_1005Metric,44.8,-72.2,90.0,top
+C2,u1,C_0402_1005Metric,47.2,-56.7,90.0,top
+C3,u1,C_0402_1005Metric,79.1,-75.1,180.0,top
+C4,22u,C_0603_1608Metric,46.0,-55.1,90.0,top
+C7,10u,C_0603_1608Metric,35.6,-76.8,-90.0,top
+C8,u1,C_0402_1005Metric,29.6,-67.3,180.0,top
+C9,10u,C_0402_1005Metric,29.6,-68.3,180.0,top
+D1,HIR25-21C/L423/2T,LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm,32.3,-66.4,90.0,top
+J4,USB,GT-USB-7051A,68.9,-75.0,0.0,top
+Q1,PT26-21B/TR8,LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm,46.2,-66.4,-90.0,top
+R1,4k7,R_0402_1005Metric,54.9,-70.3,0.0,top
+R2,5k1,R_0402_1005Metric,62.9,-74.0,180.0,top
+R6,10k,R_0402_1005Metric,43.3,-68.7,90.0,top
+R7,k1,R_0402_1005Metric,82.3,-75.6,90.0,top
+R8,10k,R_0402_1005Metric,64.3,-54.8,90.0,top
+R9,10k,R_0402_1005Metric,44.6,-55.9,90.0,top
+R10,5k1,R_0402_1005Metric,68.9,-77.8,180.0,top
+SW3,BOOT,SW_SPST_TL3342,69.1,-55.9,0.0,top
+U1,ESP32-S3-MINI-1,ESP32-S3-MINI-1U,55.75,-61.3,0.0,top
+U2,AMS1117-3.3,SOT-223-3_TabPin2,31.0,-73.4,90.0,top
+U3,SRV05-4,SOT-23-6,61.7,-71.7,0.0,top

@@ -1,6 +1,6 @@
 #pragma once
 #include "hal_ESP32.hh"
-#include <MP3Player.hh>
+#include <audioplayer.hh>
 #include <tas580x.hh>
 #include <driver/spi_master.h>
 #include <ethernet.hh>
@@ -61,28 +61,21 @@ namespace sensact::hal::SensactHsNano3
     constexpr gpio_num_t I2C_EXTERNAL_SCL{GPIO_NUM_38};
     constexpr gpio_num_t I2C_EXTERNAL_SDA{GPIO_NUM_37};
 
-
-
-
-
-
-
-
     constexpr std::array<gpio_num_t, 3U> INTERRUPT_LINES{GPIO_NUM_NC, GPIO_NUM_NC,GPIO_NUM_NC,};
 
     class cHAL : public sensact::hal::cESP32
     {
     protected:
         TAS580x::M *tas580x;
-        MP3::Player *mp3player;
+        AudioPlayer::Player *mp3player;
         iI2CPort* i2c_bus[2];
 
         ErrorCode SetupSound()
         {
             tas580x = new TAS580x::M(GetI2CPort(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
-            mp3player = new MP3::Player();
-            mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA);
-            tas580x->Init(100);
+            mp3player = new AudioPlayer::Player();
+            mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, tas580x);
+            tas580x->Init(120);
             return ErrorCode::OK;
         }
 
@@ -120,7 +113,7 @@ namespace sensact::hal::SensactHsNano3
         }
         ErrorCode AfterAppLoop() override
         {
-            tas580x->Mute(!mp3player->IsEmittingSamples());
+            
             return ErrorCode::OK;
         }
         ErrorCode BeforeAppLoop() override
@@ -158,12 +151,7 @@ namespace sensact::hal::SensactHsNano3
          */
         ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
-            if (volume0_255 != 0)
-            {
-                this->tas580x->SetVolume(volume0_255);
-            }
-            mp3player->Play(buf, len);
-            this->tas580x->Mute(false);
+            mp3player->PlayMP3(buf, len, volume0_255, true);
             return ErrorCode::OK;
         }
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
@@ -172,7 +160,6 @@ namespace sensact::hal::SensactHsNano3
         }
         ErrorCode StopSound() override
         {
-            this->tas580x->Mute(true);
             mp3player->Stop();
             return ErrorCode::OK;
         }

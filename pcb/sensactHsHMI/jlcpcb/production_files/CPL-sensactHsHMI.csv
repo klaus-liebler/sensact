@@ -1,0 +1,21 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+BZ1,Buzzer,XDCR_CMT-7525-80-SMT-TR_handsolder,82.3,-94.5,0.0,bottom
+C1,u1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,103.5,-107.3,90.0,bottom
+C2,1u,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,105.3,-96.1,90.0,bottom
+D1,LED,LED_PLCC_2835_Handsoldering,82.3,-94.5,-90.0,top
+H3,Antenna Hole,SMA_Schraubbefestigung,82.85,-104.6,0.0,top
+J1,Conn_01x10,FFC_FPC_10_P0.50mm_Horizontal,102.1625,-100.8,90.0,bottom
+Q1,AO3400A,SOT-23_Handsoldering,102.3,-92.5,0.0,bottom
+Q2,Q_NPN_BEC,SOT-23_Handsoldering,93.6,-93.25,90.0,bottom
+R1,1k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,107.3,-92.4,90.0,bottom
+R2,k1,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,98.8,-92.8,270.0,bottom
+R3,1k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,96.3,-92.8,90.0,bottom
+R4,10R,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,88.1,-97.45,270.0,bottom
+R5,1k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,105.5,-107.3,90.0,bottom
+R6,2k2,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,109.5,-107.3,270.0,bottom
+R7,k22,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,88.1,-93.1,270.0,bottom
+R8,10k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,112.3,-107.3,90.0,bottom
+R9,4k7,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,107.5,-107.3,90.0,bottom
+R12,1k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,105.3,-99.9,270.0,bottom
+SW5,Rotary_Encoder_Switch_with_Mountingpoint,Mitsumi_SIQ-02FVS3,115.4,-100.0,90.0,bottom
+X1,LH114,FP-114 13pol top only,107.1,-100.0,180.0,top

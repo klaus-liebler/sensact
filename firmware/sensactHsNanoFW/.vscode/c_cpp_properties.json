@@ -22,7 +22,7 @@
                 ],
                 "limitSymbolsToIncludedHeaders": false
             },
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "compileCommands": "C:/repos/sensact/firmware/sensactHsNanoFW/build/compile_commands.json"
         }
     ],
     "version": 4
