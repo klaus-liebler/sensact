@@ -55,13 +55,54 @@ namespace sensact
 			return hal->TrySendCanMessage(m);
 		}
 
-		void Loop()
+		void Task()
+		{
+			TickType_t xLastWakeTime = xTaskGetTickCount();
+			const TickType_t xFrequency = pdMS_TO_TICKS(100);
+			while (true)
+			{
+				currentNow = hal->GetMillisS64();
+				hal->BeforeAppLoop();
+				CANMessage message;
+				while (hal->TryReceiveCANMessage(message) == ErrorCode::OK)
+				{
+					for (auto &rr : hosts)
+					{
+						this->currentRoleRunner = rr;
+						rr->OfferMessage(*this, message);
+					}
+				}
+				// TODO CONSOLEMessage! ->entweder im HAL in CANMessage transformieren oder zweiten TryReceive-Prozess aufsetzen
+				for (auto &rr : hosts)
+				{
+					this->currentRoleRunner = rr;
+					rr->Loop(*this);
+				}
+				hal->AfterAppLoop();
+				xTaskDelayUntil(&xLastWakeTime, xFrequency);
+			}
+		}
+
+		static void StaticTask(void *pvParameters)
+		{
+			cNodemaster *myself = static_cast<cNodemaster *>(pvParameters);
+			ESP_LOGI(TAG, "cNodemaster started");
+			myself->Task();
+		}
+
+	public:
+		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP)
+		{
+		}
+
+		void Setup()
 		{
 			this->currentNow = hal->GetMillisS64();
 			hal->Setup();
 			for (auto &bm : *this->busmasters)
 			{
-				if(bm->Setup()!=ErrorCode::OK){
+				if (bm->Setup() != ErrorCode::OK)
+				{
 					LOGE(TAG, "Busmaster reported error on Setup");
 				}
 			}
@@ -95,46 +136,11 @@ namespace sensact
 			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_READY, 0, 0);
 
 			LOGI(TAG, "All Hosts have been configured. Now, %s is pleased to be at your service.\r\n", sensact::model::node::NodeDescription);
-			TickType_t xLastWakeTime=xTaskGetTickCount();
-			const TickType_t xFrequency = pdMS_TO_TICKS(100);
-			while (true)
-			{
-				currentNow = hal->GetMillisS64();
-				hal->BeforeAppLoop();
-				CANMessage message;
-				while (hal->TryReceiveCANMessage(message) == ErrorCode::OK)
-				{
-					for (auto &rr : hosts)
-					{
-						this->currentRoleRunner = rr;
-						rr->OfferMessage(*this, message);
-					}
-				}
-				// TODO CONSOLEMessage! ->entweder im HAL in CANMessage transformieren oder zweiten TryReceive-Prozess aufsetzen
-				for (auto &rr : hosts)
-				{
-					this->currentRoleRunner = rr;
-					rr->Loop(*this);
-				}
-				hal->AfterAppLoop();
-				xTaskDelayUntil(&xLastWakeTime, xFrequency);
-			}
 		}
 
-		static void Task(void *pvParameters)
-		{
-			cNodemaster *myself = static_cast<cNodemaster *>(pvParameters);
-			ESP_LOGI(TAG, "cNodemaster started");
-			myself->Loop();
-		}
-
-	public:
-		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP)
-		{
-		}
 		void RunEternalLoopInTask(void)
 		{
-			xTaskCreate(Task, "NodemasterTask", 4096 * 4, this, 6, nullptr);
+			xTaskCreate(StaticTask, "NodemasterTask", 4096 * 4, this, 6, nullptr);
 		}
 
 		void PublishOnMessageBus(CANMessage &m, bool distributeLocally) override
@@ -143,7 +149,9 @@ namespace sensact
 			if (err != ErrorCode::OK)
 			{
 				LOGE(TAG, "CAN Message couln't be sent out %02X", (int)err);
-			}else{
+			}
+			else
+			{
 				LOGD(TAG, "Message successfully sent out %lu", m.Id);
 			}
 			if (!distributeLocally)
@@ -178,16 +186,17 @@ namespace sensact
 			return currentNow;
 		}
 
-		char* GetStatusMessage(){
-			char* pointer=statusMessageBuffer;
-			size_t remainingLen=STATUS_MESSAGE_BUFLEN;
+		char *GetStatusMessage()
+		{
+			char *pointer = statusMessageBuffer;
+			size_t remainingLen = STATUS_MESSAGE_BUFLEN;
 			for (auto &host : hosts)
 			{
-				int size= host->GetStatusMessage(*this, pointer, remainingLen);
-				pointer+=size;
-				remainingLen-=size;
+				int size = host->GetStatusMessage(*this, pointer, remainingLen);
+				pointer += size;
+				remainingLen -= size;
 			}
-			*pointer='\0';
+			*pointer = '\0';
 			return statusMessageBuffer;
 		}
 	};

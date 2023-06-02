@@ -1,6 +1,7 @@
 #include "sound.hh"
 #define TAG "SOUND"
 #include <sensact_logger.hh>
+#include <common-esp32.hh>
 using namespace std;
 
 FLASH_FILE(dingdong_mp3)

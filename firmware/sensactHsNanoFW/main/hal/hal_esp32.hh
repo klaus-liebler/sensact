@@ -54,14 +54,16 @@ namespace sensact::hal
 	
 	protected:
 		void* modbus_master_handler = NULL;
-		ErrorCode SetupCAN(gpio_num_t tx, gpio_num_t rx)
+		void SetupCAN(gpio_num_t tx, gpio_num_t rx)
 		{
 			twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(tx, rx, TWAI_MODE_NORMAL);
+			g_config.alerts_enabled=TWAI_ALERT_ABOVE_ERR_WARN | TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;
 			g_config.intr_flags=ESP_INTR_FLAG_LOWMED;
 			twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 			twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
-			return ErrorCode::OK;
+			ESP_ERROR_CHECK(twai_start());
+			
 		}
 
 		ErrorCode SetupModbusMaster(uart_port_t uartPort, int baudrate, gpio_num_t tx, gpio_num_t rx, gpio_num_t rts){
@@ -141,7 +143,7 @@ namespace sensact::hal
 			{
 				return ErrorCode::NONE_AVAILABLE;
 			}
-			LOGI(TAG, "Received id %lu", rx_msg.identifier);
+			LOGD(TAG, "Received id %lu", rx_msg.identifier);
 			m.Id = rx_msg.identifier;
 			m.DataLen = rx_msg.data_length_code;
 			for (int i = 0; i < rx_msg.data_length_code; i++)

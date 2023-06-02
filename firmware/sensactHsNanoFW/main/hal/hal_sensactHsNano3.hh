@@ -4,6 +4,9 @@
 #include <tas580x.hh>
 #include <driver/spi_master.h>
 #include <ethernet.hh>
+#include <esp_log.h>
+#include <messagelog.hh>
+#define TAG "HAL"
 
 namespace sensact::hal::SensactHsNano3
 {
@@ -74,8 +77,8 @@ namespace sensact::hal::SensactHsNano3
         {
             tas580x = new TAS580x::M(GetI2CPort(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
             mp3player = new AudioPlayer::Player();
-            mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, tas580x);
-            tas580x->Init(120);
+            MESSAGELOG_ON_ERROR(mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, tas580x), messagecodes::C::I2S_INIT);
+            MESSAGELOG_ON_ERRORCODE(tas580x->Init(120), messagecodes::C::TAS5805_INIT);
             return ErrorCode::OK;
         }
 
@@ -87,7 +90,7 @@ namespace sensact::hal::SensactHsNano3
 
         ErrorCode Setup() override
         {
-            WIFI_ETH::initETH(false, SPI2_HOST, GPIO_NUM_13, GPIO_NUM_11, GPIO_NUM_12, SPI_MASTER_FREQ_20M, GPIO_NUM_NC, GPIO_NUM_10, GPIO_NUM_14, 1);
+            MESSAGELOG_ON_ERROR(WIFI_ETH::initETH(true, SPI2_HOST, GPIO_NUM_13, GPIO_NUM_11, GPIO_NUM_12, SPI_MASTER_FREQ_20M, GPIO_NUM_NC, GPIO_NUM_10, GPIO_NUM_14, 1), messagecodes::C::ETH_INIT);
             ESP_ERROR_CHECK(I2C::Init(I2C_EXTERNAL_IDF, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA));
             ESP_ERROR_CHECK(I2C::Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA));
 
@@ -165,3 +168,4 @@ namespace sensact::hal::SensactHsNano3
         }
     };
 }
+#undef TAG
