@@ -18,6 +18,7 @@
 #include "interfaces.hh"
 #include "model_node.hh"
 
+
 #define TAG "NODEMSTR"
 
 /**
@@ -44,6 +45,7 @@ namespace sensact
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
 
+
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{
 			CANMessage m;
@@ -62,6 +64,7 @@ namespace sensact
 			while (true)
 			{
 				currentNow = hal->GetMillisS64();
+				ESP_LOGD(TAG, "Before Apploop");
 				hal->BeforeAppLoop();
 				CANMessage message;
 				while (hal->TryReceiveCANMessage(message) == ErrorCode::OK)
@@ -78,7 +81,12 @@ namespace sensact
 					this->currentRoleRunner = rr;
 					rr->Loop(*this);
 				}
+				ESP_LOGD(TAG, "hal->AfterAppLoop(); 1");
 				hal->AfterAppLoop();
+				ESP_LOGD(TAG, "hal->AfterAppLoop(); 2");
+				//check problem and log them
+				hal->CheckAndLogHealth();
+				ESP_LOGD(TAG, "hal->CheckAndLogHealth();");
 				xTaskDelayUntil(&xLastWakeTime, xFrequency);
 			}
 		}

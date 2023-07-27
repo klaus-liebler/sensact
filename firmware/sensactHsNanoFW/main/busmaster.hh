@@ -13,6 +13,8 @@
 #include <pca9555.hh>
 #include <pca9685.hh>
 
+#include <webmanager.hh>
+
 #define TAG "BUSMSTR"
 
 namespace sensact
@@ -116,41 +118,51 @@ namespace sensact
 		std::vector<PCA9555::M *> pca9555_vec;
 		std::vector<PCA9685::M *> pca9685_vec;
 
-		static void Task(void *pvParameters)
+		static void StaticTask(void *pvParameters)
 		{
 			I2CBusmaster* myself = static_cast<I2CBusmaster*>(pvParameters);
-			myself->Loop();
+			myself->Task();
 		}
 
 
-		void Loop()
+		void Task()
 		{
-			//Setup'ed is already: HAL and I2C
 			ESP_LOGI(TAG, "I2CBusmaster task started");
+			webmanager::M* wm = webmanager::M::GetSingleton();
+			//Setup'ed is already: HAL and I2C
 			ERRORCODE_CHECK(i2c_num->Discover());
 			//Not setup'ed: all devices
 			PCA9685::M::SoftwareReset(this->i2c_num);
 			for (auto &pca9685 : this->pca9685_vec)
 			{
-				ERRORCODE_CHECK(pca9685->Setup());
+				if(pca9685->Setup()!=ErrorCode::OK){
+					wm->Log(messagecodes::C::I2C_SETUP_DEVICE, pca9685->GetDeviceAddress());
+				}
 			}
 			for (auto &pca9555 : this->pca9555_vec)
 			{
-				ERRORCODE_CHECK(pca9555->Setup());
+				if(pca9555->Setup()!=ErrorCode::OK){
+					wm->Log(messagecodes::C::I2C_SETUP_DEVICE, pca9555->GetDeviceAddress());
+				}
 			}
 		
 			TickType_t xLastWakeTime{0};
 			const TickType_t xTimeIncrement = pdMS_TO_TICKS(100);
 			xLastWakeTime = xTaskGetTickCount();
+			ESP_LOGI(TAG, "I2CBusmaster finalized the setup step. Now it is going into its endless loop");
 			while (true)
 			{
 				for (auto &pca9685 : this->pca9685_vec)
 				{
-					pca9685->Loop();
+					if(pca9685->Loop()!=ErrorCode::OK){
+						wm->Log(messagecodes::C::I2C_LOOP_DEVICE, pca9685->GetDeviceAddress());
+					}
 				}
 				for (auto &pca9555 : this->pca9555_vec)
 				{
-					pca9555->Update();
+					if(pca9555->Update()!=ErrorCode::OK){
+						wm->Log(messagecodes::C::I2C_LOOP_DEVICE, pca9555->GetDeviceAddress());
+					}
 				}
 				vTaskDelayUntil(&xLastWakeTime, xTimeIncrement);
 			}
@@ -168,7 +180,7 @@ namespace sensact
 
 		ErrorCode Setup() const override
 		{
-			xTaskCreate(I2CBusmaster::Task, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
+			xTaskCreate(I2CBusmaster::StaticTask, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
 			return ErrorCode::OK;
 		}
 

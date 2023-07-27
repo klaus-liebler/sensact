@@ -24,5 +24,5 @@ void setGroupscrSettings(lv_event_t * e)
 
 void onVolumeChanged(lv_event_t * e)
 {
-        printf("Value: %li\n", lv_slider_get_value(ui_sldVolume));
+		halobj->SetAmplifierVolume(2.55*lv_slider_get_value(ui_sldVolume));
 }

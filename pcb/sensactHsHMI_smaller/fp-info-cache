@@ -1,4 +1,4 @@
-21946117089865181
+21949494414091893
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -90489,6 +90489,13 @@ rotary encoder
 7
 6
 liebler_MECH
+SLLB510100
+
+
+0
+8
+5
+liebler_MECH
 SMA_Schraubbefestigung
 
 
@@ -90564,6 +90571,13 @@ Low-profile SMD Tactile Switch, https://www.e-switch.com/system/asset/product_li
 SPST Tactile Switch
 0
 4
+2
+liebler_MECH
+Speaker_1511
+
+
+0
+2
 2
 liebler_MECH
 Switch_MSK12C02

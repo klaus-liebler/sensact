@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <ctime>
 #include <common.hh>
 #include <errorcodes.hh>
 #include <esp_log.h>
