@@ -52,6 +52,14 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
+	eAppCallResult cBlind::FillStatus(SensactContext &ctx, uint8_t* buf){
+		WriteUInt16((uint16_t)currentState, buf, 0);
+		WriteUInt16((uint16_t)(currentPosition>>16), buf, 2);
+		WriteUInt16(0, buf, 4);
+		WriteUInt16((uint16_t)(targetPosition>>16), buf, 6);
+		return eAppCallResult::OK;
+	}
+
 	void cBlind::prepareUp(SensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::PREPARE_UP){
@@ -193,7 +201,7 @@ namespace sensact::apps
 		if(forced){
 			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::PERMANENT_DOWN", N());
 			this->targetPosition=BLIND::PERMANENT_DOWN;
-		} else if (this->targetPosition == 0){
+		} else if (this->targetPosition == BLIND::STOP){
 			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::SAFE_DOWN", N());
 			this->targetPosition = BLIND::SAFE_DOWN;
 		}

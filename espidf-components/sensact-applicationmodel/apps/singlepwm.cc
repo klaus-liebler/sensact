@@ -250,4 +250,12 @@ namespace sensact::apps
 		}
 		return eAppCallResult::OK;
 	}
+
+	eAppCallResult cSinglePWM::FillStatus(SensactContext &ctx, uint8_t* buf){
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(currentLevel, buf, 2);
+			WriteUInt16(autoDim, buf, 4);
+			WriteUInt16(targetLevel, buf, 6);
+			return eAppCallResult::OK;
+		}
 }

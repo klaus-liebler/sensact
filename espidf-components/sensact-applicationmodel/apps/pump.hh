@@ -14,14 +14,11 @@ namespace sensact::apps
         tms_t offInterval;
         tms_t lastChange{0};
 	public:
-		cPump(eApplicationID id, InOutId relay, tms_t onInterval, tms_t offInterval):
-			cApplication(id), relay(relay), onInterval(onInterval), offInterval(offInterval)
-			{}
 		eAppType GetAppType() override{return eAppType::PUMP;}
 		eAppCallResult Setup(SensactContext *ctx) override{
 			return eAppCallResult::OK;
 		}
-        eAppCallResult Loop(SensactContext *ctx) override{
+		eAppCallResult Loop(SensactContext *ctx) override{
             if(state==false && ctx->Now()-lastChange > offInterval){
                 lastChange=ctx->Now();
                 ctx->SetU16Output(relay, true);
@@ -31,5 +28,18 @@ namespace sensact::apps
             }
 			return eAppCallResult::OK;
 		}
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(state, buf, 2);
+			WriteUInt16(0, buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
+		}
+		cPump(eApplicationID id, InOutId relay, tms_t onInterval, tms_t offInterval):
+			cApplication(id), relay(relay), onInterval(onInterval), offInterval(offInterval)
+			{}
+		
+		
+        
 	};
 }

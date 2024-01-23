@@ -7,8 +7,10 @@ using Klli.Sensact.Model.Common.Nodes;
 
 namespace Klli.Sensact.Model.Common
 {
+    
     public class SensactApplicationContainer
     {
+        
         public SensactApplicationContainer(Node Node, SensactApplication Application)
         {
             this.Node = Node;
@@ -20,10 +22,12 @@ namespace Klli.Sensact.Model.Common
     }
     public abstract class SensactApplication
     {
-        public SensactApplication(ushort ApplicationId, string ApplicationName)
+
+        public SensactApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription="")
         {
             this.ApplicationId = ApplicationId;
             this.ApplicationName = ApplicationName;
+            this.ApplicationDescription=ApplicationDescription;
         }
         private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
 
@@ -33,6 +37,8 @@ namespace Klli.Sensact.Model.Common
         }
         public ushort ApplicationId { get; private set; }
         public string ApplicationName { get; private set; }
+
+        public string ApplicationDescription { get; private set; }
 
         public void SetApplicationId_BeCareful(ushort id)
         {
@@ -254,6 +260,8 @@ namespace Klli.Sensact.Model.Common
 
         public abstract string GenerateInitializer(ModelContainerForCodeGenerator m);
 
+        public abstract string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m);
+
         [SensactCommandMethod]
         public virtual void OnNOPCommand() { }
         [SensactCommandMethod]
@@ -351,7 +359,7 @@ namespace Klli.Sensact.Model.Common
 
     public abstract class ActorApplication : SensactApplication
     {
-        public ActorApplication(ushort ApplicationId, string ApplicationName) : base(ApplicationId, ApplicationName) { }
+        public ActorApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription) : base(ApplicationId, ApplicationName, ApplicationDescription) { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

@@ -36,6 +36,8 @@ namespace sensact::apps
 	}
 	void cRgbw::showColorOfRGBW(SensactContext *ctx, Color c)
 	{
+		
+		this->lastColor=c;
 		if (c.R == 0 && c.G == 0 && c.B == 0 && c.W == 0)
 		{
 			this->state = ePowerState::INACTIVE;
@@ -95,6 +97,12 @@ namespace sensact::apps
 		showColorOfIndex(ctx, index);
 	}
 
+	eAppCallResult cRgbw::Setup(SensactContext *ctx)
+	{
+		switchOff(ctx);
+		return eAppCallResult::OK;
+	}
+	
 	eAppCallResult cRgbw::Loop(SensactContext *ctx)
 	{
 		if (standbyController != eApplicationID::NO_APPLICATION && state == ePowerState::ACTIVE && ctx->Now() - lastHeartbeatToStandbycontroller > 10000)
@@ -114,9 +122,12 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cRgbw::Setup(SensactContext *ctx)
-	{
-		switchOff(ctx);
-		return eAppCallResult::OK;
-	}
+
+	eAppCallResult cRgbw::FillStatus(SensactContext &ctx, uint8_t* buf){
+			WriteUInt16(this->lastColor.R, buf, 0);
+			WriteUInt16(this->lastColor.G, buf, 2);
+			WriteUInt16(this->lastColor.B, buf, 4);
+			WriteUInt16(this->lastColor.W, buf, 6);
+			return eAppCallResult::OK;
+		}
 }

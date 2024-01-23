@@ -27,7 +27,14 @@ namespace sensact::apps
 		virtual void OnDoubleclick(SensactContext *ctx){};
 		virtual void OnPressedShortAndHold(SensactContext *ctx){};
 
+		
+
 	public:
+
+		bool IsPressedNow()
+		{
+			return isPressedOld;
+		}
 		void ButtonLoop(SensactContext *ctx)
 		{
 			u16 inputValue;
@@ -83,12 +90,13 @@ namespace sensact::apps
 		std::vector<eApplicationID> targets;
 
 	protected:
-		void OnPressed(SensactContext *ctx) override {
-			for(auto& target:targets){
-				ctx->SendTOGGLECommand(target); 
+		void OnPressed(SensactContext *ctx) override
+		{
+			for (auto &target : targets)
+			{
+				ctx->SendTOGGLECommand(target);
 			}
 		}
-			
 
 	public:
 		cPushbuttonSingle2Toggle(eApplicationID const id, InOutId const input, std::vector<eApplicationID> targets) : cApplication(id), cPushbutton(input), targets(targets)
@@ -106,8 +114,17 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppType GetAppType() override{
+		eAppType GetAppType() override
+		{
 			return eAppType::PSHBT;
+		}
+
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(IsPressedNow(), buf, 2);
+			WriteUInt16(0, buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
 		}
 	};
 
@@ -138,8 +155,17 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppType GetAppType() override{
+		eAppType GetAppType() override
+		{
 			return eAppType::PSHBT;
+		}
+
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(IsPressedNow(), buf, 2);
+			WriteUInt16(0, buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
 		}
 	};
 
@@ -192,8 +218,17 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppType GetAppType() override{
+		eAppType GetAppType() override
+		{
 			return eAppType::PSHBT;
+		}
+
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(down->IsPressedNow(), buf, 2);
+			WriteUInt16(up->IsPressedNow(), buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
 		}
 	};
 
@@ -246,8 +281,17 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppType GetAppType() override{
+		eAppType GetAppType() override
+		{
 			return eAppType::PSHBT;
+		}
+
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(down->IsPressedNow(), buf, 2);
+			WriteUInt16(up->IsPressedNow(), buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
 		}
 	};
 }

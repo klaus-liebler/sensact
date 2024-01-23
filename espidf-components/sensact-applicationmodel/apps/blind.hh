@@ -1,12 +1,11 @@
 #pragma once
 #include "application.hh"
 
-
 namespace sensact::apps
 {
-		class cBlind : public cApplication
+	class cBlind : public cApplication
 	{
-		enum class eCurrentBlindState
+		enum class eCurrentBlindState : uint16_t
 		{
 			ENERGY_SAVE,
 			STOP,
@@ -41,10 +40,12 @@ namespace sensact::apps
 		void updatePosition(SensactContext *ctx);
 
 	public:
-		cBlind(eApplicationID const id, InOutId const relay1, InOutId const relay2, const eRelayInterlockMode mode, const uint32_t time_up_msecs, const uint32_t time_down_msecs);
 		eAppType GetAppType() override;
 		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppCallResult Loop(SensactContext *ctx) override;		
+		eAppCallResult Loop(SensactContext *ctx) override;
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t *buf) override;
+
+		cBlind(eApplicationID const id, InOutId const relay1, InOutId const relay2, const eRelayInterlockMode mode, const uint32_t time_up_msecs, const uint32_t time_down_msecs);
 		void OnDOWNCommand(uint8_t forced, SensactContext *ctx) override;
 		void OnUPCommand(uint8_t forced, SensactContext *ctx) override;
 		void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) override;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>SensactWebControl</title>
+  <link rel="stylesheet" href="../app.css" inline>
+</head>
+
+<body>
+  <header>
+    <h1>Sensact Controls</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#" data-nav="home"><span>&#8962;</span> Home</a></li>
+      <li><a href="#" data-nav="localapps"><span>&#128204;</span><span>Local Apps</span></a></li>
+      <li><a href="#" data-nav="globalapps"><span>&#127760;</span><span>Global Apps</span></a></li>
+      <li><a href="#" data-nav="wifimanager"><span>📶</span><span>Wifi Manager</span></a></li>
+      <li><a href="#" data-nav="systemsettings"><span>&#9881;</span> <span>System Settings</span> </a></li>
+      <li><a href="#" data-nav="usersettings"><span>&#9000;</span><span>User Settings</span></a></li>
+    </ul>
+    <button id="btnUpdateState">Update</button>
+  </nav>
+  <main>
+    <section id="local">
+      <h2>Local Commands</h2>
+      <!--TEMPLATE_SPECIAL-->
+    </section>
+    <section id="global">
+      <h2>Global Commands</h2>
+      <!--TEMPLATE_COMMON-->
+    </section>
+  </main>
+  <footer>
+    <div id="scroller">
+      <!-- new content dynamically inserted here -->
+      <div id="anchor"></div>
+    </div>
+  </footer>
+  <script src="../app.js" inline></script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class ForwarderApplication : ActorApplication
     {
-        public ForwarderApplication(ushort ApplicationId, string ApplicationName,  ushort finalTarget):base(ApplicationId, ApplicationName){
+        public ForwarderApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort finalTarget):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.FinalTarget=finalTarget;
         }
         public ushort FinalTarget{get;}
@@ -106,7 +106,11 @@ namespace Klli.Sensact.Model.Common.Applications
             sb.AppendFormat("sensactapps::cForwarder {0}(eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationName, mc.GetNameFromId(FinalTarget));
             return sb.ToString();
         }
-
+        
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
+        }
         public override Regex AppNameRegex
         {
             get

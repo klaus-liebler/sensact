@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class BrightnessSensorApplication : ActorApplication
     {
-        public BrightnessSensorApplication(ushort ApplicationId, string ApplicationName, string sensorName, ushort ToggleTarget, int LimitForPassingToggle):base(ApplicationId, ApplicationName){
+        public BrightnessSensorApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, string sensorName, ushort ToggleTarget, int LimitForPassingToggle):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.SensorName=sensorName;
             this.ToggleTarget=ToggleTarget;
             this.LimitForPassingToggle=LimitForPassingToggle;
@@ -48,6 +48,11 @@ namespace Klli.Sensact.Model.Common.Applications
             //cBrightnessSensor::cBrightnessSensor(const char* name, eApplicationID id, drivers::cBH1750 *sensor, eApplicationID toggleTarget, uint16_t limitForPassingToggle)
             sb.AppendFormat("sensactapps::cBrightnessSensor {0}(eApplicationID::{0}, &{1}, eApplicationID::{2}, {3});"+Environment.NewLine+Environment.NewLine, ApplicationName, SensorName, ToggleTarget, LimitForPassingToggle);
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
 
         public override Regex AppNameRegex

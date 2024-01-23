@@ -18,6 +18,9 @@
 #include "interfaces.hh"
 #include "model_node.hh"
 
+#include <algorithm>
+#include <iterator>
+
 
 #define TAG "NODEMSTR"
 
@@ -38,12 +41,19 @@ namespace sensact
 	private:
 		std::vector<NodeRole> *nodeRoles;
 		sensact::hal::iHAL *const hal;
+		sensact::iWebsensact *const websensact;
 		std::vector<AbstractBusmaster *> *busmasters;
 		aCANMessageBuilderParser *canMBP;
 		std::vector<iHost *> hosts;
 		iHost *currentRoleRunner{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
+
+		static void ConvertWeb2Can(WebMessage &webmessage, CANMessage &message){
+			message.Id=webmessage.Id;
+			std::memcpy(message.Data, webmessage.Data, webmessage.DataLen);
+			message.DataLen=webmessage.DataLen;
+		}
 
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
@@ -67,7 +77,7 @@ namespace sensact
 				ESP_LOGD(TAG, "Before Apploop");
 				hal->BeforeAppLoop();
 				CANMessage message;
-				while (hal->TryReceiveCANMessage(message) == ErrorCode::OK)
+				while (hal->TryReceiveCanMessage(message) == ErrorCode::OK)
 				{
 					for (auto &rr : hosts)
 					{
@@ -75,7 +85,22 @@ namespace sensact
 						rr->OfferMessage(*this, message);
 					}
 				}
-				// TODO CONSOLEMessage! ->entweder im HAL in CANMessage transformieren oder zweiten TryReceive-Prozess aufsetzen
+				
+				WebMessage webmessage;
+				while(websensact->TryReceiveWebMessage(webmessage)==ErrorCode::OK){
+					ConvertWeb2Can(webmessage, message);
+					if(webmessage.send2can){
+						hal->TrySendCanMessage(message);
+					}
+					for (auto &rr : hosts)
+					{
+						this->currentRoleRunner = rr;
+						rr->OfferMessage(*this, message);
+					}
+				}
+				// TODO CONSOLEMessage! -> dritten TryReceive-Prozess aufsetzen
+
+				
 				for (auto &rr : hosts)
 				{
 					this->currentRoleRunner = rr;
@@ -99,7 +124,7 @@ namespace sensact
 		}
 
 	public:
-		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), busmasters(busmasters), canMBP(canMBP)
+		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, sensact::iWebsensact *const websensact, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), websensact(websensact), busmasters(busmasters), canMBP(canMBP)
 		{
 		}
 

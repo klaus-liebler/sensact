@@ -47,6 +47,11 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
+        }
+
         public override Regex AppNameRegex
         {
             get

@@ -1,15 +1,33 @@
 dependencies:
+  espressif/ds18b20:
+    component_hash: d1e277cbc765de715ad2a14b1f61d4e9415bf9e3ebde0da6b3f577164ddd7fe4
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.1.0
+  espressif/mdns:
+    component_hash: 090826401d30f756037f91d91068f470ba8d0ef04fe507d3aa8761305cecd7ca
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.2.3
+  espressif/onewire_bus:
+    component_hash: 4da8596055cfe301370c0bb2aa716e65dc3b7148e64f84bcc9f76693b3a32aa9
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.1
   idf:
     component_hash: null
     source:
       type: idf
-    version: 5.1.0
+    version: 5.1.1
   lvgl/lvgl:
-    component_hash: 1b50316b27a2a46269a1334b90a2cfc690ac8173f346d6e4992188add7971b79
+    component_hash: 948bff879a345149b83065535bbc4a026ce9f47498a22881e432a264b9098015
     source:
       service_url: https://api.components.espressif.com/
       type: service
-    version: 8.3.7
-manifest_hash: c262e223a693ef3d8debf667edbdc1e72aa31127dc226bc0865fc58446877f8a
+    version: 8.3.11
+manifest_hash: 9afa74aad727d75435a26846e4fb84eea51a970ae102a44072c037bdcbec3473
 target: esp32s3
 version: 1.0.0

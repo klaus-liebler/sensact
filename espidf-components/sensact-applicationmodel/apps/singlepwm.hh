@@ -30,10 +30,12 @@ namespace sensact::apps
 		void WriteCurrentLevelToOutput(SensactContext *ctx);
 
 	public:
-		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
 		eAppType GetAppType() override;
 		eAppCallResult Setup(SensactContext *ctx) override;
-        eAppCallResult Loop(SensactContext *ctx) override;
+		eAppCallResult Loop(SensactContext *ctx) override;
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+		
+		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
 		void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;
 		void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) override;
 		void OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx) override;

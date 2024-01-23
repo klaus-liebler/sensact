@@ -23,6 +23,25 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
+	eAppCallResult cOnOff::Loop(SensactContext *ctx)
+	{
+		if (autoOffCalc < ctx->Now())
+		{
+			ctx->SetU16Output(relay, sensact::magic::INACTIVE);
+		}else{
+			ctx->SetU16Output(relay, sensact::magic::ACTIVE);
+		}
+		return eAppCallResult::OK;
+	}
+
+	eAppCallResult cOnOff::FillStatus(SensactContext &ctx, uint8_t* buf){
+		WriteUInt16(0, buf, 0);
+		WriteUInt16((uint16_t)(this->autoOffCalc > ctx.Now()), buf, 2);
+		WriteUInt16(0, buf, 4);
+		WriteUInt16(0, buf, 6);
+		return eAppCallResult::OK;
+	}
+
 	void cOnOff::OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
 	{
 		if(autoReturnToOffMsecs!=0){
@@ -59,7 +78,7 @@ namespace sensact::apps
 
 	void cOnOff::OnTOGGLECommand(SensactContext *ctx)
 	{
-		if(this->autoOffCalc >ctx->Now()){
+		if(this->autoOffCalc > ctx->Now()){
 			this->autoOffCalc=0;
 		}
 		else if(autoOffCfg==0){
@@ -71,16 +90,7 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnTOGGLECommand called ", N());
 	}
 
-	eAppCallResult cOnOff::Loop(SensactContext *ctx)
-	{
-		if (autoOffCalc < ctx->Now())
-		{
-			ctx->SetU16Output(relay, sensact::magic::INACTIVE);
-		}else{
-			ctx->SetU16Output(relay, sensact::magic::ACTIVE);
-		}
-		return eAppCallResult::OK;
-	}
+
 
 
 

@@ -91,6 +91,11 @@ namespace Klli.Sensact.Model.Common.Applications
 
             return sb.ToString();
         }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
+        }
     }
 
     public class PushButtonSingle2PwmSingleApplication :PushButtonSingleApplication{
@@ -110,6 +115,11 @@ namespace Klli.Sensact.Model.Common.Applications
                 );
 
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
     }
 
@@ -132,6 +142,11 @@ namespace Klli.Sensact.Model.Common.Applications
 
             return sb.ToString();
         }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
+        }
     }
 
     public class PushButtonDual2PWMApplication :PushButtonDualApplication{
@@ -152,6 +167,11 @@ namespace Klli.Sensact.Model.Common.Applications
                 );
 
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
     }
 }

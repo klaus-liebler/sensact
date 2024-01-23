@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class PumpApplication : ActorApplication
     {
-        public PumpApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessource,  uint OnIntervalMsecs, uint OffIntervalMsecs):base(ApplicationId, ApplicationName){
+        public PumpApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort OutputRessource,  uint OnIntervalMsecs, uint OffIntervalMsecs):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.OutputRessource=OutputRessource;
             this.OnIntervalMsecs=OnIntervalMsecs;
             this.OffIntervalMsecs=OffIntervalMsecs;
@@ -41,6 +41,11 @@ namespace Klli.Sensact.Model.Common.Applications
             sb.AFL("// Pump {0}", ApplicationName);
             sb.AF2L("sensactapps::cPump {0}(eApplicationID::{0}, {1}, {2}, {3});", ApplicationName, OutputRessource, OnIntervalMsecs, OffIntervalMsecs);
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
 
         public override Regex AppNameRegex

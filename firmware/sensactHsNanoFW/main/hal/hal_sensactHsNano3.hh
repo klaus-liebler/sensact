@@ -105,11 +105,12 @@ namespace sensact::hal::SensactHsNano3
         Ringtoneplayer *rtp;
         iI2CPort* i2c_bus[2];
         uint8_t volume_0mute_255max{120};
+        const char* hostname;
         
     public:
-        cHAL(){
-            i2c_bus[(uint8_t)I2C_EXTERNAL] = new MyI2CPort(I2C_EXTERNAL_IDF);
-            i2c_bus[(uint8_t)I2C_INTERNAL] = new MyI2CPort(I2C_INTERNAL_IDF);
+        cHAL(const char* hostname):hostname(hostname){
+            i2c_bus[(uint8_t)I2C_EXTERNAL] = I2C::GetPort_DoNotForgetToDelete(I2C_EXTERNAL_IDF);
+            i2c_bus[(uint8_t)I2C_INTERNAL] = I2C::GetPort_DoNotForgetToDelete(I2C_INTERNAL_IDF);
         }
 
         ErrorCode Setup() override
@@ -119,11 +120,11 @@ namespace sensact::hal::SensactHsNano3
             gpio_set_level(LCD_BUZZER, 0);
             gpio_set_direction(LCD_BUZZER, GPIO_MODE_OUTPUT);
             //Hinweis: Das W5500 kommt faktisch auch ohne die Reset-Leitung aus. In einer Zukünftigen Version könnte deshalb ETH_RESET anders verwendet werden
-            //WIFI_ETH::initETH_W5500(true, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, "sensactNano");
-            tas580x = new TAS580x::M(GetI2CPort(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN);
-            mp3player = new AudioPlayer::Player();
-            MESSAGELOG_ON_ERROR(mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, tas580x), messagecodes::C::I2S_INIT);
-            MESSAGELOG_ON_ERRORCODE(tas580x->Init(volume_0mute_255max), messagecodes::C::TAS5805_INIT);
+            ETHERNET::initETH_W5500(true, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
+            tas580x = new TAS580x::M(GetI2CPort(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
+            mp3player = new AudioPlayer::Player(tas580x);
+            MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
+            //MESSAGELOG_ON_ERRORCODE(tas580x->Init(), messagecodes::C::TAS5805_INIT);//is done inside mp3player->Init()
 
             rtp = new Ringtoneplayer();
             rtp->Setup(BUZZER_TIMER, BUZZER_CHANNEL, LCD_BUZZER);

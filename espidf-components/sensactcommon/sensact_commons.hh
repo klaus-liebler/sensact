@@ -29,7 +29,7 @@ namespace sensact
         RELEASED = 0,
         PRESSED = 1
     };
-    
+
     enum class ePowerState : uint16_t
     {
         INACTIVE = 0,
@@ -68,6 +68,19 @@ namespace sensact
         uint32_t Id;
         uint8_t Data[8];
         size_t DataLen;
+    };
+
+    struct WebMessage
+    {
+        uint32_t Id;
+        uint8_t Data[8];
+        size_t DataLen;
+        bool send2can;
+    };
+	
+	class iWebsensact{
+        public:
+        virtual ErrorCode TryReceiveWebMessage(sensact::WebMessage &m)=0;
     };
 }
 

@@ -27,6 +27,7 @@ class cRgbw: public cApplication
 		
 		tms_t lastHeartbeatToStandbycontroller;
 		size_t lastColorIndex;
+		Color lastColor{0,0,0,0};
 		ePowerState state;
 		bool changeRecorded;
 		
@@ -37,10 +38,12 @@ class cRgbw: public cApplication
 
 
 	public:
-		cRgbw(eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, tms_t autoOffMsecs, eApplicationID idOfStandbyController, std::vector<Color> &wellKnownColors);
 		eAppType GetAppType() override;
 		eAppCallResult Setup(SensactContext *ctx) override;
-        eAppCallResult Loop(SensactContext *ctx) override;
+		eAppCallResult Loop(SensactContext *ctx) override;
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+		
+		cRgbw(eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, tms_t autoOffMsecs, eApplicationID idOfStandbyController, std::vector<Color> &wellKnownColors);
 		void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;
 		void OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx) override;
 		void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx) override;

@@ -55,6 +55,8 @@ namespace sensact
         SNSCT,
         FRWRD,
         PUMP,
+        BLITIM,
+        //updates Names below as well!
     };
 
     const char *const eAppType2Name[] = {
@@ -74,6 +76,8 @@ namespace sensact
         "LIBAR",
         "SNSCT",
         "FRWRD",
+        "PUMP",
+        "BLITIM"
     };
 
     enum class eNodeID : uint16_t

@@ -27,6 +27,14 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
+	eAppCallResult cSound::FillStatus(SensactContext &ctx, uint8_t* buf){
+			WriteUInt16(this->currentVolume, buf, 0);
+			WriteUInt16(this->sound, buf, 2);
+			WriteUInt16(0, buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
+		}
+
 	void cSound::OnTOGGLECommand(SensactContext *ctx)
 	{
 		OnSET_SIGNALCommand(this->defaultSignalOnToggle, ctx);

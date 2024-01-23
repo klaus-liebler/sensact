@@ -5,6 +5,18 @@
 		},
 		{
 			"path": "../../espidf-components/sensact-applicationmodel"
+		},
+		{
+			"path": "../../espidf-components/sensactcommon"
+		},
+		{
+			"path": "../../espidf-components/sensact-middleware"
+		},
+		{
+			"path": "../../espidf-components/sensact-hal"
+		},
+		{
+			"path": "../../espidf-components/generated"
 		}
 	],
 	"settings": {

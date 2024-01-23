@@ -6,7 +6,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class OnOffApplication : ActorApplication
     {
-        public OnOffApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessource, PowerState InitialPowerState, uint AutoOffIntervalMsecs):base(ApplicationId, ApplicationName){
+        public OnOffApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort OutputRessource, PowerState InitialPowerState, uint AutoOffIntervalMsecs):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.OutputRessource=OutputRessource;
             this.InitialPowerState=InitialPowerState;
             this.AutoOffIntervalMsecs=AutoOffIntervalMsecs;
@@ -78,6 +78,16 @@ namespace Klli.Sensact.Model.Common.Applications
             StringBuilder sb = new StringBuilder();
             sb.AFL("// ONOFF {0}", ApplicationName);
             sb.AF2L("sensact::apps::cOnOff {0}(eApplicationID::{0}, {1}, ePowerState::{2}, {3});", ApplicationName, OutputRessource, InitialPowerState.ToString(), AutoOffIntervalMsecs);
+            return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            StringBuilder sb = new StringBuilder();
+            //sb.AppendFormat("<!-- ONOFF {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
+            //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div class='controls'><input onclick='MyApp.onoff(this, {0})' class='toggle' type='checkbox'/></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("//OnOff {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
+            sb.AppendFormat("ret.push(new OnOffApplication(ApplicationId.ApplicationId_{1}, '{1}', '{2}'));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

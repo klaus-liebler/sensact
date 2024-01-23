@@ -65,7 +65,7 @@ namespace sensact::hal
         virtual ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
         virtual ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
         virtual ErrorCode StopSound() = 0;
-        virtual ErrorCode TryReceiveCANMessage(sensact::CANMessage &m) = 0;
+        virtual ErrorCode TryReceiveCanMessage(sensact::CANMessage &m) = 0;
         virtual ErrorCode TrySendCanMessage(sensact::CANMessage &m) = 0;
 
         virtual ErrorCode GetModbusHoldingRegister(uint16_t regIndexZeroBased, uint16_t &value)=0;

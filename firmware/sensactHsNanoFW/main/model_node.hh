@@ -8,5 +8,6 @@ namespace sensact::model
     public:
         static const char* const NodeDescription;
         static const sensact::eNodeID NodeID;
+        static const char* const NodeName;
     };
 }

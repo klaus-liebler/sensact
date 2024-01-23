@@ -58,6 +58,14 @@ namespace sensact::apps
 			}
 			return eAppCallResult::OK;
 		}
+
+		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
+			WriteUInt16(0, buf, 0);
+			WriteUInt16(lastRotaryValue, buf, 2);
+			WriteUInt16(0, buf, 4);
+			WriteUInt16(0, buf, 6);
+			return eAppCallResult::OK;
+		}
 	};
 }
 #undef TAG

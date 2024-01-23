@@ -8,7 +8,7 @@ namespace Klli.Sensact.Model.Common.Applications
     public class SoundApplication : ActorApplication
     {
 
-        public SoundApplication(ushort ApplicationId, string ApplicationName, byte initialVolume=100, ushort defaultSignalOnToggle=0):base(ApplicationId, ApplicationName){
+        public SoundApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, byte initialVolume=100, ushort defaultSignalOnToggle=0):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.DefaultVolume=initialVolume;
             this.defaultSignalOnToggle=defaultSignalOnToggle;
         }
@@ -64,6 +64,11 @@ namespace Klli.Sensact.Model.Common.Applications
             sb.AF2L("sensact::apps::cSound {0}(eApplicationID::{0}, {1}, {2});", 
                 ApplicationName, DefaultVolume, defaultSignalOnToggle);
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
 
         public override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)

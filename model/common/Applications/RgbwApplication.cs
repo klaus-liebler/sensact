@@ -6,7 +6,7 @@ namespace Klli.Sensact.Model.Common.Applications
 
     public class RgbwApplication : ActorApplication
     {
-        public RgbwApplication(ushort ApplicationId, string ApplicationName, ushort OutputRessourceR, ushort OutputRessourceG, ushort OutputRessourceB, ushort OutputRessourceW, uint AutoOffIntervalMsecs, ushort idOfStandbyController) : base(ApplicationId, ApplicationName)
+        public RgbwApplication(ushort ApplicationId, string ApplicationName,  string ApplicationDescription, ushort OutputRessourceR, ushort OutputRessourceG, ushort OutputRessourceB, ushort OutputRessourceW, uint AutoOffIntervalMsecs, ushort idOfStandbyController) : base(ApplicationId, ApplicationName, ApplicationDescription)
         {
             this.OutputRessourceR = OutputRessourceR;
             this.OutputRessourceG = OutputRessourceG;
@@ -55,6 +55,11 @@ namespace Klli.Sensact.Model.Common.Applications
             //sensact::cRgbw BATH("RGBWBATH", eApplicationID::BELL__DOOR, ePWMOutput::O1_01, ePWMOutput::O1_02, ePWMOutput::O1_03, ePWMOutput::NONE, false, (uint8_t*)MODEL::wellKnownRGBWColors, 2, eApplicationID::STDBY_XX_XXX_1);
             sb.AppendFormat("sensact::apps::cRgbw {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, eApplicationID::{6});" + Environment.NewLine + Environment.NewLine, ApplicationName, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, AutoOffIntervalMsecs, m.GetNameFromId(IdOfStandbyController));
             return sb.ToString();
+        }
+
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
         }
 
         public override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)

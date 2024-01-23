@@ -22,6 +22,11 @@ namespace Klli.Sensact.Model.Common.Applications
             return string.Empty;
         }
 
+        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        {
+            return string.Empty;
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new();

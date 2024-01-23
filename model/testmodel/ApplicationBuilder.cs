@@ -10,20 +10,20 @@ namespace Klli.Sensact.Model
     {
         public const int DEFAULT_MIN_DIM_LEVEL = 2;
 
-        public static void AddPlaceholder(this List<SensactApplication> list, ApplicationId appId)
+        public static void AddPlaceholder(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription)
         {
-            list.Add(new PlaceholderApplication((ushort)appId, appId.ToString()));
+            list.Add(new PlaceholderApplication((ushort)appId, appId.ToString(), ApplicationDescription));
         }
 
-        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, ushort Relay1, ushort Relay2, RelayInterlockMode relMode, uint time_up_secs, uint time_down_secs)
+        public static void AddBlindApplication(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription, ushort Relay1, ushort Relay2, RelayInterlockMode relMode, uint time_up_secs, uint time_down_secs)
         {
-            list.Add(new BlindApplication((ushort)appId, appId.ToString(), Relay1, Relay2, relMode, time_up_secs, time_down_secs));
+            list.Add(new BlindApplication((ushort)appId, appId.ToString(), ApplicationDescription, Relay1, Relay2, relMode, time_up_secs, time_down_secs));
         }
 
 
-        public static void AddPWMApplication(this List<SensactApplication> list, ApplicationId appId, ApplicationId StandbyController, ISet<ushort> outputResources, uint AutoOffIntervalMsecs = 0, byte minimalOnLevel=DEFAULT_MIN_DIM_LEVEL, byte initialStoredTargetLevel=byte.MaxValue)
+        public static void AddPWMApplication(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription, ApplicationId StandbyController, ISet<ushort> outputResources, uint AutoOffIntervalMsecs = 0, byte minimalOnLevel=DEFAULT_MIN_DIM_LEVEL, byte initialStoredTargetLevel=byte.MaxValue)
         {
-            list.Add(new SinglePWMApplication((ushort)appId, appId.ToString(), outputResources, minimalOnLevel, initialStoredTargetLevel, AutoOffIntervalMsecs, (ushort)StandbyController));
+            list.Add(new SinglePWMApplication((ushort)appId, appId.ToString(), ApplicationDescription, outputResources, minimalOnLevel, initialStoredTargetLevel, AutoOffIntervalMsecs, (ushort)StandbyController));
         }
 
 
@@ -37,9 +37,14 @@ namespace Klli.Sensact.Model
             list.Add(new PushButtonSingle2ToggleApplication((ushort)appId, appId.ToString(), inputRessource, new HashSet<ushort>{(ushort)targetAppId}));
         }
 
-        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, ushort outputRessource, uint autoOffIntervalMsecs = 0, PowerState initialPowerState=PowerState.INACTIVE)
+        public static void AddPowIt(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription,  ushort outputRessource, uint autoOffIntervalMsecs = 0, PowerState initialPowerState=PowerState.INACTIVE)
         {
-            list.Add(new OnOffApplication((ushort)appId, appId.ToString(), outputRessource, initialPowerState, autoOffIntervalMsecs));
+            list.Add(new OnOffApplication((ushort)appId, appId.ToString(), ApplicationDescription, outputRessource, initialPowerState, autoOffIntervalMsecs));
+        }
+
+        public static void AddSound(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription, byte initialVolume=100, ushort defaultSignalOnToggle=1){
+            list.Add(new SoundApplication((ushort)appId, appId.ToString(), ApplicationDescription, initialVolume, defaultSignalOnToggle));
+
         }
 
 

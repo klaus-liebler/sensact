@@ -444,7 +444,7 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "sensactInpExt2.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""

@@ -16,49 +16,6 @@ using namespace sensact::hal;
 using namespace sensact;
 namespace sensact::hal
 {
-	class MyI2CPort : public iI2CPort
-	{
-	private:
-		i2c_port_t i2c_port;
-
-	public:
-		MyI2CPort(i2c_port_t i2c_port) : i2c_port(i2c_port)
-		{
-		}
-		ErrorCode ReadReg(uint8_t address7bit, uint8_t reg_addr, uint8_t *reg_data, size_t len) override
-		{
-			return I2C::ReadReg(this->i2c_port, address7bit, reg_addr, reg_data, len) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode ReadReg16(uint8_t address7bit, uint16_t reg_addr16, uint8_t *reg_data, size_t len) override
-		{
-			return I2C::ReadReg16(this->i2c_port, address7bit, reg_addr16, reg_data, len) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode Read(uint8_t address7bit, uint8_t *data, size_t len) override
-		{
-			return I2C::Read(this->i2c_port, address7bit, data, len) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode WriteReg(uint8_t address7bit, uint8_t reg_addr, const uint8_t *reg_data, size_t len) override
-		{
-			return I2C::WriteReg(this->i2c_port, address7bit, reg_addr, reg_data, len) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode WriteSingleReg(uint8_t address7bit, uint8_t reg_addr, uint8_t reg_data)
-		{
-			return I2C::WriteSingleReg(this->i2c_port, address7bit, reg_addr, reg_data) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode Write(uint8_t address7bit, const uint8_t *data, size_t len) override
-		{
-			return I2C::Write(this->i2c_port, address7bit, data, len) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode IsAvailable(uint8_t address7bit) override
-		{
-			return I2C::IsAvailable(this->i2c_port, address7bit) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-		ErrorCode Discover() override
-		{
-			return I2C::Discover(this->i2c_port) == ESP_OK ? ErrorCode::OK : ErrorCode::DEVICE_NOT_RESPONDING;
-		}
-	};
-
 	class cESP32 : public iHAL
 	{
 
@@ -214,7 +171,7 @@ namespace sensact::hal
 			return gpio_set_level((gpio_num_t)id, value) == ESP_OK ? ErrorCode::OK : ErrorCode::PIN_NOT_AVAILABLE;
 		}
 
-		ErrorCode TryReceiveCANMessage(CANMessage &m) override
+		ErrorCode TryReceiveCanMessage(CANMessage &m) override
 		{
 			twai_message_t rx_msg;
 			if (twai_receive(&rx_msg, 0) != ESP_OK)

@@ -4,8 +4,8 @@
 #include <freertos/task.h>
 #include <esp_system.h>
 #include <spi_flash_mmap.h>
-#include <esp_wifi.h>
-#include <esp_event.h>
+ 
+#include <esp_mac.h>
 #include <esp_log.h>
 #include <nvs_flash.h>
 #include <esp_log.h>
@@ -22,12 +22,16 @@
 #include "esp_http_client.h"
 #include "esp_ota_ops.h"
 #include "esp_https_ota.h"
+#include "mdns.h"
+#include "netdb.h"
 #include <hwinc.inc>
 #include "nodemaster.hh"
 #include "busmaster.hh"
 #include "can_message_builder_parser.hh"
 #include "sensact_projectconfig.hh"
 #include <webmanager.hh>
+#include <websensact.hh>
+#include <model_node.hh>
 
 #define TAG "main"
 using namespace sensact;
@@ -54,6 +58,8 @@ extern "C" void app_main(void)
     webmanager::M* wman= webmanager::M::GetSingleton();
     ESP_ERROR_CHECK(wman->Init(http_server, buffer, BUFFER_SIZE));
     
+    websensact::M* wwws = websensact::M::GetSingleton();
+    
     ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily());
 
     aCANMessageBuilderParser* canMBP;
@@ -62,14 +68,25 @@ extern "C" void app_main(void)
     } else{
         canMBP = new cCANMessageBuilderParserOld();
     }
+
+    char   *hostname;
+    asprintf(&hostname, "%s", sensact::model::node::NodeName);
     
     #include <hwcfg.inc>
     if(!halobj){
         ESP_LOGE(TAG, "HAL has not been created in <hwcfg.inc>");
         esp_restart();
     }
+
+    ESP_ERROR_CHECK(mdns_init());
+    ESP_ERROR_CHECK(mdns_hostname_set(hostname));
+    ESP_LOGI(TAG, "mdns hostname set to: [%s]", hostname);
+    const char* MDNS_INSTANCE="SENSACT_MDNS_INSTANCE";
+    ESP_ERROR_CHECK(mdns_instance_name_set(MDNS_INSTANCE));
+    ESP_ERROR_CHECK(mdns_service_subtype_add_for_host("SENSACT-WebServer", "_http", "_tcp", NULL, "_server") );
+    free(hostname);
     
-    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, halobj, &busmasters, canMBP);
+    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, halobj, wwws, &busmasters, canMBP);
     nodemaster->Setup();
 
     //Idee: Wenn bis hierher etwas schief läuft, dann wird eh resettet

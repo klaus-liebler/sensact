@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config
 {
@@ -211,22 +211,28 @@ namespace Klli.Sensact.Config
             GenerateNodeSpecificFiles(mc);
 
             GenerateJSONDescription(mc);
+            GenerateHTML(mc);
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb_c = new StringBuilder();
+            StringBuilder sb_flatc = new StringBuilder();
+            sb_flatc.AppendLine("enum ApplicationId:ushort {");
             //mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             //page.Nodes.Add("CNT");
             ushort CNT=0;
             foreach (var id in Enum.GetValues<Model.ApplicationId>())
             {
-                sb.AppendLine(id.ToString() + "=" + (ushort)id + ",");
+                sb_c.AppendLine(id.ToString() + "=" + (ushort)id + ",");
+                sb_flatc.AppendLine("\tApplicationId_"+id.ToString() + "=" + (ushort)id + ",");
                 if(id!=Model.ApplicationId.NO_APPLICATION){
                     CNT=Math.Max(CNT, (ushort)id);
                 }
             }
-            sb.AF2L("CNT={0},", CNT+1);
-            this.WriteCommonFile("applicationIds", sb);
+            sb_c.AF2L("CNT={0},", CNT+1);
+            sb_flatc.AppendLine("}");
+            this.WriteCommonFile("applicationIds", sb_c);
+            this.WriteCommonFile("applicationIds.fbs", sb_flatc);
             LOG.LogInformation("Successfully created appids");
             return;
         }
@@ -262,7 +268,8 @@ namespace Klli.Sensact.Config
 
         protected void GenerateSendCommandImplementation()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb_c = new StringBuilder();
+            StringBuilder sb_typescript = new StringBuilder();
             foreach (MethodInfo mi in typeof(SensactApplication).GetMethods())
             {
 
@@ -270,28 +277,41 @@ namespace Klli.Sensact.Config
                 {
                     continue;
                 }
-                sb.AppendFormat("\tvoid cApplicationHost::Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(mi));
+                sb_c.AppendFormat("\tvoid cApplicationHost::Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(mi));
+                sb_typescript.AppendFormat("export function Send{0}Command(destinationApp:ApplicationId", SensactApplication.ExtractCmdName(mi));
+                
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
-                    sb.Append(", ");
-                    sb.Append(CS2CPPType(pi.ParameterType));
-                    sb.Append(" " + pi.Name);
+                    sb_c.Append(", ");
+                    sb_c.Append(CS2CPPType(pi.ParameterType));
+                    sb_c.Append(" " + pi.Name);
+                    sb_typescript.Append(", ");
+                    sb_typescript.Append(pi.Name);
+                    sb_typescript.Append(":"+CS2TSType(pi.ParameterType));
+                    
                 }
-                sb.AppendLine(")");
-                sb.AppendLine("\t{");
-                sb.AppendLine("\t\tuint8_t buffer[8];");
-                int offset = 0;
+                sb_c.AppendLine(")");
+                sb_typescript.AppendLine(")");
+                sb_c.AppendLine("\t{");
+                sb_typescript.AppendLine("{");
+                sb_c.AppendLine("\t\tuint8_t buffer[8];");
+                sb_typescript.AppendLine("\tvar view = new DataView(new ArrayBuffer(8));");
+                int offset_c= 0;
+                int offset_ts=0;
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
-                    sb.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset));
-
+                    sb_c.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset_c));   
+                    sb_typescript.AppendLine("\t" + CS2TSWriter(pi, ref offset_ts));
                 }
-                sb.AppendFormat("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset);
-                sb.AppendLine();
-                sb.AppendLine("\t}");
+                sb_c.AFL("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset_c);
+                sb_c.AppendLine("\t}");
+                sb_typescript.AFL("\tsendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer));", SensactApplication.ExtractCmdName(mi));
+                sb_typescript.AppendLine("}");
             }
-            WriteCommonFile("sendCommandImplementation", sb);
-            LOG.LogInformation("Successfully created sendCommandImplementation");
+            WriteCommonFile("sendCommandImplementation", sb_c);
+            WriteCommonFile("sendCommandImplementation.ts", sb_typescript);
+            
+            LOG.LogInformation("Successfully created sendCommandImplementation for C++ and Typescript");
         }
 
         protected void GeneratePublishEventImplementation()
@@ -338,8 +358,6 @@ namespace Klli.Sensact.Config
             }
             WriteCommonFile("cmdHandler", sb);
         }
-
-
 
         private void GenerateCommandHandlerDeclarations(bool TrueIfVirtualFalseIfOverride)
         {
@@ -485,6 +503,17 @@ namespace Klli.Sensact.Config
             else throw new ArgumentException("Type " + t + " is unknown");
         }
 
+        private static string CS2TSType(Type t)
+        {
+            if (t == typeof(int)) return "number";
+            else if (t == typeof(uint)) return "number";
+            else if (t == typeof(short)) return "number";
+            else if (t == typeof(ushort)) return "number";
+            else if (t == typeof(sbyte)) return "number";
+            else if (t == typeof(byte)) return "number";
+            else throw new ArgumentException("Type " + t + " is unknown");
+        }
+
         private string CS2CPPParser(Type t, ref int offset)
         {
             string ret;
@@ -524,7 +553,6 @@ namespace Klli.Sensact.Config
             return ret;
         }
 
-
         private string CS2CPPWriter(ParameterInfo pi, ref int offset)
         {
             string ret;
@@ -559,6 +587,40 @@ namespace Klli.Sensact.Config
                     ret = "buffer[" + offset + "]=" + pi.Name + ";";
                     offset += 1;
                 }
+            }
+            else throw new ArgumentException("Type " + pi.ParameterType + " is unknown");
+            return ret;
+        }
+
+        private string CS2TSWriter(ParameterInfo pi, ref int offset)
+        {
+            string ret;
+            if (pi.ParameterType == typeof(uint))
+            {
+                ret = "view.setUint32(" + offset + "," + pi.Name+ ");";
+                offset += 4;
+            }
+            else if (pi.ParameterType == typeof(short))
+            {
+                ret = "view.setInt16(" + offset + "," + pi.Name+ ");";
+                offset += 2;
+            }
+            else if (pi.ParameterType == typeof(ushort))
+            {
+                ret = "view.setUint16(" + offset + "," + pi.Name+ ");";
+                offset += 2;
+            }
+            else if (pi.ParameterType == typeof(sbyte))
+            {
+                ret = "view.setUint8(" + offset + "," + pi.Name+ ");";
+                offset += 1;
+            }
+            else if (pi.ParameterType == typeof(byte))
+            {
+                
+                ret = "view.setInt8(" + offset + "," + pi.Name+ ");";
+                offset += 1;
+                
             }
             else throw new ArgumentException("Type " + pi.ParameterType + " is unknown");
             return ret;
@@ -651,14 +713,15 @@ namespace Klli.Sensact.Config
                 }else{//2023-02-15: the only use case for this: The "MONITORING" node has no application
                     sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::NO_APPLICATION;", node.NodeName);
                 }
-                WriteFileInSubdirectory(node.NodeName, "nodeMasterApplicationId", sb);
+                WriteNodeSpecificFile(node, "nodeMasterApplicationId", sb);
                 sb.Clear();
 
                 //const char MODEL::ModelString[] ="NodeId SNSCT_L0_TECH_HS_1 created on 02.02.2021 22:29:40 using model Sattlerstraße 16 from git hash ea29f6371a5d33c7621cecf1e6bda050edf38681";
                 sb.AFL("const char* const node::NodeDescription =\"NodeId {0} created on {1} using model {2}\";", node.NodeName, DateTime.Now, mc.Model.Name);
                 //const eNodeID MODEL::NodeID = eNodeID::SNSCT_L0_TECH_HS_1;
                 sb.AFL("const sensact::eNodeID node::NodeID = sensact::eNodeID::{0};", node.NodeName);
-                WriteFileInSubdirectory(node.NodeName, "nodeDescription", sb);
+                sb.AFL("const char* const node::NodeName =\"{0}\";", node.NodeName);
+                WriteNodeSpecificFile(node, "nodeDescription", sb);
                 sb.Clear();
 
                 string[] Glo2LocCmd = new string[mc.NextFreeIndex];
@@ -673,13 +736,13 @@ namespace Klli.Sensact.Config
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     Glo2LocCmd[appCont.Application.ApplicationId] = "\t&" + app.ApplicationName + ",";
                 }
-                WriteFileInSubdirectory(node.NodeName, "applicationInitializers", sb);
+                WriteNodeSpecificFile(node, "applicationInitializers", sb);
                 sb.Clear();
                 for (int i = 0; i < Glo2LocCmd.Length; i++)
                 {
                     sb.AppendLine(Glo2LocCmd[i]);
                 }
-                WriteFileInSubdirectory(node.NodeName, "glo2LocCmd", sb);
+                WriteNodeSpecificFile(node, "glo2LocCmd", sb);
                 sb.Clear();
                 string[] Glo2LocEvents = new string[mc.NextFreeIndex];
                 for (int i = 0; i < Glo2LocEvents.Length; i++)
@@ -691,7 +754,13 @@ namespace Klli.Sensact.Config
                     sb.AppendLine(Glo2LocEvents[i]);
                 }
 
-                WriteFileInSubdirectory(node.NodeName, "glo2LocEvt", sb);
+                WriteNodeSpecificFile(node, "glo2LocEvt", sb);
+                sb.Clear();
+                //HTML User Interface
+                foreach(var app in node.Applications){
+                    sb.Append(app.GenerateHTMLUserInterface(mc));
+                }
+                WriteNodeSpecificFile(node, "websensact.html", sb);
                 sb.Clear();
             }
             LOG.LogInformation("Successfully created all node specific .inc files");
@@ -711,9 +780,33 @@ namespace Klli.Sensact.Config
                 string path = Path.Combine(directory, "app_descriptor.json");
                 File.WriteAllText(path, JsonSerializer.Serialize<object>(list));
             }
-            LOG.LogInformation("Successfully created all node specific .json files");
+            LOG.LogInformation("Successfully created all node specific .json files in {0}.", this.options.BasePath);
         }
 
+        private void GenerateHTML(ModelContainer mc){
+            
+            var regex=new Regex("^([A-Z]+)_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_(.*)$");
+
+            
+            StringBuilder sb = new StringBuilder();
+            foreach (SensactApplicationContainer appc in mc.id2app.Values)
+            {
+                Match m=regex.Match(appc.Application.ApplicationName);
+                var appcode= m.Groups[1];
+                var level= m.Groups[2];
+                var room= m.Groups[3];
+                var number= m.Groups[4];
+                sb.Append(appc.Application.GenerateHTMLUserInterface(mc));
+            }
+            WriteCommonFile("sensactapps.ts", sb);
+            LOG.LogInformation("Successfully created common html file with UI for all apps");
+        }
+
+        protected void WriteNodeSpecificFile(Model.Common.Nodes.Node node, string filenameWithoutExtension, StringBuilder content)
+        {
+            WriteFileInSubdirectory(node.NodeName, filenameWithoutExtension, content);
+        }
+        
         protected void WriteFileInSubdirectory(string subdir, string filenameWithoutExtension, StringBuilder content)
         {
             string directory = Path.Combine(this.options.BasePath, subdir);
@@ -744,23 +837,33 @@ namespace Klli.Sensact.Config
 
         internal void GenerateCommandTypes(ModelContainer model)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder sb_c = new StringBuilder();
+            StringBuilder sb_protobuf = new StringBuilder();
+            sb_protobuf.AppendLine("enum Command:byte {");
             foreach (CommandType ct in Enum.GetValues(typeof(CommandType)))
             {
-
-                stringBuilder.AppendLine(ct.ToString() + "=" + (int)ct + ",");
+                sb_c.AppendLine(ct.ToString() + "=" + (int)ct + ",");
+                sb_protobuf.AppendLine("\t"+ct.ToString() + "=" + (int)ct + ",");
             }
-            WriteCommonFile("commandTypes", stringBuilder);
+            sb_protobuf.AppendLine("}");
+            WriteCommonFile("commandTypes", sb_c);
+            WriteCommonFile("commandTypes.fbs", sb_protobuf);
+            
         }
+        
         internal void GenerateEventTypes(ModelContainer model)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder sb_c = new StringBuilder();
+            StringBuilder sb_protobuf = new StringBuilder();
+            sb_protobuf.AppendLine("enum Event:byte {");
             foreach (EventType ct in Enum.GetValues(typeof(EventType)))
             {
-
-                stringBuilder.AppendLine(ct.ToString() + "=" + (int)ct + ",");
+                sb_c.AppendLine(ct.ToString() + "=" + (int)ct + ",");
+                sb_protobuf.AppendLine("\t"+ct.ToString() + "=" + (int)ct + ",");
             }
-            WriteCommonFile("eventTypes", stringBuilder);
+            sb_protobuf.AppendLine("}");
+            WriteCommonFile("eventTypes", sb_c);
+            WriteCommonFile("eventTypes.fbs", sb_protobuf);
 
         }
     }
