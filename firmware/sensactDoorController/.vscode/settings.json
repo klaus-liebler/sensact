@@ -13,5 +13,11 @@
         "target/esp32.cfg"
     ],
     "idf.pythonBinPathWin": "C:\\Users\\mail\\.espressif\\python_env\\idf5.1_py3.11_env\\Scripts\\python.exe",
-    "idf.toolsPathWin": "C:\\Users\\mail\\.espressif"
+    "idf.toolsPathWin": "C:\\Users\\mail\\.espressif",
+    "files.associations": {
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "regex": "cpp"
+    }
 }

@@ -2,14 +2,50 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
+#include <cstdio>
+#include <memory>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/uart.h"
+#include "driver/gpio.h"
+#include "sdkconfig.h"
+#include "esp_log.h"
+#define TAG "FINGER"
+#include <common.hh>
 namespace fingerprint
 {
-    constexpr uint32_t POWER_UP_DELAY_MS{50};
+    constexpr TickType_t POWER_UP_DELAY_TICKS{pdMS_TO_TICKS(50)};
     constexpr size_t NOTEPAD_SIZE_BYTES{16 * 32};
     constexpr size_t FEATURE_BUFFER_MAX{6};
     constexpr uint32_t DEFAULT_ADDRESS{0xFFFFFFFF};
     constexpr uint32_t DEFAULT_BAUD_RATE{57600};
-    constexpr size_t DEFAULT_TIMEOUT{1000}; //!< UART reading timeout in milliseconds
+    constexpr TickType_t DEFAULT_TIMEOUT_TICKS{pdMS_TO_TICKS(1000)}; //!< UART reading timeout in milliseconds
+    constexpr const char* enrollStep2description[]{
+        "",
+        "Collect image for the first time",
+        "Generate Feature for the first time",
+        "Collect image for the second time",
+        "Generate Feature for the second time",
+        "Collect image for the third time",
+        "Generate Feature for the third time",
+        "Collect image for the fourth time",
+        "Generate Feature for the fourth time",
+        "Collect image for the fifth time",
+        "Generate Feature for the fifth time",
+        "Collect image for the sixth time",
+        "Generate Feature for the sixth time",
+        "Repeat fingerprint check",
+        "Merge feature",
+        "Storage template",
+    };
+
+    constexpr const char* identifyStep2description[]{
+        "",
+        "Collect Image",
+        "Generate Feature",
+        "Search",
+    };
+
     enum class INSTRUCTION : uint8_t
     {
         GenImg = 0x01,         // Collect finger image
@@ -84,6 +120,12 @@ namespace fingerprint
         UNSUPPORTED_COMMAND = 0xfc,
         HARDWARE_ERROR = 0xfd,
         COMMAND_EXECUTION_FAILURE = 0xfe,
+
+        CANNOT_FIND_STARTCODE = 0x50,
+        WRONG_MODULE_ADDRESS = 0x51,
+        ACKNOWLEDGE_PACKET_EXPECTED=0x52,
+        UNEXPECTED_LENGTH=0x53,
+        CHECKSUM_ERROR=0x54,
     };
 
     enum class PARAM_INDEX : uint8_t
@@ -93,23 +135,6 @@ namespace fingerprint
         DATA_PACKAGE_LENGTH = 6, // Its value is 0, 1, 2, 3, corresponding to 32 bytes, 64 bytes, 128 bytes, 256 bytes respectively.
     };
 
-#define FINGERPRINT_LEDON 0x50  //!< Turn on the onboard LED
-#define FINGERPRINT_LEDOFF 0x51 //!< Turn off the onboard LED
-
-#define FINGERPRINT_LED_BREATHING 0x01   //!< Breathing light
-#define FINGERPRINT_LED_FLASHING 0x02    //!< Flashing light
-#define FINGERPRINT_LED_ON 0x03          //!< Always on
-#define FINGERPRINT_LED_OFF 0x04         //!< Always off
-#define FINGERPRINT_LED_GRADUAL_ON 0x05  //!< Gradually on
-#define FINGERPRINT_LED_GRADUAL_OFF 0x06 //!< Gradually off
-#define FINGERPRINT_LED_RED 0x01         //!< Red LED
-#define FINGERPRINT_LED_BLUE 0x02        //!< Blue LED
-#define FINGERPRINT_LED_PURPLE 0x03      //!< Purple LEDpassword
-
-    enum class PARAM_LED : uint8_t
-    {
-
-    };
 
     enum class PARAM_BAUD : uint8_t
     {
@@ -150,7 +175,7 @@ namespace fingerprint
     };
 
     constexpr uint16_t STARTCODE{0xEF01}; //!< Fixed falue of EF01H; High byte transferred first
-    
+
     enum class PacketIdentifier : uint8_t
     {
         COMMANDPACKET = 0x1, //!< Command packet
@@ -159,170 +184,277 @@ namespace fingerprint
         ENDDATAPACKET = 0x8, //!< End of data packet
     };
 
-   
-    ///! Helper class to craft UART packets
-    struct FingerprintPacket
-    {
-        FingerprintPacket(INSTRUCTION type, uint16_t length, uint8_t *data)
-        {
-            this->start_code = STARTCODE;
-            this->type = (uint8_t)type;
-            this->length = length;
-            address[0] = 0xFF;
-            address[1] = 0xFF;
-            address[2] = 0xFF;
-            address[3] = 0xFF;
-            if (length < 64)
-                std::memcpy(this->data, data, length);
-            else
-                std::memcpy(this->data, data, 64);
-        }
-        uint16_t start_code; ///< "Wakeup" code for packet detection
-        uint8_t address[4];  ///< 32-bit Fingerprint sensor address
-        uint8_t type;        ///< Type of packet
-        uint16_t length;     ///< Length of packet
-        uint8_t data[64];    ///< The raw buffer for packet payload
+    struct SystemParameter{
+        uint16_t status;
+        uint16_t librarySize;
+        uint8_t securityLevel;
+        uint32_t deviceAddress;
+        uint8_t dataPacketSizeCode;
+        uint8_t baudRateTimes9600;
+        char* algVer;
+        char* fwVer;
     };
 
-    
+    class iFingerprintHandler{
+        public:
+        virtual void HandleFingerprint(uint16_t finger, uint16_t score)=0;
+    };
+
+
     class M
     {
-    public:
-        M(HardwareSerial *hs, uint32_t password = 0x0);
-        Adafruit_Fingerprint(Stream *serial, uint32_t password = 0x0);
-
-        void begin(uint32_t baud);
-
-        bool verifyPassword(void);
-        uint8_t getParameters(void);
-
-        uint8_t getImage(void);
-        uint8_t image2Tz(uint8_t slot = 1);
-        uint8_t createModel(void);
-
-        uint8_t emptyDatabase(void);
-        uint8_t storeModel(uint16_t id);
-        uint8_t loadModel(uint16_t id);
-        uint8_t getModel(void);
-        uint8_t deleteModel(uint16_t id);
-        uint8_t fingerFastSearch(void);
-        uint8_t fingerSearch(uint8_t slot = 1);
-        uint8_t getTemplateCount(void);
-        uint8_t setPassword(uint32_t password);
-        uint8_t LEDcontrol(bool on);
-        uint8_t LEDcontrol(uint8_t control, uint8_t speed, uint8_t coloridx,
-                           uint8_t count = 0);
-
-        uint8_t setBaudRate(uint8_t baudrate);
-        uint8_t setSecurityLevel(uint8_t level);
-        uint8_t setPacketSize(uint8_t size);
-
-        void writeStructuredPacket(const Adafruit_Fingerprint_Packet &p);
-        uint8_t getStructuredPacket(Adafruit_Fingerprint_Packet *p,
-                                    uint16_t timeout = DEFAULTTIMEOUT);
-
-        /// The matching location that is set by fingerFastSearch()
-        uint16_t fingerID;
-        /// The confidence of the fingerFastSearch() match, higher numbers are more
-        /// confidents
-        uint16_t confidence;
-        /// The number of stored templates in the sensor, set by getTemplateCount()
-        uint16_t templateCount;
-
-        uint16_t status_reg = 0x0;   ///< The status register (set by getParameters)
-        uint16_t system_id = 0x0;    ///< The system identifier (set by getParameters)
-        uint16_t capacity = 64;      ///< The fingerprint capacity (set by getParameters)
-        uint16_t security_level = 0; ///< The security level (set by getParameters)
-        uint32_t device_addr =
-            0xFFFFFFFF;             ///< The device address (set by getParameters)
-        uint16_t packet_len = 64;   ///< The max packet length (set by getParameters)
-        uint16_t baud_rate = 57600; ///< The UART baud rate (set by getParameters)
-
     private:
-        uint8_t checkPassword(void);
-        uint8_t writeRegister(uint8_t regAdd, uint8_t value);
-        uint32_t thePassword;
-        uint32_t theAddress;
-        uint8_t recvPacket[20];
+        uart_port_t uart_num;
+        gpio_num_t gpio_irq;
+        SystemParameter params;
+        bool previousIrqLineValue{true};
+        iFingerprintHandler* handler;
+        SemaphoreHandle_t mutex;
 
-        Stream *mySerial;
-#if defined(__AVR__) || defined(ESP8266) || defined(FREEDOM_E300_HIFIVE1)
-        SoftwareSerial *swSerial;
-#endif
-        HardwareSerial *hwSerial;
+        static void static_task(void *args)
+        {
+            M *myself = static_cast<M *>(args);
+            myself->task();
+        }
+
+        void task()
+        {
+            vTaskDelay(POWER_UP_DELAY_TICKS);
+            while(true){
+                vTaskDelay(pdMS_TO_TICKS(100));
+                if(!xSemaphoreTake(mutex, pdMS_TO_TICKS(3000))){
+                    ESP_LOGI(TAG, "There seems to be an enrollment. Fingerprint task pauses...");
+                    continue;
+                }
+                bool newIrqValue=gpio_get_level(gpio_irq);
+                if(previousIrqLineValue==true && newIrqValue==false){
+                    //negative edge detected
+                    ESP_LOGI(TAG, "Negative edge detected, trying to read fingerprint");
+                    uint16_t fingerIndex;
+                    uint16_t score;
+                    RET ret= AutoIdentify(fingerIndex, score);
+                    
+                    if(ret==RET::OK){
+                        ESP_LOGI(TAG, "Fingerprint detected successfully: fingerIndex=%d, score=%d", fingerIndex, score);
+                        if(this->handler) handler->HandleFingerprint(fingerIndex, score);
+                    }else{
+                        ESP_LOGI(TAG, "AutoIdentify returns %d", (int)ret);
+                    }
+                }
+                previousIrqLineValue=newIrqValue;
+                xSemaphoreGive(mutex);
+            }
+        }
+
+        void createAndSendDataPackage(PacketIdentifier pid, uint8_t* contents, size_t contentsLength, uint32_t targetAddress=DEFAULT_ADDRESS){
+            contentsLength=std::min((size_t)64, contentsLength);
+            uint16_t packageLength=contentsLength+2;//data and checksum
+            uint16_t wireLength=2+4+1+2+contentsLength+2;
+            uint8_t buffer[wireLength];
+            WriteUInt16(STARTCODE, buffer, 0);
+            WriteUInt32(targetAddress, buffer, 2);
+            WriteU8((uint8_t)pid, buffer, 6);
+            WriteUInt16(packageLength, buffer, 7);
+            std::memcpy(buffer+9, contents, contentsLength);
+            uint16_t sum{0};
+            for(size_t i=6; i<wireLength-2;i++){ sum+=buffer[i]; }
+            uart_write_bytes(this->uart_num, buffer, wireLength);
+
+        }
+
+        RET basicAckPackageCheck(uint32_t targetAddress, uint8_t* buf, size_t bufLen){
+            int receivedBytes=uart_read_bytes(this->uart_num, buf, bufLen, DEFAULT_TIMEOUT_TICKS);
+            if(receivedBytes!=bufLen) return RET::TIMEOUT;
+            if(ParseUInt16(buf, 0)!=STARTCODE) return RET::CANNOT_FIND_STARTCODE;
+            if(ParseUInt32(buf, 2)!=targetAddress) return RET::WRONG_MODULE_ADDRESS;
+            if(buf[6]!=(uint8_t)PacketIdentifier::ACKPACKET) return RET::ACKNOWLEDGE_PACKET_EXPECTED;
+            if(ParseUInt16(buf, 7)!=bufLen-9) return RET::UNEXPECTED_LENGTH;
+            uint16_t sum{0};
+            for(size_t i=6; i<bufLen-2;i++){ sum+=buf[i];}
+            if(ParseUInt16(buf, bufLen-2)!=sum) return RET::CHECKSUM_ERROR;
+            if(buf[9]!=0) return (RET)buf[9];
+            return RET::OK;
+        }
+
+        #define BPC() while(0){RET ret=basicAckPackageCheck(targetAddress, buffer, wireLength); if(ret!=RET::OK) return ret;}
+
+        RET SetSysPara(PARAM_INDEX param, uint8_t value, uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[]{(uint8_t)INSTRUCTION::SetSysPara,(uint8_t)param,value};
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+            size_t wireLength{12};
+            uint8_t buffer[wireLength];
+            BPC();
+            return RET::OK;
+        }
+
+        RET ReadSysPara(SystemParameter& outParams, uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[]{(uint8_t)INSTRUCTION::ReadSysPara};
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+            const size_t wireLength{0x13+9};
+            uint8_t buffer[wireLength];
+            BPC();
+            outParams.status=ParseUInt16(buffer, 10);
+            outParams.librarySize=ParseUInt16(buffer, 14);
+            outParams.securityLevel=ParseUInt16(buffer, 16);
+            outParams.deviceAddress=ParseUInt32(buffer, 18);
+            outParams.dataPacketSizeCode=ParseUInt16(buffer, 22);
+            outParams.baudRateTimes9600=ParseUInt16(buffer, 24);
+            return RET::OK;
+        }
+
+
+        RET Get32ByteString(INSTRUCTION instr, char** string, uint32_t targetAddress=DEFAULT_ADDRESS){
+            *string = new char[33];
+            *string[32]='\0';
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, (uint8_t*)&instr, 1);
+            const size_t wireLength{0x23+9};
+            uint8_t buffer[wireLength];
+            BPC();
+            strncpy(*string, (char*)(buffer+10), 32);
+            return RET::OK;
+        }
+
+        RET GetAlgVer(char** string, uint32_t targetAddress=DEFAULT_ADDRESS){
+            return Get32ByteString(INSTRUCTION::GetAlgVer, string, targetAddress);
+        }
+
+        RET GetFwVer(char** string, uint32_t targetAddress=DEFAULT_ADDRESS){
+            return Get32ByteString(INSTRUCTION::GetFwVer, string, targetAddress);
+        }
+
+        RET ReadAllSysPara(SystemParameter& outParams, uint32_t targetAddress=DEFAULT_ADDRESS){
+            RET ret;
+            ret= ReadSysPara(outParams, targetAddress);
+            if(ret!=RET::OK) return ret;
+            ret= GetAlgVer(&outParams.algVer, targetAddress);
+            if(ret!=RET::OK) return ret;
+            ret= GetFwVer(&outParams.fwVer, targetAddress);
+            return ret;
+        }
+
+        RET DeleteChar(uint16_t index, uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[5];
+            data[0]=(uint8_t)INSTRUCTION::DeleteChar;
+            WriteUInt16(index, data, 1);
+            WriteUInt16(1, data, 3);
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+
+            const size_t wireLength{0x3+9};
+            uint8_t buffer[wireLength];
+            BPC();
+            return RET::OK;
+        }
+
+        RET EmptyLibrary(uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[]{(uint8_t)INSTRUCTION::Empty};
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+            const size_t wireLength{0x3+9};
+            uint8_t buffer[wireLength];
+            BPC();
+            return RET::OK;
+        }
+
+        RET AutoEnroll(uint16_t& fingerIndexOr0xFFFF_inout, bool overwriteExisting, bool duplicateFingerAllowed, bool returnStatusDuringProcess, bool fingerHasToLeaveBetweenScans,  uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[7];
+            data[0]=(uint8_t)INSTRUCTION::AutoEnroll;
+            WriteUInt16(fingerIndexOr0xFFFF_inout, data, 1);
+            data[3]=overwriteExisting?1:0;
+            data[4]=duplicateFingerAllowed?1:0;
+            data[5]=returnStatusDuringProcess?1:0;
+            data[6]=fingerHasToLeaveBetweenScans?1:0;
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+            const size_t wireLength{0x6+9};
+            uint8_t buffer[wireLength];
+            while(true){
+                BPC(); //returns this function, if anything goes wrong
+                uint8_t step = buffer[10];
+                fingerIndexOr0xFFFF_inout =ParseUInt16(buffer, 11);
+                ESP_LOGI(TAG, "'%s', Finger is stored in index %d", enrollStep2description[step], fingerIndexOr0xFFFF_inout);
+                if(step==0x0F) break;
+            }
+            return RET::OK;
+        }
+
+        RET AutoIdentify(uint16_t& fingerIndex_out, uint16_t& score_out,  PARAM_SECURITY securityLevel=PARAM_SECURITY::_3, bool returnStatusDuringProcess=true, uint8_t maxScanAttempts=1,  uint32_t targetAddress=DEFAULT_ADDRESS){
+            uint8_t data[8];
+            data[0]=(uint8_t)INSTRUCTION::AutoIdentify;
+            data[1]=(uint8_t)securityLevel;
+            WriteUInt16(0x0, data, 2);//search over all fingers
+            WriteUInt16(0x05DC, data, 4);//search over all fingers
+            data[6]=returnStatusDuringProcess?1:0;
+            data[7]=maxScanAttempts;
+            createAndSendDataPackage(PacketIdentifier::COMMANDPACKET, data, sizeof(data));
+            const size_t wireLength{0x8+9};
+            uint8_t buffer[wireLength];
+            while(true){
+                BPC(); //returns this function, if anything goes wrong
+                uint8_t step = buffer[10];
+                fingerIndex_out =ParseUInt16(buffer, 11);
+                score_out = ParseUInt16(buffer, 13);
+                ESP_LOGI(TAG, "'%s', Finger is stored in index %d", identifyStep2description[step], fingerIndex_out);
+                if(step==3) break;
+            }
+            return RET::OK;
+        }
+        
+
+    public:
+        M(uart_port_t uart_num, gpio_num_t gpio_irq, iFingerprintHandler* handler) : uart_num(uart_num), gpio_irq(gpio_irq), handler(handler) {}
+        esp_err_t begin(gpio_num_t txd, gpio_num_t rxd)
+        {
+            mutex = xSemaphoreCreateMutex();
+            /* Install UART friver */
+            uart_config_t c = {};
+            c.baud_rate = 57600;
+            c.data_bits = UART_DATA_8_BITS;
+            c.parity = UART_PARITY_DISABLE;
+            c.stop_bits = UART_STOP_BITS_1;
+            c.flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
+            c.source_clk = UART_SCLK_DEFAULT;
+
+            ESP_ERROR_CHECK(uart_driver_install(uart_num, 64, 0, 1, nullptr, 0));
+            ESP_ERROR_CHECK(uart_param_config(uart_num, &c));
+            ESP_ERROR_CHECK(uart_set_pin(uart_num, (int)txd, (int)rxd, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+            ESP_ERROR_CHECK(uart_flush(uart_num));
+
+            gpio_set_pull_mode(gpio_irq, GPIO_PULLUP_ONLY);
+
+            RET ret = ReadAllSysPara(this->params);
+            if(ret!=RET::OK){
+                ESP_LOGE(TAG, "Communication error with fingerprint reader. Error code %d", (int)ret);
+            }
+
+            xTaskCreate(static_task, "fingerprint", 4096, this, 10, nullptr);
+            return ESP_OK;
+        }
+
+        bool TryEnrollAndStore(const char* name){
+            if(!xSemaphoreTake(mutex, pdMS_TO_TICKS(3000))){
+                ESP_LOGE(TAG, "Cannot take mutex in enrollment after 3000ms");
+                return false;
+            }
+            uint16_t fingerIndex{0xFFFF};
+            RET ret = AutoEnroll(fingerIndex, false, false, true, true);
+            if(ret==RET::OK){
+                //TODO store in flash
+                ESP_LOGI(TAG, "Fingerprint has been successfully enrolled and stored with index %d and name %s", fingerIndex, name);
+            }
+            xSemaphoreGive(mutex);
+            return ret==RET::OK;
+        }
+
+        bool TryRename(uint16_t index, const char* newName){
+            //TODO: in flash
+        }
+
+        bool TryDelete(uint16_t index){
+            //TODO: in sensor and in flash
+        }
+
+        bool TryDeleteAll(uint16_t index){
+            //TODO : in sensor and in flash
+        }
     };
+
 }
-
-/*
-  By using the touch ring as an additional input to the image sensor the sensitivity is much higher for door bell ring events. Unfortunately
-  we cannot differ between touches on the ring by fingers or rain drops, so rain on the ring will cause false alarms.
-*/
-const int touchRingPin = 5; // touch/wakeup pin connected to fingerprint sensor
-
-enum class ScanResult
-{
-    noFinger,
-    matchFound,
-    noMatchFound,
-    error
-};
-enum class EnrollResult
-{
-    ok,
-    error
-};
-
-struct Match
-{
-    ScanResult scanResult = ScanResult::noFinger;
-    uint16_t matchId = 0;
-    String matchName = "unknown";
-    uint16_t matchConfidence = 0;
-    uint8_t returnCode = 0;
-};
-
-struct NewFinger
-{
-    EnrollResult enrollResult = EnrollResult::error;
-    uint8_t returnCode = 0;
-};
-
-class FingerprintManager
-{
-private:
-    Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
-    bool lastTouchState = false;
-    String fingerList[201];
-    int fingerCountOnSensor = 0;
-    bool ignoreTouchRing = false; // set to true when the sensor is usually exposed to rain to avoid false ring events. Can also be set conditional by a rain sensor over MQTT
-    bool lastIgnoreTouchRing = false;
-
-    void updateTouchState(bool touched);
-    bool isRingTouched();
-    void loadFingerListFromPrefs();
-    void disconnect();
-    uint8_t writeNotepad(uint8_t pageNumber, const char *text, uint8_t length);
-    uint8_t readNotepad(uint8_t pageNumber, char *text, uint8_t length);
-
-public:
-    bool connected;
-    bool connect();
-    Match scanFingerprint();
-    NewFinger enrollFinger(int id, String name);
-    void deleteFinger(int id);
-    void renameFinger(int id, String newName);
-    String getFingerListAsHtmlOptionList();
-    void setIgnoreTouchRing(bool state);
-    bool isFingerOnSensor();
-    void setLedRingError();
-    void setLedRingWifiConfig();
-    void setLedRingReady();
-    String getPairingCode();
-    bool setPairingCode(String pairingCode);
-
-    bool deleteAll();
-
-    // functions for sensor replacement
-    void exportSensorDB();
-    void importSensorDB();
-};
+#undef TAG
