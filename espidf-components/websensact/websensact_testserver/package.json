@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "flatbuffers": "^23.5.26",
     "ws": "^8.14.2"
   }
