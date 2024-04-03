@@ -1,4 +1,4 @@
-23160057191026719
+23165185271229826
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -93996,6 +93996,13 @@ rotary encoder
 7
 6
 liebler_MECH
+SLLB510100
+
+
+0
+8
+5
+liebler_MECH
 SMA_Schraubbefestigung
 
 
@@ -94078,6 +94085,13 @@ Low-profile SMD Tactile Switch, https://www.e-switch.com/system/asset/product_li
 SPST Tactile Switch
 0
 4
+2
+liebler_MECH
+Speaker_1511
+
+
+0
+2
 2
 liebler_MECH
 Switch_MSK12C02
@@ -94968,6 +94982,13 @@ SO SOIC 2.54
 0
 4
 4
+liebler_SEMICONDUCTORS
+SOIC-8_3.9x4.9mm_P1.27mm_handsolder
+SOIC, 8 Pin (JEDEC MS-012AA, https://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/soic_narrow-r/r_8.pdf), generated with kicad-footprint-generator ipc_gullwing_generator.py
+SOIC SO
+0
+8
+8
 liebler_SEMICONDUCTORS
 SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder
 8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)
