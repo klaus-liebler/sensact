@@ -1,0 +1,14 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C1,10u,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,107.5,-117.9,0.0,bottom
+C2,u1,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,100.4,-121.8,90.0,bottom
+C3,56p,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,84.6,-112.6,180.0,bottom
+C4,22u,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,87.5,-113.5,90.0,bottom
+C5,22u,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,89.5,-113.5,90.0,bottom
+J1,BaseConnect,PinHeader_2x07_P2.54mm_Vertical,100.5,-100.0,0.0,top
+J2,~,WAGO_250-210,88.0,-100.0,-90.0,top
+L1,10u,L_0630,94.5,-118.5,210.0,bottom
+R1,M1,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,84.6,-114.6,0.0,bottom
+R2,22k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,106.0,-121.0,270.0,bottom
+R3,k22,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,89.6,-101.5,270.0,bottom
+U1,TPS54202DDC,SOT-23-6_Handsoldering,103.2,-121.0,270.0,bottom
+U2,PC817,mdip_4_handsolder,95.5,-103.8,180.0,bottom
