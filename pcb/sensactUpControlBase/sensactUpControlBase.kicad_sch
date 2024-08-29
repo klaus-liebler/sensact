@@ -2424,6 +2424,12 @@
 		(uuid "0ed9867f-9c55-4c5c-976d-9fc5191a74c7")
 	)
 	(junction
+		(at 26.67 177.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3953d3a1-ee84-476d-ba75-4f3e6fc01b41")
+	)
+	(junction
 		(at 67.31 162.56)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2521,6 +2527,16 @@
 	)
 	(wire
 		(pts
+			(xy 21.59 177.8) (xy 26.67 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1bc060b5-768d-4b2d-9dfe-1bc7f48023db")
+	)
+	(wire
+		(pts
 			(xy 76.2 162.56) (xy 80.01 162.56)
 		)
 		(stroke
@@ -2558,6 +2574,16 @@
 			(type default)
 		)
 		(uuid "35fd3e8c-83fc-43e8-8980-4a2a91a3cb41")
+	)
+	(wire
+		(pts
+			(xy 21.59 165.1) (xy 26.67 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38492a1a-0185-4cc9-96a6-7f413f971ef1")
 	)
 	(polyline
 		(pts
@@ -2721,6 +2747,16 @@
 	)
 	(wire
 		(pts
+			(xy 21.59 173.99) (xy 21.59 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9303f603-2ff7-4348-bb30-8713de6a0181")
+	)
+	(wire
+		(pts
 			(xy 44.45 177.8) (xy 44.45 175.26)
 		)
 		(stroke
@@ -2738,6 +2774,16 @@
 			(type default)
 		)
 		(uuid "ae24bcc1-db1f-4b6f-97bb-1fa10ba896fc")
+	)
+	(wire
+		(pts
+			(xy 21.59 166.37) (xy 21.59 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0ef4792-2790-40ec-90d7-5c1916897bda")
 	)
 	(wire
 		(pts
@@ -3777,6 +3823,73 @@
 			(project "sensactUpControlBase"
 				(path "/2b7d0c27-221d-4cf0-b15c-d63b003387ec"
 					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 21.59 170.18 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "29a9ce14-8a14-440a-92ba-2316a2c4b88c")
+		(property "Reference" "C6"
+			(at 22.86 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "u1"
+			(at 24.13 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
+			(at 20.6248 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 21.59 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 21.59 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a02650e2-41a6-429a-a0b4-f7dec6a10d9d")
+		)
+		(pin "2"
+			(uuid "6e4c1eb7-ecc8-406b-b90c-fa326a10cf65")
+		)
+		(instances
+			(project "sensactUpControlBase"
+				(path "/2b7d0c27-221d-4cf0-b15c-d63b003387ec"
+					(reference "C6")
 					(unit 1)
 				)
 			)
