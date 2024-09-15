@@ -1,0 +1,28 @@
+<div class="top">
+    <label>
+        <span>Select a Widget</span>
+        <select [(ngModel)]="currentlySelectedWidgetType">
+            <option *ngFor="let i of uConfig | enumToArray" value="{{i.index}}">{{i.name}}</option>
+        </select>
+    </label>
+    <button class="styled" (click)="onBtnAddClicked()" type="button">Add</button>
+    <button class="styled" (click)="onBtnSaveClicked()" type="button">Save</button>
+</div>
+
+<div class="itemlist">
+    <ng-container *ngFor="let widget of widgets" [ngSwitch]="widget.type">
+        <app-blind-config-widget 
+            *ngSwitchCase=uConfig.tBlindConfig 
+            [widgetData]="widget" 
+            (moveItemUpEvent)="moveItemUpHandler($event)"
+            (moveItemDownEvent)="moveItemDownHandler($event)"
+            (deleteItemEvent)="deleteItemHandler($event)"></app-blind-config-widget>
+        <app-single-pwm-config-widget *ngSwitchCase=uConfig.tSinglePwmConfig [widgetData]="widget" (moveItemUpEvent)="moveItemUpHandler($event)"
+        (moveItemDownEvent)="moveItemDownHandler($event)"
+        (deleteItemEvent)="deleteItemHandler($event)">
+        </app-single-pwm-config-widget>
+        <app-on-off-config-widget *ngSwitchCase=uConfig.tOnOffConfig [widgetData]="widget" (moveItemUpEvent)="moveItemUpHandler($event)"
+        (moveItemDownEvent)="moveItemDownHandler($event)"
+        (deleteItemEvent)="deleteItemHandler($event)"></app-on-off-config-widget>
+    </ng-container>
+</div>

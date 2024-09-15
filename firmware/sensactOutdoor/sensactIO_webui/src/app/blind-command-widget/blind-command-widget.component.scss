@@ -1,0 +1,10 @@
+@use "src/mixins" as m;
+
+:host{
+    @include m.control_widget_container;
+}
+button{
+    flex: 1 1 0;
+    font-size: x-large;
+}
+

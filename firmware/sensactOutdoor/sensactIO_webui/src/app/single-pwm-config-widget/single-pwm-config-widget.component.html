@@ -1,0 +1,10 @@
+<h3>SinglePwm</h3>
+<label><span>pwm_first</span><input type="number" [(ngModel)]="pwmFirst" placeholder="Index of the first PWM output (incl)" min="0" max="65535"></label>
+<label><span>pwm_last</span><input type="number" [(ngModel)]="pwmLast" placeholder="Index of the last PWM output (incl!!!)" min="0" max="65535"></label>
+<label><span>stndby</span><input type="number"  [(ngModel)]="idOfStandbyController" placeholder="Index of the StandbyController application" min="0" max="65535"></label>
+<label><span>AutoOff [ms]</span><input type="number" type="number" [(ngModel)]="autoOffMsecs" min="0" max="100000"></label>
+<button (click)="onBtnUpClicked()" *ngIf="_widgetData.index!=0" class="styled" type="button">▲</button>
+<button (click)="onBtnDeleteClicked()" class="styled" type="button">
+    <svg class="smallicon" icon="icon-bin2"><use xlink:href="#icon-bin2"></use></svg>
+</button>
+<button (click)="onBtnDownClicked()" *ngIf="!_widgetData.isLast"  class="styled" type="button">▼</button>

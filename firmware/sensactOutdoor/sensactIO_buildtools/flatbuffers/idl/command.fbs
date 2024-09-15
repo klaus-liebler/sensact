@@ -1,0 +1,37 @@
+include "_common.fbs";
+namespace sensact.comm;
+
+
+table tBlindCommand{
+  cmd:eBlindCommand;
+}
+
+table tSinglePwmCommand{
+  cmd:eSinglePwmCommand;
+  intensity_0_1:float;
+}
+
+table tRgbwPwmCommand{
+  cmd:eRgbwPwmCommand;
+  payload:float;
+}
+
+table tOnOffCommand{
+  cmd:eOnOffCommand;
+  msecs:uint32;
+}
+
+union uCommand{
+  tBlindCommand,
+  tSinglePwmCommand,
+  tOnOffCommand,
+  tRgbwPwmCommand,
+}
+
+table tCommand{
+  application_id:uint32;
+  command:uCommand;
+}
+
+file_identifier "SCMD";
+root_type tCommand;

@@ -1,0 +1,29 @@
+@use "src/colors" as c;
+
+@mixin main_screen{
+  flex-grow: 1;
+  background-color: lighten(c.$color1, 70%);
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  min-height: 350px;
+}
+
+@mixin control_widget_container {//is a widgets container
+    max-width: 800px;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items:stretch;
+    align-content:center;
+    border: c.$color4 1px solid;
+    padding:2px;
+    margin: 5px;
+  }
+
+  @mixin config_widget_container {//is a widgets container
+    max-width: 800px;
+    border: c.$color4 1px solid;
+    padding:2px;
+    margin: 5px;
+  }

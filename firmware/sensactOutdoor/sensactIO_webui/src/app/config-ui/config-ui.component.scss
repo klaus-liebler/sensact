@@ -1,0 +1,19 @@
+@use "src/colors" as c;
+@use "src/mixins";
+:host{//is a "screen" minus header and footer
+   @include mixins.main_screen
+  }
+
+  div.itemlist{
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+  }
+  
+  div.top {
+    border: tan 1px solid;
+    padding:2px;
+    margin-bottom: 3px;
+  }

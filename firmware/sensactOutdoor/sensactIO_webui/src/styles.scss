@@ -1,0 +1,91 @@
+@use "src/colors" as c;
+
+$font-stack:    Helvetica, sans-serif;
+/* SCSS RGB */
+
+
+*{
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    font: 100% $font-stack;
+    color: c.$color1;
+    margin:0px;
+  }
+
+
+
+ 
+  
+  .icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    stroke-width: 0;
+  }
+  
+  .smallicon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    stroke-width: 0;
+  }
+
+ 
+  
+  button.onoff{
+    font-size: x-large;
+    border: none;
+    font-family: inherit;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+    padding: 0.25em 0.75em;
+    min-width: 80px;
+    transition: 220ms all ease-in-out;
+    stroke: black;
+    fill: none;
+   
+    &.on{
+      background-color: c.$onColor;
+    }
+
+    &.off{
+      background-color: c.$offColor;
+    }
+  }
+  
+  button.styled {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color:c.$dark-electric-blue;
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .2),
+                                      rgba(0, 0, 0, .2) 30%,
+                                      rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+  }
+  
+  button.styled:hover {
+    background-color: rgba(255, 0, 0, 1);
+  }
+  
+  button.styled:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+  }
+  
+  
+  

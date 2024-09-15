@@ -1,0 +1,15 @@
+menu "sensactio"
+    config I2C_SLAVE_ADDRESS
+        hex "I2C slave address"
+        default 0x42
+        help
+            Set the I2C slave address.
+    config HTTP_SCRATCHPAD_SIZE
+        int "HTTP_SCRATCHPAD_SIZE"
+        default 2048
+        help
+            All HTTP handlers (should) use a common buffer to process HTTP requests. This setting defines the size in bytes
+    config OTA_URL
+        string "OTA URL"
+        default "https://www.google.de"
+endmenu

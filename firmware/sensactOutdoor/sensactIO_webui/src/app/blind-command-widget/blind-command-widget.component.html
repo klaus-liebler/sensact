@@ -1,0 +1,3 @@
+<button (click)="onBtnUpClicked()" [ngStyle]="{'color':blState==eBlindState.UP?'green':'black'}">🢁</button>
+<button (click)="onBtnStopClicked()"><svg class="icon"><use [ngStyle]="{'fill':blState==eBlindState.STOP?'green':'black'}" xlink:href="#icon-blinds"></use></svg></button>
+<button (click)="onBtnDownClicked()"[ngStyle]="{'color':blState==eBlindState.DOWN?'green':'black'}">🢃</button>

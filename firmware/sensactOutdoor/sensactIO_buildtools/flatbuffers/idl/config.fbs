@@ -1,0 +1,47 @@
+include "_common.fbs";
+namespace sensact.comm;
+
+table tBlindConfig{
+  relay1:uint16;
+	relay2:uint16;
+  mode:eRelayInterlockMode;
+  time_up_msecs:uint32;
+  time_down_msecs:uint32;
+}
+
+table tSinglePwmConfig{
+  pwm_first:uint16;
+  pwm_last:uint16;
+  id_of_standby_controller:uint16;
+  auto_off_msecs:uint32;
+}
+
+table tRgbwPwmConfig{
+  pwm_r:uint16;
+  pwm_g:uint16;
+  pwm_b:uint16;
+  pwm_ww:uint16;
+  pwm_cw:uint16;
+  id_of_standby_controller:uint16;
+  auto_off_msecs:uint32;
+}
+
+table tOnOffConfig{
+  relay:uint16;
+	auto_off_msecs:uint32;
+	initial_state:eOnOffState;
+}
+
+union uConfig { tBlindConfig, tSinglePwmConfig, tOnOffConfig, tRgbwPwmConfig}
+
+table tConfigWrapper{
+  config:uConfig;
+}
+
+table tIoConfig{
+  timestamp:uint32;
+  configs:[tConfigWrapper];
+}
+
+file_identifier "SCFG";
+root_type tIoConfig;

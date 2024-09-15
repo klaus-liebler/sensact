@@ -1,0 +1,20 @@
+@use "src/colors" as c;
+
+
+header button{
+  height: 20px;
+  font-size: 12px;
+}
+:host{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-height: 100vh;
+    margin: 0px;
+}
+
+
+header, footer{
+  background-color:lighten(c.$color1, 50%);
+}
+

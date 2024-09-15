@@ -1,0 +1,38 @@
+include "_common.fbs";
+namespace sensact.comm;
+
+table tBlindState{
+  position:uint16;
+  state:eBlindState;
+}
+
+table tSinglePwmState{
+  intensity_0_1:float;
+  on:bool;
+}
+
+table tRgbwPwmState{
+  r:uint8;
+  g:uint8;
+  b:uint8;
+  ww:float;
+  cw:float;
+  on:bool;
+}
+
+table tOnOffState{
+  state:eOnOffState;
+}
+
+union uState { tBlindState, tSinglePwmState, tOnOffState, tRgbwPwmState }
+table tStateWrapper{
+  application_id:uint32;
+  state:uState;
+}
+table tState{
+  timestamp:uint32;
+  states:[tStateWrapper];
+}
+
+file_identifier "SSTA";
+root_type tState;

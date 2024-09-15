@@ -1,0 +1,9 @@
+<ng-container *ngFor="let widget of widgets" [ngSwitch]="widget.type">
+    <app-blind-command-widget *ngSwitchCase=uState.tBlindState [applicationId]="widget.applicationId"
+        [state]="state"></app-blind-command-widget>
+    <app-single-pwmcommand-widget *ngSwitchCase=uState.tSinglePwmState [applicationId]="widget.applicationId"
+        [state]="state"></app-single-pwmcommand-widget>
+    <app-on-off-command-widget *ngSwitchCase=uState.tOnOffState [applicationId]="widget.applicationId"
+        [state]="state"></app-on-off-command-widget>
+</ng-container>
+

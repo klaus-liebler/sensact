@@ -1,0 +1,14 @@
+<h3>OnOff</h3>
+<label><span>Relay</span><input type="number" [(ngModel)]="relay" placeholder="Index of Relay1" min="0" max="65535"></label>
+<label>
+    <span>Initial State</span>
+    <select [(ngModel)]="initialState">
+        <option *ngFor="let i of OnOffStates | enumToArray" value="{{i.index}}">{{i.name}}</option>
+    </select>
+</label>
+<label><span>AutoOff [ms]</span><input type="number" [(ngModel)]="autoOffMsecs" min="0" max="100000"></label>
+<button (click)="onBtnUpClicked()" *ngIf="_widgetData.index!=0" class="styled" type="button">▲</button>
+<button (click)="onBtnDeleteClicked()" class="styled" type="button">
+    <svg class="smallicon" icon="icon-bin2"><use xlink:href="#icon-bin2"></use></svg>
+</button>
+<button (click)="onBtnDownClicked()" *ngIf="!_widgetData.isLast"  class="styled" type="button">▼</button>

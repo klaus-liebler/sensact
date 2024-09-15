@@ -1,0 +1,206 @@
+<main class="ConfigScreen">
+    <div class="top">
+        <label>
+            <span>Select a Widget</span>
+            <select name="widget" id="widget">
+                <option value="BLIND">BLIND</option>
+                <option value="SinglePWM">SinglePWM</option>
+                <option value="OnOff">OnOff</option>
+            </select>
+        </label>
+        <button class="styled" type="button">Add</button>
+        <button class="styled" type="button">Save</button>
+    </div>
+    <div class="itemlist">
+        <div>
+            <h3>Blind</h3>
+            <label>
+                <span>Relay 1</span>
+                <input type="number" min="1" max="65535">
+            </label>
+            <label>
+                <span>Relay 2</span>
+                <input type="number" min="1" max="65535">
+            </label>
+            <label>
+                <span>Mode</span>
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <label>
+                <span>Up [ms]</span>
+                <input type="number" min="1" max="100000">
+            </label>
+            <label>
+                <span>Down [ms]</span>
+                <input type="number" min="1" max="100000">
+            </label>
+            <button class="styled" type="button">▲</button>
+            <button class="styled" type="button">▼</button>
+            <button class="styled" type="button"><svg class="smallicon">
+                <use xlink:href="#icon-bin2"></use>
+              </svg></button>
+        </div>
+        <div>
+            <h3>OnOff</h3>
+            <label>
+                <span>Relay</span>
+                <input type="number" min="1" max="65535"></label>
+            <label>
+                <span>State</span>
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <label>
+                <span>AutoOff [ms]</span>
+                <input type="number" min="1" max="100000">
+            </label>
+            <button class="styled" type="button">▲</button>
+            <button class="styled" type="button">▼</button>
+            <button class="styled" type="button"><svg class="smallicon">
+                <use xlink:href="#icon-bin2"></use>
+              </svg></button>
+        </div>
+        <div>
+            <h3>SinglePWM</h3>
+            <label>
+                <span>pwmFirst</span>
+                <input type="number" min="1" max="65535"></label>
+            <label>
+            <label>
+                <span>pwmLast</span>
+                <input type="number" min="1" max="65535"></label>
+            <label>
+            <label>
+                <span>AutoOff [ms]</span>
+                <input type="number" min="1" max="100000">
+            </label>   
+            <label>
+                <span>standbyId</span>
+                <input type="number" min="1" max="65535"></label>
+            <label>
+            <button class="styled" type="button">▲</button>
+            <button class="styled" type="button">▼</button>
+            <button class="styled" type="button"><svg class="smallicon">
+                <use xlink:href="#icon-bin2"></use>
+              </svg></button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        <div>
+            <h3>Blind</h3>
+            <label>Relay 1<input type="number" min="1" max="65535"></label>
+            <label>Relay 2<input type="number" min="1" max="65535"></label>
+            <label>Mode
+                <select>
+                    <option value="Interlock1">Interlock1</option>
+                    <option value="Interlock2">Interlock2</option>
+                </select>
+            </label>
+            <button class="styled" type="button">Up</button>
+            <button class="styled" type="button">Down</button>
+            <button class="styled" type="button">Del</button>
+        </div>
+        
+    </div>
+</main>

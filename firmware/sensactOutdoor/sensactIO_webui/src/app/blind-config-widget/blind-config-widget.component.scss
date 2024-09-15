@@ -1,0 +1,7 @@
+
+@use "src/mixins" as m; 
+@import "src/configWidgets";
+:host{
+    @include m.config_widget_container;
+}
+

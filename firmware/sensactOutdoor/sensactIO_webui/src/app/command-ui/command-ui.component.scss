@@ -1,0 +1,5 @@
+@use "src/colors" as c;
+@use "src/mixins";
+:host{//is a "screen" minus header and footer
+   @include mixins.main_screen
+  }

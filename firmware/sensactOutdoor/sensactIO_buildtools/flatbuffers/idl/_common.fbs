@@ -1,0 +1,61 @@
+namespace sensact.comm;
+
+enum eRelayInterlockMode:byte{
+  R1_UP__R2_DOWN,
+  R1_DOWN__R2_UP,
+  R1_POWER__R2_UP,
+  R1_POWER__R2_DOWN,
+  R1_UP__R2_POWER,
+  R1_DOWN__R2_POWER,
+}
+
+enum eBlindState:byte{
+  STOP=0,
+	UP=1,
+	DOWN=2,
+  PREPARE=3,
+}
+
+enum eBlindCommand:byte{
+  STOP,
+  UP,
+  DOWN,
+  UP_OR_STOP,
+  DOWN_OR_STOP,
+}
+
+enum eSinglePwmCommand:byte{
+  TOGGLE,
+  ON,
+  OFF,
+  CHANGE_INTENSITY,
+}
+
+enum eRgbwPwmCommand:byte{
+  TOGGLE,
+  ON,
+  OFF,
+  CHANGE_HUE_0_360,
+  CHANGE_SATURATION_0_1,
+  CHANGE_VALUE_0_1,
+  CHANGE_R_0_255,
+  CHANGE_G_0_255,
+  CHANGE_B_0_255,
+  CHANGE_WWCW_BRIGHTNESS_0_1,
+  CHANGE_WWCW_RATIO_0_1,
+}
+
+enum eOnOffCommand:byte{
+  ON,
+  AUTO,
+  OFF,
+  TRIGGER,
+  TRIGGER_MSECS,
+}
+
+enum eOnOffState:byte{
+  MANUAL_OFF,
+  MANUAL_ON,
+  AUTO_OFF,
+  AUTO_ON,
+}

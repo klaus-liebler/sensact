@@ -1,0 +1,208 @@
+
+$btnColor: #4CAF50;
+
+*{
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  stroke-width: 0;
+}
+
+.smallicon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  stroke-width: 0;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-height: 100vh;
+  margin: 0px;
+}
+
+body>* {
+  padding: 5px;
+}
+
+body>header{
+  background-color: burlywood;
+}
+
+body>header button{
+  height: 20px;
+  font-size: 12px;
+}
+
+button.onoff{
+  font-size: x-large;
+  border: none;
+  font-family: inherit;
+  background-color: $btnColor; /* Green */
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+  padding: 0.25em 0.75em;
+  min-width: 80px;
+  transition: 220ms all ease-in-out;
+  stroke: black;
+  fill: none;
+  &:hover{
+    background-color: scale-color($btnColor, $lightness: +20%);
+    stroke: red;
+  }
+  &.on{
+    background-color: scale-color($btnColor, $lightness: +20%);
+    stroke: red;
+  }
+}
+
+button.updown{
+  font-size: x-large;
+}
+
+button.styled {
+  border: 0;
+  line-height: 2.5;
+  padding: 0 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  background-color: rgba(220, 0, 0, 1);
+  background-image: linear-gradient(to top left,
+                                    rgba(0, 0, 0, .2),
+                                    rgba(0, 0, 0, .2) 30%,
+                                    rgba(0, 0, 0, 0));
+  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+              inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+button.styled:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+button.styled:active {
+  box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+              inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+
+body>footer {
+  background-color: burlywood;
+}
+
+body>main{//is a "screen" minus header and footer
+  flex-grow: 1;
+  background-color: cornsilk;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  min-height: 350px;
+}
+
+main.ControlScreen>div {//is a widgets container
+  max-width: 800px;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items:stretch;
+  align-content:center;
+  border: tan 1px solid;
+  padding:2px;
+}
+
+main.ConfigScreen>div.itemlist{
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+main.ConfigScreen>div.top {
+  border: tan 1px solid;
+  padding:2px;
+  margin-bottom: 3px;
+}
+
+main.ConfigScreen>div>div {
+  border: tan 1px solid;
+  padding:2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+main.ConfigScreen h3 {
+  margin-block-start: 0em;
+  margin-block-end: 0.5em;
+}
+
+
+
+main.ConfigScreen label {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+main.ConfigScreen label>span {
+  text-align: right;
+  min-width: 140px;
+  max-width: 140px;
+  font-size: 1.1em;
+  margin-right: 5px;
+}
+
+main.ConfigScreen label>input,label>select {
+  flex: 1 1 0;
+  font-size: 1.1em;
+}
+
+
+
+main.ControlScreen input{
+  font-size: 24pt;
+}
+
+.switch_3_ways_container{
+  height:100%;
+}
+
+div.switch_3_ways_item{
+  cursor:pointer;
+  padding: 0 1em;
+  background-color: gray;
+  border-radius: 0.3em;
+  position: relative;
+  flex:1 1 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.switch_3_ways_selector{
+  text-align:center;
+  position:absolute;
+  width:0px;
+  top:0px;
+  height:100%;
+  box-sizing:border-box;
+  transition: 300ms ease-out;
+  border-radius:0.3em;  
+  box-shadow: 0px 2px 13px 0px #9b9b9b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}

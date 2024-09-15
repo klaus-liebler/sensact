@@ -1,0 +1,9 @@
+<div style="flex: 1 1 0; position: relative;">
+    <div class="switch_3_ways_container" style="display: flex;">
+        <div (click)="onBtnOnClicked()" #butOn class="switch_3_ways_item"><span>On</span></div>
+        <div (click)="onBtnAutoClicked()" #butAuto class="switch_3_ways_item"><span>Auto</span></div>
+        <div (click)="onBtnOffClicked()" #butOff class="switch_3_ways_item"><span>Off</span></div>
+    </div>
+    <div #selector class="switch_3_ways_selector" [ngStyle]="{'backgroundColor':selectorBackgroundColor, 'color':selectorForegroundColor, 'width':selectorWidth+'px', 'left':selectorLeft+'px', 'visibility':selectorVisibility}"><span>{{selectorText}}</span></div>
+
+</div>

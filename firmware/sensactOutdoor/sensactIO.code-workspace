@@ -1,0 +1,52 @@
+{
+	"folders": [
+		{
+			"path": "sensactIO_firmware"
+		},
+		{
+			"path": "sensactIO_buildtools"
+		},
+		{
+			"path": "sensactIO_webui"
+		},
+		{
+			"path": "../espidf-components/megacli"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.tcc": "cpp",
+			"format": "cpp",
+			"vector": "cpp",
+			"new": "cpp",
+			"algorithm": "cpp",
+			"barrier": "cpp",
+			"chrono": "cpp",
+			"latch": "cpp",
+			"limits": "cpp",
+			"random": "cpp",
+			"semaphore": "cpp",
+			"utility": "cpp",
+			"valarray": "cpp",
+			"cstddef": "cpp",
+			"codecvt": "cpp",
+			"xlocale": "cpp",
+			"functional": "cpp",
+			"any": "cpp",
+			"array": "cpp",
+			"compare": "cpp",
+			"filesystem": "cpp",
+			"future": "cpp",
+			"memory": "cpp",
+			"ratio": "cpp",
+			"regex": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"variant": "cpp",
+			"xmemory": "cpp",
+			"xstring": "cpp",
+			"xtr1common": "cpp",
+			"xutility": "cpp"
+		}
+	}
+}

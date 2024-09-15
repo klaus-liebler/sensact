@@ -1,0 +1,5 @@
+@use "src/mixins" as m;
+
+:host{
+    @include m.control_widget_container;
+}

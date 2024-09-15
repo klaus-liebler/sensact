@@ -1,0 +1,16 @@
+<h3>Blind</h3>
+<label><span>Relay1</span><input type="number" [(ngModel)]="relay1" placeholder="Index of Relay1" min="0" max="65535"></label>
+<label><span>Relay2</span><input type="number" [(ngModel)]="relay2" placeholder="Index of Relay1" min="0" max="65535"></label>
+<label>
+    <span>Mode</span>
+    <select [(ngModel)]="relayInterlockMode" >
+        <option *ngFor="let i of RelayInterlockModes | enumToArray" value="{{i.index}}">{{i.name}}</option>
+    </select>
+</label>
+<label><span>Up [ms]</span><input type="number" [(ngModel)]="timeUpMsecs"    min="1" max="100000"></label>
+<label><span>Down [ms]</span><input type="number" [(ngModel)]="timeDownMsecs" min="1" max="100000"></label>
+<button (click)="onBtnUpClicked()" *ngIf="_widgetData.index!=0" class="styled" type="button">▲</button>
+<button (click)="onBtnDeleteClicked()" class="styled" type="button">
+    <svg class="smallicon" icon="icon-bin2"><use xlink:href="#icon-bin2"></use></svg>
+</button>
+<button  (click)="onBtnDownClicked()" *ngIf="!_widgetData.isLast"  class="styled" type="button">▼</button>
