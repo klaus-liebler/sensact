@@ -1,3 +1,4 @@
 (sym_lib_table
-  (lib (name sensactHsIO3-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactHsIO3-rescue.lib)(options "")(descr ""))
+  (version 7)
+  (lib (name "sensactHsIO3-rescue")(type "KiCad")(uri "${KIPRJMOD}/sensactHsIO3-rescue.kicad_sym")(options "")(descr ""))
 )
