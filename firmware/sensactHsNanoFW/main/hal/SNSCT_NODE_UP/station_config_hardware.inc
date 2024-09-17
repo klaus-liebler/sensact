@@ -6,4 +6,3 @@
     DirectGPIOBusmaster gpioBusmaster("GPIO", halobj);
     I2CBusmaster i2cBusmaster("SensactBus", i2c_internal, SensactUp3::INTERRUPT_LINES, pca9555_vec, pca9685_vec);
     std::vector<AbstractBusmaster*> busmasters{&gpioBusmaster, &i2cBusmaster};
-    std::vector<NodeRole> nodeRoles{NodeRole::APPLICATION_HOST,};

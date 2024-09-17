@@ -11,10 +11,8 @@
 #include <esp_log.h>
 #include <string.h>
 #include <common-esp32.hh>
-#include "lvgl.h"
-#include "ui/ui.h"
+
 #include <adc_buttons.hh>
-#include "lcd_manager.hh"
 
 #include <lwip/err.h>
 #include <lwip/sys.h>
@@ -39,16 +37,11 @@ using namespace sensact;
 
 iHAL* halobj{nullptr};
 
-
-
-
-
 constexpr auto BUFFER_SIZE{1024};
 uint8_t buffer[BUFFER_SIZE];
 
 extern "C" void app_main(void)
 {
-    //esp_log_level_set("gdma", ESP_LOG_VERBOSE);
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     httpd_handle_t http_server{nullptr};
@@ -72,22 +65,20 @@ extern "C" void app_main(void)
     char   *hostname;
     asprintf(&hostname, "%s", sensact::model::node::NodeName);
     
-    #include <hwcfg.inc>
-    if(!halobj){
-        ESP_LOGE(TAG, "HAL has not been created in <hwcfg.inc>");
-        esp_restart();
-    }
+    #include <station_config_hardware.inc>
+    assert(halobj);
 
     ESP_ERROR_CHECK(mdns_init());
-    ESP_ERROR_CHECK(mdns_hostname_set(hostname));
+    ESP_ERROR_CHECK(mdns_hostname_set(hostname ".local"));
     ESP_LOGI(TAG, "mdns hostname set to: [%s]", hostname);
     const char* MDNS_INSTANCE="SENSACT_MDNS_INSTANCE";
     ESP_ERROR_CHECK(mdns_instance_name_set(MDNS_INSTANCE));
     ESP_ERROR_CHECK(mdns_service_subtype_add_for_host("SENSACT-WebServer", "_http", "_tcp", NULL, "_server") );
     free(hostname);
     
-    cNodemaster* nodemaster = new cNodemaster(&nodeRoles, halobj, wwws, &busmasters, canMBP);
-    nodemaster->Setup();
+    cNodemaster* nodemaster = new cNodemaster(halobj, wwws, &busmasters, canMBP);
+    #include <station_config_hosts.inc>
+    nodemaster->Setup(hosts);
 
     //Idee: Wenn bis hierher etwas schief läuft, dann wird eh resettet
     wman->CallMeAfterInitializationToMarkCurrentPartitionAsValid();

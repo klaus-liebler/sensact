@@ -1,33 +1,43 @@
 dependencies:
   espressif/ds18b20:
     component_hash: d1e277cbc765de715ad2a14b1f61d4e9415bf9e3ebde0da6b3f577164ddd7fe4
+    dependencies:
+    - name: espressif/onewire_bus
+      registry_url: https://components.espressif.com/
+      require: private
+      version: ^1.0.0
     source:
-      service_url: https://api.components.espressif.com/
+      registry_url: https://components.espressif.com/
       type: service
     version: 0.1.0
   espressif/mdns:
     component_hash: 090826401d30f756037f91d91068f470ba8d0ef04fe507d3aa8761305cecd7ca
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
     source:
-      service_url: https://api.components.espressif.com/
+      registry_url: https://components.espressif.com/
       type: service
     version: 1.2.3
   espressif/onewire_bus:
-    component_hash: 4da8596055cfe301370c0bb2aa716e65dc3b7148e64f84bcc9f76693b3a32aa9
+    component_hash: c4c781940d8bd988432b47ac3ee68479c69e14e01fdfba0b61365b233a3ba5d6
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
     source:
-      service_url: https://api.components.espressif.com/
+      registry_url: https://components.espressif.com/
       type: service
-    version: 1.0.1
+    version: 1.0.2
   idf:
-    component_hash: null
     source:
       type: idf
-    version: 5.1.1
-  lvgl/lvgl:
-    component_hash: 948bff879a345149b83065535bbc4a026ce9f47498a22881e432a264b9098015
-    source:
-      service_url: https://api.components.espressif.com/
-      type: service
-    version: 8.3.11
-manifest_hash: 9afa74aad727d75435a26846e4fb84eea51a970ae102a44072c037bdcbec3473
+    version: 5.3.0
+direct_dependencies:
+- espressif/ds18b20
+- espressif/mdns
+- idf
+manifest_hash: fb485f115e06a24563c83131c1d975e25df5c7a219f2688bc54e02c17526baf9
 target: esp32s3
-version: 1.0.0
+version: 2.0.0

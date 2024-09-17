@@ -55,14 +55,6 @@ namespace sensact
 		R1_UP__R2_DOWN,
 	};
 
-    enum class NodeRole : uint8_t
-    {
-        GATEWAY,
-        USER_INTERFACE,
-        APPLICATION_HOST,
-        IO_HOST,
-    };
-
     struct CANMessage
     {
         uint32_t Id;

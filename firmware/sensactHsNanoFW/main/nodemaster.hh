@@ -28,7 +28,7 @@
  * @brief
  * Nodemaster ist die höchste Instanz. Weiß nichts von Apps
  * Nodemaster kennt die Busmaster (Bus-Zugriff läuft nicht bzw nicht direkt über die HAL, aber die Busmaster selbst können natürlich die HAL nutzen)
- * Nodemaster kennt die Hosts (ein Host ist der ApplicationHost, in dem die SensactApps laufen)
+ * Nodemaster kennt die Hosts (einer dieser Hosts ist der ApplicationHost, in dem die SensactApps laufen)
  * Nodemaster macht den großen Zyklus "HAL_Before" -->Empfang aller CAN-Nachrichten und Angebot an alle Hosts-->Verarbeitung in allen Hosts -->"HAL_After"
  * Nodemaster kann ausgehende CAN-Nachrichten an alle RoleRunner spiegeln.
  */
@@ -39,13 +39,12 @@ namespace sensact
 	class cNodemaster : public iHostContext
 	{
 	private:
-		std::vector<NodeRole> *nodeRoles;
 		sensact::hal::iHAL *const hal;
 		sensact::iWebsensact *const websensact;
 		std::vector<AbstractBusmaster *> *busmasters;
 		aCANMessageBuilderParser *canMBP;
 		std::vector<iHost *> hosts;
-		iHost *currentRoleRunner{nullptr};
+		iHost *currentHost{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
 
@@ -81,7 +80,7 @@ namespace sensact
 				{
 					for (auto &rr : hosts)
 					{
-						this->currentRoleRunner = rr;
+						this->currentHost = rr;
 						rr->OfferMessage(*this, message);
 					}
 				}
@@ -94,16 +93,16 @@ namespace sensact
 					}
 					for (auto &rr : hosts)
 					{
-						this->currentRoleRunner = rr;
+						this->currentHost = rr;
 						rr->OfferMessage(*this, message);
 					}
 				}
-				// TODO CONSOLEMessage! -> dritten TryReceive-Prozess aufsetzen
+				// TODO UDP-Message! -> dritten TryReceive-Prozess aufsetzen
 
 				
 				for (auto &rr : hosts)
 				{
-					this->currentRoleRunner = rr;
+					this->currentHost = rr;
 					rr->Loop(*this);
 				}
 				ESP_LOGD(TAG, "hal->AfterAppLoop(); 1");
@@ -124,12 +123,13 @@ namespace sensact
 		}
 
 	public:
-		cNodemaster(std::vector<NodeRole> *nodeRoles, sensact::hal::iHAL *hal, sensact::iWebsensact *const websensact, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), websensact(websensact), busmasters(busmasters), canMBP(canMBP)
+		cNodemaster(sensact::hal::iHAL *hal, sensact::iWebsensact *const websensact, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), websensact(websensact), busmasters(busmasters), canMBP(canMBP)
 		{
 		}
 
-		void Setup()
+		void Setup(std::vector<sensact::iHost *> hosts)
 		{
+			this->hosts = hosts;
 			this->currentNow = hal->GetMillisS64();
 			hal->Setup();
 			for (auto &bm : *this->busmasters)
@@ -140,30 +140,10 @@ namespace sensact
 				}
 			}
 			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_STARTED, 0, 0);
-			for (auto &role : *nodeRoles)
-			{
-				iHost *h;
-				switch (role)
-				{
-				case NodeRole::APPLICATION_HOST:
-					h = new cApplicationHost(hal, this, this->canMBP);
-					hosts.push_back(h);
-					break;
-				case NodeRole::GATEWAY:
-					hosts.push_back(new cGatewayHost());
-					break;
-				case NodeRole::IO_HOST:
-					hosts.push_back(new cIoHost());
-					break;
-				default:
-					LOGE(TAG, "NodeRole has no implementation");
-					break;
-				}
-			}
 			this->currentNow = hal->GetMillisS64();
 			for (auto &rr : hosts)
 			{
-				this->currentRoleRunner = rr;
+				this->currentHost = rr;
 				rr->Setup(*this);
 			}
 			PublishNodeEvent(currentNow, sensact::model::node::NodeID, eNodeEventType::NODE_READY, 0, 0);
@@ -191,7 +171,7 @@ namespace sensact
 				return;
 			for (auto &rr : hosts)
 			{
-				if (this->currentRoleRunner == rr)
+				if (this->currentHost == rr)
 					continue;
 				rr->OfferMessage(*this, m);
 			}
