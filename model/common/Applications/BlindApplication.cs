@@ -81,13 +81,13 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             //sb.AppendFormat("<!-- Blind {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
             //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div><button onclick='MyApp.blind_up(this, {0})'>⏶</button><button onclick='MyApp.blind_stop(this, {0})'>⏹</button><button onclick='MyApp.blind_down(this, {0})'>⏷</button></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             sb.AppendFormat("//Blind {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new BlindApplication(ApplicationId.ApplicationId_{1}, '{1}', '{2}'));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("ret.push(new BlindApplication(ApplicationId.{1}, '{2}'));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

@@ -47,7 +47,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

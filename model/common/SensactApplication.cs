@@ -29,7 +29,8 @@ namespace Klli.Sensact.Model.Common
             this.ApplicationName = ApplicationName;
             this.ApplicationDescription=ApplicationDescription;
         }
-        private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_.*";
+
+        private const string REGEX_FLOOR_ROOM_SUFFIX = "_(L[0-3]|LX|LS|X[1-3])_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XX[1-4])_(.*)$";
 
         public Regex FLOOR_ROOM_Regex(string prefix)
         {
@@ -260,7 +261,7 @@ namespace Klli.Sensact.Model.Common
 
         public abstract string GenerateInitializer(ModelContainerForCodeGenerator m);
 
-        public abstract string GenerateHTMLUserInterface(ModelContainerForCodeGenerator m);
+        public abstract string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m);
 
         [SensactCommandMethod]
         public virtual void OnNOPCommand() { }

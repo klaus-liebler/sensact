@@ -211,7 +211,7 @@ namespace Klli.Sensact.Config
             GenerateNodeSpecificFiles(mc);
 
             GenerateJSONDescription(mc);
-            GenerateHTML(mc);
+            GenerateTypescriptUserInterface(mc);
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
@@ -223,8 +223,8 @@ namespace Klli.Sensact.Config
             ushort CNT=0;
             foreach (var id in Enum.GetValues<Model.ApplicationId>())
             {
-                sb_c.AppendLine(id.ToString() + "=" + (ushort)id + ",");
-                sb_flatc.AppendLine("\tApplicationId_"+id.ToString() + "=" + (ushort)id + ",");
+                sb_c.AppendLine("\t"+id.ToString() + "=" + (ushort)id + ",");
+                sb_flatc.AppendLine("\t"+id.ToString() + "=" + (ushort)id + ",");
                 if(id!=Model.ApplicationId.NO_APPLICATION){
                     CNT=Math.Max(CNT, (ushort)id);
                 }
@@ -758,9 +758,9 @@ namespace Klli.Sensact.Config
                 sb.Clear();
                 //HTML User Interface
                 foreach(var app in node.Applications){
-                    sb.Append(app.GenerateHTMLUserInterface(mc));
+                    sb.Append(app.GenerateTypescriptUserInterface(mc));
                 }
-                WriteNodeSpecificFile(node, "websensact.html", sb);
+                WriteNodeSpecificFile(node, "sensactapps_local.ts", sb);
                 sb.Clear();
             }
             LOG.LogInformation("Successfully created all node specific .inc files");
@@ -783,23 +783,18 @@ namespace Klli.Sensact.Config
             LOG.LogInformation("Successfully created all node specific .json files in {0}.", this.options.BasePath);
         }
 
-        private void GenerateHTML(ModelContainer mc){
+        private void GenerateTypescriptUserInterface(ModelContainer mc){
             
-            var regex=new Regex("^([A-Z]+)_(L0|L1|L2|L3|LX|LS|XX)_(LVNG|KTCH|KID1|KID2|BATH|CORR|TECH|WORK|BEDR|WELL|STO1|PRTY|STRS|UTIL|LEFT|RGHT|BACK|FRON|CARP|GARA|ROOF|XXX)_(.*)$");
-
+            
             
             StringBuilder sb = new StringBuilder();
             foreach (SensactApplicationContainer appc in mc.id2app.Values)
             {
-                Match m=regex.Match(appc.Application.ApplicationName);
-                var appcode= m.Groups[1];
-                var level= m.Groups[2];
-                var room= m.Groups[3];
-                var number= m.Groups[4];
-                sb.Append(appc.Application.GenerateHTMLUserInterface(mc));
+   
+                sb.Append(appc.Application.GenerateTypescriptUserInterface(mc));
             }
             WriteCommonFile("sensactapps.ts", sb);
-            LOG.LogInformation("Successfully created common html file with UI for all apps");
+            LOG.LogInformation("Successfully created typescript file with UI for all apps");
         }
 
         protected void WriteNodeSpecificFile(Model.Common.Nodes.Node node, string filenameWithoutExtension, StringBuilder content)
