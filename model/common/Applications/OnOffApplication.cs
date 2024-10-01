@@ -68,7 +68,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator m)
+        public override string GenerateCPP(ModelContainerForCodeGenerator m)
         {
             if (OffEvents.Count >0 || OnEvents.Count>0  || ToggleEvents.Count>0)
             {
@@ -81,13 +81,13 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             //sb.AppendFormat("<!-- ONOFF {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
             //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div class='controls'><input onclick='MyApp.onoff(this, {0})' class='toggle' type='checkbox'/></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             sb.AppendFormat("//OnOff {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new OnOffApplication(ApplicationId.{1}, '{2}'));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("ret.push(new OnOffApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

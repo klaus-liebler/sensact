@@ -99,7 +99,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return String.Empty;
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator mc)
+        public override string GenerateCPP(ModelContainerForCodeGenerator mc)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Forwarder {0}"+Environment.NewLine, ApplicationName);
@@ -107,7 +107,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
         
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

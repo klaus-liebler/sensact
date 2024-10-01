@@ -291,7 +291,7 @@ namespace Klli.Sensact.Config
                     
                 }
                 sb_c.AppendLine(")");
-                sb_typescript.AppendLine(")");
+                sb_typescript.AppendLine(", ctx:ISensactContext)");
                 sb_c.AppendLine("\t{");
                 sb_typescript.AppendLine("{");
                 sb_c.AppendLine("\t\tuint8_t buffer[8];");
@@ -305,7 +305,7 @@ namespace Klli.Sensact.Config
                 }
                 sb_c.AFL("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset_c);
                 sb_c.AppendLine("\t}");
-                sb_typescript.AFL("\tsendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer));", SensactApplication.ExtractCmdName(mi));
+                sb_typescript.AFL("\tsendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer), ctx);", SensactApplication.ExtractCmdName(mi));
                 sb_typescript.AppendLine("}");
             }
             WriteCommonFile("sendCommandImplementation", sb_c);
@@ -732,7 +732,7 @@ namespace Klli.Sensact.Config
                 //Static initializers
                 foreach (SensactApplication app in node.Applications)
                 {
-                    sb.Append(app.GenerateInitializer(mc));
+                    sb.Append(app.GenerateCPP(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     Glo2LocCmd[appCont.Application.ApplicationId] = "\t&" + app.ApplicationName + ",";
                 }
@@ -758,7 +758,7 @@ namespace Klli.Sensact.Config
                 sb.Clear();
                 //HTML User Interface
                 foreach(var app in node.Applications){
-                    sb.Append(app.GenerateTypescriptUserInterface(mc));
+                    sb.Append(app.GenerateTypescript(mc));
                 }
                 WriteNodeSpecificFile(node, "sensactapps_local.ts", sb);
                 sb.Clear();
@@ -784,14 +784,11 @@ namespace Klli.Sensact.Config
         }
 
         private void GenerateTypescriptUserInterface(ModelContainer mc){
-            
-            
-            
             StringBuilder sb = new StringBuilder();
             foreach (SensactApplicationContainer appc in mc.id2app.Values)
             {
    
-                sb.Append(appc.Application.GenerateTypescriptUserInterface(mc));
+                sb.Append(appc.Application.GenerateTypescript(mc));
             }
             WriteCommonFile("sensactapps.ts", sb);
             LOG.LogInformation("Successfully created typescript file with UI for all apps");

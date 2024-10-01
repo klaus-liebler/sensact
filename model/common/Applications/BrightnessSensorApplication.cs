@@ -41,7 +41,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>() { EventType.STATUS };
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator m)
+        public override string GenerateCPP(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// BrightnessSensor {0}" + Environment.NewLine, ApplicationName);
@@ -50,7 +50,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

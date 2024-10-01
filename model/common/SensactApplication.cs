@@ -259,9 +259,9 @@ namespace Klli.Sensact.Model.Common
 
         public abstract HashSet<EventType> ICanSendTheseEvents();
 
-        public abstract string GenerateInitializer(ModelContainerForCodeGenerator m);
+        public abstract string GenerateCPP(ModelContainerForCodeGenerator m);
 
-        public abstract string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m);
+        public abstract string GenerateTypescript(ModelContainerForCodeGenerator m);
 
         [SensactCommandMethod]
         public virtual void OnNOPCommand() { }

@@ -106,7 +106,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator m)
+        public override string GenerateCPP(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AFL("// cSinglePWM {0} (Dimmer for one color)", ApplicationName);
@@ -114,13 +114,13 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             //sb.AppendFormat("<!--SinglePWM {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
             //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div><input type='range' min='1' max='100' value='50' onchange='MyApp.singlepwm_slider(this, {0})'><input onchange='MyApp.singlepwm_toggle(this, {0})' class='toggle' type='checkbox' /></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             sb.AppendFormat("//SinglePWM {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new SinglePwmApplication(ApplicationId.{1}, '{2}'));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("ret.push(new SinglePwmApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

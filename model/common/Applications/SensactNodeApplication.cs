@@ -18,7 +18,7 @@ namespace Klli.Sensact.Model.Common.Applications
             }
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator m)
+        public override string GenerateCPP(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AFL("// Sensact node management application {0}", ApplicationName);
@@ -27,7 +27,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

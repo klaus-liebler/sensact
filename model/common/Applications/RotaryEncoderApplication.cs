@@ -36,7 +36,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return ret;
         }
 
-        public override string GenerateInitializer(ModelContainerForCodeGenerator m)
+        public override string GenerateCPP(ModelContainerForCodeGenerator m)
         {
             //Command op_a1[1] = {{eApplicationID::POWIT_EG_WOZ_L1, eCommandType::BACKWARD }};
             StringBuilder sb = new StringBuilder();
@@ -47,7 +47,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescriptUserInterface(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
