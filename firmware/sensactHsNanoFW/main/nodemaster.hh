@@ -30,9 +30,18 @@
  * Nodemaster kennt die Busmaster (Bus-Zugriff läuft nicht bzw nicht direkt über die HAL, aber die Busmaster selbst können natürlich die HAL nutzen)
  * Nodemaster kennt die Hosts (einer dieser Hosts ist der ApplicationHost, in dem die SensactApps laufen)
  * Nodemaster macht den großen Zyklus "HAL_Before" -->Empfang aller CAN-Nachrichten und Angebot an alle Hosts-->Verarbeitung in allen Hosts -->"HAL_After"
- * Nodemaster kann ausgehende CAN-Nachrichten an alle RoleRunner spiegeln.
+ * Nodemaster kann ausgehende CAN-Nachrichten an alle Hosts spiegeln.
+ * Nodemaster abstrahiert alle pyhsischen Inputs und Outputs auf 16bit-Index mit 16bit-Wert
+ * 
  */
 
+//TODO:
+//- CAN-artige Nachrichten können auch vom Webinterface, von der Fernbedienung und vom Fingerprint-Sensor kommen
+//Static-Task als Lambda-Funktion implementieren - geht kürzer
+//NAchrichten können also von unterschiedlichen Quellen stammen, die 
+//möglichst gleich verwaltet werden sollen
+//while(source->HasMessage(&temp_message))
+//eine Message hat ProcessingInstruction: ForceLocal (kein Versand), ForceCanBus (Versand auf den CAN-Bus), Auto (Prüft, ob die Nachricht lokal jemanden interessiert. Wenn ja: Kein Weiterversand, Wenn nein: Weiterleitung auf den CAN-Bus)
 namespace sensact
 {
 	constexpr size_t STATUS_MESSAGE_BUFLEN{256};
