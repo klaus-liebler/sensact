@@ -2,3 +2,5 @@ build/
 sdkconfig
 sdkconfig.old
 managed_components/
+CMakeFiles/
+CMakeCache.txt

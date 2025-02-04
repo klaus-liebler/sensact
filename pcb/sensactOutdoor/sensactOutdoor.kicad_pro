@@ -546,7 +546,14 @@
       "version": 3
     },
     "net_colors": null,
-    "netclass_assignments": null,
+    "netclass_assignments": {
+      "/LINE_FUSE": "230V",
+      "Earth_Protective": "230V",
+      "LINE": "230V",
+      "NEUT": "230V",
+      "Net-(D1-A)": "230V",
+      "Net-(D1-K)": "230V"
+    },
     "netclass_patterns": [
       {
         "netclass": "230V",
@@ -740,7 +747,7 @@
   "sheets": [
     [
       "eed466bf-cd88-4860-9abf-41a594ca08bd",
-      "Stammblatt"
+      "Root"
     ]
   ],
   "text_variables": {}
