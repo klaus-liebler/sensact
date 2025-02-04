@@ -2153,7 +2153,7 @@
 		(descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
 		(tags "capacitor handsolder")
 		(property "Reference" "C2"
-			(at 0 1.68 360)
+			(at 0 1.68 0)
 			(layer "B.SilkS")
 			(hide yes)
 			(uuid "ffa2c015-94e1-4706-b58c-38878b9bede1")
@@ -2178,7 +2178,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "840db974-b960-4a79-89d4-c3b889102d4f")
@@ -2190,7 +2190,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "39a26471-7a31-4f0b-80b8-69aa85cee436")
@@ -2202,7 +2202,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "200045f7-9cc0-4930-8304-92e7d7f17e66")
@@ -2319,7 +2319,7 @@
 			(uuid "5253d579-58f4-4618-b045-ceae797c7bae")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "B.Fab")
 			(uuid "1b72866e-bf78-4676-8df4-a08985a85e83")
 			(effects
@@ -3227,7 +3227,7 @@
 		(descr "smd shielded power inductor https://abracon.com/Magnetics/power/ASPI-0630LR.pdf")
 		(tags "inductor abracon smd shielded")
 		(property "Reference" "L1"
-			(at 0 4.25 360)
+			(at 0 4.25 0)
 			(layer "B.SilkS")
 			(hide yes)
 			(uuid "770742ad-9df6-4ec7-ad05-caf1e6384dca")
@@ -3240,7 +3240,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 0 -4.25 360)
+			(at 0 -4.25 0)
 			(layer "B.SilkS")
 			(uuid "812639e7-9182-492d-8c3e-344537108021")
 			(effects
@@ -3252,7 +3252,7 @@
 			)
 		)
 		(property "Footprint" "liebler_PASSIVES:L_0630"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c8420438-318f-4516-a814-1001c6fd2cd9")
@@ -3264,7 +3264,7 @@
 			)
 		)
 		(property "Datasheet" "C408449"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "e133f4eb-6d99-4e14-9082-446676cf27fb")
@@ -3276,7 +3276,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d219e382-9904-47b5-b1f0-0aa6638a1701")
@@ -3393,7 +3393,7 @@
 			(uuid "7df50f2e-eb49-4d7b-ad37-770d05ab519f")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "B.Fab")
 			(uuid "d0c92f94-babc-4a8e-b7f8-ab11a1eed867")
 			(effects
@@ -3668,7 +3668,7 @@
 		(descr "6-pin SOT-23 package, Handsoldering")
 		(tags "SOT-23-6 Handsoldering")
 		(property "Reference" "U1"
-			(at 0 2.9 360)
+			(at 0 2.9 0)
 			(layer "B.SilkS")
 			(hide yes)
 			(uuid "bb1400b2-b577-4931-b47d-a5056b05ccc2")
@@ -3681,7 +3681,7 @@
 			)
 		)
 		(property "Value" "TPS54202DDC"
-			(at 0 -2.9 360)
+			(at 0 -2.9 0)
 			(layer "B.Fab")
 			(uuid "d69dda2e-74a8-47a3-9820-7634b3c7fb90")
 			(effects
@@ -3693,7 +3693,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6_Handsoldering"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "edd54c8e-71e0-46ec-8a2c-8e244165a7b2")
@@ -3705,7 +3705,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/tps54202.pdf"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "f436f5c3-2c4e-43fa-8bf7-5386f5916a10")
@@ -3717,7 +3717,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "ad372c8b-ea16-4d4a-8f0f-9543dae97cf8")
