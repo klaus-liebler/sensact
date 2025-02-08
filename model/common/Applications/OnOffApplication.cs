@@ -87,7 +87,7 @@ namespace Klli.Sensact.Model.Common.Applications
             //sb.AppendFormat("<!-- ONOFF {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
             //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div class='controls'><input onclick='MyApp.onoff(this, {0})' class='toggle' type='checkbox'/></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             sb.AppendFormat("//OnOff {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new OnOffApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("ret.push(new Apps.OnOffApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

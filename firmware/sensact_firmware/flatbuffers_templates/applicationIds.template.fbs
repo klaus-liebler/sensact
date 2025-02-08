@@ -1,0 +1,5 @@
+//Build process uses this file, if sensact integration is not used
+namespace sensact;
+enum ApplicationId:ushort {
+	//TEMPLATE_HERE
+}

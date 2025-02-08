@@ -217,7 +217,7 @@ namespace Klli.Sensact.Config
         {
             StringBuilder sb_c = new StringBuilder();
             StringBuilder sb_flatc = new StringBuilder();
-            sb_flatc.AppendLine("enum ApplicationId:ushort {");
+        
             //mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             //page.Nodes.Add("CNT");
             ushort CNT=0;
@@ -230,7 +230,6 @@ namespace Klli.Sensact.Config
                 }
             }
             sb_c.AF2L("CNT={0},", CNT+1);
-            sb_flatc.AppendLine("}");
             this.WriteCommonFile("applicationIds", sb_c);
             this.WriteCommonFile("applicationIds.fbs", sb_flatc);
             LOG.LogInformation("Successfully created appids");
@@ -305,7 +304,7 @@ namespace Klli.Sensact.Config
                 }
                 sb_c.AFL("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset_c);
                 sb_c.AppendLine("\t}");
-                sb_typescript.AFL("\tsendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer), ctx);", SensactApplication.ExtractCmdName(mi));
+                sb_typescript.AFL("\tctx.SendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer));", SensactApplication.ExtractCmdName(mi));
                 sb_typescript.AppendLine("}");
             }
             WriteCommonFile("sendCommandImplementation", sb_c);
@@ -831,13 +830,12 @@ namespace Klli.Sensact.Config
         {
             StringBuilder sb_c = new StringBuilder();
             StringBuilder sb_protobuf = new StringBuilder();
-            sb_protobuf.AppendLine("enum Command:byte {");
+            
             foreach (CommandType ct in Enum.GetValues(typeof(CommandType)))
             {
                 sb_c.AppendLine(ct.ToString() + "=" + (int)ct + ",");
                 sb_protobuf.AppendLine("\t"+ct.ToString() + "=" + (int)ct + ",");
             }
-            sb_protobuf.AppendLine("}");
             WriteCommonFile("commandTypes", sb_c);
             WriteCommonFile("commandTypes.fbs", sb_protobuf);
             

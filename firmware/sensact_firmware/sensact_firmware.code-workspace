@@ -17,6 +17,12 @@
 		},
 		{
 			"path": "../../espidf-components/generated"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/web-components"
+		},
+		{
+			"path": "../../../espidf-component-webmanager"
 		}
 	],
 	"settings": {

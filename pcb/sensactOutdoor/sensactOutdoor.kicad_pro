@@ -59,7 +59,13 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "clearance|172680000|97650000|d72c89a6-7578-4468-964e-2a845431195f|c8ab8246-b2bb-4b06-b45e-2548482466fd",
+        "clearance|173720000|97650000|5f38bdb2-3657-474e-8e86-d6bb0b298110|b0054ce1-b60e-41de-a6a2-bf712784dd39",
+        "clearance|173720000|97650000|b0054ce1-b60e-41de-a6a2-bf712784dd39|c8ab8246-b2bb-4b06-b45e-2548482466fd",
+        "clearance|173799999|98249999|d72c89a6-7578-4468-964e-2a845431195f|5f38bdb2-3657-474e-8e86-d6bb0b298110",
+        "lib_footprint_mismatch|188100000|107200000|00000000-0000-0000-0000-00006070b76d|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "filename": "board_design_settings.json",
         "version": 2
@@ -98,7 +104,7 @@
         "padstack": "error",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "ignore",
         "silk_overlap": "ignore",
         "skew_out_of_range": "error",
@@ -552,7 +558,8 @@
       "LINE": "230V",
       "NEUT": "230V",
       "Net-(D1-A)": "230V",
-      "Net-(D1-K)": "230V"
+      "Net-(D1-K)": "230V",
+      "PE": "230V"
     },
     "netclass_patterns": [
       {

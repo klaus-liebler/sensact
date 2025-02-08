@@ -6,4 +6,7 @@ firmware_sensactOutdoor/sdkconfig.old
 **/*-backups
 /pcb/**/gerber
 /pcb/**/assembly
-
+**/node_modules/
+**/package-lock.json
+**/board_info.json
+**/secrets.ts

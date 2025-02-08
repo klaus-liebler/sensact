@@ -1,5 +1,5 @@
-include "../generated/sensact_fbs/applicationIds.fbs.inc";
-include "../generated/sensact_fbs/commandTypes.fbs.inc";
+include "../../../../generated/flatbuffers_fbs/applicationIds.fbs";
+include "../../../../generated/flatbuffers_fbs/commandTypes.fbs";
 
 namespace sensact;
 
