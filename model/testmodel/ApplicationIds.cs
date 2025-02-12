@@ -9,6 +9,8 @@ namespace Klli.Sensact.Model
         SNSCT_NODE_HS,
         SNSCT_NODE_UP,
 
+        SNSCT_NODE_SIDEDOOR,
+
         PUSHB_X1_XX1_3,
         PUSHB_X2_XX2_4,
         PUSHB_X3_XX3_5,
@@ -24,6 +26,9 @@ namespace Klli.Sensact.Model
         STDBY_X1_XX1_15,
         SOUND_X2_XX2_0,
         ROTAR_X3_XX3_0,
+
+        FINGR_X1_XX1_42,//Fingerprint
+        POWIT_X1_XX1_42,//Türöffner
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }
 }

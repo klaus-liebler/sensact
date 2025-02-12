@@ -12,9 +12,7 @@
 
 #include <pca9555.hh>
 #include <pca9685.hh>
-
-#include <webmanager.hh>
-
+#include <logger.hh>
 #define TAG "BUSMSTR"
 
 namespace sensact
@@ -43,11 +41,11 @@ namespace sensact
 	class AbstractBusmaster
 	{
 	public:
-		virtual ErrorCode Setup() const = 0;
-		virtual ErrorCode GetInput(u16 input, u16 &value) const = 0;
-		virtual ErrorCode SetOutput(u16 output, u16 value) const = 0;
-		virtual ErrorCode CommitInputs() const = 0;
-		virtual ErrorCode CommitOutputs() const = 0;
+		virtual ErrorCode Setup() = 0;
+		virtual ErrorCode GetInput(u16 input, u16 &value) = 0;
+		virtual ErrorCode SetOutput(u16 output, u16 value) = 0;
+		virtual ErrorCode CommitInputs() = 0;
+		virtual ErrorCode CommitOutputs() = 0;
 	};
 
 	class AbstractSubBusmaster
@@ -58,12 +56,12 @@ namespace sensact
 	public:
 		AbstractSubBusmaster(char const *const name) : name(name) {}
 		virtual ErrorCode Setup() = 0;
-		virtual ErrorCode Loop() = 0;
-		virtual ErrorCode Discover() const = 0;
-		virtual ErrorCode GetInput(u16 input, u16 &value) const = 0;
-		virtual ErrorCode SetOutput(u16 output, u16 value) const = 0;
-		virtual ErrorCode CommitInputs() const = 0;
-		virtual ErrorCode CommitOutputs() const = 0;
+		virtual ErrorCode Loop() {return ErrorCode::OK;}
+		virtual ErrorCode Discover() const {return ErrorCode::OK;}
+		virtual ErrorCode GetInput(u16 input, u16 &value) {return ErrorCode::OK;}
+		virtual ErrorCode SetOutput(u16 output, u16 value) {return ErrorCode::OK;}
+		virtual ErrorCode CommitInputs() {return ErrorCode::OK;}
+		virtual ErrorCode CommitOutputs() {return ErrorCode::OK;}
 	};
 
 
@@ -83,14 +81,14 @@ namespace sensact
 		{
 			return ErrorCode::OK;
 		}
-		ErrorCode GetInput(u16 input, u16 &inputState) const override
+		ErrorCode GetInput(u16 input, u16 &inputState) override
 		{
 			inputState = 0;
 			return ErrorCode::OK;
 		}
-		ErrorCode SetOutput(u16 output, u16 value) const override { return ErrorCode::OK; }
-		ErrorCode CommitInputs() const override { return ErrorCode::OK; }
-		ErrorCode CommitOutputs() const override { return ErrorCode::OK; }
+		ErrorCode SetOutput(u16 output, u16 value) override { return ErrorCode::OK; }
+		ErrorCode CommitInputs() override { return ErrorCode::OK; }
+		ErrorCode CommitOutputs() override { return ErrorCode::OK; }
 	};
 
 	class cOwSubbus : public AbstractSubBusmaster
@@ -102,9 +100,9 @@ namespace sensact
 		std::vector<cDS2413Node *> ds2413Nodes;
 
 	public:
-		ErrorCode Init(void) const;
-		ErrorCode Discover(void);
-		ErrorCode Process(tms_t now);
+		ErrorCode Setup(void) {return ErrorCode::OK;}
+		ErrorCode Discover(void) const override { return ErrorCode::OK; }
+		ErrorCode Process(tms_t now) { return ErrorCode::OK; }
 
 		cOwSubbus(/*DS2482::M *const driver, std::vector<cSensactSENode *> sensactSENodes, std::vector<cDS1820Node *> ds1820Nodes, std::vector<cDS2413Node *> ds2413Nodes*/);
 	};
@@ -128,7 +126,7 @@ namespace sensact
 		void Task()
 		{
 			ESP_LOGI(TAG, "I2CBusmaster task started");
-			webmanager::M* wm = webmanager::M::GetSingleton();
+			//webmanager::M* wm = webmanager::M::GetSingleton();
 			//Setup'ed is already: HAL and I2C
 			ERRORCODE_CHECK(i2c_num->Discover());
 			//Not setup'ed: all devices
@@ -136,13 +134,13 @@ namespace sensact
 			for (auto &pca9685 : this->pca9685_vec)
 			{
 				if(pca9685->Setup()!=ErrorCode::OK){
-					wm->Log(messagecodes::C::I2C_SETUP_DEVICE, pca9685->GetDeviceAddress());
+					LOGGER::Journal(messagecodes::C::I2C_SETUP_DEVICE, pca9685->GetDeviceAddress());
 				}
 			}
 			for (auto &pca9555 : this->pca9555_vec)
 			{
 				if(pca9555->Setup()!=ErrorCode::OK){
-					wm->Log(messagecodes::C::I2C_SETUP_DEVICE, pca9555->GetDeviceAddress());
+					LOGGER::Journal(messagecodes::C::I2C_SETUP_DEVICE, pca9555->GetDeviceAddress());
 				}
 			}
 		
@@ -155,13 +153,13 @@ namespace sensact
 				for (auto &pca9685 : this->pca9685_vec)
 				{
 					if(pca9685->Loop()!=ErrorCode::OK){
-						wm->Log(messagecodes::C::I2C_LOOP_DEVICE, pca9685->GetDeviceAddress());
+						LOGGER::Journal(messagecodes::C::I2C_LOOP_DEVICE, pca9685->GetDeviceAddress());
 					}
 				}
 				for (auto &pca9555 : this->pca9555_vec)
 				{
 					if(pca9555->Update()!=ErrorCode::OK){
-						wm->Log(messagecodes::C::I2C_LOOP_DEVICE, pca9555->GetDeviceAddress());
+						LOGGER::Journal(messagecodes::C::I2C_LOOP_DEVICE, pca9555->GetDeviceAddress());
 					}
 				}
 				vTaskDelayUntil(&xLastWakeTime, xTimeIncrement);
@@ -178,14 +176,14 @@ namespace sensact
 		{
 		}
 
-		ErrorCode Setup() const override
+		ErrorCode Setup() override
 		{
 			xTaskCreate(I2CBusmaster::StaticTask, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
 			return ErrorCode::OK;
 		}
 
 
-		ErrorCode GetInput(u16 id, u16 &value) const override{
+		ErrorCode GetInput(u16 id, u16 &value) override{
 			id&=0x3FFF; //clear two MSB as they are for selecting one of four busses
 			if(id>=1024){
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
@@ -205,7 +203,7 @@ namespace sensact
 			
 			
 		}
-		ErrorCode SetOutput(u16 id, u16 value) const override{
+		ErrorCode SetOutput(u16 id, u16 value) override{
 			id&=0x3FFF; //clear two MSB  as they are for selecting one of four busses
 			if(id>=1024){
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
@@ -222,12 +220,12 @@ namespace sensact
 			return pca9685->SetOutput(locIndex, value);
 		}
 
-		ErrorCode CommitInputs() const override
+		ErrorCode CommitInputs() override
 		{
 			return ErrorCode::OK;
 		}
 
-		ErrorCode CommitOutputs() const override
+		ErrorCode CommitOutputs() override
 		{
 			return ErrorCode::OK;
 		}
@@ -244,13 +242,13 @@ namespace sensact
 		{
 		}
 
-		ErrorCode Setup() const override
+		ErrorCode Setup() override
 		{
 			return ErrorCode::OK;
 		}
 
 
-		ErrorCode GetInput(u16 id, u16 &value) const override{
+		ErrorCode GetInput(u16 id, u16 &value) override{
 			id&=0x3FFF; //clear two MSB
 			switch (id)
 			{
@@ -265,7 +263,7 @@ namespace sensact
 				break;
 			}			
 		}
-		ErrorCode SetOutput(u16 id, u16 value) const override{
+		ErrorCode SetOutput(u16 id, u16 value) override{
 			id&=0x3FFF; //clear two MSB
 			switch (id)
 			{
@@ -277,12 +275,12 @@ namespace sensact
 			}			
 		}
 
-		ErrorCode CommitInputs() const override
+		ErrorCode CommitInputs() override
 		{
 			return ErrorCode::OK;
 		}
 
-		ErrorCode CommitOutputs() const override
+		ErrorCode CommitOutputs() override
 		{
 			
 			return ErrorCode::OK;

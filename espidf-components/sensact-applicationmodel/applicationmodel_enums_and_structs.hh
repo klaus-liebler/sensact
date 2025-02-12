@@ -56,6 +56,7 @@ namespace sensact
         FRWRD,
         PUMP,
         BLITIM,
+        FINGR,
         //updates Names below as well!
     };
 
@@ -77,7 +78,8 @@ namespace sensact
         "SNSCT",
         "FRWRD",
         "PUMP",
-        "BLITIM"
+        "BLITIM",
+        "FINGR",
     };
 
     enum class eNodeID : uint16_t

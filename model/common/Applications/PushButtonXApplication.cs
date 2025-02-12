@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public abstract class PushButtonApplication : SensorApplication
     {
-        protected PushButtonApplication(ushort ApplicationId, string ApplicationName):base(ApplicationId, ApplicationName){}
+        protected PushButtonApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription=""):base(ApplicationId, ApplicationName, ApplicationDescription){}
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>

@@ -60,10 +60,10 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(lastRotaryValue, buf, 2);
-			WriteUInt16(0, buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(lastRotaryValue, buf, 2);
+			WriteU16(0, buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 	};

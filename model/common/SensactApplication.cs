@@ -353,7 +353,7 @@ namespace Klli.Sensact.Model.Common
 
     public abstract class SensorApplication : SensactApplication
     {
-        public SensorApplication(ushort ApplicationId, string ApplicationName) : base(ApplicationId, ApplicationName) { }
+        public SensorApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription) : base(ApplicationId, ApplicationName, ApplicationDescription) { }
 
 
     }

@@ -39,7 +39,7 @@ namespace Klli.Sensact.Model.Common.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AFL("// Pump {0}", ApplicationName);
-            sb.AF2L("sensactapps::cPump {0}(eApplicationID::{0}, {1}, {2}, {3});", ApplicationName, OutputRessource, OnIntervalMsecs, OffIntervalMsecs);
+            sb.AF2L("sensact::apps::cPump {0}(eApplicationID::{0}, {1}, {2}, {3});", ApplicationName, OutputRessource, OnIntervalMsecs, OffIntervalMsecs);
             return sb.ToString();
         }
 

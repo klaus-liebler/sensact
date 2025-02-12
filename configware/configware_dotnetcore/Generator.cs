@@ -32,12 +32,42 @@ namespace Klli.Sensact.Config
     {
         ILogger<SourceCodeGenerator> LOG;
         SourceCodeGeneratorOptions options;
-        public SourceCodeGenerator(AppSettings appSettings, ILogger<SourceCodeGenerator> LOG)
+       public SourceCodeGenerator(AppSettings appSettings, ILogger<SourceCodeGenerator> LOG)
         {
             this.options = appSettings.SourceCodeGenerator;
             this.LOG = LOG;
         }
 
+        public void generateAll(ModelContainer mc){
+            GenerateApplicationIds(mc);
+            GenerateNodeIds(mc);
+            GenerateApplicationNames(mc);
+            
+            GenerateParseCommand();
+            
+            GenerateCommandTypes(mc);
+            GenerateCommandNames(mc);
+            GenerateEventTypes(mc);
+            GenerateEventNames(mc);
+            GenerateEmptyImplementationForCmdHandler();
+            GenerateCommandHandlerDeclarations(true);
+            GenerateCommandHandlerDeclarations(false);
+            
+            GenerateSendCommandDeclarations(true);
+            GenerateSendCommandDeclarations(false);
+            GenerateSendCommandImplementation();
+            
+            GeneratePublishEventDeclarations(true);
+            GeneratePublishEventDeclarations(false);
+            GeneratePublishEventImplementation();
+
+            GenerateHeaderIncludesForApplications(mc);
+            GenerateNodeSpecificFiles(mc);
+
+            GenerateJSONDescription(mc);
+            GenerateTypescriptUserInterface(mc);
+        }
+        
         public bool CheckAndPrepare(ModelContainer mc)
         {
             HashSet<ushort> predefinedAppIds = Enum.GetValues<Model.ApplicationId>().Select(x=>(ushort)x).ToHashSet();
@@ -65,7 +95,7 @@ namespace Klli.Sensact.Config
                     
                     if (mc.id2app.ContainsKey(app.ApplicationId))
                     {
-                        LOG.LogError("AppId {0} is defined at least two times in node applications", app.ApplicationId);
+                        LOG.LogError("AppId {0} with name {1} is defined at least two times in node applications", app.ApplicationId, app.ApplicationName);
                         return false;
                     }
                     if (!app.HasValidAppId())
@@ -182,36 +212,6 @@ namespace Klli.Sensact.Config
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
             }
-        }
-
-        public void generateAll(ModelContainer mc){
-            GenerateApplicationIds(mc);
-            GenerateNodeIds(mc);
-            GenerateApplicationNames(mc);
-            
-            GenerateParseCommand();
-            
-            GenerateCommandTypes(mc);
-            GenerateCommandNames(mc);
-            GenerateEventTypes(mc);
-            GenerateEventNames(mc);
-            GenerateEmptyImplementationForCmdHandler();
-            GenerateCommandHandlerDeclarations(true);
-            GenerateCommandHandlerDeclarations(false);
-            
-            GenerateSendCommandDeclarations(true);
-            GenerateSendCommandDeclarations(false);
-            GenerateSendCommandImplementation();
-            
-            GeneratePublishEventDeclarations(true);
-            GeneratePublishEventDeclarations(false);
-            GeneratePublishEventImplementation();
-
-            GenerateHeaderIncludesForApplications(mc);
-            GenerateNodeSpecificFiles(mc);
-
-            GenerateJSONDescription(mc);
-            GenerateTypescriptUserInterface(mc);
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
@@ -518,22 +518,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (t == typeof(int))
             {
-                ret = "ParseInt32(payload, " + offset + ")";
+                ret = "ParseI32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(uint))
             {
-                ret = "ParseUInt32(payload, " + offset + ")";
+                ret = "ParseU32(payload, " + offset + ")";
                 offset += 4;
             }
             else if (t == typeof(short))
             {
-                ret = "ParseInt16(payload, " + offset + ")";
+                ret = "ParseI16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(ushort))
             {
-                ret = "ParseUInt16(payload, " + offset + ")";
+                ret = "ParseU16(payload, " + offset + ")";
                 offset += 2;
             }
             else if (t == typeof(sbyte))
@@ -557,22 +557,22 @@ namespace Klli.Sensact.Config
             string ret;
             if (pi.ParameterType == typeof(int))
             {
-                ret = "WriteInt32(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteI32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(uint))
             {
-                ret = "WriteUInt32(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteU32(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(short))
             {
-                ret = "WriteInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteI16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(ushort))
             {
-                ret = "WriteUInt16(" + pi.Name + ", buffer, " + offset + ");";
+                ret = "WriteU16(" + pi.Name + ", buffer, " + offset + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(sbyte))

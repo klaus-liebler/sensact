@@ -103,7 +103,7 @@ namespace Klli.Sensact.Model.Common.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Forwarder {0}"+Environment.NewLine, ApplicationName);
-            sb.AppendFormat("sensactapps::cForwarder {0}(eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationName, mc.GetNameFromId(FinalTarget));
+            sb.AppendFormat("sensact::apps::cForwarder {0}(eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationName, mc.GetNameFromId(FinalTarget));
             return sb.ToString();
         }
         

@@ -2,6 +2,8 @@
 #include <sensact_commons.hh>
 #include "crgb.hh"
 #include <i2c.hh>
+#include <buzzer.hh>
+#include <led_animator.hh>
 
 /*
 Die HAL leifert einen Low-Level-Zugriff auf
@@ -34,7 +36,7 @@ namespace sensact::hal
     public:
         virtual ~iHAL(){}
         virtual ErrorCode Setup() = 0;
-        virtual bool HasRole(sensact::NodeRole role) = 0;
+        //virtual bool HasRole(sensact::NodeRole role) = 0;
         virtual ErrorCode HardwareTest() = 0;
         virtual ErrorCode AfterAppLoop() = 0;
         virtual ErrorCode BeforeAppLoop() = 0;
@@ -50,6 +52,9 @@ namespace sensact::hal
         virtual ErrorCode StageRGBLed(uint8_t index, CRGB color) = 0;
         virtual ErrorCode StageUnColorizeAllRGBLed() = 0;
         virtual ErrorCode CommitRGBLed() = 0;
+        virtual ErrorCode SetInfoLed(led::AnimationPattern* pattern, tms_t timeToAutoOff=0){
+            return ErrorCode::OK;
+        }
         virtual ErrorCode GetBoardTemperature(float &temperatureCelcius)=0;
         virtual ErrorCode GetRotaryEncoderValue(sensact::eRotaryEncoder re, uint16_t &value, bool &isPressed) = 0;
         virtual ErrorCode SetAmplifierVolume(uint8_t volume0_255) = 0;
@@ -64,13 +69,12 @@ namespace sensact::hal
          */
         virtual ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
         virtual ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
+        virtual ErrorCode PlayNotes(const BUZZER::Note *note) = 0;
         virtual ErrorCode StopSound() = 0;
         virtual ErrorCode TryReceiveCanMessage(sensact::CANMessage &m) = 0;
         virtual ErrorCode TrySendCanMessage(sensact::CANMessage &m) = 0;
 
         virtual ErrorCode GetModbusHoldingRegister(uint16_t regIndexZeroBased, uint16_t &value)=0;
         virtual ErrorCode SetModbusHoldingRegister(uint16_t regIndexZeroBased, uint16_t &value)=0;
-
-        virtual ErrorCode CheckAndLogHealth()=0;
     };
 }

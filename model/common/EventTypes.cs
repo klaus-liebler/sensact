@@ -21,5 +21,8 @@
         WARN,
         IAP_READY,
         DOUBLE_CLICKED,
+        FINGER_DETECTED,
+        FINGER_NOT_DETECTED,
+        FINGER_ADDED,
     }
 }

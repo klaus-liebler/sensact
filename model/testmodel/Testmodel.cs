@@ -28,6 +28,8 @@ namespace Klli.Sensact.Config
             model.Nodes.Add(NODE_HS);
             Node NODE_UP = new SensactUp03((ushort)Model.ApplicationId.SNSCT_NODE_UP, Model.ApplicationId.SNSCT_NODE_UP.ToString());
             model.Nodes.Add(NODE_UP);
+            Node NODE_SIDEDOOR = new SensactUpControl((ushort)Model.ApplicationId.SNSCT_NODE_SIDEDOOR, Model.ApplicationId.SNSCT_NODE_SIDEDOOR.ToString());
+            model.Nodes.Add(NODE_SIDEDOOR);
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X1_XX1_3, BUS0+I2C+0, Model.ApplicationId.POWIT_X1_XX3_9);//macht erstes Licht an
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X2_XX2_4, BUS0+I2C+1, Model.ApplicationId.SOUND_X2_XX2_0);//Klingel
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X3_XX3_5, BUS0+I2C+2, new HashSet<Model.ApplicationId>{Model.ApplicationId.POWIT_X1_XX3_9,Model.ApplicationId.POWIT_X2_XX4_10});//erstes und zweites Licht
@@ -46,6 +48,8 @@ namespace Klli.Sensact.Config
 
             NODE_UP.Applications.AddRotaryEncoder(Model.ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTARYENCODER_1, Model.ApplicationId.PWM___X3_XX4_14);
             
+            NODE_SIDEDOOR.Applications.AddFingerprint(Model.ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42);
+            NODE_SIDEDOOR.Applications.AddPowIt(Model.ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
             return model;
         }
     }

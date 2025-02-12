@@ -53,10 +53,10 @@ namespace sensact::apps
 	}
 
 	eAppCallResult cBlind::FillStatus(SensactContext &ctx, uint8_t* buf){
-		WriteUInt16((uint16_t)currentState, buf, 0);
-		WriteUInt16((uint16_t)(currentPosition>>16), buf, 2);
-		WriteUInt16(0, buf, 4);
-		WriteUInt16((uint16_t)(targetPosition>>16), buf, 6);
+		WriteU16((uint16_t)currentState, buf, 0);
+		WriteU16((uint16_t)(currentPosition>>16), buf, 2);
+		WriteU16(0, buf, 4);
+		WriteU16((uint16_t)(targetPosition>>16), buf, 6);
 		return eAppCallResult::OK;
 	}
 

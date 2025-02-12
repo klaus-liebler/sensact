@@ -1,3 +1,3 @@
 idf_component_register(SRCS
                     INCLUDE_DIRS "."
-                    REQUIRES "sensactcommon" "rgbled")
+                    REQUIRES "sensactcommon" "rgbled" "ledanimator")

@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class RotaryEncoder2PWMApplication : SensorApplication
     {
-         public RotaryEncoder2PWMApplication(ushort ApplicationId, string ApplicationName, ushort InputRotaryRessource, ushort targetApplication):base(ApplicationId, ApplicationName){
+         public RotaryEncoder2PWMApplication(ushort ApplicationId, string ApplicationName, ushort InputRotaryRessource, ushort targetApplication, string ApplicationDescription=""):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.InputRotaryRessource=InputRotaryRessource;
             this.TargetApplication=targetApplication;
         }
@@ -40,7 +40,7 @@ namespace Klli.Sensact.Model.Common.Applications
         {
             //Command op_a1[1] = {{eApplicationID::POWIT_EG_WOZ_L1, eCommandType::BACKWARD }};
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// RotaryEncoder2PWM {0}", ApplicationId);
+            sb.AFL("// RotaryEncoder2PWM {0}", ApplicationName);
             
             sb.AF2L("sensact::apps::cRotaryEncoder2PWM {0}(eApplicationID::{0}, eRotaryEncoder::{1}, {2});", ApplicationName, InputRotaryRessource, m.GetNameFromId(TargetApplication));
 

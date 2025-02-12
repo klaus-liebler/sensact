@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class LightbarrierApplication : SensorApplication
     {
-        public LightbarrierApplication(ushort ApplicationId, string ApplicationName, ushort InputRessource, ushort FinalTarget, ushort BrightnessSensor, bool ActiveSignalLevel):base(ApplicationId, ApplicationName){
+        public LightbarrierApplication(ushort ApplicationId, string ApplicationName, ushort InputRessource, ushort FinalTarget, ushort BrightnessSensor, bool ActiveSignalLevel, string ApplicationDescription=""):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.InputRessource=InputRessource;
             this.FinalTarget=FinalTarget;
             this.BrightnessSensor=BrightnessSensor;
@@ -46,7 +46,7 @@ namespace Klli.Sensact.Model.Common.Applications
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("// Lightbarrier {0}" + Environment.NewLine, ApplicationName);
-            sb.AppendFormat("sensactapps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::apps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationName, InputRessource, 
                 ActiveSignalLevel.ToString().ToLower(),
                 BrightnessSensor,

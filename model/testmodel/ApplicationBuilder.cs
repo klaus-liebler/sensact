@@ -47,6 +47,11 @@ namespace Klli.Sensact.Model
 
         }
 
+        public static void AddFingerprint(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription, ApplicationId targetAppId1, ApplicationId targetAppId2, ApplicationId targetAppId3){
+            list.Add(new FingerprintApplication((ushort)appId, appId.ToString(), ApplicationDescription, (ushort)targetAppId1, (ushort)targetAppId2, (ushort)targetAppId3));
+
+        }
+
 
         public static void AddRotaryEncoder(this List<SensactApplication> list, ApplicationId appId, RotaryEncoder rotEnc, ApplicationId targetAppId)
         {

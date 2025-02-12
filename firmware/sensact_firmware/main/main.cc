@@ -1,35 +1,40 @@
-#include <stdio.h>
+//c++ lib incudes
+#include <cstdio>
+#include <cstring>
 #include <vector>
+//FreeRTOS & Lwip includes
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+
+//esp idf includes
 #include <esp_system.h>
 #include <spi_flash_mmap.h>
- 
-#include <esp_mac.h>
 #include <esp_log.h>
+#include <nvs.h>
 #include <nvs_flash.h>
 #include <esp_log.h>
-#include <string.h>
+
+//klaus-liebler component components
 #include <common-esp32.hh>
-
 #include <adc_buttons.hh>
-
-#include <lwip/err.h>
-#include <lwip/sys.h>
-#include "esp_tls.h"
-#include "esp_http_client.h"
-#include "esp_ota_ops.h"
-#include "esp_https_ota.h"
-#include "mdns.h"
-#include "netdb.h"
-#include <hwinc.inc>
-#include "nodemaster.hh"
-#include "busmaster.hh"
-#include "can_message_builder_parser.hh"
-#include "sensact_projectconfig.hh"
 #include <webmanager.hh>
-#include <websensact.hh>
+
+//sensact in
+#include <sensact_projectconfig.hh>
+#include <can_message_builder_parser.hh>
+#include <nodemaster.hh>
+#include <busmaster.hh>
 #include <model_node.hh>
+#include <current_board/cpp/__build_config.hh>
+#include <webmanager_plugins/systeminfo_plugin.hh>
+
+
+constexpr const char* NVS_PARTITION_NAME{NVS_DEFAULT_PART_NAME};
+
+//board specific includes
+#include <hal.inc>
+
+#include <model_applications.hh>
 
 #define TAG "main"
 using namespace sensact;
@@ -37,23 +42,23 @@ using namespace sensact;
 
 iHAL* halobj{nullptr};
 
+
+
+
 constexpr auto BUFFER_SIZE{1024};
 uint8_t buffer[BUFFER_SIZE];
 
+httpd_handle_t http_server{nullptr};
+
+FLASH_FILE(esp32_pem_crt);
+FLASH_FILE(esp32_pem_key);
+
+
 extern "C" void app_main(void)
 {
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-    httpd_handle_t http_server{nullptr};
-	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-	ESP_ERROR_CHECK(httpd_start(&http_server, &config));
-    
-    webmanager::M* wman= webmanager::M::GetSingleton();
-    ESP_ERROR_CHECK(wman->Init(http_server, buffer, BUFFER_SIZE));
-    
-    websensact::M* wwws = websensact::M::GetSingleton();
-    
-    ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily());
+    ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily("NVS"));
+    std::vector<webmanager::iWebmanagerPlugin*> plugins;
+    plugins.push_back(new SystemInfoPlugin());
 
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
@@ -61,27 +66,34 @@ extern "C" void app_main(void)
     } else{
         canMBP = new cCANMessageBuilderParserOld();
     }
-
-    char   *hostname;
-    asprintf(&hostname, "%s", sensact::model::node::NodeName);
     
     #include <station_config_hardware.inc>
     assert(halobj);
 
-    ESP_ERROR_CHECK(mdns_init());
-    ESP_ERROR_CHECK(mdns_hostname_set(hostname ".local"));
-    ESP_LOGI(TAG, "mdns hostname set to: [%s]", hostname);
-    const char* MDNS_INSTANCE="SENSACT_MDNS_INSTANCE";
-    ESP_ERROR_CHECK(mdns_instance_name_set(MDNS_INSTANCE));
-    ESP_ERROR_CHECK(mdns_service_subtype_add_for_host("SENSACT-WebServer", "_http", "_tcp", NULL, "_server") );
-    free(hostname);
     
-    cNodemaster* nodemaster = new cNodemaster(halobj, wwws, &busmasters, canMBP);
+    cNodemaster* nodemaster = new cNodemaster(halobj, &busmasters, canMBP);
     #include <station_config_hosts.inc>
     nodemaster->Setup(hosts);
 
+    webmanager::M* wm = webmanager::M::GetSingleton();
+
+    //TODO: Der "Nodemaster" ist das "SensactPlugin" und muss auch eingehängt werden
+    //TODO: Ersetze Hostname-Pattern mit NodeID
+    ESP_ERROR_CHECK(wm->Begin("sensact%02x%02x%02x", "sensact1", "sensact%02x%02x%02x", false, &plugins, true));
+    
+    const char *hostname = wm->GetHostname();
+    httpd_ssl_config_t httpd_conf = HTTPD_SSL_CONFIG_DEFAULT();
+    httpd_conf.servercert = esp32_pem_crt_start;
+    httpd_conf.servercert_len = esp32_pem_crt_end-esp32_pem_crt_start;
+    httpd_conf.prvtkey_pem = esp32_pem_key_start;
+    httpd_conf.prvtkey_len = esp32_pem_key_end-esp32_pem_key_start;
+    httpd_conf.httpd.uri_match_fn = httpd_uri_match_wildcard;
+    httpd_conf.httpd.max_uri_handlers = 15;
+    ESP_ERROR_CHECK(httpd_ssl_start(&http_server, &httpd_conf));
+    ESP_LOGI(TAG, "HTTPS Server listening on https://%s:%d", hostname, httpd_conf.port_secure);
+    
     //Idee: Wenn bis hierher etwas schief läuft, dann wird eh resettet
-    wman->CallMeAfterInitializationToMarkCurrentPartitionAsValid();
+    wm->CallMeAfterInitializationToMarkCurrentPartitionAsValid();
     
     nodemaster->RunEternalLoopInTask();
     

@@ -4,11 +4,12 @@
 #include <driver/gpio.h>
 #include <driver/twai.h>
 #include <driver/uart.h>
-#include "modbusmaster.hh"
 #include <i2c.hh>
 #include <vector>
 #include <driver/temperature_sensor.h>
-#include <webmanager.hh>
+#include <logger.hh>
+#include <messagecodes.hh>
+#include <esp_timer.h>
 
 #define TAG "HAL"
 
@@ -37,7 +38,11 @@ namespace sensact::hal
  		
 		void SetupInternalTemperatureSensor()
 		{
-			temperature_sensor_config_t temp_sensor_config = TEMPERATURE_SENSOR_CONFIG_DEFAULT(-10, 80);
+			temperature_sensor_config_t temp_sensor_config={};
+			temp_sensor_config.range_min=-10;
+			temp_sensor_config.range_max=+80;
+			temp_sensor_config.clk_src=TEMPERATURE_SENSOR_CLK_SRC_DEFAULT;
+			temp_sensor_config.flags.allow_pd=0;
 			ESP_ERROR_CHECK(temperature_sensor_install(&temp_sensor_config, &this->temp_handle));
 			ESP_ERROR_CHECK(temperature_sensor_enable(this->temp_handle));
 		}
@@ -84,58 +89,6 @@ namespace sensact::hal
 		ErrorCode GetBoardTemperature(float &temperatureCelcius) override{
             return temperature_sensor_get_celsius(this->temp_handle, &temperatureCelcius)==ESP_OK?ErrorCode::OK:ErrorCode::GENERIC_ERROR;
         }
-
-		
-		ErrorCode CheckAndLogHealth() override{
-
-			bool atLeastHealthWarning{false};
-			bool healthError{false};
-				
-			webmanager::M* wm = webmanager::M::GetSingleton();
-
-			float temperatureCelcius;
-			GetBoardTemperature(temperatureCelcius);
-			if(temperatureCelcius>60){
-				wm->Log(messagecodes::C::BOARD_HOT, temperatureCelcius);
-				healthError=true;				
-			}
-			else if(temperatureCelcius>50){
-				wm->Log(messagecodes::C::BOARD_WARM, temperatureCelcius);
-				atLeastHealthWarning=true;
-			}
-			twai_status_info_t status_info={};
-			twai_get_status_info(&status_info);
-			if(status_info.tx_error_counter>0){
-				wm->Log(messagecodes::C::CAN_TX_ERROR_COUNTER, status_info.tx_error_counter);
-				atLeastHealthWarning=true;
-			}
-			if(status_info.rx_error_counter>0){
-				wm->Log(messagecodes::C::CAN_RX_ERROR_COUNTER, status_info.rx_error_counter);
-				atLeastHealthWarning=true;
-			}
-			if(status_info.tx_failed_count>0){
-				wm->Log(messagecodes::C::CAN_TX_FAILED_COUNTER, status_info.tx_failed_count);
-				healthError=true;
-			}
-			if(status_info.rx_missed_count>0){
-				wm->Log(messagecodes::C::CAN_RX_MISSED_COUNTER, status_info.rx_missed_count);
-				healthError=true;
-			}
-			if(status_info.rx_overrun_count>0){
-				wm->Log(messagecodes::C::CAN_RX_OVERRUN_COUNTER, status_info.rx_overrun_count);
-				healthError=true;
-			}
-			if(status_info.arb_lost_count>0){
-				wm->Log(messagecodes::C::CAN_ARBITRATION_LOST, status_info.arb_lost_count);
-				healthError=true;
-			}
-			if(status_info.bus_error_count>0){
-				wm->Log(messagecodes::C::CAN_BUS_ERROR, status_info.bus_error_count);
-				healthError=true;
-			}
-
-			return healthError?ErrorCode::HEALTH_ERROR:atLeastHealthWarning?ErrorCode::HEALTH_WARNING:ErrorCode::OK;
-		}
 		
 		
 		ErrorCode GetU16Input(InOutId id, uint16_t &inputState) override

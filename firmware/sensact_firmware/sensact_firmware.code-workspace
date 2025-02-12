@@ -16,13 +16,28 @@
 			"path": "../../espidf-components/sensact-hal"
 		},
 		{
-			"path": "../../espidf-components/generated"
-		},
-		{
 			"path": "../../../npm-packages/@klaus-liebler/web-components"
 		},
 		{
 			"path": "../../../espidf-component-webmanager"
+		},
+		{
+			"path": "../../../espidf-components/common"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/websocket_file_testserver"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/espidf-vite-secure-build-tools"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/web-components-sensact"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/sensact-base"
+		},
+		{
+			"path": "../../../npm-packages/@klaus-liebler/commons"
 		}
 	],
 	"settings": {

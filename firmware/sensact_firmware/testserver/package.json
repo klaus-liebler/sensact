@@ -1,0 +1,20 @@
+{
+  "name": "websensact_testserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node -r ts-node/register index.ts "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@generated/flatbuffers_ts": "file:../../../../generated/flatbuffers_ts",
+    "@generated/sensact_ts": "file:../../../../generated/sensact_ts",
+    "@klaus-liebler/commons": "file:../../../../npm-packages/@klaus-liebler/commons",
+    "@klaus-liebler/websocket_file_testserver": "file:../../../../npm-packages/@klaus-liebler/websocket_file_testserver",
+    "@types/node": "^22.13.1",
+    "flatbuffers": "25.1.24",
+    "ts-node": "^10.9.2"
+  }
+}

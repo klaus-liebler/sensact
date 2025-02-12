@@ -124,10 +124,10 @@ namespace sensact::apps
 
 
 	eAppCallResult cRgbw::FillStatus(SensactContext &ctx, uint8_t* buf){
-			WriteUInt16(this->lastColor.R, buf, 0);
-			WriteUInt16(this->lastColor.G, buf, 2);
-			WriteUInt16(this->lastColor.B, buf, 4);
-			WriteUInt16(this->lastColor.W, buf, 6);
+			WriteU16(this->lastColor.R, buf, 0);
+			WriteU16(this->lastColor.G, buf, 2);
+			WriteU16(this->lastColor.B, buf, 4);
+			WriteU16(this->lastColor.W, buf, 6);
 			return eAppCallResult::OK;
 		}
 }

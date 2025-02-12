@@ -120,10 +120,10 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(IsPressedNow(), buf, 2);
-			WriteUInt16(0, buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(IsPressedNow(), buf, 2);
+			WriteU16(0, buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 	};
@@ -161,10 +161,10 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(IsPressedNow(), buf, 2);
-			WriteUInt16(0, buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(IsPressedNow(), buf, 2);
+			WriteU16(0, buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 	};
@@ -224,10 +224,10 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(down->IsPressedNow(), buf, 2);
-			WriteUInt16(up->IsPressedNow(), buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(down->IsPressedNow(), buf, 2);
+			WriteU16(up->IsPressedNow(), buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 	};
@@ -287,10 +287,10 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(down->IsPressedNow(), buf, 2);
-			WriteUInt16(up->IsPressedNow(), buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(down->IsPressedNow(), buf, 2);
+			WriteU16(up->IsPressedNow(), buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 	};

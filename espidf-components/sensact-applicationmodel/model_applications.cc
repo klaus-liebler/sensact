@@ -2,6 +2,7 @@
 #include "application.hh"
 #include "model_applications.hh"
 #include "apps/blind.hh"
+#include "apps/fingerprint.hh"
 #include "apps/node.hh"
 #include "apps/onoff.hh"
 #include "apps/pump.hh"

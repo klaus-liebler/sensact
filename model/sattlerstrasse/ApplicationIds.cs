@@ -413,6 +413,13 @@ namespace Klli.Sensact.Model
         STDBY_L3_TECH_48V,
         STDBY_L3_ROOF_48V, //Sitzt im Drempel über dem Bad
         STDBY_L3_WORK_C1, //ist die Stromversorgung fur die Deckenlampe im Arbeitszimmer
+
+        BLIND_LX_BACK_J2,//Terrassendach, horizontale jalousie
+        BLIND_LX_BACK_J3,//Terrassendach, vertikale jalousie
+
+        PWM___LX_BACK_C1,//Terrassendach, 5 der 9 Leuchten (mittlere dreierreihe und die äußeren Einzel-LEDs)
+        PWM___LX_BACK_C2,//Terrassendach, 4 der 9 Leuchten (links und rechts der Mitte, jeweils zwei LEDs)
+
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }
 }

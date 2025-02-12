@@ -325,7 +325,7 @@ p {
   background-color: orange;
 }
 
-.buttons {
+div.buttons {
   display: flex;
   gap: 15px;
   margin-top: 10px;
@@ -337,7 +337,26 @@ button.withsvg {
   align-items: center;
   padding: 5px;
 
-  span {
+  >span {
     margin-left: 5px;
+  }
+  >svg{
+    height: 24px;
+    width: 24px;
+  }
+}
+
+div.accordion {
+  width:100%;
+  border: #555555 solid 1px;
+  margin-bottom: 10px;
+  >button {
+    display: flex; width:100%; align-items:center;
+    >input{
+      height:30px;
+    }
+  }
+  >div>table{
+    margin: 0px;
   }
 }

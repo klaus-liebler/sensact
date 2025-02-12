@@ -29,10 +29,10 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteUInt16(0, buf, 0);
-			WriteUInt16(state, buf, 2);
-			WriteUInt16(0, buf, 4);
-			WriteUInt16(0, buf, 6);
+			WriteU16(0, buf, 0);
+			WriteU16(state, buf, 2);
+			WriteU16(0, buf, 4);
+			WriteU16(0, buf, 6);
 			return eAppCallResult::OK;
 		}
 		cPump(eApplicationID id, InOutId relay, tms_t onInterval, tms_t offInterval):

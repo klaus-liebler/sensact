@@ -1,5 +1,5 @@
 //Build process uses this file, if sensact integration is not used 
 namespace sensact;
 enum Command:byte {
-	NOP=0,
+	//TEMPLATE_HERE
 }

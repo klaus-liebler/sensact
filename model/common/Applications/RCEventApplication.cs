@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class RCEventApplication : SensorApplication
     {
-        public RCEventApplication(ushort ApplicationId, string ApplicationName):base(ApplicationId, ApplicationName){
+        public RCEventApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription):base(ApplicationId, ApplicationName, ApplicationDescription){
 
         }
         public List<Command> CommandsOnPressed=new();
@@ -51,7 +51,7 @@ namespace Klli.Sensact.Model.Common.Applications
             sb.Append(CommandInitializer("OnPressedShortAndHold", CommandsOnPressedShortAndHold, m));
             sb.Append(CommandInitializer("OnReleasedLong", CommandsOnReleasedLong, m));
 
-            sb.AppendFormat("sensactapps::cRCEvent {0}(eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::apps::cRCEvent {0}(eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6});" + Environment.NewLine + Environment.NewLine, 
                 ApplicationName, EventCode, 
                 CommandsOnPressed == null ? 0 : CommandsOnPressed.Count,
                 CommandsOnReleased == null ? 0 : CommandsOnReleased.Count,

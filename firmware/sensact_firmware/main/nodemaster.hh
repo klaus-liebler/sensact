@@ -10,7 +10,10 @@
 #include <chrono>
 #include <vector>
 
+#include <driver/twai.h>
+
 #include <hal.hh>
+#include <led_animator.hh>
 #include <sensact_logger.hh>
 #include "node_applicationhost.hh"
 #include "node_gatewayhost.hh"
@@ -45,11 +48,14 @@
 namespace sensact
 {
 	constexpr size_t STATUS_MESSAGE_BUFLEN{256};
+	
+	led::BlinkPattern SLOW(200, 1000);
+	led::BlinkPattern FAST(200, 200);
+	led::BlinkPattern STANDBY(50, 10000);
 	class cNodemaster : public iHostContext
 	{
 	private:
 		sensact::hal::iHAL *const hal;
-		sensact::iWebsensact *const websensact;
 		std::vector<AbstractBusmaster *> *busmasters;
 		aCANMessageBuilderParser *canMBP;
 		std::vector<iHost *> hosts;
@@ -75,7 +81,72 @@ namespace sensact
 			return hal->TrySendCanMessage(m);
 		}
 
-		void Task()
+		ErrorCode CheckAndLogHealth(){
+
+			bool atLeastHealthWarning{false};
+			bool healthError{false};
+
+			//Temperatur
+			float temperatureCelcius;
+			hal->GetBoardTemperature(temperatureCelcius);
+			if(temperatureCelcius>70){
+				LOGGER::Journal(messagecodes::C::BOARD_HOT, temperatureCelcius);
+				healthError=true;				
+			}
+			else if(temperatureCelcius>60){
+				LOGGER::Journal(messagecodes::C::BOARD_WARM, temperatureCelcius);
+				atLeastHealthWarning=true;
+			}
+			//CAN-Nachrichten
+			twai_status_info_t status_info={};
+			twai_get_status_info(&status_info);
+			if(status_info.tx_error_counter>0){
+				LOGGER::Journal(messagecodes::C::CAN_TX_ERROR_COUNTER, status_info.tx_error_counter);
+				atLeastHealthWarning=true;
+			}
+			if(status_info.rx_error_counter>0){
+				LOGGER::Journal(messagecodes::C::CAN_RX_ERROR_COUNTER, status_info.rx_error_counter);
+				atLeastHealthWarning=true;
+			}
+			if(status_info.tx_failed_count>0){
+				LOGGER::Journal(messagecodes::C::CAN_TX_FAILED_COUNTER, status_info.tx_failed_count);
+				healthError=true;
+			}
+			if(status_info.rx_missed_count>0){
+				LOGGER::Journal(messagecodes::C::CAN_RX_MISSED_COUNTER, status_info.rx_missed_count);
+				healthError=true;
+			}
+			if(status_info.rx_overrun_count>0){
+				LOGGER::Journal(messagecodes::C::CAN_RX_OVERRUN_COUNTER, status_info.rx_overrun_count);
+				healthError=true;
+			}
+			if(status_info.arb_lost_count>0){
+				LOGGER::Journal(messagecodes::C::CAN_ARBITRATION_LOST, status_info.arb_lost_count);
+				healthError=true;
+			}
+			if(status_info.bus_error_count>0){
+				LOGGER::Journal(messagecodes::C::CAN_BUS_ERROR, status_info.bus_error_count);
+				healthError=true;
+			}
+			//Netzwerk
+			webmanager::M* wm= webmanager::M::GetSingleton();
+			webmanager::WifiStationState state= wm->GetStaState();
+			if(state!=webmanager::WifiStationState::CONNECTED){
+				LOGGER::Journal(messagecodes::C::WIFI, (uint32_t)state);
+				atLeastHealthWarning=true;
+			}
+			if(healthError){
+				hal->SetInfoLed(&sensact::FAST);
+			}else if(atLeastHealthWarning){
+				hal->SetInfoLed(&sensact::SLOW);
+			}else{
+				hal->SetInfoLed(&led::CONST_OFF);
+			}
+
+			return healthError?ErrorCode::HEALTH_ERROR:atLeastHealthWarning?ErrorCode::HEALTH_WARNING:ErrorCode::OK;
+		}
+
+		void task()
 		{
 			TickType_t xLastWakeTime = xTaskGetTickCount();
 			const TickType_t xFrequency = pdMS_TO_TICKS(100);
@@ -93,7 +164,7 @@ namespace sensact
 						rr->OfferMessage(*this, message);
 					}
 				}
-				
+				/*
 				WebMessage webmessage;
 				while(websensact->TryReceiveWebMessage(webmessage)==ErrorCode::OK){
 					ConvertWeb2Can(webmessage, message);
@@ -107,7 +178,7 @@ namespace sensact
 					}
 				}
 				// TODO UDP-Message! -> dritten TryReceive-Prozess aufsetzen
-
+				*/
 				
 				for (auto &rr : hosts)
 				{
@@ -118,21 +189,14 @@ namespace sensact
 				hal->AfterAppLoop();
 				ESP_LOGD(TAG, "hal->AfterAppLoop(); 2");
 				//check problem and log them
-				hal->CheckAndLogHealth();
+				this->CheckAndLogHealth();
 				ESP_LOGD(TAG, "hal->CheckAndLogHealth();");
 				xTaskDelayUntil(&xLastWakeTime, xFrequency);
 			}
 		}
 
-		static void StaticTask(void *pvParameters)
-		{
-			cNodemaster *myself = static_cast<cNodemaster *>(pvParameters);
-			ESP_LOGI(TAG, "cNodemaster started");
-			myself->Task();
-		}
-
 	public:
-		cNodemaster(sensact::hal::iHAL *hal, sensact::iWebsensact *const websensact, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : nodeRoles(nodeRoles), hal(hal), websensact(websensact), busmasters(busmasters), canMBP(canMBP)
+		cNodemaster(sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : hal(hal), busmasters(busmasters), canMBP(canMBP)
 		{
 		}
 
@@ -162,7 +226,7 @@ namespace sensact
 
 		void RunEternalLoopInTask(void)
 		{
-			xTaskCreate(StaticTask, "NodemasterTask", 4096 * 4, this, 6, nullptr);
+			xTaskCreate([](void *p){((cNodemaster*)p)->task(); }, "NodemasterTask", 4096*4, this, 6, nullptr);
 		}
 
 		void PublishOnMessageBus(CANMessage &m, bool distributeLocally) override

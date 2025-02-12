@@ -12,9 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@klaus-liebler/commons": "file:../../../npm-packages/@klaus-liebler/commons",
-    "@klaus-liebler/espidf-vite": "file:../../../npm-packages/@klaus-liebler/espidf-vite",
-    "@klaus-liebler/usersettings_codegeneration": "file:../../../npm-packages/@klaus-liebler/usersettings_codegeneration",
+    "@klaus-liebler/commons": "file:../../../../npm-packages/@klaus-liebler/commons",
+    "@klaus-liebler/espidf-vite-secure-build-tools": "file:../../../../npm-packages/@klaus-liebler/espidf-vite-secure-build-tools",
+    "@klaus-liebler/usersettings_codegeneration": "file:../../../../npm-packages/@klaus-liebler/usersettings_codegeneration",
     "@types/gulp": "^4.0.17",
     "@types/node": "^22.10.7",
     "gulp": "^5.0.0",

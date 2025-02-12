@@ -174,3 +174,4 @@ namespace sensact::hal::SensactUp3
         }
     };
 }
+#undef TAG

@@ -1,14 +1,14 @@
 import * as gulp from "gulp";
 import fs from "node:fs";
 import path from "node:path";
-import * as cert from "@klaus-liebler/espidf-vite/certificates";
-import * as P from "@klaus-liebler/espidf-vite/paths";
-import * as idf from "@klaus-liebler/espidf-vite/espidf";
-import { getLastCommit } from "@klaus-liebler/espidf-vite/git";
-import { flatbuffers_generate_c, flatbuffers_generate_ts } from "@klaus-liebler/espidf-vite/flatbuffers";
-import {Context, ContextConfig} from "@klaus-liebler/espidf-vite/context"
-import {mac_12char, mac_6char, writeFileCreateDirLazy } from "@klaus-liebler/espidf-vite/utils";
-import * as vite_helper from "@klaus-liebler/espidf-vite/vite_helper";
+import * as cert from "@klaus-liebler/espidf-vite-secure-build-tools/certificates";
+import * as P from "@klaus-liebler/espidf-vite-secure-build-tools/paths";
+import * as idf from "@klaus-liebler/espidf-vite-secure-build-tools/espidf";
+import { getLastCommit } from "@klaus-liebler/espidf-vite-secure-build-tools/git";
+import { flatbuffers_generate_c, flatbuffers_generate_ts } from "@klaus-liebler/espidf-vite-secure-build-tools/flatbuffers";
+import {Context, ContextConfig} from "@klaus-liebler/espidf-vite-secure-build-tools/context"
+import {mac_12char, mac_6char } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
+import * as vite_helper from "@klaus-liebler/espidf-vite-secure-build-tools/vite_helper";
 import { strInterpolator } from "@klaus-liebler/commons";
 import * as sensact from "./sensact";
 //Default Board Type
@@ -23,11 +23,11 @@ export const USERPROFILE =globalThis.process.env.USERPROFILE as string;
 
 //Config
 const IDF_PROJECT_ROOT = `C:\\repos\\sensact\\firmware\\sensact_firmware`
-const IDF_COMPONENT_WEBMANAGER_ROOT = "C:/repos/espidf-component-webmanager";
+const IDF_COMPONENT_WEBMANAGER_ROOT = "C:\\repos\\espidf-component-webmanager";
 const GENERATED_ROOT = "c:\\repos\\generated";
-const FLATBUFFER_OBJECT_DEFINITIONS_NPM_PROJECT = "C:/repos/npm-packages/@klaus-liebler/flatbuffer-object-definitions"
+const SENSACT_COMPONENT_GENERATED_PATH = "C:\\repos\\generated\\sensact_model";
 
-const SENSACT_COMPONENT_GENERATED_PATH = "C:/repos/sensact/espidf-components/generated";
+
 const BOARDS_BASE_DIR= path.join(USERPROFILE, "netcase/esp32_boards");
 const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates");
 
@@ -40,27 +40,23 @@ const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS
 
 
 export const buildForCurrent = gulp.series(
-  deleteGenerated,
   prepare_board_specific_files,
   compileAndDistributeFlatbuffers,
   buildAndCompressWebProject,
   createBoardCertificatesLazily,
-  createRandomFlashEncryptionKeyLazily,
+  //createRandomFlashEncryptionKeyLazily,
   createCppConfigurationHeader,
   copyMostRecentlyConnectedBoardFilesToCurrent,
   buildFirmware,
-  encryptFirmware,
+  //encryptFirmware,
 )
 
 export default gulp.series(
   addOrUpdateConnectedBoard,
   buildForCurrent,
-  flashEncryptedFirmware,
+  //flashEncryptedFirmware,
+  flashFirmware
 )
-async function deleteGenerated(cb: gulp.TaskFunctionCallback) {
-  const c = await Context.get(contextConfig);
-  fs.rmSync(c.c.generatedDirectory, {recursive:true, force:true})
-}
 
 async function createRandomFlashEncryptionKeyLazily(cb: gulp.TaskFunctionCallback) {
   await idf.createRandomFlashEncryptionKeyLazily(await Context.get(contextConfig));
@@ -86,6 +82,11 @@ async function flashEncryptedFirmware(cb: gulp.TaskFunctionCallback){
   cb();
 }
 
+async function flashFirmware(cb: gulp.TaskFunctionCallback){
+  await idf.flashFirmware(await Context.get(contextConfig), true, true);
+  cb();
+}
+
 export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
   await Context.get(contextConfig, true);
   return cb();
@@ -102,6 +103,8 @@ export async function prepare_board_specific_files(cb: gulp.TaskFunctionCallback
 export async function compileAndDistributeFlatbuffers(cb: gulp.TaskFunctionCallback) {
   const c= await Context.get(contextConfig)
   const pa = new P.Paths(c);
+  fs.rmSync(pa.GENERATED_FLATBUFFERS_CPP, {recursive:true, force:true})
+  fs.rmSync(pa.GENERATED_FLATBUFFERS_TS, {recursive:true, force:true})
   console.info(`${pa.GENERATED_FLATBUFFERS_FBS}`)
   await flatbuffers_generate_c(
     [path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), pa.P_FLATBUFFERS],
@@ -110,7 +113,7 @@ export async function compileAndDistributeFlatbuffers(cb: gulp.TaskFunctionCallb
   
   await flatbuffers_generate_ts(
     [path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), pa.P_FLATBUFFERS],
-    c.c.generatedDirectory, "flatbuffers_ts"
+    path.join(c.c.generatedDirectory, "flatbuffers_ts")
   );
   
   cb();

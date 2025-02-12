@@ -6,33 +6,14 @@
 #include <driver/ledc.h>
 #include <ethernet.hh>
 #include <esp_log.h>
-#include <webmanager.hh>
 #include <adc_buttons.hh>
-
-#include <ringtoneplayer.hh>
+#include <messagecodes.hh>
+#include <buzzer.hh>
+#include <logger.hh>
 #define TAG "HAL"
 
-lv_group_t *groupHome{nullptr};
-lv_group_t *groupSettings{nullptr};
-lv_indev_t *encoder_indev{nullptr};
-lv_indev_drv_t indev_drv;
 
-extern "C" void encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
-{
-    static uint32_t previousKey{false};
-    AdcButtons::State nextKey=AdcButtons::UpdateBlocking();
-    if(nextKey!=AdcButtons::State::IDLE){
-        //wurde gedrückt
-        data->key=nextKey==AdcButtons::State::LEFT?LV_KEY_LEFT:nextKey==AdcButtons::State::RIGHT?LV_KEY_RIGHT:LV_KEY_ENTER;
-        data->state = LV_INDEV_STATE_PRESSED;
-        previousKey=data->key;
-        
-    }else{
-        //wurde losgelassen
-        data->key=previousKey;
-        data->state = LV_INDEV_STATE_RELEASED;
-    }
-}
+
 
 namespace sensact::hal::SensactHsNano3
 {
@@ -102,7 +83,7 @@ namespace sensact::hal::SensactHsNano3
     protected:
         TAS580x::M *tas580x;
         AudioPlayer::Player *mp3player;
-        Ringtoneplayer *rtp;
+        BUZZER::M *rtp;
         iI2CPort* i2c_bus[2];
         uint8_t volume_0mute_255max{120};
         const char* hostname;
@@ -126,45 +107,21 @@ namespace sensact::hal::SensactHsNano3
             MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
             //MESSAGELOG_ON_ERRORCODE(tas580x->Init(), messagecodes::C::TAS5805_INIT);//is done inside mp3player->Init()
 
-            rtp = new Ringtoneplayer();
-            rtp->Setup(BUZZER_TIMER, BUZZER_CHANNEL, LCD_BUZZER);
+            rtp = new BUZZER::M(BUZZER_CHANNEL, BUZZER_TIMER);
+            rtp->Begin(LCD_BUZZER);
 
             //I2C::Discover(I2C_EXTERNAL_IDF);
             this->SetupCAN(CAN_TX, CAN_RX);
             this->SetupInternalTemperatureSensor();
-            LCD::InitLCD(LCD_SPI_HOST, LCD_MOSI, LCD_SCLK, SPI_MASTER_FREQ_20M, LCD_CS, GPIO_NUM_NC, LCD_RS, LCD_BACKLIGHT, 135, 52, 240, 40, LCD_TIMER, LCD_INTR_FLAGS);
+            //LCD::InitLCD(LCD_SPI_HOST, LCD_MOSI, LCD_SCLK, SPI_MASTER_FREQ_20M, LCD_CS, GPIO_NUM_NC, LCD_RS, LCD_BACKLIGHT, 135, 52, 240, 40, LCD_TIMER, LCD_INTR_FLAGS);
             AdcButtons::InitAdcButtons(SW_PIN);
             
-            lv_indev_drv_init(&indev_drv);          /*Basic initialization*/
-            indev_drv.type = LV_INDEV_TYPE_ENCODER; /*See below.*/
-            indev_drv.read_cb = encoder_read;       /*See below.*/
-            /*Register the driver in LVGL and save the created input device object*/
-            encoder_indev = lv_indev_drv_register(&indev_drv);
-            assert(encoder_indev!=NULL);
-
-            groupHome = lv_group_create();
-            lv_group_add_obj(groupHome, ui_sldVolume);
-            lv_group_add_obj(groupHome, ui_btnNext);
-            lv_indev_set_group(encoder_indev, groupHome);
-            groupSettings = lv_group_create();
-            lv_group_add_obj(groupSettings, ui_btnPrev);
-            LCD::StartLVGLTask();
-            LCD::SemaphoreTake();
-            lv_slider_set_value(ui_sldVolume, this->GetAmplifierVolume()/2.55, LV_ANIM_OFF);
-            LCD::SemaphoreGive();
-            rtp->PlayNotes(Greeting);
+            rtp->PlayNotes(BUZZER::POSITIVE);
             return ErrorCode::OK;
         }
 
         iI2CPort* GetI2CPort(I2CPortIndex portIndex) override{
             return i2c_bus[((uint8_t)portIndex)%2];
-        }
-
-       
-        
-        bool HasRole(NodeRole role) override
-        {
-            return role == NodeRole::GATEWAY || role == NodeRole::APPLICATION_HOST;
         }
         
         ErrorCode HardwareTest() override
