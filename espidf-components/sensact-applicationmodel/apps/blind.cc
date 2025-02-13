@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "blind.hh"
-#include "model_applications.hh"
+#include "cApplications.hh"
 #include <sensact_logger.hh>
 #define TAG "BLIND"
 
@@ -44,7 +44,7 @@ namespace sensact::apps
 		return eAppType::BLIND;
 	}
 
-	eAppCallResult cBlind::Setup(SensactContext *ctx)
+	eAppCallResult cBlind::Setup(iSensactContext *ctx)
 	{
 		ctx->SetU16Output(relay1, sensact::magic::INACTIVE);
 		ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
@@ -52,15 +52,15 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cBlind::FillStatus(SensactContext &ctx, uint8_t* buf){
-		WriteU16((uint16_t)currentState, buf, 0);
-		WriteU16((uint16_t)(currentPosition>>16), buf, 2);
-		WriteU16(0, buf, 4);
-		WriteU16((uint16_t)(targetPosition>>16), buf, 6);
+	eAppCallResult cBlind::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+		buf[0]=currentState;
+		buf[1]=(currentPosition>>16);
+		buf[2]=0;
+		buf[3]=(targetPosition>>16);
 		return eAppCallResult::OK;
 	}
 
-	void cBlind::prepareUp(SensactContext *ctx)
+	void cBlind::prepareUp(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::PREPARE_UP){
 			return;
@@ -81,7 +81,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::up(SensactContext *ctx)
+	void cBlind::up(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::UP){
 			return;
@@ -106,7 +106,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::prepareDown(SensactContext *ctx)
+	void cBlind::prepareDown(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::PREPARE_DOWN){
 			return;
@@ -127,7 +127,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::down(SensactContext *ctx)
+	void cBlind::down(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::DOWN){
 			return;
@@ -152,7 +152,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::stop(SensactContext *ctx)
+	void cBlind::stop(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::STOP){
 			return;
@@ -183,7 +183,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::energySave(SensactContext *ctx)
+	void cBlind::energySave(iSensactContext *ctx)
 	{
 		if(this->currentState==eCurrentBlindState::ENERGY_SAVE){
 			return;
@@ -196,7 +196,7 @@ namespace sensact::apps
 		ctx->SetU16Output(relay2, sensact::magic::INACTIVE);
 	}
 
-	void cBlind::OnDOWNCommand(uint8_t forced, SensactContext *ctx){
+	void cBlind::OnDOWNCommand(uint8_t forced, iSensactContext *ctx){
 		
 		if(forced){
 			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::PERMANENT_DOWN", N());
@@ -210,7 +210,7 @@ namespace sensact::apps
 			this->targetPosition = BLIND::STOP;
 		}
 	}
-	void cBlind::OnUPCommand(uint8_t forced, SensactContext *ctx) {
+	void cBlind::OnUPCommand(uint8_t forced, iSensactContext *ctx) {
 		
 		if(forced){
 			LOGI(TAG, "%s OnUPCommand called, target BLIND::PERMANENT_UP", N());
@@ -225,12 +225,12 @@ namespace sensact::apps
 		}
 	}
 
-	void cBlind::OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) {
+	void cBlind::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx) {
 		LOGI(TAG, "%s OnSET_VERTICAL_TARGETCommand called ", N());
 		this->targetPosition=target<<16;
 	}
 	
-	void cBlind::OnSTOPCommand(SensactContext *ctx) {
+	void cBlind::OnSTOPCommand(iSensactContext *ctx) {
 		LOGI(TAG, "%s OnSTOPCommand called ", N());
 		this->targetPosition = BLIND::STOP;
 	}
@@ -285,7 +285,7 @@ namespace sensact::apps
 	}
 	*/
 
-	void cBlind::updatePosition(SensactContext *ctx)
+	void cBlind::updatePosition(iSensactContext *ctx)
 	{
 		if (this->currentState == eCurrentBlindState::UP)
 		{
@@ -298,7 +298,7 @@ namespace sensact::apps
 		this->lastPositionCalculation = ctx->Now();
 	}
 
-	eAppCallResult cBlind::Loop(SensactContext *ctx)
+	eAppCallResult cBlind::Loop(iSensactContext *ctx)
 	{
 		updatePosition(ctx);
 		if (this->targetPosition==BLIND::STOP){

@@ -10,12 +10,12 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "application.hh"
+#include "cApplication.hh"
 using namespace std;
 namespace sensact::apps
 {
@@ -21,29 +21,29 @@ namespace sensact::apps
 		tms_t lastAutoDimSignal{0};
 		tms_t lastHeartbeatSent{0};
 		
-		void SetTargetAbsolute(u8, SensactContext *ctx);
-		void SetTargetRelative(int, SensactContext *ctx);
-		void SetOff(SensactContext *ctx);
+		void SetTargetAbsolute(u8, iSensactContext *ctx);
+		void SetTargetRelative(int, iSensactContext *ctx);
+		void SetOff(iSensactContext *ctx);
 		
-		void MoveInDirection(u16 dir, SensactContext *ctx);
-		void StopMove(SensactContext *ctx);
-		void WriteCurrentLevelToOutput(SensactContext *ctx);
+		void MoveInDirection(u16 dir, iSensactContext *ctx);
+		void StopMove(iSensactContext *ctx);
+		void WriteCurrentLevelToOutput(iSensactContext *ctx);
 
 	public:
 		eAppType GetAppType() override;
-		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppCallResult Loop(SensactContext *ctx) override;
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+		eAppCallResult Setup(iSensactContext *ctx) override;
+		eAppCallResult Loop(iSensactContext *ctx) override;
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 		
 		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
-		void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;
-		void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) override;
-		void OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx) override;
-		void OnSTARTCommand(SensactContext *ctx) override;
-		void OnSTOPCommand(SensactContext *ctx) override;
-		void OnTOGGLECommand(SensactContext *ctx) override;
-		void OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx) override;
-		void OnDOWNCommand(uint8_t forced, SensactContext *ctx) override;
-		void OnUPCommand(uint8_t forced, SensactContext *ctx) override;
+		void OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx) override;
+		void OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx) override;
+		void OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx) override;
+		void OnSTARTCommand(iSensactContext *ctx) override;
+		void OnSTOPCommand(iSensactContext *ctx) override;
+		void OnTOGGLECommand(iSensactContext *ctx) override;
+		void OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx) override;
+		void OnDOWNCommand(uint8_t forced, iSensactContext *ctx) override;
+		void OnUPCommand(uint8_t forced, iSensactContext *ctx) override;
 	};
 }

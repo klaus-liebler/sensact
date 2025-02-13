@@ -24,6 +24,20 @@ export class Sensact {
     );
   }
 
+  public GetNodeId():string{
+    const sjp=this.pa.boardSpecificPath(SENSACT_JSON_FILENAME)
+    if (!fs.existsSync(sjp)) {
+      throw Error(`No sensact.json file found for mac 0x${mac_6char(this.c.b.mac)} at ${sjp}.`);
+    }
+    const sensact_json = JSON.parse(fs.readFileSync(sjp).toString())
+
+    const node_id = sensact_json ? sensact_json["node_id"] : null;
+    if (!node_id) {
+      throw Error(`sensact.json file found for mac 0x${mac_6char(this.c.b.mac)} did not contain a node_id.`);
+    }
+    return node_id;
+  }
+
 
   public prepare_sensact_files() {
 
@@ -71,7 +85,7 @@ export class Sensact {
     project ="sensact_appsbuilder"
     this.templateHere(
       path.join(this.pa.P_WEB, "templates", "sensactapps.template.ts"),
-      path.join(this.sensactComponentGeneratedDirectory, "common", "sensactapps.ts.inc"),
+      path.join(this.sensactComponentGeneratedDirectory, this.GetNodeId(), "sensactapps_local.ts.inc"),
       path.join(this.c.c.generatedDirectory, project, "sensactapps.ts")
     );
     npm.CreateAndInstallNpmProjectLazily(
@@ -89,21 +103,5 @@ export class Sensact {
         }
       }
     );
-    
-    
-
-
-    return;
-    //Jetzt wird es spezifisch -->ES GIBT HIER NICHTS "SPEZIFISCHES"!
-
-    if (this.pa.existsBoardSpecificPath(SENSACT_JSON_FILENAME)) {
-      throw Error(`No sensact.json file found for mac 0x${mac_6char(this.c.b.mac)}.`);
-    }
-    const sensact_json = JSON.parse(fs.readFileSync(this.pa.boardSpecificPath("sensact.json")).toString())
-
-    const node_id = sensact_json ? sensact_json["node_id"] : null;
-    if (!node_id) {
-      throw Error(`sensact.json file found for mac 0x${mac_6char(this.c.b.mac)} did not contain a node_id.`);
-    }
   }
 }

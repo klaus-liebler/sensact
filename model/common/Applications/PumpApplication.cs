@@ -35,15 +35,14 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// Pump {0}", ApplicationName);
-            sb.AF2L("sensact::apps::cPump {0}(eApplicationID::{0}, {1}, {2}, {3});", ApplicationName, OutputRessource, OnIntervalMsecs, OffIntervalMsecs);
+            sb.AppendFormat("sensact::apps::cPump {0}(eApplicationID::{0}, {1}, {2}, {3})", ApplicationName, OutputRessource, OnIntervalMsecs, OffIntervalMsecs);
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

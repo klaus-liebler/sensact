@@ -1,6 +1,6 @@
 #include <algorithm> // std::max
 #include "onoff.hh"
-#include "model_applications.hh"
+#include "cApplications.hh"
 #define TAG "ONOFF"
 #include <sensact_logger.hh>
 
@@ -17,13 +17,13 @@ namespace sensact::apps
 		return eAppType::POWIT;
 	}
 
-	eAppCallResult cOnOff::Setup(SensactContext *ctx)
+	eAppCallResult cOnOff::Setup(iSensactContext *ctx)
 	{
 		ctx->SetU16Output(this->relay, sensact::magic::INACTIVE);
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cOnOff::Loop(SensactContext *ctx)
+	eAppCallResult cOnOff::Loop(iSensactContext *ctx)
 	{
 		if (autoOffCalc < ctx->Now())
 		{
@@ -34,15 +34,13 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cOnOff::FillStatus(SensactContext &ctx, uint8_t* buf){
-		WriteU16(0, buf, 0);
-		WriteU16((uint16_t)(this->autoOffCalc > ctx.Now()), buf, 2);
-		WriteU16(0, buf, 4);
-		WriteU16(0, buf, 6);
+	eAppCallResult cOnOff::FillStatus(iSensactContext &ctx, uint8_t* buf){
+		buf[0]=buf[2]=buf[3]=0;
+		buf[1]=(uint16_t)(this->autoOffCalc > ctx.Now());
 		return eAppCallResult::OK;
 	}
 
-	void cOnOff::OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	void cOnOff::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
 		if(autoReturnToOffMsecs!=0){
 			this->autoOffCalc=ctx->Now()+autoReturnToOffMsecs;
@@ -53,13 +51,13 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnONCommand called", N());
 	}
 
-	void cOnOff::OnOFFCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	void cOnOff::OnOFFCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
 		this->autoOffCalc=0;
 		LOGI(TAG, "%s OnOFFCommand called", N());
 	}
 
-	void cOnOff::OnHEARTBEATCommand(uint32_t sender, SensactContext *ctx)
+	void cOnOff::OnHEARTBEATCommand(uint32_t sender, iSensactContext *ctx)
 	{
 
 		if(autoOffCfg==0){
@@ -71,12 +69,12 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnHEARTBEATCommand called ", N());
 	}
 
-	void cOnOff::OnTOGGLE_SPECIALCommand(SensactContext *ctx)
+	void cOnOff::OnTOGGLE_SPECIALCommand(iSensactContext *ctx)
 	{
 		this->OnTOGGLECommand(ctx);
 	}
 
-	void cOnOff::OnTOGGLECommand(SensactContext *ctx)
+	void cOnOff::OnTOGGLECommand(iSensactContext *ctx)
 	{
 		if(this->autoOffCalc > ctx->Now()){
 			this->autoOffCalc=0;

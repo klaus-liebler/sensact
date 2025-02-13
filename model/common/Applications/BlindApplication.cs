@@ -69,25 +69,22 @@ namespace Klli.Sensact.Model.Common.Applications
             return string.Empty;
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             if (FullyCloseEvents.Count>0 || FullyOpenEvents.Count>0)
             {
                 throw new NotImplementedException("Events of Blinds at "+ApplicationName);
             }
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// Blind {0} {1}"+Environment.NewLine, ApplicationName, ApplicationDescription);
-            sb.AppendFormat("sensact::apps::cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayInterlockMode::{3}, {4}, {5});"+Environment.NewLine+Environment.NewLine, ApplicationName, OutputResource1, OutputResource2, RelayMode, UpTimeInSeconds*1000, DownTimeInSeconds*1000);
+            sb.AppendFormat("sensact::apps::cBlind {0}(eApplicationID::{0}, {1}, {2}, eRelayInterlockMode::{3}, {4}, {5})", ApplicationName, OutputResource1, OutputResource2, RelayMode, UpTimeInSeconds*1000, DownTimeInSeconds*1000);
             return sb.ToString();
         }
+        
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            //sb.AppendFormat("<!-- Blind {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div><button onclick='MyApp.blind_up(this, {0})'>⏶</button><button onclick='MyApp.blind_stop(this, {0})'>⏹</button><button onclick='MyApp.blind_down(this, {0})'>⏷</button></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
-            sb.AppendFormat("//Blind {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new Apps.BlindApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("new Apps.BlindApplication(ApplicationId.{1}, '{2}', ctx)"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

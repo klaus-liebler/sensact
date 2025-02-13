@@ -18,16 +18,15 @@ namespace Klli.Sensact.Model.Common.Applications
             }
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        //Ohne Semikolon und Kommentar!
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// Sensact node management application {0}", ApplicationName);
-            //sb.AppendFormat("//is already hardcoded");
-            sb.AF2L("sensact::apps::cSensactNode {0}(eApplicationID::{0});", ApplicationName);
+            sb.AppendFormat("sensact::apps::cSensactNode {0}(eApplicationID::{0})", ApplicationName);
             return sb.ToString();
         }
-
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        //Ohne Semikolon und Kommentar und ret.push...
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

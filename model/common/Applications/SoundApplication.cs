@@ -56,17 +56,16 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// SOUND {0}", ApplicationName);
-            //cBell DOORBELL("DOORBELL", eApplicationID::DOORBELL, &MODEL::volumeSchedule);
-            sb.AF2L("sensact::apps::cSound {0}(eApplicationID::{0}, {1}, {2});", 
+
+            sb.AppendFormat("sensact::apps::cSound {0}(eApplicationID::{0}, {1}, {2})", 
                 ApplicationName, DefaultVolume, defaultSignalOnToggle);
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

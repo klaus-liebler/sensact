@@ -134,7 +134,10 @@
 			"shared_mutex": "cpp",
 			"unordered_set": "cpp",
 			"netfwd": "cpp",
-			"complex": "cpp"
+			"complex": "cpp",
+			"text_encoding": "cpp",
+			"csetjmp": "cpp",
+			"variant": "cpp"
 		}
 	}
 }

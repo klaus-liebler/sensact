@@ -99,15 +99,14 @@ namespace Klli.Sensact.Model.Common.Applications
             return String.Empty;
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator mc)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator mc)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// Forwarder {0}"+Environment.NewLine, ApplicationName);
-            sb.AppendFormat("sensact::apps::cForwarder {0}(eApplicationID::{0}, eApplicationID::{1});"+Environment.NewLine+Environment.NewLine, ApplicationName, mc.GetNameFromId(FinalTarget));
+            sb.AppendFormat("sensact::apps::cForwarder {0}(eApplicationID::{0}, eApplicationID::{1})", ApplicationName, mc.GetNameFromId(FinalTarget));
             return sb.ToString();
         }
         
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

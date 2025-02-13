@@ -1,5 +1,5 @@
 #pragma once
-#include <application.hh>
+#include "cApplication.hh"
 
 namespace sensact::apps
 {
@@ -12,15 +12,15 @@ namespace sensact::apps
 		uint16_t defaultSignalOnToggle;
 	public:
 		eAppType GetAppType() override;
-		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppCallResult Loop(SensactContext *ctx) override;
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+		eAppCallResult Setup(iSensactContext *ctx) override;
+		eAppCallResult Loop(iSensactContext *ctx) override;
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 
 		cSound(eApplicationID id, u8 initialVolume, uint16_t defaultSignalOnToggle);
-		void OnTOGGLECommand(SensactContext *ctx) override;
-		void OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx) override;
-		void OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx) override;
-		void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) override;
-		void OnSTOPCommand(SensactContext *ctx) override;
+		void OnTOGGLECommand(iSensactContext *ctx) override;
+		void OnSET_SIGNALCommand(uint16_t signal, iSensactContext *ctx) override;
+		void OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx) override;
+		void OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx) override;
+		void OnSTOPCommand(iSensactContext *ctx) override;
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "application.hh"
+#include "cApplication.hh"
 using namespace std;
 namespace sensact::apps
 {
@@ -15,10 +15,10 @@ namespace sensact::apps
         tms_t lastChange{0};
 	public:
 		eAppType GetAppType() override{return eAppType::PUMP;}
-		eAppCallResult Setup(SensactContext *ctx) override{
+		eAppCallResult Setup(iSensactContext *ctx) override{
 			return eAppCallResult::OK;
 		}
-		eAppCallResult Loop(SensactContext *ctx) override{
+		eAppCallResult Loop(iSensactContext *ctx) override{
             if(state==false && ctx->Now()-lastChange > offInterval){
                 lastChange=ctx->Now();
                 ctx->SetU16Output(relay, true);
@@ -28,11 +28,9 @@ namespace sensact::apps
             }
 			return eAppCallResult::OK;
 		}
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(state, buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[2]=buf[3]=0;
+			buf[1]=state;
 			return eAppCallResult::OK;
 		}
 		cPump(eApplicationID id, InOutId relay, tms_t onInterval, tms_t offInterval):

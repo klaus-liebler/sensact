@@ -72,7 +72,7 @@ namespace webmanager
         void OnTimeUpdate(iWebmanagerCallback *callback) override{
 
         }
-        virtual eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf)override{
+        eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf)override{
             if (ns != journal::Namespace::Namespace_Value)
                 return webmanager::eMessageReceiverResult::NOT_FOR_ME;
             

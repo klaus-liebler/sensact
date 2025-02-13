@@ -1,6 +1,6 @@
 #include <algorithm> // std::max
 #include "singlepwm.hh"
-#include "model_applications.hh"
+#include "cApplications.hh"
 #define TAG "SINGLEPWM"
 #include <sensact_logger.hh>
 
@@ -51,7 +51,7 @@ namespace sensact::apps
 		return eAppType::PWM;
 	}
 
-	void cSinglePWM::OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	void cSinglePWM::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
 		SetTargetAbsolute(MAXIMUM_LEVEL, ctx);
 		if (autoReturnToOffMsecs != 0)
@@ -63,14 +63,14 @@ namespace sensact::apps
 
 
 
-	void cSinglePWM::OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx)
+	void cSinglePWM::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
 	{
 		SetOff(ctx);
 		LOGD(TAG, "%s OnOFFCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
 
-	void cSinglePWM::OnTOGGLECommand(SensactContext *ctx)
+	void cSinglePWM::OnTOGGLECommand(iSensactContext *ctx)
 	{
 		if (targetLevel == 0)
 		{
@@ -83,14 +83,14 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnTOGGLECommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
-	void cSinglePWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx)
+	void cSinglePWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx)
 	{
 		
 		SetTargetAbsolute(target, ctx);
 		LOGD(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
 	}
 	// gesendet vom Inkrementalgeber
-	void cSinglePWM::OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx)
+	void cSinglePWM::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
 	{
 		if (targetLevel == 0)
 		{
@@ -107,7 +107,7 @@ namespace sensact::apps
 	}
 
 	// gesendet vom 1BP
-	void cSinglePWM::OnSTARTCommand(SensactContext *ctx)
+	void cSinglePWM::OnSTARTCommand(iSensactContext *ctx)
 	{
 		if (this->lastAutoDimSignal + TIME_TO_FORGET_DIM_DIRECTION < ctx->Now())
 		{
@@ -123,20 +123,20 @@ namespace sensact::apps
 	}
 
 	// gesendet vom 1PB
-	void cSinglePWM::OnSTOPCommand(SensactContext *ctx)
+	void cSinglePWM::OnSTOPCommand(iSensactContext *ctx)
 	{
 		StopMove(ctx);
 		LOGI(TAG, "%s OnSTOPCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
-	void cSinglePWM::OnUPCommand(uint8_t forced, SensactContext *ctx)
+	void cSinglePWM::OnUPCommand(uint8_t forced, iSensactContext *ctx)
 	{
 		(void)(forced);
 		MoveInDirection(+1, ctx);
 		LOGI(TAG, "%s OnUPCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 	
-	void cSinglePWM::OnDOWNCommand(uint8_t forced, SensactContext *ctx)
+	void cSinglePWM::OnDOWNCommand(uint8_t forced, iSensactContext *ctx)
 	{
 		(void)(forced);
 		MoveInDirection(-1, ctx);
@@ -144,7 +144,7 @@ namespace sensact::apps
 	}
 
 
-	void cSinglePWM::SetTargetAbsolute(uint8_t level, SensactContext *ctx)
+	void cSinglePWM::SetTargetAbsolute(uint8_t level, iSensactContext *ctx)
 	{
 		this->targetLevel = std::max(level, minimalLevel);
 		if (autoOffCfg != 0)
@@ -153,14 +153,14 @@ namespace sensact::apps
 		}
 	}
 
-	void cSinglePWM::SetOff(SensactContext *ctx)
+	void cSinglePWM::SetOff(iSensactContext *ctx)
 	{
 		this->storedLevel = targetLevel;
 		this->targetLevel = 0;
 		this->autoOffCalc = sensact::magic::TIME_MAX;
 	}
 
-	void cSinglePWM::SetTargetRelative(int step, SensactContext *ctx)
+	void cSinglePWM::SetTargetRelative(int step, iSensactContext *ctx)
 	{
 		int level = targetLevel + step;
 		level=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
@@ -171,7 +171,7 @@ namespace sensact::apps
 		}
 	}
 
-	void cSinglePWM::MoveInDirection(uint16_t dir, SensactContext *ctx)
+	void cSinglePWM::MoveInDirection(uint16_t dir, iSensactContext *ctx)
 	{
 		autoDim = dir;
 		lastAutoDimSignal=ctx->Now();
@@ -181,12 +181,12 @@ namespace sensact::apps
 		}
 	}
 
-	void cSinglePWM::StopMove(SensactContext *ctx)
+	void cSinglePWM::StopMove(iSensactContext *ctx)
 	{
 		MoveInDirection(0, ctx);
 	}
 
-	void cSinglePWM::WriteCurrentLevelToOutput(SensactContext *ctx)
+	void cSinglePWM::WriteCurrentLevelToOutput(iSensactContext *ctx)
 	{
 		uint16_t val = level2pwm[currentLevel];
 
@@ -196,7 +196,7 @@ namespace sensact::apps
 		}
 	}
 
-	eAppCallResult cSinglePWM::Setup(SensactContext *ctx)
+	eAppCallResult cSinglePWM::Setup(iSensactContext *ctx)
 	{
 		currentLevel = 0;
 		targetLevel = 0;
@@ -205,7 +205,7 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSinglePWM::Loop(SensactContext *ctx)
+	eAppCallResult cSinglePWM::Loop(iSensactContext *ctx)
 	{
 		// Die drei folgenden IFs sollten exklusiv sein, wenn doch nicht, dann gewinnt das Automatische dimmen
 		// Gemeinsamkeit dieser IFs: Sie verändert das targetLevel
@@ -251,11 +251,11 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSinglePWM::FillStatus(SensactContext &ctx, uint8_t* buf){
-			WriteU16(0, buf, 0);
-			WriteU16(currentLevel, buf, 2);
-			WriteU16(autoDim, buf, 4);
-			WriteU16(targetLevel, buf, 6);
+	eAppCallResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+			buf[0]=0;
+			buf[1]=currentLevel;
+			buf[2]=autoDim;
+			buf[3]=targetLevel;;
 			return eAppCallResult::OK;
 		}
 }

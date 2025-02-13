@@ -6,11 +6,15 @@ namespace sensact;
 enum Namespace:uint32{
     Value=9
 }
+struct Payload {
+    data: [uint8:8];
+    len:int;
+}
 
 table RequestCommand {
     id:ApplicationId;
     cmd:Command;
-    payload:ulong;
+    payload:Payload;
 }
 
 table ResponseCommand{
@@ -22,9 +26,13 @@ table RequestStatus{
     ids:[ApplicationId];
 }
 
+struct StatusPayload {
+    data: [uint16:4];
+}
+
 struct ResponseStatusItem{
     id:ApplicationId;
-    status:uint;//state of an item must fit into 32bit. How these 32bits are used, dependes of the application type
+    status:StatusPayload;
 }
 
 table ResponseStatus{
@@ -33,7 +41,7 @@ table ResponseStatus{
 
 table NotifyStatus{
     id:ApplicationId;
-    status:uint;//state of an item must fit into 32bit. How these 32bits are used, dependes of the application type
+    status:StatusPayload;
 }
 
 

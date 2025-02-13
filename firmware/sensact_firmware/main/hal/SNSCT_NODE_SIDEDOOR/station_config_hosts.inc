@@ -1,3 +1,2 @@
-    std::vector<sensact::iHost *> hosts{
-        new cApplicationHost(halobj, nodemaster, canMBP),
-    };
+   applicationHost=new cApplicationHost(halobj, nodemaster, canMBP);
+   hosts.push_back(applicationHost);

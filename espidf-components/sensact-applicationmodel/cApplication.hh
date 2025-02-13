@@ -2,7 +2,7 @@
 #include <inttypes.h>
 #include "sensact_commons.hh"
 #include "applicationmodel_enums_and_structs.hh"
-#include "applicationcontext.hh"
+#include "iSensactContext.hh"
 
 namespace sensact::apps
 {
@@ -18,15 +18,15 @@ namespace sensact::apps
         {
         }
         virtual eAppType GetAppType() = 0; //Vorteil davon, dass das als Methode und nicht als Eigenschaft des Objektes gespreichert wird: kein RAM-Verbrauch
-        virtual eAppCallResult Setup(SensactContext* ctx) = 0;
-        virtual eAppCallResult Loop(SensactContext* ctx) = 0;
+        virtual eAppCallResult Setup(iSensactContext* ctx) = 0;
+        virtual eAppCallResult Loop(iSensactContext* ctx) = 0;
         /*
-        FillStatus fills four 16bit values (Little Endian):
+        FillStatus fills four 16bit values:
         - Mode (e.g. Auto, Manual, TimerControlled, DayMode, NightMode)
         - CurrentValue (e.g. On=1, Off=0, current position for blinds, current dim level for PWM, current)
         - Current Movement (Dim up, Dim down, Up, down)
         - Target (target dim value, target blindsposition)
         */
-        virtual eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) = 0;
+        virtual eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) = 0;
     };
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "application.hh"
+#include "cApplication.hh"
 
 
 namespace sensact::apps
@@ -9,12 +9,12 @@ private:
 
 public:
 	eAppType GetAppType() override;
-	eAppCallResult Setup(SensactContext *ctx) override;
-	eAppCallResult Loop(SensactContext *ctx) override;
-	eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+	eAppCallResult Setup(iSensactContext *ctx) override;
+	eAppCallResult Loop(iSensactContext *ctx) override;
+	eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 	
 	cSensactNode(const eApplicationID id);
-	void OnPINGCommand(uint32_t payload, SensactContext *ctx) override;
+	void OnPINGCommand(uint32_t payload, iSensactContext *ctx) override;
 };
 
 }

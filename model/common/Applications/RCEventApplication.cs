@@ -40,18 +40,17 @@ namespace Klli.Sensact.Model.Common.Applications
             }
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
 
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// RCEvent {0}", ApplicationName);
             sb.Append(CommandInitializer("OnPressed", CommandsOnPressed, m));
             sb.Append(CommandInitializer("OnReleased", CommandsOnReleased, m));
             sb.Append(CommandInitializer("OnReleasedShort", CommandsOnReleasedShort, m));
             sb.Append(CommandInitializer("OnPressedShortAndHold", CommandsOnPressedShortAndHold, m));
             sb.Append(CommandInitializer("OnReleasedLong", CommandsOnReleasedLong, m));
 
-            sb.AppendFormat("sensact::apps::cRCEvent {0}(eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::apps::cRCEvent {0}(eApplicationID::{0}, {1}, {0}_OnPressed, {2}, {0}_OnReleased, {3}, {0}_OnReleasedShort, {4}, {0}_OnPressedShortAndHold, {5}, {0}_OnReleasedLong, {6})", 
                 ApplicationName, EventCode, 
                 CommandsOnPressed == null ? 0 : CommandsOnPressed.Count,
                 CommandsOnReleased == null ? 0 : CommandsOnReleased.Count,
@@ -62,7 +61,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

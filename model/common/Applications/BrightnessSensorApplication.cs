@@ -41,16 +41,14 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>() { EventType.STATUS };
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// BrightnessSensor {0}" + Environment.NewLine, ApplicationName);
-            //cBrightnessSensor::cBrightnessSensor(const char* name, eApplicationID id, drivers::cBH1750 *sensor, eApplicationID toggleTarget, uint16_t limitForPassingToggle)
-            sb.AppendFormat("sensact::apps::cBrightnessSensor {0}(eApplicationID::{0}, &{1}, eApplicationID::{2}, {3});"+Environment.NewLine+Environment.NewLine, ApplicationName, SensorName, ToggleTarget, LimitForPassingToggle);
+            sb.AppendFormat("sensact::apps::cBrightnessSensor {0}(eApplicationID::{0}, &{1}, eApplicationID::{2}, {3})"+Environment.NewLine+Environment.NewLine, ApplicationName, SensorName, ToggleTarget, LimitForPassingToggle);
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

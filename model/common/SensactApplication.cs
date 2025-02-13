@@ -259,9 +259,15 @@ namespace Klli.Sensact.Model.Common
 
         public abstract HashSet<EventType> ICanSendTheseEvents();
 
-        public abstract string GenerateCPP(ModelContainerForCodeGenerator m);
+        public abstract string GenerateCPPConstructor(ModelContainerForCodeGenerator m);
 
-        public abstract string GenerateTypescript(ModelContainerForCodeGenerator m);
+        public abstract string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m);
+
+        public virtual string GenerateCommentAboveConstructor(ModelContainerForCodeGenerator m){
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("// {0} {1} {2}", this.GetType().Name, ApplicationName, ApplicationDescription);
+            return sb.ToString();
+        }
 
         [SensactCommandMethod]
         public virtual void OnNOPCommand() { }

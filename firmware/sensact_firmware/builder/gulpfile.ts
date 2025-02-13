@@ -5,12 +5,13 @@ import * as cert from "@klaus-liebler/espidf-vite-secure-build-tools/certificate
 import * as P from "@klaus-liebler/espidf-vite-secure-build-tools/paths";
 import * as idf from "@klaus-liebler/espidf-vite-secure-build-tools/espidf";
 import { getLastCommit } from "@klaus-liebler/espidf-vite-secure-build-tools/git";
+import * as ascii_art from "@klaus-liebler/espidf-vite-secure-build-tools/ascii_art";
 import { flatbuffers_generate_c, flatbuffers_generate_ts } from "@klaus-liebler/espidf-vite-secure-build-tools/flatbuffers";
 import {Context, ContextConfig} from "@klaus-liebler/espidf-vite-secure-build-tools/context"
-import {mac_12char, mac_6char } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
+import {mac_12char, mac_6char, writeFileCreateDirLazy } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
 import * as vite_helper from "@klaus-liebler/espidf-vite-secure-build-tools/vite_helper";
-import { strInterpolator } from "@klaus-liebler/commons";
-import * as sensact from "./sensact";
+import { MyFavouriteDateTimeFormat, StringBuilderImpl, strInterpolator } from "@klaus-liebler/commons";
+import * as sensact from "./sensact_code_generator";
 //Default Board Type
 
 export const DEFAULT_BOARD_NAME="SENSACT_OUTDOOR"
@@ -33,7 +34,7 @@ const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates");
 
 
 const HOSTNAME_TEMPLATE = "sensact_${mac_6char}"
-const APPLICATION_NAME = "labathome"
+const APPLICATION_NAME = "sensact"
 const APPLICATION_VERSION = "1.0"
 
 const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS_BASE_DIR, DEFAULT_BOARD_NAME, DEFAULT_BOARD_VERSION);
@@ -135,29 +136,33 @@ export async function createBoardCertificatesLazily(cb: gulp.TaskFunctionCallbac
 }
 
 async function createObjectWithDefines(c:Context) {
+  var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
   var defines: any = {};
   for (const [k, v] of Object.entries(c.b.board_settings?.web ?? {})) {
-    defines[k] = JSON.stringify(v);
+    defines[k] = v;
   }
 
   for (const [k, v] of Object.entries(c.b.board_settings?.firmware ?? {})) {
-    defines[k] = JSON.stringify(v);
+    defines[k] = v;
   }
-
-  defines.__BOARD_NAME__ = JSON.stringify(c.b.board_name);
-  defines.__BOARD_VERSION__ = JSON.stringify(c.b.board_version);
-  defines.__BOARD_MAC__ = JSON.stringify(c.b.mac);
-  defines.__APP_NAME__ = JSON.stringify(APPLICATION_NAME);
-  defines.__APP_VERSION__ = JSON.stringify(APPLICATION_VERSION);
-  defines.__CREATION_DT__ = JSON.stringify(Math.floor(Date.now() / 1000));
-  defines.__GIT_SHORT_HASH__ = JSON.stringify((await getLastCommit(true)).shortHash);
+  const now = new Date();
+  defines.NODE_ID=s.GetNodeId();
+  defines.BOARD_NAME = c.b.board_name;
+  defines.BOARD_VERSION = c.b.board_version;
+  defines.BOARD_MAC = c.b.mac;
+  defines.APP_NAME = APPLICATION_NAME;
+  defines.APP_VERSION = APPLICATION_VERSION;
+  defines.CREATION_DT = Math.floor(now.valueOf() / 1000);
+  defines.CREATION_DT_STR = now.toLocaleString("de-DE", MyFavouriteDateTimeFormat)
+  defines.GIT_SHORT_HASH = (await getLastCommit(true)).shortHash;
+  defines.BANNER = ascii_art.createAsciiArt(APPLICATION_NAME);
   return defines;
 }
 
 export async function buildAndCompressWebProject(cb: gulp.TaskFunctionCallback) {
   const c = await Context.get(contextConfig);
   const pa = new P.Paths(c);
-  await vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), pa.GENERATED_WEB,  await createObjectWithDefines(c));
+  await vite_helper.buildAndCompressWebProject(pa, path.join(c.c.idfProjectDirectory, "web"), pa.GENERATED_WEB,  await createObjectWithDefines(c));
   return cb();
 }
 
@@ -166,11 +171,19 @@ export async function createCppConfigurationHeader(cb: gulp.TaskFunctionCallback
   const c=await Context.get(contextConfig);
   const p = new P.Paths(c);
   const defines = await createObjectWithDefines(c);
-  var s = "#pragma once\n";
+  var s = new StringBuilderImpl("#pragma once\n");
   for (const [k, v] of Object.entries(defines)) {
-    s += `#define ${k} ${v}\n`
+    s.AppendLine(`#define ${k} ${JSON.stringify(v)}`);
   }
-  p.writeBoardSpecificFileCreateDirLazy("cpp", "__build_config.hh", s);
+  writeFileCreateDirLazy(path.join(p.GENERATED_RUNTIMECONFIG_CPP,"runtimeconfig_defines.hh"), s.Code);
+  s = new StringBuilderImpl("#pragma once\nnamespace cfg{");
+  for (const [k, v] of Object.entries(defines)) {
+
+    s.AppendLine(`\tconstexpr auto ${k}{${JSON.stringify(v)}};`);
+  }
+  s.AppendLine("}//namespace")
+  writeFileCreateDirLazy(path.join(p.GENERATED_RUNTIMECONFIG_CPP,"runtimeconfig.hh"), s.Code);
+
   return cb();
 }
 

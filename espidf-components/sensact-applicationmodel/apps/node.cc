@@ -8,7 +8,7 @@ namespace sensact::apps
 	{
 	}
 
-	eAppCallResult cSensactNode::Setup(SensactContext *ctx)
+	eAppCallResult cSensactNode::Setup(iSensactContext *ctx)
 	{
 
 		return eAppCallResult::OK;
@@ -19,22 +19,19 @@ namespace sensact::apps
 		return eAppType::SNSCT;
 	}
 
-	void cSensactNode::OnPINGCommand(uint32_t payload, SensactContext *ctx)
+	void cSensactNode::OnPINGCommand(uint32_t payload, iSensactContext *ctx)
 	{
 		ctx->PublishPONGEvent(this->id, (uint8_t *)&payload, 4);
 	}
 
-	eAppCallResult cSensactNode::Loop(SensactContext *ctx)
+	eAppCallResult cSensactNode::Loop(iSensactContext *ctx)
 	{
 
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSensactNode::FillStatus(SensactContext &ctx, uint8_t* buf){
-		WriteU16(0, buf, 0);
-		WriteU16(0, buf, 2);
-		WriteU16(0, buf, 4);
-		WriteU16(0, buf, 6);
+	eAppCallResult cSensactNode::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+		buf[0]=buf[1]=buf[2]=buf[3]=0;
 		return eAppCallResult::OK;
 	}
 	

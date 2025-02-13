@@ -1,7 +1,7 @@
 #pragma once
 #define TAG "PUSHB"
 #include <sensact_logger.hh>
-#include <application.hh>
+#include "cApplication.hh"
 
 namespace sensact::apps
 {
@@ -20,12 +20,12 @@ namespace sensact::apps
 		cPushbutton(InOutId const input) : input(input)
 		{
 		}
-		virtual void OnPressed(SensactContext *ctx){};
-		virtual void OnReleasedShort(SensactContext *ctx){};
-		virtual void OnReleasedLong(SensactContext *ctx){};
-		virtual void OnReleased(SensactContext *ctx){};
-		virtual void OnDoubleclick(SensactContext *ctx){};
-		virtual void OnPressedShortAndHold(SensactContext *ctx){};
+		virtual void OnPressed(iSensactContext *ctx){};
+		virtual void OnReleasedShort(iSensactContext *ctx){};
+		virtual void OnReleasedLong(iSensactContext *ctx){};
+		virtual void OnReleased(iSensactContext *ctx){};
+		virtual void OnDoubleclick(iSensactContext *ctx){};
+		virtual void OnPressedShortAndHold(iSensactContext *ctx){};
 
 		
 
@@ -35,7 +35,7 @@ namespace sensact::apps
 		{
 			return isPressedOld;
 		}
-		void ButtonLoop(SensactContext *ctx)
+		void ButtonLoop(iSensactContext *ctx)
 		{
 			u16 inputValue;
 			tms_t now = ctx->Now();
@@ -90,7 +90,7 @@ namespace sensact::apps
 		std::vector<eApplicationID> targets;
 
 	protected:
-		void OnPressed(SensactContext *ctx) override
+		void OnPressed(iSensactContext *ctx) override
 		{
 			for (auto &target : targets)
 			{
@@ -103,13 +103,13 @@ namespace sensact::apps
 		{
 		}
 
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			this->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override
+		eAppCallResult Setup(iSensactContext *ctx) override
 		{
 			return eAppCallResult::OK;
 		}
@@ -119,11 +119,10 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(IsPressedNow(), buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[3]=0;
+			buf[1]=IsPressedNow();
+			buf[2]=0;
 			return eAppCallResult::OK;
 		}
 	};
@@ -134,23 +133,23 @@ namespace sensact::apps
 		eApplicationID target;
 
 	protected:
-		void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
-		void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
-		void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendSTARTCommand(target); }
-		void OnDoubleclick(SensactContext *ctx) override { ctx->SendONCommand(target, 0); }
+		void OnReleasedShort(iSensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+		void OnReleasedLong(iSensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+		void OnPressedShortAndHold(iSensactContext *ctx) override { ctx->SendSTARTCommand(target); }
+		void OnDoubleclick(iSensactContext *ctx) override { ctx->SendONCommand(target, 0); }
 
 	public:
 		cPushbuttonSingle2PwmSingle(eApplicationID const id, InOutId const input, eApplicationID target) : cApplication(id), cPushbutton(input), target(target)
 		{
 		}
 
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			this->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override
+		eAppCallResult Setup(iSensactContext *ctx) override
 		{
 			return eAppCallResult::OK;
 		}
@@ -160,11 +159,10 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(IsPressedNow(), buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[3]=0;
+			buf[1]=IsPressedNow();
+			buf[2]=0;
 			return eAppCallResult::OK;
 		}
 	};
@@ -178,9 +176,9 @@ namespace sensact::apps
 
 		public:
 			cPushbuttonUP(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
-			void OnReleasedShort(SensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
-			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendUPCommand(target, 1); }
-			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+			void OnReleasedShort(iSensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
+			void OnPressedShortAndHold(iSensactContext *ctx) override { ctx->SendUPCommand(target, 1); }
+			void OnReleasedLong(iSensactContext *ctx) override { ctx->SendSTOPCommand(target); }
 		};
 
 		class cPushbuttonDOWN : public cPushbutton
@@ -190,9 +188,9 @@ namespace sensact::apps
 
 		public:
 			cPushbuttonDOWN(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
-			void OnReleasedShort(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
-			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 1); }
-			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+			void OnReleasedShort(iSensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
+			void OnPressedShortAndHold(iSensactContext *ctx) override { ctx->SendDOWNCommand(target, 1); }
+			void OnReleasedLong(iSensactContext *ctx) override { ctx->SendSTOPCommand(target); }
 		};
 
 	private:
@@ -206,14 +204,14 @@ namespace sensact::apps
 			down = new cPushbuttonDOWN(inputDown, target);
 		}
 
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			down->ButtonLoop(ctx);
 			up->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override
+		eAppCallResult Setup(iSensactContext *ctx) override
 		{
 			return eAppCallResult::OK;
 		}
@@ -223,11 +221,11 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(down->IsPressedNow(), buf, 2);
-			WriteU16(up->IsPressedNow(), buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[3]=0;
+			buf[1]=down->IsPressedNow();
+			buf[2]=up->IsPressedNow();
+			return eAppCallResult::OK;
 			return eAppCallResult::OK;
 		}
 	};
@@ -241,9 +239,9 @@ namespace sensact::apps
 
 		public:
 			cPushbuttonUP(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
-			void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
-			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
-			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+			void OnReleasedShort(iSensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+			void OnPressedShortAndHold(iSensactContext *ctx) override { ctx->SendUPCommand(target, 0); }
+			void OnReleasedLong(iSensactContext *ctx) override { ctx->SendSTOPCommand(target); }
 		};
 
 		class cPushbuttonDOWN : public cPushbutton
@@ -253,9 +251,9 @@ namespace sensact::apps
 
 		public:
 			cPushbuttonDOWN(InOutId const input, eApplicationID target) : cPushbutton(input), target(target) {}
-			void OnReleasedShort(SensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
-			void OnPressedShortAndHold(SensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
-			void OnReleasedLong(SensactContext *ctx) override { ctx->SendSTOPCommand(target); }
+			void OnReleasedShort(iSensactContext *ctx) override { ctx->SendTOGGLECommand(target); }
+			void OnPressedShortAndHold(iSensactContext *ctx) override { ctx->SendDOWNCommand(target, 0); }
+			void OnReleasedLong(iSensactContext *ctx) override { ctx->SendSTOPCommand(target); }
 		};
 
 	private:
@@ -269,14 +267,14 @@ namespace sensact::apps
 			down = new cPushbuttonDOWN(inputDown, target);
 		}
 
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			down->ButtonLoop(ctx);
 			up->ButtonLoop(ctx);
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override
+		eAppCallResult Setup(iSensactContext *ctx) override
 		{
 			return eAppCallResult::OK;
 		}
@@ -286,11 +284,10 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(down->IsPressedNow(), buf, 2);
-			WriteU16(up->IsPressedNow(), buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[3]=0;
+			buf[1]=down->IsPressedNow();
+			buf[2]=up->IsPressedNow();
 			return eAppCallResult::OK;
 		}
 	};

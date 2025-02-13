@@ -1,6 +1,6 @@
 #include <algorithm> // std::max
 #include "blindstimer.hh"
-#include "model_applications.hh"
+#include "cApplications.hh"
 #define TAG "BLITIM"
 #include <sensact_logger.hh>
 #include <sunsetsunrise.hh>
@@ -31,7 +31,7 @@ namespace sensact::apps
 		
 	}
 
-	eAppCallResult cBlindsTimer::Setup(SensactContext *ctx)
+	eAppCallResult cBlindsTimer::Setup(iSensactContext *ctx)
 	{
 		for(size_t i=0;i<this->blindTargets->size();i++){
 			this->nextOpenings.push_back(0);
@@ -42,7 +42,7 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cBlindsTimer::Loop(SensactContext *ctx)
+	eAppCallResult cBlindsTimer::Loop(iSensactContext *ctx)
 	{
 		for(size_t i =0; i<this->nextOpenings.size(); i++){
 			tms_t t = nextOpenings[i];
@@ -62,21 +62,21 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cBlindsTimer::FillStatus(SensactContext &ctx, uint8_t* buf){
-		WriteU16(0, buf, 0);
-		WriteU16(this->timerActive, buf, 2);
-		WriteU16(0, buf, 4);
-		WriteU16(0, buf, 6);
+	eAppCallResult cBlindsTimer::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+		buf[0]=0;
+		buf[1]=this->timerActive;
+		buf[2]=0;
+		buf[3]=0;
 		return eAppCallResult::OK;
 	}
 
-	void cBlindsTimer::OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	void cBlindsTimer::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
 		this->timerActive=true;
 		LOGI(TAG, "%s OnONCommand called", N());
 	}
 
-	void cBlindsTimer::OnOFFCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx)
+	void cBlindsTimer::OnOFFCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
 		this->timerActive=false;
 		LOGI(TAG, "%s OnOFFCommand called", N());

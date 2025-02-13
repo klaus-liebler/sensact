@@ -79,11 +79,10 @@ namespace Klli.Sensact.Model.Common.Applications
 
 
         public ICollection<ushort> TargetApplicationIds; 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// cPushbuttonSingle2Toggle {0}" + Environment.NewLine, ApplicationName);
-            sb.AF2L("sensact::apps::cPushbuttonSingle2Toggle {0}(eApplicationID::{0}, {1}, {2});", 
+            sb.AF2L("sensact::apps::cPushbuttonSingle2Toggle {0}(eApplicationID::{0}, {1}, {2})", 
                 ApplicationName,
                 InputResource, 
                 VectorOfApplicationIds(TargetApplicationIds, m)
@@ -92,7 +91,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
@@ -104,11 +103,10 @@ namespace Klli.Sensact.Model.Common.Applications
             this.TargetApplicationId=TargetApplicationId;
         }
         public ushort TargetApplicationId; 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// cPushbuttonSingle2PwmSingle {0}", ApplicationName);
-            sb.AF2L("sensact::apps::cPushbuttonSingle2PwmSingle {0}(eApplicationID::{0}, {1}, eApplicationID::{2});", 
+            sb.AF2L("sensact::apps::cPushbuttonSingle2PwmSingle {0}(eApplicationID::{0}, {1}, eApplicationID::{2})", 
                 ApplicationName,
                 InputResource, 
                 m.GetNameFromId(TargetApplicationId)
@@ -117,7 +115,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
@@ -129,11 +127,10 @@ namespace Klli.Sensact.Model.Common.Applications
             this.TargetApplicationId=TargetApplicationId;
         }
         public ushort TargetApplicationId; 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// cPushbuttonDual2Blind {0}", ApplicationName);
-            sb.AF2L("sensact::apps::cPushbuttonDual2Blind {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3});", 
+            sb.AppendFormat("sensact::apps::cPushbuttonDual2Blind {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3})", 
                 ApplicationName,
                 InputResource1,
                 InputResource2,
@@ -143,7 +140,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
@@ -155,7 +152,7 @@ namespace Klli.Sensact.Model.Common.Applications
             this.TargetApplicationId=TargetApplicationIds;
         }
         public ushort TargetApplicationId; 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
             sb.AFL("// cPushbuttonDual2PWM {0}", ApplicationName);
@@ -170,7 +167,7 @@ namespace Klli.Sensact.Model.Common.Applications
         }
 
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

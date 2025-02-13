@@ -36,18 +36,16 @@ namespace Klli.Sensact.Model.Common.Applications
             return ret;
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             //Command op_a1[1] = {{eApplicationID::POWIT_EG_WOZ_L1, eCommandType::BACKWARD }};
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// RotaryEncoder2PWM {0}", ApplicationName);
-            
-            sb.AF2L("sensact::apps::cRotaryEncoder2PWM {0}(eApplicationID::{0}, eRotaryEncoder::{1}, {2});", ApplicationName, InputRotaryRessource, m.GetNameFromId(TargetApplication));
+            sb.AppendFormat("sensact::apps::cRotaryEncoder2PWM {0}(eApplicationID::{0}, eRotaryEncoder::{1}, {2})", ApplicationName, InputRotaryRessource, m.GetNameFromId(TargetApplication));
 
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

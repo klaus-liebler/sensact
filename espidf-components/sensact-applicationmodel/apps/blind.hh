@@ -1,5 +1,5 @@
 #pragma once
-#include "application.hh"
+#include "cApplication.hh"
 
 namespace sensact::apps
 {
@@ -31,24 +31,24 @@ namespace sensact::apps
 		eCurrentBlindState currentState;
 		s32 targetPosition;
 		s32 currentPosition;
-		void up(SensactContext *ctx);
-		void down(SensactContext *ctx);
-		void stop(SensactContext *ctx);
-		void energySave(SensactContext *ctx);
-		void prepareUp(SensactContext *ctx);
-		void prepareDown(SensactContext *ctx);
-		void updatePosition(SensactContext *ctx);
+		void up(iSensactContext *ctx);
+		void down(iSensactContext *ctx);
+		void stop(iSensactContext *ctx);
+		void energySave(iSensactContext *ctx);
+		void prepareUp(iSensactContext *ctx);
+		void prepareDown(iSensactContext *ctx);
+		void updatePosition(iSensactContext *ctx);
 
 	public:
 		eAppType GetAppType() override;
-		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppCallResult Loop(SensactContext *ctx) override;
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t *buf) override;
+		eAppCallResult Setup(iSensactContext *ctx) override;
+		eAppCallResult Loop(iSensactContext *ctx) override;
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 
 		cBlind(eApplicationID const id, InOutId const relay1, InOutId const relay2, const eRelayInterlockMode mode, const uint32_t time_up_msecs, const uint32_t time_down_msecs);
-		void OnDOWNCommand(uint8_t forced, SensactContext *ctx) override;
-		void OnUPCommand(uint8_t forced, SensactContext *ctx) override;
-		void OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx) override;
-		void OnSTOPCommand(SensactContext *ctx) override;
+		void OnDOWNCommand(uint8_t forced, iSensactContext *ctx) override;
+		void OnUPCommand(uint8_t forced, iSensactContext *ctx) override;
+		void OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx) override;
+		void OnSTOPCommand(iSensactContext *ctx) override;
 	};
 }

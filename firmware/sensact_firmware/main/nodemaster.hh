@@ -20,6 +20,9 @@
 #include "node_iohost.hh"
 #include "interfaces.hh"
 #include "model_node.hh"
+#include "webmanager_interfaces.hh"
+#include "flatbuffers/flatbuffers.h"
+
 
 #include <algorithm>
 #include <iterator>
@@ -40,11 +43,11 @@
 
 //TODO:
 //- CAN-artige Nachrichten können auch vom Webinterface, von der Fernbedienung und vom Fingerprint-Sensor kommen
-//Static-Task als Lambda-Funktion implementieren - geht kürzer
 //NAchrichten können also von unterschiedlichen Quellen stammen, die 
 //möglichst gleich verwaltet werden sollen
 //while(source->HasMessage(&temp_message))
 //eine Message hat ProcessingInstruction: ForceLocal (kein Versand), ForceCanBus (Versand auf den CAN-Bus), Auto (Prüft, ob die Nachricht lokal jemanden interessiert. Wenn ja: Kein Weiterversand, Wenn nein: Weiterleitung auf den CAN-Bus)
+
 namespace sensact
 {
 	constexpr size_t STATUS_MESSAGE_BUFLEN{256};
@@ -62,13 +65,7 @@ namespace sensact
 		iHost *currentHost{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
-
-		static void ConvertWeb2Can(WebMessage &webmessage, CANMessage &message){
-			message.Id=webmessage.Id;
-			std::memcpy(message.Data, webmessage.Data, webmessage.DataLen);
-			message.DataLen=webmessage.DataLen;
-		}
-
+		webmanager::iWebmanagerCallback * webmanager_callback{nullptr};
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{
@@ -164,22 +161,7 @@ namespace sensact
 						rr->OfferMessage(*this, message);
 					}
 				}
-				/*
-				WebMessage webmessage;
-				while(websensact->TryReceiveWebMessage(webmessage)==ErrorCode::OK){
-					ConvertWeb2Can(webmessage, message);
-					if(webmessage.send2can){
-						hal->TrySendCanMessage(message);
-					}
-					for (auto &rr : hosts)
-					{
-						this->currentHost = rr;
-						rr->OfferMessage(*this, message);
-					}
-				}
-				// TODO UDP-Message! -> dritten TryReceive-Prozess aufsetzen
-				*/
-				
+
 				for (auto &rr : hosts)
 				{
 					this->currentHost = rr;
@@ -195,10 +177,13 @@ namespace sensact
 			}
 		}
 
-	public:
+		public:
 		cNodemaster(sensact::hal::iHAL *hal, std::vector<AbstractBusmaster *> *busmasters, aCANMessageBuilderParser *canMBP) : hal(hal), busmasters(busmasters), canMBP(canMBP)
 		{
+			
 		}
+
+		
 
 		void Setup(std::vector<sensact::iHost *> hosts)
 		{

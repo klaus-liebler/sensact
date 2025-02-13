@@ -1,6 +1,6 @@
 
 import * as flatbuffers from "flatbuffers"
-import {Namespace, RequestCommand, RequestStatus, RequestWrapper, Requests, ResponseCommand, ResponseStatus, ResponseStatusItem, ResponseWrapper, Responses} from "@generated/flatbuffers_ts/sensact"
+import {ApplicationId, Command, Namespace, RequestCommand, RequestStatus, RequestWrapper, Requests, ResponseCommand, ResponseStatus, ResponseStatusItem, ResponseWrapper, Responses} from "@generated/flatbuffers_ts/sensact"
 import { ISender, NamespaceAndHandler } from "@klaus-liebler/websocket_file_testserver/utils"
 
 export class SensactHandler extends NamespaceAndHandler {
@@ -31,7 +31,7 @@ export class SensactHandler extends NamespaceAndHandler {
             }
             case Requests.RequestCommand:{
                 const rs=rw.request(new RequestCommand()) as RequestCommand;
-                console.log(`Sensact Command ${rs.cmd().toString()} to  ${rs.id().toString()}`)
+                console.log(`Sensact Command ${Command[rs.cmd()]} to ${ApplicationId[rs.id()]}`)
                 b.finish(
                     ResponseWrapper.createResponseWrapper(
                         b,

@@ -73,7 +73,7 @@ namespace Klli.Sensact.Config
             HashSet<ushort> predefinedAppIds = Enum.GetValues<Model.ApplicationId>().Select(x=>(ushort)x).ToHashSet();
             mc.NextFreeIndex = (ushort)(1+predefinedAppIds.Where(x=>x!=(ushort)Model.ApplicationId.NO_APPLICATION).Max());
 
-            SensactApplicationContainer masterApp = new SensactApplicationContainer(null, new Sensact.Model.Common.Applications.MasterApplication((ushort)Model.ApplicationId.MASTER, Model.ApplicationId.MASTER.ToString()));
+            SensactApplicationContainer masterApp = new SensactApplicationContainer(null, new MasterApplication((ushort)Model.ApplicationId.MASTER, Model.ApplicationId.MASTER.ToString()));
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
             Model.Common.Nodes.Node monitoring_node= new Model.Common.Nodes.Monitoring(ushort.MaxValue, "MONITORING");
             mc.Model.Nodes.Add(monitoring_node);
@@ -294,17 +294,21 @@ namespace Klli.Sensact.Config
                 sb_c.AppendLine("\t{");
                 sb_typescript.AppendLine("{");
                 sb_c.AppendLine("\t\tuint8_t buffer[8];");
-                sb_typescript.AppendLine("\tvar view = new DataView(new ArrayBuffer(8));");
+                
                 int offset_c= 0;
                 int offset_ts=0;
+                StringBuilder sb_typescript_params = new StringBuilder();
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
                     sb_c.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset_c));   
-                    sb_typescript.AppendLine("\t" + CS2TSWriter(pi, ref offset_ts));
+                    sb_typescript_params.AppendLine("\t" + CS2TSWriter(pi, ref offset_ts));
                 }
                 sb_c.AFL("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset_c);
                 sb_c.AppendLine("\t}");
-                sb_typescript.AFL("\tctx.SendCommandMessage(destinationApp, Command.{0}, new Uint8Array(view.buffer));", SensactApplication.ExtractCmdName(mi));
+                
+                sb_typescript.AFL("\tvar view = new DataView(new ArrayBuffer({0}));", offset_ts);
+                sb_typescript.Append(sb_typescript_params.ToString());
+                sb_typescript.AFL("\tctx.SendCommandMessage(destinationApp, Command.{0}, view);", SensactApplication.ExtractCmdName(mi), offset_ts);
                 sb_typescript.AppendLine("}");
             }
             WriteCommonFile("sendCommandImplementation", sb_c);
@@ -379,7 +383,7 @@ namespace Klli.Sensact.Config
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name + ", ");
                 }
-                sb.Append("SensactContext *ctx)");
+                sb.Append("iSensactContext *ctx)");
                  if(TrueIfVirtualFalseIfOverride){
                     sb.AppendLine("{return;}");
                 }else{
@@ -474,7 +478,7 @@ namespace Klli.Sensact.Config
                         sb.Append(CS2CPPType(pi.ParameterType));
                         sb.Append(" " + pi.Name + ", ");
                     }
-                    sb.AppendLine("SensactContext *ctx) override;");
+                    sb.AppendLine("iSensactContext *ctx) override;");
 
                 }
             }
@@ -704,13 +708,14 @@ namespace Klli.Sensact.Config
         {
             
             StringBuilder sb = new StringBuilder();
-            foreach (Klli.Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
+            foreach (Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
             {
+                LOG.LogInformation("Create Files for node {0}", node.NodeName);
                 //const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
                 if(node.NodeHasANodeApplication){
-                    sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
+                    sb.AFL("const sensact::eApplicationID cApplications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
                 }else{//2023-02-15: the only use case for this: The "MONITORING" node has no application
-                    sb.AFL("const sensact::eApplicationID applications::NodeMasterApplication = sensact::eApplicationID::NO_APPLICATION;", node.NodeName);
+                    sb.AFL("const sensact::eApplicationID cApplications::NodeMasterApplication = sensact::eApplicationID::NO_APPLICATION;", node.NodeName);
                 }
                 WriteNodeSpecificFile(node, "nodeMasterApplicationId", sb);
                 sb.Clear();
@@ -731,7 +736,8 @@ namespace Klli.Sensact.Config
                 //Static initializers
                 foreach (SensactApplication app in node.Applications)
                 {
-                    sb.Append(app.GenerateCPP(mc));
+                    sb.AFL("{0}",app.GenerateCommentAboveConstructor(mc));
+                    sb.AF2L("{0}",app.GenerateCPPConstructor(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     Glo2LocCmd[appCont.Application.ApplicationId] = "\t&" + app.ApplicationName + ",";
                 }
@@ -755,9 +761,22 @@ namespace Klli.Sensact.Config
 
                 WriteNodeSpecificFile(node, "glo2LocEvt", sb);
                 sb.Clear();
-                //HTML User Interface
-                foreach(var app in node.Applications){
-                    sb.Append(app.GenerateTypescript(mc));
+                //Typescript Constructor
+                foreach (SensactApplicationContainer appc in mc.id2app.Values)
+                {
+                    if(appc.Node==null){
+                        continue; //for MASTER Application
+                    }
+                    sb.AFL("{0}", appc.Application.GenerateCommentAboveConstructor(mc));
+                    string constr=appc.Application.GenerateTypescriptConstructor(mc);
+                    if(string.IsNullOrEmpty(constr)){
+                        sb.AppendLine();
+                        continue;
+                    }
+                    bool isLocal=appc.Node.NodeName.Equals(node.NodeName);
+
+                    sb.AF2L("ret.push({{local:{0}, app:{1}}})", isLocal?"true":"false", constr );
+                    
                 }
                 WriteNodeSpecificFile(node, "sensactapps_local.ts", sb);
                 sb.Clear();
@@ -786,8 +805,8 @@ namespace Klli.Sensact.Config
             StringBuilder sb = new StringBuilder();
             foreach (SensactApplicationContainer appc in mc.id2app.Values)
             {
-   
-                sb.Append(appc.Application.GenerateTypescript(mc));
+                sb.AFL("{0}",appc.Application.GenerateCommentAboveConstructor(mc));
+                sb.AF2L("{0}",appc.Application.GenerateTypescriptConstructor(mc));
             }
             WriteCommonFile("sensactapps.ts", sb);
             LOG.LogInformation("Successfully created typescript file with UI for all apps");

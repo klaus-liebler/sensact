@@ -106,21 +106,17 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// cSinglePWM {0} (Dimmer for one color)", ApplicationName);
-            sb.AppendFormat("sensact::apps::cSinglePWM {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, eApplicationID::{5});" + Environment.NewLine + Environment.NewLine, ApplicationName, VectorOfInOutIds(this.OutputResources, m), MinimalOnLevel, InitialStoredTargetLevel, AutoOffIntervalMsecs, m.GetNameFromId(StandbyController));
+            sb.AppendFormat("sensact::apps::cSinglePWM {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, eApplicationID::{5})", ApplicationName, VectorOfInOutIds(this.OutputResources, m), MinimalOnLevel, InitialStoredTargetLevel, AutoOffIntervalMsecs, m.GetNameFromId(StandbyController));
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            //sb.AppendFormat("<!--SinglePWM {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div><input type='range' min='1' max='100' value='50' onchange='MyApp.singlepwm_slider(this, {0})'><input onchange='MyApp.singlepwm_toggle(this, {0})' class='toggle' type='checkbox' /></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
-            sb.AppendFormat("//SinglePWM {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new Apps.SinglePwmApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("new Apps.SinglePwmApplication(ApplicationId.{1}, '{2}', ctx)", ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

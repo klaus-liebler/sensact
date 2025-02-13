@@ -18,28 +18,27 @@ namespace sensact::apps
 	{
 		return eAppType::SOUND;
 	}
-	eAppCallResult cSound::Setup(SensactContext *ctx)
+	eAppCallResult cSound::Setup(iSensactContext *ctx)
 	{
 		return eAppCallResult::OK;
 	}
-	eAppCallResult cSound::Loop(SensactContext *ctx)
+	eAppCallResult cSound::Loop(iSensactContext *ctx)
 	{
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSound::FillStatus(SensactContext &ctx, uint8_t* buf){
-			WriteU16(this->currentVolume, buf, 0);
-			WriteU16(this->sound, buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+	eAppCallResult cSound::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+			buf[0]=this->currentVolume;
+			buf[1]=this->sound;
+			buf[2]=buf[3]=0;
 			return eAppCallResult::OK;
 		}
 
-	void cSound::OnTOGGLECommand(SensactContext *ctx)
+	void cSound::OnTOGGLECommand(iSensactContext *ctx)
 	{
 		OnSET_SIGNALCommand(this->defaultSignalOnToggle, ctx);
 	}
-	void cSound::OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx)
+	void cSound::OnSET_SIGNALCommand(uint16_t signal, iSensactContext *ctx)
 	{
 		if (signal >= sizeof(SOUNDS) / sizeof(uint8_t *))
 			signal = 0;
@@ -47,16 +46,16 @@ namespace sensact::apps
 		ctx->PlayMP3(this->currentVolume, SOUNDS[sound], SONGS_LEN[sound]);
 		LOGI(TAG, "Set Sound to %d", sound);
 	}
-	void cSound::OnOFFCommand(uint32_t autoReturnToOnMsecs, SensactContext *ctx)
+	void cSound::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
 	{
 		ctx->StopSound();
 	}
-	void cSound::OnSET_VERTICAL_TARGETCommand(uint16_t target, SensactContext *ctx)
+	void cSound::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx)
 	{
 		this->currentVolume = target & 0xFF;
 		ctx->SetAmplifierVolume(this->currentVolume);
 	}
-	void cSound::OnSTOPCommand(SensactContext *ctx)
+	void cSound::OnSTOPCommand(iSensactContext *ctx)
 	{
 		this->OnSTOPCommand(ctx);
 	}

@@ -2,9 +2,9 @@
 #include <sensact_commons.hh>
 #include <sensact_projectconfig.hh>
 #include "node_applicationHost.hh"
-#include "model_applications.hh"
-#include "application.hh"
-#include "applicationcontext.hh"
+#include "cApplications.hh"
+#include "cApplication.hh"
+#include "iSensactContext.hh"
 #include <sensact_logger.hh>
 #define TAG "APPHOST"
 
@@ -14,9 +14,82 @@ namespace sensact
 #include <common/sendCommandImplementation.inc>
 #include <common/publishEventImplementation.inc>
 
-    ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength)
+void cApplicationHost::OnBegin(webmanager::iWebmanagerCallback *callback){
+    this->webmanager_callback=callback;
+}
+void cApplicationHost::OnWifiConnect(webmanager::iWebmanagerCallback *callback){
+    this->webmanager_callback=callback;
+}
+void cApplicationHost::OnWifiDisconnect(webmanager::iWebmanagerCallback *callback){
+    this->webmanager_callback=callback;
+}
+void cApplicationHost::OnTimeUpdate(webmanager::iWebmanagerCallback *callback){
+    this->webmanager_callback=callback;
+}
+
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const sensact::RequestCommand* req, webmanager::iWebmanagerCallback* callback){
+    flatbuffers::FlatBufferBuilder b(1024);
+    auto d = req->payload()->data()->data();
+    CommandMessage message{
+        (sensact::eApplicationID)req->id(), 
+        (sensact::eCommandType)req->cmd(),
+        {d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7]},
+        req->payload()->len()
+    };
+    xQueueSend(this->webCommandQueue, (void *)&message, pdMS_TO_TICKS(100));
+    b.Finish(
+        sensact::CreateResponseWrapper(
+            b,
+            sensact::Responses::Responses_ResponseCommand,
+            sensact::CreateResponseCommand(b).Union()
+        )
+    );
+    return callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+}
+
+
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const sensact::RequestStatus* req, webmanager::iWebmanagerCallback* callback){
+    flatbuffers::FlatBufferBuilder b(1024);
+    std::vector<flatbuffers::Offset<sensact::ResponseStatusItem>> status_item_vector;
+    for(int i=0;i<req->ids()->Length();i++){
+        auto id = req->ids()->Get(i);
+        auto state=this->statusBuffer[id];
+        sensact::ResponseStatusItem
+    }
+    b.Finish(
+        sensact::CreateResponseWrapper(
+            b,
+            sensact::Responses::Responses_ResponseStatus,
+            sensact::CreateResponseStatusDirect(b).Union()
+        )
+    );
+    return callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+}
+
+
+webmanager::eMessageReceiverResult cApplicationHost::ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf){
+    this->webmanager_callback=callback;
+    if (ns != sensact::Namespace::Namespace_Value)
+        return webmanager::eMessageReceiverResult::NOT_FOR_ME;
+    
+    auto rw = flatbuffers::GetRoot<sensact::RequestWrapper>(buf);
+    switch (rw->request_type())
     {
-        SensactContext *ctx = this;
+    case sensact::Requests::Requests_RequestCommand:{
+        return this->handleRequestCommand(rw->request_as_RequestCommand(), callback);
+    }
+    case sensact::Requests::Requests_RequestStatus:{
+        return this->handleRequestStatus(rw->request_as_RequestStatus(), callback);
+    }
+    default:
+        return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+    }
+}    
+
+
+ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength)
+    {
+        iSensactContext *ctx = this;
         switch (command)
         {
 #include <common/parseCommand.inc>
@@ -35,14 +108,20 @@ namespace sensact
             {
                 nextStatusApp = 0;
             }
-        } while (sensact::apps::applications::Glo2locCmd[nextStatusApp] == 0);
+        } while (sensact::apps::cApplications::Glo2locCmd[nextStatusApp] == 0);
     }
 
-    ErrorCode cApplicationHost::PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, uint8_t *payload, uint8_t payloadLength)
+    ErrorCode cApplicationHost::PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, std::array<uint16_t,4> &payload)
     {
+        uint8_t byteArray[8];
+        for (size_t i = 0; i < payload.size(); ++i) {
+            byteArray[2 * i] = static_cast<uint8_t>(payload[i] & 0xFF); // Niedrigwertiges Byte
+            byteArray[2 * i + 1] = static_cast<uint8_t>((payload[i] >> 8) & 0xFF); // Hochwertiges Byte
+        }
         CANMessage m;
-        canMBP->BuildApplicationStatusMessage((u16)sourceApp, (u8)statusType, payload, payloadLength, m);
-        hostCtx->PublishOnMessageBus(m, true);
+        if(canMBP->BuildApplicationStatusMessage((u16)sourceApp, (u8)statusType, byteArray, 8, m)==ErrorCode::OK){
+            hostCtx->PublishOnMessageBus(m, true);
+        }
         return ErrorCode::OK;
     }
 
@@ -58,7 +137,7 @@ namespace sensact
             return;
         }
 
-        sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[(uint16_t)destinationApp];
+        sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[(uint16_t)destinationApp];
         if (app != NULL)
         {
             // only in this case, the message can be processed local; no need to send it to the CAN bus
@@ -92,6 +171,7 @@ namespace sensact
 
     cApplicationHost::cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP) : hal(hal), hostCtx(hostCtx), canMBP(canMBP)
     {
+        this->webCommandQueue = xQueueCreate(3, sizeof(CommandMessage));
     }
 
     void cApplicationHost::SetAmplifierVolume(uint8_t volume0_255)
@@ -199,7 +279,7 @@ namespace sensact
         // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project
         for (uint16_t appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
-            sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
             if (!app)
                 continue;
             sensact::eAppCallResult appResult = app->Setup(this);
@@ -211,9 +291,10 @@ namespace sensact
             {
                 LOGE(TAG, "Error while configuring App %s. Error is %u", sensact::ApplicationNames[appId], (int)appResult);
             }
-            statusBuffer = (uint8_t *)malloc(8); // only for one single Application
-            statusBuffer[0] = (uint8_t)appResult;
-            PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::STARTED, statusBuffer, 8);
+            //Too many messages! statusBuffer = new uint8_t[8]; // only for one single Application
+            //statusBuffer[0] = (uint8_t)appResult;
+            //PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::STARTED, statusBuffer, 8);
+            //delete[] statusBuffer;
             appCnt++;
         }
         FindNextStatusApp();
@@ -246,7 +327,7 @@ namespace sensact
                 LOGE(TAG, "Received ApplicationCommand. Unknown target applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            app = sensact::apps::applications::Glo2locCmd[appId];
+            app = sensact::apps::cApplications::Glo2locCmd[appId];
             if (app != NULL)
             {
                 // Es ist natürlich kein Fehler, wenn hier an der Node eine Nachricht ankommt, für die lokal keine App hinterlegt ist - eine andere Node wird die schon empfangen...
@@ -262,7 +343,7 @@ namespace sensact
                 LOGE(TAG, "Received ApplicationEvent. Unknown source applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            app = sensact::apps::applications::Glo2locEvt[appId];
+            app = sensact::apps::cApplications::Glo2locEvt[appId];
             if (app != NULL)
             {
                 LOGE(TAG, "Received ApplicationEvent, but this is not yet implemented");
@@ -277,29 +358,35 @@ namespace sensact
 
     ErrorCode cApplicationHost::Loop(iHostContext &ctx)
     {
+        CANMessage message;
         this->nowForCurrentLoop = ctx.Now();
+        while (xQueueReceive(this->webCommandQueue, (void *)&message, 0)==pdTRUE)
+        {
+                this->OfferMessage(ctx, message);
+        }
         for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
-            sensact::apps::cApplication *const app = sensact::apps::applications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
             if (!app)
                 continue;
             eAppCallResult appResult = app->Loop(this);
-            if ((uint8_t)appResult >= (uint8_t)sensact::eAppCallResult::ERROR_GENERIC) // means: no severe error
+            if ((uint8_t)appResult >= (uint8_t)sensact::eAppCallResult::ERROR_GENERIC) 
             {
-                PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::ERROR_ON_CYCLIC, statusBuffer, 8);
+                // means: an error occured. Report instantly
+                app->FillStatus(*this, this->statusBuffer[appId]);
+                PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::ERROR_ON_CYCLIC, this->statusBuffer[appId]);
                 continue;
             }
-            if (appResult != eAppCallResult::OK && statusBufferLength > 0) // TODO: Weshalb muss statusBufferLength (auch 5 Zeilen drunter) geprüft werden. Wenn es etwas interessantes gibt, dann muss das doch veröffentlicht werden, auch wenn es keinen Payload gibt!
+            else if (appResult != eAppCallResult::OK)
             {
-                // Something interesting happened -->inform everybody!
-                PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
+                // Something interesting happened. Report everybody!
+                app->FillStatus(*this, this->statusBuffer[appId]);
+                PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::CHANGED, this->statusBuffer[appId]);
             }
-            if (nowForCurrentLoop - lastSentCANMessage > 1000 && appId == nextStatusApp)
+            else if (nowForCurrentLoop - lastSentCANMessage > 1000 && appId == nextStatusApp)
             {
-                if (statusBufferLength > 0)
-                {
-                    PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, statusBuffer, 8);
-                }
+                app->FillStatus(*this, this->statusBuffer[appId]);
+                PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, this->statusBuffer[appId]);
                 FindNextStatusApp();
             }
         }

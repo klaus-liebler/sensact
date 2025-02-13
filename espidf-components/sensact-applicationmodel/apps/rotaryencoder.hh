@@ -1,5 +1,5 @@
 #pragma once
-#include <application.hh>
+#include "cApplication.hh"
 #define TAG "ROTENC"
 #include <sensact_logger.hh>
 
@@ -26,12 +26,12 @@ namespace sensact::apps
 			return eAppType::ROTAR;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override{
+		eAppCallResult Setup(iSensactContext *ctx) override{
 			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue, isPressedOld);
 			return eAppCallResult::OK;
 
 		}
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			uint16_t currentRotaryValue;
 			bool isPressed;
@@ -59,11 +59,9 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(lastRotaryValue, buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[2]=buf[3]=0;
+			buf[1]=lastRotaryValue;
 			return eAppCallResult::OK;
 		}
 	};

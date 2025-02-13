@@ -5,7 +5,7 @@
 
 namespace sensact::apps
 {
-    class SensactContext
+    class iSensactContext
     { // all void functions. Fehlerbehandlung darf nicht den Apps angelastet werden. Fehlerausgabe und Standardwert zurück geben --> the show must go on!!!
     public:
         virtual tms_t Now() = 0;

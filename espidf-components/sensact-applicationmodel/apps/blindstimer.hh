@@ -1,5 +1,5 @@
 #pragma once
-#include "application.hh"
+#include "cApplication.hh"
 #include "sunsetsunrise.hh"
 #include <vector>
 namespace sensact::apps
@@ -19,13 +19,13 @@ namespace sensact::apps
 		
 	public:
 		eAppType GetAppType() override;
-		eAppCallResult Setup(SensactContext *ctx) override;
-		eAppCallResult Loop(SensactContext *ctx) override;
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override;
+		eAppCallResult Setup(iSensactContext *ctx) override;
+		eAppCallResult Loop(iSensactContext *ctx) override;
+		eAppCallResult FillStatus(iSensactContext &ctx, uint8_t* buf) override;
 		
 		cBlindsTimer(eApplicationID id, const std::vector<eApplicationID>* blindTargets, const sunsetsunrise::eDawn dawn, const tms_t fixedOffset, const tms_t maxRandomOffset);
-		void OnONCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx) override;
-		void OnOFFCommand(uint32_t autoReturnToOffMsecs, SensactContext *ctx) override;
+		void OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx) override;
+		void OnOFFCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx) override;
 
 	};
 }

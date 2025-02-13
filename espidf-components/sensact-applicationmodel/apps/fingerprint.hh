@@ -1,5 +1,5 @@
 #pragma once
-#include <application.hh>
+#include "cApplication.hh"
 #define TAG "ROTENC"
 #include <sensact_logger.hh>
 
@@ -25,11 +25,11 @@ namespace sensact::apps
 			return eAppType::FINGR;
 		}
 
-		eAppCallResult Setup(SensactContext *ctx) override{
+		eAppCallResult Setup(iSensactContext *ctx) override{
 			return eAppCallResult::OK;
 
 		}
-		eAppCallResult Loop(SensactContext *ctx) override
+		eAppCallResult Loop(iSensactContext *ctx) override
 		{
 			if(fireEvent!=eApplicationID::NO_APPLICATION){
 				ctx->SendONCommand(fireEvent,1000);
@@ -38,11 +38,8 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult FillStatus(SensactContext &ctx, uint8_t* buf) override{
-			WriteU16(0, buf, 0);
-			WriteU16(0, buf, 2);
-			WriteU16(0, buf, 4);
-			WriteU16(0, buf, 6);
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+			buf[0]=buf[1]=buf[2]=buf[3]=0
 			return eAppCallResult::OK;
 		}
 

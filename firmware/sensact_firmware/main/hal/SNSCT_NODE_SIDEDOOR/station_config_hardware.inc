@@ -1,7 +1,7 @@
 //defined: iHAL* halobj;
     
 
-    sensact::apps::cFingerprint* fingerprintApp= (sensact::apps::cFingerprint*)sensact::apps::applications::Glo2locCmd[(int)sensact::eApplicationID::FINGR_X1_XX1_42];
+    sensact::apps::cFingerprint* fingerprintApp= (sensact::apps::cFingerprint*)sensact::apps::cApplications::Glo2locCmd[(int)sensact::eApplicationID::FINGR_X1_XX1_42];
     halobj = new sensact::hal::SensactUpControl::cHAL();
     DirectGPIOBusmaster gpioBusmaster("GPIO", halobj);
     std::vector<AbstractBusmaster*> busmasters{&gpioBusmaster};

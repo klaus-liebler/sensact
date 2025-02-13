@@ -42,11 +42,10 @@ namespace Klli.Sensact.Model.Common.Applications
             }
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("// Lightbarrier {0}" + Environment.NewLine, ApplicationName);
-            sb.AppendFormat("sensact::apps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4});" + Environment.NewLine + Environment.NewLine, 
+            sb.AppendFormat("sensact::apps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4})", 
                 ApplicationName, InputRessource, 
                 ActiveSignalLevel.ToString().ToLower(),
                 BrightnessSensor,
@@ -55,7 +54,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }

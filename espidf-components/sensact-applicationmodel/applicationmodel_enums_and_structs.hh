@@ -18,6 +18,7 @@ namespace sensact
     {
         STARTED,
         NEW_STATUS,
+        CHANGED,
         REGULAR_STATUS,
         ERROR_ON_CYCLIC,
         TERMINATED,
@@ -107,11 +108,11 @@ namespace sensact
     };
 
 
-    struct Command
+    struct CommandMessage
     {
         const eApplicationID target;
         const eCommandType command;
-        const uint8_t *const payload;
+        const uint8_t payload[8];
         const uint8_t payloadLength;
     };
 }

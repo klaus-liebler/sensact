@@ -27,14 +27,14 @@ namespace sensact::apps
 		return eAppType::RGBW;
 	}
 
-	void cRgbw::showColorOfIndex(SensactContext *ctx, uint8_t index)
+	void cRgbw::showColorOfIndex(iSensactContext *ctx, uint8_t index)
 	{
 		index %= wellKnownColors.size();
 		lastColorIndex = index;
 		LOGD(TAG, "Showing Color ID %d", lastColorIndex);
 		showColorOfRGBW(ctx, wellKnownColors[index]);
 	}
-	void cRgbw::showColorOfRGBW(SensactContext *ctx, Color c)
+	void cRgbw::showColorOfRGBW(iSensactContext *ctx, Color c)
 	{
 		
 		this->lastColor=c;
@@ -59,12 +59,12 @@ namespace sensact::apps
 			autoOffCalc = ctx->Now() + autoOffCfg;
 		}
 	}
-	void cRgbw::switchOff(SensactContext *ctx)
+	void cRgbw::switchOff(iSensactContext *ctx)
 	{
 		showColorOfRGBW(ctx, Color{0, 0, 0, 0});
 	}
 
-	void cRgbw::OnSTEP_VERTICALCommand(int16_t step, SensactContext *ctx)
+	void cRgbw::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
 	{
 		
 		if (step == 0)
@@ -73,7 +73,7 @@ namespace sensact::apps
 		showColorOfIndex(ctx, index);
 	}
 
-	void cRgbw::OnTOGGLECommand(SensactContext *ctx)
+	void cRgbw::OnTOGGLECommand(iSensactContext *ctx)
 	{
 		if (this->state == ePowerState::INACTIVE)
 		{
@@ -85,25 +85,25 @@ namespace sensact::apps
 		}
 	}
 
-	void cRgbw::OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, SensactContext *ctx)
+	void cRgbw::OnSET_RGBWCommand(uint8_t R, uint8_t G, uint8_t B, uint8_t W, iSensactContext *ctx)
 	{
 		showColorOfRGBW(ctx, Color{R, G, B, W});
 	}
 	// Payload enthält 16bit wellKnownColorIndex
-	void cRgbw::OnSET_SIGNALCommand(uint16_t signal, SensactContext *ctx)
+	void cRgbw::OnSET_SIGNALCommand(uint16_t signal, iSensactContext *ctx)
 	{
 
 		uint8_t index = signal % wellKnownColors.size();
 		showColorOfIndex(ctx, index);
 	}
 
-	eAppCallResult cRgbw::Setup(SensactContext *ctx)
+	eAppCallResult cRgbw::Setup(iSensactContext *ctx)
 	{
 		switchOff(ctx);
 		return eAppCallResult::OK;
 	}
 	
-	eAppCallResult cRgbw::Loop(SensactContext *ctx)
+	eAppCallResult cRgbw::Loop(iSensactContext *ctx)
 	{
 		if (standbyController != eApplicationID::NO_APPLICATION && state == ePowerState::ACTIVE && ctx->Now() - lastHeartbeatToStandbycontroller > 10000)
 		{
@@ -123,11 +123,11 @@ namespace sensact::apps
 	}
 
 
-	eAppCallResult cRgbw::FillStatus(SensactContext &ctx, uint8_t* buf){
-			WriteU16(this->lastColor.R, buf, 0);
-			WriteU16(this->lastColor.G, buf, 2);
-			WriteU16(this->lastColor.B, buf, 4);
-			WriteU16(this->lastColor.W, buf, 6);
+	eAppCallResult cRgbw::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+			buf[0]=this->lastColor.R;
+			buf[1]=this->lastColor.G;
+			buf[2]=this->lastColor.B;
+			buf[3]=this->lastColor.W;
 			return eAppCallResult::OK;
 		}
 }

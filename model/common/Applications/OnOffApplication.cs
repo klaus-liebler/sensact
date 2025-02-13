@@ -68,7 +68,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return new HashSet<EventType>();
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             if (OffEvents.Count >0 || OnEvents.Count>0  || ToggleEvents.Count>0)
             {
@@ -76,18 +76,14 @@ namespace Klli.Sensact.Model.Common.Applications
             }
             
             StringBuilder sb = new StringBuilder();
-            sb.AFL("// ONOFF {0}", ApplicationName);
-            sb.AF2L("sensact::apps::cOnOff {0}(eApplicationID::{0}, {1}, ePowerState::{2}, {3});", ApplicationName, OutputRessource, InitialPowerState.ToString(), AutoOffIntervalMsecs);
+            sb.AppendFormat("sensact::apps::cOnOff {0}(eApplicationID::{0}, {1}, ePowerState::{2}, {3})", ApplicationName, OutputRessource, InitialPowerState.ToString(), AutoOffIntervalMsecs);
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            //sb.AppendFormat("<!-- ONOFF {0}--> "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            //sb.AppendFormat("<div class='app'><div><h2>{1}</h2><p>{2}</p></div><div class='controls'><input onclick='MyApp.onoff(this, {0})' class='toggle' type='checkbox'/></div></div>"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
-            sb.AppendFormat("//OnOff {0} "+Environment.NewLine, ApplicationDescription??ApplicationName);
-            sb.AppendFormat("ret.push(new Apps.OnOffApplication(ApplicationId.{1}, '{2}', ctx));"+Environment.NewLine+Environment.NewLine, ApplicationId, ApplicationName, ApplicationDescription );
+            sb.AppendFormat("new Apps.OnOffApplication(ApplicationId.{1}, '{2}', ctx)", ApplicationId, ApplicationName, ApplicationDescription );
             return sb.ToString();
         }
 

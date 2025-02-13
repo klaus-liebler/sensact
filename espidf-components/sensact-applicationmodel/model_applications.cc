@@ -1,6 +1,6 @@
 #include <sensact_commons.hh>
-#include "application.hh"
-#include "model_applications.hh"
+#include "cApplication.hh"
+#include "cApplications.hh"
 #include "apps/blind.hh"
 #include "apps/fingerprint.hh"
 #include "apps/node.hh"
@@ -20,11 +20,11 @@ namespace sensact::apps
 #include <nodeMasterApplicationId.inc>
 #include <applicationInitializers.inc>
 
-    constexpr cApplication * applications::Glo2locCmd[]{
+    constexpr cApplication * cApplications::Glo2locCmd[]{
         #include <glo2LocCmd.inc>
         nullptr,
     };
-    constexpr cApplication *applications::Glo2locEvt[]{
+    constexpr cApplication *cApplications::Glo2locEvt[]{
         #include <glo2LocEvt.inc>
         nullptr, nullptr
     };

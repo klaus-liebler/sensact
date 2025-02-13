@@ -25,7 +25,7 @@
 #include <nodemaster.hh>
 #include <busmaster.hh>
 #include <model_node.hh>
-#include <current_board/cpp/__build_config.hh>
+#include <runtimeconfig_cpp/runtimeconfig.hh>
 #include <webmanager_plugins/systeminfo_plugin.hh>
 
 
@@ -33,17 +33,13 @@ constexpr const char* NVS_PARTITION_NAME{NVS_DEFAULT_PART_NAME};
 
 //board specific includes
 #include <hal.inc>
-
-#include <model_applications.hh>
+#include <cApplications.hh>
 
 #define TAG "main"
 using namespace sensact;
 
 
 iHAL* halobj{nullptr};
-
-
-
 
 constexpr auto BUFFER_SIZE{1024};
 uint8_t buffer[BUFFER_SIZE];
@@ -56,6 +52,8 @@ FLASH_FILE(esp32_pem_key);
 
 extern "C" void app_main(void)
 {
+    ESP_LOGI(TAG, "\n%s", cfg::BANNER);
+    ESP_LOGI(TAG, "%s is booting up. Firmware build at %s on Git %s", cfg::NODE_ID, cfg::CREATION_DT_STR, cfg::GIT_SHORT_HASH);
     ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily("NVS"));
     std::vector<webmanager::iWebmanagerPlugin*> plugins;
     plugins.push_back(new SystemInfoPlugin());
@@ -70,11 +68,17 @@ extern "C" void app_main(void)
     #include <station_config_hardware.inc>
     assert(halobj);
 
-    
     cNodemaster* nodemaster = new cNodemaster(halobj, &busmasters, canMBP);
-    #include <station_config_hosts.inc>
-    nodemaster->Setup(hosts);
+    std::vector<sensact::iHost *> hosts;
+    
+    sensact::cApplicationHost* applicationHost{nullptr};
 
+    #include <station_config_hosts.inc>
+    if(applicationHost!=nullptr){
+        plugins.push_back(applicationHost);
+    }
+    nodemaster->Setup(hosts);
+    
     webmanager::M* wm = webmanager::M::GetSingleton();
 
     //TODO: Der "Nodemaster" ist das "SensactPlugin" und muss auch eingehängt werden

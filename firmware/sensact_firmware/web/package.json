@@ -22,6 +22,7 @@
     "@generated/flatbuffers_ts": "file:../../../../generated/flatbuffers_ts",
     "@types/node": "^22.10.9",
     "@generated/sensact_appsbuilder": "file:../../../../generated/sensact_appsbuilder",
+    "@generated/runtimeconfig_ts": "file:../../../../generated/runtimeconfig_ts",
     "esbuild-minify-templates": "^0.11.0",
     "flatbuffers": "25.1.24",
     "lit-html": "^3.2.1",

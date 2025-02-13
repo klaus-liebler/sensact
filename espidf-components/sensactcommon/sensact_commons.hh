@@ -61,19 +61,6 @@ namespace sensact
         uint8_t Data[8];
         size_t DataLen;
     };
-
-    struct WebMessage
-    {
-        uint32_t Id;
-        uint8_t Data[8];
-        size_t DataLen;
-        bool send2can;
-    };
-	
-	class iWebsensact{
-        public:
-        virtual ErrorCode TryReceiveWebMessage(sensact::WebMessage &m)=0;
-    };
 }
 
 namespace sensact::magic

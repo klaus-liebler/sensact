@@ -30,11 +30,10 @@ namespace Klli.Sensact.Model.Common.Applications
             }
         }
 
-        public override string GenerateCPP(ModelContainerForCodeGenerator m)
+        public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new();
-            sb.AFL("// FingerprintSensor {0}", ApplicationName);
-            sb.AF2L("sensact::apps::cFingerprint {0}(eApplicationID::{0}, eApplicationID::{1}, eApplicationID::{2}, eApplicationID::{3});", 
+            sb.AppendFormat("sensact::apps::cFingerprint {0}(eApplicationID::{0}, eApplicationID::{1}, eApplicationID::{2}, eApplicationID::{3})", 
                 m.GetNameFromId(ApplicationId),
                 m.GetNameFromId(TargetApplication1),
                 m.GetNameFromId(TargetApplication2),
@@ -44,7 +43,7 @@ namespace Klli.Sensact.Model.Common.Applications
             return sb.ToString();
         }
 
-        public override string GenerateTypescript(ModelContainerForCodeGenerator m)
+        public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
             return string.Empty;
         }
