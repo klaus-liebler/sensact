@@ -10,6 +10,20 @@
       "type": "espidf",
       "name": "Launch",
       "request": "launch"
-    }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "BuildForCurrent Gulp Task",
+      "args": ["--import", "tsx", "node_modules/gulp/bin/gulp", "buildForCurrent" ],
+      "cwd": "${workspaceFolder}/builder"
+  },
+  {
+    "type": "node",
+    "request": "launch",
+    "name": "AddOrupdate Gulp Task",
+    "args": ["--import", "tsx", "node_modules/gulp/bin/gulp", "addOrUpdateConnectedBoard" ],
+    "cwd": "${workspaceFolder}/builder"
+}
   ]
 }

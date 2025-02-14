@@ -53,7 +53,7 @@ namespace sensact::apps
 	}
 
 	eAppCallResult cBlind::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-		buf[0]=currentState;
+		buf[0]=(uint16_t)currentState;
 		buf[1]=(currentPosition>>16);
 		buf[2]=0;
 		buf[3]=(targetPosition>>16);

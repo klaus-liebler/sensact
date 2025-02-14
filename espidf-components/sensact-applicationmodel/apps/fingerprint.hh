@@ -39,7 +39,7 @@ namespace sensact::apps
 		}
 
 		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
-			buf[0]=buf[1]=buf[2]=buf[3]=0
+			buf[0]=buf[1]=buf[2]=buf[3]=0;
 			return eAppCallResult::OK;
 		}
 

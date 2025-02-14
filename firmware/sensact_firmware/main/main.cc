@@ -54,7 +54,7 @@ extern "C" void app_main(void)
 {
     ESP_LOGI(TAG, "\n%s", cfg::BANNER);
     ESP_LOGI(TAG, "%s is booting up. Firmware build at %s on Git %s", cfg::NODE_ID, cfg::CREATION_DT_STR, cfg::GIT_SHORT_HASH);
-    ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily("NVS"));
+    ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily(NVS_PARTITION_NAME));
     std::vector<webmanager::iWebmanagerPlugin*> plugins;
     plugins.push_back(new SystemInfoPlugin());
 

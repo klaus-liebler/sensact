@@ -21,7 +21,7 @@ namespace sensact::apps
 		eAppType GetAppType() override;
 		eAppCallResult Setup(iSensactContext *ctx) override;
 		eAppCallResult Loop(iSensactContext *ctx) override;
-		eAppCallResult FillStatus(iSensactContext &ctx, uint8_t* buf) override;
+		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 		
 		cBlindsTimer(eApplicationID id, const std::vector<eApplicationID>* blindTargets, const sunsetsunrise::eDawn dawn, const tms_t fixedOffset, const tms_t maxRandomOffset);
 		void OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx) override;

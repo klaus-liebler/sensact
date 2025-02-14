@@ -34,7 +34,7 @@ webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const 
         (sensact::eApplicationID)req->id(), 
         (sensact::eCommandType)req->cmd(),
         {d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7]},
-        req->payload()->len()
+        (uint8_t)req->payload()->len()
     };
     xQueueSend(this->webCommandQueue, (void *)&message, pdMS_TO_TICKS(100));
     b.Finish(
@@ -50,17 +50,17 @@ webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const 
 
 webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const sensact::RequestStatus* req, webmanager::iWebmanagerCallback* callback){
     flatbuffers::FlatBufferBuilder b(1024);
-    std::vector<flatbuffers::Offset<sensact::ResponseStatusItem>> status_item_vector;
-    for(int i=0;i<req->ids()->Length();i++){
+    std::vector<sensact::ResponseStatusItem> states;
+    for(int i=0;i<req->ids()->size();i++){
         auto id = req->ids()->Get(i);
         auto state=this->statusBuffer[id];
-        sensact::ResponseStatusItem
+        states.push_back(sensact::ResponseStatusItem((sensact::ApplicationId)id, sensact::StatusPayload(state)));
     }
     b.Finish(
         sensact::CreateResponseWrapper(
             b,
             sensact::Responses::Responses_ResponseStatus,
-            sensact::CreateResponseStatusDirect(b).Union()
+            sensact::CreateResponseStatusDirect(b, &states).Union()
         )
     );
     return callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;

@@ -3,16 +3,13 @@ using Klli.Sensact.Model.Common.Nodes;
 
 namespace Klli.Sensact.Model.Common
 {
-    public class Model
+    public class Model(string name)
     {       
         [XmlElement(typeof(SensactHs07))]
         [XmlElement(typeof(SensactUp02))]
         public List<Node> Nodes = new List<Node>();
-        public Model(string name)
-        {
-            Name = name;
-        }
-        public string Name { get; private set; }
+        
+        public string Name { get; }=name;
 
         public const ushort NO_APPLICATION_ID=0xFFFF;
     }

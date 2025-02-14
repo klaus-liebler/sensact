@@ -737,7 +737,7 @@ namespace Klli.Sensact.Config
                 foreach (SensactApplication app in node.Applications)
                 {
                     sb.AFL("{0}",app.GenerateCommentAboveConstructor(mc));
-                    sb.AF2L("{0}",app.GenerateCPPConstructor(mc));
+                    sb.AF2L("{0};",app.GenerateCPPConstructor(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     Glo2LocCmd[appCont.Application.ApplicationId] = "\t&" + app.ApplicationName + ",";
                 }
@@ -789,12 +789,28 @@ namespace Klli.Sensact.Config
             
             foreach (Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
             {
+                string directory = Path.Combine(this.options.BasePath, node.NodeName);
+                Directory.CreateDirectory(directory);
+
+                var info = new Dictionary<string, string>()
+                {
+                    { "SENSACT_NODE_NAME", node.NodeName},
+                    { "SENSACT_MODEL_NAME", mc.Model.Name},
+                    { "SENSACT_MODEL_CREATION_DT", DateTimeOffset.Now.ToUnixTimeSeconds().ToString()},
+                    { "SENSACT_MODEL_CREATION_DT_STRING", DateTime.Now.ToString()},
+                };
+
+                File.WriteAllText(
+                    Path.Combine(directory, "node_descriptor.json"),
+                    JsonSerializer.Serialize<object>(info)
+                );
+
                 List<object> list = new List<object>();
                 foreach(var app in node.Applications){
                     app.AddJSONDescriptionToList(list);
                 }
-                string directory = Path.Combine(this.options.BasePath, node.NodeName);
-                Directory.CreateDirectory(directory);
+                
+                
                 string path = Path.Combine(directory, "app_descriptor.json");
                 File.WriteAllText(path, JsonSerializer.Serialize<object>(list));
             }

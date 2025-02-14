@@ -84,6 +84,7 @@ namespace sensact::hal::SensactUpControl
             this->buzzer = new BUZZER::M();
             this->buzzer->Begin(P::BUZZER);
             this->led = new led::Animator(P::LED1);
+            this->led->Begin();
             this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
             gpio_set_direction(P::MOTOR, GPIO_MODE_OUTPUT);
             this->SetupInternalTemperatureSensor();

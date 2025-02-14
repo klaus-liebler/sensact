@@ -8,7 +8,7 @@ import * as CONST from "@klaus-liebler/web-components/typescript/utils/constants
 
 let app: AppController;
 document.addEventListener("DOMContentLoaded", (e) => {
-  app = new AppController("Sensact WebUI", CONST.WS_URL, false, false, "");
+  app = new AppController("SensAct WebUI", CONST.WS_URL, false, false, `:: Node ${CFG.SENSACT_NODE_NAME} :: SensactModel ${CFG.SENSACT_MODEL_NAME} created at  ${CFG.SENSACT_MODEL_CREATED_DT_STRING} `);
 
   app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>&#127760;</span><span>Home</span>`, new DefaultScreenController(app)) 
   app.AddScreenController("system", new RegExp("^/system$"), html`<span>🧰</span><span>System Settings</span>`, new SystemController(app))
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
   app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>🔬</span><span>Can Bus Monitor</span>`, new CanMonitorScreenController(app))
   const s = new SensactController(app);
   s.AddApps(SensactAppsBuild(s));
-  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>✽</span><span>Sensact</span>`, s)
+  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>✽</span><span>SensAct</span>`, s)
   app.AddScreenController("journal", new RegExp("^/journal$"), html`<span>📓</span><span>Journal</span>`, new JournalController(app))
   if(CFG.NODE_ID=="SNSCT_NODE_SIDEDOOR")
     app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>🔑</span><span>Fingerprint</span>`, new FingerprintScreenController(app))

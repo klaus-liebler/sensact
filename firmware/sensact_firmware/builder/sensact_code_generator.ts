@@ -9,6 +9,17 @@ import * as npm from "@klaus-liebler/espidf-vite-secure-build-tools/npm"
 const SENSACT_JSON_FILENAME = "sensact.json"
 
 export class Sensact {
+
+  AddSensactNodeAndModelDescriptorToDefines(defines: any) {
+    const dp=path.join(this.sensactComponentGeneratedDirectory, this.GetNodeId(), "node_descriptor.json")
+    if (!fs.existsSync(dp)) {
+      throw Error(`No node_descriptor.json file found for mac 0x${mac_6char(this.c.b.mac)} at ${dp}.`);
+    }
+    const sensact_json = JSON.parse(fs.readFileSync(dp, "utf8"))
+    return {...defines, ...sensact_json};
+  }
+
+
   private pa: P.Paths
   constructor(private readonly c: Context, private readonly sensactComponentGeneratedDirectory: string) {
     this.pa = new P.Paths(c);
@@ -39,7 +50,7 @@ export class Sensact {
   }
 
 
-  public prepare_sensact_files() {
+  public PrepareSensactFiles() {
 
 
     //jede Node kennt alle ApplicationIds und CommandTypes - das ist also nicht board-spezifisch, deshalb aus dem "common"-Ordner kopieren

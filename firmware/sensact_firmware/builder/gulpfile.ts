@@ -96,7 +96,7 @@ export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
 export async function prepare_board_specific_files(cb: gulp.TaskFunctionCallback){
   const c = await Context.get(contextConfig);
   var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
-  s.prepare_sensact_files()
+  s.PrepareSensactFiles()
 
   return cb()
 }
@@ -132,19 +132,26 @@ export async function createBoardCertificatesLazily(cb: gulp.TaskFunctionCallbac
   const hostname = strInterpolator(HOSTNAME_TEMPLATE, {mac_6char:mac_6char(c.b.mac), mac_12char:mac_12char(c.b.mac)});
   let esp32Cert = cert.CreateAndSignCert(hostname, hostname, path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
   pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
-  pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate, cb);
+  pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
+  cb();
 }
 
 async function createObjectWithDefines(c:Context) {
-  var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
   var defines: any = {};
+  
+  var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
+  defines=s.AddSensactNodeAndModelDescriptorToDefines(defines);
+  
+  
   for (const [k, v] of Object.entries(c.b.board_settings?.web ?? {})) {
     defines[k] = v;
   }
-
+  
   for (const [k, v] of Object.entries(c.b.board_settings?.firmware ?? {})) {
     defines[k] = v;
   }
+  
+  
   const now = new Date();
   defines.NODE_ID=s.GetNodeId();
   defines.BOARD_NAME = c.b.board_name;
