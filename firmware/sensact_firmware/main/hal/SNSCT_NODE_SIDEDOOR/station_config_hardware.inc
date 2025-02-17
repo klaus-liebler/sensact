@@ -1,8 +1,8 @@
 //defined: iHAL* halobj;
-    
+//defined: temperature_sensor_handle_t tempHandle;
 
     sensact::apps::cFingerprint* fingerprintApp= (sensact::apps::cFingerprint*)sensact::apps::cApplications::Glo2locCmd[(int)sensact::eApplicationID::FINGR_X1_XX1_42];
-    halobj = new sensact::hal::SensactUpControl::cHAL();
+    halobj = new sensact::hal::SensactUpControl::cHAL(tempHandle);
     DirectGPIOBusmaster gpioBusmaster("GPIO", halobj);
     std::vector<AbstractBusmaster*> busmasters{&gpioBusmaster};
     nvs_handle_t nvsFingerName2FingerIndex;

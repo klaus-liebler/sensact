@@ -82,7 +82,7 @@ namespace sensact
 
 			bool atLeastHealthWarning{false};
 			bool healthError{false};
-
+			static webmanager::WifiStationState previousWifiState{webmanager::WifiStationState::NO_CONNECTION};
 			//Temperatur
 			float temperatureCelcius;
 			hal->GetBoardTemperature(temperatureCelcius);
@@ -128,9 +128,22 @@ namespace sensact
 			//Netzwerk
 			webmanager::M* wm= webmanager::M::GetSingleton();
 			webmanager::WifiStationState state= wm->GetStaState();
+			if(state!=previousWifiState){
+				if(state==webmanager::WifiStationState::CONNECTED){
+					LOGGER::Journal(messagecodes::C::WIFI_CONNECTED, (uint32_t)state);
+				}else{
+					LOGGER::Journal(messagecodes::C::WIFI_NOT_CONNECTED, (uint32_t)state);
+				}
+				previousWifiState=state;
+			}
 			if(state!=webmanager::WifiStationState::CONNECTED){
-				LOGGER::Journal(messagecodes::C::WIFI, (uint32_t)state);
 				atLeastHealthWarning=true;
+			}
+			static bool previousHasRealtime{false};
+			bool hasRealtime=wm->HasRealtime();
+			if(previousHasRealtime!=hasRealtime){
+				LOGGER::Journal(messagecodes::C::GOT_REALTIME, esp_timer_get_time()/1000);
+				previousHasRealtime=hasRealtime;
 			}
 			if(healthError){
 				hal->SetInfoLed(&sensact::FAST);
@@ -147,6 +160,39 @@ namespace sensact
 		{
 			TickType_t xLastWakeTime = xTaskGetTickCount();
 			const TickType_t xFrequency = pdMS_TO_TICKS(100);
+			
+			switch (auto reason = esp_reset_reason())
+            {
+            case ESP_RST_POWERON:
+                ESP_LOGI(TAG, "Reset Reason is RESET %d. MessageLog Memory is reset", reason);
+				webmanager::JournalPlugin::GetSingleton()->ResetJournal();
+                break;
+            case ESP_RST_EXT:
+            case ESP_RST_SW:
+                ESP_LOGI(TAG, "Reset Reason is EXT/SW %d. MessageLogEntry is added", reason);
+                LOGGER::Journal(messagecodes::C::SW, reason);
+                break;
+            case ESP_RST_PANIC:
+                ESP_LOGI(TAG, "Reset Reason is PANIC %d. MessageLogEntry is added", reason);
+                LOGGER::Journal(messagecodes::C::PANIC, reason);
+                break;
+            case ESP_RST_BROWNOUT:
+                ESP_LOGI(TAG, "Reset Reason is BROWNOUT %d. MessageLogEntry is added", reason);
+                LOGGER::Journal(messagecodes::C::BROWNOUT, reason);
+                break;
+            case ESP_RST_TASK_WDT:
+            case ESP_RST_INT_WDT:
+                ESP_LOGI(TAG, "Reset Reason is WATCHDOG %d. MessageLogEntry is added", reason);
+                LOGGER::Journal(messagecodes::C::WATCHDOG, 0);
+                break;
+            default:
+                ESP_LOGI(TAG, "Reset Reason is %d. MessageLog Memory is reset", reason);
+                webmanager::JournalPlugin::GetSingleton()->ResetJournal();
+                break;
+            }
+
+
+
 			while (true)
 			{
 				currentNow = hal->GetMillisS64();

@@ -21,7 +21,7 @@ namespace sensact::hal
 	{
 
 	protected:
-		void *modbus_master_handler = NULL;
+		void *modbus_master_handler{nullptr};
 		temperature_sensor_handle_t temp_handle{nullptr};
 		void SetupCAN(gpio_num_t tx, gpio_num_t rx, int intr_alloc_flags=0)
 		{
@@ -34,9 +34,10 @@ namespace sensact::hal
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
 			ESP_ERROR_CHECK(twai_start());
 		}
-
+		
+		
  		
-		void SetupInternalTemperatureSensor()
+		void SetupInternalTemperatureSensor_deprecated_Do_IT_LIKE_SENSACT_UP_CONTROL()
 		{
 			temperature_sensor_config_t temp_sensor_config={};
 			temp_sensor_config.range_min=-10;
@@ -81,12 +82,17 @@ namespace sensact::hal
 		}
 
 	public:
+		
 		tms_t GetMillisS64() override
 		{
 			return esp_timer_get_time() / 1000;
 		}
 
 		ErrorCode GetBoardTemperature(float &temperatureCelcius) override{
+			if(!this->temp_handle){
+				temperatureCelcius=std::numeric_limits<float>::quiet_NaN();
+				return ErrorCode::FUNCTION_NOT_AVAILABLE;
+			}
             return temperature_sensor_get_celsius(this->temp_handle, &temperatureCelcius)==ESP_OK?ErrorCode::OK:ErrorCode::GENERIC_ERROR;
         }
 		

@@ -56,6 +56,9 @@ namespace webmanager
             return singleton;
         }
         
+        void ResetJournal(){
+            messageLog.fill({0, 0, 0, 0});
+        }
 
         void OnBegin(iWebmanagerCallback *callback) override{
             

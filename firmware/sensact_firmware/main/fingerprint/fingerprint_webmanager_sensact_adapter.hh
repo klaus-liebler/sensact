@@ -266,7 +266,7 @@ namespace fingerprint
             this->myFingerprintSensactApp->NotifyFingerDetected(action);
         }
 
-        void HandleFingerprintDetected(uint8_t errorCode, uint16_t finger, uint16_t score) override
+        void HandleFingerprintDetected(uint16_t errorCode, uint16_t finger, uint16_t score) override
         {
             if (callback)
             {
@@ -294,7 +294,7 @@ namespace fingerprint
             }
         }
 
-        void HandleEnrollmentUpdate(uint8_t errorCode, uint8_t step, uint16_t fingerIndex, const char *name) override
+        void HandleEnrollmentUpdate(uint16_t errorCode, uint8_t step, uint16_t fingerIndex, const char *name) override
         {
             if (callback)
             {

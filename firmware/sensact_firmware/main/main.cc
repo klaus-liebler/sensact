@@ -8,11 +8,12 @@
 
 //esp idf includes
 #include <esp_system.h>
+#include <esp_log.h>
+#include <esp_littlefs.h>
 #include <spi_flash_mmap.h>
 #include <esp_log.h>
 #include <nvs.h>
 #include <nvs_flash.h>
-#include <esp_log.h>
 
 //klaus-liebler component components
 #include <common-esp32.hh>
@@ -54,9 +55,24 @@ extern "C" void app_main(void)
 {
     ESP_LOGI(TAG, "\n%s", cfg::BANNER);
     ESP_LOGI(TAG, "%s is booting up. Firmware build at %s on Git %s", cfg::NODE_ID, cfg::CREATION_DT_STR, cfg::GIT_SHORT_HASH);
+    
+    // Configure NVS and SPIFFS
+    size_t total = 0, used = 0;
+    esp_vfs_littlefs_conf_t conf = {"/spiffs", "storage", nullptr, 0,0,0,0};
+    ESP_ERROR_CHECK(esp_vfs_littlefs_register(&conf));
+    ESP_ERROR_CHECK(esp_littlefs_info(conf.partition_label, &total, &used));
+    ESP_LOGI(TAG, "LittleFS Partition successfully mounted: total: %dbyte, used: %dbyte", total, used);
     ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily(NVS_PARTITION_NAME));
+
+    //Install Temperature sensor
+    //Temperature Sensor is used in generic hal for generic use and is used in the SystemPlugin
+    temperature_sensor_handle_t tempHandle;
+    temperature_sensor_config_t temp_sensor_config = {-10, 80, TEMPERATURE_SENSOR_CLK_SRC_DEFAULT, {0}};
+    ESP_ERROR_CHECK(temperature_sensor_install(&temp_sensor_config, &tempHandle));
+    ESP_ERROR_CHECK(temperature_sensor_enable(tempHandle));
+    
     std::vector<webmanager::iWebmanagerPlugin*> plugins;
-    plugins.push_back(new SystemInfoPlugin());
+    plugins.push_back(new SystemInfoPlugin(tempHandle));
 
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
@@ -81,9 +97,7 @@ extern "C" void app_main(void)
     
     webmanager::M* wm = webmanager::M::GetSingleton();
 
-    //TODO: Der "Nodemaster" ist das "SensactPlugin" und muss auch eingehängt werden
-    //TODO: Ersetze Hostname-Pattern mit NodeID
-    ESP_ERROR_CHECK(wm->Begin("sensact%02x%02x%02x", "sensact1", "sensact%02x%02x%02x", false, &plugins, true));
+    ESP_ERROR_CHECK(wm->Begin("sensact%02x%02x%02x", "sensact1", cfg::NODE_ID, false, &plugins, true));
     
     const char *hostname = wm->GetHostname();
     httpd_ssl_config_t httpd_conf = HTTPD_SSL_CONFIG_DEFAULT();
@@ -96,7 +110,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(httpd_ssl_start(&http_server, &httpd_conf));
     ESP_LOGI(TAG, "HTTPS Server listening on https://%s:%d", hostname, httpd_conf.port_secure);
     
-    //Idee: Wenn bis hierher etwas schief läuft, dann wird eh resettet
+    wm->RegisterHTTPDHandlers(http_server);
     wm->CallMeAfterInitializationToMarkCurrentPartitionAsValid();
     
     nodemaster->RunEternalLoopInTask();

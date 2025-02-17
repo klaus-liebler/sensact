@@ -73,8 +73,9 @@ namespace sensact::hal::SensactUpControl
         led::Animator* led{nullptr};
 
     public:
-        cHAL()
+        cHAL(temperature_sensor_handle_t tempHandle)
         {
+            temp_handle=tempHandle;
             i2c_bus[(uint8_t)R::I2C_INTERNAL] = new iI2CPort_Impl(R::I2C_INTERNAL_IDF);
         }
 
@@ -87,7 +88,6 @@ namespace sensact::hal::SensactUpControl
             this->led->Begin();
             this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
             gpio_set_direction(P::MOTOR, GPIO_MODE_OUTPUT);
-            this->SetupInternalTemperatureSensor();
             return ErrorCode::OK;
         }
         // The only output is the motor output. So always use the appropriate pin. No inversion, Logic 1 means: Motor On

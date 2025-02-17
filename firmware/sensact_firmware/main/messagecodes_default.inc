@@ -3,5 +3,6 @@
         DEF(PANIC, "Reset Reason is PANIC")
         DEF(BROWNOUT, "Reset Reason is BROWNOUT")
         DEF(WATCHDOG, "Reset Reason is WATCHDOG")
-        DEF(SNTP, "Simple Network Time Protocol")
-        DEF(WIFI, "WiFi is not connected")
+        DEF(GOT_REALTIME, "Received Realtime with SNTP")
+        DEF(WIFI_NOT_CONNECTED, "WiFi is not connected")
+        DEF(WIFI_CONNECTED, "WiFi is connected")

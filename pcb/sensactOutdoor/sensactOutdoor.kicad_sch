@@ -7849,6 +7849,16 @@
 	)
 	(wire
 		(pts
+			(xy 217.17 236.22) (xy 217.17 238.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00898054-13cb-4d83-9c20-b6f635627890")
+	)
+	(wire
+		(pts
 			(xy 31.75 128.27) (xy 36.83 128.27)
 		)
 		(stroke
@@ -7866,6 +7876,16 @@
 			(type default)
 		)
 		(uuid "0198a4ec-0606-487d-bb10-f1d0a2152462")
+	)
+	(wire
+		(pts
+			(xy 205.74 222.25) (xy 212.09 222.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "050cc5f6-0e78-439c-abf1-14e09dbbf41b")
 	)
 	(wire
 		(pts
@@ -7889,6 +7909,26 @@
 	)
 	(wire
 		(pts
+			(xy 217.17 231.14) (xy 217.17 233.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a0187e7-c5fc-4bd1-9b2b-371b868b66b5")
+	)
+	(wire
+		(pts
+			(xy 217.17 252.73) (xy 217.17 255.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ac8ce7e-a046-4b1d-88f1-daa4cd77835f")
+	)
+	(wire
+		(pts
 			(xy 62.23 163.83) (xy 62.23 166.37)
 		)
 		(stroke
@@ -7906,6 +7946,16 @@
 			(type default)
 		)
 		(uuid "0c984976-1ab5-4278-9723-e0d391915c7a")
+	)
+	(wire
+		(pts
+			(xy 212.09 245.11) (xy 217.17 245.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "104b2d28-d98a-4215-8d30-7084135aa29b")
 	)
 	(wire
 		(pts
@@ -7936,6 +7986,16 @@
 			(type default)
 		)
 		(uuid "15e1670d-9e79-4a5e-88ad-fbbb238a3e8a")
+	)
+	(wire
+		(pts
+			(xy 217.17 241.3) (xy 214.63 241.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16fcce38-87e1-479f-b048-b60d83664c57")
 	)
 	(wire
 		(pts
@@ -7976,6 +8036,16 @@
 			(type default)
 		)
 		(uuid "1a4c4733-7173-4d6d-80d3-6d1aeb3fce07")
+	)
+	(wire
+		(pts
+			(xy 217.17 247.65) (xy 217.17 250.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20e051e3-5804-4206-8b42-9e092cc40568")
 	)
 	(wire
 		(pts
@@ -8249,6 +8319,16 @@
 	)
 	(wire
 		(pts
+			(xy 217.17 219.71) (xy 217.17 218.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54cdda8a-2b22-4b2f-8300-d12fcdf465c4")
+	)
+	(wire
+		(pts
 			(xy 247.65 54.61) (xy 255.27 54.61)
 		)
 		(stroke
@@ -8276,6 +8356,16 @@
 			(type default)
 		)
 		(uuid "5afa9d3b-f445-4959-80a6-f41aaa5da280")
+	)
+	(wire
+		(pts
+			(xy 217.17 226.06) (xy 217.17 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5be9c8e0-8117-472b-894f-059b82065277")
 	)
 	(wire
 		(pts
@@ -8479,6 +8569,16 @@
 	)
 	(wire
 		(pts
+			(xy 210.82 224.79) (xy 210.82 262.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7f672651-aeb2-4d2e-9a09-86a25906bb7d")
+	)
+	(wire
+		(pts
 			(xy 247.65 92.71) (xy 255.27 92.71)
 		)
 		(stroke
@@ -8486,6 +8586,16 @@
 			(type default)
 		)
 		(uuid "8019bb27-2172-4d60-932e-7bd55a890b6c")
+	)
+	(wire
+		(pts
+			(xy 205.74 224.79) (xy 210.82 224.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8135df5c-0369-4881-9e69-c60ec278b56b")
 	)
 	(wire
 		(pts
@@ -8589,6 +8699,16 @@
 	)
 	(wire
 		(pts
+			(xy 217.17 220.98) (xy 217.17 223.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "909db22e-79c4-494b-a586-6c20db7da7d3")
+	)
+	(wire
+		(pts
 			(xy 140.97 181.61) (xy 149.86 181.61)
 		)
 		(stroke
@@ -8689,6 +8809,16 @@
 	)
 	(wire
 		(pts
+			(xy 212.09 222.25) (xy 212.09 245.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ac821030-0a7c-4d93-8b08-24aabdda265c")
+	)
+	(wire
+		(pts
 			(xy 247.65 20.32) (xy 247.65 16.51)
 		)
 		(stroke
@@ -8719,6 +8849,16 @@
 	)
 	(wire
 		(pts
+			(xy 205.74 219.71) (xy 217.17 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0e05510-77ed-4e59-a0cd-3c899109e0e5")
+	)
+	(wire
+		(pts
 			(xy 247.65 111.76) (xy 255.27 111.76)
 		)
 		(stroke
@@ -8746,6 +8886,26 @@
 			(type default)
 		)
 		(uuid "b4b34247-ac90-4661-9c7b-b38bc13395fe")
+	)
+	(wire
+		(pts
+			(xy 210.82 262.89) (xy 217.17 262.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b524de02-34d2-461a-8b88-1276cafd79a8")
+	)
+	(wire
+		(pts
+			(xy 214.63 241.3) (xy 214.63 227.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b6577642-42fa-4c5e-b2dc-5c9ec1854d9c")
 	)
 	(wire
 		(pts
@@ -8846,6 +9006,16 @@
 			(type default)
 		)
 		(uuid "c7bb385f-1f3c-407c-a061-e64dc8ff9eb6")
+	)
+	(wire
+		(pts
+			(xy 214.63 227.33) (xy 205.74 227.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7c2abe2-4be1-43c6-831d-4ee6d979beb3")
 	)
 	(wire
 		(pts
@@ -9006,6 +9176,16 @@
 			(type default)
 		)
 		(uuid "f151b30b-555b-450f-b28d-b0c0c56a0458")
+	)
+	(wire
+		(pts
+			(xy 217.17 257.81) (xy 217.17 260.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f15e5ffd-4a76-4df4-98b3-35a9d38c860e")
 	)
 	(wire
 		(pts
@@ -9803,6 +9983,28 @@
 			)
 		)
 	)
+	(global_label "LED0-"
+		(shape bidirectional)
+		(at 195.58 227.33 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "1cadea22-7eeb-4cf9-a926-12e6d77beadb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 186.0675 227.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "Onewire"
 		(shape bidirectional)
 		(at 142.24 57.15 0)
@@ -10039,6 +10241,28 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "LED1-"
+		(shape bidirectional)
+		(at 195.58 224.79 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "3a77a77a-cf08-4ea0-a1ce-26694753eac4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 186.0675 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -10767,6 +10991,28 @@
 			)
 		)
 	)
+	(global_label "LED1+"
+		(shape bidirectional)
+		(at 195.58 222.25 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a6188a6f-a6fb-4caa-b853-1dfb8126e157")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 186.0675 222.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "K4"
 		(shape input)
 		(at 115.57 93.98 180)
@@ -11422,6 +11668,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "LED0+"
+		(shape bidirectional)
+		(at 195.58 219.71 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "fc45834e-ae16-43ca-be9c-74c3a62532e7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 186.0675 219.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -17747,6 +18015,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 200.66 222.25 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1234943e-90b2-4468-a0db-1bd5eea624b5")
+		(property "Reference" "J8"
+			(at 198.628 222.4532 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED Out"
+			(at 198.628 224.7646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:ÖLFLEX 4x1mm2"
+			(at 200.66 222.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 200.66 222.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 200.66 222.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0e5e28e5-55d8-4c78-9694-19212ddc118e")
+		)
+		(pin "2"
+			(uuid "02b61ce5-025a-4ee0-9e24-204510677d98")
+		)
+		(pin "3"
+			(uuid "6ca27a0f-6250-457f-933c-972186137c9a")
+		)
+		(pin "4"
+			(uuid "2c7d0904-1668-401d-ac76-95849e2c8211")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 21.59 187.96 270)
 		(unit 1)
@@ -19602,6 +19946,69 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 236.22 260.35 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "38cdd76b-afa1-46a8-867c-8bc8ac920422")
+		(property "Reference" "H2"
+			(at 238.76 259.1816 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 238.76 261.493 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 236.22 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 236.22 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 236.22 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 130.81 101.6 90)
 		(unit 1)
@@ -21123,6 +21530,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 233.68 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5f735733-6486-4a8c-81eb-e06f1dda25c7")
+		(property "Reference" "J12"
+			(at 224.79 233.6799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 236.2199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 233.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 233.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 233.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b942")
+		)
+		(pin "1"
+			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b292")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "LED:APA-106-F5")
 		(at 175.26 101.6 0)
 		(unit 1)
@@ -21602,6 +22079,76 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR077")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 223.52 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "680ff746-fc3c-4faf-9b7d-8aa3489c3057")
+		(property "Reference" "J11"
+			(at 224.79 223.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 226.0599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 223.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 223.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 223.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b942")
+		)
+		(pin "1"
+			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b292")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J11")
 					(unit 1)
 				)
 			)
@@ -23329,6 +23876,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 228.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "96cde53a-2933-44f2-a639-a20e8b1207ab")
+		(property "Reference" "J15"
+			(at 224.79 228.5999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 231.1399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b942")
+		)
+		(pin "1"
+			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b292")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 308.61 217.17 270)
 		(unit 1)
@@ -23754,6 +24371,76 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "D4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 218.44 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a1d93c66-82f7-4f62-8e64-6cb0a7ad0726")
+		(property "Reference" "J10"
+			(at 224.79 218.4399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 220.9799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "35d65848-d87b-4c5f-a0c8-f4fe1a2c0542")
+		)
+		(pin "1"
+			(uuid "86cb5384-fcd7-4758-838f-51b7217e1f5e")
+		)
+		(instances
+			(project ""
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J10")
 					(unit 1)
 				)
 			)
@@ -24895,6 +25582,146 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 260.35 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bf17f2c8-e0e0-48d4-9f0e-0b70365606a9")
+		(property "Reference" "J22"
+			(at 224.79 260.3499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 262.8899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "6fc4043d-eaa6-4283-87c9-38995230b560")
+		)
+		(pin "1"
+			(uuid "c363fe92-0174-4caa-8623-037337b31f9a")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 238.76 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bf2a763b-71d0-49e4-984c-5a416560cb2a")
+		(property "Reference" "J18"
+			(at 224.79 238.7599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 241.2999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "d93f0bcf-572f-49a4-9052-20a5bd3f44cd")
+		)
+		(pin "1"
+			(uuid "0cc6ee09-2cb6-4c09-83f0-7fd009979930")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VBUS")
 		(at 312.42 217.17 270)
 		(unit 1)
@@ -25633,6 +26460,139 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 245.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cfdd88f7-c073-4339-ab8f-f5522aaf8847")
+		(property "Reference" "J19"
+			(at 224.79 245.1099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 247.6499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "6ebe2e09-683c-47e8-ba9b-14b5743af386")
+		)
+		(pin "1"
+			(uuid "ea575c3f-a7ed-404c-9166-9289da31853a")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 236.22 238.76 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "cfe0321f-5977-4b2f-bde6-be96a3806620")
+		(property "Reference" "H6"
+			(at 238.76 237.5916 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 238.76 239.903 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 236.22 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 236.22 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 236.22 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 165.1 73.66 90)
 		(unit 1)
@@ -26111,6 +27071,146 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "C1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 250.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d8412496-d2e7-41ad-ba19-4e1e27eef5cd")
+		(property "Reference" "J20"
+			(at 224.79 250.1899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 252.7299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "543ad40f-e70e-48d2-ac59-52a17e47ca7b")
+		)
+		(pin "1"
+			(uuid "ad64ead2-98d4-4446-9f9f-74877dc7fd7c")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 222.25 255.27 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d8d4c762-128e-42d0-83c1-fd24595e7ab9")
+		(property "Reference" "J21"
+			(at 224.79 255.2699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "LED1"
+			(at 224.79 257.8099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
+			(at 222.25 255.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 255.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 222.25 255.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "bd093fae-a775-40bb-90fd-8b16c4b25e36")
+		)
+		(pin "1"
+			(uuid "482b859b-69b9-4fd1-8342-de37fb836c0b")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J21")
 					(unit 1)
 				)
 			)
@@ -27917,6 +29017,69 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 236.22 228.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f9ca3ed6-091c-4c65-b3f4-5cee88c49fa8")
+		(property "Reference" "H5"
+			(at 238.76 227.4316 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 238.76 229.743 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 236.22 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 236.22 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 236.22 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 87.63 187.96 90)
 		(unit 1)
@@ -28045,6 +29208,69 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 236.22 250.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fcdeed96-53a8-47f2-ad56-cade731cd2ef")
+		(property "Reference" "H1"
+			(at 238.76 249.0216 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 238.76 251.333 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 236.22 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 236.22 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 236.22 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H1")
 					(unit 1)
 				)
 			)

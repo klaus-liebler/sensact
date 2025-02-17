@@ -33,7 +33,6 @@ const BOARDS_BASE_DIR= path.join(USERPROFILE, "netcase/esp32_boards");
 const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates");
 
 
-const HOSTNAME_TEMPLATE = "sensact_${mac_6char}"
 const APPLICATION_NAME = "sensact"
 const APPLICATION_VERSION = "1.0"
 
@@ -124,13 +123,14 @@ export async function compileAndDistributeFlatbuffers(cb: gulp.TaskFunctionCallb
 
 export async function createBoardCertificatesLazily(cb: gulp.TaskFunctionCallback) {
   const c=await Context.get(contextConfig);
+  const s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
   const pa = new P.Paths(c);
   if (pa.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE)
     && pa.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE)) {
     return cb();
   }
-  const hostname = strInterpolator(HOSTNAME_TEMPLATE, {mac_6char:mac_6char(c.b.mac), mac_12char:mac_12char(c.b.mac)});
-  let esp32Cert = cert.CreateAndSignCert(hostname, hostname, path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
+  const hostname =s.GetNodeId();
+  let esp32Cert = cert.CreateAndSignCert(hostname, [hostname, hostname+".local", hostname+".fritz.box"], path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
   pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
   pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
   cb();
@@ -154,6 +154,7 @@ async function createObjectWithDefines(c:Context) {
   
   const now = new Date();
   defines.NODE_ID=s.GetNodeId();
+  defines.HOSTNAME=s.GetNodeId();
   defines.BOARD_NAME = c.b.board_name;
   defines.BOARD_VERSION = c.b.board_version;
   defines.BOARD_MAC = c.b.mac;
@@ -162,7 +163,7 @@ async function createObjectWithDefines(c:Context) {
   defines.CREATION_DT = Math.floor(now.valueOf() / 1000);
   defines.CREATION_DT_STR = now.toLocaleString("de-DE", MyFavouriteDateTimeFormat)
   defines.GIT_SHORT_HASH = (await getLastCommit(true)).shortHash;
-  defines.BANNER = ascii_art.createAsciiArt(APPLICATION_NAME);
+  defines.BANNER = ascii_art.createAsciiArt(`${APPLICATION_NAME} ${s.GetNodeId()}`);
   return defines;
 }
 
@@ -197,6 +198,7 @@ export async function createCppConfigurationHeader(cb: gulp.TaskFunctionCallback
 export async function copyMostRecentlyConnectedBoardFilesToCurrent(cb: gulp.TaskFunctionCallback) {
   const c=await Context.get(contextConfig);
   const p = new P.Paths(c);
+  fs.rmSync(p.GENERATED_CURRENT_BOARD, {recursive:true, force:true})
   fs.cpSync(p.boardSpecificPath(), p.GENERATED_CURRENT_BOARD, { recursive: true });
   return cb();
 }
