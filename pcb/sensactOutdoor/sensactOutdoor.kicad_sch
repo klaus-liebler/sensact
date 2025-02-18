@@ -1270,7 +1270,7 @@
 				)
 			)
 		)
-		(symbol "Converter_ACDC:HLK-PM01"
+		(symbol "Converter_ACDC:HLK-30M24C"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -1282,7 +1282,7 @@
 					)
 				)
 			)
-			(property "Value" "HLK-PM01"
+			(property "Value" "HLK-30M24C"
 				(at 0 -5.08 0)
 				(effects
 					(font
@@ -1290,8 +1290,8 @@
 					)
 				)
 			)
-			(property "Footprint" "Converter_ACDC:Converter_ACDC_HiLink_HLK-PMxx"
-				(at 0 -7.62 0)
+			(property "Footprint" "Converter_ACDC:Converter_ACDC_Hi-Link_HLK-30Mxx"
+				(at 0 -6.985 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1299,8 +1299,8 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "http://www.hlktech.net/product_detail.php?ProId=54"
-				(at 10.16 -8.89 0)
+			(property "Datasheet" "https://h.hlktech.com/download/ACDC%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%9730W%E7%B3%BB%E5%88%97/1/%E6%B5%B7%E5%87%8C%E7%A7%9130WC%E7%B3%BB%E5%88%97%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%97%E8%A7%84%E6%A0%BC%E4%B9%A6V1.2.pdf"
+				(at 0 -8.89 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1308,7 +1308,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Compact AC/DC board mount power module 3W 5V"
+			(property "Description" "Compact AC/DC board mount power module 30W 24V"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1326,7 +1326,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "Converter*ACDC*HiLink*HLK?PM*"
+			(property "ki_fp_filters" "Converter*ACDC*Hi?Link*HLK?30M*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1335,7 +1335,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "HLK-PM01_0_1"
+			(symbol "HLK-30M24C_0_1"
 				(rectangle
 					(start -7.62 3.81)
 					(end 7.62 -3.81)
@@ -1504,7 +1504,316 @@
 					)
 				)
 			)
-			(symbol "HLK-PM01_1_1"
+			(symbol "HLK-30M24C_1_1"
+				(pin power_in line
+					(at -10.16 2.54 0)
+					(length 2.54)
+					(name "AC/L"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -10.16 -2.54 0)
+					(length 2.54)
+					(name "AC/N"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 10.16 -2.54 180)
+					(length 2.54)
+					(name "-Vout"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 10.16 2.54 180)
+					(length 2.54)
+					(name "+Vout"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Converter_ACDC:HLK-5M05"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "PS"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "HLK-5M05"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Converter_ACDC:Converter_ACDC_Hi-Link_HLK-5Mxx"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://h.hlktech.com/download/ACDC%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%975W%E7%B3%BB%E5%88%97/1/%E6%B5%B7%E5%87%8C%E7%A7%915W%E7%B3%BB%E5%88%97%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%97%E8%A7%84%E6%A0%BC%E4%B9%A6V2.8.pdf"
+				(at 10.16 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Compact AC/DC board mount power module 5W, 5V 1A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "AC/DC module power supply"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Converter*ACDC*Hi?Link*HLK?5M*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "HLK-5M05_0_1"
+				(rectangle
+					(start -7.62 3.81)
+					(end 7.62 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(arc
+					(start -5.334 0.635)
+					(mid -4.699 0.2495)
+					(end -4.064 0.635)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -2.794 0.635)
+					(mid -3.429 1.0072)
+					(end -4.064 0.635)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.334 -0.635) (xy -2.794 -0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -3.175)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -1.27) (xy 0 -1.905)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27) (xy 0 0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 1.905)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 3.81) (xy 0 3.175)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.794 -0.635) (xy 5.334 -0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.794 0.635) (xy 3.302 0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 0.635) (xy 4.318 0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.826 0.635) (xy 5.334 0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "HLK-5M05_1_1"
 				(pin power_in line
 					(at -10.16 2.54 0)
 					(length 2.54)
@@ -7550,22 +7859,10 @@
 		(uuid "2f7c673c-191a-45ef-a835-daf888fdccaf")
 	)
 	(junction
-		(at 24.13 135.89)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "32eadd02-312d-42aa-8cbf-c1103e536216")
-	)
-	(junction
 		(at 87.63 153.67)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3745c03c-368f-44fd-b2ba-b2c9cee9f429")
-	)
-	(junction
-		(at 241.3 127)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3ed761c5-6f66-472f-a10c-25f3200c1894")
 	)
 	(junction
 		(at 255.27 92.71)
@@ -7616,28 +7913,28 @@
 		(uuid "58fc998e-35c8-4d3d-878f-8a9e3cee266e")
 	)
 	(junction
-		(at 57.15 129.54)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5ec671f4-e95a-4015-81fd-a57a3eac93a5")
-	)
-	(junction
 		(at 175.26 86.36)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "68c9c6c5-fe0a-4a08-8ecd-e1a1ce1cf5f6")
 	)
 	(junction
-		(at 24.13 128.27)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "6b7918b4-c72a-489e-ad3d-e02cac2430cb")
-	)
-	(junction
 		(at 72.39 158.75)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "70ec89ae-87d4-4fd1-89ce-4775f275e345")
+	)
+	(junction
+		(at 29.21 128.27)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "721fd978-17eb-434c-a526-5a2be8f7e7b7")
+	)
+	(junction
+		(at 57.15 129.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "73b4ac84-29b7-48f4-aad9-095cd5132415")
 	)
 	(junction
 		(at 115.57 148.59)
@@ -7650,12 +7947,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "764a11fa-79d0-41c9-80e7-6f8b8c89e39f")
-	)
-	(junction
-		(at 247.65 127)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "764d5cf8-94a1-45eb-be7e-794341989c79")
 	)
 	(junction
 		(at 247.65 69.85)
@@ -7790,12 +8081,6 @@
 		(uuid "c1b05ab7-0d06-44c2-b39a-443f224a07f6")
 	)
 	(junction
-		(at 255.27 111.76)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c520a7c7-4a33-457e-9ef7-4eb85665c202")
-	)
-	(junction
 		(at 135.89 175.26)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7832,6 +8117,12 @@
 		(uuid "f2e26aba-e593-4250-a903-931d5ae6271f")
 	)
 	(junction
+		(at 29.21 135.89)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f4fb1be8-6f06-4828-90a9-80562600ad64")
+	)
+	(junction
 		(at 151.13 147.32)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7844,8 +8135,16 @@
 		(uuid "f9bd414f-ca27-4954-aced-77d5f1031820")
 	)
 	(no_connect
+		(at 260.35 101.6)
+		(uuid "1466bce5-f057-4fd2-b2d1-24379a68f3f1")
+	)
+	(no_connect
 		(at 151.13 137.16)
 		(uuid "88ed6b44-edc6-499e-b14e-db9bf740cb20")
+	)
+	(no_connect
+		(at 187.96 72.39)
+		(uuid "a64c97a8-020f-463d-8a34-b640b613f5bc")
 	)
 	(wire
 		(pts
@@ -7856,16 +8155,6 @@
 			(type default)
 		)
 		(uuid "00898054-13cb-4d83-9c20-b6f635627890")
-	)
-	(wire
-		(pts
-			(xy 31.75 128.27) (xy 36.83 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "010273c5-6740-4aa7-98fd-67337697b7d0")
 	)
 	(wire
 		(pts
@@ -8059,16 +8348,6 @@
 	)
 	(wire
 		(pts
-			(xy 247.65 127) (xy 255.27 127)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24baa91a-5cf7-4a88-a7e9-e52baebbc3cc")
-	)
-	(wire
-		(pts
 			(xy 247.65 35.56) (xy 255.27 35.56)
 		)
 		(stroke
@@ -8106,16 +8385,6 @@
 			(type default)
 		)
 		(uuid "29987966-1d19-4068-93f6-a61cdfb40ffa")
-	)
-	(wire
-		(pts
-			(xy 21.59 128.27) (xy 24.13 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "29aee339-ff65-4fde-9e45-d902a683cfee")
 	)
 	(wire
 		(pts
@@ -8249,6 +8518,16 @@
 	)
 	(wire
 		(pts
+			(xy 21.59 128.27) (xy 29.21 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3da22ed3-8719-432b-8a5c-db08abcb591f")
+	)
+	(wire
+		(pts
 			(xy 241.3 107.95) (xy 247.65 107.95)
 		)
 		(stroke
@@ -8276,6 +8555,16 @@
 			(type default)
 		)
 		(uuid "3f0a804a-38f8-4dad-936d-e078055b6f0d")
+	)
+	(wire
+		(pts
+			(xy 34.29 128.27) (xy 29.21 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "40bd3658-2ac2-415a-ab00-f75b611eb460")
 	)
 	(wire
 		(pts
@@ -8389,16 +8678,6 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 127) (xy 241.3 127)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5ed74174-89ba-40e3-9144-47fc4ffe4811")
-	)
-	(wire
-		(pts
 			(xy 128.27 167.64) (xy 123.19 167.64)
 		)
 		(stroke
@@ -8509,6 +8788,16 @@
 	)
 	(wire
 		(pts
+			(xy 29.21 135.89) (xy 36.83 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "798e86a3-0392-4181-80f8-2baafba87811")
+	)
+	(wire
+		(pts
 			(xy 247.65 147.32) (xy 255.27 147.32)
 		)
 		(stroke
@@ -8516,16 +8805,6 @@
 			(type default)
 		)
 		(uuid "7a7c10a4-103c-497b-aee9-f00c42c531bc")
-	)
-	(wire
-		(pts
-			(xy 247.65 119.38) (xy 247.65 111.76)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7c3df708-fb44-40cc-b435-cd67e8cec48a")
 	)
 	(wire
 		(pts
@@ -8759,16 +9038,6 @@
 	)
 	(wire
 		(pts
-			(xy 36.83 128.27) (xy 36.83 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e2492fd-e074-42db-8129-fe39460dc1e0")
-	)
-	(wire
-		(pts
 			(xy 149.86 181.61) (xy 158.75 181.61)
 		)
 		(stroke
@@ -8939,6 +9208,16 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 134.62) (xy 36.83 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bdcdb29c-5c21-46f5-a9f0-730773ef905d")
+	)
+	(wire
+		(pts
 			(xy 153.67 167.64) (xy 162.56 167.64)
 		)
 		(stroke
@@ -8959,16 +9238,6 @@
 	)
 	(wire
 		(pts
-			(xy 21.59 135.89) (xy 24.13 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c3537c12-1c43-4fa8-b293-e29432cae229")
-	)
-	(wire
-		(pts
 			(xy 72.39 182.88) (xy 80.01 182.88)
 		)
 		(stroke
@@ -8986,16 +9255,6 @@
 			(type default)
 		)
 		(uuid "c5565d96-c729-4597-a74f-7f75befcc39d")
-	)
-	(wire
-		(pts
-			(xy 24.13 135.89) (xy 36.83 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c6545ebd-eb85-4b41-8c60-ce86a7d07df8")
 	)
 	(wire
 		(pts
@@ -9036,6 +9295,16 @@
 			(type default)
 		)
 		(uuid "cddd9175-04b9-4933-a1af-b1d8264869ad")
+	)
+	(wire
+		(pts
+			(xy 34.29 129.54) (xy 34.29 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce5bb7a6-57e7-476a-8ee2-060451fcbb77")
 	)
 	(wire
 		(pts
@@ -9099,16 +9368,6 @@
 	)
 	(wire
 		(pts
-			(xy 36.83 135.89) (xy 36.83 134.62)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e04b8c10-725b-4bde-8cbf-66bfea5053e6")
-	)
-	(wire
-		(pts
 			(xy 48.26 168.91) (xy 48.26 158.75)
 		)
 		(stroke
@@ -9116,6 +9375,16 @@
 			(type default)
 		)
 		(uuid "e23be5c4-ac1b-45f0-a8d4-95661f7b2716")
+	)
+	(wire
+		(pts
+			(xy 36.83 129.54) (xy 34.29 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e37e8f7c-e05e-48b1-a1c9-2fee238725f1")
 	)
 	(wire
 		(pts
@@ -9196,16 +9465,6 @@
 			(type default)
 		)
 		(uuid "f2a21fa2-bc6f-40c8-a317-560188931411")
-	)
-	(wire
-		(pts
-			(xy 241.3 127) (xy 247.65 127)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f364b99f-4502-4cba-a96d-4ed35ad108b5")
 	)
 	(wire
 		(pts
@@ -9635,18 +9894,9 @@
 		)
 		(uuid "f471b782-3067-4b2c-947f-aa9930537237")
 	)
-	(label "L6"
-		(at 187.96 50.8 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "1b358453-467e-4e50-a263-4ae4923ac7fc")
-	)
 	(label "L5"
 		(at 267.97 92.71 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9657,6 +9907,7 @@
 	)
 	(label "L1"
 		(at 267.97 16.51 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9667,6 +9918,7 @@
 	)
 	(label "L3"
 		(at 267.97 54.61 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9675,18 +9927,9 @@
 		)
 		(uuid "41b4f8c6-4973-4fc7-9118-d582bc7f31e7")
 	)
-	(label "L6"
-		(at 267.97 111.76 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "47993d80-a37e-426e-90c9-fd54b49ed166")
-	)
 	(label "L4"
 		(at 267.97 73.66 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9697,6 +9940,7 @@
 	)
 	(label "L4"
 		(at 187.96 34.29 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9705,8 +9949,20 @@
 		)
 		(uuid "6710e49b-55ed-46cb-bbff-ec6784903691")
 	)
+	(label "L5"
+		(at 38.1 207.01 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "68b0a3d5-96ce-4441-8458-a3db8769697c")
+	)
 	(label "L3"
 		(at 187.96 36.83 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9716,7 +9972,8 @@
 		(uuid "7b898533-e4ba-442d-a7e2-0c52738780b3")
 	)
 	(label "LINE_FUSE"
-		(at 33.02 128.27 0)
+		(at 31.75 135.89 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9725,18 +9982,20 @@
 		)
 		(uuid "b57d94f1-4194-422d-a8aa-4f58dc0d1c7a")
 	)
-	(label "L5"
-		(at 187.96 53.34 180)
+	(label "LINE_FUSE"
+		(at 265.43 107.95 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
-		(uuid "b5d4355e-4eaf-4039-90ca-8dba4d0ce4b4")
+		(uuid "c282f493-500f-4086-a7a8-2d903407515d")
 	)
 	(label "L1"
 		(at 187.96 20.32 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9747,6 +10006,7 @@
 	)
 	(label "L2"
 		(at 267.97 35.56 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9757,6 +10017,7 @@
 	)
 	(label "L2"
 		(at 187.96 17.78 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -9805,28 +10066,6 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "K6"
-		(shape input)
-		(at 115.57 110.49 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "0d43bfed-8035-4ef9-85ba-b5ee5c66d347")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 110.8389 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 				(hide yes)
 			)
 		)
@@ -10630,28 +10869,6 @@
 		(uuid "6c4e64ef-c7ea-46a3-8ec7-f97accf2a680")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 147.0505 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "K6"
-		(shape input)
-		(at 233.68 124.46 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "6f1beb86-67e1-46bf-8c2b-6d1e1485d5c0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 233.68 119.6495 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12731,7 +12948,7 @@
 	)
 	(symbol
 		(lib_id "Device:Fuse")
-		(at 27.94 128.27 270)
+		(at 25.4 135.89 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12739,15 +12956,15 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-000060502385")
 		(property "Reference" "F1"
-			(at 27.94 123.2662 90)
+			(at 25.4 130.8862 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "T0.5"
-			(at 27.94 125.5776 90)
+		(property "Value" "T2.0"
+			(at 25.4 133.1976 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12755,7 +12972,7 @@
 			)
 		)
 		(property "Footprint" "Fuse:Fuse_Littelfuse_372_D8.50mm"
-			(at 27.94 126.492 90)
+			(at 25.4 134.112 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12764,7 +12981,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 27.94 128.27 0)
+			(at 25.4 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12773,7 +12990,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 27.94 128.27 0)
+			(at 25.4 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14003,81 +14220,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Relay:FINDER-32.21-x300")
-		(at 260.35 119.38 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-000060552ea7")
-		(property "Reference" "K6"
-			(at 271.272 118.2116 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "ALDP105W"
-			(at 271.272 120.523 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "liebler_MECH:RELAY_ALDP105W"
-			(at 292.608 120.142 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://gfinder.findernet.com/assets/Series/355/S32EN.pdf"
-			(at 260.35 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 260.35 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "11"
-			(uuid "d54e8eb9-4d2c-4188-976e-a338ad3e7122")
-		)
-		(pin "14"
-			(uuid "3a057c4b-683c-4dd2-a022-7db9095635b8")
-		)
-		(pin "A1"
-			(uuid "744669be-8909-469d-8f2d-6f5e6f6f3203")
-		)
-		(pin "A2"
-			(uuid "5925070e-ca54-4f81-9f05-a7a97e877395")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "K6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Transistor_BJT:BC847")
 		(at 238.76 113.03 0)
 		(unit 1)
@@ -14281,215 +14423,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R23")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_BJT:BC847")
-		(at 238.76 132.08 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-000060552f06")
-		(property "Reference" "Q11"
-			(at 243.6114 130.9116 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BC847"
-			(at 243.6114 133.223 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
-			(at 243.84 133.985 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657"
-			(at 238.76 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 238.76 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ee306311-f3e3-466b-8ae4-ac801d5ee876")
-		)
-		(pin "2"
-			(uuid "3dfbc96a-205a-47f5-b222-b06c39a4f0ba")
-		)
-		(pin "3"
-			(uuid "f15f37f9-48c0-4c32-8eee-86b766659612")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "Q11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 241.3 137.16 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-000060552f10")
-		(property "Reference" "#PWR034"
-			(at 247.65 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 246.38 137.16 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 241.3 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 241.3 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 241.3 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6f723bd4-40b0-400b-842e-4939b975375f")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR034")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 233.68 128.27 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-000060552f1a")
-		(property "Reference" "R24"
-			(at 236.22 129.54 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 233.68 129.54 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
-			(at 231.902 128.27 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 233.68 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 233.68 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a81f47c8-d758-4a1a-b078-3bf1b27e0f5d")
-		)
-		(pin "2"
-			(uuid "a1de1bb8-711c-4cef-8791-3c91b2d5c464")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "R24")
 					(unit 1)
 				)
 			)
@@ -14843,81 +14776,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Converter_ACDC:HLK-PM01")
-		(at 46.99 132.08 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-0000605a8dcf")
-		(property "Reference" "PS1"
-			(at 46.99 123.825 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "HLK-5M05"
-			(at 46.99 126.1364 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "liebler_MODULES:CONV_HLK-5M05"
-			(at 46.99 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.hlktech.net/product_detail.php?ProId=54"
-			(at 57.15 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 46.99 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "030f3240-2fcb-438f-9083-2ee943c96613")
-		)
-		(pin "2"
-			(uuid "0ed2130a-7830-4d20-ab42-5a963ae72061")
-		)
-		(pin "3"
-			(uuid "a6227ee4-b7c2-4e5a-8275-60e499f35589")
-		)
-		(pin "4"
-			(uuid "4fa52d39-fb84-494f-aa65-5c6351bd9eac")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "PS1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:Varistor")
-		(at 24.13 132.08 0)
+		(at 29.21 132.08 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14925,7 +14785,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-0000605a9fdb")
 		(property "Reference" "RV1"
-			(at 26.7462 130.9116 0)
+			(at 31.8262 130.9116 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14934,7 +14794,7 @@
 			)
 		)
 		(property "Value" "10D561K"
-			(at 20.32 137.16 0)
+			(at 25.4 137.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14943,7 +14803,7 @@
 			)
 		)
 		(property "Footprint" "Varistor:RV_Disc_D12mm_W3.9mm_P7.5mm"
-			(at 22.352 132.08 90)
+			(at 27.432 132.08 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14952,7 +14812,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 24.13 132.08 0)
+			(at 29.21 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14961,7 +14821,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 24.13 132.08 0)
+			(at 29.21 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17007,6 +16867,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:NEUT")
+		(at 38.1 212.09 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "03ac3029-2972-41f3-bb4b-ab7bd2254dec")
+		(property "Reference" "#PWR0105"
+			(at 41.91 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "NEUT"
+			(at 35.56 212.0899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 38.1 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 38.1 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"NEUT\""
+			(at 38.1 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "616fdb23-51bf-47b5-9c14-93432ffb6267")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR0105")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 115.57 148.59 0)
 		(unit 1)
@@ -18977,7 +18904,7 @@
 	)
 	(symbol
 		(lib_id "power:LINE")
-		(at 187.96 67.31 90)
+		(at 187.96 69.85 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18986,7 +18913,7 @@
 		(fields_autoplaced yes)
 		(uuid "22a1d301-48b6-43f0-8577-6320dae9e127")
 		(property "Reference" "#PWR070"
-			(at 191.77 67.31 0)
+			(at 191.77 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18995,7 +18922,7 @@
 			)
 		)
 		(property "Value" "LINE"
-			(at 185.42 67.3099 90)
+			(at 185.42 69.8499 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19004,7 +18931,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 187.96 67.31 0)
+			(at 187.96 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19013,7 +18940,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 187.96 67.31 0)
+			(at 187.96 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19022,7 +18949,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"LINE\""
-			(at 187.96 67.31 0)
+			(at 187.96 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19170,81 +19097,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "SW2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x04")
-		(at 170.18 20.32 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "23804879-569c-4ac2-85e8-506ff1b30e09")
-		(property "Reference" "J9"
-			(at 172.212 20.5232 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "24V in"
-			(at 172.212 22.8346 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "liebler_CONN:ÖLFLEX 4x1mm2"
-			(at 170.18 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 170.18 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 170.18 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f1df2f86-2c98-41d8-b88b-019deb57279c")
-		)
-		(pin "2"
-			(uuid "9bb1c53a-7dbd-4f25-b41f-ff61b1654a3b")
-		)
-		(pin "3"
-			(uuid "f9a52847-5478-4e70-8b0a-ce3164f77713")
-		)
-		(pin "4"
-			(uuid "7c0437a9-77fe-452f-9d9d-9536cb5ebc54")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "J9")
 					(unit 1)
 				)
 			)
@@ -19454,71 +19306,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "D15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 165.1 20.32 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "31fe4517-9afa-4a53-b8ba-e29d45ca2b9f")
-		(property "Reference" "#PWR028"
-			(at 158.75 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 160.02 20.32 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 165.1 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 165.1 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 165.1 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fced6257-4d63-484a-b751-daadc858260e")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR028")
 					(unit 1)
 				)
 			)
@@ -20435,6 +20222,69 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 340.36 218.44 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4280499d-aab9-4558-b4f5-e261f5113ee7")
+		(property "Reference" "H7"
+			(at 342.9 217.2716 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 342.9 219.583 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 340.36 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 340.36 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 340.36 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Espressif:ESP32-S3-WROOM-1")
 		(at 83.82 49.53 0)
 		(unit 1)
@@ -20897,71 +20747,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "J6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 165.1 22.86 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5110c230-f4e2-421d-b693-040358e1caf8")
-		(property "Reference" "#PWR027"
-			(at 158.75 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 160.02 22.86 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 165.1 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 165.1 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 165.1 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c10e6a9f-0d79-43da-ba14-8637b32f288a")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR027")
 					(unit 1)
 				)
 			)
@@ -21886,71 +21671,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:Earth_Protective")
-		(at 187.96 58.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "64ab109d-c7f4-42a4-90a2-25f421e5f24d")
-		(property "Reference" "#PWR065"
-			(at 187.96 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PE"
-			(at 191.77 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 187.96 60.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 187.96 60.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"Earth_Protective\""
-			(at 187.96 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0e741502-d72b-4d08-aad4-f38b430829bb")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR065")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+24V")
 		(at 21.59 153.67 90)
 		(unit 1)
@@ -22018,73 +21738,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:LINE")
-		(at 265.43 107.95 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "675de50c-5654-4b86-9f4c-3a7692176321")
-		(property "Reference" "#PWR077"
-			(at 261.62 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "LINE"
-			(at 269.24 107.9499 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 265.43 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 265.43 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"LINE\""
-			(at 265.43 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "da6f9823-3008-4cbd-b015-03d081ff296a")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR077")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
 		(at 222.25 223.52 0)
 		(unit 1)
@@ -22140,10 +21793,10 @@
 			)
 		)
 		(pin "2"
-			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b942")
+			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b943")
 		)
 		(pin "1"
-			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b292")
+			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b293")
 		)
 		(instances
 			(project "sensactOutdoor"
@@ -23125,140 +22778,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:LINE")
-		(at 265.43 127 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "85a112ca-a1da-4192-9177-fee0f188d15c")
-		(property "Reference" "#PWR076"
-			(at 261.62 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "LINE"
-			(at 269.24 126.9999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 265.43 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 265.43 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"LINE\""
-			(at 265.43 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b3670e48-a3e4-4884-8165-64a190213079")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR076")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+24V")
-		(at 165.1 25.4 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "85e350cf-e652-45ca-abfe-a03991b9f585")
-		(property "Reference" "#PWR026"
-			(at 168.91 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+24V"
-			(at 162.56 25.3999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 165.1 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 165.1 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+24V\""
-			(at 165.1 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a9a9dcbb-3d26-4b37-95e4-21a1def23686")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR026")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 41.91 157.48 0)
 		(unit 1)
@@ -23744,73 +23263,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:NEUT")
-		(at 187.96 55.88 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "903e5cba-a29c-4be3-b74c-48cca05a17ce")
-		(property "Reference" "#PWR066"
-			(at 191.77 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "NEUT"
-			(at 185.42 55.8799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 187.96 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 187.96 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"NEUT\""
-			(at 187.96 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7d049e8a-0230-451a-86ba-77b82d9174f0")
-		)
-		(instances
-			(project ""
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR066")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 21.59 161.29 270)
 		(unit 1)
@@ -23876,6 +23328,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 58.42 212.09 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "935cf5e0-52f2-4247-bc28-783c20879d93")
+		(property "Reference" "#PWR0107"
+			(at 64.77 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 63.5 212.09 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 58.42 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 58.42 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "63c5900a-4071-4407-be9b-240fbe8a0b4e")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR0107")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
 		(at 222.25 228.6 0)
 		(unit 1)
@@ -23931,10 +23448,10 @@
 			)
 		)
 		(pin "2"
-			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b942")
+			(uuid "c5bb1d45-0c3e-4d5f-a99f-b1265896b944")
 		)
 		(pin "1"
-			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b292")
+			(uuid "2eaca7c8-7a59-4952-a984-6ab804f6b294")
 		)
 		(instances
 			(project "sensactOutdoor"
@@ -24009,82 +23526,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R10")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:D")
-		(at 247.65 123.19 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "98ed480a-1026-4b24-b579-7c4792cb0f24")
-		(property "Reference" "D6"
-			(at 242.1382 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SM4007PL"
-			(at 244.4496 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "liebler_SEMICONDUCTORS:D_SOD-123_handsolder"
-			(at 247.65 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 247.65 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 247.65 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C64898"
-			(at 247.65 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "60e8faec-b474-43d3-9e91-a89bd53b5e5b")
-		)
-		(pin "2"
-			(uuid "47f2fd04-a89f-4530-b74e-9a4f13affde8")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "D6")
 					(unit 1)
 				)
 			)
@@ -24584,7 +24025,7 @@
 	)
 	(symbol
 		(lib_id "power:LINE")
-		(at 21.59 128.27 90)
+		(at 21.59 135.89 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -24593,7 +24034,7 @@
 		(fields_autoplaced yes)
 		(uuid "a3f2d703-b053-4c55-aaa5-b8ad5706cf38")
 		(property "Reference" "#PWR071"
-			(at 25.4 128.27 0)
+			(at 25.4 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24602,7 +24043,7 @@
 			)
 		)
 		(property "Value" "LINE"
-			(at 19.05 128.2699 90)
+			(at 19.05 135.8899 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24611,7 +24052,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 21.59 128.27 0)
+			(at 21.59 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24620,7 +24061,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 21.59 128.27 0)
+			(at 21.59 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24629,7 +24070,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"LINE\""
-			(at 21.59 128.27 0)
+			(at 21.59 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25077,82 +24518,17 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 130.81 110.49 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "adfcf54e-e91a-4c1d-b194-068435d83d7b")
-		(property "Reference" "#PWR050"
-			(at 137.16 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 133.35 107.95 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 130.81 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 130.81 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 130.81 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "56ee0910-bc5f-4239-a3f4-2cbe15fa9ed4")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR050")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:NEUT")
-		(at 187.96 72.39 90)
+		(lib_id "power:+24V")
+		(at 58.42 207.01 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "b1326a3d-619e-4c0a-a595-2617e39e7d19")
-		(property "Reference" "#PWR067"
-			(at 191.77 72.39 0)
+		(uuid "acc30040-1c37-4eaf-bda9-ab4705e91bef")
+		(property "Reference" "#PWR0106"
+			(at 54.61 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25160,8 +24536,8 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "NEUT"
-			(at 185.42 72.3899 90)
+		(property "Value" "+24V"
+			(at 62.23 207.0099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25170,7 +24546,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 187.96 72.39 0)
+			(at 58.42 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25179,7 +24555,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 187.96 72.39 0)
+			(at 58.42 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25187,8 +24563,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Power symbol creates a global label with name \"NEUT\""
-			(at 187.96 72.39 0)
+		(property "Description" "Power symbol creates a global label with name \"+24V\""
+			(at 58.42 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25197,12 +24573,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8ea77275-c6ce-4a7f-b9e2-c9e4279f90a8")
+			(uuid "e7ba6e61-740f-4af4-9c15-c4ce0ba4ea3f")
 		)
 		(instances
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR067")
+					(reference "#PWR0106")
 					(unit 1)
 				)
 			)
@@ -25268,6 +24644,80 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR085")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Converter_ACDC:HLK-30M24C")
+		(at 48.26 209.55 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b3df7b34-fa74-460b-9b43-c650b819ff88")
+		(property "Reference" "PS2"
+			(at 48.26 200.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "HLK-30M24C"
+			(at 48.26 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Converter_ACDC:Converter_ACDC_Hi-Link_HLK-30Mxx"
+			(at 48.26 216.535 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://h.hlktech.com/download/ACDC%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%9730W%E7%B3%BB%E5%88%97/1/%E6%B5%B7%E5%87%8C%E7%A7%9130WC%E7%B3%BB%E5%88%97%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%97%E8%A7%84%E6%A0%BC%E4%B9%A6V1.2.pdf"
+			(at 48.26 218.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Compact AC/DC board mount power module 30W 24V"
+			(at 48.26 209.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4c7b56b8-8c39-4f39-8a9b-0f3b1c1136c0")
+		)
+		(pin "3"
+			(uuid "acab2afd-eb03-402d-9c3d-04ecb0a1a208")
+		)
+		(pin "6"
+			(uuid "addf46d0-647d-4e4a-8c12-35af6475456b")
+		)
+		(pin "1"
+			(uuid "bb7a096f-10bf-4a35-8152-b0688ce39922")
+		)
+		(instances
+			(project ""
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "PS2")
 					(unit 1)
 				)
 			)
@@ -25507,6 +24957,80 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Converter_ACDC:HLK-5M05")
+		(at 46.99 132.08 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bab810d1-0101-4f06-a733-3386edcec781")
+		(property "Reference" "PS1"
+			(at 46.99 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "HLK-5M05"
+			(at 46.99 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Converter_ACDC:Converter_ACDC_Hi-Link_HLK-5Mxx"
+			(at 46.99 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://h.hlktech.com/download/ACDC%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%975W%E7%B3%BB%E5%88%97/1/%E6%B5%B7%E5%87%8C%E7%A7%915W%E7%B3%BB%E5%88%97%E7%94%B5%E6%BA%90%E6%A8%A1%E5%9D%97%E8%A7%84%E6%A0%BC%E4%B9%A6V2.8.pdf"
+			(at 57.15 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Compact AC/DC board mount power module 5W, 5V 1A"
+			(at 46.99 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "d018740b-2f70-429d-9420-8c965c0c8f02")
+		)
+		(pin "2"
+			(uuid "fce7c36d-e3c0-40d4-8a3e-5d9588d4c132")
+		)
+		(pin "4"
+			(uuid "2728e12a-2f87-4621-b249-3dbcc30f9280")
+		)
+		(pin "1"
+			(uuid "99ff654b-b65c-436a-bf84-90788b4658cd")
+		)
+		(instances
+			(project ""
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "PS1")
 					(unit 1)
 				)
 			)
@@ -27351,16 +26875,15 @@
 	)
 	(symbol
 		(lib_id "power:NEUT")
-		(at 21.59 135.89 90)
+		(at 21.59 128.27 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "dbcc777a-9367-4651-a082-58cc89ea7e8c")
 		(property "Reference" "#PWR072"
-			(at 25.4 135.89 0)
+			(at 25.4 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27369,7 +26892,7 @@
 			)
 		)
 		(property "Value" "NEUT"
-			(at 19.05 135.8899 90)
+			(at 19.05 128.2699 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27378,7 +26901,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 21.59 135.89 0)
+			(at 21.59 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27387,7 +26910,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 21.59 135.89 0)
+			(at 21.59 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27396,7 +26919,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"NEUT\""
-			(at 21.59 135.89 0)
+			(at 21.59 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27549,6 +27072,69 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 340.36 228.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "dd805b31-241a-455a-8c7f-d63172b0c6c6")
+		(property "Reference" "H8"
+			(at 342.9 227.4316 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "H"
+			(at 342.9 229.743 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_3.2mm_M3"
+			(at 340.36 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 340.36 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 340.36 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "H8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:LINE")
 		(at 232.41 144.78 270)
 		(unit 1)
@@ -27677,75 +27263,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR058")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 119.38 110.49 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "deae386c-9255-430c-859a-3201ee70821f")
-		(property "Reference" "R40"
-			(at 120.7516 108.712 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "k47"
-			(at 123.063 108.712 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
-			(at 119.38 112.268 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 119.38 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 119.38 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3cb43478-24df-42a8-97c3-263d267b5391")
-		)
-		(pin "2"
-			(uuid "bfdb58b4-f90c-4b29-85af-a5b584b2abb3")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "R40")
 					(unit 1)
 				)
 			)
@@ -28040,81 +27557,6 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR094")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x04")
-		(at 193.04 53.34 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e90aa096-8ff0-4caa-913b-f52edc310fcb")
-		(property "Reference" "J16"
-			(at 195.072 53.5432 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "230V Out"
-			(at 195.072 55.8546 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "liebler_CONN:ÖLFLEX 4x1mm2"
-			(at 193.04 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 193.04 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 193.04 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bab3ab73-9961-4177-ad45-b988c085d82e")
-		)
-		(pin "2"
-			(uuid "c092cdc6-054e-42c0-8922-de52716f38ac")
-		)
-		(pin "3"
-			(uuid "1e344c5b-e917-4808-8d97-a69b11347f2b")
-		)
-		(pin "4"
-			(uuid "55555bab-ad6c-4f00-b2df-381c34922593")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "J16")
 					(unit 1)
 				)
 			)
@@ -28424,73 +27866,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+24V")
-		(at 165.1 17.78 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "efed1e1e-113e-42d6-8b70-e684179fffa3")
-		(property "Reference" "#PWR09"
-			(at 168.91 17.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+24V"
-			(at 162.56 17.7799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 165.1 17.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 165.1 17.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+24V\""
-			(at 165.1 17.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4549dd64-0f18-4490-a726-4bfbe4ff7e3c")
-		)
-		(instances
-			(project ""
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "#PWR09")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 119.38 93.98 90)
 		(unit 1)
@@ -28690,86 +28065,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:LED")
-		(at 127 110.49 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f375770f-3b9a-43fc-89b2-0654b8d106d2")
-		(property "Reference" "D18"
-			(at 128.5494 107.4928 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "K6"
-			(at 130.8608 107.4928 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
-			(at 127 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 127 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 127 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" "C2286"
-			(at 127 110.49 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f44cd867-221c-42cc-bcd5-926f0f00b579")
-		)
-		(pin "2"
-			(uuid "32a3234d-3e20-436a-b053-c1b2d7664abb")
-		)
-		(instances
-			(project "sensactOutdoor"
-				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
-					(reference "D18")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:NEUT")
-		(at 187.96 69.85 90)
+		(at 187.96 67.31 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -28778,7 +28075,7 @@
 		(fields_autoplaced yes)
 		(uuid "f3804706-aacb-4a7f-843b-43c59ec4590e")
 		(property "Reference" "#PWR075"
-			(at 191.77 69.85 0)
+			(at 191.77 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28787,7 +28084,7 @@
 			)
 		)
 		(property "Value" "NEUT"
-			(at 185.42 69.8499 90)
+			(at 185.42 67.3099 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28796,7 +28093,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 187.96 69.85 0)
+			(at 187.96 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28805,7 +28102,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 187.96 69.85 0)
+			(at 187.96 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28814,7 +28111,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"NEUT\""
-			(at 187.96 69.85 0)
+			(at 187.96 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)

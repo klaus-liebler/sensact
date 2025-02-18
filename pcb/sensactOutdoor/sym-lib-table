@@ -1,3 +1,4 @@
 (sym_lib_table
-  (lib (name sensactOutdoor-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactOutdoor-rescue.lib)(options "")(descr ""))
+  (version 7)
+  (lib (name "sensactOutdoor-rescue")(type "Legacy")(uri "${KIPRJMOD}/sensactOutdoor-rescue.lib")(options "")(descr ""))
 )
