@@ -1,5 +1,5 @@
 {
-  "name": "labathome_webui",
+  "name": "web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,10 +19,9 @@
     "@klaus-liebler/web-components": "file:../../../../npm-packages/@klaus-liebler/web-components",
     "@klaus-liebler/web-components-sensact": "file:../../../../npm-packages/@klaus-liebler/web-components-sensact",
     "@klaus-liebler/sensact-base": "file:../../../../npm-packages/@klaus-liebler/sensact-base",
-    "@generated/flatbuffers_ts": "file:../../../../generated/flatbuffers_ts",
-    "@types/node": "^22.10.9",
     "@generated/sensact_appsbuilder": "file:../../../../generated/sensact_appsbuilder",
     "@generated/runtimeconfig_ts": "file:../../../../generated/runtimeconfig_ts",
+    "@types/node": "^22.10.9",
     "esbuild-minify-templates": "^0.11.0",
     "flatbuffers": "25.1.24",
     "lit-html": "^3.2.1",
