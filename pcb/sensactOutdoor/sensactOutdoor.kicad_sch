@@ -7882,12 +7882,6 @@
 		(uuid "3c5a516a-3853-4c90-b478-648da3f0b5ce")
 	)
 	(junction
-		(at 31.75 205.74)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3e4c7197-5c73-4a4d-a2fc-fef783af79dc")
-	)
-	(junction
 		(at 153.67 175.26)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7952,12 +7946,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "70ec89ae-87d4-4fd1-89ce-4775f275e345")
-	)
-	(junction
-		(at 31.75 213.36)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "72db9f3d-3b80-4cb0-8e8f-f9fd9fde6a1c")
 	)
 	(junction
 		(at 115.57 148.59)
@@ -8152,6 +8140,12 @@
 		(uuid "d026d702-ca49-40ad-bba0-6261b561ca33")
 	)
 	(junction
+		(at 31.75 205.74)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d797772c-68b9-47af-97fc-f8901f3d469e")
+	)
+	(junction
 		(at 279.4 148.59)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -8168,6 +8162,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f230e24e-50b1-4db8-b865-6788db806c41")
+	)
+	(junction
+		(at 31.75 213.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f2b7936b-ee85-4807-9854-476978a8abdd")
 	)
 	(junction
 		(at 182.88 144.78)
@@ -8427,6 +8427,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 259.08) (xy 77.47 259.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d106392-10e3-413c-8962-26cdf653c4ff")
+	)
+	(wire
+		(pts
 			(xy 217.17 247.65) (xy 217.17 250.19)
 		)
 		(stroke
@@ -8634,16 +8644,6 @@
 			(type default)
 		)
 		(uuid "38400501-a6fa-4445-9c50-9057e56dd820")
-	)
-	(wire
-		(pts
-			(xy 31.75 213.36) (xy 38.1 213.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "39296508-259a-4778-8aa4-d9377f939a89")
 	)
 	(wire
 		(pts
@@ -9687,6 +9687,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 271.78) (xy 77.47 271.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0cd535e-35a6-42dc-98f8-6e386fe74482")
+	)
+	(wire
+		(pts
 			(xy 309.88 44.45) (xy 327.66 44.45)
 		)
 		(stroke
@@ -9714,6 +9724,16 @@
 			(type default)
 		)
 		(uuid "e518a60b-ea24-4375-ae43-78ba722634b4")
+	)
+	(wire
+		(pts
+			(xy 31.75 213.36) (xy 38.1 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5319b45-93b2-44fb-a57e-22e6f18d073a")
 	)
 	(wire
 		(pts
@@ -10254,8 +10274,20 @@
 		)
 		(uuid "f471b782-3067-4b2c-947f-aa9930537237")
 	)
+	(label "L4"
+		(at 111.76 266.7 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "01960850-9f56-4f3c-b192-bf197f57644e")
+	)
 	(label "L5"
 		(at 267.97 92.71 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10266,6 +10298,7 @@
 	)
 	(label "L1"
 		(at 267.97 16.51 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10276,6 +10309,7 @@
 	)
 	(label "L3"
 		(at 267.97 54.61 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10284,8 +10318,20 @@
 		)
 		(uuid "41b4f8c6-4973-4fc7-9118-d582bc7f31e7")
 	)
+	(label "L2"
+		(at 111.76 256.54 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "61dadd9c-4fc5-4a67-bef8-16299bf0e773")
+	)
 	(label "L4"
 		(at 267.97 73.66 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10296,6 +10342,7 @@
 	)
 	(label "L4"
 		(at 187.96 34.29 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10306,6 +10353,7 @@
 	)
 	(label "SW"
 		(at 344.17 34.29 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10316,6 +10364,7 @@
 	)
 	(label "LINE_FUSED"
 		(at 232.41 144.78 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10326,6 +10375,7 @@
 	)
 	(label "L3"
 		(at 187.96 36.83 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10334,8 +10384,20 @@
 		)
 		(uuid "7b898533-e4ba-442d-a7e2-0c52738780b3")
 	)
+	(label "L3"
+		(at 111.76 261.62 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "930aa497-077b-4848-b3e9-0968ae68dbe9")
+	)
 	(label "FB"
 		(at 339.09 36.83 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10346,6 +10408,7 @@
 	)
 	(label "LINE_FUSED"
 		(at 29.21 213.36 270)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10356,6 +10419,7 @@
 	)
 	(label "LINE_FUSE"
 		(at 31.75 135.89 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10366,6 +10430,7 @@
 	)
 	(label "L1"
 		(at 187.96 20.32 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10376,6 +10441,7 @@
 	)
 	(label "L2"
 		(at 267.97 35.56 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10386,6 +10452,7 @@
 	)
 	(label "BOOT"
 		(at 340.36 31.75 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10396,6 +10463,7 @@
 	)
 	(label "L2"
 		(at 187.96 17.78 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10403,6 +10471,17 @@
 			(justify right bottom)
 		)
 		(uuid "f3883c94-9ddd-4e28-8590-a1ec2dc2c269")
+	)
+	(label "L1"
+		(at 111.76 251.46 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "fbc26f01-d3a6-4b9f-beeb-f4c6b145d783")
 	)
 	(global_label "PROG_IO0"
 		(shape bidirectional)
@@ -12292,6 +12371,52 @@
 	(netclass_flag ""
 		(length 2.54)
 		(shape round)
+		(at 111.76 256.54 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0f2ef955-45c0-40da-90d2-ec60dcccbc48")
+		(property "Netclass" "230V"
+			(at 112.3696 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 77.47 265.43 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "17f6d341-fa0c-486e-8219-2d60898d9cf6")
+		(property "Netclass" "230V"
+			(at 78.0796 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
 		(at 19.05 213.36 180)
 		(fields_autoplaced yes)
 		(effects
@@ -12510,6 +12635,98 @@
 		(uuid "a47ed976-fa2a-48a0-bf32-88790b1598ad")
 		(property "Netclass" "230V"
 			(at 75.5396 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 111.76 251.46 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ad584d10-8e6b-4786-b03e-251ca0cd908c")
+		(property "Netclass" "230V"
+			(at 112.3696 248.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 77.47 278.13 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ef406f78-47d2-4436-bd90-601efe37bb76")
+		(property "Netclass" "230V"
+			(at 78.0796 275.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 111.76 266.7 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f7f4235d-3df8-4395-a8f0-536b91709833")
+		(property "Netclass" "230V"
+			(at 112.3696 264.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 111.76 261.62 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f924aa5e-8ee2-497f-b1c2-76bfbb3728e4")
+		(property "Netclass" "230V"
+			(at 112.3696 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15016,7 +15233,7 @@
 	)
 	(symbol
 		(lib_id "Device:Varistor")
-		(at 31.75 209.55 180)
+		(at 31.75 209.55 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15024,7 +15241,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-0000605a9fdb")
 		(property "Reference" "RV1"
-			(at 31.75 208.28 90)
+			(at 31.75 210.82 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15033,7 +15250,7 @@
 			)
 		)
 		(property "Value" "10D561K"
-			(at 35.56 204.47 0)
+			(at 27.94 214.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15042,7 +15259,7 @@
 			)
 		)
 		(property "Footprint" "Varistor:RV_Disc_D12mm_W3.9mm_P7.5mm"
-			(at 33.528 209.55 90)
+			(at 29.972 209.55 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17970,6 +18187,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth_Protective")
+		(at 77.47 265.43 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1099f2fd-b1fa-4bd9-a14e-6359d850ac71")
+		(property "Reference" "#PWR034"
+			(at 67.31 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PE"
+			(at 73.66 269.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 74.93 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 74.93 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth_Protective\""
+			(at 77.47 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d61d00f1-3153-45bc-9031-f557d7b3a5e0")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR034")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Generic:Conn_01x01")
 		(at 81.28 250.19 0)
 		(unit 1)
@@ -19536,6 +19818,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 82.55 259.08 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3174e974-83cb-4168-8f78-ab811c8ee6a5")
+		(property "Reference" "J27"
+			(at 85.09 257.8099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "N_IN"
+			(at 85.09 260.3499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 82.55 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 82.55 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 82.55 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d4d88d1c-d5cc-4c49-b511-bac712e4d963")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 363.22 33.02 180)
 		(unit 1)
@@ -20433,6 +20782,73 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 82.55 271.78 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "415c49ec-bef1-4a7b-b88a-0f3bfb67e7f3")
+		(property "Reference" "J29"
+			(at 85.09 270.5099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "N_IN"
+			(at 85.09 273.0499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 82.55 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 82.55 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 82.55 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cc5f168b-58ec-47c2-9237-fe9f1da4e12f")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J29")
 					(unit 1)
 				)
 			)
@@ -23397,6 +23813,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 116.84 256.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "84ccad03-3c5e-4aba-b21d-1b5c97ac3d7c")
+		(property "Reference" "J24"
+			(at 119.38 255.2699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "L2"
+			(at 119.38 257.8099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 116.84 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 116.84 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "788b3d88-dca7-457a-a0a3-537d7dce9e83")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 41.91 157.48 0)
 		(unit 1)
@@ -24012,6 +24495,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth_Protective")
+		(at 77.47 278.13 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "961baa19-8da3-4a7a-9a61-2baf8aae58ae")
+		(property "Reference" "#PWR050"
+			(at 67.31 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PE"
+			(at 73.66 281.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 74.93 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 74.93 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth_Protective\""
+			(at 77.47 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5abc5e5e-c38a-4831-8c6d-2180420b9c54")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR050")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
 		(at 222.25 228.6 0)
 		(unit 1)
@@ -24512,6 +25060,72 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "D4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:NEUT")
+		(at 74.93 259.08 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9c91ad6a-193c-440b-a9e6-f07908d4713c")
+		(property "Reference" "#PWR02"
+			(at 78.74 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "NEUT"
+			(at 72.39 259.0799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 74.93 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 74.93 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"NEUT\""
+			(at 74.93 259.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8a5c688e-8437-4d46-a942-69d04cc352f2")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -25140,6 +25754,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:NEUT")
+		(at 74.93 271.78 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a8d56bee-4b2d-4183-8b12-7daff9728413")
+		(property "Reference" "#PWR035"
+			(at 78.74 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "NEUT"
+			(at 72.39 271.7799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 74.93 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 74.93 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"NEUT\""
+			(at 74.93 271.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a3fe820d-3e97-468a-be6d-262fc5174947")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "#PWR035")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 309.88 36.83 180)
 		(unit 1)
@@ -25352,6 +26032,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 82.55 265.43 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ad067e74-a3b6-4911-98b7-fb2945205d00")
+		(property "Reference" "J28"
+			(at 85.09 264.1599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "PE_IN"
+			(at 85.09 266.6999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 82.55 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 82.55 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 82.55 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1b35f43c-6448-4ab5-a978-cf5a6ca87b92")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J28")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 384.81 29.21 0)
 		(unit 1)
@@ -25542,6 +26289,73 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR085")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 116.84 266.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b3b5bd42-99b2-4dd5-8eee-ca343534ce39")
+		(property "Reference" "J26"
+			(at 119.38 265.4299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "L4"
+			(at 119.38 267.9699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 116.84 266.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 266.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 116.84 266.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "94f76d19-afe4-4c14-b419-ccb4c85632c3")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J26")
 					(unit 1)
 				)
 			)
@@ -25854,6 +26668,73 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 116.84 261.62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b57dc641-de06-4775-bc77-ed31c8da8f42")
+		(property "Reference" "J25"
+			(at 119.38 260.3499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "L3"
+			(at 119.38 262.8899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 116.84 261.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 261.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 116.84 261.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7b36305d-da6e-46c5-956a-117e946ebdc8")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J25")
 					(unit 1)
 				)
 			)
@@ -26199,6 +27080,73 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 116.84 251.46 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c58647ef-e123-4357-8336-1d0df9941824")
+		(property "Reference" "J23"
+			(at 119.38 250.1899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "L1"
+			(at 119.38 252.7299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 116.84 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 116.84 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "6935f238-fd44-4860-9329-ea9b11bd315d")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J23")
 					(unit 1)
 				)
 			)
@@ -28086,6 +29034,73 @@
 			(project "sensactOutdoor"
 				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
 					(reference "#PWR058")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 82.55 278.13 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e0c9e8df-8fe3-4f8b-989a-f7edbcd7e245")
+		(property "Reference" "J30"
+			(at 85.09 276.8599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "PE_IN"
+			(at 85.09 279.3999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_CONN:Flachstecker gewinkelt 4,8 oder 6,35mm"
+			(at 82.55 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 82.55 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 82.55 278.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e185f0a0-114b-4015-9666-98a557b34476")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/eed466bf-cd88-4860-9abf-41a594ca08bd"
+					(reference "J30")
 					(unit 1)
 				)
 			)

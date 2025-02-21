@@ -59,13 +59,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        "clearance|172680000|97650000|d72c89a6-7578-4468-964e-2a845431195f|c8ab8246-b2bb-4b06-b45e-2548482466fd",
-        "clearance|173720000|97650000|5f38bdb2-3657-474e-8e86-d6bb0b298110|b0054ce1-b60e-41de-a6a2-bf712784dd39",
-        "clearance|173720000|97650000|b0054ce1-b60e-41de-a6a2-bf712784dd39|c8ab8246-b2bb-4b06-b45e-2548482466fd",
-        "clearance|173799999|98249999|d72c89a6-7578-4468-964e-2a845431195f|5f38bdb2-3657-474e-8e86-d6bb0b298110",
-        "lib_footprint_mismatch|188100000|107200000|00000000-0000-0000-0000-00006070b76d|00000000-0000-0000-0000-000000000000"
-      ],
+      "drc_exclusions": [],
       "meta": {
         "filename": "board_design_settings.json",
         "version": 2
@@ -553,6 +547,10 @@
     },
     "net_colors": null,
     "netclass_assignments": {
+      "/L1": "230V",
+      "/L2": "230V",
+      "/L3": "230V",
+      "/L4": "230V",
       "/LINE_FUSE": "230V",
       "/LINE_FUSED": "230V",
       "Earth_Protective": "230V",
@@ -757,7 +755,7 @@
   "sheets": [
     [
       "eed466bf-cd88-4860-9abf-41a594ca08bd",
-      "Root"
+      "Stammblatt"
     ]
   ],
   "text_variables": {}
