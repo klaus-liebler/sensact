@@ -461,12 +461,13 @@
       "wire_dangling": "error"
     }
   },
+  "legacy": [],
   "libraries": {
     "pinned_footprint_libs": [],
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "test.kicad_pro",
+    "filename": "sensactOutdoor.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -635,14 +636,14 @@
       "intersheets_ref_show": false,
       "intersheets_ref_suffix": "",
       "junction_size_choice": 3,
-      "label_size_ratio": 0.375,
+      "label_size_ratio": 0.25,
       "operating_point_overlay_i_precision": 3,
       "operating_point_overlay_i_range": "~A",
       "operating_point_overlay_v_precision": 3,
       "operating_point_overlay_v_range": "~V",
       "overbar_offset_ratio": 1.23,
-      "pin_symbol_size": 25.0,
-      "text_offset_ratio": 0.15
+      "pin_symbol_size": 0.0,
+      "text_offset_ratio": 0.08
     },
     "legacy_lib_dir": "",
     "legacy_lib_list": [],
@@ -662,11 +663,6 @@
     "subpart_first_id": 65,
     "subpart_id_separator": 0
   },
-  "sheets": [
-    [
-      "55406433-902c-400a-90c4-aae7882b2968",
-      "Root"
-    ]
-  ],
+  "sheets": [],
   "text_variables": {}
 }
