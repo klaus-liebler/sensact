@@ -11700,6 +11700,29 @@
 	(netclass_flag ""
 		(length 2.54)
 		(shape round)
+		(at 256.54 153.67 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "1c56faf7-24ee-49e5-bad6-110ece7bf543")
+		(property "Netclass" "230V"
+			(at 257.1496 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
 		(at 320.04 223.52 0)
 		(fields_autoplaced yes)
 		(effects
@@ -11711,6 +11734,29 @@
 		(uuid "274d46db-936c-4149-a22d-5a792c727020")
 		(property "Netclass" "230V"
 			(at 320.6496 220.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+			)
+		)
+	)
+	(netclass_flag ""
+		(length 2.54)
+		(shape round)
+		(at 256.54 148.59 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2b018e8b-79eb-4033-ac0d-3441c1c3bdf8")
+		(property "Netclass" "230V"
+			(at 257.1496 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14257,7 +14303,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "LED0"
+		(property "Value" "EN"
 			(at 42.4942 167.4368 0)
 			(effects
 				(font
@@ -17326,7 +17372,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "K4"
+		(property "Value" "K3"
 			(at 104.1908 73.2028 90)
 			(effects
 				(font
@@ -22449,7 +22495,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "LED0"
+		(property "Value" "K4"
 			(at 110.5408 116.3828 90)
 			(effects
 				(font
@@ -22843,7 +22889,6 @@
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x03")
 		(at 195.58 53.34 0)
-		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -22851,7 +22896,7 @@
 		(dnp no)
 		(uuid "978dd376-a549-4153-bbc4-35b87353e465")
 		(property "Reference" "J31"
-			(at 197.612 54.4068 0)
+			(at 197.612 52.2732 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22860,7 +22905,7 @@
 			)
 		)
 		(property "Value" "PROG"
-			(at 197.612 52.0954 0)
+			(at 197.612 54.5846 0)
 			(effects
 				(font
 					(size 1.27 1.27)
