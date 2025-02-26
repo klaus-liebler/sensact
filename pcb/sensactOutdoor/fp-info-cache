@@ -1,4 +1,4 @@
-25253492620500068
+25255233173975167
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -100775,6 +100775,13 @@ liebler_MODULES
 NEOPIXEL_STICK_alternativ
 JST PH series connector, B4B-PH-K (http://www.jst-mfg.com/product/pdf/eng/ePH.pdf), generated with kicad-footprint-generator
 connector JST PH side entry
+0
+8
+8
+liebler_MODULES
+NRF24L01-Module-SMD
+Through hole pin header, pitch 1.27mm
+pin header
 0
 8
 8
