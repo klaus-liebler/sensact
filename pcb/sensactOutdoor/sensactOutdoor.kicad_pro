@@ -58,7 +58,16 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "lib_footprint_mismatch|166900000|122800000|14331944-dc6d-4ab6-83f5-599660ed86f9|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "lib_footprint_mismatch|189525000|97755000|f5e90ef4-8bfd-49ea-9615-660fd335874d|00000000-0000-0000-0000-000000000000",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -124,7 +133,7 @@
         "max_error": 0.005,
         "min_clearance": 0.0,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.5,
+        "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
@@ -189,6 +198,7 @@
         0.0,
         0.3,
         0.6,
+        0.65,
         0.8,
         1.6,
         3.0
@@ -243,7 +253,28 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "global_label_dangling|1828800|2197100|28b9760c-c80a-43cf-ab6a-6fd585663c03|00000000-0000-0000-0000-000000000000|/55406433-902c-400a-90c4-aae7882b2968||",
+        ""
+      ],
+      [
+        "global_label_dangling|1828800|2222500|bcda203b-16f5-40d1-a0e2-86a3f32ebcd3|00000000-0000-0000-0000-000000000000|/55406433-902c-400a-90c4-aae7882b2968||",
+        ""
+      ],
+      [
+        "global_label_dangling|1828800|2247900|fbc9909b-d5ce-4208-b1e9-fa72563a6ef4|00000000-0000-0000-0000-000000000000|/55406433-902c-400a-90c4-aae7882b2968||",
+        ""
+      ],
+      [
+        "global_label_dangling|1828800|2273300|438f786c-cffc-46e8-bcf7-dadbe0d57138|00000000-0000-0000-0000-000000000000|/55406433-902c-400a-90c4-aae7882b2968||",
+        ""
+      ],
+      [
+        "pin_to_pin|279400|571500|60828f9f-cb4f-4a83-896c-b9d7e0f1791f|fa88bcfe-5df3-47e3-a15f-89d5996089f8|/55406433-902c-400a-90c4-aae7882b2968|/55406433-902c-400a-90c4-aae7882b2968|/55406433-902c-400a-90c4-aae7882b2968",
+        "May only be an Input; for better routing"
+      ]
+    ],
     "meta": {
       "version": 0
     },

@@ -22,15 +22,12 @@ export const IDF_PATH=globalThis.process.env.IDF_PATH as string;
 export const USERPROFILE =globalThis.process.env.USERPROFILE as string;
 
 //Config
-const IDF_PROJECT_ROOT = `C:\\repos\\sensact\\firmware\\sensact_firmware`
-const IDF_COMPONENT_WEBMANAGER_ROOT = "C:\\repos\\espidf-component-webmanager";
-const GENERATED_ROOT = "c:\\repos\\generated";
-const SENSACT_COMPONENT_GENERATED_PATH = "C:\\repos\\generated\\sensact_model";
-
-const BOARDS_BASE_DIR= path.join(USERPROFILE, "netcase/esp32_boards");
-const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates");
-
-
+const IDF_PROJECT_ROOT = "C:\\repos\\sensact\\firmware\\sensact_firmware"
+const IDF_COMPONENT_WEBMANAGER_ROOT = "C:\\repos\\espidf-component-webmanager"
+const GENERATED_ROOT = "c:\\repos\\generated"
+const SENSACT_COMPONENT_GENERATED_PATH = "C:\\repos\\generated\\sensact_model"
+const BOARDS_BASE_DIR= path.join(USERPROFILE, "netcase/esp32_boards")
+const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates")
 const APPLICATION_NAME = "sensact"
 const APPLICATION_VERSION = "1.0"
 
