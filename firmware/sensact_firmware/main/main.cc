@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
+
 //FreeRTOS & Lwip includes
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -95,8 +96,8 @@ extern "C" void app_main(void)
     }
     nodemaster->Setup(hosts);
     
+    //Configure Network
     webmanager::M* wm = webmanager::M::GetSingleton();
-
     ESP_ERROR_CHECK(wm->Begin("sensact%02x%02x%02x", "sensact1", cfg::NODE_ID, false, &plugins, true));
     
     const char *hostname = wm->GetHostname();

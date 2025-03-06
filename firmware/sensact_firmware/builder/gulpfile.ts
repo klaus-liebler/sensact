@@ -160,7 +160,7 @@ async function createObjectWithDefines(c:Context) {
 export async function buildAndCompressWebProject(cb: gulp.TaskFunctionCallback) {
   const c = await Context.get(contextConfig);
   const pa = new P.Paths(c);
-  await vite_helper.buildAndCompressWebProject(pa, path.join(c.c.idfProjectDirectory, "web"), pa.GENERATED_WEB,  await createObjectWithDefines(c));
+  await vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), pa.GENERATED_WEB);
   return cb();
 }
 
