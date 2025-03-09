@@ -6168,6 +6168,199 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "liebler_MODULES:MAX98357_MODULE"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MAX98357_MODULE"
+				(at 0 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "MAX98357_MODULE_0_1"
+				(rectangle
+					(start 0 8.89)
+					(end 7.62 -8.89)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "MAX98357_MODULE_1_1"
+				(pin input line
+					(at -2.54 7.62 0)
+					(length 2.54)
+					(name "LRC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -2.54 5.08 0)
+					(length 2.54)
+					(name "BCLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -2.54 2.54 0)
+					(length 2.54)
+					(name "DIN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -2.54 0 0)
+					(length 2.54)
+					(name "GAIN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -2.54 -2.54 0)
+					(length 2.54)
+					(name "SD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -2.54 -5.08 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -2.54 -7.62 0)
+					(length 2.54)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "liebler_SEMICONDUCTORS:TPS92200D1DDCR"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -8329,10 +8522,6 @@
 		(uuid "fe39dc25-d82c-41ab-8199-ffbcc2bf1ecb")
 	)
 	(no_connect
-		(at 58.42 57.15)
-		(uuid "25f97211-09e4-4798-b935-c5ec9ad7b53b")
-	)
-	(no_connect
 		(at 151.13 137.16)
 		(uuid "31044ed6-d9a5-4ec3-9fa0-8992c1ac4fcf")
 	)
@@ -8341,24 +8530,8 @@
 		(uuid "35e1ab64-1cc5-4756-98fa-e66fe5e068cb")
 	)
 	(no_connect
-		(at 58.42 52.07)
-		(uuid "3f8c6fca-3fc6-4e05-b19c-b27a9ddaa984")
-	)
-	(no_connect
 		(at 204.47 139.7)
 		(uuid "45340b08-3a13-4c0f-a4f0-e0e3ea3a7ff4")
-	)
-	(no_connect
-		(at 58.42 49.53)
-		(uuid "9101081d-dae8-4a16-ae8e-bfe3680f0720")
-	)
-	(no_connect
-		(at 58.42 59.69)
-		(uuid "aa7adef8-5dbe-47e8-b99e-bee621b92370")
-	)
-	(no_connect
-		(at 58.42 54.61)
-		(uuid "c40732c8-a5db-4096-9773-a11e0880bc34")
 	)
 	(no_connect
 		(at 317.5 36.83)
@@ -8367,10 +8540,6 @@
 	(no_connect
 		(at 58.42 41.91)
 		(uuid "db763136-cc21-45cb-9945-3983f530f8a7")
-	)
-	(no_connect
-		(at 58.42 39.37)
-		(uuid "f56f4ff0-4625-4554-a93d-386f06fcd78d")
 	)
 	(no_connect
 		(at 58.42 44.45)
@@ -10096,6 +10265,28 @@
 		)
 		(uuid "ee1dc053-4900-4b32-9465-49280d866986")
 	)
+	(global_label "I2S_GAIN"
+		(shape input)
+		(at 91.44 38.1 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "02e4de06-0afe-4bf6-bbe9-6946ca349773")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 80.8237 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "PROG_IO0"
 		(shape bidirectional)
 		(at 25.4 97.79 90)
@@ -10174,6 +10365,28 @@
 		(uuid "1da977d8-4a49-41db-afae-3cd70914c1ee")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 298.8117 228.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "I2S_SD"
+		(shape output)
+		(at 58.42 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1f1c732b-adbe-48aa-9f5b-b5e3ba0478a9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 67.2219 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10424,28 +10637,6 @@
 			)
 		)
 	)
-	(global_label "CAN_RX"
-		(shape input)
-		(at 27.94 31.75 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "39beea3f-3e0d-4158-b5aa-991571972cca")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 18.4728 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "VBUS_SENSE"
 		(shape output)
 		(at 27.94 49.53 180)
@@ -10533,6 +10724,50 @@
 			)
 		)
 	)
+	(global_label "I2S_LRC"
+		(shape output)
+		(at 58.42 54.61 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "50151a1f-0f25-4a8e-8ba0-a29a28d71f3e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 68.3105 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "I2S_DATA"
+		(shape output)
+		(at 58.42 49.53 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5289b69c-f539-44bd-b5a3-3726f1385211")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 69.1572 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "USB+"
 		(shape bidirectional)
 		(at 58.42 36.83 0)
@@ -10595,6 +10830,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "I2S_BCLK"
+		(shape output)
+		(at 58.42 52.07 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5fe68d50-c960-45e9-8abb-2f6e06689441")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 69.5805 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -10775,7 +11032,7 @@
 	)
 	(global_label "LED1_DIM"
 		(shape output)
-		(at 58.42 69.85 0)
+		(at 58.42 67.31 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -10785,7 +11042,7 @@
 		)
 		(uuid "70144293-9eea-4223-82f6-06a50ba37d82")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.7014 69.85 0)
+			(at 69.7014 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10817,9 +11074,31 @@
 			)
 		)
 	)
+	(global_label "I2S_GAIN"
+		(shape output)
+		(at 58.42 57.15 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "785ed356-33d8-4eca-95f9-b417cdee6c30")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 69.0363 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "LED0_DIM"
 		(shape output)
-		(at 58.42 62.23 0)
+		(at 58.42 69.85 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -10829,7 +11108,7 @@
 		)
 		(uuid "7ed4ce60-c166-4077-aa16-7db61c3b57e1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.7014 62.23 0)
+			(at 69.7014 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10852,6 +11131,28 @@
 		(uuid "82d3d498-4365-4470-b605-dcdbbfe70b91")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 46.0084 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "I2S_BCLK"
+		(shape input)
+		(at 91.44 43.18 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "850062c4-5812-4154-acc7-f3d2f0e6632f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 80.2795 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10971,6 +11272,28 @@
 			)
 		)
 	)
+	(global_label "I2S_SD"
+		(shape input)
+		(at 91.44 48.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9980a0e6-d455-47d8-ad8b-ddd4c2e4ad09")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 82.6381 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "PROG_TX"
 		(shape bidirectional)
 		(at 190.5 53.34 180)
@@ -11039,7 +11362,7 @@
 	)
 	(global_label "MAINS"
 		(shape input)
-		(at 58.42 67.31 0)
+		(at 58.42 39.37 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11049,7 +11372,7 @@
 		)
 		(uuid "a4022bb8-64f3-42d0-a08a-10dae874570f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 66.4358 67.31 0)
+			(at 66.4358 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11234,6 +11557,28 @@
 			)
 		)
 	)
+	(global_label "I2S_DATA"
+		(shape input)
+		(at 91.44 45.72 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b79e3e82-58ab-470e-b38e-cabafbacfa0d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 80.7028 45.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "RGB_OUT"
 		(shape input)
 		(at 210.82 73.66 180)
@@ -11362,6 +11707,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "I2S_LRC"
+		(shape input)
+		(at 91.44 40.64 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c8103ef9-dea1-4a79-b3f0-ea42c0a97760")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 81.5495 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -11652,6 +12019,28 @@
 			)
 		)
 	)
+	(global_label "CAN_RX"
+		(shape input)
+		(at 58.42 59.69 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e5d485be-d3b2-44ad-8a84-1a2180fca926")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 67.8872 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "LED1+"
 		(shape bidirectional)
 		(at 165.1 59.69 180)
@@ -11697,7 +12086,7 @@
 	)
 	(global_label "CAN_TX"
 		(shape output)
-		(at 27.94 34.29 180)
+		(at 27.94 31.75 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11707,7 +12096,7 @@
 		)
 		(uuid "e8f89990-2acd-494a-887d-c5946ce12c8f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 18.7752 34.29 0)
+			(at 18.7752 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17167,6 +17556,71 @@
 			(project "test"
 				(path "/55406433-902c-400a-90c4-aae7882b2968"
 					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 91.44 53.34 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "11f2853c-acec-481c-8eb2-26075b9e2084")
+		(property "Reference" "#PWR0111"
+			(at 95.25 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 85.09 53.34 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 91.44 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 91.44 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 91.44 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b43b1680-2243-4a75-adb1-7297eaa053f9")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/55406433-902c-400a-90c4-aae7882b2968"
+					(reference "#PWR0111")
 					(unit 1)
 				)
 			)
@@ -27218,6 +27672,91 @@
 		)
 	)
 	(symbol
+		(lib_id "liebler_MODULES:MAX98357_MODULE")
+		(at 93.98 45.72 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e4cf52bc-60e1-4eee-8d58-cdb85ce345e1")
+		(property "Reference" "U1"
+			(at 102.87 44.4499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MAX98357_MODULE"
+			(at 102.87 46.9899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical"
+			(at 93.98 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 45.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "0c6e1ac4-2b2e-4a3a-a69f-a002f5cfbfb4")
+		)
+		(pin "1"
+			(uuid "9c631842-c989-4199-933e-5a0f810bcc90")
+		)
+		(pin "3"
+			(uuid "bff70b9b-08fb-4af6-afb5-a508bc5d3422")
+		)
+		(pin "5"
+			(uuid "9c70b917-325c-4a26-b4d3-4a3c2787dfb8")
+		)
+		(pin "7"
+			(uuid "42b8d456-1b09-4105-a5bf-cdb6285361ee")
+		)
+		(pin "4"
+			(uuid "f3e8b5d5-1df5-49ea-a126-595fd94a26d5")
+		)
+		(pin "6"
+			(uuid "843d9b24-5e6b-4227-b56b-301cdcfde5f2")
+		)
+		(instances
+			(project ""
+				(path "/55406433-902c-400a-90c4-aae7882b2968"
+					(reference "U1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Switch:SW_SPDT")
 		(at 199.39 137.16 0)
 		(unit 1)
@@ -28491,6 +29030,71 @@
 			(project "test"
 				(path "/55406433-902c-400a-90c4-aae7882b2968"
 					(reference "H1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 91.44 50.8 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ffd44851-59c8-4871-8aa8-5014b51d7aee")
+		(property "Reference" "#PWR067"
+			(at 85.09 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 86.36 50.8 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 91.44 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 91.44 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 91.44 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4078364c-ba78-423d-a5c2-7f4b1df6365c")
+		)
+		(instances
+			(project "sensactOutdoor"
+				(path "/55406433-902c-400a-90c4-aae7882b2968"
+					(reference "#PWR067")
 					(unit 1)
 				)
 			)
