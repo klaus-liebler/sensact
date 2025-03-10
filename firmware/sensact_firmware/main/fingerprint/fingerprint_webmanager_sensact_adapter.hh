@@ -281,13 +281,13 @@ namespace fingerprint
                 callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
                 
             }
-            if (errorCode == (uint8_t)fingerprint::RET::OK)
+            if (errorCode == (uint8_t)grow_fingerprint::RET::OK)
             {
 
                 ESP_LOGI(TAG, "Fingerprint detected successfully: fingerIndex=%d", finger);
                 // buzzer->PlaySong(BUZZER::RINGTONE_SONG::POSITIVE);
             }
-            else if (errorCode == (uint8_t)fingerprint::RET::FINGER_NOT_FOUND)
+            else if (errorCode == (uint8_t)grow_fingerprint::RET::FINGER_NOT_FOUND)
             {
                 ESP_LOGW(TAG, "Unknown finger!");
                 // buzzer->PlaySong(BUZZER::RINGTONE_SONG::NEGATIV);

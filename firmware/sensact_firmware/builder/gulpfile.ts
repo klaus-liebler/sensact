@@ -8,9 +8,10 @@ import { getLastCommit } from "@klaus-liebler/espidf-vite-secure-build-tools/git
 import * as ascii_art from "@klaus-liebler/espidf-vite-secure-build-tools/ascii_art";
 import { flatbuffers_generate_c, flatbuffers_generate_ts } from "@klaus-liebler/espidf-vite-secure-build-tools/flatbuffers";
 import {Context, ContextConfig} from "@klaus-liebler/espidf-vite-secure-build-tools/context"
-import {writeFileCreateDirLazy } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
+import {cleanNpmExcept_PackageJson_node_modules } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
 import * as vite_helper from "@klaus-liebler/espidf-vite-secure-build-tools/vite_helper";
-import { MyFavouriteDateTimeFormat, StringBuilderImpl } from "@klaus-liebler/commons";
+import { MyFavouriteDateTimeFormat } from "@klaus-liebler/commons";
+import * as cfg from "@klaus-liebler/espidf-vite-secure-build-tools/key_value_file_helper"
 import * as sensact from "./sensact_code_generator";
 
 //Default Board Type
@@ -35,15 +36,9 @@ const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS
 
 
 export const buildForCurrent = gulp.series(
-  createSensactSpecificFiles,
-  createFlatbuffers,
+  createFiles,
   buildAndCompressWebProject,
-  createBoardCertificatesLazily,
-  //createRandomFlashEncryptionKeyLazily,
-  createCppConfigurationHeader,
-  createCMakeJsonConfigFile,
   buildFirmware,
-  //encryptFirmware,
 )
 
 export default gulp.series(
@@ -53,78 +48,48 @@ export default gulp.series(
   flashFirmware
 )
 
-async function createRandomFlashEncryptionKeyLazily(cb: gulp.TaskFunctionCallback) {
-  await idf.createRandomFlashEncryptionKeyLazily(await Context.get(contextConfig));
+export async function createFiles(cb: gulp.TaskFunctionCallback) {
+  const c= await Context.get(contextConfig)
+
+  //Sensact
+  var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
+  s.PrepareSensactFiles()
+
+  //Flatbuffers
+  fs.rmSync(c.p.GENERATED_FLATBUFFERS_CPP, {recursive:true, force:true})
+  cleanNpmExcept_PackageJson_node_modules(c.p.GENERATED_FLATBUFFERS_TS);
+  await flatbuffers_generate_c([path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), c.p.P_FLATBUFFERS], c.p.GENERATED_FLATBUFFERS_CPP);
+  await flatbuffers_generate_ts([path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), c.p.P_FLATBUFFERS], c.p.GENERATED_FLATBUFFERS_TS);
+
+  //Certificates (lazy)
+  if (!c.p.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE)
+    || !c.p.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE)) {
+    const hostname = s.GetNodeId();
+    let esp32Cert = cert.CreateAndSignCert(hostname, [hostname, hostname+".local", hostname+".fritz.box"], path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
+    c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
+    c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
+    }
+
+  //Config files
+  const defs = await createObjectWithDefines(c);
+  cfg.createCMakeJsonConfigFile(c, defs);
+  cfg.createCppConfigurationHeader(c, defs);
+  cfg.createTypeScriptRuntimeConfigProject(c, defs);
   cb();
 }
 
 async function buildFirmware(cb: gulp.TaskFunctionCallback) {
   const c=await Context.get(contextConfig)
-  const p = new P.Paths(c)
-  await idf.buildFirmware(c);
-  //await idf.nvs_partition_gen_encrypt(c, ()=>true)
-  cb();
+  return idf.buildFirmware(c);
 } 
 
-async function encryptFirmware(cb: gulp.TaskFunctionCallback){
-  await idf.encryptPartitions_Bootloader_App_PartitionTable_OtaData(await Context.get(contextConfig));
-  cb();
-}
-
-async function flashEncryptedFirmware(cb: gulp.TaskFunctionCallback){
-  await idf.flashEncryptedFirmware(await Context.get(contextConfig), false, false);
-  cb();
-}
 
 async function flashFirmware(cb: gulp.TaskFunctionCallback){
-  await idf.flashFirmware(await Context.get(contextConfig), true, true);
-  cb();
+  return idf.flashFirmware(await Context.get(contextConfig), true, true);
 }
 
 export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
-  await Context.get(contextConfig, true);
-  return cb();
-}
-
-export async function createSensactSpecificFiles(cb: gulp.TaskFunctionCallback){
-  const c = await Context.get(contextConfig);
-  var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
-  s.PrepareSensactFiles()
-
-  return cb()
-}
-
-export async function createFlatbuffers(cb: gulp.TaskFunctionCallback) {
-  const c= await Context.get(contextConfig)
-  const pa = new P.Paths(c);
-  fs.rmSync(pa.GENERATED_FLATBUFFERS_CPP, {recursive:true, force:true})
-  fs.rmSync(pa.GENERATED_FLATBUFFERS_TS, {recursive:true, force:true})
-  await flatbuffers_generate_c(
-    [path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), pa.P_FLATBUFFERS],
-    pa.GENERATED_FLATBUFFERS_CPP
-  );
-  
-  await flatbuffers_generate_ts(
-    [path.join(IDF_COMPONENT_WEBMANAGER_ROOT, "flatbuffers"), pa.P_FLATBUFFERS],
-    pa.GENERATED_FLATBUFFERS_TS
-  );
-  
-  cb();
-}
-
-export async function createBoardCertificatesLazily(cb: gulp.TaskFunctionCallback) {
-  const c=await Context.get(contextConfig);
-  const s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
-  const pa = new P.Paths(c);
-  if (pa.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE)
-    && pa.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE)) {
-    return cb();
-  }
-  const hostname =s.GetNodeId();
-  let esp32Cert = cert.CreateAndSignCert(hostname, [hostname, hostname+".local", hostname+".fritz.box"], path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
-  pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
-  pa.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
-  cb();
+  return Context.get(contextConfig, true);
 }
 
 async function createObjectWithDefines(c:Context) {
@@ -142,12 +107,13 @@ async function createObjectWithDefines(c:Context) {
   }
 
   const now = new Date();
-  defines.NODE_ID=s.GetNodeId();
+  defines.NODE_ID=s.GetNodeId();//Specific for Sensact
   defines.HOSTNAME=s.GetNodeId();
   defines.BOARD_NAME = c.b.board_name;
   defines.BOARD_VERSION = c.b.board_version;
-  defines.BOARD_ROLES=[s.GetNodeId()];
+  defines.BOARD_ROLES=c.b.board_roles;
   defines.BOARD_MAC = c.b.mac;
+  defines.BOARD_DIRECTORY = c.p.boardSpecificPath();
   defines.APP_NAME = APPLICATION_NAME;
   defines.APP_VERSION = APPLICATION_VERSION;
   defines.CREATION_DT = Math.floor(now.valueOf() / 1000);
@@ -159,39 +125,12 @@ async function createObjectWithDefines(c:Context) {
 
 export async function buildAndCompressWebProject(cb: gulp.TaskFunctionCallback) {
   const c = await Context.get(contextConfig);
-  const pa = new P.Paths(c);
-  await vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), pa.GENERATED_WEB);
-  return cb();
+  return vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), c.p.GENERATED_WEB);
 }
 
 
-export async function createCppConfigurationHeader(cb: gulp.TaskFunctionCallback) {
-  const c=await Context.get(contextConfig);
-  const p = new P.Paths(c);
-  const defines = await createObjectWithDefines(c);
-  var s = new StringBuilderImpl("#pragma once\n");
-  for (const [k, v] of Object.entries(defines)) {
-    s.AppendLine(`#define ${k} ${JSON.stringify(v)}`);
-  }
-  writeFileCreateDirLazy(path.join(p.GENERATED_RUNTIMECONFIG_CPP,"runtimeconfig_defines.hh"), s.Code);
-  s = new StringBuilderImpl("#pragma once\nnamespace cfg{");
-  for (const [k, v] of Object.entries(defines)) {
 
-    s.AppendLine(`\tconstexpr auto ${k}{${JSON.stringify(v)}};`);
-  }
-  s.AppendLine("}//namespace")
-  writeFileCreateDirLazy(path.join(p.GENERATED_RUNTIMECONFIG_CPP,"runtimeconfig.hh"), s.Code);
-  return cb();
-}
 
-export async function createCMakeJsonConfigFile(cb: gulp.TaskFunctionCallback) {
-  const c=await Context.get(contextConfig);
-  const p = new P.Paths(c);
-  var defs =await createObjectWithDefines(c);
-  defs["BOARD_DIRECTORY"]=p.boardSpecificPath();
-  writeFileCreateDirLazy(path.join(p.GENERATED_CMAKE, "config.json") ,JSON.stringify(defs));
-  return cb();
-}
 
 
 
