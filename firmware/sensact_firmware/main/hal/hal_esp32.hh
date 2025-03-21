@@ -34,6 +34,38 @@ namespace sensact::hal
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
 			ESP_ERROR_CHECK(twai_start());
 		}
+
+	
+
+		void SetupLedcCommonTimer(ledc_timer_t timer){
+			
+			// Prepare and then apply the LEDC PWM timer configuration
+			ledc_timer_config_t ledc_timer = {};
+			ledc_timer.speed_mode= LEDC_LOW_SPEED_MODE;//obligatory according to https://docs.espressif.com/projects/esp-idf/en/v5.4/esp32s3/api-reference/peripherals/ledc.html
+			ledc_timer.duty_resolution  = LEDC_TIMER_14_BIT;
+			ledc_timer.timer_num        = timer;
+			ledc_timer.freq_hz          = 1000;
+			ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
+			ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
+		}
+		void SetupLedcChannel(ledc_timer_t timer, ledc_channel_t channel, gpio_num_t gpio, uint32_t initialDuty=0){
+
+			// Prepare and then apply the LEDC PWM channel configuration
+			ledc_channel_config_t ledc_channel = {};
+			ledc_channel.speed_mode     = LEDC_LOW_SPEED_MODE;
+			ledc_channel.channel        = channel;
+			ledc_channel.timer_sel      = timer;
+			ledc_channel.intr_type      = LEDC_INTR_DISABLE;
+			ledc_channel.gpio_num       = (int)gpio;
+			ledc_channel.duty           = initialDuty;
+			ledc_channel.hpoint         = 0;
+			ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+		}
+
+		void SetDuty(ledc_channel_t channel, uint16_t value_0_65635){
+			ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, value_0_65635>>2);//>>2 because of 14 bit Resolution
+			ledc_update_duty(LEDC_LOW_SPEED_MODE, channel);
+		}
 		
 		
  		
