@@ -52,6 +52,10 @@ namespace Klli.Sensact.Model
 
         }
 
+        public static void AddRemoteControl(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription){
+            list.Add(new RemoteControlApplicaiton((ushort)appId, appId.ToString(), ApplicationDescription));
+        }
+
 
         public static void AddRotaryEncoder(this List<SensactApplication> list, ApplicationId appId, RotaryEncoder rotEnc, ApplicationId targetAppId)
         {

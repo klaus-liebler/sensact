@@ -3,7 +3,7 @@
 #include <array>
 #include "webmanager_interfaces.hh"
 #include "flatbuffers/flatbuffers.h"
-#include "flatbuffers_cpp/journal_generated.h"
+#include "flatbuffers_cpp/ns11journal_generated.h"
 #include "messagecodes.hh"
 #define TAG "JRNL"
 namespace webmanager

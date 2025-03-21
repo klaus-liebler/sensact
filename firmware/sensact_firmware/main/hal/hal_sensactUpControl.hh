@@ -14,7 +14,7 @@ namespace sensact::hal::SensactUpControl
         constexpr gpio_num_t NRF_CS{GPIO_NUM_15};
         constexpr gpio_num_t NRF_SCLK{GPIO_NUM_16};
         constexpr gpio_num_t FINGER_IRQ{GPIO_NUM_39};
-        constexpr gpio_num_t FINGER_TX{GPIO_NUM_40};
+        constexpr gpio_num_t FINGER_TX_HOST{GPIO_NUM_40};
         constexpr gpio_num_t ONEWIRE{GPIO_NUM_41};
         constexpr gpio_num_t MOTOR{GPIO_NUM_42};
 
@@ -42,7 +42,7 @@ namespace sensact::hal::SensactUpControl
 
         constexpr gpio_num_t LCD_MOSI{GPIO_NUM_21};
 
-        constexpr gpio_num_t FINGER_RX{GPIO_NUM_38};
+        constexpr gpio_num_t FINGER_RX_HOST{GPIO_NUM_38};
         constexpr gpio_num_t LCD_BACKLIGHT{GPIO_NUM_45};
         constexpr gpio_num_t RS485_DE{GPIO_NUM_46};
 

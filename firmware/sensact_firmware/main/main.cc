@@ -110,7 +110,7 @@ extern "C" void app_main(void)
     
     //Configure Network
     webmanager::M* wm = webmanager::M::GetSingleton();
-    ESP_ERROR_CHECK(wm->Begin("sensact%02x%02x%02x", "sensact1", cfg::NODE_ID, false, &plugins, true));
+    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true));
     
     const char *hostname = wm->GetHostname();
     #ifdef HTTPS
@@ -130,7 +130,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(httpd_start(&http_server, &httpd_conf));
     ESP_LOGI(TAG, "HTTP Server (not secure!) listening on http://%s:%d", hostname, httpd_conf.server_port);
 #else
-    #error "Either define HTTP or HTTPS
+    #error "Either define HTTP or HTTPS"
 #endif
     
     wm->RegisterHTTPDHandlers(http_server);

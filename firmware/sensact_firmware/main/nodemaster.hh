@@ -82,7 +82,7 @@ namespace sensact
 
 			bool atLeastHealthWarning{false};
 			bool healthError{false};
-			static webmanager::WifiStationState previousWifiState{webmanager::WifiStationState::NO_CONNECTION};
+			static bool previousWifiState{false};
 			//Temperatur
 			float temperatureCelcius;
 			hal->GetBoardTemperature(temperatureCelcius);
@@ -127,16 +127,16 @@ namespace sensact
 			}
 			//Netzwerk
 			webmanager::M* wm= webmanager::M::GetSingleton();
-			webmanager::WifiStationState state= wm->GetStaState();
+			bool state= wm->GetStaState();
 			if(state!=previousWifiState){
-				if(state==webmanager::WifiStationState::CONNECTED){
+				if(state){
 					LOGGER::Journal(messagecodes::C::WIFI_CONNECTED, (uint32_t)state);
 				}else{
 					LOGGER::Journal(messagecodes::C::WIFI_NOT_CONNECTED, (uint32_t)state);
 				}
 				previousWifiState=state;
 			}
-			if(state!=webmanager::WifiStationState::CONNECTED){
+			if(!state){
 				atLeastHealthWarning=true;
 			}
 			static bool previousHasRealtime{false};

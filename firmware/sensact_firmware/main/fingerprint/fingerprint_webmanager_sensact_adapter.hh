@@ -2,7 +2,7 @@
 #include <r503pro_manager.hh>
 #include <apps/fingerprint.hh>
 #include <hal.hh>
-#include "flatbuffers_cpp/fingerprint_generated.h"
+#include "flatbuffers_cpp/ns07fingerprint_generated.h"
 #define TAG "FGRADPTR"
 namespace fingerprint
 {

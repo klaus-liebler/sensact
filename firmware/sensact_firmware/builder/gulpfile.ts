@@ -14,6 +14,9 @@ import { MyFavouriteDateTimeFormat } from "@klaus-liebler/commons";
 import * as cfg from "@klaus-liebler/espidf-vite-secure-build-tools/key_value_file_helper"
 import * as sensact from "./sensact_code_generator";
 
+//Reset
+const OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS=true;
+
 //Default Board Type
 export const DEFAULT_BOARD_NAME="SENSACT_OUTDOOR"
 export const DEFAULT_BOARD_VERSION=0
@@ -44,9 +47,21 @@ export const buildForCurrent = gulp.series(
 export default gulp.series(
   addOrUpdateConnectedBoard,
   buildForCurrent,
-  //flashEncryptedFirmware,
   flashFirmware
 )
+
+export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
+  return Context.get(contextConfig, true);
+}
+
+async function buildFirmware(cb: gulp.TaskFunctionCallback) {
+  const c=await Context.get(contextConfig)
+  return idf.buildFirmware(c);
+}
+
+async function flashFirmware(cb: gulp.TaskFunctionCallback){
+  return idf.flashFirmware(await Context.get(contextConfig), OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS, false);
+}
 
 export async function createFiles(cb: gulp.TaskFunctionCallback) {
   const c= await Context.get(contextConfig)
@@ -76,20 +91,6 @@ export async function createFiles(cb: gulp.TaskFunctionCallback) {
   cfg.createCppConfigurationHeader(c, defs);
   cfg.createTypeScriptRuntimeConfigProject(c, defs);
   cb();
-}
-
-async function buildFirmware(cb: gulp.TaskFunctionCallback) {
-  const c=await Context.get(contextConfig)
-  return idf.buildFirmware(c);
-} 
-
-
-async function flashFirmware(cb: gulp.TaskFunctionCallback){
-  return idf.flashFirmware(await Context.get(contextConfig), true, true);
-}
-
-export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
-  return Context.get(contextConfig, true);
 }
 
 async function createObjectWithDefines(c:Context) {

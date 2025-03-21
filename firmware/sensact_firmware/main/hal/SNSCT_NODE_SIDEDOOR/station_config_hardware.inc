@@ -17,7 +17,7 @@
     sched->Begin();
     fingerprintAdapter= new fingerprint::FingerprintWebmanagerSensactAdapter(halobj, nvsFingerName2FingerIndex, nvsFingerIndex2SchedulerName, nvsFingerIndex2ActionIndex);
     fpm = new fingerprint::R503ProManager(UART_NUM_1, sensact::hal::SensactUpControl::P::FINGER_IRQ, fingerprintAdapter, sched, nvsFingerName2FingerIndex, nvsFingerIndex2SchedulerName, nvsFingerIndex2ActionIndex);
-    fpm->Begin(sensact::hal::SensactUpControl::P::FINGER_TX, sensact::hal::SensactUpControl::P::FINGER_RX);
+    fpm->Begin(sensact::hal::SensactUpControl::P::FINGER_TX_HOST, sensact::hal::SensactUpControl::P::FINGER_RX_HOST);
     fingerprintAdapter->Begin(fingerprintApp, fpm, sched);
     plugins.push_back(fingerprintAdapter);
 
