@@ -1,4 +1,4 @@
-25255233174120251
+25257010862251842
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -101031,7 +101031,14 @@ cherry MX SK6812 Mini-E rearmount rear mount led rgb backlight
 4
 4
 liebler_OPTO
-SK6812SIDE
+SK6812_SIDE_A
+
+
+0
+6
+4
+liebler_OPTO
+SK6812_SIDE_A_handsolder
 
 
 0

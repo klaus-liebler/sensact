@@ -1,0 +1,118 @@
+Comment,Designator,Footprint,LCSC,Quantity
+m1,"C1,C2,C20",C_1206_3216Metric,C15008,3
+u1,C15,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,C1525,1
+10u,C12,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,C19702,1
+LED0,"D12,D13,D14,D15,D16",LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder,C2286,5
+0R15,"R13,R2",R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,C25271,2
+22uF,"L1,L2",L_0630,C408455,2
+u1,"C13,C17,C18,C19,C25,C27,C28,C30,C32,C9",C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,C49678,10
+22u,C16,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,C59461,1
+SM4007PL,"D10,D2,D3,D4",D_SOD-123_handsolder,C64898,4
+BC847,Q6,SOT-23_Handsoldering,C8512,1
+LED1,J22,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+H,H6,MountingHole_3.2mm_M3,,1
+L1,J23,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+LED1,J15,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+ALDP105W,K1,RELAY_ALDP105W,,1
+H,H1,MountingHole_3.2mm_M3,,1
+LED1,J10,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+N,J29,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+LED Out,J17,"PhoenixContact_MCV_1,5_4-G-3.5_1x04_P3.50mm_Vertical",,1
+H,H5,MountingHole_3.2mm_M3,,1
+INFO,D23,LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder,,1
+RGB,J13,PinHeader_1x03_P2.54mm_Vertical,,1
+DS18B20,U10,TO-92L_HandSolder,,1
+LED1,J19,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+LED0,TP3,TestPoint_THTPad_D2.0mm_Drill1.0mm,,1
+10D561K,RV1,RV_Disc_D12mm_W3.9mm_P7.5mm,,1
+N,J27,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+L_IN,J9,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+T2.0,F1,Fuse_Littelfuse_372_D8.50mm,,1
+MAX98357_MODULE,U1,PinHeader_1x07_P2.54mm_Vertical,,1
+LED1,J12,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+PE,J28,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+H,H8,MountingHole_3.2mm_M3,,1
+L3,J25,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+ALDP105W,K2,RELAY_ALDP105W,,1
+N_IN,J16,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+LED1,J11,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+PROG,SW2,SW_SPST_TL3342_smaller_handsolder,,1
+LED1,J20,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+USB,J1,PinHeader_1x04_P2.54mm_Vertical,,1
+22n/250V,C23,C_Rect_L11.0mm_W5.1mm_P10.00mm_MKT,,1
+H,H3,MountingHole_3.2mm_M3,,1
+TERM OFF,SW1,Switch_SS12D00,,1
+PROG,J32,PinHeader_2x03_P2.54mm_Vertical,,1
+ALDP105W,K4,RELAY_ALDP105W,,1
+RESET,SW4,SW_SPST_TL3342_smaller_handsolder,,1
+L4,J26,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+HLK-30M24C,PS2,Converter_ACDC_Hi-Link_HLK-30Mxx,,1
+LED1,J18,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+PE,J30,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+H,H2,MountingHole_3.2mm_M3,,1
+ALDP105W,K3,RELAY_ALDP105W,,1
+Info1,D7,LED_D5.0mm-4_RGB_Staggered_Pins,,1
+LED1,J21,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,,1
+H,H4,MountingHole_3.2mm_M3,,1
+PE_IN,J14,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+EXT1,J7,JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical,,1
+L2,J24,"Flachstecker gewinkelt 4,8 oder 6,35mm",,1
+CAN,J6,"PhoenixContact_MCV_1,5_4-G-3.5_1x04_P3.50mm_Vertical",,1
+H,H7,MountingHole_3.2mm_M3,,1
+1k,R7,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+RF,U6,NRF24L01-Module-SMD,,1
+MAINS,D1,LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder,,1
+LED Out,J8,ÖLFLEX 4x1mm2,,1
+AMS1117-3.3,U5,SOT-223-3_TabPin2_HANDSOLDER,,1
+470K,R31,R_2512_6332Metric_Pad1.40x3.35mm_HandSolder,,1
+1k,R1,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+3k3,R16,R_2512_6332Metric_Pad1.40x3.35mm_HandSolder,,1
+470K,R30,R_2512_6332Metric_Pad1.40x3.35mm_HandSolder,,1
+15k,R10,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+10u,C21,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,,1
+k1,R32,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+NUP2105,D8,SOT-23_Handsoldering,,1
+BC847,Q7,SOT-23_Handsoldering,,1
+BC847,Q9,SOT-23_Handsoldering,,1
+K12,R12,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,,1
+10u,L3,L_0630,,1
+10u,C22,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,,1
+10u,C31,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,,1
+TPS92200D1DDCR,U2,SOT-23-6_Handsoldering,,1
+1k,R8,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+4k7,R25,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+6k8,R17,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+10k,R3,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+TPS54202DDC,U9,SOT-23-6_Handsoldering,,1
+TPS92200D1DDCR,U3,SOT-23-6_Handsoldering,,1
+k47,R38,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+3k3,R28,R_2512_6332Metric_Pad1.40x3.35mm_HandSolder,,1
+10u,C24,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,,1
+k47,R34,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+1N5819WS,D9,D_SMA_Handsoldering,,1
+10k,R47,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+k47,R33,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+10k,R11,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+k1,R9,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+10u,C26,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,,1
+k1,R48,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+SN65HVD230,U7,SOIC-8_3.9x4.9mm_Pitch1.27mm_handsolder,,1
+10u,C14,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,,1
+22u,C34,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,,1
+4k7,R26,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+10k,R29,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+22u,C35,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,,1
+22k,R4,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+k47,R14,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+BC847,Q8,SOT-23_Handsoldering,,1
+10u,C10,C_1206_3216Metric_Pad1.33x1.80mm_HandSolder,,1
+EL817,U8,SO-4_7.6x3.6mm_P2.54mm_handsolder,,1
+M1,R15,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+1k,R5,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+1k,R6,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+56p,C33,C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,,1
+6k8,R18,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+1k,R46,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
+u1,C29,C_0805_2012Metric,,1
+ESP32-S3-WROOM-1,U11,ESP32-S3-WROOM-1_handsolder,,1
+k47,R37,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,,1
