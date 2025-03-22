@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace Klli.Sensact.Config
 {
-
     public static class TestModelBuilder
     {
         const ushort INTI = 0x0000;
@@ -30,6 +29,8 @@ namespace Klli.Sensact.Config
             model.Nodes.Add(NODE_UP);
             Node NODE_SIDEDOOR = new SensactUpControl((ushort)Model.ApplicationId.SNSCT_NODE_SIDEDOOR, Model.ApplicationId.SNSCT_NODE_SIDEDOOR.ToString());
             model.Nodes.Add(NODE_SIDEDOOR);
+            Node NODE_TERRASSE = new SensactOutdoor((ushort)Model.ApplicationId.SNSCT_NODE_TERRASSE, Model.ApplicationId.SNSCT_NODE_TERRASSE.ToString());
+            model.Nodes.Add(NODE_TERRASSE);
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X1_XX1_3, BUS0+I2C+0, Model.ApplicationId.POWIT_X1_XX3_9);//macht erstes Licht an
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X2_XX2_4, BUS0+I2C+1, Model.ApplicationId.SOUND_X2_XX2_0);//Klingel
             NODE_HS.Applications.AddToggleButton(Model.ApplicationId.PUSHB_X3_XX3_5, BUS0+I2C+2, new HashSet<Model.ApplicationId>{Model.ApplicationId.POWIT_X1_XX3_9,Model.ApplicationId.POWIT_X2_XX4_10});//erstes und zweites Licht
@@ -50,6 +51,11 @@ namespace Klli.Sensact.Config
             
             NODE_SIDEDOOR.Applications.AddFingerprint(Model.ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42);
             NODE_SIDEDOOR.Applications.AddPowIt(Model.ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
+
+            NODE_TERRASSE.Applications.AddMilightControllerApplication(Model.ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
+            NODE_TERRASSE.Applications.AddPWMApplication(Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+5, INTI+6}, 5000, 20, 255);
+            NODE_TERRASSE.Applications.AddBlindApplication(Model.ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
+            NODE_TERRASSE.Applications.AddBlindApplication(Model.ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
             return model;
         }
     }

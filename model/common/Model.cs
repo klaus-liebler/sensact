@@ -33,7 +33,7 @@ namespace Klli.Sensact.Model.Common
         public string GetNameFromId(ushort id)
         {
             if(id==Model.NO_APPLICATION_ID){
-                return string.Empty;
+                return "NO_APPLICATION";
             }
             SensactApplicationContainer? cont;
             if(!id2app.TryGetValue(id, out cont)){

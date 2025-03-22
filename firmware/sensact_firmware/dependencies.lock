@@ -1,6 +1,6 @@
 dependencies:
   espressif/ds18b20:
-    component_hash: d676429d9f1f686b65ed895e418eb4b331477bcd5d63c27f43dc3d6a2de8f13b
+    component_hash: 87a753636db56dbb42633b8fdd615c63c5e752ec9c9629e6386d8115f36efc30
     dependencies:
     - name: espressif/onewire_bus
       registry_url: https://components.espressif.com
@@ -9,9 +9,9 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 0.1.1
+    version: 0.1.2
   espressif/mdns:
-    component_hash: 26d0b8b207c7d8382cb3c103a9add9c75ca4dc0ef172b03a98af2c2254b2792b
+    component_hash: 3ec0af5f6bce310512e90f482388d21cc7c0e99668172d2f895356165fc6f7c5
     dependencies:
     - name: idf
       require: private
@@ -19,7 +19,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.6.0
+    version: 1.8.2
   espressif/onewire_bus:
     component_hash: c4c781940d8bd988432b47ac3ee68479c69e14e01fdfba0b61365b233a3ba5d6
     dependencies:
@@ -50,6 +50,6 @@ direct_dependencies:
 - espressif/onewire_bus
 - idf
 - joltwallet/littlefs
-manifest_hash: b36154233cdbd764f3de1ca60eddc7caf6d0da3f8930b96f22ac378f70e6ed0b
+manifest_hash: e2f942a1dc03481b42187e35522adddd73c75fbeb81e6de3f235593258bbbb6f
 target: esp32s3
 version: 2.0.0

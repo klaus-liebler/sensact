@@ -2,7 +2,6 @@
 #include "hal_ESP32.hh"
 #include <driver/spi_master.h>
 #include <esp_log.h>
-#include <buzzer.hh>
 #include <led_animator.hh>
 #include <i2c.hh>
 #define TAG "HAL"
@@ -69,7 +68,7 @@ namespace sensact::hal::SensactOutdoor
         constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
         constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
         constexpr bool OUTPUT_IS_PWM[]{false,false,false,false,true,true};
-        constexpr gpio_num_t OUTPUT2PIN[]{K1,K2,K3,K4, GPIO_NUM_NC, GPIO_NUM_NC};
+        constexpr gpio_num_t OUTPUT2PIN[]{P::K1,P::K2,P::K3,P::K4, GPIO_NUM_NC, GPIO_NUM_NC};
         constexpr ledc_channel_t OUTPUT2LEDC[]{LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_0,LEDC_CHANNEL_1};
     }
 
@@ -88,7 +87,7 @@ namespace sensact::hal::SensactOutdoor
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_INTERNAL_SCL, P::I2C_INTERNAL_SDA));
+            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_SCL, P::I2C_SDA));
 
             this->led = new led::Animator(P::LED_INFO);
             this->led->Begin();
@@ -109,12 +108,12 @@ namespace sensact::hal::SensactOutdoor
             {
                 return ErrorCode::OK;
             }
-            if((int)id>=sizeof(R::OUTPUT_IS_PWM)/sizeof(bool)) return ErrorCode::FAIL;
+            if((int)id>=sizeof(R::OUTPUT_IS_PWM)/sizeof(bool)) return ErrorCode::GENERIC_ERROR;
 
             if(R::OUTPUT_IS_PWM[id]){
                 this->SetDuty(R::OUTPUT2LEDC[id],value);
             }else{
-                gpio_set_level(R::OUTPUT2PIN, value);
+                gpio_set_level(R::OUTPUT2PIN[id], value);
             }
             return ErrorCode::OK;
         }
@@ -184,7 +183,6 @@ namespace sensact::hal::SensactOutdoor
         }
 
         ErrorCode PlayNotes(const BUZZER::Note *note) override{
-            buzzer->PlayNotes(note);
             return ErrorCode::OK;
         }
         ErrorCode StopSound() override

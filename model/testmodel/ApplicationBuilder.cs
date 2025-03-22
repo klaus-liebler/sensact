@@ -51,9 +51,8 @@ namespace Klli.Sensact.Model
             list.Add(new FingerprintApplication((ushort)appId, appId.ToString(), ApplicationDescription, (ushort)targetAppId1, (ushort)targetAppId2, (ushort)targetAppId3));
 
         }
-
-        public static void AddRemoteControl(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription){
-            list.Add(new RemoteControlApplicaiton((ushort)appId, appId.ToString(), ApplicationDescription));
+        public static void AddMilightControllerApplication(this List<SensactApplication> list, ApplicationId appId, string ApplicationDescription){
+            list.Add(new MilightControllerApplication((ushort)appId, appId.ToString(), ApplicationDescription));
         }
 
 

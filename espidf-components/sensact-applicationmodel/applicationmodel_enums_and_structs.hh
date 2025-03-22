@@ -36,53 +36,18 @@ namespace sensact
         STATE_ERROR = 130,
         NOT_IMPLEMENTED = 255,
     };
-
+#undef _
+#define _(n) n
     enum class eAppType : uint8_t
     {
-        UNDEFINED,
-        BLIND,
-        POWIT,
-        PWM,
-        PSHBT,
-        ROTAR,
-        BMP180,
-        BSENS,
-        RGBW,
-        STDBY,
-        SOUND,
-        MLTLC,
-        RCEVT,
-        LIBAR,
-        SNSCT,
-        FRWRD,
-        PUMP,
-        BLITIM,
-        FINGR,
-        //updates Names below as well!
+ #include "applicationmodel_applicationTypes.inc"
     };
-
+    #undef _
+    #define _(n) #n
     const char *const eAppType2Name[] = {
-        "UNDEFINED",
-        "BLIND",
-        "POWIT",
-        "PWM",
-        "PSHBT",
-        "ROTAR",
-        "BMP180",
-        "BSENS",
-        "RGBW",
-        "STDBY",
-        "SOUND",
-        "MLTLC",
-        "RCEVT",
-        "LIBAR",
-        "SNSCT",
-        "FRWRD",
-        "PUMP",
-        "BLITIM",
-        "FINGR",
+  #include "applicationmodel_applicationTypes.inc"
     };
-
+#undef _
     enum class eNodeID : uint16_t
     {
 #include <common/nodeIds.inc>

@@ -25,10 +25,20 @@ namespace sensact::hal
 		temperature_sensor_handle_t temp_handle{nullptr};
 		void SetupCAN(gpio_num_t tx, gpio_num_t rx, int intr_alloc_flags=0)
 		{
-			twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(tx, rx, TWAI_MODE_NORMAL);
+			twai_general_config_t g_config ={};
+			g_config.controller_id = 0;
+			g_config.mode = TWAI_MODE_NORMAL;
+			g_config.tx_io = tx;
+			g_config.rx_io = rx;        
+			g_config.clkout_io = TWAI_IO_UNUSED;
+			g_config.bus_off_io = TWAI_IO_UNUSED;
+			g_config.tx_queue_len = 16;
+			g_config.rx_queue_len = 5;
 			g_config.alerts_enabled = TWAI_ALERT_ABOVE_ERR_WARN | TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;
+			g_config.clkout_divider = 0;
 			g_config.intr_flags = intr_alloc_flags;
-			g_config.tx_queue_len=16;
+			g_config.general_flags.sleep_allow_pd=0;
+			
 			twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 			twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
 			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));

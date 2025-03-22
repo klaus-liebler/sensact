@@ -80,7 +80,7 @@ export async function createFiles(cb: gulp.TaskFunctionCallback) {
   if (!c.p.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE)
     || !c.p.existsBoardSpecificPath(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE)) {
     const hostname = s.GetNodeId();
-    let esp32Cert = cert.CreateAndSignCert(hostname, [hostname, hostname+".local", hostname+".fritz.box"], path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
+    let esp32Cert = cert.CreateAndSignCert(hostname, "192.168.4.1", [hostname, hostname+".local", hostname+".fritz.box"], path.join(CERTIFICATES, P.ROOT_CA_PEM_CRT_FILE), path.join(CERTIFICATES, P.ROOT_CA_PEM_PRVTKEY_FILE));
     c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
     c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
     }

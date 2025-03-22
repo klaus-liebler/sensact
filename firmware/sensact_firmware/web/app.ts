@@ -8,7 +8,7 @@ import * as CONST from "@klaus-liebler/web-components/typescript/utils/constants
 
 let app: AppController;
 document.addEventListener("DOMContentLoaded", (e) => {
-  app = new AppController("SensAct WebUI", CONST.WS_URL, false, false, `:: Node ${CFG.SENSACT_NODE_NAME} :: SensactModel ${CFG.SENSACT_MODEL_NAME} created at  ${CFG.SENSACT_MODEL_CREATED_DT_STRING} `);
+  app = new AppController("SensAct WebUI", CONST.WS_URL, false, false, `:: Node ${CFG.SENSACT_NODE_NAME} :: SensactModel ${CFG.SENSACT_MODEL_NAME} created at  ${CFG.SENSACT_MODEL_CREATION_DT_STRING} `);
 
   app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>&#127760;</span><span>Home</span>`, new DefaultScreenController(app)) 
   app.AddScreenController("system", new RegExp("^/system$"), html`<span>🧰</span><span>System Settings</span>`, new SystemController(app))

@@ -13,14 +13,11 @@ using System.Text.RegularExpressions;
 
 namespace Klli.Sensact.Config
 {
-    
-
     public enum TargetDirectory
     {
         COMMON,
         NODE_SPECIFIC,
     }
-
     public class SourceCodeGeneratorOptions
     {
         public const string SectionName = "SourceCodeGenerator";

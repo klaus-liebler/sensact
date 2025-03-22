@@ -11,6 +11,7 @@
 #include "apps/rotaryencoder.hh"
 #include "apps/singlepwm.hh"
 #include "apps/sound.hh"
+#include "apps/milightcontroller.hh"
 
 
 namespace sensact::apps

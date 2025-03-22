@@ -8,9 +8,8 @@ namespace Klli.Sensact.Model
         //Sensact-Geräte
         SNSCT_NODE_HS,
         SNSCT_NODE_UP,
-
         SNSCT_NODE_SIDEDOOR,
-
+        SNSCT_NODE_TERRASSE,
         PUSHB_X1_XX1_3,
         PUSHB_X2_XX2_4,
         PUSHB_X3_XX3_5,
@@ -29,6 +28,10 @@ namespace Klli.Sensact.Model
 
         FINGR_X1_XX1_42,//Fingerprint
         POWIT_X1_XX1_42,//Türöffner
+        REMOT_X1_XX1_42,//Der spezielle Typ Fernbedienung mit Hardcodierten Aktivitäten, wenn ein Knopf gedrückt wird
+        PWM___X1_XX1_42,//Spots
+        BLIND_X1_XX1_42,//Horizontale Markise
+        BLIND_X1_XX1_43,//Vertikale Markise
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }
 }
