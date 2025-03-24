@@ -77,3 +77,11 @@ namespace sensact::magic
     constexpr uint16_t ACTIVE = UINT16_MAX;
     constexpr uint16_t INACTIVE = 0;
 }
+
+namespace sensact::time
+{
+    constexpr tms_t M3_ms{3*60*1000};
+    constexpr tms_t M15_ms{15*60*1000};
+    constexpr tms_t H1_ms{60*60*1000};
+    constexpr tms_t H12_ms{12*60*60*1000};
+}

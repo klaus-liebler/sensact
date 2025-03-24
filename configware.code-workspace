@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "configware/configware_dotnetcore"
+		},
+		{
+			"path": "model/common"
+		},
+		{
+			"path": "model/testmodel"
+		}
+	],
+	"settings": {}
+}
