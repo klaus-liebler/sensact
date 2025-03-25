@@ -13,7 +13,8 @@ namespace sensact::apps
 		tms_t autoOffCfg; //die konfigurierte AutoOff-Zeit
 		eApplicationID idOfStandbyController;
 		
-		tms_t autoOffCalc{0}; //die nach dem Anschalten oder Bedienen immer neu berechnete Auto-Off-Zeit
+		tms_t autoOffCalc{sensact::magic::TIME_MAX}; //die nach dem Anschalten oder Bedienen immer neu berechnete Auto-Off-Zeit
+		tms_t autoOnCalc{sensact::magic::TIME_MAX}; //die nach dem Anschalten oder Bedienen immer neu berechnete Auto-On-Zeit
 		u8 targetLevel{0};//Zielhelligkeit, nur diese wird gesetzt durch die Helper-Funktionen
 		u8 currentLevel{0};//aktuelle Helligkeit
 		s16 autoDim{0};

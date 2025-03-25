@@ -179,7 +179,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = hal->SetAmplifierVolume(volume0_255);
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "SetAmplifierVolume raised error %02X", (int)err);
+            LOGE(TAG, "SetAmplifierVolume raised error %s", ErrorCodeStr[(int)err]);
         }
     }
     void cApplicationHost::PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len)
@@ -187,7 +187,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = hal->PlayMP3(volume0_255, buf, len);
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "PlayMP3 raised error %02X", (int)err);
+            LOGE(TAG, "PlayMP3 raised error %s", ErrorCodeStr[(int)err]);
         }
     }
 
@@ -196,7 +196,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = hal->StopSound();
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "StopSound raised error %02X", (int)err);
+            LOGE(TAG, "StopSound raised error %s", ErrorCodeStr[(int)err]);
         }
     }
     tms_t cApplicationHost::Now()
@@ -209,7 +209,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = hal->StageRGBLed(index, color);
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "SetRGBLed raised error %02X", (int)err);
+            LOGE(TAG, "SetRGBLed raised error %s", ErrorCodeStr[(int)err]);
         }
     }
     void cApplicationHost::UnColorizeAllRGBLed()
@@ -217,7 +217,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = hal->StageUnColorizeAllRGBLed();
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "UnColorizeAllRGBLed raised error %02X", (int)err);
+            LOGE(TAG, "UnColorizeAllRGBLed raised error %s", ErrorCodeStr[(int)err]);
         }
     }
 
@@ -226,7 +226,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = this->hostCtx->SetU16Output(id, value);
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "SetU16Output raised error %02X", (int)err);
+            LOGE(TAG, "SetU16Output {'id':%d}  raised error %s",(int)id, ErrorCodeStr[(int)err]);
         }
     }
 

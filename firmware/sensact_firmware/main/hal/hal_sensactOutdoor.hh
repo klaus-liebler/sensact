@@ -67,9 +67,8 @@ namespace sensact::hal::SensactOutdoor
     {
         constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
         constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
-        constexpr bool OUTPUT_IS_PWM[]{false,false,false,false,true,true};
-        constexpr gpio_num_t OUTPUT2PIN[]{P::K1,P::K2,P::K3,P::K4, GPIO_NUM_NC, GPIO_NUM_NC};
-        constexpr ledc_channel_t OUTPUT2LEDC[]{LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_MAX,LEDC_CHANNEL_0,LEDC_CHANNEL_1};
+ 
+        
     }
 
     class cHAL : public sensact::hal::cESP32
@@ -104,18 +103,32 @@ namespace sensact::hal::SensactOutdoor
         // So always use the appropriate pin. No inversion, Logic 1 means: Motor On
         ErrorCode SetU16Output(InOutId id, uint16_t value) override
         {
-            if (id == sensact::magic::OUTPUT_NULL)
+            switch (id)
             {
+            case sensact::magic::OUTPUT_NULL:
                 return ErrorCode::OK;
+            case 0:
+                gpio_set_level(P::K1, value);
+                return ErrorCode::OK;
+            case 1:
+                gpio_set_level(P::K2, value);
+                return ErrorCode::OK;
+            case 2:
+                gpio_set_level(P::K3, value);
+                return ErrorCode::OK;
+            case 3:
+                gpio_set_level(P::K4, value);
+                return ErrorCode::OK;
+            case 4:
+                this->SetDuty(LEDC_CHANNEL_0,value);
+                return ErrorCode::OK;
+            case 5:
+                this->SetDuty(LEDC_CHANNEL_1,value);
+                return ErrorCode::OK;
+            default:
+                ESP_LOGW(TAG, "sensactOutdoor has only inOutId 0...5, not %d", id);
+                return ErrorCode::PIN_NOT_AVAILABLE;
             }
-            if((int)id>=sizeof(R::OUTPUT_IS_PWM)/sizeof(bool)) return ErrorCode::GENERIC_ERROR;
-
-            if(R::OUTPUT_IS_PWM[id]){
-                this->SetDuty(R::OUTPUT2LEDC[id],value);
-            }else{
-                gpio_set_level(R::OUTPUT2PIN[id], value);
-            }
-            return ErrorCode::OK;
         }
 
         iI2CPort *GetI2CPort(I2CPortIndex portIndex) override

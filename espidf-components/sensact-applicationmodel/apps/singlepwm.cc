@@ -43,7 +43,7 @@ namespace sensact::apps
 
 	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController) : cApplication(id), pwmOutputs(pwmOutputs), minimalLevel(minimalLevel), storedLevel(initialLevel), autoOffCfg(autoOffMsecs), idOfStandbyController(idOfStandbyController)
 	{
-		// LOGI(TAG, "Build cSinglePWM for id:%d, pwmFirst:%d autoOffMsecs:%d idOfStandbyController:%d", id, pwmFirst, autoOffMsecs, idOfStandbyController);
+		
 	}
 
 	eAppType cSinglePWM::GetAppType()
@@ -58,7 +58,7 @@ namespace sensact::apps
 		{
 			autoOffCalc = ctx->Now() + autoReturnToOffMsecs;
 		}
-		LOGI(TAG, "%s OnONCommand called resulting in targetLevel %d", N(), targetLevel);
+		LOGI(TAG, "%s OnONCommand called resulting in targetLevel %d, autoOff @ %lld", N(), targetLevel, autoOffCalc);
 	}
 
 
@@ -66,7 +66,11 @@ namespace sensact::apps
 	void cSinglePWM::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
 	{
 		SetOff(ctx);
-		LOGD(TAG, "%s OnOFFCommand called resulting in targetLevel %d", N(), targetLevel);
+		if (autoReturnToOnMsecs != 0)
+		{
+			autoOnCalc = ctx->Now() + autoReturnToOnMsecs;
+		}
+		LOGI(TAG, "%s OnOFFCommand called resulting in targetLevel %d, autoOn @ %lld", N(), targetLevel, autoOnCalc);
 	}
 
 
@@ -87,7 +91,7 @@ namespace sensact::apps
 	{
 		
 		SetTargetAbsolute(target, ctx);
-		LOGD(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
+		LOGI(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
 	}
 	// gesendet vom Inkrementalgeber
 	void cSinglePWM::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
@@ -163,8 +167,7 @@ namespace sensact::apps
 	void cSinglePWM::SetTargetRelative(int step, iSensactContext *ctx)
 	{
 		int level = targetLevel + step;
-		level=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
-		targetLevel = level;
+		targetLevel=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
 		if (autoOffCfg != 0)
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
@@ -198,9 +201,9 @@ namespace sensact::apps
 
 	eAppCallResult cSinglePWM::Setup(iSensactContext *ctx)
 	{
+		LOGI(TAG, "Build cSinglePWM for id:%s, pwmFirst:%d autoOffMsecs:%lld", N(), pwmOutputs[0], autoOffCfg);
 		currentLevel = 0;
 		targetLevel = 0;
-		autoOffCalc = sensact::magic::TIME_MAX;
 		WriteCurrentLevelToOutput(ctx);
 		return eAppCallResult::OK;
 	}
@@ -229,6 +232,12 @@ namespace sensact::apps
 			LOGI(TAG, "%s does AutoOff", N());
 			targetLevel = 0;
 			autoOffCalc = sensact::magic::TIME_MAX;
+		}
+		else if (ctx->Now() > autoOnCalc)
+		{
+			LOGI(TAG, "%s does AutoOn", N());
+			targetLevel = storedLevel;
+			autoOnCalc = sensact::magic::TIME_MAX;
 		}
 
 		if (idOfStandbyController != eApplicationID::NO_APPLICATION && currentLevel > 0 && lastHeartbeatSent + sensact::magic::HEARTBEAT_STANDBY_SENDER < ctx->Now())

@@ -201,6 +201,8 @@ namespace sensact::apps
 		if(forced){
 			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::PERMANENT_DOWN", N());
 			this->targetPosition=BLIND::PERMANENT_DOWN;
+		} else if(this->currentPosition==BLIND::FULL_DOWN){
+			this->targetPosition = BLIND::SAFE_UP;//Komfortfunktion: Wenn der Rollo ganz unten ist, kann er nicht weiter runter. Also geht es nach oben!
 		} else if (this->targetPosition == BLIND::STOP){
 			LOGI(TAG, "%s OnDOWNCommand called, target BLIND::SAFE_DOWN", N());
 			this->targetPosition = BLIND::SAFE_DOWN;
@@ -215,6 +217,8 @@ namespace sensact::apps
 		if(forced){
 			LOGI(TAG, "%s OnUPCommand called, target BLIND::PERMANENT_UP", N());
 			this->targetPosition=BLIND::PERMANENT_UP;
+		} else if(this->currentPosition==BLIND::FULL_UP){
+			this->targetPosition = BLIND::SAFE_DOWN;//Komfortfunktion: Wenn der Rollo ganz oben ist, kann er nicht weiter nach oben. Also geht es nach unten!
 		}else if (this->targetPosition == BLIND::STOP){
 			LOGI(TAG, "%s OnUPCommand called, target BLIND::SAFE_UP", N());
 			this->targetPosition = BLIND::SAFE_UP;

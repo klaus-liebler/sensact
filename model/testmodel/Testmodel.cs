@@ -53,7 +53,7 @@ namespace Klli.Sensact.Config
             NODE_SIDEDOOR.Applications.AddPowIt(Model.ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
 
             NODE_TERRASSE.Applications.AddMilightControllerApplication(Model.ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
-            NODE_TERRASSE.Applications.AddPWMApplication(Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+5, INTI+6}, 5000, 20, 255);
+            NODE_TERRASSE.Applications.AddPWMApplication(Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, 5000, 20, 255);
             NODE_TERRASSE.Applications.AddBlindApplication(Model.ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
             NODE_TERRASSE.Applications.AddBlindApplication(Model.ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
             return model;

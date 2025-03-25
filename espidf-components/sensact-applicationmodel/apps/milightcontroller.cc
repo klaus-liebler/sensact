@@ -16,16 +16,16 @@ namespace sensact::apps
 			ctx->SendOFFCommand(eApplicationID::PWM___X1_XX1_42, 0);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K1_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_42, true);
+			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_42, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K1_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(eApplicationID::BLIND_X1_XX1_42, true);
+			ctx->SendDOWNCommand(eApplicationID::BLIND_X1_XX1_42, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K2_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_43, true);
+			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_43, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K2_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(sensact::eApplicationID::BLIND_X1_XX1_43, true);
+			ctx->SendDOWNCommand(sensact::eApplicationID::BLIND_X1_XX1_43, false);
 		};
 	}
 
@@ -84,7 +84,7 @@ namespace sensact::apps
             }
 
             default:
-                ESP_LOGW(TAG, "Command %d has no associated handler", cmd);
+                ESP_LOGD(TAG, "Command %d has no associated handler", cmd);
                 continue;;
             }
 		}

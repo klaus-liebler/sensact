@@ -23,6 +23,9 @@
 		},
 		{
 			"path": "../../../espidf-components/nrf24"
+		},
+		{
+			"path": "../../../espidf-components/errorcodes"
 		}
 	],
 	"settings": {
