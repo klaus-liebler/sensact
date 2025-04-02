@@ -53,15 +53,13 @@ namespace sensact::apps
 
 	void cSinglePWM::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
-		SetTargetAbsolute(MAXIMUM_LEVEL, ctx);
+		SetTargetAbsolute(storedLevel, ctx);
 		if (autoReturnToOffMsecs != 0)
 		{
 			autoOffCalc = ctx->Now() + autoReturnToOffMsecs;
 		}
 		LOGI(TAG, "%s OnONCommand called resulting in targetLevel %d, autoOff @ %lld", N(), targetLevel, autoOffCalc);
 	}
-
-
 
 	void cSinglePWM::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
 	{
@@ -70,9 +68,8 @@ namespace sensact::apps
 		{
 			autoOnCalc = ctx->Now() + autoReturnToOnMsecs;
 		}
-		LOGI(TAG, "%s OnOFFCommand called resulting in targetLevel %d, autoOn @ %lld", N(), targetLevel, autoOnCalc);
+		LOGI(TAG, "%s OnOFFCommand called resulting in {'targetLevel':%d, 'storedLevel':%d, 'autoOn':%lld}", N(), targetLevel, storedLevel, autoOnCalc);
 	}
-
 
 	void cSinglePWM::OnTOGGLECommand(iSensactContext *ctx)
 	{
@@ -89,10 +86,10 @@ namespace sensact::apps
 
 	void cSinglePWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx)
 	{
-		
-		SetTargetAbsolute(target, ctx);
+		SetTargetAbsolute((target>>8)&0xFF, ctx);
 		LOGI(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
 	}
+	
 	// gesendet vom Inkrementalgeber
 	void cSinglePWM::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
 	{
@@ -151,6 +148,7 @@ namespace sensact::apps
 	void cSinglePWM::SetTargetAbsolute(uint8_t level, iSensactContext *ctx)
 	{
 		this->targetLevel = std::max(level, minimalLevel);
+		this->storedLevel = targetLevel;
 		if (autoOffCfg != 0)
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
@@ -159,6 +157,7 @@ namespace sensact::apps
 
 	void cSinglePWM::SetOff(iSensactContext *ctx)
 	{
+		if(this->targetLevel==0) return; //andernfalls würde storedLevel mit 0 überschrieben, nur weil man zweimal auf OFF drückt
 		this->storedLevel = targetLevel;
 		this->targetLevel = 0;
 		this->autoOffCalc = sensact::magic::TIME_MAX;
@@ -167,7 +166,8 @@ namespace sensact::apps
 	void cSinglePWM::SetTargetRelative(int step, iSensactContext *ctx)
 	{
 		int level = targetLevel + step;
-		targetLevel=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
+		this->targetLevel=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
+		this->storedLevel = targetLevel;
 		if (autoOffCfg != 0)
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
@@ -230,6 +230,7 @@ namespace sensact::apps
 		else if (ctx->Now() > autoOffCalc)
 		{
 			LOGI(TAG, "%s does AutoOff", N());
+			storedLevel=targetLevel;
 			targetLevel = 0;
 			autoOffCalc = sensact::magic::TIME_MAX;
 		}
@@ -261,7 +262,7 @@ namespace sensact::apps
 	}
 
 	eAppCallResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-			buf[0]=0;
+			buf[0]=currentLevel==0?0:1; // 1=ON, 0=OFF
 			buf[1]=currentLevel;
 			buf[2]=autoDim;
 			buf[3]=targetLevel;;

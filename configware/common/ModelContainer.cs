@@ -1,19 +1,5 @@
-﻿using System.Xml.Serialization;
-using Klli.Sensact.Model.Common.Nodes;
-
 namespace Klli.Sensact.Model.Common
 {
-    public class Model(string name)
-    {       
-        [XmlElement(typeof(SensactHs07))]
-        [XmlElement(typeof(SensactUp02))]
-        public List<Node> Nodes = new List<Node>();
-        
-        public string Name { get; }=name;
-
-        public const ushort NO_APPLICATION_ID=0xFFFF;
-    }
-
     public class ModelContainer : ModelContainerForCodeGenerator
     {
         public Dictionary<ushort, SensactApplicationContainer> id2app = new Dictionary<ushort, SensactApplicationContainer>();
@@ -28,7 +14,13 @@ namespace Klli.Sensact.Model.Common
         public Dictionary<ushort, HashSet<EventType>> id2busEvents = new Dictionary<ushort, HashSet<EventType>>();
 
         public ushort NextFreeIndex=0;
-        public Model? Model;
+
+        public Model Model;
+        public ModelContainer(Model model){
+            this.Model=model;
+        }
+
+
 
         public string GetNameFromId(ushort id)
         {

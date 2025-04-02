@@ -7,21 +7,12 @@ using NLog.Extensions.Logging;
 using Klli.Sensact.Model.Common;
 namespace Klli.Sensact.Config
 {
-    public class AppSettings{
-            public SourceCodeGeneratorOptions SourceCodeGenerator{get;set;}
-        }
+
     class Program
     {
-        private static Klli.Sensact.Model.Common.Model GetModel()
+        private static ModelContainer GetModel()
         {
-            return TestModelBuilder.TwoNodesDemo();
-            //return TestModelBuilder.BuildModelToTestAllPins();
-            //Model model = TestModelBuilder.BuildLIBARDemo();
-            //return Sensact.Model.Sattlerstrasse16.Build();
-            //return Sattlerstrasse16Classic.Build();
-            //return TestModelBuilder.BuildModelToTestAllAllI2CPinsAndCAN();
-            //return TestModelBuilder.BuildMP3Demo();
-            //return TestModelBuilder.BuildBLINDDemo();
+            return new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer();
         }
 
               
@@ -31,8 +22,8 @@ namespace Klli.Sensact.Config
             
             
             ServiceCollection services = new ServiceCollection();
-            services.AddSingleton<Sensact.Model.Common.Model>(GetModel());
-            services.AddSingleton<SourceCodeGenerator>();
+            services.AddSingleton<ModelContainer>(GetModel());
+            services.AddSingleton<SourceCodeGenerator<Model.ApplicationId>>();
             services.AddLogging(loggingBuilder =>
                {
                    // configure Logging with NLog
@@ -61,13 +52,10 @@ namespace Klli.Sensact.Config
                 var servicesProvider = BuildServiceProvider(config);
                 using (servicesProvider as IDisposable)
                 {
-                    var generator = servicesProvider.GetRequiredService<SourceCodeGenerator>();
-                    var model = servicesProvider.GetRequiredService<Sensact.Model.Common.Model>();
+                    var generator = servicesProvider.GetRequiredService<SourceCodeGenerator<Model.ApplicationId>>();
+                    var mc = servicesProvider.GetRequiredService<Sensact.Model.Common.ModelContainer>();
                  
-                    ModelContainer mc = new ModelContainer()
-                    {
-                        Model = model
-                    };
+
                     if(!generator.CheckAndPrepare(mc))
                     {
                         Console.WriteLine("See errors and then press any key to exit");

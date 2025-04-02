@@ -3,23 +3,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using Klli.Sensact.Model.Common.Nodes;
 
 namespace Klli.Sensact.Model.Common
 {
-    
-    public class SensactApplicationContainer
-    {
-        
-        public SensactApplicationContainer(Node Node, SensactApplication Application)
-        {
-            this.Node = Node;
-            this.Application = Application;
-        }
-        public Node Node { get; }
-        public SensactApplication Application { get; }
-
-    }
     public abstract class SensactApplication
     {
 
@@ -346,16 +332,6 @@ namespace Klli.Sensact.Model.Common
         public virtual void OnSET_PWMCommand(uint bitmask, ushort value) { }
 
     }
-
-
-
-    public class Command
-    {
-        public ushort TargetAppId;
-        public CommandType CommandType; //TODO: Prüfung: Kann die DestinationApp auf dieses Event reagieren?
-        public byte[] Payload=new byte[0];
-    }
-
 
     public abstract class SensorApplication : SensactApplication
     {

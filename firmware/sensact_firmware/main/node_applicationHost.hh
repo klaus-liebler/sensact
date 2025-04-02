@@ -6,7 +6,7 @@
 #include "hal.hh"
 #include <cApplication.hh>
 #include <webmanager_interfaces.hh>
-#include "flatbuffers_cpp/sensact_generated.h"
+#include "flatbuffers_cpp/ns20sensact_generated.h"
 namespace sensact
 {
     class cApplicationHost : public iHost, public sensact::apps::iSensactContext, public webmanager::iWebmanagerPlugin

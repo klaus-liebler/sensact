@@ -28,9 +28,11 @@ namespace sensact::apps
 
 		time_t lastChanged;
 		time_t lastPositionCalculation;
+		time_t lastPositionOutput{0L};
 		eCurrentBlindState currentState;
 		s32 targetPosition;
 		s32 currentPosition;
+
 		void up(iSensactContext *ctx);
 		void down(iSensactContext *ctx);
 		void stop(iSensactContext *ctx);

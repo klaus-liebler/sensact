@@ -23,7 +23,7 @@ namespace sensact::apps
         /*
         FillStatus fills four 16bit values:
         - Mode (e.g. Auto, Manual, TimerControlled, DayMode, NightMode)
-        - CurrentValue (e.g. On=1, Off=0, current position for blinds, current dim level for PWM, current)
+        - CurrentValue (e.g. On=1, Off=0, current position for blinds, current dim level for PWM, current melody for sound)
         - Current Movement (Dim up, Dim down, Up, down)
         - Target (target dim value, target blindsposition)
         */

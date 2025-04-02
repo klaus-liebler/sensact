@@ -8,7 +8,7 @@
    
    auto nrf24= new Nrf24Receiver(CONFIG_REGISTER_DEFAULT_VALUE_FOR_MILIGHT, P::NRF_CE, P::NRF_IRQ);
    nrf24->SetupSpi(SPI2_HOST, P::NRF_MISO, P::NRF_MOSI, P::NRF_SCLK, P::NRF_CS);
-   auto milight = new milight::Milight(nrf24, milightControllerApp);
+   auto milight = new milight::Milight9BytePayload(nrf24, milightControllerApp);
    ESP_LOGI(TAG, "Init milight");
    ESP_ERROR_CHECK(milight->SetupAndRun());
 

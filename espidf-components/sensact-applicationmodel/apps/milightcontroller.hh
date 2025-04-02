@@ -50,6 +50,9 @@ namespace sensact::apps
 	private:
 		std::array<std::function<void(sensact::apps::iSensactContext*)>, milight::keycodesFUT89::MAX> keyCode2command = {};
 		 QueueHandle_t milightQueue{nullptr};
+		 uint8_t previousCmd{0};
+		 uint8_t previousArg{0};
+		 time_t lastForwarded_us{0};
 	public:
 		void ReceivedFromMilight(uint8_t cmd, uint8_t arg) override;
 		eAppType GetAppType() override;

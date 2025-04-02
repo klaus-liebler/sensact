@@ -1,5 +1,9 @@
 #include <algorithm> // std::max
 #include "milightcontroller.hh"
+#include <esp_timer.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/queue.h>
+#include <freertos/task.h>
 #include "cApplications.hh"
 #define TAG "MILIGHT"
 #include <sensact_logger.hh>
@@ -9,6 +13,8 @@ namespace sensact::apps
 	
 	cMilightController::cMilightController(eApplicationID id) : cApplication(id)
 	{
+		milightQueue = xQueueCreate(10, sizeof(std::pair<uint8_t, uint8_t>));
+
 		this->keyCode2command[milight::keycodesFUT89::KON]= [](sensact::apps::iSensactContext *ctx){
 			ctx->SendONCommand(eApplicationID::PWM___X1_XX1_42, sensact::time::H12_ms);
 		};
@@ -36,30 +42,16 @@ namespace sensact::apps
 
 	eAppCallResult cMilightController::Setup(iSensactContext *ctx)
 	{
-		milightQueue = xQueueCreate(10, sizeof(std::pair<uint8_t, uint8_t>));
-
-		if (milightQueue == nullptr)
-		{
-			ESP_LOGE(TAG, "Fehler beim Erstellen der Queue");
-			return eAppCallResult::ERROR_GENERIC;
-		}
 		return eAppCallResult::OK;
 	}
 
 	eAppCallResult cMilightController::Loop(iSensactContext *ctx)
 	{
-		if (milightQueue == nullptr)
-		{
-			ESP_LOGE(TAG, "Queue nicht initialisiert!");
-			return eAppCallResult::ERROR_GENERIC;
-		}
-
 		std::pair<uint8_t, uint8_t> message;
 
-		// Prüfen, ob eine Nachricht in der Queue ist (nicht blockierend)
 		while (xQueueReceive(milightQueue, &message, 0) == pdTRUE)
 		{
-			uint8_t cmd =message.first;
+			uint8_t cmd = message.first;
 			uint8_t arg = message.second;
 			switch (cmd)
             {
@@ -79,6 +71,7 @@ namespace sensact::apps
                     val=arg*(UINT16_MAX/100.0);
                 }
                 //float x = arg * (0.95 / 100.0) + 0.05;
+				ESP_LOGD(TAG, "ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___X1_XX1_42, val)");
 				ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___X1_XX1_42, val);
                 continue;
             }
@@ -96,11 +89,15 @@ namespace sensact::apps
 	}
 
 	void cMilightController::ReceivedFromMilight(uint8_t cmd, uint8_t arg){
-		if (!milightQueue)
-		{
-			ESP_LOGE(TAG, "Queue nicht initialisiert!");
+		auto now= esp_timer_get_time();
+		if(arg == previousArg && cmd == previousCmd && (now - lastForwarded_us) < 500'000) {
+			ESP_LOGD(TAG, "CMD %3d ARG %3d (blocked)", cmd, arg);
 			return;
 		}
+		ESP_LOGI(TAG, "CMD %3d ARG %3d (forwarded)", cmd, arg);
+		previousArg=arg;
+		previousCmd=cmd;
+		lastForwarded_us=now;
 
 		std::pair<uint8_t, uint8_t> message = {cmd, arg};
 		

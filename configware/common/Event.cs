@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Klli.Sensact.Model.Common
+﻿namespace Klli.Sensact.Model.Common
 {
     public class Event
     {

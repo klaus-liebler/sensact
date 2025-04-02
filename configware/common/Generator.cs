@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 
 using Klli.Sensact.Model.Common;
 using Klli.Sensact.Model.Common.Applications;
-using System.Linq;
 using System.Text;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
+using Klli.Sensact.Model.Common.Nodes;
 
 namespace Klli.Sensact.Config
 {
@@ -18,30 +14,49 @@ namespace Klli.Sensact.Config
         COMMON,
         NODE_SPECIFIC,
     }
-    public class SourceCodeGeneratorOptions
-    {
-        public const string SectionName = "SourceCodeGenerator";
 
-        public string BasePath { get; set; }
-        public int ANumber { get; set; }
-    }
-    public class SourceCodeGenerator
+    public class SourceCodeGenerator<ApplicationIdType> where ApplicationIdType : struct, Enum
     {
-        ILogger<SourceCodeGenerator> LOG;
-        SourceCodeGeneratorOptions options;
-       public SourceCodeGenerator(AppSettings appSettings, ILogger<SourceCodeGenerator> LOG)
+        private ILogger<SourceCodeGenerator<ApplicationIdType>> LOG;
+        private SourceCodeGeneratorOptions appSettings;
+
+        private ApplicationIdType noAppId;
+        private ApplicationIdType masterAppId;
+        public SourceCodeGenerator(AppSettings appSettings, ILogger<SourceCodeGenerator<ApplicationIdType>> LOG)
         {
-            this.options = appSettings.SourceCodeGenerator;
+            this.appSettings = appSettings.SourceCodeGenerator!;
             this.LOG = LOG;
+
+            if(this.appSettings.BasePath == null)
+            {
+                throw new ArgumentException("BasePath in applicationSettings cannot be null. Please set it in the configuration file.");
+            }
+            
+            if (!Directory.Exists(this.appSettings.BasePath))
+            {
+                throw new DirectoryNotFoundException($"BasePath '{this.appSettings.BasePath}' does not exist.");
+            }
+            
+            if (!Enum.TryParse("NO_APPLICATION", out noAppId) || Convert.ToUInt16(noAppId) != Sensact.Model.Common.Model.NO_APPLICATION_ID)
+            {
+                throw new ArgumentException("Enum validation failed: NO_APPLICATION not found in " + typeof(ApplicationIdType).Name);
+            }
+
+            if (!Enum.TryParse("MASTER", out masterAppId) || Convert.ToUInt16(masterAppId) != Sensact.Model.Common.Model.MASTER_APPLICATION_ID)
+            {
+                throw new ArgumentException("Enum validation failed: MASTER not found in " + typeof(ApplicationIdType).Name);
+            }
+          
         }
 
-        public void generateAll(ModelContainer mc){
+        public void generateAll(ModelContainer mc)
+        {
             GenerateApplicationIds(mc);
             GenerateNodeIds(mc);
             GenerateApplicationNames(mc);
-            
-            GenerateParseCommand();
-            
+
+            GenerateParseCommandCPP();
+
             GenerateCommandTypes(mc);
             GenerateCommandNames(mc);
             GenerateEventTypes(mc);
@@ -49,11 +64,11 @@ namespace Klli.Sensact.Config
             GenerateEmptyImplementationForCmdHandler();
             GenerateCommandHandlerDeclarations(true);
             GenerateCommandHandlerDeclarations(false);
-            
+
             GenerateSendCommandDeclarations(true);
             GenerateSendCommandDeclarations(false);
             GenerateSendCommandImplementation();
-            
+
             GeneratePublishEventDeclarations(true);
             GeneratePublishEventDeclarations(false);
             GeneratePublishEventImplementation();
@@ -64,46 +79,56 @@ namespace Klli.Sensact.Config
             GenerateJSONDescription(mc);
             GenerateTypescriptUserInterface(mc);
         }
+
         
         public bool CheckAndPrepare(ModelContainer mc)
         {
-            HashSet<ushort> predefinedAppIds = Enum.GetValues<Model.ApplicationId>().Select(x=>(ushort)x).ToHashSet();
-            mc.NextFreeIndex = (ushort)(1+predefinedAppIds.Where(x=>x!=(ushort)Model.ApplicationId.NO_APPLICATION).Max());
 
-            SensactApplicationContainer masterApp = new SensactApplicationContainer(null, new MasterApplication((ushort)Model.ApplicationId.MASTER, Model.ApplicationId.MASTER.ToString()));
+            HashSet<ushort> predefinedAppIds = [.. Enum.GetValues<ApplicationIdType>().Select(x => Convert.ToUInt16(x))];
+           
+            if (Convert.ToUInt16(noAppId) != predefinedAppIds.Max())
+            {
+                LOG.LogError($"Enum validation failed: NO_APPLICATION should have the highest value in {typeof(ApplicationIdType).Name}");
+                return false;
+            }
+            mc.NextFreeIndex = (ushort)(1 + predefinedAppIds.Where(x => x != Convert.ToUInt16(noAppId)).Max());
+            Node nullNode = new NullNode(0, "NullNode");
+            Node monitoring_node = new MonitoringNode(ushort.MaxValue, "MONITORING");
+            SensactApplicationContainer masterApp = new(nullNode, new MasterApplication(Convert.ToUInt16(masterAppId), masterAppId.ToString()));
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
-            Model.Common.Nodes.Node monitoring_node= new Model.Common.Nodes.Monitoring(ushort.MaxValue, "MONITORING");
             mc.Model.Nodes.Add(monitoring_node);
-            
-            foreach (Sensact.Model.Common.Nodes.Node n in mc.Model.Nodes)
-            {  
-                HashSet<string> usedInputPins = new HashSet<string>();
-                HashSet<string> usedOutputPins = new HashSet<string>();
-                
+
+            foreach (Node n in mc.Model.Nodes)
+            {
+                HashSet<string> usedInputPins = [];
+                HashSet<string> usedOutputPins = [];
+
                 foreach (SensactApplication app in n.Applications)
                 {
-                    if(app.ApplicationName==null){
+                    if (app.ApplicationName == null)
+                    {
                         LOG.LogError("An App in Node {0} has no name", n.NodeName);
                         return false;
                     }
-                    if(app.ApplicationId==0 && app.ApplicationName!=null){
+                    if (app.ApplicationId == 0 && app.ApplicationName != null)
+                    {
                         app.SetApplicationId_BeCareful(mc.NextFreeIndex++);
                     }
-                    
+
                     if (mc.id2app.ContainsKey(app.ApplicationId))
                     {
-                        LOG.LogError("AppId {0} with name {1} is defined at least two times in node applications", app.ApplicationId, app.ApplicationName);
+                        LOG.LogError($"AppId {app.ApplicationId} with name {app.ApplicationName} is defined at least two times in node applications");
                         return false;
                     }
                     if (!app.HasValidAppId())
                     {
-                        LOG.LogWarning("AppId {0} with name {1} in node {2} does not fulfill the regex pattern {3} for application name. This is ok, but maybe it is an error...", app.ApplicationId, app.ApplicationName, n.NodeName, app.AppNameRegex);
+                        LOG.LogWarning($"AppId {app.ApplicationId} with name {app.ApplicationName} in node {n.NodeName} does not fulfill the regex pattern {app.AppNameRegex} for application name. This is ok, but maybe it is an error...");
                         app.HasValidAppId();
                     }
                     string errorMessage = app.CheckAndAddUsedPins(usedInputPins, usedOutputPins);
                     if (errorMessage != string.Empty)
                     {
-                        LOG.LogError("AppId {0} uses pins that have been reserved by another app:\n{1}", app.ApplicationId, errorMessage);
+                        LOG.LogError($"AppId {app.ApplicationId} uses pins that have been reserved by another app:\n{errorMessage}");
                         return false;
                     }
                     SensactApplicationContainer cont = new SensactApplicationContainer(n, app);
@@ -111,23 +136,27 @@ namespace Klli.Sensact.Config
                 }
 
                 //Sanity: Check, whether node application has already been added
-                if(mc.id2app.ContainsKey(n.NodeId)){
+                if (mc.id2app.ContainsKey(n.NodeId))
+                {
                     //Es wurde eine Application mit der ID der Node angelegt
-                    if(!mc.id2app[n.NodeId].Application.ApplicationName.Equals(n.NodeName)){
+                    if (!mc.id2app[n.NodeId].Application.ApplicationName.Equals(n.NodeName))
+                    {
                         //mit dem Namen gibt es ein Problem
-                        LOG.LogError("There is a predefined node app for node {0}, but its name is not correct:", n.NodeName);
+                        LOG.LogError($"There is a predefined node app for node {n.NodeName}, but its name is not correct:");
                         return false;
                     }
-                }else if(n!=monitoring_node){//add a special node app if it is not the monitoring node
+                }
+                else if (n != monitoring_node)
+                {//add a special node app if it is not the monitoring node
                     SensactApplicationContainer nodeAppContainer = new SensactApplicationContainer(n, new SensactNodeApplication(n.NodeId, n.NodeName));
                     n.Applications.Add(nodeAppContainer.Application);
                     mc.id2app.Add(nodeAppContainer.Application.ApplicationId, nodeAppContainer);
-                }                
+                }
             }
 
             //Find out which events should be fired by each application because there is a listener for the event
             //distinguish between local events and bus events
-            foreach (Sensact.Model.Common.Nodes.Node n in mc.Model.Nodes)
+            foreach (Node n in mc.Model.Nodes)
             {
                 foreach (SensactApplication app in n.Applications)
                 {
@@ -136,25 +165,23 @@ namespace Klli.Sensact.Config
                     foreach (Event evt in evts)
                     {
                         //Kann die SourceApp dieses Event überhaupt erzeugen?
-                        SensactApplicationContainer source;
-                        if (!mc.id2app.TryGetValue(evt.SourceAppId, out source))
+                        if (!mc.id2app.TryGetValue(evt.SourceAppId, out SensactApplicationContainer? source))
                         {
-                            LOG.LogError("AppId {0} listens to event from AppId {1}, but this app does not exist.", app.ApplicationId, evt.SourceAppId);
+                            LOG.LogError($"AppId {app.ApplicationId} listens to event from AppId {evt.SourceAppId}, but this app does not exist.");
                             return false;
                         }
                         else
                         {
                             if (!source.Application.ICanSendTheseEvents().Contains(evt.EventType))
                             {
-                                LOG.LogError("AppId {0} listens to event {1} from AppId {2}, but this app cannot produce such events.", app.ApplicationId, evt.EventType, evt.SourceAppId);
+                                LOG.LogError($"AppId {app.ApplicationId} listens to event {evt.EventType} from AppId {evt.SourceAppId}, but this app cannot produce such events.");
                                 return false;
                             }
                         }
                         if (appCont.Node == source.Node)
                         {
                             //source und destination leben in der selben node
-                            HashSet<EventType> set = null;
-                            if (!mc.id2localEvents.TryGetValue(evt.SourceAppId, out set))
+                            if (!mc.id2localEvents.TryGetValue(evt.SourceAppId, out HashSet<EventType>? set))
                             {
                                 set = new HashSet<EventType>();
                                 mc.id2localEvents[evt.SourceAppId] = set;
@@ -163,10 +190,9 @@ namespace Klli.Sensact.Config
                         }
                         else
                         {
-                            HashSet<EventType> set = null;
-                            if (!mc.id2busEvents.TryGetValue(evt.SourceAppId, out set))
+                            if (!mc.id2busEvents.TryGetValue(evt.SourceAppId, out HashSet<EventType>? set))
                             {
-                                set = new HashSet<EventType>();
+                                set = [];
                                 mc.id2busEvents[evt.SourceAppId] = set;
                             }
                             set.Add(evt.EventType);
@@ -175,12 +201,11 @@ namespace Klli.Sensact.Config
                     HashSet<Command> cmds = app.ISendTheseCommands();
                     foreach (Command cmd in cmds)
                     {
-                        SensactApplicationContainer target;
-                        if (!mc.id2app.TryGetValue(cmd.TargetAppId, out target))
+                        if (!mc.id2app.TryGetValue(cmd.TargetAppId, out SensactApplicationContainer? target))
                         {
-                            if (cmd.TargetAppId != (ushort)Model.ApplicationId.NO_APPLICATION)
+                            if (cmd.TargetAppId != Convert.ToUInt16(noAppId))
                             {
-                                LOG.LogError("AppId {0} sends command to AppId {1}, but this app does not exist.", app.ApplicationId, cmd.TargetAppId);
+                                LOG.LogError($"AppId {app.ApplicationId} sends command to non-existent AppId {cmd.TargetAppId}.");
                                 return false;
                             }
                         }
@@ -188,7 +213,7 @@ namespace Klli.Sensact.Config
                         {
                             if (!target.Application.ICanReactOnTheseCommands().Contains(cmd.CommandType))
                             {
-                                LOG.LogError("AppId {0} sends command {1} to AppId {2}, but this app cannot react on this command.", app.ApplicationId, cmd.CommandType, cmd.TargetAppId);
+                                LOG.LogError($"AppId {app.ApplicationId} sends command {cmd.CommandType} to AppId {cmd.TargetAppId}, but this app cannot react on this command.");
                                 return false;
                             }
                         }
@@ -207,26 +232,34 @@ namespace Klli.Sensact.Config
                 string codeBase = Assembly.GetExecutingAssembly().Location;
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                return Path.GetDirectoryName(path)!;
             }
         }
         protected void GenerateApplicationIds(ModelContainer mc)
         {
             StringBuilder sb_c = new StringBuilder();
             StringBuilder sb_flatc = new StringBuilder();
-        
+
+            ApplicationIdType noAppId;
+            if (!Enum.TryParse("NO_APPLICATION", out noAppId))
+            {
+                LOG.LogError("Enum {0} does not contain NO_APPLICATION", typeof(ApplicationIdType).Name);
+                return;
+            }
+
             //mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             //page.Nodes.Add("CNT");
-            ushort CNT=0;
-            foreach (var id in Enum.GetValues<Model.ApplicationId>())
+            ushort CNT = 0;
+            foreach (var id in Enum.GetValues<ApplicationIdType>())
             {
-                sb_c.AppendLine("\t"+id.ToString() + "=" + (ushort)id + ",");
-                sb_flatc.AppendLine("\t"+id.ToString() + "=" + (ushort)id + ",");
-                if(id!=Model.ApplicationId.NO_APPLICATION){
-                    CNT=Math.Max(CNT, (ushort)id);
+                sb_c.AppendLine("\t" + id.ToString() + "=" + Convert.ToUInt16(id) + ",");
+                sb_flatc.AppendLine("\t" + id.ToString() + "=" + Convert.ToUInt16(id) + ",");
+                if (!id.Equals(noAppId))
+                {
+                    CNT = Math.Max(CNT, Convert.ToUInt16(id));
                 }
             }
-            sb_c.AF2L("CNT={0},", CNT+1);
+            sb_c.AF2L("CNT={0},", CNT + 1);
             this.WriteCommonFile("applicationIds", sb_c);
             this.WriteCommonFile("applicationIds.fbs", sb_flatc);
             LOG.LogInformation("Successfully created appids");
@@ -238,7 +271,7 @@ namespace Klli.Sensact.Config
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
 
-        protected void GenerateParseCommand()
+        protected void GenerateParseCommandCPP()
         {
             //case eCommandType::SET_SIGNAL: OnSET_SIGNALCommand(ParseUInt16(payload, 0), now); break;
             StringBuilder sb = new StringBuilder();
@@ -259,7 +292,7 @@ namespace Klli.Sensact.Config
                 sb.AppendLine("ctx); break;");
             }
             WriteCommonFile("parseCommand", sb);
-            LOG.LogInformation("Successfully created parseCommand");
+            LOG.LogInformation("Successfully created parseCommandCPP");
         }
 
         protected void GenerateSendCommandImplementation()
@@ -275,7 +308,7 @@ namespace Klli.Sensact.Config
                 }
                 sb_c.AppendFormat("\tvoid cApplicationHost::Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(mi));
                 sb_typescript.AppendFormat("export function Send{0}Command(destinationApp:ApplicationId", SensactApplication.ExtractCmdName(mi));
-                
+
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
                     sb_c.Append(", ");
@@ -283,26 +316,26 @@ namespace Klli.Sensact.Config
                     sb_c.Append(" " + pi.Name);
                     sb_typescript.Append(", ");
                     sb_typescript.Append(pi.Name);
-                    sb_typescript.Append(":"+CS2TSType(pi.ParameterType));
-                    
+                    sb_typescript.Append(":" + CS2TSType(pi.ParameterType));
+
                 }
                 sb_c.AppendLine(")");
                 sb_typescript.AppendLine(", ctx:ISensactContext)");
                 sb_c.AppendLine("\t{");
                 sb_typescript.AppendLine("{");
                 sb_c.AppendLine("\t\tuint8_t buffer[8];");
-                
-                int offset_c= 0;
-                int offset_ts=0;
+
+                int offset_c = 0;
+                int offset_ts = 0;
                 StringBuilder sb_typescript_params = new StringBuilder();
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
-                    sb_c.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset_c));   
+                    sb_c.AppendLine("\t\t" + CS2CPPWriter(pi, ref offset_c));
                     sb_typescript_params.AppendLine("\t" + CS2TSWriter(pi, ref offset_ts));
                 }
                 sb_c.AFL("\t\tthis->SendApplicationCommandToMessageBus(destinationApp, sensact::eCommandType::{0}, buffer, {1});", SensactApplication.ExtractCmdName(mi), offset_c);
                 sb_c.AppendLine("\t}");
-                
+
                 sb_typescript.AFL("\tvar view = new DataView(new ArrayBuffer({0}));", offset_ts);
                 sb_typescript.Append(sb_typescript_params.ToString());
                 sb_typescript.AFL("\tctx.SendCommandMessage(destinationApp, Command.{0}, view);", SensactApplication.ExtractCmdName(mi), offset_ts);
@@ -310,7 +343,7 @@ namespace Klli.Sensact.Config
             }
             WriteCommonFile("sendCommandImplementation", sb_c);
             WriteCommonFile("sendCommandImplementation.ts", sb_typescript);
-            
+
             LOG.LogInformation("Successfully created sendCommandImplementation for C++ and Typescript");
         }
 
@@ -371,7 +404,8 @@ namespace Klli.Sensact.Config
                     continue;
                 }
                 sb.Append("\t");
-                if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.Append("virtual ");
                 }
                 sb.Append("void " + m.Name + "(");
@@ -381,15 +415,21 @@ namespace Klli.Sensact.Config
                     sb.Append(" " + pi.Name + ", ");
                 }
                 sb.Append("iSensactContext *ctx)");
-                 if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.AppendLine("{return;}");
-                }else{
+                }
+                else
+                {
                     sb.AppendLine(" override;");
                 }
             }
-            if(TrueIfVirtualFalseIfOverride){
+            if (TrueIfVirtualFalseIfOverride)
+            {
                 WriteCommonFile("commandHandlerDeclarationsVirtual", sb);
-            }else{
+            }
+            else
+            {
                 WriteCommonFile("commandHandlerDeclarationsOverride", sb);
             }
         }
@@ -397,23 +437,31 @@ namespace Klli.Sensact.Config
         private void GeneratePublishEventDeclarations(bool TrueIfVirtualFalseIfOverride)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(EventType e in Enum.GetValues(typeof(EventType))){
+            foreach (EventType e in Enum.GetValues(typeof(EventType)))
+            {
                 sb.Append("\t");
-                if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.Append("virtual ");
                 }
                 sb.AppendFormat("void Publish{0}Event(sensact::eApplicationID sourceApp, const uint8_t *const payload, uint8_t payloadLength", e.ToString());
-                if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.AppendLine(")=0;");
-                }else{
+                }
+                else
+                {
                     sb.AppendLine(") override;");
                 }
-                
+
             }
 
-            if(TrueIfVirtualFalseIfOverride){
+            if (TrueIfVirtualFalseIfOverride)
+            {
                 WriteCommonFile("publishEventDeclarationsVirtual", sb);
-            }else{
+            }
+            else
+            {
                 WriteCommonFile("publishEventDeclarationsOverride", sb);
             }
         }
@@ -429,31 +477,38 @@ namespace Klli.Sensact.Config
                     continue;
                 }
                 sb.Append("\t");
-                if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.Append("virtual ");
                 }
                 sb.AppendFormat("void Send{0}Command(sensact::eApplicationID destinationApp", SensactApplication.ExtractCmdName(m));
-               
+
                 foreach (ParameterInfo pi in m.GetParameters())
                 {
                     sb.Append(", ");
                     sb.Append(CS2CPPType(pi.ParameterType));
                     sb.Append(" " + pi.Name);
                 }
-                if(TrueIfVirtualFalseIfOverride){
+                if (TrueIfVirtualFalseIfOverride)
+                {
                     sb.AppendLine(")=0;");
-                }else{
+                }
+                else
+                {
                     sb.AppendLine(") override;");
                 }
-                
+
             }
 
-            if(TrueIfVirtualFalseIfOverride){
+            if (TrueIfVirtualFalseIfOverride)
+            {
                 WriteCommonFile("sendCommandDeclarationsVirtual", sb);
-            }else{
+            }
+            else
+            {
                 WriteCommonFile("sendCommandDeclarationsOverride", sb);
             }
-            
+
         }
 
         private StringBuilder HeaderForCommandsOfType(Type t)
@@ -597,67 +652,72 @@ namespace Klli.Sensact.Config
             string ret;
             if (pi.ParameterType == typeof(uint))
             {
-                ret = "view.setUint32(" + offset + "," + pi.Name+ ");";
+                ret = "view.setUint32(" + offset + "," + pi.Name + ");";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(short))
             {
-                ret = "view.setInt16(" + offset + "," + pi.Name+ ");";
+                ret = "view.setInt16(" + offset + "," + pi.Name + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(ushort))
             {
-                ret = "view.setUint16(" + offset + "," + pi.Name+ ");";
+                ret = "view.setUint16(" + offset + "," + pi.Name + ");";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(sbyte))
             {
-                ret = "view.setUint8(" + offset + "," + pi.Name+ ");";
+                ret = "view.setUint8(" + offset + "," + pi.Name + ");";
                 offset += 1;
             }
             else if (pi.ParameterType == typeof(byte))
             {
-                
-                ret = "view.setInt8(" + offset + "," + pi.Name+ ");";
+
+                ret = "view.setInt8(" + offset + "," + pi.Name + ");";
                 offset += 1;
-                
+
             }
             else throw new ArgumentException("Type " + pi.ParameterType + " is unknown");
             return ret;
         }
 
-        internal void GenerateNodeIds(ModelContainer mc){
+        internal void GenerateNodeIds(ModelContainer mc)
+        {
             StringBuilder sb = new StringBuilder();
             foreach (Sensact.Model.Common.Nodes.Node n in mc.Model.Nodes)
             {
 
-                sb.AppendLine(n.NodeName+",");
+                sb.AppendLine(n.NodeName + ",");
             }
             WriteCommonFile("nodeIds", sb);
         }
         internal void GenerateApplicationNames(ModelContainer mc)
         {
             var ApplicationNames = new string[mc.NextFreeIndex];
-            foreach (var kv in Enum.GetValues<Model.ApplicationId>().Where(x=>x!=Model.ApplicationId.NO_APPLICATION))
+            ApplicationIdType noAppId;
+            Enum.TryParse("NO_APPLICATION", out noAppId);
+            foreach (var kv in Enum.GetValues<ApplicationIdType>().Where(x => !x.Equals(noAppId)))
             {
-                ApplicationNames[(ushort)kv] = kv.ToString();
+                ApplicationNames[Convert.ToUInt16(kv)] = kv.ToString();
                 //Alle vordefinierten Indizes müssen bekannt sein, auch wenn die App (noch) nicht definiert ist
             }
-            foreach(var appc in mc.id2app.Values){
+            foreach (var appc in mc.id2app.Values)
+            {
                 //Sanity check
                 try
                 {
-                    if(ApplicationNames[appc.Application.ApplicationId]!=null && !ApplicationNames[appc.Application.ApplicationId].Equals(appc.Application.ApplicationName)){
-                    throw new Exception("Implementation error!");
-                }
+                    if (ApplicationNames[appc.Application.ApplicationId] != null && !ApplicationNames[appc.Application.ApplicationId].Equals(appc.Application.ApplicationName))
+                    {
+                        throw new Exception("Implementation error!");
+                    }
                 }
                 catch (System.Exception)
                 {
-                    
+
                     throw;
                 }
-                
-                ApplicationNames[appc.Application.ApplicationId]=appc.Application.ApplicationName;
+
+                ApplicationNames[appc.Application.ApplicationId] = appc.Application.ApplicationName;
                 //Auch alle Apps, die keinen vordefinierten Index verwenden, müssen bekannt sein
             }
 
@@ -703,15 +763,18 @@ namespace Klli.Sensact.Config
 
         internal void GenerateNodeSpecificFiles(ModelContainer mc)
         {
-            
+
             StringBuilder sb = new StringBuilder();
             foreach (Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
             {
                 LOG.LogInformation("Create Files for node {0}", node.NodeName);
                 //const eApplicationID MODEL::NodeMasterApplication = eApplicationID::SNSCT_L0_TECH_HS_1;
-                if(node.NodeHasANodeApplication){
+                if (node.NodeHasANodeApplication)
+                {
                     sb.AFL("const sensact::eApplicationID cApplications::NodeMasterApplication = sensact::eApplicationID::{0};", node.NodeName);
-                }else{//2023-02-15: the only use case for this: The "MONITORING" node has no application
+                }
+                else
+                {//2023-02-15: the only use case for this: The "MONITORING" node has no application
                     sb.AFL("const sensact::eApplicationID cApplications::NodeMasterApplication = sensact::eApplicationID::NO_APPLICATION;", node.NodeName);
                 }
                 WriteNodeSpecificFile(node, "nodeMasterApplicationId", sb);
@@ -733,8 +796,8 @@ namespace Klli.Sensact.Config
                 //Static initializers
                 foreach (SensactApplication app in node.Applications)
                 {
-                    sb.AFL("{0}",app.GenerateCommentAboveConstructor(mc));
-                    sb.AF2L("{0};",app.GenerateCPPConstructor(mc));
+                    sb.AFL("{0}", app.GenerateCommentAboveConstructor(mc));
+                    sb.AF2L("{0};", app.GenerateCPPConstructor(mc));
                     SensactApplicationContainer appCont = mc.id2app[app.ApplicationId];
                     Glo2LocCmd[appCont.Application.ApplicationId] = "\t&" + app.ApplicationName + ",";
                 }
@@ -761,19 +824,21 @@ namespace Klli.Sensact.Config
                 //Typescript Constructor
                 foreach (SensactApplicationContainer appc in mc.id2app.Values)
                 {
-                    if(appc.Node==null){
+                    if (appc.Node == null)
+                    {
                         continue; //for MASTER Application
                     }
                     sb.AFL("{0}", appc.Application.GenerateCommentAboveConstructor(mc));
-                    string constr=appc.Application.GenerateTypescriptConstructor(mc);
-                    if(string.IsNullOrEmpty(constr)){
+                    string constr = appc.Application.GenerateTypescriptConstructor(mc);
+                    if (string.IsNullOrEmpty(constr))
+                    {
                         sb.AppendLine();
                         continue;
                     }
-                    bool isLocal=appc.Node.NodeName.Equals(node.NodeName);
+                    bool isLocal = appc.Node.NodeName.Equals(node.NodeName);
 
-                    sb.AF2L("ret.push({{local:{0}, app:{1}}})", isLocal?"true":"false", constr );
-                    
+                    sb.AF2L("ret.push({{local:{0}, app:{1}}})", isLocal ? "true" : "false", constr);
+
                 }
                 WriteNodeSpecificFile(node, "sensactapps_local.ts", sb);
                 sb.Clear();
@@ -782,11 +847,11 @@ namespace Klli.Sensact.Config
             return;
         }
 
-        private void GenerateJSONDescription(ModelContainer mc){
-            
+        private void GenerateJSONDescription(ModelContainer mc)
+        {
             foreach (Sensact.Model.Common.Nodes.Node node in mc.Model.Nodes)
             {
-                string directory = Path.Combine(this.options.BasePath, node.NodeName);
+                string directory = Path.Combine(this.appSettings.BasePath!, node.NodeName);
                 Directory.CreateDirectory(directory);
 
                 var info = new Dictionary<string, string>()
@@ -803,23 +868,25 @@ namespace Klli.Sensact.Config
                 );
 
                 List<object> list = new List<object>();
-                foreach(var app in node.Applications){
+                foreach (var app in node.Applications)
+                {
                     app.AddJSONDescriptionToList(list);
                 }
-                
-                
+
+
                 string path = Path.Combine(directory, "app_descriptor.json");
                 File.WriteAllText(path, JsonSerializer.Serialize<object>(list));
             }
-            LOG.LogInformation("Successfully created all node specific .json files in {0}.", this.options.BasePath);
+            LOG.LogInformation("Successfully created all node specific .json files in {0}.", this.appSettings.BasePath);
         }
 
-        private void GenerateTypescriptUserInterface(ModelContainer mc){
+        private void GenerateTypescriptUserInterface(ModelContainer mc)
+        {
             StringBuilder sb = new StringBuilder();
             foreach (SensactApplicationContainer appc in mc.id2app.Values)
             {
-                sb.AFL("{0}",appc.Application.GenerateCommentAboveConstructor(mc));
-                sb.AF2L("{0}",appc.Application.GenerateTypescriptConstructor(mc));
+                sb.AFL("{0}", appc.Application.GenerateCommentAboveConstructor(mc));
+                sb.AF2L("{0}", appc.Application.GenerateTypescriptConstructor(mc));
             }
             WriteCommonFile("sensactapps.ts", sb);
             LOG.LogInformation("Successfully created typescript file with UI for all apps");
@@ -829,10 +896,10 @@ namespace Klli.Sensact.Config
         {
             WriteFileInSubdirectory(node.NodeName, filenameWithoutExtension, content);
         }
-        
+
         protected void WriteFileInSubdirectory(string subdir, string filenameWithoutExtension, StringBuilder content)
         {
-            string directory = Path.Combine(this.options.BasePath, subdir);
+            string directory = Path.Combine(this.appSettings.BasePath!, subdir);
             Directory.CreateDirectory(directory);
             string path = Path.Combine(directory, filenameWithoutExtension + ".inc");
             File.WriteAllText(path, content.ToString());
@@ -840,10 +907,11 @@ namespace Klli.Sensact.Config
 
         public void DeleteBaseDirectory()
         {
-            
+
             try
             {
-                foreach(var subdir in Directory.GetDirectories(this.options.BasePath)){
+                foreach (var subdir in Directory.GetDirectories(this.appSettings.BasePath!))
+                {
                     Directory.Delete(subdir, true);
                 }
             }
@@ -852,7 +920,7 @@ namespace Klli.Sensact.Config
 
         protected void WriteCommonFile(string filenameWithoutExtension, StringBuilder content)
         {
-            string directory = Path.Combine(this.options.BasePath, "common");
+            string directory = Path.Combine(this.appSettings.BasePath!, "common");
             Directory.CreateDirectory(directory);
             string path = Path.Combine(directory, filenameWithoutExtension + ".inc");
             File.WriteAllText(path, content.ToString());
@@ -862,17 +930,17 @@ namespace Klli.Sensact.Config
         {
             StringBuilder sb_c = new StringBuilder();
             StringBuilder sb_protobuf = new StringBuilder();
-            
+
             foreach (CommandType ct in Enum.GetValues(typeof(CommandType)))
             {
                 sb_c.AppendLine(ct.ToString() + "=" + (int)ct + ",");
-                sb_protobuf.AppendLine("\t"+ct.ToString() + "=" + (int)ct + ",");
+                sb_protobuf.AppendLine("\t" + ct.ToString() + "=" + (int)ct + ",");
             }
             WriteCommonFile("commandTypes", sb_c);
             WriteCommonFile("commandTypes.fbs", sb_protobuf);
-            
+
         }
-        
+
         internal void GenerateEventTypes(ModelContainer model)
         {
             StringBuilder sb_c = new StringBuilder();
@@ -881,7 +949,7 @@ namespace Klli.Sensact.Config
             foreach (EventType ct in Enum.GetValues(typeof(EventType)))
             {
                 sb_c.AppendLine(ct.ToString() + "=" + (int)ct + ",");
-                sb_protobuf.AppendLine("\t"+ct.ToString() + "=" + (int)ct + ",");
+                sb_protobuf.AppendLine("\t" + ct.ToString() + "=" + (int)ct + ",");
             }
             sb_protobuf.AppendLine("}");
             WriteCommonFile("eventTypes", sb_c);

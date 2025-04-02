@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Klli.Sensact.Model.Common.Nodes
+﻿namespace Klli.Sensact.Model.Common.Nodes
 {
     public class SensactOutdoor : Node
     {

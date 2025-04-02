@@ -110,7 +110,7 @@ extern "C" void app_main(void)
     
     //Configure Network
     webmanager::M* wm = webmanager::M::GetSingleton();
-    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true));
+    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true, false));
     
     const char *hostname = wm->GetHostname();
     #ifdef HTTPS
@@ -138,10 +138,15 @@ extern "C" void app_main(void)
     
     nodemaster->RunEternalLoopInTask();
     
-    
+    int counter{0};
     while (true)
     {
-        ESP_LOGI(TAG, "Heap %6lu nodemaster tells:\n %s", esp_get_free_heap_size(), nodemaster->GetStatusMessage());
-        vTaskDelay(pdMS_TO_TICKS(10000));
+        wm->Supervise();
+        if (++counter % 10 == 0)
+        {
+            ESP_LOGI(TAG, "Heap %6lu nodemaster tells:\n %s", esp_get_free_heap_size(), nodemaster->GetStatusMessage());
+        }
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
+    
 }

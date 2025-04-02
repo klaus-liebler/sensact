@@ -4,7 +4,7 @@ include "../../../../generated/flatbuffers_fbs/commandTypes.fbs";
 namespace sensact;
 
 enum Namespace:uint32{
-    Value=9
+    Value=20
 }
 struct Payload {
     data: [uint8:8];
@@ -30,6 +30,11 @@ struct StatusPayload {
     data: [uint16:4];
 }
 
+table NotifyStatus{
+    id:ApplicationId;
+    status:StatusPayload;
+}
+
 struct ResponseStatusItem{
     id:ApplicationId;
     status:StatusPayload;
@@ -39,10 +44,6 @@ table ResponseStatus{
     states:[ResponseStatusItem];
 }
 
-table NotifyStatus{
-    id:ApplicationId;
-    status:StatusPayload;
-}
 
 
 union Requests{

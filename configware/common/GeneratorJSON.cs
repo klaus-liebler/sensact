@@ -1,7 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Collections.Generic;
-
 namespace Klli.Sensact.Config{
     public class JSONAppDescription{
 

@@ -122,6 +122,19 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         if(canMBP->BuildApplicationStatusMessage((u16)sourceApp, (u8)statusType, byteArray, 8, m)==ErrorCode::OK){
             hostCtx->PublishOnMessageBus(m, true);
         }
+        if(this->webmanager_callback!=nullptr){
+            flatbuffers::FlatBufferBuilder b(128);
+            auto sp= sensact::StatusPayload(payload);
+            b.Finish(
+                sensact::CreateResponseWrapper(
+                    b,
+                    sensact::Responses::Responses_NotifyStatus,
+                    sensact::CreateNotifyStatus(b, static_cast<sensact::ApplicationId>(sourceApp), &sp).Union()
+                )
+            );
+            webmanager_callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b);
+
+        }
         return ErrorCode::OK;
     }
 

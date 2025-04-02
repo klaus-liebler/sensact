@@ -4,28 +4,16 @@
 			"path": "."
 		},
 		{
-			"path": "../../espidf-components/sensact-applicationmodel"
-		},
-		{
-			"path": "../../espidf-components/sensactcommon"
-		},
-		{
-			"path": "../../espidf-components/sensact-middleware"
-		},
-		{
-			"path": "../../espidf-components/sensact-hal"
-		},
-		{
 			"path": "../../../npm-packages/@klaus-liebler/sensact-base"
 		},
 		{
-			"path": "../../../espidf-components/milight"
+			"path": "../../../npm-packages/@klaus-liebler/web-components-sensact"
 		},
 		{
-			"path": "../../../espidf-components/nrf24"
+			"path": "../../../npm-packages/@klaus-liebler/web-components"
 		},
 		{
-			"path": "../../../espidf-components/errorcodes"
+			"path": "../../espidf-components/sensact-applicationmodel"
 		}
 	],
 	"settings": {

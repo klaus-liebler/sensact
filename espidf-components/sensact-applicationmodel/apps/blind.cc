@@ -3,7 +3,8 @@
 #include "cApplications.hh"
 #include <sensact_logger.hh>
 #define TAG "BLIND"
-
+#define CUR_POS() ((int)(100*((float)currentPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
+#define TAR_POS() ((int)(100*((float)targetPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
 
 namespace sensact::apps
 {
@@ -65,7 +66,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::PREPARE_UP){
 			return;
 		}
-		LOGI(TAG, "%s prepareUp %ld->%ld", N(), this->currentPosition, this->targetPosition);
+		LOGI(TAG, "%s prepareUp {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
 		this->currentState = eCurrentBlindState::PREPARE_UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -86,7 +87,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::UP){
 			return;
 		}
-		LOGI(TAG, "%s up %ld->%ld", N(), this->currentPosition, this->targetPosition);
+		LOGI(TAG, "%s up {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
 		this->currentState = eCurrentBlindState::UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -111,7 +112,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::PREPARE_DOWN){
 			return;
 		}
-		LOGI(TAG, "%s prepareDown %ld->%ld", N(), this->currentPosition, this->targetPosition);
+		LOGI(TAG, "%s prepareDown {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
 		this->currentState = eCurrentBlindState::PREPARE_DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -132,7 +133,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::DOWN){
 			return;
 		}
-		LOGI(TAG, "%s down %ld->%ld", N(), this->currentPosition, this->targetPosition);
+		LOGI(TAG, "%s down {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
 		this->currentState = eCurrentBlindState::DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -157,7 +158,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::STOP){
 			return;
 		}
-		LOGI(TAG, "%s stop %ld->%ld", N(), this->currentPosition, this->targetPosition);
+		LOGI(TAG, "%s stop {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
 		this->currentState = eCurrentBlindState::STOP;
 		this->targetPosition=BLIND::STOP;
 		this->lastChanged = ctx->Now();
@@ -297,9 +298,13 @@ namespace sensact::apps
 		}
 		else if (this->currentState == eCurrentBlindState::DOWN)
 		{
-			this->currentPosition += (ctx->Now() - this->lastPositionCalculation) * millisteps_down;
+			this->currentPosition -= (ctx->Now() - this->lastPositionCalculation) * millisteps_down;
 		}
 		this->lastPositionCalculation = ctx->Now();
+		if((ctx->Now() - this->lastPositionOutput > 1000) && this->currentState != eCurrentBlindState::ENERGY_SAVE){
+			LOGI(TAG, "%s current position %3d%%", N(), CUR_POS());
+			this->lastPositionOutput = ctx->Now();
+		}
 	}
 
 	eAppCallResult cBlind::Loop(iSensactContext *ctx)
@@ -355,6 +360,7 @@ namespace sensact::apps
 				break;
 			}
 		}else{
+			LOGI(TAG, "%s CUR:%d is in the range of TAR:%d -->STOP the motor", N(), CUR_POS(), TAR_POS());
 			stop(ctx);
 		}
 		return eAppCallResult::OK;
