@@ -65,7 +65,7 @@ namespace sensact
 		iHost *currentHost{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
-		webmanager::iWebmanagerCallback * webmanager_callback{nullptr};
+		webmanager::iWebmanagerCallback * webmanager_callback_i_am_nullptr{nullptr};
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{

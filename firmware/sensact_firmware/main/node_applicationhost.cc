@@ -341,7 +341,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
             app = sensact::apps::cApplications::Glo2locCmd[appId];
-            if (app != NULL)
+            if (app != nullprt)
             {
                 // Es ist natürlich kein Fehler, wenn hier an der Node eine Nachricht ankommt, für die lokal keine App hinterlegt ist - eine andere Node wird die schon empfangen...
                 this->OnApplicationCommand(app, (eCommandType)commandType, canMBP->GetPayloadStart(m), canMBP->GetPayloadLen(m));
@@ -371,11 +371,13 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
 
     ErrorCode cApplicationHost::Loop(iHostContext &ctx)
     {
-        CANMessage message;
+        CommandMessage message;
         this->nowForCurrentLoop = ctx.Now();
         while (xQueueReceive(this->webCommandQueue, (void *)&message, 0)==pdTRUE)
         {
-                this->OfferMessage(ctx, message);
+            sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[message.target];
+            if(!app) continue;
+            this->OnApplicationCommand(app, message->command, message.payload, message.payloadLength);
         }
         for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
