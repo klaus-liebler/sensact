@@ -62,12 +62,12 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cBlindsTimer::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cBlindsTimer::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 		buf[0]=0;
 		buf[1]=this->timerActive;
 		buf[2]=0;
 		buf[3]=0;
-		return eAppCallResult::OK;
+		return eFillStatusResult::OK;
 	}
 
 	void cBlindsTimer::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)

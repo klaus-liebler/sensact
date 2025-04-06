@@ -4,20 +4,7 @@ using System.Text.RegularExpressions;
 namespace Klli.Sensact.Model.Common.Applications
 {
     public class SinglePWMApplication:ActorApplication{
-        public SinglePWMApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ISet<ushort> OutputResources,  int MinimalOnLevel, int InitialStoredTargetLevel, uint AutoOffIntervalMsecs, ushort StandbyController):base(ApplicationId, ApplicationName, ApplicationDescription){
-            if(MinimalOnLevel<1)
-            {
-                MinimalOnLevel = 1;
-            }
-            if(MinimalOnLevel>Byte.MaxValue)
-            {
-                MinimalOnLevel = Byte.MaxValue;
-            }
-            if (InitialStoredTargetLevel<MinimalOnLevel || InitialStoredTargetLevel>Byte.MaxValue)
-            {
-                InitialStoredTargetLevel = Byte.MaxValue;
-            }
-            AutoOffIntervalMsecs = Math.Max(0, AutoOffIntervalMsecs);
+        public SinglePWMApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ISet<ushort> OutputResources,  ushort MinimalOnLevel, ushort InitialStoredTargetLevel, uint AutoOffIntervalMsecs, ushort StandbyController):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.OutputResources=OutputResources;
             this.MinimalOnLevel=MinimalOnLevel;
             this.InitialStoredTargetLevel=InitialStoredTargetLevel;
@@ -25,8 +12,8 @@ namespace Klli.Sensact.Model.Common.Applications
             this.StandbyController=StandbyController;
         }
         public ISet<ushort> OutputResources{get;}
-        public int MinimalOnLevel{get;}
-        public int InitialStoredTargetLevel{get;}
+        public ushort MinimalOnLevel{get;}
+        public ushort InitialStoredTargetLevel{get;}
         public uint AutoOffIntervalMsecs{get;}
         public ushort StandbyController{get;}
         

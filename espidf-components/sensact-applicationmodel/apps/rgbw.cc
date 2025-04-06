@@ -123,11 +123,11 @@ namespace sensact::apps
 	}
 
 
-	eAppCallResult cRgbw::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cRgbw::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 			buf[0]=this->lastColor.R;
 			buf[1]=this->lastColor.G;
 			buf[2]=this->lastColor.B;
 			buf[3]=this->lastColor.W;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 }

@@ -15,7 +15,7 @@ import * as cfg from "@klaus-liebler/espidf-vite-secure-build-tools/key_value_fi
 import * as sensact from "./sensact_code_generator";
 
 //Reset
-const OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS=true;
+const OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS=false;
 
 //Default Board Type
 export const DEFAULT_BOARD_NAME="SENSACT_OUTDOOR"
@@ -37,10 +37,14 @@ const APPLICATION_VERSION = "1.0"
 
 const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS_BASE_DIR, DEFAULT_BOARD_NAME, DEFAULT_BOARD_VERSION);
 
-
-export const buildForCurrent = gulp.series(
+export const buildWebForCurrent = gulp.series(
   createFiles,
   buildAndCompressWebProject,
+)
+
+
+export const buildForCurrent = gulp.series(
+  buildWebForCurrent,
   buildFirmware,
 )
 

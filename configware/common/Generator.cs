@@ -652,17 +652,17 @@ namespace Klli.Sensact.Config
             string ret;
             if (pi.ParameterType == typeof(uint))
             {
-                ret = "view.setUint32(" + offset + "," + pi.Name + ");";
+                ret = "view.setUint32(" + offset + "," + pi.Name + ", true);";
                 offset += 4;
             }
             else if (pi.ParameterType == typeof(short))
             {
-                ret = "view.setInt16(" + offset + "," + pi.Name + ");";
+                ret = "view.setInt16(" + offset + "," + pi.Name + ", true);";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(ushort))
             {
-                ret = "view.setUint16(" + offset + "," + pi.Name + ");";
+                ret = "view.setUint16(" + offset + "," + pi.Name + ", true);";
                 offset += 2;
             }
             else if (pi.ParameterType == typeof(sbyte))

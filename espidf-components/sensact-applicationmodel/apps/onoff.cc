@@ -34,10 +34,10 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cOnOff::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cOnOff::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 		buf[0]=buf[2]=buf[3]=0;
 		buf[1]=(uint16_t)(this->autoOffCalc > ctx.Now());
-		return eAppCallResult::OK;
+		return eFillStatusResult::OK;
 	}
 
 	void cOnOff::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)

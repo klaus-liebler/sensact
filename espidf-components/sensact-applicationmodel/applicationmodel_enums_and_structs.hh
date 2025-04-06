@@ -23,19 +23,32 @@ namespace sensact
         ERROR_ON_CYCLIC,
         TERMINATED,
     };
-
+#undef _
+#define _(n) n
     enum class eAppCallResult : uint8_t
     {
-        OK = 0,
-        OK_CHANGED = 1,
-        OK_CHANGEUP_START = 2,
-        OK_CHANGEDOWN_START = 3,
-        OK_CHANGE_END = 4,
-        ERROR_GENERIC = 128,
-        BUS_ERROR = 129,
-        STATE_ERROR = 130,
-        NOT_IMPLEMENTED = 255,
+        #include "eAppCallResult.inc"
     };
+#undef _
+#define _(n) #n
+    const char *const eAppCallResultStr[] = {
+        #include "eAppCallResult.inc"
+    };
+
+#undef _
+#define _(n) n
+    enum class eFillStatusResult : uint8_t
+    {
+        #include "eFillStatusResult.inc"
+    };
+#undef _
+#define _(n) #n
+    const char *const eFillStatusResultStr[] = {
+        #include "eFillStatusResult.inc"
+    };
+
+
+
 #undef _
 #define _(n) n
     enum class eAppType : uint8_t
@@ -75,9 +88,9 @@ namespace sensact
 
     struct CommandMessage
     {
-        const eApplicationID target;
-        const eCommandType command;
-        const uint8_t payload[8];
-        const uint8_t payloadLength;
+        eApplicationID target;
+        eCommandType command;
+        uint8_t payload[8];
+        uint8_t payloadLength;
     };
 }

@@ -3,8 +3,8 @@
 #include "cApplications.hh"
 #include <sensact_logger.hh>
 #define TAG "BLIND"
-#define CUR_POS() ((int)(100*((float)currentPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
-#define TAR_POS() ((int)(100*((float)targetPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
+#define CUR_POS_PERCENT() ((int)(100*((float)currentPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
+#define TAR_POS_PERCENT() ((int)(100*((float)targetPosition-(float)FULL_DOWN)/((float)FULL_UP-(float)FULL_DOWN)))
 
 namespace sensact::apps
 {
@@ -53,12 +53,12 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cBlind::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cBlind::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 		buf[0]=(uint16_t)currentState;
-		buf[1]=(currentPosition>>16);
-		buf[2]=0;
-		buf[3]=(targetPosition>>16);
-		return eAppCallResult::OK;
+		buf[1]=clamp_kl(CUR_POS_PERCENT(), 0, 100);
+		buf[2]=currentState==eCurrentBlindState::UP?(u16)eCurrentBlindState::UP:currentState==eCurrentBlindState::DOWN?(u16)eCurrentBlindState::DOWN:0;
+		buf[3]=clamp_kl(TAR_POS_PERCENT(), 0, 100);
+		return eFillStatusResult::OK;
 	}
 
 	void cBlind::prepareUp(iSensactContext *ctx)
@@ -66,7 +66,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::PREPARE_UP){
 			return;
 		}
-		LOGI(TAG, "%s prepareUp {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
+		LOGI(TAG, "%s prepareUp {CUR:%d, TAR:%d}", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 		this->currentState = eCurrentBlindState::PREPARE_UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -87,7 +87,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::UP){
 			return;
 		}
-		LOGI(TAG, "%s up {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
+		LOGI(TAG, "%s up {CUR:%d, TAR:%d}", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 		this->currentState = eCurrentBlindState::UP;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -112,7 +112,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::PREPARE_DOWN){
 			return;
 		}
-		LOGI(TAG, "%s prepareDown {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
+		LOGI(TAG, "%s prepareDown {CUR:%d, TAR:%d}", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 		this->currentState = eCurrentBlindState::PREPARE_DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -133,7 +133,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::DOWN){
 			return;
 		}
-		LOGI(TAG, "%s down {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
+		LOGI(TAG, "%s down {CUR:%d, TAR:%d}", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 		this->currentState = eCurrentBlindState::DOWN;
 		this->lastChanged = ctx->Now();
 		switch (this->mode)
@@ -158,7 +158,7 @@ namespace sensact::apps
 		if(this->currentState==eCurrentBlindState::STOP){
 			return;
 		}
-		LOGI(TAG, "%s stop {CUR:%d, TAR:%d}", N(), CUR_POS(), TAR_POS());
+		LOGI(TAG, "%s stop {CUR:%d, TAR:%d}", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 		this->currentState = eCurrentBlindState::STOP;
 		this->targetPosition=BLIND::STOP;
 		this->lastChanged = ctx->Now();
@@ -290,7 +290,7 @@ namespace sensact::apps
 	}
 	*/
 
-	void cBlind::updatePosition(iSensactContext *ctx)
+	bool cBlind::updatePosition(iSensactContext *ctx)
 	{
 		if (this->currentState == eCurrentBlindState::UP)
 		{
@@ -302,14 +302,18 @@ namespace sensact::apps
 		}
 		this->lastPositionCalculation = ctx->Now();
 		if((ctx->Now() - this->lastPositionOutput > 1000) && this->currentState != eCurrentBlindState::ENERGY_SAVE){
-			LOGI(TAG, "%s current position %3d%%", N(), CUR_POS());
+			LOGI(TAG, "%s current position %3d%%", N(), CUR_POS_PERCENT());
 			this->lastPositionOutput = ctx->Now();
+			return true;
+		}
+		else{
+			return false;
 		}
 	}
 
 	eAppCallResult cBlind::Loop(iSensactContext *ctx)
 	{
-		updatePosition(ctx);
+		auto significantPositionUpdate=updatePosition(ctx);
 		if (this->targetPosition==BLIND::STOP){
 			switch (currentState)
 			{
@@ -360,9 +364,9 @@ namespace sensact::apps
 				break;
 			}
 		}else{
-			LOGI(TAG, "%s CUR:%d is in the range of TAR:%d -->STOP the motor", N(), CUR_POS(), TAR_POS());
+			LOGI(TAG, "%s CUR:%d is in the range of TAR:%d -->STOP the motor", N(), CUR_POS_PERCENT(), TAR_POS_PERCENT());
 			stop(ctx);
 		}
-		return eAppCallResult::OK;
+		return significantPositionUpdate?eAppCallResult::OK_CHANGED:eAppCallResult::OK;
 	}
 }

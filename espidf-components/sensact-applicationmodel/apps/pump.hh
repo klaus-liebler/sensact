@@ -28,10 +28,10 @@ namespace sensact::apps
             }
 			return eAppCallResult::OK;
 		}
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[2]=buf[3]=0;
 			buf[1]=state;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 		cPump(eApplicationID id, InOutId relay, tms_t onInterval, tms_t offInterval):
 			cApplication(id), relay(relay), onInterval(onInterval), offInterval(offInterval)

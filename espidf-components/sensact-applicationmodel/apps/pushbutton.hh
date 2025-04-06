@@ -119,11 +119,11 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[3]=0;
 			buf[1]=IsPressedNow();
 			buf[2]=0;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 	};
 
@@ -159,11 +159,11 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[3]=0;
 			buf[1]=IsPressedNow();
 			buf[2]=0;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 	};
 
@@ -221,12 +221,11 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[3]=0;
 			buf[1]=down->IsPressedNow();
 			buf[2]=up->IsPressedNow();
-			return eAppCallResult::OK;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 	};
 
@@ -284,11 +283,11 @@ namespace sensact::apps
 			return eAppType::PSHBT;
 		}
 
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[3]=0;
 			buf[1]=down->IsPressedNow();
 			buf[2]=up->IsPressedNow();
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 	};
 }

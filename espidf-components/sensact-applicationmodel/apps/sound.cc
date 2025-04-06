@@ -27,11 +27,11 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSound::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cSound::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 			buf[0]=this->currentVolume;
 			buf[1]=this->sound;
 			buf[2]=buf[3]=0;
-			return eAppCallResult::OK;
+			return eFillStatusResult::OK;
 		}
 
 	void cSound::OnTOGGLECommand(iSensactContext *ctx)

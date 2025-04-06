@@ -38,9 +38,9 @@ namespace sensact::apps
 			return eAppCallResult::OK;
 		}
 
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override{
 			buf[0]=buf[1]=buf[2]=buf[3]=0;
-			return eAppCallResult::OK;
+			return eFillStatusResult::NO_STATUS;
 		}
 
 		void NotifyFingerDetected(int action){

@@ -14,7 +14,7 @@ namespace sensact::apps
 		eAppType GetAppType() override;
 		eAppCallResult Setup(iSensactContext *ctx) override;
 		eAppCallResult Loop(iSensactContext *ctx) override;
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 
 		cSound(eApplicationID id, u8 initialVolume, uint16_t defaultSignalOnToggle);
 		void OnTOGGLECommand(iSensactContext *ctx) override;

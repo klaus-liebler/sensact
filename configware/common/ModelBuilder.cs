@@ -7,7 +7,7 @@ namespace Klli.Sensact.Common
     public abstract class ModelBuilder<ApplicationIdType> where ApplicationIdType:struct,Enum
     {
         protected Model.Common.Model model;
-        const byte DEFAULT_MIN_DIM_LEVEL=20;
+        const ushort DEFAULT_MIN_DIM_LEVEL=512;
         public ModelBuilder(string name){
             model=new Model.Common.Model(name);
 
@@ -30,7 +30,7 @@ namespace Klli.Sensact.Common
         }
 
 
-        public void AddPWMApplication(Node node, ApplicationIdType appId, string ApplicationDescription, ApplicationIdType StandbyController, ISet<ushort> outputResources, uint AutoOffIntervalMsecs = 0, byte minimalOnLevel=DEFAULT_MIN_DIM_LEVEL, byte initialStoredTargetLevel=byte.MaxValue)
+        public void AddPWMApplication(Node node, ApplicationIdType appId, string ApplicationDescription, ApplicationIdType StandbyController, ISet<ushort> outputResources, uint AutoOffIntervalMsecs = 0, ushort minimalOnLevel=DEFAULT_MIN_DIM_LEVEL, ushort initialStoredTargetLevel=ushort.MaxValue)
         {
             node.Applications.Add(new SinglePWMApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription, outputResources, minimalOnLevel, initialStoredTargetLevel, AutoOffIntervalMsecs, Convert.ToUInt16(StandbyController)));
         }

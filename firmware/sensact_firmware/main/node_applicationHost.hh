@@ -15,7 +15,7 @@ namespace sensact
         u16 nextStatusApp{0};
         u16 appCnt{0};
         size_t statusBufferLength{0};
-        tms_t lastSentCANMessage{0};
+        tms_t lastSentMessageOnMessageBus{0};
         tms_t nowForCurrentLoop{0};
         sensact::hal::iHAL *hal;
         iHostContext *hostCtx;
@@ -29,7 +29,7 @@ namespace sensact
         ErrorCode PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, std::array<uint16_t,4> &payload);
         void SendApplicationCommandToMessageBus(eApplicationID destinationApp, eCommandType command, uint8_t *payload, uint8_t payloadLength);
         void PublishApplicationEventToMessageBus(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength);
-        ErrorCode OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, uint8_t *payload, uint8_t payloadLength);
+        ErrorCode OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, const uint8_t *const payload, uint8_t payloadLength);
 
 		webmanager::eMessageReceiverResult handleRequestCommand(const sensact::RequestCommand* req, webmanager::iWebmanagerCallback* callback);
 

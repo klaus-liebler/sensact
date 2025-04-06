@@ -56,9 +56,9 @@ namespace Klli.Sensact.Config
             AddPowIt(NODE_SIDEDOOR, Model.ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
 
             AddMilightControllerApplication(NODE_TERRASSE, Model.ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
-            AddPWMApplication(NODE_TERRASSE, Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, 5000, 20, 255);
-            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
-            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 8, 5);
+            AddPWMApplication(NODE_TERRASSE, Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, 10000, 512, 65535);
+            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
         }
     }
 }

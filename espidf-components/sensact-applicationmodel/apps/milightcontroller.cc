@@ -84,8 +84,9 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cMilightController::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-		return eAppCallResult::OK;
+	eFillStatusResult cMilightController::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+		buf[0]=buf[1]=buf[2]=buf[3]=0;
+		return eFillStatusResult::NO_STATUS;
 	}
 
 	void cMilightController::ReceivedFromMilight(uint8_t cmd, uint8_t arg){

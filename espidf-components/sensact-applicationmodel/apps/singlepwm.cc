@@ -1,4 +1,5 @@
 #include <algorithm> // std::max
+
 #include "singlepwm.hh"
 #include "cApplications.hh"
 #define TAG "SINGLEPWM"
@@ -6,9 +7,9 @@
 
 namespace sensact::apps
 {
-	constexpr int MAXIMUM_LEVEL = UINT8_MAX;
+	constexpr int MAXIMUM_LEVEL = UINT16_MAX;
 	constexpr tms_t TIME_TO_FORGET_DIM_DIRECTION = 5000;
-	constexpr int DIM_TO_TARGET_STEP = 2;
+	constexpr int DIM_TO_TARGET_STEP = 8*256;
 
 	constexpr uint16_t level2pwm[] = {0, 66, 67, 69, 71, 73, 75, 77,
 									  79, 81, 84, 86, 88, 91, 93, 96, 99, 101, 104, 107, 110, 113, 116, 119,
@@ -41,7 +42,14 @@ namespace sensact::apps
 		SINGLE_BUTTON_MODE
 	};
 
-	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, u8 minimalLevel, u8 initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController) : cApplication(id), pwmOutputs(pwmOutputs), minimalLevel(minimalLevel), storedLevel(initialLevel), autoOffCfg(autoOffMsecs), idOfStandbyController(idOfStandbyController)
+	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, uint16_t minimalLevel, uint16_t initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController) :
+		cApplication(id), 
+		pwmOutputs(pwmOutputs), 
+		minimalLevel(minimalLevel), 
+		storedLevel(initialLevel), 
+		autoOffCfg(autoOffMsecs), 
+		idOfStandbyController(idOfStandbyController),
+		targetChangedFlag(false)
 	{
 		
 	}
@@ -86,7 +94,7 @@ namespace sensact::apps
 
 	void cSinglePWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx)
 	{
-		SetTargetAbsolute((target>>8)&0xFF, ctx);
+		SetTargetAbsolute(target, ctx);
 		LOGI(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
 	}
 	
@@ -145,7 +153,7 @@ namespace sensact::apps
 	}
 
 
-	void cSinglePWM::SetTargetAbsolute(uint8_t level, iSensactContext *ctx)
+	void cSinglePWM::SetTargetAbsolute(uint16_t level, iSensactContext *ctx)
 	{
 		this->targetLevel = std::max(level, minimalLevel);
 		this->storedLevel = targetLevel;
@@ -153,6 +161,7 @@ namespace sensact::apps
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
 		}
+		targetChangedFlag.store(true);
 	}
 
 	void cSinglePWM::SetOff(iSensactContext *ctx)
@@ -161,6 +170,7 @@ namespace sensact::apps
 		this->storedLevel = targetLevel;
 		this->targetLevel = 0;
 		this->autoOffCalc = sensact::magic::TIME_MAX;
+		targetChangedFlag.store(true);
 	}
 
 	void cSinglePWM::SetTargetRelative(int step, iSensactContext *ctx)
@@ -172,9 +182,10 @@ namespace sensact::apps
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
 		}
+		targetChangedFlag.store(true);
 	}
 
-	void cSinglePWM::MoveInDirection(uint16_t dir, iSensactContext *ctx)
+	void cSinglePWM::MoveInDirection(int16_t dir, iSensactContext *ctx)
 	{
 		autoDim = dir;
 		lastAutoDimSignal=ctx->Now();
@@ -182,6 +193,7 @@ namespace sensact::apps
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
 		}
+		targetChangedFlag.store(true);
 	}
 
 	void cSinglePWM::StopMove(iSensactContext *ctx)
@@ -191,7 +203,7 @@ namespace sensact::apps
 
 	void cSinglePWM::WriteCurrentLevelToOutput(iSensactContext *ctx)
 	{
-		uint16_t val = level2pwm[currentLevel];
+		uint16_t val = level2pwm[currentLevel>>8];
 
 		for (auto &io : this->pwmOutputs)
 		{
@@ -210,6 +222,7 @@ namespace sensact::apps
 
 	eAppCallResult cSinglePWM::Loop(iSensactContext *ctx)
 	{
+		
 		// Die drei folgenden IFs sollten exklusiv sein, wenn doch nicht, dann gewinnt das Automatische dimmen
 		// Gemeinsamkeit dieser IFs: Sie verändert das targetLevel
 		if (autoDim > 0)
@@ -217,27 +230,32 @@ namespace sensact::apps
 			if (targetLevel == 0)
 			{
 				targetLevel = minimalLevel;
+				targetChangedFlag.store(true);
 			}
 			else
 			{
 				targetLevel = std::min(MAXIMUM_LEVEL, targetLevel + autoDim);
+				targetChangedFlag.store(true);
 			}
 		}
 		else if (autoDim < 0)
 		{
 			targetLevel = std::max((int)minimalLevel, targetLevel + autoDim); // Addition, weil autoDim ja kleiner 0 ist!
+			targetChangedFlag.store(true);
 		}
 		else if (ctx->Now() > autoOffCalc)
 		{
 			LOGI(TAG, "%s does AutoOff", N());
 			storedLevel=targetLevel;
 			targetLevel = 0;
+			targetChangedFlag.store(true);
 			autoOffCalc = sensact::magic::TIME_MAX;
 		}
 		else if (ctx->Now() > autoOnCalc)
 		{
 			LOGI(TAG, "%s does AutoOn", N());
 			targetLevel = storedLevel;
+			targetChangedFlag.store(true);
 			autoOnCalc = sensact::magic::TIME_MAX;
 		}
 
@@ -258,14 +276,18 @@ namespace sensact::apps
 			currentLevel = std::max(currentLevel - DIM_TO_TARGET_STEP, (int)targetLevel);
 			WriteCurrentLevelToOutput(ctx);
 		}
-		return eAppCallResult::OK;
+		if(targetChangedFlag.exchange(false)){
+			return eAppCallResult::OK_CHANGED;
+		}else{
+			return eAppCallResult::OK;
+		}
 	}
 
-	eAppCallResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-			buf[0]=currentLevel==0?0:1; // 1=ON, 0=OFF
-			buf[1]=currentLevel;
+	eFillStatusResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+			buf[0]=targetLevel==0?0:1; // 1=ON, 0=OFF
+			buf[1]=storedLevel;
 			buf[2]=autoDim;
-			buf[3]=targetLevel;;
-			return eAppCallResult::OK;
+			buf[3]=targetLevel;
+			return eFillStatusResult::OK;
 		}
 }

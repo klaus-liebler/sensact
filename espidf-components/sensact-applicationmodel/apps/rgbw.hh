@@ -41,7 +41,7 @@ class cRgbw: public cApplication
 		eAppType GetAppType() override;
 		eAppCallResult Setup(iSensactContext *ctx) override;
 		eAppCallResult Loop(iSensactContext *ctx) override;
-		eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
+		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 		
 		cRgbw(eApplicationID id, const uint16_t outputR, const uint16_t outputG, const uint16_t outputB, const uint16_t outputW, tms_t autoOffMsecs, eApplicationID idOfStandbyController, std::vector<Color> &wellKnownColors);
 		void OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx) override;

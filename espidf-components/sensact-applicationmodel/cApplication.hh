@@ -27,6 +27,6 @@ namespace sensact::apps
         - Current Movement (Dim up, Dim down, Up, down)
         - Target (target dim value, target blindsposition)
         */
-        virtual eAppCallResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) = 0;
+        virtual eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) = 0;
     };
 }

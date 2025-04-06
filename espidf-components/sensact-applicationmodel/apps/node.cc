@@ -30,9 +30,10 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	eAppCallResult cSensactNode::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
+	eFillStatusResult cSensactNode::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 		buf[0]=buf[1]=buf[2]=buf[3]=0;
-		return eAppCallResult::OK;
+		//TODO: ctx.GetHealth(oder ähnlich)
+		return eFillStatusResult::NO_STATUS;
 	}
 	
 
