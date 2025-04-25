@@ -3874,298 +3874,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "RF:NRF24L01_Breakout"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "U"
-				(at -8.89 12.7 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "NRF24L01_Breakout"
-				(at 3.81 12.7 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "RF_Module:nRF24L01_Breakout"
-				(at 3.81 15.24 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "http://www.nordicsemi.com/eng/content/download/2730/34105/file/nRF24L01_Product_Specification_v2_0.pdf"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Ultra low power 2.4GHz RF Transceiver, Carrier PCB"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "Low Power RF Transceiver breakout carrier"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "nRF24L01*Breakout*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "NRF24L01_Breakout_0_1"
-				(rectangle
-					(start -8.89 11.43)
-					(end 8.89 -11.43)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(arc
-					(start 3.175 5.08)
-					(mid 6.453 4.548)
-					(end 6.985 1.27)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 4.445 2.54)
-					(radius 0.635)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 4.445 1.905) (xy 4.445 -1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(arc
-					(start 3.81 4.445)
-					(mid 5.8835 3.9785)
-					(end 6.35 1.905)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(arc
-					(start 4.445 3.81)
-					(mid 5.3558 3.4508)
-					(end 5.715 2.54)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "NRF24L01_Breakout_1_1"
-				(pin input line
-					(at -12.7 7.62 0)
-					(length 3.81)
-					(name "MOSI"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at -12.7 5.08 0)
-					(length 3.81)
-					(name "MISO"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input clock
-					(at -12.7 2.54 0)
-					(length 3.81)
-					(name "SCK"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -12.7 0 0)
-					(length 3.81)
-					(name "~{CSN}"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -12.7 -5.08 0)
-					(length 3.81)
-					(name "CE"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at -12.7 -7.62 0)
-					(length 3.81)
-					(name "IRQ"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 15.24 270)
-					(length 3.81)
-					(name "VCC"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -15.24 90)
-					(length 3.81)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "RF_Module:ESP32-S3-WROOM-1"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -6619,6 +6327,298 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "liebler_MODULES:NRF24L01_Breakout_SMD"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at -8.89 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "NRF24L01_Breakout_SMD"
+				(at 3.81 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "liebler_MODULES:NRF24L01-Module-SMD"
+				(at 3.81 15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://www.nordicsemi.com/eng/content/download/2730/34105/file/nRF24L01_Product_Specification_v2_0.pdf"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Ultra low power 2.4GHz RF Transceiver, Carrier PCB"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Low Power RF Transceiver breakout carrier"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "nRF24L01*Breakout*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "NRF24L01_Breakout_SMD_0_1"
+				(rectangle
+					(start -8.89 11.43)
+					(end 8.89 -11.43)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(arc
+					(start 3.175 5.08)
+					(mid 6.453 4.548)
+					(end 6.985 1.27)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 4.445 2.54)
+					(radius 0.635)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.445 1.905) (xy 4.445 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 3.81 4.445)
+					(mid 5.8835 3.9785)
+					(end 6.35 1.905)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 4.445 3.81)
+					(mid 5.3558 3.4508)
+					(end 5.715 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "NRF24L01_Breakout_SMD_1_1"
+				(pin input line
+					(at -12.7 7.62 0)
+					(length 3.81)
+					(name "MOSI"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -12.7 5.08 0)
+					(length 3.81)
+					(name "MISO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input clock
+					(at -12.7 2.54 0)
+					(length 3.81)
+					(name "SCK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 0 0)
+					(length 3.81)
+					(name "~{CSN}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 -5.08 0)
+					(length 3.81)
+					(name "CE"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -12.7 -7.62 0)
+					(length 3.81)
+					(name "IRQ"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 15.24 270)
+					(length 3.81)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -15.24 90)
+					(length 3.81)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "liebler_SEMICONDUCTORS:TPS92200D1DDCR"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -8413,10 +8413,10 @@
 		(uuid "02e5d67b-eacc-49c8-a33b-e0b8803f1274")
 	)
 	(junction
-		(at 80.01 153.67)
+		(at 80.01 180.34)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "0a6f8bc8-487c-41bc-b57c-45a53ffa4e69")
+		(uuid "1376df81-4c2d-43c5-a5c9-8fba5ad0710e")
 	)
 	(junction
 		(at 370.84 36.83)
@@ -8507,12 +8507,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3ad60caa-de79-4b74-86cc-585a67850a19")
-	)
-	(junction
-		(at 80.01 180.34)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3bd9f850-31be-4306-96b0-28dd3a3d1c2f")
 	)
 	(junction
 		(at 198.12 144.78)
@@ -8677,6 +8671,12 @@
 		(uuid "9f25d0cd-85c3-41a1-9a5d-6553e9b0a9f6")
 	)
 	(junction
+		(at 80.01 153.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9f6cc1b1-8eb3-46e3-9117-702984ddd785")
+	)
+	(junction
 		(at 175.26 93.98)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -8764,7 +8764,7 @@
 		(at 64.77 86.36)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "d1f54a11-293e-4d58-9940-3b7b90093d5f")
+		(uuid "d44d0536-a573-425f-a913-22949c0925de")
 	)
 	(junction
 		(at 144.78 167.64)
@@ -8815,6 +8815,10 @@
 	(no_connect
 		(at 58.42 46.99)
 		(uuid "35e1ab64-1cc5-4756-98fa-e66fe5e068cb")
+	)
+	(no_connect
+		(at 27.94 34.29)
+		(uuid "9dd82c6f-f297-4ef3-8096-f33c21684d06")
 	)
 	(no_connect
 		(at 317.5 36.83)
@@ -8957,6 +8961,16 @@
 			(type default)
 		)
 		(uuid "15e8faef-2460-46b7-a0d1-1656f3f4fef1")
+	)
+	(wire
+		(pts
+			(xy 72.39 180.34) (xy 80.01 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "169e4661-3750-48d4-8662-396d8d0c14cf")
 	)
 	(wire
 		(pts
@@ -9408,16 +9422,6 @@
 		)
 		(uuid "57259d35-5403-42b1-af23-dbb693ab909f")
 	)
-	(wire
-		(pts
-			(xy 72.39 156.21) (xy 80.01 156.21)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58caac77-5bf1-469b-9551-0113b5a24737")
-	)
 	(polyline
 		(pts
 			(xy 297.815 12.7) (xy 401.955 12.7)
@@ -9507,16 +9511,6 @@
 			(type default)
 		)
 		(uuid "6b7902e9-8e2e-4301-a826-7a620206b44a")
-	)
-	(wire
-		(pts
-			(xy 80.01 182.88) (xy 80.01 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6e5fa9e5-bd63-4170-b99c-cd3dd62c42c6")
 	)
 	(wire
 		(pts
@@ -9850,6 +9844,16 @@
 	)
 	(wire
 		(pts
+			(xy 80.01 180.34) (xy 80.01 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9d615926-1b53-486e-9d18-1cea99632fef")
+	)
+	(wire
+		(pts
 			(xy 62.23 190.5) (xy 62.23 193.04)
 		)
 		(stroke
@@ -10040,6 +10044,16 @@
 	)
 	(wire
 		(pts
+			(xy 72.39 153.67) (xy 80.01 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b799ba0b-9f61-429b-9871-207784915a3e")
+	)
+	(wire
+		(pts
 			(xy 374.65 36.83) (xy 374.65 44.45)
 		)
 		(stroke
@@ -10117,16 +10131,6 @@
 			(type default)
 		)
 		(uuid "ce7541b8-f445-49fd-ab39-3fd15beb6c23")
-	)
-	(wire
-		(pts
-			(xy 80.01 156.21) (xy 80.01 153.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ce7ecf1f-5db6-4e14-8333-87f6de02597c")
 	)
 	(wire
 		(pts
@@ -10300,6 +10304,16 @@
 	)
 	(wire
 		(pts
+			(xy 80.01 156.21) (xy 80.01 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4eb7663-01f5-4bad-8264-0d4014a90c14")
+	)
+	(wire
+		(pts
 			(xy 205.74 219.71) (xy 217.17 219.71)
 		)
 		(stroke
@@ -10417,16 +10431,6 @@
 			(type default)
 		)
 		(uuid "fc019573-b093-42ba-9ed2-63e3e87d89f6")
-	)
-	(wire
-		(pts
-			(xy 72.39 182.88) (xy 80.01 182.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fcee6cff-d22e-4b83-b6ec-60c4350f71d6")
 	)
 	(wire
 		(pts
@@ -11540,22 +11544,22 @@
 	)
 	(global_label "K4"
 		(shape input)
-		(at 91.44 76.2 180)
+		(at 120.65 92.71 90)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "88b75a54-174e-4557-a601-47a7ed854340")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 85.9753 76.2 0)
+			(at 120.65 87.8995 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -13542,95 +13546,6 @@
 			(project "test"
 				(path "/55406433-902c-400a-90c4-aae7882b2968"
 					(reference "#PWR039")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "RF:NRF24L01_Breakout")
-		(at 64.77 101.6 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "00000000-0000-0000-0000-0000604d4080")
-		(property "Reference" "U6"
-			(at 74.422 100.4316 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "RF"
-			(at 74.422 102.743 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "liebler_MODULES:NRF24L01-Module-SMD"
-			(at 68.58 86.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.nordicsemi.com/eng/content/download/2730/34105/file/nRF24L01_Product_Specification_v2_0.pdf"
-			(at 64.77 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Ultra low power 2.4GHz RF Transceiver, Carrier PCB"
-			(at 64.77 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "499badc9-4d27-4f05-afe4-910d0f5441e3")
-		)
-		(pin "2"
-			(uuid "c05502b5-4113-464e-b05a-09a90cc7bd17")
-		)
-		(pin "3"
-			(uuid "454759c1-2db1-401f-9d2a-8919ec5fc620")
-		)
-		(pin "4"
-			(uuid "f2e5c89e-cdf9-4274-90cd-058c07b0a635")
-		)
-		(pin "5"
-			(uuid "0aeedf50-f80c-4969-8d3a-a825dd2b85a9")
-		)
-		(pin "6"
-			(uuid "7e2e70cc-1460-480c-a363-016beee0df15")
-		)
-		(pin "7"
-			(uuid "eae60d9e-8c56-4f6e-a5ef-f6cd8992511f")
-		)
-		(pin "8"
-			(uuid "6df6b4e1-803f-4d03-ac4d-50dfa49b7e8b")
-		)
-		(instances
-			(project "test"
-				(path "/55406433-902c-400a-90c4-aae7882b2968"
-					(reference "U6")
 					(unit 1)
 				)
 			)
@@ -17231,7 +17146,7 @@
 				)
 			)
 		)
-		(property "Value" "TPS92200D1DDCR"
+		(property "Value" "TPS92200D2DDCR"
 			(at 62.23 148.59 0)
 			(effects
 				(font
@@ -17715,7 +17630,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 106.68 76.2 90)
+		(at 120.65 107.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17723,7 +17638,7 @@
 		(dnp no)
 		(uuid "0f36a89d-2eff-40fb-849f-2067a37d528e")
 		(property "Reference" "#PWR055"
-			(at 113.03 76.2 0)
+			(at 120.65 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17732,7 +17647,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 109.22 73.66 90)
+			(at 123.19 110.49 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17740,7 +17655,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 106.68 76.2 0)
+			(at 120.65 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17749,7 +17664,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 106.68 76.2 0)
+			(at 120.65 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17758,7 +17673,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 106.68 76.2 0)
+			(at 120.65 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18189,7 +18104,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 102.87 76.2 180)
+		(at 120.65 104.14 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18197,7 +18112,7 @@
 		(dnp no)
 		(uuid "150f57c7-452e-4c4a-97b6-2168c7db3240")
 		(property "Reference" "D16"
-			(at 101.8794 73.2028 90)
+			(at 123.6472 103.1494 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18206,7 +18121,7 @@
 			)
 		)
 		(property "Value" "L4"
-			(at 104.1908 73.2028 90)
+			(at 123.6472 105.4608 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18215,7 +18130,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
-			(at 102.87 76.2 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18224,7 +18139,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 102.87 76.2 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18233,7 +18148,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 102.87 76.2 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18242,7 +18157,7 @@
 			)
 		)
 		(property "JLCPCB" "C2286"
-			(at 102.87 76.2 90)
+			(at 120.65 104.14 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18251,7 +18166,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 102.87 76.2 0)
+			(at 120.65 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19160,7 +19075,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 76.2 153.67 90)
+		(at 76.2 156.21 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -19168,7 +19083,7 @@
 		(dnp no)
 		(uuid "21e19a9d-e64a-400c-a4a0-8c7691a516a2")
 		(property "Reference" "C28"
-			(at 75.0316 150.749 0)
+			(at 75.0316 153.289 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19177,7 +19092,7 @@
 			)
 		)
 		(property "Value" "u1"
-			(at 77.343 150.749 0)
+			(at 77.343 153.289 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19186,7 +19101,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
-			(at 80.01 152.7048 0)
+			(at 80.01 155.2448 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19195,7 +19110,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 76.2 153.67 0)
+			(at 76.2 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19204,7 +19119,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 76.2 153.67 0)
+			(at 76.2 156.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20198,6 +20113,96 @@
 			(project "test"
 				(path "/55406433-902c-400a-90c4-aae7882b2968"
 					(reference "#PWR074")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "liebler_MODULES:NRF24L01_Breakout_SMD")
+		(at 64.77 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "382d542b-d039-4dbe-9473-e1546d17b792")
+		(property "Reference" "U4"
+			(at 74.93 100.3299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "NRF24L01_Breakout_SMD"
+			(at 74.93 102.8699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "liebler_MODULES:NRF24L01-Module-SMD"
+			(at 68.58 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.nordicsemi.com/eng/content/download/2730/34105/file/nRF24L01_Product_Specification_v2_0.pdf"
+			(at 64.77 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Ultra low power 2.4GHz RF Transceiver, Carrier PCB"
+			(at 64.77 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "4"
+			(uuid "fa23fd5a-b078-4766-8bda-030b82f9f252")
+		)
+		(pin "2"
+			(uuid "373b2c18-fe1e-4d22-929d-32a08cb703a5")
+		)
+		(pin "3"
+			(uuid "54cecde4-1714-4b93-b9ca-0a0abd2749f6")
+		)
+		(pin "8"
+			(uuid "0ae63ff0-c3f8-4a53-bc98-8b5962723c71")
+		)
+		(pin "1"
+			(uuid "422598f6-fcf3-444c-973f-de4cf1f9bec1")
+		)
+		(pin "7"
+			(uuid "6c3f1d79-893c-4184-8ece-7a5d5eb331eb")
+		)
+		(pin "6"
+			(uuid "98ba9ca9-4373-4f19-8a25-c63a50892133")
+		)
+		(pin "5"
+			(uuid "61f826ea-5d52-4de4-9538-711d2547d98e")
+		)
+		(instances
+			(project ""
+				(path "/55406433-902c-400a-90c4-aae7882b2968"
+					(reference "U4")
 					(unit 1)
 				)
 			)
@@ -21249,7 +21254,7 @@
 				)
 			)
 		)
-		(property "Value" "TPS92200D1DDCR"
+		(property "Value" "TPS92200D2DDCR"
 			(at 62.23 175.26 0)
 			(effects
 				(font
@@ -25587,7 +25592,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 76.2 180.34 90)
+		(at 76.2 182.88 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -25595,7 +25600,7 @@
 		(dnp no)
 		(uuid "bb7eefe5-b5f0-4f3e-9d16-458217a79862")
 		(property "Reference" "C19"
-			(at 75.0316 177.419 0)
+			(at 75.0316 179.959 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25604,7 +25609,7 @@
 			)
 		)
 		(property "Value" "u1"
-			(at 77.343 177.419 0)
+			(at 77.343 179.959 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25613,7 +25618,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
-			(at 80.01 179.3748 0)
+			(at 80.01 181.9148 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25622,7 +25627,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 76.2 180.34 0)
+			(at 76.2 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25631,7 +25636,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 76.2 180.34 0)
+			(at 76.2 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26464,7 +26469,7 @@
 				)
 			)
 		)
-		(property "Value" "22uF"
+		(property "Value" "22uH"
 			(at 83.82 177.8 90)
 			(effects
 				(font
@@ -28404,7 +28409,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 95.25 76.2 90)
+		(at 120.65 96.52 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -28412,7 +28417,7 @@
 		(dnp no)
 		(uuid "ea044666-72a6-48cc-973d-6edb5f26e72a")
 		(property "Reference" "R38"
-			(at 94.0816 74.422 0)
+			(at 122.428 95.3516 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28421,7 +28426,7 @@
 			)
 		)
 		(property "Value" "k47"
-			(at 96.393 74.422 0)
+			(at 122.428 97.663 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28430,7 +28435,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
-			(at 95.25 77.978 90)
+			(at 118.872 96.52 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28439,7 +28444,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 95.25 76.2 0)
+			(at 120.65 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28448,7 +28453,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 95.25 76.2 0)
+			(at 120.65 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28636,7 +28641,7 @@
 				)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "10uH"
 			(at 355.6 26.924 90)
 			(effects
 				(font
@@ -29140,7 +29145,7 @@
 				)
 			)
 		)
-		(property "Value" "22uF"
+		(property "Value" "22uH"
 			(at 83.82 151.13 90)
 			(effects
 				(font
