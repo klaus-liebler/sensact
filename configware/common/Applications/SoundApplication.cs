@@ -6,11 +6,11 @@ namespace Klli.Sensact.Model.Common.Applications
     public class SoundApplication : ActorApplication
     {
 
-        public SoundApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, byte initialVolume=100, ushort defaultSignalOnToggle=0):base(ApplicationId, ApplicationName, ApplicationDescription){
+        public SoundApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort initialVolume=65535, ushort defaultSignalOnToggle=0):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.DefaultVolume=initialVolume;
             this.defaultSignalOnToggle=defaultSignalOnToggle;
         }
-        public byte DefaultVolume{get;}
+        public ushort DefaultVolume{get;}
         public ushort defaultSignalOnToggle{get;}
         
         [SensactCommandMethod]

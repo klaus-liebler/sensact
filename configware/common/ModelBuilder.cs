@@ -51,7 +51,7 @@ namespace Klli.Sensact.Common
             node.Applications.Add(new OnOffApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription, outputRessource, initialPowerState, autoOffIntervalMsecs));
         }
 
-        public void AddSound(Node node, ApplicationIdType appId, string ApplicationDescription, byte initialVolume=100, ushort defaultSignalOnToggle=1){
+        public void AddSound(Node node, ApplicationIdType appId, string ApplicationDescription, ushort initialVolume=65535, ushort defaultSignalOnToggle=1){
             node.Applications.Add(new SoundApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription, initialVolume, defaultSignalOnToggle));
 
         }

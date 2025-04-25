@@ -5,7 +5,7 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class LightbarrierApplication : SensorApplication
     {
-        public LightbarrierApplication(ushort ApplicationId, string ApplicationName, ushort InputRessource, ushort FinalTarget, ushort BrightnessSensor, bool ActiveSignalLevel, string ApplicationDescription=""):base(ApplicationId, ApplicationName, ApplicationDescription){
+        public LightbarrierApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort InputRessource, ushort FinalTarget, ushort BrightnessSensor, bool ActiveSignalLevel):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.InputRessource=InputRessource;
             this.FinalTarget=FinalTarget;
             this.BrightnessSensor=BrightnessSensor;

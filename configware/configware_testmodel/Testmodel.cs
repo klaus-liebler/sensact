@@ -20,6 +20,9 @@ namespace Klli.Sensact.Config
         const ushort OW2 = 0x0C00;
         const ushort OW3 = 0x1000;
 
+        const int MS_12H = 1000 * 60 * 60 * 12;
+        const int MS_1H = 1000 * 60 * 60;
+
         public TestModelBuilder(): base("TwoNodesDemo")
         {
         }
@@ -47,18 +50,19 @@ namespace Klli.Sensact.Config
             AddPowIt(NODE_HS, Model.ApplicationId.POWIT_X1_XX2_12, "viertes Licht", BUS0+I2C+3, 5000);//viertes Licht
             AddBlindApplication(NODE_HS, Model.ApplicationId.BLIND_X2_XX3_13, "Test-Rollade", BUS0+I2C+4, BUS0+I2C+5, RelayInterlockMode.R1_DOWN__R2_POWER, 8, 5);
             AddPWMApplication(NODE_HS, Model.ApplicationId.PWM___X3_XX4_14, "Dimmbares Licht", Model.ApplicationId.STDBY_X1_XX1_15, new HashSet<ushort>{BUS0+I2C+6}, 5000, 20, 255);
-            AddPowIt(NODE_HS, Model.ApplicationId.STDBY_X1_XX1_15, "Standby für die PWMApplication", BUS0+I2C+7, 10000);//ist der Standny für die PWMApplication
-            AddSound(NODE_HS, Model.ApplicationId.SOUND_X2_XX2_0, "Soundgenerator", 20, 1);
+            AddPowIt(NODE_HS, ApplicationId.STDBY_X1_XX1_15, "Standby für die PWMApplication", BUS0+I2C+7, 10000);//ist der Standny für die PWMApplication
+            AddSound(NODE_HS, ApplicationId.SOUND_X2_XX2_0, "Soundgenerator", 20, 1);
 
-            AddRotaryEncoder(NODE_UP,Model.ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTARYENCODER_1, Model.ApplicationId.PWM___X3_XX4_14);
+            AddRotaryEncoder(NODE_UP,ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___X3_XX4_14);
             
-            AddFingerprint(NODE_SIDEDOOR, Model.ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42, Model.ApplicationId.POWIT_X1_XX1_42);
-            AddPowIt(NODE_SIDEDOOR, Model.ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
+            AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42);
+            AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
 
-            AddMilightControllerApplication(NODE_TERRASSE, Model.ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
-            AddPWMApplication(NODE_TERRASSE, Model.ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", Model.ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, 10000, 512, 65535);
-            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
-            AddBlindApplication(NODE_TERRASSE, Model.ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
+            AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, MS_12H, 512, 65535);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddSound(NODE_TERRASSE, ApplicationId.SOUND_X1_XX1_44, "Soundgenerator", 65535, 1);
         }
     }
 }

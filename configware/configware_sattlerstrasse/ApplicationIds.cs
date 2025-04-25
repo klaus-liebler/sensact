@@ -7,9 +7,9 @@ namespace Klli.Sensact.Model
         MASTER,
         //Sensact-Geräte
         SNSCT_L0_TECH_HS_1,
-        SNSCT_L0_TECH_HS_2,
+        SNSCT_NODE_SIDEDOOR,
         SNSCT_L3_TECH_HS_1,
-        SNSCT_L3_TECH_HS_2,
+        SNSCT_NODE_TERRASSE,
 
         SNSCT_L1_LVNG_UP,
         SNSCT_L1_KTCH_UP,
@@ -179,7 +179,7 @@ namespace Klli.Sensact.Model
         BLIND_L1_UTIL_J1,
         SCLIM_L1_UTIL_AIR,
         STEMP_L1_UTIL_FLOOR,
-        SWIND_L1_UTIL_W1,
+        SWIND_L1_UTIL_W1,//Induktionsschalter am Fenster
         SDOOR_L1_UTIL_D1,
         VALVE_L1_UTIL,
 
@@ -419,6 +419,11 @@ namespace Klli.Sensact.Model
 
         PWM___LX_BACK_C1,//Terrassendach, 5 der 9 Leuchten (mittlere dreierreihe und die äußeren Einzel-LEDs)
         PWM___LX_BACK_C2,//Terrassendach, 4 der 9 Leuchten (links und rechts der Mitte, jeweils zwei LEDs)
+        REMOT_LX_BACK, //Der spezielle Typ Fernbedienung mit Hardcodierten Aktivitäten, wenn ein Knopf gedrückt wird
+
+        FINGR_L1_UTIL,//Fingerprint
+        POWIT_L1_UTIL_DOOR,//Türöffner, der mit dem Fingerabdrucksensor verbunden ist
+
 
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }

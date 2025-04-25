@@ -32,6 +32,7 @@ namespace Klli.Sensact.Model
         PWM___X1_XX1_42,//Spots
         BLIND_X1_XX1_42,//Horizontale Markise
         BLIND_X1_XX1_43,//Vertikale Markise
+        SOUND_X1_XX1_44,//Sound
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }
 }
