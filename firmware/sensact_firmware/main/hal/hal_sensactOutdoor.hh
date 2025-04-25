@@ -1,9 +1,11 @@
 #pragma once
-#include "hal_ESP32.hh"
 #include <driver/spi_master.h>
-#include <esp_log.h>
-#include <led_animator.hh>
 #include <i2c.hh>
+#include <audioplayer.hh>
+#include "../max98357.hh"
+#include "hal_ESP32.hh"
+#include <led_animator.hh>
+#include <esp_log.h>
 #define TAG "HAL"
 
 /*
@@ -71,9 +73,18 @@ namespace sensact::hal::SensactOutdoor
         
     }
 
+    namespace BlinkPatterns
+    {
+        led::BlinkPattern BlinkSlow(1000, 1000);
+        led::BlinkPattern BlinkFast(200, 200);
+        led::BlinkPattern Flash(50, 3000);
+    }
+
     class cHAL : public sensact::hal::cESP32
     {
     protected:
+        MAX98357::M *max98357;
+        AudioPlayer::Player *mp3player;
         iI2CPort *i2c_bus[1];
         led::Animator* led{nullptr};
 
@@ -88,8 +99,12 @@ namespace sensact::hal::SensactOutdoor
         {
             ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_SCL, P::I2C_SDA));
 
-            this->led = new led::Animator(P::LED_INFO);
-            this->led->Begin();
+            max98357 = new MAX98357::M(P::I2S_GAIN, P::I2S_SD);
+            max98357->Init(P::I2S_BCLK, P::I2S_LRC, P::I2S_DATA);
+            mp3player = new AudioPlayer::Player(max98357);
+            MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
+            this->led = new led::Animator(P::LED_INFO, false, &BlinkPatterns::BlinkSlow);
+            this->led->Begin(&BlinkPatterns::BlinkFast);
             this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
             gpio_set_direction(P::K1, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K2, GPIO_MODE_OUTPUT);
@@ -140,13 +155,17 @@ namespace sensact::hal::SensactOutdoor
         {
             return ErrorCode::OK;
         }
+
         ErrorCode AfterAppLoop() override
         {
             this->led->Refresh();
-            
             return ErrorCode::OK;
         }
-        ErrorCode BeforeAppLoop() override { return ErrorCode::OK; }
+
+        ErrorCode BeforeAppLoop() override
+        {
+            return ErrorCode::OK;
+        }
 
         ErrorCode StageRGBLed(uint8_t index, CRGB color) override
         {
@@ -157,39 +176,34 @@ namespace sensact::hal::SensactOutdoor
             this->led->AnimatePixel(pattern, timeToAutoOff);
             return ErrorCode::OK;
         }
+        
         ErrorCode StageUnColorizeAllRGBLed() override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
+        
         ErrorCode CommitRGBLed() override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
+        
         ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
-        ErrorCode SetAmplifierVolume(uint8_t volume0_255) override
+        
+
+        ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
+            mp3player->PlayMP3(buf, len, volume0_255, true);
             return ErrorCode::OK;
         }
 
-        uint8_t GetAmplifierVolume() override
-        {
-            return 255;
-        }
-        /**
-         * @brief
-         *
-         * @param volume0_255: Volume=0 means: Do not change current volume
-         * @param buf
-         * @param len
-         * @return ErrorCode
-         */
-        ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
-        {
+        ErrorCode IsPlayingMP3(bool& isPlaying) override{
+            isPlaying= mp3player->IsEmittingSamples();
             return ErrorCode::OK;
         }
+
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
@@ -200,7 +214,7 @@ namespace sensact::hal::SensactOutdoor
         }
         ErrorCode StopSound() override
         {
-
+            mp3player->Stop();
             return ErrorCode::OK;
         }
     };

@@ -57,17 +57,16 @@ namespace sensact::hal
         }
         virtual ErrorCode GetBoardTemperature(float &temperatureCelcius)=0;
         virtual ErrorCode GetRotaryEncoderValue(sensact::eRotaryEncoder re, uint16_t &value, bool &isPressed) = 0;
-        virtual ErrorCode SetAmplifierVolume(uint8_t volume0_255) = 0;
-        virtual uint8_t GetAmplifierVolume()=0;
         /**
          * @brief
          *
-         * @param volume0_255: Volume=0 means: Do not change current volume
+         * @param volume0_255: Volume=0 means: Play, but be silent
          * @param buf
          * @param len
          * @return ErrorCode
          */
         virtual ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
+        virtual ErrorCode IsPlayingMP3(bool& isPlaying) = 0;
         virtual ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) = 0;
         virtual ErrorCode PlayNotes(const BUZZER::Note *note) = 0;
         virtual ErrorCode StopSound() = 0;

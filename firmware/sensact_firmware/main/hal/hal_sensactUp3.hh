@@ -163,6 +163,12 @@ namespace sensact::hal::SensactUp3
             mp3player->PlayMP3(buf, len, volume0_255, true);
             return ErrorCode::OK;
         }
+
+        ErrorCode IsPlayingMP3(bool& isPlaying) override{
+            isPlaying= mp3player->IsEmittingSamples();
+            return ErrorCode::OK;
+        }
+
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;

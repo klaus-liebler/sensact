@@ -38,7 +38,7 @@ class SinglePwmTwin extends aStatusProvider {
         } else if(cmd.cmd() == Command.TOGGLE   ) {
             this.state[0]=this.state[0]==0?1:0;
         }
-        console.info(`SinglePwmTwin ${this.appId} got command ${Command[cmd.cmd()]}. state[0]=${this.state[0]} state[1]=${this.state[1]}`);
+        console.info(`SinglePwmTwin ${ApplicationId[this.appId]} got command ${Command[cmd.cmd()]}. state[0]=${this.state[0]} state[1]=${this.state[1]}`);
         setTimeout(() => {
                     console.log(`sendUpdateState ${this.appId}`)
                     let b = new flatbuffers.Builder(1024);
@@ -57,13 +57,88 @@ class SinglePwmTwin extends aStatusProvider {
     }
 }
 
+enum  eCurrentBlindState
+		{
+			ENERGY_SAVE,
+			STOP,
+			PREPARE_UP,
+			PREPARE_DOWN,
+			UP,
+			DOWN,
+		};
+
+class BlindTwin extends aStatusProvider {
+
+    private position:number = 50; // Simulated position of the blind (0-100%)
+    private blindState:eCurrentBlindState = eCurrentBlindState.STOP;
+    private sender:ISender | undefined = undefined;
+    
+    constructor(appId: ApplicationId) {
+        super(appId);
+        setInterval(() => {
+            switch (this.blindState) {
+                case eCurrentBlindState.UP:
+                    this.position += 5; // Simulate moving up
+                    if(this.position >= 100) {
+                        this.blindState = eCurrentBlindState.STOP; // Stop when reaching the top
+                        this.position = 100;
+                    }
+                    break;
+                case eCurrentBlindState.DOWN:
+                    this.position -= 5; // Simulate moving up
+                    if(this.position <0) {
+                        this.blindState = eCurrentBlindState.STOP; // Stop when reaching the top
+                        this.position = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            this.state[0] = this.blindState; // Update the blind state
+            this.state[1] = this.position; // Update the position
+            console.info(`BlindTwin ${ApplicationId[this.appId]} updates state. state[0]=${eCurrentBlindState[this.state[0]]} state[1]=${this.state[1]}`);
+            if(this.sender){
+                let b = new flatbuffers.Builder(1024);
+                NotifyStatus.startNotifyStatus(b);
+                NotifyStatus.addId(b, this.appId);
+                NotifyStatus.addStatus(b, StatusPayload.createStatusPayload(b, this.state));
+                const notifyStatusOffset = NotifyStatus.endNotifyStatus(b);
+                b.finish(ResponseWrapper.createResponseWrapper(b, Responses.NotifyStatus, notifyStatusOffset));
+                this.sender.send(Namespace.Value, b)
+            }
+        }, 1000)
+    }
+
+    UpdateStateWithCommand(cmd: RequestCommand, sender: ISender): void {
+        this.sender = sender;;
+        const p=cmd.payload(new Payload())
+        switch(cmd.cmd()) {
+            case Command.UP:
+                this.blindState=eCurrentBlindState.UP;
+                break
+            case Command.DOWN:
+                this.blindState=eCurrentBlindState.DOWN;
+                break;
+            default:
+                this.blindState=eCurrentBlindState.STOP;
+                break
+
+        }
+        console.info(`BlindTwin ${ApplicationId[this.appId]} got command ${Command[cmd.cmd()]}. state[0]=${this.state[0]} state[1]=${this.state[1]}`);
+
+        
+    }
+   
+}
+
 export class SensactHandler extends NamespaceAndHandler {
     private Map: Map<ApplicationId, aStatusProvider> = new Map<ApplicationId, aStatusProvider>();
 
     constructor() {
         super(Namespace.Value);
         this.Map.set(ApplicationId.PWM___X1_XX1_42, new SinglePwmTwin(ApplicationId.PWM___X1_XX1_42));
-      
+        this.Map.set(ApplicationId.BLIND_X1_XX1_42, new BlindTwin(ApplicationId.BLIND_X1_XX1_42));
+        this.Map.set(ApplicationId.BLIND_X1_XX1_43, new BlindTwin(ApplicationId.BLIND_X1_XX1_43));
        
         //console.log(`Die id im ersten item ist ${s.states(0).id()} ${s.states(0).status()!.data(0)} ${s.states(0).status()!.data(1)} ${s.states(0).status()!.data(2)} ${s.states(0).status()!.data(3)}`);
         //console.log(`Die id im zweiten item ist ${s.states(1).id()} ${s.states(1).status()!.data(0)} ${s.states(1).status()!.data(1)} ${s.states(1).status()!.data(2)} ${s.states(1).status()!.data(3)}`);

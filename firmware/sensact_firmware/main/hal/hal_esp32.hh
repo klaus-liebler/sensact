@@ -17,6 +17,8 @@ using namespace sensact::hal;
 using namespace sensact;
 namespace sensact::hal
 {
+	constexpr ledc_timer_bit_t DUTY_RESOLUTION = LEDC_TIMER_10_BIT;
+	
 	class cESP32 : public iHAL
 	{
 
@@ -52,9 +54,9 @@ namespace sensact::hal
 			// Prepare and then apply the LEDC PWM timer configuration
 			ledc_timer_config_t ledc_timer = {};
 			ledc_timer.speed_mode= LEDC_LOW_SPEED_MODE;//obligatory according to https://docs.espressif.com/projects/esp-idf/en/v5.4/esp32s3/api-reference/peripherals/ledc.html
-			ledc_timer.duty_resolution  = LEDC_TIMER_14_BIT;
+			ledc_timer.duty_resolution  = DUTY_RESOLUTION;
 			ledc_timer.timer_num        = timer;
-			ledc_timer.freq_hz          = 1000;
+			ledc_timer.freq_hz          = 30000;
 			ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
 			ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 		}
@@ -73,7 +75,7 @@ namespace sensact::hal
 		}
 
 		void SetDuty(ledc_channel_t channel, uint16_t value_0_65635){
-			ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, value_0_65635>>2);//>>2 because of 14 bit Resolution
+			ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, value_0_65635>>(16-DUTY_RESOLUTION));
 			ledc_update_duty(LEDC_LOW_SPEED_MODE, channel);
 		}
 		

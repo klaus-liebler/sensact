@@ -10,6 +10,20 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 0.1.2
+  espressif/esp_tinyusb:
+    component_hash: 9382e15aaacd3f29e2de2360eb266ef1d7e5ebf4fdefbeaebe146e471d341656
+    dependencies:
+    - name: idf
+      require: private
+      version: ^5.0
+    - name: espressif/tinyusb
+      registry_url: https://components.espressif.com
+      require: public
+      version: '>=0.14.2'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.7.2
   espressif/mdns:
     component_hash: 3ec0af5f6bce310512e90f482388d21cc7c0e99668172d2f895356165fc6f7c5
     dependencies:
@@ -30,6 +44,20 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 1.0.2
+  espressif/tinyusb:
+    component_hash: 10703da2c3cd39a944711ee3d320c6dda54debabf13b4b933a7c90daf102372b
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com
+      type: service
+    targets:
+    - esp32s2
+    - esp32s3
+    - esp32p4
+    version: 0.18.0~2
   idf:
     source:
       type: idf
@@ -46,10 +74,11 @@ dependencies:
     version: 1.16.4
 direct_dependencies:
 - espressif/ds18b20
+- espressif/esp_tinyusb
 - espressif/mdns
 - espressif/onewire_bus
 - idf
 - joltwallet/littlefs
-manifest_hash: e2f942a1dc03481b42187e35522adddd73c75fbeb81e6de3f235593258bbbb6f
+manifest_hash: 096df704ec6878470567d2eb43b2f3597741491bfb32695ea2cca91adc394263
 target: esp32s3
 version: 2.0.0

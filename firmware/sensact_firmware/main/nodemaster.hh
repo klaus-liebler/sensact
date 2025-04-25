@@ -54,7 +54,7 @@ namespace sensact
 	
 	led::BlinkPattern SLOW(200, 1000);
 	led::BlinkPattern FAST(200, 200);
-	led::BlinkPattern STANDBY(50, 10000);
+	led::BlinkPattern FLASH(20, 3000);
 	class cNodemaster : public iHostContext
 	{
 	private:
@@ -150,7 +150,7 @@ namespace sensact
 			}else if(atLeastHealthWarning){
 				hal->SetInfoLed(&sensact::SLOW);
 			}else{
-				hal->SetInfoLed(&led::CONST_OFF);
+				hal->SetInfoLed(&sensact::FLASH);
 			}
 
 			return healthError?ErrorCode::HEALTH_ERROR:atLeastHealthWarning?ErrorCode::HEALTH_WARNING:ErrorCode::OK;

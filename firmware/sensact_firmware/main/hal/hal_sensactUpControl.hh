@@ -138,27 +138,18 @@ namespace sensact::hal::SensactUpControl
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
         }
-        ErrorCode SetAmplifierVolume(uint8_t volume0_255) override
-        {
-            return ErrorCode::OK;
-        }
 
-        uint8_t GetAmplifierVolume() override
-        {
-            return 255;
-        }
-        /**
-         * @brief
-         *
-         * @param volume0_255: Volume=0 means: Do not change current volume
-         * @param buf
-         * @param len
-         * @return ErrorCode
-         */
+
         ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
             return ErrorCode::OK;
         }
+
+        ErrorCode IsPlayingMP3(bool& isPlaying) override{
+            isPlaying= false;
+            return ErrorCode::OK;
+        }
+        
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;

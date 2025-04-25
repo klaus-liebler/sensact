@@ -185,15 +185,6 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
     {
         this->webCommandQueue = xQueueCreate(3, sizeof(CommandMessage));
     }
-
-    void cApplicationHost::SetAmplifierVolume(uint8_t volume0_255)
-    {
-        ErrorCode err = hal->SetAmplifierVolume(volume0_255);
-        if (err != ErrorCode::OK)
-        {
-            LOGE(TAG, "SetAmplifierVolume raised error %s", ErrorCodeStr[(int)err]);
-        }
-    }
     
     void cApplicationHost::PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len)
     {
@@ -201,6 +192,14 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         if (err != ErrorCode::OK)
         {
             LOGE(TAG, "PlayMP3 raised error %s", ErrorCodeStr[(int)err]);
+        }
+    }
+
+    void cApplicationHost::IsPlayingMP3(bool &isPlaying){
+        ErrorCode err = hal->IsPlayingMP3(isPlaying);
+        if (err != ErrorCode::OK)
+        {
+            LOGE(TAG, "IsPlayingMP3 raised error %s", ErrorCodeStr[(int)err]);
         }
     }
 

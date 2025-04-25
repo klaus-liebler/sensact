@@ -16,22 +16,22 @@ namespace sensact::apps
 		milightQueue = xQueueCreate(10, sizeof(std::pair<uint8_t, uint8_t>));
 
 		this->keyCode2command[milight::keycodesFUT89::KON]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendONCommand(eApplicationID::PWM___X1_XX1_42, sensact::time::H12_ms);
+			ctx->SendONCommand(eApplicationID::PWM___LX_BACK_C1, sensact::time::H12_ms);
 		};
 		this->keyCode2command[milight::keycodesFUT89::KOFF]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendOFFCommand(eApplicationID::PWM___X1_XX1_42, 0);
+			ctx->SendOFFCommand(eApplicationID::PWM___LX_BACK_C1, 0);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K1_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_42, false);
+			ctx->SendUPCommand(eApplicationID::BLIND_LX_BACK_J2, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K1_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(eApplicationID::BLIND_X1_XX1_42, false);
+			ctx->SendDOWNCommand(eApplicationID::BLIND_LX_BACK_J2, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K2_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_X1_XX1_43, false);
+			ctx->SendUPCommand(eApplicationID::BLIND_LX_BACK_J3, false);
 		};
 		this->keyCode2command[milight::keycodesFUT89::K2_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(sensact::eApplicationID::BLIND_X1_XX1_43, false);
+			ctx->SendDOWNCommand(sensact::eApplicationID::BLIND_LX_BACK_J3, false);
 		};
 	}
 
@@ -65,14 +65,13 @@ namespace sensact::apps
                 //arg von 0...100%
                 //ab 95% -->voll
                 uint16_t val{0};
-                if(arg>95){
+                if(arg>98){
                     val=UINT16_MAX;
                 }else{
                     val=arg*(UINT16_MAX/100.0);
                 }
-                //float x = arg * (0.95 / 100.0) + 0.05;
-				ESP_LOGD(TAG, "ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___X1_XX1_42, val)");
-				ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___X1_XX1_42, val);
+				ESP_LOGD(TAG, "ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___LX_BACK_C1, val)");
+				ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___LX_BACK_C1, val);
                 continue;
             }
 

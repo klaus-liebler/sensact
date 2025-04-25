@@ -113,6 +113,8 @@ namespace webmanager
             struct timeval tv_now;
             gettimeofday(&tv_now, nullptr);
             xSemaphoreTake(webmanager_semaphore, portMAX_DELAY);
+            time_t oldestTimestamp = INT64_MAX;
+            size_t oldestIndex{0};
             for (int i = 0; i < messageLog.size(); i++)
             {
                 if (messageLog[i].messageCode == 0)
@@ -134,20 +136,14 @@ namespace webmanager
                     entryFound = true;
                     break;
                 }
+                if (messageLog[i].lastMessageTimestamp < oldestTimestamp)
+                {
+                    oldestTimestamp = messageLog[i].lastMessageTimestamp;
+                    oldestIndex = i;
+                }
             }
             if (!entryFound)
             {
-                // search oldest and overwrite
-                time_t oldestTimestamp = messageLog[0].lastMessageTimestamp;
-                size_t oldestIndex{0};
-                for (size_t i = 1; i < messageLog.size(); i++)
-                {
-                    if (messageLog[i].lastMessageTimestamp < oldestTimestamp)
-                    {
-                        oldestTimestamp = messageLog[i].lastMessageTimestamp;
-                        oldestIndex = i;
-                    }
-                }
                 ESP_LOGD(TAG, "Found the oldest logging slot on pos %d for messageCode %lu", oldestIndex, (uint32_t)messageCode);
                 messageLog[oldestIndex].messageCode = (uint32_t)messageCode;
                 messageLog[oldestIndex].lastMessageData = messageData;

@@ -18,6 +18,10 @@
 #include <esp_log.h>
 #include <nvs.h>
 #include <nvs_flash.h>
+#include "tinyusb.h"
+#include "tusb_cdc_acm.h"
+#include "tusb_console.h"
+
 #ifdef HTTPS
 #include <esp_https_server.h>
 #ifndef CONFIG_ESP_HTTPS_SERVER_ENABLE
@@ -76,6 +80,24 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_littlefs_info(conf.partition_label, &total, &used));
     ESP_LOGI(TAG, "LittleFS Partition successfully mounted: total: %dbyte, used: %dbyte", total, used);
     ESP_ERROR_CHECK(nvs_flash_init_and_erase_lazily(NVS_PARTITION_NAME));
+
+    //Configure USB
+    ESP_LOGI(TAG, "USB initialization");
+
+    tinyusb_config_t tusb_cfg = {};
+    tusb_cfg.device_descriptor = nullptr;
+    tusb_cfg.string_descriptor = nullptr;
+    tusb_cfg.external_phy = false; // In the most cases you need to use a `false` value,
+    tusb_cfg.configuration_descriptor = nullptr;
+    tusb_cfg.self_powered=true;
+    tusb_cfg.vbus_monitor_io=sensact::hal::SensactOutdoor::P::VBUS_SENSE; 
+    ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
+
+    tinyusb_config_cdcacm_t acm_cfg = {}; // the configuration uses default values
+
+    ESP_ERROR_CHECK(tusb_cdc_acm_init(&acm_cfg));
+
+    ESP_LOGI(TAG, "USB initialization DONE");
 
     //Install Temperature sensor
     //Temperature Sensor is used in generic hal for generic use and is used in the SystemPlugin
