@@ -5,6 +5,7 @@
 #include "../max98357.hh"
 #include "hal_ESP32.hh"
 #include <led_animator.hh>
+#include <rgbled.hh>
 #include <esp_log.h>
 #define TAG "HAL"
 
@@ -52,7 +53,7 @@ namespace sensact::hal::SensactOutdoor
         constexpr gpio_num_t I2S_SD{GPIO_NUM_45};
         
         
-        constexpr gpio_num_t LED_WS2812{GPIO_NUM_3};
+        constexpr gpio_num_t LED_PL9823{GPIO_NUM_3};
         constexpr gpio_num_t LED_INFO{GPIO_NUM_46};
         constexpr gpio_num_t LED0{GPIO_NUM_48};
         constexpr gpio_num_t LED1{GPIO_NUM_47};
@@ -78,6 +79,8 @@ namespace sensact::hal::SensactOutdoor
         led::BlinkPattern BlinkSlow(1000, 1000);
         led::BlinkPattern BlinkFast(200, 200);
         led::BlinkPattern Flash(50, 3000);
+        RGBLED::BlinkPattern BlinkSlowGreen(CRGB::DarkGreen, 50, CRGB::Black, 10000);
+        RGBLED::BlinkPattern BlinkFastRed(CRGB::Red, 200, CRGB::Black, 200);
     }
 
     class cHAL : public sensact::hal::cESP32
@@ -87,6 +90,7 @@ namespace sensact::hal::SensactOutdoor
         AudioPlayer::Player *mp3player;
         iI2CPort *i2c_bus[1];
         led::Animator* led{nullptr};
+        RGBLED::M<2, RGBLED::DeviceType::PL9823> *rgbled{nullptr};
 
     public:
         cHAL(temperature_sensor_handle_t tempHandle)
@@ -105,14 +109,22 @@ namespace sensact::hal::SensactOutdoor
             MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
             this->led = new led::Animator(P::LED_INFO, false, &BlinkPatterns::BlinkSlow);
             this->led->Begin(&BlinkPatterns::BlinkFast);
+
+            this->rgbled = new RGBLED::M<2, RGBLED::DeviceType::PL9823>();
+            ERRORCODE_CHECK(this->rgbled->Begin(SPI3_HOST, P::LED_PL9823));
+            ERRORCODE_CHECK(this->rgbled->AnimatePixel(0, &BlinkPatterns::BlinkSlowGreen));
+            ERRORCODE_CHECK(this->rgbled->AnimatePixel(1, &BlinkPatterns::BlinkSlowGreen));
+            ERRORCODE_CHECK(this->rgbled->Refresh(1000, true));
+
             this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
             gpio_set_direction(P::K1, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K2, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K3, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K4, GPIO_MODE_OUTPUT);
-            this->SetupLedcCommonTimer(LEDC_TIMER_0);
+            this->SetupLedcCommonTimer(LEDC_TIMER_0, 30000);
             this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_0, P::LED0);
             this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_1, P::LED1);
+            //this->SetupMCPWMForLEDs(P::LED0, P::LED1);
             return ErrorCode::OK;
         }
         // So always use the appropriate pin. No inversion, Logic 1 means: Motor On
@@ -135,15 +147,22 @@ namespace sensact::hal::SensactOutdoor
                 gpio_set_level(P::K4, value);
                 return ErrorCode::OK;
             case 4:
-                this->SetDuty(LEDC_CHANNEL_0,value);
-                return ErrorCode::OK;
-            case 5:
-                this->SetDuty(LEDC_CHANNEL_1,value);
+                this->SetPowerLed(value);
                 return ErrorCode::OK;
             default:
-                ESP_LOGW(TAG, "sensactOutdoor has only inOutId 0...5, not %d", id);
+                ESP_LOGW(TAG, "sensactOutdoor has only inOutId 0...4, not %d", id);
                 return ErrorCode::PIN_NOT_AVAILABLE;
             }
+        }
+
+        bool highPowerMode{true};
+
+        void SetPowerLed(uint16_t value) 
+        {
+            
+                this->SetDuty(LEDC_CHANNEL_0,value);
+                this->SetDuty(LEDC_CHANNEL_1,value);
+           
         }
 
         iI2CPort *GetI2CPort(I2CPortIndex portIndex) override
@@ -159,6 +178,7 @@ namespace sensact::hal::SensactOutdoor
         ErrorCode AfterAppLoop() override
         {
             this->led->Refresh();
+            ERRORCODE_CHECK(this->rgbled->Refresh(1000));
             return ErrorCode::OK;
         }
 
@@ -169,7 +189,7 @@ namespace sensact::hal::SensactOutdoor
 
         ErrorCode StageRGBLed(uint8_t index, CRGB color) override
         {
-            return ErrorCode::FUNCTION_NOT_AVAILABLE;
+            return this->rgbled->SetPixel(index, color);
         }
 
         ErrorCode SetInfoLed(led::AnimationPattern* pattern, tms_t timeToAutoOff) override{

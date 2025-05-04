@@ -267,9 +267,9 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project
         for (uint16_t appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
         {
+            this->statusBuffer[appId].fill(0xFFFF); //for all apps, even for the nonlocal.  fill with 0xFFFF, so that we can see, if the app has provided a status or not
             sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
-            if (!app)
-                continue;
+            if (!app) continue;
             sensact::eAppCallResult appResult = app->Setup(this);
             if ((uint8_t)appResult < (uint8_t)eAppCallResult::GENERIC_ERROR)
             {

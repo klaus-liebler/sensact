@@ -67,6 +67,10 @@ async function flashFirmware(cb: gulp.TaskFunctionCallback){
   return idf.flashFirmware(await Context.get(contextConfig), OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS, false);
 }
 
+export async function dimmingCurve(cb: gulp.TaskFunctionCallback) {
+
+}
+
 export async function createFiles(cb: gulp.TaskFunctionCallback) {
   const c= await Context.get(contextConfig)
 

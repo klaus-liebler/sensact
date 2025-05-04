@@ -136,9 +136,13 @@ export class SensactHandler extends NamespaceAndHandler {
 
     constructor() {
         super(Namespace.Value);
-        this.Map.set(ApplicationId.PWM___X1_XX1_42, new SinglePwmTwin(ApplicationId.PWM___X1_XX1_42));
-        this.Map.set(ApplicationId.BLIND_X1_XX1_42, new BlindTwin(ApplicationId.BLIND_X1_XX1_42));
-        this.Map.set(ApplicationId.BLIND_X1_XX1_43, new BlindTwin(ApplicationId.BLIND_X1_XX1_43));
+        this.Map.set(ApplicationId.PWM___L0_PRTY_S, new SinglePwmTwin(ApplicationId.PWM___L0_PRTY_S));
+        this.Map.set(ApplicationId.PWM___L1_BATH_S, new SinglePwmTwin(ApplicationId.PWM___L1_BATH_S));
+        this.Map.set(ApplicationId.PWM___L2_BATH_S, new SinglePwmTwin(ApplicationId.PWM___L2_BATH_S));
+        this.Map.set(ApplicationId.PWM___L3_WORK_S, new SinglePwmTwin(ApplicationId.PWM___L3_WORK_S));
+        this.Map.set(ApplicationId.BLIND_L1_BATH_J1, new BlindTwin(ApplicationId.BLIND_L1_BATH_J1));
+        this.Map.set(ApplicationId.BLIND_L2_BATH_J1, new BlindTwin(ApplicationId.BLIND_L2_BATH_J1));
+        this.Map.set(ApplicationId.BLIND_L3_WORK_J1, new BlindTwin(ApplicationId.BLIND_L3_WORK_J1));
        
         //console.log(`Die id im ersten item ist ${s.states(0).id()} ${s.states(0).status()!.data(0)} ${s.states(0).status()!.data(1)} ${s.states(0).status()!.data(2)} ${s.states(0).status()!.data(3)}`);
         //console.log(`Die id im zweiten item ist ${s.states(1).id()} ${s.states(1).status()!.data(0)} ${s.states(1).status()!.data(1)} ${s.states(1).status()!.data(2)} ${s.states(1).status()!.data(3)}`);
