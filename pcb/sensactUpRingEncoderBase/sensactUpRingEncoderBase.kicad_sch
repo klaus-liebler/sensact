@@ -11905,7 +11905,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm_H4.3mm"
+		(property "Footprint" "liebler_MECH:Button_12mm_ANCHOR_CENTER"
 			(at 132.08 72.39 0)
 			(effects
 				(font

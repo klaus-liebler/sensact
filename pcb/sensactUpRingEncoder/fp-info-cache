@@ -1,4 +1,4 @@
-25351617710908115
+25355166251941437
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -99883,6 +99883,13 @@ GT-USB-7051A
 20
 17
 liebler_CONN
+Hirose_FH12-14S-0.5SH_1x14-1MP_P0.50mm_Horizontal_handsolder
+Hirose FH12, FFC/FPC connector, FH12-14S-0.5SH, 14 Pins per row (https://www.hirose.com/product/en/products/FH12/FH12-24S-0.5SH(55)/), generated with kicad-footprint-generator
+connector Hirose FH12 horizontal
+0
+16
+15
+liebler_CONN
 IDC-Header_2x05_P2.54mm_Horizontal_tightCrtYd
 Through hole IDC box header, 2x05, 2.54mm pitch, DIN 41651 / IEC 60603-13, double rows, https://docs.google.com/spreadsheets/d/16SsEcesNF15N3Lb4niX7dcUr-NY5_MFPQhobNuNppn4/edit#gid=0
 Through hole horizontal IDC box header THT 2x05 2.54mm double row
@@ -102024,3 +102031,10 @@ MIC_T3902
 0
 6
 6
+liebler_SENSORS
+VCNL4040_handsolder
+Digital Proximity, Ambient Light, RGB and Gesture Sensor (https://docs.broadcom.com/doc/AV02-4191EN)
+DFN Sensor optical IR
+0
+8
+8
