@@ -178,6 +178,177 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector_Generic:Conn_01x03"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x03"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x03_1_1"
+				(rectangle
+					(start -1.27 3.81)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 2.667)
+					(end 0 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector_Generic:Conn_01x14"
 			(pin_names
 				(offset 1.016)
@@ -4590,6 +4761,28 @@
 			)
 		)
 	)
+	(global_label "A"
+		(shape output)
+		(at 40.64 181.61 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5458abd9-0e3b-4ea6-81e1-ecdee3f47ab3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 36.5662 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "BaseIO1"
 		(shape bidirectional)
 		(at 22.86 68.58 180)
@@ -4636,7 +4829,29 @@
 	)
 	(global_label "B"
 		(shape output)
-		(at 127 205.74 180)
+		(at 40.64 176.53 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7a9031b2-5cbe-4ba9-9a61-563cd2522fcf")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 36.3848 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "B"
+		(shape output)
+		(at 71.12 176.53 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4646,7 +4861,7 @@
 		)
 		(uuid "81fb5441-1c59-48d1-a53c-ce132739b05f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 122.7448 205.74 0)
+			(at 66.8648 176.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4834,7 +5049,7 @@
 	)
 	(global_label "A"
 		(shape output)
-		(at 127 210.82 180)
+		(at 71.12 181.61 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4844,7 +5059,7 @@
 		)
 		(uuid "e7ec0297-0342-4d0a-a02e-13f770e04aa2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 122.9262 210.82 0)
+			(at 67.0462 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5270,6 +5485,70 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "C28")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 231.14 116.84 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "07266476-8cc8-4b5f-89e7-718269450a7a")
+		(property "Reference" "H5"
+			(at 233.68 115.5699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 233.68 118.1099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+			(at 231.14 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 231.14 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 231.14 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "H5")
 					(unit 1)
 				)
 			)
@@ -7201,6 +7480,79 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR047")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 45.72 179.07 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "41f0e4f4-68bb-40d7-b349-61b05aa5095d")
+		(property "Reference" "J1"
+			(at 48.26 177.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ROT_EXT"
+			(at 48.26 180.3399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 45.72 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 45.72 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 45.72 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "22637990-dae4-4a5e-b0f1-6fbc1b686d78")
+		)
+		(pin "2"
+			(uuid "16435058-f35a-47b3-80b2-6298eaf727c6")
+		)
+		(pin "1"
+			(uuid "4cb12ec0-0ced-437b-99b9-5ba5b549a281")
+		)
+		(instances
+			(project ""
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "J1")
 					(unit 1)
 				)
 			)
@@ -9151,7 +9503,7 @@
 	)
 	(symbol
 		(lib_id "Device:RotaryEncoder")
-		(at 134.62 208.28 0)
+		(at 78.74 179.07 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9160,7 +9512,7 @@
 		(fields_autoplaced yes)
 		(uuid "6e9c6d2c-63aa-487c-b0ce-2c67755a2295")
 		(property "Reference" "SW3"
-			(at 140.97 207.0099 0)
+			(at 85.09 177.7999 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9169,7 +9521,7 @@
 			)
 		)
 		(property "Value" "RotaryEncoder"
-			(at 140.97 209.5499 0)
+			(at 85.09 180.3399 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9178,7 +9530,7 @@
 			)
 		)
 		(property "Footprint" "liebler_MECH:Encoder Alps-Alpine EC35"
-			(at 130.81 204.216 0)
+			(at 74.93 175.006 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9187,7 +9539,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 134.62 201.676 0)
+			(at 78.74 172.466 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9196,7 +9548,7 @@
 			)
 		)
 		(property "Description" "Rotary encoder, dual channel, incremental quadrate outputs"
-			(at 134.62 208.28 0)
+			(at 78.74 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9217,6 +9569,73 @@
 			(project ""
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "SW3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 40.64 179.07 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "709f45df-c460-4c92-962a-09df47c99499")
+		(property "Reference" "#PWR02"
+			(at 34.29 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 36.83 179.0701 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 40.64 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 40.64 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 40.64 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cc8524f9-f19a-48a5-bbeb-f053187a153f")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -12016,7 +12435,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 127 208.28 270)
+		(at 71.12 179.07 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12025,7 +12444,7 @@
 		(fields_autoplaced yes)
 		(uuid "c62b94ef-5ec8-4b30-9c63-f80f912ba4b9")
 		(property "Reference" "#PWR035"
-			(at 120.65 208.28 0)
+			(at 64.77 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12034,7 +12453,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 123.19 208.2801 90)
+			(at 67.31 179.0701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12043,7 +12462,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 127 208.28 0)
+			(at 71.12 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12052,7 +12471,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 127 208.28 0)
+			(at 71.12 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12061,7 +12480,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 127 208.28 0)
+			(at 71.12 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12350,6 +12769,70 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "C17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 231.14 106.68 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cd9b3e90-2e7c-4732-a739-62089d4762cc")
+		(property "Reference" "H3"
+			(at 233.68 105.4099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 233.68 107.9499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+			(at 231.14 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 231.14 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 231.14 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "H3")
 					(unit 1)
 				)
 			)
@@ -13801,6 +14284,70 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR025")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 231.14 111.76 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f7bd50ac-d34e-4bce-8278-e9b21249cab6")
+		(property "Reference" "H4"
+			(at 233.68 110.4899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 233.68 113.0299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2"
+			(at 231.14 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 231.14 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 231.14 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "H4")
 					(unit 1)
 				)
 			)

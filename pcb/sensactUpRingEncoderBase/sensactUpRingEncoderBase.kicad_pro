@@ -68,6 +68,14 @@
           ""
         ],
         [
+          "courtyards_overlap|108015000|101938394|020bbb41-1472-4286-82c0-5bf0c5ec24d6|0f08404c-af7f-420e-8707-33fc72686a74",
+          ""
+        ],
+        [
+          "courtyards_overlap|92005000|98076144|0f08404c-af7f-420e-8707-33fc72686a74|230f28b9-24af-4740-9355-361571d3f552",
+          ""
+        ],
+        [
           "lib_footprint_mismatch|119500000|90500000|83bff256-e3c1-472f-b749-9431e5bbaf03|00000000-0000-0000-0000-000000000000",
           ""
         ],
@@ -124,6 +132,7 @@
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
         "text_height": "warning",
+        "text_on_edge_cuts": "error",
         "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
