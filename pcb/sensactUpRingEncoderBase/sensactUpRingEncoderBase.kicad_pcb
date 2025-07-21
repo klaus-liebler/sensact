@@ -13343,7 +13343,7 @@
 		(embedded_fonts no)
 		(model "${CUSTOM_LIBS}/liebler_MECH.pretty/EC35A0930401.STEP"
 			(offset
-				(xyz 0 0 7.5)
+				(xyz 0 0 4.5)
 			)
 			(scale
 				(xyz 1 1 1)
@@ -13809,6 +13809,7 @@
 		)
 		(embedded_fonts no)
 		(model "${KICAD9_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x03_P2.54mm_Vertical.step"
+			(hide yes)
 			(offset
 				(xyz 0 0 0)
 			)

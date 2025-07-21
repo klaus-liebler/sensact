@@ -6831,16 +6831,16 @@
 		(uuid "13ea69e3-0061-49dc-93ef-738c75021026")
 	)
 	(no_connect
+		(at 27.94 36.83)
+		(uuid "37f80586-c2d5-4ef2-beae-368e720ad088")
+	)
+	(no_connect
 		(at 58.42 69.85)
 		(uuid "5a0c9c04-06e3-472b-b542-81fb915c285e")
 	)
 	(no_connect
 		(at 248.92 31.75)
 		(uuid "631bc91d-d4b4-4f6f-967a-113f70818bd1")
-	)
-	(no_connect
-		(at 27.94 36.83)
-		(uuid "b023fdff-d7de-4a37-8eb0-4f8e76df8650")
 	)
 	(wire
 		(pts
@@ -7736,7 +7736,7 @@
 	)
 	(global_label "MIC_DAT"
 		(shape input)
-		(at 27.94 39.37 180)
+		(at 27.94 31.75 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7746,7 +7746,7 @@
 		)
 		(uuid "037e6ea6-fedc-43a6-8e5e-42ead2daae10")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 17.3348 39.37 0)
+			(at 17.3348 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7861,6 +7861,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "Onewire_intern"
+		(shape bidirectional)
+		(at 259.08 100.33 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1a5e0f01-289f-4bb5-a937-6852ce9a93ea")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 277.0256 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -8042,7 +8064,7 @@
 	)
 	(global_label "MIC_CLK"
 		(shape output)
-		(at 27.94 41.91 180)
+		(at 27.94 34.29 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8052,7 +8074,7 @@
 		)
 		(uuid "2bd24099-56e7-40ba-8f17-160a65eda6b9")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 17.0929 41.91 0)
+			(at 17.0929 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8763,6 +8785,28 @@
 			)
 		)
 	)
+	(global_label "Onewire_intern"
+		(shape bidirectional)
+		(at 27.94 41.91 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "93a105fc-3a30-45ef-9f0d-438526e229d1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 9.9944 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "SCL_EXT"
 		(shape bidirectional)
 		(at 58.42 72.39 0)
@@ -8885,28 +8929,6 @@
 		(uuid "ad40336e-d281-40b1-89c7-8f460733ed87")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 148.59 81.7478 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "Onewire"
-		(shape bidirectional)
-		(at 259.08 100.33 270)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "ad6a0254-9990-4c5c-890e-aaff0f09405f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 259.08 110.9917 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14205,7 +14227,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x03_P1.27mm_Vertical"
+		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x03_P1.27mm_Vertical_SMD"
 			(at 93.98 26.67 0)
 			(effects
 				(font
@@ -18218,6 +18240,72 @@
 			(project "sensactUp4"
 				(path "/fa03935d-41e7-4027-b7ba-e827613a2522"
 					(reference "C9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 22.86 39.37 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fe18b018-a9b7-4485-96db-2ad773dee8fb")
+		(property "Reference" "J1"
+			(at 21.59 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "IO4"
+			(at 17.78 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm"
+			(at 22.86 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 22.86 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 22.86 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "26fe8534-ecd7-4809-ac08-a33f2fd95d49")
+		)
+		(instances
+			(project "sensactUpRingEncoder"
+				(path "/fa03935d-41e7-4027-b7ba-e827613a2522"
+					(reference "J1")
 					(unit 1)
 				)
 			)
