@@ -349,6 +349,235 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector_Generic:Conn_01x05"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x05"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x05, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x05_1_1"
+				(rectangle
+					(start -1.27 6.35)
+					(end 1.27 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 5.207)
+					(end 0 4.953)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 2.667)
+					(end 0 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -4.953)
+					(end 0 -5.207)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 5.08 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -5.08 0)
+					(length 3.81)
+					(name "Pin_5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector_Generic:Conn_01x14"
 			(pin_names
 				(offset 1.016)
@@ -1920,6 +2149,192 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Jumper:SolderJumper_2_Open"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(property "Reference" "JP"
+				(at 0 2.032 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SolderJumper_2_Open"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Solder Jumper, 2-pole, open"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "solder jumper SPST"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SolderJumper*Open*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SolderJumper_2_Open_0_1"
+				(polyline
+					(pts
+						(xy -0.254 1.016) (xy -0.254 -1.016)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -0.254 -1.016)
+					(mid -1.2656 0)
+					(end -0.254 1.016)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -0.254 -1.016)
+					(mid -1.2656 0)
+					(end -0.254 1.016)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(arc
+					(start 0.254 1.016)
+					(mid 1.2656 0)
+					(end 0.254 -1.016)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0.254 1.016)
+					(mid 1.2656 0)
+					(end 0.254 -1.016)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 1.016) (xy 0.254 -1.016)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SolderJumper_2_Open_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "LED:WS2812B"
 			(pin_names
 				(offset 0.254)
@@ -3178,6 +3593,474 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Transistor_FET:Q_Dual_NMOS_G1S2G2D2S1D1"
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "Q_Dual_NMOS_G1S2G2D2S1D1"
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Dual NMOS transistor, 6 pin package"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "transistor NMOS N-MOS N-MOSFET"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Q_Dual_NMOS_G1S2G2D2S1D1_0_1"
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 2.286) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0.508) (xy 0.762 -0.508)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.27) (xy 0.762 -2.286)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.921 0.381) (xy 3.683 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Q_Dual_NMOS_G1S2G2D2S1D1_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "Q_Dual_NMOS_G1S2G2D2S1D1_2_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "power:+12V"
+			(power)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "+12V"
+				(at 0 3.556 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+12V\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "+12V_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+12V_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:+24V"
 			(power)
 			(pin_numbers
@@ -3769,6 +4652,30 @@
 		(uuid 018c7594-376a-49d9-95a3-5cbab7e01c62)
 	)
 	(rectangle
+		(start 320.675 12.7)
+		(end 395.605 77.47)
+		(stroke
+			(width 0)
+			(type dash)
+		)
+		(fill
+			(type none)
+		)
+		(uuid bc04ced5-1a68-460f-8c85-b9a5faff5f31)
+	)
+	(rectangle
+		(start 204.47 46.99)
+		(end 270.51 82.55)
+		(stroke
+			(width 0)
+			(type dash)
+		)
+		(fill
+			(type none)
+		)
+		(uuid df687371-4dd2-42fc-bb0f-65c1e5527f5f)
+	)
+	(rectangle
 		(start 177.8 132.08)
 		(end 280.67 165.1)
 		(stroke
@@ -3779,6 +4686,17 @@
 			(type none)
 		)
 		(uuid e658bc72-3819-4d06-a2e5-702693cab23c)
+	)
+	(text "PowerOutputs"
+		(exclude_from_sim no)
+		(at 321.31 12.7 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0167a5ac-2068-45e4-8ce7-a7e38a644b41")
 	)
 	(text "5V->3,3V + microUSV"
 		(exclude_from_sim no)
@@ -3791,11 +4709,28 @@
 		)
 		(uuid "8d8c33b5-abe0-4bbd-a54e-456b63a5ec29")
 	)
+	(text "24V->12V"
+		(exclude_from_sim no)
+		(at 204.47 46.99 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "bc1eebd2-de9d-4c26-92c5-07f231d7f7bd")
+	)
 	(junction
 		(at 209.55 22.86)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "04e062a6-db26-4ac0-971d-15bbe553bb3f")
+	)
+	(junction
+		(at 224.79 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "16083f02-58ed-47cd-9494-82b3ebfd364c")
 	)
 	(junction
 		(at 26.67 22.86)
@@ -3820,6 +4755,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "206c4021-768e-4fcd-8ec5-38c8a1be77e1")
+	)
+	(junction
+		(at 337.82 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "25f14ec3-ac97-4817-ab7a-8c3b883bc7e8")
 	)
 	(junction
 		(at 250.19 162.56)
@@ -3858,6 +4799,12 @@
 		(uuid "40f557ce-998d-4b08-b685-df8fec7cf8d9")
 	)
 	(junction
+		(at 214.63 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4213d273-0f8a-49fd-8a5c-14ff1c5256d7")
+	)
+	(junction
 		(at 224.79 22.86)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3868,6 +4815,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5b6bf137-eaae-4feb-ab57-f4631d7ac553")
+	)
+	(junction
+		(at 246.38 62.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "663ab3a9-81f0-4f98-a54b-cc8c54755ade")
 	)
 	(junction
 		(at 148.59 22.86)
@@ -3882,10 +4835,34 @@
 		(uuid "6fa28d7f-171c-4c13-84ca-ef6919b67350")
 	)
 	(junction
+		(at 246.38 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6ff99fae-374c-4e48-bd4b-ee636e88f31f")
+	)
+	(junction
 		(at 118.11 22.86)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "78a06a8d-bc1d-4117-b5fb-afb766633faa")
+	)
+	(junction
+		(at 255.27 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7930932c-2af4-4ec8-ab61-703331a70bf5")
+	)
+	(junction
+		(at 224.79 62.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7c7acfbc-a019-4b99-96f1-96e4cba8349c")
+	)
+	(junction
+		(at 337.82 20.32)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "93e0398c-04c4-42d8-9f2e-7b22c00cfed3")
 	)
 	(junction
 		(at 160.02 167.64)
@@ -3912,6 +4889,12 @@
 		(uuid "a34c1712-f3a9-442b-a629-7c1452ee77ef")
 	)
 	(junction
+		(at 237.49 62.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "aca13569-592a-4e10-b197-1d2d7e3b6d17")
+	)
+	(junction
 		(at 189.23 154.94)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3922,6 +4905,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ba2f6222-286e-4530-ae21-b8a2ab29d01e")
+	)
+	(junction
+		(at 337.82 66.04)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "be261842-88ce-4d47-9d3f-ac903b6a8672")
 	)
 	(junction
 		(at 250.19 147.32)
@@ -3976,6 +4965,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e1d0e22e-0c4f-4588-ae7b-4763ea2f0c6e")
+	)
+	(junction
+		(at 337.82 35.56)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e613ad80-0df0-480d-88f9-b08612666b38")
 	)
 	(junction
 		(at 57.15 22.86)
@@ -4035,6 +5030,26 @@
 	)
 	(wire
 		(pts
+			(xy 245.11 54.61) (xy 246.38 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "02321651-b194-4cc5-83f0-22fabbced699")
+	)
+	(wire
+		(pts
+			(xy 372.11 38.1) (xy 374.65 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "03874d3b-e51b-4928-9ae8-bbbcf124641c")
+	)
+	(wire
+		(pts
 			(xy 250.19 162.56) (xy 254 162.56)
 		)
 		(stroke
@@ -4052,6 +5067,26 @@
 			(type default)
 		)
 		(uuid "07334683-059e-477d-abb4-baf41f888498")
+	)
+	(wire
+		(pts
+			(xy 373.38 43.18) (xy 374.65 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0fa02784-7dd4-42a5-bc54-1bb896a5c3da")
+	)
+	(wire
+		(pts
+			(xy 224.79 62.23) (xy 237.49 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "18ebf063-f7ef-48c6-83d2-8fd36f2b805c")
 	)
 	(wire
 		(pts
@@ -4095,6 +5130,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 45.72) (xy 374.65 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2ad86a45-6d0e-4069-9c5c-7e70e84f8385")
+	)
+	(wire
+		(pts
 			(xy 50.8 68.58) (xy 58.42 68.58)
 		)
 		(stroke
@@ -4112,6 +5157,26 @@
 			(type default)
 		)
 		(uuid "2f18145f-39a0-4ea4-a43b-25b81420973d")
+	)
+	(wire
+		(pts
+			(xy 229.87 54.61) (xy 224.79 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "333a78fb-f94e-4e48-a98e-31d042100f1c")
+	)
+	(wire
+		(pts
+			(xy 373.38 30.48) (xy 373.38 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34985b7b-d2c7-44a6-90fb-8dfd0174a054")
 	)
 	(wire
 		(pts
@@ -4155,6 +5220,16 @@
 	)
 	(wire
 		(pts
+			(xy 374.65 15.24) (xy 374.65 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3b7ef4a9-a605-47bf-b55e-42de1dacb0e6")
+	)
+	(wire
+		(pts
 			(xy 58.42 43.18) (xy 19.05 43.18)
 		)
 		(stroke
@@ -4185,6 +5260,16 @@
 	)
 	(wire
 		(pts
+			(xy 374.65 60.96) (xy 374.65 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4cba6f13-37db-4d3f-929e-b8ee08695731")
+	)
+	(wire
+		(pts
 			(xy 271.78 139.7) (xy 264.16 139.7)
 		)
 		(stroke
@@ -4205,6 +5290,16 @@
 	)
 	(wire
 		(pts
+			(xy 372.11 30.48) (xy 372.11 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "51b94702-7cf5-4ab2-ae1c-adb5ac21f7a4")
+	)
+	(wire
+		(pts
 			(xy 142.24 175.26) (xy 151.13 175.26)
 		)
 		(stroke
@@ -4222,6 +5317,16 @@
 			(type default)
 		)
 		(uuid "64b2299a-a267-493a-a016-e47106b56b75")
+	)
+	(wire
+		(pts
+			(xy 246.38 54.61) (xy 255.27 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "655b956e-ac99-4fa7-b497-830ecef80283")
 	)
 	(wire
 		(pts
@@ -4272,6 +5377,16 @@
 			(type default)
 		)
 		(uuid "7ed4b721-21bb-4bda-8937-078ee6248882")
+	)
+	(wire
+		(pts
+			(xy 373.38 40.64) (xy 374.65 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80a80628-8297-40db-b229-dc132d34153d")
 	)
 	(wire
 		(pts
@@ -4355,6 +5470,16 @@
 	)
 	(wire
 		(pts
+			(xy 374.65 55.88) (xy 373.38 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a5db97d8-cf30-4577-9f62-b8bec6dcb87e")
+	)
+	(wire
+		(pts
 			(xy 229.87 134.62) (xy 229.87 139.7)
 		)
 		(stroke
@@ -4372,6 +5497,26 @@
 			(type default)
 		)
 		(uuid "ab7df3f5-80d1-4c40-af6f-60189170e8e7")
+	)
+	(wire
+		(pts
+			(xy 214.63 54.61) (xy 224.79 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "add9a60e-ca19-4586-a922-0cc2f072e80b")
+	)
+	(wire
+		(pts
+			(xy 373.38 55.88) (xy 373.38 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ae9f1035-4e93-49b8-803e-429c70f5d3f7")
 	)
 	(wire
 		(pts
@@ -4395,6 +5540,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 30.48) (xy 372.11 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c2b003ce-f905-4b9c-80c9-cb1c7193f73a")
+	)
+	(wire
+		(pts
 			(xy 184.15 154.94) (xy 189.23 154.94)
 		)
 		(stroke
@@ -4402,6 +5557,16 @@
 			(type default)
 		)
 		(uuid "c59474e6-54b7-4c4d-9403-a54276b3cc4c")
+	)
+	(wire
+		(pts
+			(xy 237.49 62.23) (xy 246.38 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c693f74e-1bd2-4e28-90a9-b9b333c5fb52")
 	)
 	(wire
 		(pts
@@ -4435,6 +5600,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 15.24) (xy 374.65 15.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6a078b7-12b1-44e1-8152-57c21fdb8736")
+	)
+	(wire
+		(pts
 			(xy 242.57 147.32) (xy 250.19 147.32)
 		)
 		(stroke
@@ -4442,6 +5617,16 @@
 			(type default)
 		)
 		(uuid "e3209450-40d7-46fb-82ab-4ff4930baae0")
+	)
+	(wire
+		(pts
+			(xy 373.38 30.48) (xy 374.65 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e825b9ef-baf1-4f35-9c79-2a63d19bb014")
 	)
 	(wire
 		(pts
@@ -4472,6 +5657,36 @@
 			(type default)
 		)
 		(uuid "ed898492-f491-4203-8443-eace25958240")
+	)
+	(wire
+		(pts
+			(xy 246.38 62.23) (xy 255.27 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef34c58c-0ddb-4c17-9ae0-6b251b208065")
+	)
+	(wire
+		(pts
+			(xy 374.65 60.96) (xy 345.44 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f1fa5ac4-68a6-442d-928e-0f6f6e4f302e")
+	)
+	(wire
+		(pts
+			(xy 214.63 62.23) (xy 224.79 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f98e9d1f-dc25-4784-a902-2b9171b1359a")
 	)
 	(wire
 		(pts
@@ -4562,6 +5777,28 @@
 			(justify left bottom)
 		)
 		(uuid "eb9d983b-b02e-417c-bfa7-f7963a392053")
+	)
+	(global_label "SDA_EXT"
+		(shape bidirectional)
+		(at 322.58 66.04 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "01ba8043-91bf-46da-bad4-588e1aa9c43e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 310.6217 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
 	)
 	(global_label "IO10"
 		(shape bidirectional)
@@ -4785,6 +6022,28 @@
 	)
 	(global_label "BaseIO1"
 		(shape bidirectional)
+		(at 330.2 20.32 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "6cec12df-62db-4ccd-af52-39e47bdb2017")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 318.423 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "BaseIO1"
+		(shape bidirectional)
 		(at 22.86 68.58 180)
 		(fields_autoplaced yes)
 		(effects
@@ -4981,6 +6240,28 @@
 			)
 		)
 	)
+	(global_label "Onewire"
+		(shape bidirectional)
+		(at 322.58 50.8 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c5c4f283-8953-4b88-9a8f-1e349f632c14")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 311.1053 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "SCL_EXT"
 		(shape bidirectional)
 		(at 160.02 135.89 0)
@@ -5016,6 +6297,28 @@
 		(uuid "e159de38-abb2-42d3-8aa6-c2a92f289d55")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 147.3963 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "BaseIO2"
+		(shape bidirectional)
+		(at 330.2 35.56 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e2d1195c-34d3-4f48-b106-c906704ee8eb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 318.423 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6207,6 +7510,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 224.79 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1db422aa-1afe-47d4-ac8d-197b282716e4")
+		(property "Reference" "C53"
+			(at 227.711 57.2516 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "u1"
+			(at 227.711 59.563 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
+			(at 225.7552 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 224.79 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 224.79 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8342bd6c-bec8-4b1b-bcf0-ccf44b7882b9")
+		)
+		(pin "2"
+			(uuid "2b052237-e14b-45ba-b6c5-30022e082588")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "C53")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 148.59 15.24 270)
 		(unit 1)
@@ -6402,6 +7774,140 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR064")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 345.44 40.64 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "23461aca-0189-4cf2-98e4-4115221d879e")
+		(property "Reference" "#PWR08"
+			(at 351.79 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 349.8342 40.513 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 345.44 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 345.44 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 345.44 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5d8da335-8930-41f1-b991-550031eb434d")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR08")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 334.01 35.56 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "24a69529-0af3-4eae-8e18-95c444b25c1e")
+		(property "Reference" "R56"
+			(at 335.28 33.02 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 335.28 35.56 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 334.01 37.338 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 334.01 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 334.01 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "84f302db-7d0b-4393-b742-8b5a0ec581e3")
+		)
+		(pin "2"
+			(uuid "912b48d3-4591-41ae-9d76-f3a3b1962c04")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R56")
 					(unit 1)
 				)
 			)
@@ -6615,6 +8121,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Transistor_FET:Q_Dual_NMOS_G1S2G2D2S1D1")
+		(at 342.9 66.04 0)
+		(unit 2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2a7ce2ad-87df-451f-bc85-94750a354e92")
+		(property "Reference" "Q3"
+			(at 349.25 64.7699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "AO6800-HXY"
+			(at 349.25 67.3099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6_Handsoldering"
+			(at 347.98 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 347.98 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Dual NMOS transistor, 6 pin package"
+			(at 342.9 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "5"
+			(uuid "9fa05d75-7d7f-4025-9d98-46c57fa98a2d")
+		)
+		(pin "3"
+			(uuid "795a4a3e-42f8-4cbe-96c0-ae86e8158a3c")
+		)
+		(pin "1"
+			(uuid "f271e9a0-5051-4cfe-ad95-571debe4768c")
+		)
+		(pin "6"
+			(uuid "f8306eb8-58cd-45c9-9f83-9beb42716e60")
+		)
+		(pin "4"
+			(uuid "7bd03847-0ef7-41b2-b12d-e39234f4c1c6")
+		)
+		(pin "2"
+			(uuid "a00299ec-746f-4af9-bbbf-4065b57aa7b1")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "Q3")
+					(unit 2)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 72.39 22.86 270)
 		(unit 1)
@@ -6674,6 +8262,75 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR018")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 255.27 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2dd631bf-1e8e-4ad5-8c66-325493226695")
+		(property "Reference" "C55"
+			(at 258.191 57.2516 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10u"
+			(at 258.191 59.563 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
+			(at 256.2352 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 255.27 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 255.27 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "59e9fea4-0392-43da-a44c-550c545595f8")
+		)
+		(pin "2"
+			(uuid "fcd7c355-98d0-49ef-8d75-4cc41f567916")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "C55")
 					(unit 1)
 				)
 			)
@@ -6749,6 +8406,71 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "D7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 345.44 71.12 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "313e45c9-f8d5-470c-8726-9a5b6da25760")
+		(property "Reference" "#PWR010"
+			(at 351.79 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 349.8342 70.993 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 345.44 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 345.44 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 345.44 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2f77de78-a10c-49a9-aeb4-786940009686")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR010")
 					(unit 1)
 				)
 			)
@@ -7198,6 +8920,140 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 345.44 25.4 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3a6e94fe-d59c-47b0-8c3e-e8810f50dfc7")
+		(property "Reference" "#PWR07"
+			(at 351.79 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 349.8342 25.273 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 345.44 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 345.44 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 345.44 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f8ba8d13-5cbd-46cb-9e99-89c6a77602d0")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR07")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 334.01 50.8 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3b6bf118-c432-4f24-ad73-82b434b2d626")
+		(property "Reference" "R57"
+			(at 335.28 48.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 335.28 50.8 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 334.01 52.578 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 334.01 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 334.01 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "86ce5a12-8717-4b17-99e7-378f6705073a")
+		)
+		(pin "2"
+			(uuid "2bda7f60-900d-4dee-9562-42554c1a0ebd")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R57")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 264.16 143.51 0)
 		(unit 1)
@@ -7513,7 +9369,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "liebler_CONN:PhoenixContact_MCV_1,5_3-G-3.5_1x03_P3.50mm_Vertical_smallerCourtyard"
 			(at 45.72 179.07 0)
 			(effects
 				(font
@@ -7628,6 +9484,71 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "D3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 337.82 43.18 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "43bdcc3f-defb-4b3d-8eef-a8efeafdaa63")
+		(property "Reference" "#PWR03"
+			(at 344.17 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 342.2142 43.053 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 337.82 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 337.82 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 337.82 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "90cd7e74-28ec-416c-900a-27b4364cbc33")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR03")
 					(unit 1)
 				)
 			)
@@ -8443,6 +10364,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 345.44 55.88 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "543dc70b-a954-4e69-9e0b-13245f09b5f6")
+		(property "Reference" "#PWR09"
+			(at 351.79 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 349.8342 55.753 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 345.44 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 345.44 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 345.44 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "20864477-c9d8-42c2-8dbe-68dd7cf229c9")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR09")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+24V")
 		(at 184.15 142.24 0)
 		(unit 1)
@@ -8503,6 +10489,93 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 337.82 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5555152d-ce2e-4bc2-8a7c-420fd0e04917")
+		(property "Reference" "R63"
+			(at 335.28 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "M1"
+			(at 337.82 55.88 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 336.042 54.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 337.82 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 337.82 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "0201WMF1003TEE"
+			(at 337.82 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 337.82 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d2dc5826-8a91-4b09-8b95-b831759ee970")
+		)
+		(pin "2"
+			(uuid "06f8e854-b126-4199-8081-df5597bae76a")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R63")
 					(unit 1)
 				)
 			)
@@ -8956,6 +11029,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Transistor_FET:Q_Dual_NMOS_G1S2G2D2S1D1")
+		(at 342.9 35.56 0)
+		(unit 2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "64a9925c-1965-4117-ab66-f6d270460df8")
+		(property "Reference" "Q2"
+			(at 349.25 34.2899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "AO6800-HXY"
+			(at 349.25 36.8299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6_Handsoldering"
+			(at 347.98 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 347.98 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Dual NMOS transistor, 6 pin package"
+			(at 342.9 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "5"
+			(uuid "9fa05d75-7d7f-4025-9d98-46c57fa98a2c")
+		)
+		(pin "3"
+			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60b")
+		)
+		(pin "1"
+			(uuid "f271e9a0-5051-4cfe-ad95-571debe4768b")
+		)
+		(pin "6"
+			(uuid "f8306eb8-58cd-45c9-9f83-9beb42716e5f")
+		)
+		(pin "4"
+			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae68")
+		)
+		(pin "2"
+			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb591")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "Q2")
+					(unit 2)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 26.67 38.1 90)
 		(unit 1)
@@ -9082,6 +11237,72 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+12V")
+		(at 374.65 48.26 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "697d9e2b-bdc3-41f9-be9d-bc28e3daa2a6")
+		(property "Reference" "#PWR011"
+			(at 374.65 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+12V"
+			(at 374.65 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 374.65 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 374.65 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+12V\""
+			(at 374.65 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "93d95816-f26b-451d-b3b3-8523743e1479")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR011")
 					(unit 1)
 				)
 			)
@@ -10210,6 +12431,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 237.49 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8479ab13-53a6-4b1d-a9cc-378777bc2be3")
+		(property "Reference" "#PWR039"
+			(at 237.49 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 237.617 66.6242 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 237.49 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 237.49 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 237.49 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7c5a14b2-8acc-4ac2-9b16-fb3c23abfc1d")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR039")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 133.35 22.86 270)
 		(unit 1)
@@ -10269,6 +12555,88 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:Q_Dual_NMOS_G1S2G2D2S1D1")
+		(at 342.9 20.32 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "87be4c7a-5b8f-4f16-ae1f-9898a2ba29cd")
+		(property "Reference" "Q2"
+			(at 349.25 19.0499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "AO6800-HXY"
+			(at 349.25 21.5899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6_Handsoldering"
+			(at 347.98 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 347.98 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Dual NMOS transistor, 6 pin package"
+			(at 342.9 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "5"
+			(uuid "9fa05d75-7d7f-4025-9d98-46c57fa98a2e")
+		)
+		(pin "3"
+			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60c")
+		)
+		(pin "1"
+			(uuid "f271e9a0-5051-4cfe-ad95-571debe4768d")
+		)
+		(pin "6"
+			(uuid "f8306eb8-58cd-45c9-9f83-9beb42716e61")
+		)
+		(pin "4"
+			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae69")
+		)
+		(pin "2"
+			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb592")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "Q2")
 					(unit 1)
 				)
 			)
@@ -10411,6 +12779,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 334.01 20.32 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8b8bcaf0-a4c8-4b58-9e7d-e2ddb349c94a")
+		(property "Reference" "R55"
+			(at 335.28 17.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 335.28 20.32 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 334.01 22.098 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 334.01 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 334.01 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cffd44a8-c425-4e0c-afd0-fdb06fcf194c")
+		)
+		(pin "2"
+			(uuid "cd5abe12-7e5a-479b-89ad-832bf34f3882")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R55")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 224.79 22.86 270)
 		(unit 1)
@@ -10545,6 +12982,75 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "D11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 334.01 66.04 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8f9ee6a3-6a35-42c4-ab23-833a556128cc")
+		(property "Reference" "R58"
+			(at 335.28 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 335.28 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 334.01 67.818 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 334.01 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 334.01 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "da4bb12d-2573-46b4-9fe0-b8a3e5861c87")
+		)
+		(pin "2"
+			(uuid "096cb158-ff6c-41e4-9802-ed3d04da3f5f")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R58")
 					(unit 1)
 				)
 			)
@@ -11083,6 +13589,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Regulator_Linear:AMS1117-3.3")
+		(at 237.49 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9c047b99-5ada-40f0-a8ff-eceb882dce4e")
+		(property "Reference" "U7"
+			(at 237.49 48.4632 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AMS1117-12"
+			(at 237.49 50.7746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "liebler_SEMICONDUCTORS:SOT-223-3_TabPin2_HANDSOLDER"
+			(at 237.49 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.advanced-monolithic.com/pdf/ds1117.pdf"
+			(at 240.03 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "1A Low Dropout regulator, positive, 3.3V fixed output, SOT-223"
+			(at 237.49 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a0cbcbd6-5f9e-4914-b1b1-1040b2d94c29")
+		)
+		(pin "2"
+			(uuid "e3caa9fd-452a-4d2c-a9fc-5c4bd427e4a1")
+		)
+		(pin "3"
+			(uuid "a3787dcb-7814-499f-ac9b-7a2f2f80f9c4")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "U7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 118.11 38.1 90)
 		(unit 1)
@@ -11310,6 +13886,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 246.38 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9d60bb81-6384-4bad-b70c-9986ec6d5c25")
+		(property "Reference" "C54"
+			(at 249.301 57.2516 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "u1"
+			(at 249.301 59.563 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
+			(at 247.3452 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 246.38 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c70978d7-14bc-4054-93d6-3c00695da134")
+		)
+		(pin "2"
+			(uuid "194ddfaa-f32c-471d-a576-337b183d03e0")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "C54")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "LED:WS2812B")
 		(at 26.67 30.48 0)
 		(unit 1)
@@ -11529,6 +14174,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 337.82 73.66 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a56edc02-da16-4874-8b26-ca137d0766d2")
+		(property "Reference" "#PWR06"
+			(at 344.17 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 342.2142 73.533 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 337.82 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 337.82 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 337.82 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4427ae1f-5320-4ef6-a401-7e0755a76a62")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 33.02 52.07 0)
 		(unit 1)
@@ -11663,6 +14373,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 337.82 58.42 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "aa7a3482-24b0-4453-ab87-0736afbb59d5")
+		(property "Reference" "#PWR05"
+			(at 344.17 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 342.2142 58.293 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 337.82 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 337.82 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 337.82 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c520c4de-8b50-4092-81cf-c41cbf349b65")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR05")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 184.15 147.32 180)
 		(unit 1)
@@ -11742,6 +14517,85 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "C79")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x05")
+		(at 379.73 43.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ac7cec7c-c12b-4131-bb1d-9dff3ac9211c")
+		(property "Reference" "J7"
+			(at 382.27 41.9099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "PowerOutput"
+			(at 382.27 44.4499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"
+			(at 379.73 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 379.73 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x05, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 379.73 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "56b498a1-a33e-4e1b-96ca-863fa0a775f2")
+		)
+		(pin "1"
+			(uuid "5c77d688-e4c9-4469-8345-fe276fa6cf67")
+		)
+		(pin "4"
+			(uuid "b76636d2-6c1c-467f-8b37-9df6ce5d98d7")
+		)
+		(pin "2"
+			(uuid "ab0c14f0-631a-4c8c-b056-50e97082ce06")
+		)
+		(pin "5"
+			(uuid "681e6628-6138-4981-a8ea-a576910d9048")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "J7")
 					(unit 1)
 				)
 			)
@@ -12086,6 +14940,162 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 337.82 24.13 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b7572512-5f89-418a-a5a1-ec0d1da106ba")
+		(property "Reference" "R61"
+			(at 335.28 26.67 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "M1"
+			(at 337.82 25.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 336.042 24.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 337.82 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 337.82 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "0201WMF1003TEE"
+			(at 337.82 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 337.82 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "61c7d72f-7c67-4160-8eaa-3b6417e7a832")
+		)
+		(pin "2"
+			(uuid "a2c42b41-0414-4641-9ed3-a4f8bdcc4588")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R61")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 214.63 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b837a6df-565e-4bf4-b30f-c16b2583bedb")
+		(property "Reference" "C48"
+			(at 217.551 57.2516 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10u"
+			(at 217.551 59.563 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
+			(at 215.5952 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 214.63 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 214.63 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3c33d0bd-baa7-4639-821c-b84c95c25541")
+		)
+		(pin "2"
+			(uuid "6c9ce61d-1444-49f3-978d-c595215e612a")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "C48")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Switch:SW_SPDT")
 		(at 161.29 92.71 0)
 		(unit 1)
@@ -12151,6 +15161,88 @@
 			(project ""
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "SW2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:Q_Dual_NMOS_G1S2G2D2S1D1")
+		(at 342.9 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b95f8276-296e-483e-9895-5a441e333557")
+		(property "Reference" "Q3"
+			(at 349.25 49.5299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "AO6800-HXY"
+			(at 349.25 52.0699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6_Handsoldering"
+			(at 347.98 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 347.98 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Dual NMOS transistor, 6 pin package"
+			(at 342.9 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "5"
+			(uuid "21731575-369f-4592-a5df-aaf4c50acb1b")
+		)
+		(pin "3"
+			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60d")
+		)
+		(pin "1"
+			(uuid "66d9474c-41b6-4858-ad3e-1ce911b61db5")
+		)
+		(pin "6"
+			(uuid "54265e3f-fcfb-4d53-b772-150f2bddabe5")
+		)
+		(pin "4"
+			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae6a")
+		)
+		(pin "2"
+			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb593")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "Q3")
 					(unit 1)
 				)
 			)
@@ -12434,6 +15526,93 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 337.82 39.37 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c45e82ac-6fd8-4f84-80c3-d58deeebdd71")
+		(property "Reference" "R62"
+			(at 335.28 41.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "M1"
+			(at 337.82 40.64 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 336.042 39.37 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 337.82 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 337.82 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "0201WMF1003TEE"
+			(at 337.82 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 337.82 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8af0251a-308c-473e-a354-e171e9ab0769")
+		)
+		(pin "2"
+			(uuid "8becb80c-d4cb-4c9a-b00b-11611f579c27")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R62")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 71.12 179.07 270)
 		(unit 1)
@@ -12706,6 +15885,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Jumper:SolderJumper_2_Open")
+		(at 326.39 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cbd11e52-60dc-4f54-b39c-86094c049e44")
+		(property "Reference" "JP2"
+			(at 326.39 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Sda2Out4"
+			(at 326.39 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+			(at 326.39 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 326.39 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Solder Jumper, 2-pole, open"
+			(at 326.39 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "05ef9167-7e74-4218-9987-349c110fa734")
+		)
+		(pin "2"
+			(uuid "824affa7-baa5-413c-8038-e2e8254aef22")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "JP2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 72.39 19.05 0)
 		(unit 1)
@@ -12904,6 +16151,159 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+12V")
+		(at 255.27 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d0593060-9cd0-4662-b46d-58423e9d078a")
+		(property "Reference" "#PWR081"
+			(at 255.27 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+12V"
+			(at 255.27 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 255.27 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 255.27 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+12V\""
+			(at 255.27 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "43ee3f43-a593-4421-8d29-ab1ed1e0d727")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR081")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 337.82 69.85 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d3d02879-d221-4378-b286-5d6ff6527f78")
+		(property "Reference" "R64"
+			(at 335.28 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "M1"
+			(at 337.82 71.12 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 336.042 69.85 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 337.82 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 337.82 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "0201WMF1003TEE"
+			(at 337.82 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 337.82 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "da90a6b6-53a1-4b2c-9227-094d0f2c9831")
+		)
+		(pin "2"
+			(uuid "f4ccf183-fec6-4ace-b319-87e12893faf7")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "R64")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 72.39 38.1 90)
 		(unit 1)
@@ -13050,6 +16450,72 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "C80")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+24V")
+		(at 214.63 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d5f23985-7cbb-41b2-b30e-10917d875e9c")
+		(property "Reference" "#PWR032"
+			(at 214.63 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+24V"
+			(at 214.63 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 214.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 214.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+24V\""
+			(at 214.63 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a7e7116f-89e4-424c-a90a-5afed5e39b96")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR032")
 					(unit 1)
 				)
 			)
@@ -13756,6 +17222,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 337.82 27.94 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e78f917e-3b11-4876-93b7-98fcc8b4215f")
+		(property "Reference" "#PWR044"
+			(at 344.17 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 342.2142 27.813 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 337.82 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 337.82 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 337.82 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "eb851ae0-886a-41d6-9e53-2a14ec8a6659")
+		)
+		(instances
+			(project "sensactUpRingEncoderBase"
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "#PWR044")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 194.31 22.86 270)
 		(unit 1)
@@ -14348,6 +17879,74 @@
 			(project "sensactUpRingEncoderBase"
 				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
 					(reference "H4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Jumper:SolderJumper_2_Open")
+		(at 326.39 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f82f3a70-751c-4bc0-bae1-3c2dadaf5523")
+		(property "Reference" "JP1"
+			(at 326.39 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Onewire2Out3"
+			(at 326.39 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+			(at 326.39 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 326.39 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Solder Jumper, 2-pole, open"
+			(at 326.39 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "459075d1-fbcd-47bf-808d-1b1e3de553e0")
+		)
+		(pin "2"
+			(uuid "9851b40d-9d92-4bd6-8730-166c12e3b71d")
+		)
+		(instances
+			(project ""
+				(path "/cb39c70e-28f8-4150-a238-63553bfa4663"
+					(reference "JP1")
 					(unit 1)
 				)
 			)
