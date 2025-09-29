@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udpmonitor", "udpmonitor\udpmonitor.csproj", "{FA0E0F96-2AD6-31C5-2D2B-F6B953A5F7CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA0E0F96-2AD6-31C5-2D2B-F6B953A5F7CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA0E0F96-2AD6-31C5-2D2B-F6B953A5F7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA0E0F96-2AD6-31C5-2D2B-F6B953A5F7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA0E0F96-2AD6-31C5-2D2B-F6B953A5F7CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14DAF79A-0E13-4650-BE0C-1A2D9A597235}
+	EndGlobalSection
+EndGlobal

@@ -17026,22 +17026,22 @@
 			)
 		)
 		(pin "5"
-			(uuid "9fa05d75-7d7f-4025-9d98-46c57fa98a2c")
+			(uuid "9fa05d75-7d7f-4025-9d98-46c57fa98a2e")
 		)
 		(pin "3"
-			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60b")
+			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60c")
 		)
 		(pin "1"
-			(uuid "f271e9a0-5051-4cfe-ad95-571debe4768b")
+			(uuid "f271e9a0-5051-4cfe-ad95-571debe4768d")
 		)
 		(pin "6"
-			(uuid "f8306eb8-58cd-45c9-9f83-9beb42716e5f")
+			(uuid "f8306eb8-58cd-45c9-9f83-9beb42716e61")
 		)
 		(pin "4"
-			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae68")
+			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae69")
 		)
 		(pin "2"
-			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb591")
+			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb592")
 		)
 		(instances
 			(project ""
@@ -18726,7 +18726,7 @@
 			(uuid "21731575-369f-4592-a5df-aaf4c50acb1b")
 		)
 		(pin "3"
-			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60b")
+			(uuid "c3dee9ca-5ea6-4299-9731-fd59580bd60d")
 		)
 		(pin "1"
 			(uuid "66d9474c-41b6-4858-ad3e-1ce911b61db5")
@@ -18735,10 +18735,10 @@
 			(uuid "54265e3f-fcfb-4d53-b772-150f2bddabe5")
 		)
 		(pin "4"
-			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae68")
+			(uuid "eb728ed7-ff4e-473c-b4fd-d4174de9ae6a")
 		)
 		(pin "2"
-			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb591")
+			(uuid "782b4ad8-a805-4182-bf1b-1d19e25bb593")
 		)
 		(instances
 			(project "sensactUp4"
