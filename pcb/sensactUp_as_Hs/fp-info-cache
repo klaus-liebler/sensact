@@ -1,4 +1,4 @@
-26963486141345847
+26972285311706315
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -106120,6 +106120,13 @@ HLK-PM01
 4
 4
 liebler_MECH
+Hinge_3040
+
+
+0
+0
+0
+liebler_MECH
 KCD1-11-2P
 
 
@@ -106182,6 +106189,20 @@ RotaryEncoder_EC11_SMD_handsolder
 0
 7
 6
+liebler_MECH
+SG90_PCB
+
+
+0
+0
+0
+liebler_MECH
+SG90_vertical_PCB
+
+
+0
+0
+0
 liebler_MECH
 SLLB510100
 
@@ -106645,6 +106666,13 @@ MODULE_A4988_STEPPER_MOTOR_DRIVER_CARRIER
 16
 16
 liebler_MODULES
+MODULE_ESP32-C3_SUPERMINI
+
+
+0
+16
+16
+liebler_MODULES
 MODULE_LAN8720
 Through hole angled pin header, 2x07, 2.54mm pitch, 6mm pin length, double rows
 Through hole angled pin header THT 2x07 2.54mm double row
@@ -106770,6 +106798,13 @@ TPA3110_module
 0
 11
 11
+liebler_MODULES
+Untitled
+
+
+0
+0
+0
 liebler_MODULES
 W5500-mini
 
