@@ -302,7 +302,7 @@ namespace Klli.Sensact.Config
             AddBlindApplication(SNSCT_L0_TECH_HS_1, ApplicationId.BLIND_L1_WORK_J2, "Rollo Straße", BB + I2C + 24, BB + I2C + 34, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_LONG_BLIND_UP_sec, DEFAULT_LONG_BLIND_DOWN_sec);//K17 18
             #endregion
             #region L2
-            //BATH
+            //L2.BATH
             AddRotaryEncoder(SNSCT_L2_BATH_UP, ApplicationId.ROTAR_L2_BATH_B11, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___L2_BATH_S);
             AddRotaryEncoder(SNSCT_L2_BATH_UP, ApplicationId.ROTAR_L2_BATH_B12, RotaryEncoder.ROTARYENCODER_2, ApplicationId.RGBW__L2_BATH_W);
             //Start "be careful". These buttons are connected to central sensact
@@ -346,7 +346,7 @@ namespace Klli.Sensact.Config
             AddPWMApplication(SNSCT_L2_BATH_UP, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5 }, T_2h__ms);
             //End be careful
 
-            //L2.KID1 (TODO Klara oder Simon???)
+            //L2.KID1 (Sollte nach der Bennenung im Grundriss Klaras Zimmer sein)
             AddToggleButton(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_KID1_B11, BB + I2C + 26, ApplicationId.POWIT_L2_KID1_C1);
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_KID1_B12, BB + I2C + 25, BB + I2C + 24, ApplicationId.BLIND_L2_KID1_J1);
             AddToggleButton(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_KID1_B21, BB + I2C + 28, ApplicationId.POWIT_L2_KID1_C1);
@@ -355,7 +355,7 @@ namespace Klli.Sensact.Config
             AddPowIt(SNSCT_L3_TECH_HS_1, ApplicationId.POWIT_L2_KID1_C2, "Deckenleuchte KLA na?", RB + I2C + 40, T_12h__ms);
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_KID1_J1, "Rollo KLA?", RB + I2C + 19, RB + I2C + 28, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
   
-            //L2.KID2 (TODO Klara oder Simon???)
+            //L2.KID2 (Sollte nach der Bennenung im Grundriss Simons Zimmer sein)
             AddToggleButton(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_KID2_B11, BB + I2C + 31, ApplicationId.POWIT_L2_KID2_C1);
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_KID2_B12, BB + I2C + 30, BB + I2C + 29, ApplicationId.BLIND_L2_KID2_J1);
             AddPowIt(SNSCT_L3_TECH_HS_1, ApplicationId.POWIT_L2_KID2_C1, "Deckenleuchte SIM?", RB + I2C + 41, T_12h__ms);
