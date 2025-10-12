@@ -10688,7 +10688,7 @@
 			(net 12 "+3V3")
 			(pinfunction "VO")
 			(pintype "power_out")
-			(uuid "b2c330ec-e7d3-4d3e-b8ba-baa446127fcd")
+			(uuid "8e644a04-8f60-4f1a-8ec1-4c19a4aa8e52")
 		)
 		(pad "3" smd roundrect
 			(at -3.35 2.3 180)
