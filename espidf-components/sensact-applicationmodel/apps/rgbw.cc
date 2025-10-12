@@ -64,6 +64,11 @@ namespace sensact::apps
 		showColorOfRGBW(ctx, Color{0, 0, 0, 0});
 	}
 
+	void cRgbw::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
+	{
+		switchOff(ctx);
+	}
+
 	void cRgbw::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
 	{
 		

@@ -83,14 +83,13 @@ extern "C" void app_main(void)
 
     //Configure USB
     ESP_LOGI(TAG, "USB initialization");
-
     tinyusb_config_t tusb_cfg = {};
     tusb_cfg.device_descriptor = nullptr;
     tusb_cfg.string_descriptor = nullptr;
     tusb_cfg.external_phy = false; // In the most cases you need to use a `false` value,
     tusb_cfg.configuration_descriptor = nullptr;
     tusb_cfg.self_powered=true;
-    tusb_cfg.vbus_monitor_io=sensact::hal::SensactOutdoor::P::VBUS_SENSE; 
+    tusb_cfg.vbus_monitor_io=sensact::hal::usb::VBUS_SENSE; 
     ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
 
     tinyusb_config_cdcacm_t acm_cfg = {}; // the configuration uses default values

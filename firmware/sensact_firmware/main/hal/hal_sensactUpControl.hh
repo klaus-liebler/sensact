@@ -81,7 +81,7 @@ namespace sensact::hal::SensactUpControl
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_INTERNAL_SCL, P::I2C_INTERNAL_SDA));
+            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_INTERNAL_SCL, P::I2C_INTERNAL_SDA, ESP_INTR_FLAG_SHARED));
             this->buzzer = new BUZZER::M();
             this->buzzer->Begin(P::BUZZER);
             this->led = new led::Animator(P::LED1);

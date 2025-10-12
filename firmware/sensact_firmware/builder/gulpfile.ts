@@ -10,7 +10,7 @@ import { flatbuffers_generate_c, flatbuffers_generate_ts } from "@klaus-liebler/
 import {Context, ContextConfig} from "@klaus-liebler/espidf-vite-secure-build-tools/context"
 import {cleanNpmExcept_PackageJson_node_modules } from "@klaus-liebler/espidf-vite-secure-build-tools/utils";
 import * as vite_helper from "@klaus-liebler/espidf-vite-secure-build-tools/vite_helper";
-import { MyFavouriteDateTimeFormat } from "@klaus-liebler/commons";
+import { eEncryptionMode, MyFavouriteDateTimeFormat } from "@klaus-liebler/commons";
 import * as cfg from "@klaus-liebler/espidf-vite-secure-build-tools/key_value_file_helper"
 import * as sensact from "./sensact_code_generator";
 
@@ -18,58 +18,84 @@ import * as sensact from "./sensact_code_generator";
 const OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS=false;
 
 //Default Board Type
-export const DEFAULT_BOARD_NAME="SENSACT_OUTDOOR"
+export const DEFAULT_BOARD_NAME="SENSACT_UP_HS"
 export const DEFAULT_BOARD_VERSION=0
+
+//Sensact specific config
+const APPLICATION_NAME = "sensact"
+const APPLICATION_VERSION = "1.0"
+
+//Security
+export const DEFAULT_ENCRYPTION_MODE = eEncryptionMode.NON_ENCRYPTED as eEncryptionMode
+export const FLASH_ENCYRPTION_STRENGTH=idf.EncryptionStrength.AES256
 
 //Paths
 export const IDF_PATH=globalThis.process.env.IDF_PATH as string;
 export const USERPROFILE =globalThis.process.env.USERPROFILE as string;
-
-//Config
 const IDF_PROJECT_ROOT = "C:\\repos\\sensact\\firmware\\sensact_firmware"
 const IDF_COMPONENT_WEBMANAGER_ROOT = "C:\\repos\\espidf-component-webmanager"
 const GENERATED_ROOT = "c:\\repos\\generated"
 const SENSACT_COMPONENT_GENERATED_PATH = "C:\\repos\\generated\\sensact_model"
-const BOARDS_BASE_DIR= path.join(USERPROFILE, "netcase/esp32_boards")
-const CERTIFICATES = path.join(USERPROFILE, "netcase/certificates")
-const APPLICATION_NAME = "sensact"
-const APPLICATION_VERSION = "1.0"
+//hier werden alle board-spezifischen Daten abgelegt, z.B. Zertifikate, Sounds, Usersettings
+const BOARDS_BASE_DIR= path.join(USERPROFILE, "OneDrive - HSOS\\esp32_boards")
+//hier wird der RootCA und die Testzertifikate abgelegt
+const CERTIFICATES = path.join(USERPROFILE, "OneDrive - HSOS\\certificates")
 
-const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS_BASE_DIR, DEFAULT_BOARD_NAME, DEFAULT_BOARD_VERSION);
+
+
+const contextConfig = new ContextConfig(GENERATED_ROOT, IDF_PROJECT_ROOT, BOARDS_BASE_DIR, DEFAULT_BOARD_NAME, DEFAULT_BOARD_VERSION, DEFAULT_ENCRYPTION_MODE);
 
 export const buildWebForCurrent = gulp.series(
   createFiles,
   buildAndCompressWebProject,
 )
 
-
 export const buildForCurrent = gulp.series(
-  buildWebForCurrent,
+  createFiles,
+  buildAndCompressWebProject,
   buildFirmware,
 )
 
 export default gulp.series(
   addOrUpdateConnectedBoard,
   buildForCurrent,
-  flashFirmware
+  encryptFirmwareIfNecessary,
+  flashFirmware,
 )
 
-export async function addOrUpdateConnectedBoard(cb: gulp.TaskFunctionCallback){
+export async function addOrUpdateConnectedBoard(_cb: gulp.TaskFunctionCallback){
   return Context.get(contextConfig, true);
 }
 
-async function buildFirmware(cb: gulp.TaskFunctionCallback) {
+export async function info(cb: gulp.TaskFunctionCallback){
+  await Context.printInfo(contextConfig);
+  return cb();
+}
+
+async function buildFirmware(_cb: gulp.TaskFunctionCallback) {
   const c=await Context.get(contextConfig)
   return idf.buildFirmware(c);
 }
 
+async function encryptFirmwareIfNecessary(cb: gulp.TaskFunctionCallback) {
+  const c=await Context.get(contextConfig);
+  if(c.b.flash_encryption_key_burned_and_activated || c.c.defaultEncryptionMode===eEncryptionMode.ENCRYPTED) {
+    return idf.encryptPartitions_Bootloader_App_PartitionTable_OtaData(c);
+  }else{
+    return cb();
+  }
+} 
+
 async function flashFirmware(cb: gulp.TaskFunctionCallback){
-  return idf.flashFirmware(await Context.get(contextConfig), OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS, false);
+  const c = await Context.get(contextConfig)
+  if(c.b.flash_encryption_key_burned_and_activated || c.c.defaultEncryptionMode===eEncryptionMode.ENCRYPTED){
+    await idf.burnFlashEncryptionKeyAndActivateEncryptedFlash(c, FLASH_ENCYRPTION_STRENGTH)
+    return idf.flashEncryptedFirmware(c, OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS, true, false);
+  }else{
+    return idf.flashFirmware(c, OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS, true);
+  }
 }
 
-export async function dimmingCurve(cb: gulp.TaskFunctionCallback) {
-
-}
 
 export async function createFiles(cb: gulp.TaskFunctionCallback) {
   const c= await Context.get(contextConfig)
@@ -92,6 +118,9 @@ export async function createFiles(cb: gulp.TaskFunctionCallback) {
     c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_PRVTKEY_FILE, esp32Cert.privateKey);
     c.p.writeBoardSpecificFileCreateDirLazy(P.CERTIFICATES_SUBDIR, P.ESP32_CERT_PEM_CRT_FILE, esp32Cert.certificate);
     }
+  
+  //Flash Encryption Key
+  idf.createRandomFlashEncryptionKeyLazily(await Context.get(contextConfig), FLASH_ENCYRPTION_STRENGTH);
 
   //Config files
   const defs = await createObjectWithDefines(c);
@@ -102,17 +131,17 @@ export async function createFiles(cb: gulp.TaskFunctionCallback) {
 }
 
 async function createObjectWithDefines(c:Context) {
-  var defines: any = {};
+  var defines: Record<string, string|Array<string>|number> = {};
   
   var s= new sensact.Sensact(c, SENSACT_COMPONENT_GENERATED_PATH)
   defines=s.AddSensactNodeAndModelDescriptorToDefines(defines);
   
   for (const [k, v] of Object.entries(c.b.board_settings?.web ?? {})) {
-    defines[k] = v;
+    defines[k] = JSON.stringify(v);;
   }
   
   for (const [k, v] of Object.entries(c.b.board_settings?.firmware ?? {})) {
-    defines[k] = v;
+    defines[k] = JSON.stringify(v);;
   }
 
   const now = new Date();
@@ -134,7 +163,8 @@ async function createObjectWithDefines(c:Context) {
 
 export async function buildAndCompressWebProject(cb: gulp.TaskFunctionCallback) {
   const c = await Context.get(contextConfig);
-  return vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), c.p.GENERATED_WEB);
+  await vite_helper.buildAndCompressWebProject(path.join(c.c.idfProjectDirectory, "web"), c.p.GENERATED_WEB);
+  cb()
 }
 
 

@@ -94,8 +94,8 @@ namespace Klli.Sensact.Config
             Node SNSCT_L1_LVNG_UP = new SensactUp02((ushort)ApplicationId.SNSCT_L1_LVNG_UP, ApplicationId.SNSCT_L1_LVNG_UP.ToString());
             model.Nodes.Add(SNSCT_L1_LVNG_UP);
 
-            Node SNSCT_L2_BATH_UP = new SensactUp02((ushort)ApplicationId.SNSCT_L2_BATH_UP, ApplicationId.SNSCT_L2_BATH_UP.ToString());
-            model.Nodes.Add(SNSCT_L2_BATH_UP);
+            Node SNSCT_L3_WORK_HS = new SensactUp02((ushort)ApplicationId.SNSCT_L3_WORK_HS, ApplicationId.SNSCT_L3_WORK_HS.ToString());
+            model.Nodes.Add(SNSCT_L3_WORK_HS);
 
             Node NODE_SIDEDOOR = new SensactUpControl((ushort)Model.ApplicationId.SNSCT_NODE_SIDEDOOR, Model.ApplicationId.SNSCT_NODE_SIDEDOOR.ToString());
             model.Nodes.Add(NODE_SIDEDOOR);
@@ -211,7 +211,7 @@ namespace Klli.Sensact.Config
             AddPWMApplication(SNSCT_L0_TECH_HS_1, ApplicationId.PWM___L1_CORR_W1, "Wandlicht", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 4 }, T_2h__ms);
 
             //L1.KTCH
-            AddRotaryEncoder(SNSCT_L1_KTCH_UP, ApplicationId.ROTAR_L1_KTCH_B21, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___L1_KTCH_S1);
+            AddRotaryEncoder(SNSCT_L1_KTCH_UP, ApplicationId.ROTAR_L1_KTCH_B21, RotaryEncoder.ROTENC0, ApplicationId.PWM___L1_KTCH_S1);
             AddToggleButton(SNSCT_L1_KTCH_UP, ApplicationId.PUSHB_L1_KTCH_B22, SensactUp02.Pin_xROTD, ApplicationId.POWIT_L1_KTCH_C1);
             AddOneDimButton(SNSCT_L1_KTCH_UP, ApplicationId.PUSHB_L1_KTCH_B23, SensactUp02.IO1, ApplicationId.PWM___L1_KTCH_W1);
             AddOneDimButton(SNSCT_L1_KTCH_UP, ApplicationId.PUSHB_L1_KTCH_B24, SensactUp02.IO2, ApplicationId.PWM___L1_KTCH_S2);
@@ -238,7 +238,7 @@ namespace Klli.Sensact.Config
             AddBlindButtons(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B31, SensactUp02.IO1, SensactUp02.IO2, ApplicationId.BLIND_L1_LVNG_J1);
             AddBlindButtons(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B33, SensactUp02.IO3, SensactUp02.IO4, ApplicationId.BLIND_L1_LVNG_J2);
             AddBlindButtons(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B35, SensactUp02.IO5, SensactUp02.IO6, ApplicationId.BLIND_L1_LVNG_J3);
-            AddRotaryEncoder(SNSCT_L1_LVNG_UP, ApplicationId.ROTAR_L1_LVNG_B41, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___L1_LVNG_S);
+            AddRotaryEncoder(SNSCT_L1_LVNG_UP, ApplicationId.ROTAR_L1_LVNG_B41, RotaryEncoder.ROTENC0, ApplicationId.PWM___L1_LVNG_S);
             AddToggleButton(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B42,SensactUp02.Pin_xROTD, ApplicationId.POWIT_L1_LVNG_C1);
             AddOneDimButton(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B43, SensactUp02.IO7, ApplicationId.PWM___L1_LVNG_W1);
             AddOneDimButton(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B44, SensactUp02.IO8, ApplicationId.PWM___L1_LVNG_C2);
@@ -303,13 +303,13 @@ namespace Klli.Sensact.Config
             #endregion
             #region L2
             //L2.BATH
-            AddRotaryEncoder(SNSCT_L2_BATH_UP, ApplicationId.ROTAR_L2_BATH_B11, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___L2_BATH_S);
-            AddRotaryEncoder(SNSCT_L2_BATH_UP, ApplicationId.ROTAR_L2_BATH_B12, RotaryEncoder.ROTARYENCODER_2, ApplicationId.RGBW__L2_BATH_W);
+            AddRotaryEncoder(SNSCT_L3_WORK_HS, ApplicationId.ROTAR_L2_BATH_B11, RotaryEncoder.ROTENC0, ApplicationId.PWM___L2_BATH_S);
+            AddRotaryEncoder(SNSCT_L3_WORK_HS, ApplicationId.ROTAR_L2_BATH_B12, RotaryEncoder.ROTENC1, ApplicationId.RGBW__L2_BATH_W);
             //Start "be careful". These buttons are connected to central sensact
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_BATH_B13, BB + I2C + 1,  BB + I2C + 0, ApplicationId.BLIND_L2_BATH_J1);//4 2
             //End "be careful"
-            AddPWMApplication(SNSCT_L2_BATH_UP, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 });
-            SNSCT_L2_BATH_UP.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), "Dekolicht", /*Nach L2.Corr!*/BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8 , BUS0 + I2C + 9, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 });
+            SNSCT_L3_WORK_HS.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), "Dekolicht", /*Nach L2.Corr!*/BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8 , BUS0 + I2C + 9, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_BATH_J1, "Rollo", RB + I2C + 16, RB + I2C + 25, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
 
 
@@ -343,7 +343,7 @@ namespace Klli.Sensact.Config
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_CORR_B42, BB + I2C + 22, BB + I2C + 21, ApplicationId.BLIND_L2_CORR_J1);
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_CORR_J1, "Rollo", RB + I2C + 18, RB + I2C + 27, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
             //Start be careful: The LED Spots are controlled by the bath-sensactUP
-            AddPWMApplication(SNSCT_L2_BATH_UP, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5 }, T_2h__ms);
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5 }, T_2h__ms);
             //End be careful
 
             //L2.KID1 (Sollte nach der Bennenung im Grundriss Klaras Zimmer sein)

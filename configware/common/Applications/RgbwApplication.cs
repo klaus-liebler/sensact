@@ -50,7 +50,7 @@ namespace Klli.Sensact.Model.Common.Applications
         public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("sensact::apps::cRgbw {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, eApplicationID::{6})", ApplicationName, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, AutoOffIntervalMsecs, m.GetNameFromId(IdOfStandbyController));
+            sb.AppendFormat("sensact::apps::cRgbw {0}(eApplicationID::{0}, {1}, {2}, {3}, {4}, {5}, eApplicationID::{6}, WELL_KNOWN_COLORS)", ApplicationName, OutputRessourceR, OutputRessourceG, OutputRessourceB, OutputRessourceW, AutoOffIntervalMsecs, m.GetNameFromId(IdOfStandbyController));
             return sb.ToString();
         }
 

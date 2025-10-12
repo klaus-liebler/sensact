@@ -13,7 +13,7 @@ namespace Klli.Sensact.Model
 
         SNSCT_L1_LVNG_UP,
         SNSCT_L1_KTCH_UP,
-        SNSCT_L2_BATH_UP,
+        SNSCT_L3_WORK_HS,
 
         //Keller
         PUSHB_L0_CORR_B11, //STRS.W1. Das ist immer der rechte Taster

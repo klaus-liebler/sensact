@@ -17,7 +17,7 @@
 namespace sensact::apps
 {
 
-
+#include <wellKnownColors.inc>
 #include <nodeMasterApplicationId.inc>
 #include <applicationInitializers.inc>
 

@@ -10,7 +10,8 @@
     "wc": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp buildWebForCurrent",    
     "c": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp buildForCurrent",
     "u": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp addOrUpdateConnectedBoard",
-    "f": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp createFiles"
+    "f": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp createFiles",
+    "i": "node --trace-warnings --import tsx node_modules/gulp/bin/gulp info"
   },
   "author": "",
   "license": "ISC",

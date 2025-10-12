@@ -26,6 +26,13 @@ export class Sensact {
   }
 
   private  templateHere(templatePath:string, incPath:string, destPath:string) {
+    if (!fs.existsSync(templatePath)) {
+      throw Error(`No Template Base file found for mac 0x${mac_6char(this.c.b.mac)} at ${templatePath}.`);
+    }
+
+     if (!fs.existsSync(incPath)) {
+      throw Error(`No Template Include file found for mac 0x${mac_6char(this.c.b.mac)} at ${incPath}.`);
+    }
     var content = fs.readFileSync(templatePath).toString()
     writeFileCreateDirLazy(
       destPath,

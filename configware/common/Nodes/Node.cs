@@ -56,8 +56,8 @@ namespace Klli.Sensact.Model.Common.Nodes
 
     public enum RotaryEncoder
     {
-        ROTARYENCODER_1,
-        ROTARYENCODER_2,
+        ROTENC0,
+        ROTENC1,
     }
 
     public class RessourceMapEntry

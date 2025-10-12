@@ -81,7 +81,7 @@ namespace sensact::hal::SensactUp3
             return ErrorCode::OK;
         }
 
-        iI2CPort* GetI2CPort(I2CPortIndex portIndex) override{
+        iI2CPort* GetI2CPort(eI2CPortIndex portIndex) override{
             return i2c_bus[0];
         }
         

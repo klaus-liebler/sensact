@@ -25,12 +25,6 @@ namespace sensact::hal
         OUTPUT_PUSH_PULL = 3,
     };
 
-    enum class I2CPortIndex : uint8_t
-    {
-        I2C_0=0,
-        I2C_1=1,
-    };
-
     class iHAL
     {
     public:
@@ -41,7 +35,7 @@ namespace sensact::hal
         virtual ErrorCode AfterAppLoop() = 0;
         virtual ErrorCode BeforeAppLoop() = 0;
         virtual tms_t GetMillisS64() = 0;
-        virtual iI2CPort* GetI2CPort(I2CPortIndex portIndex)=0;
+        virtual iI2CPort* GetI2CPort(uint8_t portIndex)=0;
         virtual ErrorCode SetU16Output(uint16_t id, uint16_t value) = 0;
         ErrorCode SetU16Output(uint16_t id, bool state)
         {

@@ -1,0 +1,8 @@
+{
+    "idf.espIdfPathWin": "C:\\Users\\mail\\esp\\v5.4\\esp-idf",
+    "idf.toolsPathWin": "C:\\Users\\mail\\.espressif",
+    "idf.pythonInstallPath": "C:\\Users\\mail\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
+    "files.associations": {
+        "xiosbase": "cpp"
+    }
+}
