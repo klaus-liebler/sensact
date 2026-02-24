@@ -4,6 +4,7 @@
 #include <i2c.hh>
 #include <buzzer.hh>
 #include <led_animator.hh>
+#include <vector>
 
 /*
 Die HAL leifert einen Low-Level-Zugriff auf
@@ -43,6 +44,15 @@ namespace sensact::hal
             return ErrorCode::OK;
         }
         virtual ErrorCode GetU16Input(uint16_t id, u16 &value) = 0;
+
+        virtual ErrorCode AppendValidGpioInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges){
+            return ErrorCode::OK;
+        }
+
+        virtual ErrorCode AppendValidGpioOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges){
+            return ErrorCode::OK;
+        }
+		
         virtual ErrorCode StageRGBLed(uint8_t index, CRGB color) = 0;
         virtual ErrorCode StageUnColorizeAllRGBLed() = 0;
         virtual ErrorCode CommitRGBLed() = 0;

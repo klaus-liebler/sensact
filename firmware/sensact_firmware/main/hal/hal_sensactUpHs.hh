@@ -5,11 +5,11 @@
 #include <audioplayer.hh>
 #include <codec_manager.hh>
 #include <max98357.hh>
+#include <rotenc.hh>
 
 #include <driver/spi_master.h>
 #include <driver/ledc.h>
 #include <esp_log.h>
-#include <adc_buttons.hh>
 #include <messagecodes.hh>
 #include <logger.hh>
 #define TAG "HAL"
@@ -73,16 +73,24 @@ namespace sensact::hal::SensactUpHs
         constexpr i2s_port_t AMP_I2S_PORT{I2S_NUM_0};
     }
 
+    namespace INPUTS{
+        constexpr u16 GPIO_MAX{255};
+        constexpr u16 ROTARY1{256};
+        constexpr u16 ROTARY2{257};
+        constexpr u16 CHIP_TEMPERATURE{258};
+    }
+
     constexpr std::array<gpio_num_t, 3U> INTERRUPT_LINES{P::I2C_EXT_INT0, P::I2C_EXT_INT1, P::I2C_EXT_INT2,};
 
     class cHAL : public sensact::hal::cESP32
     {
     protected:
         MAX98357::M *max98357;
-        
         AudioPlayer::Player *mp3player;
-
         iI2CPort* i2c_bus[2];
+        cRotaryEncoder* rotenc[2]{nullptr};
+        uint16_t rotenc_value_with_overflow[2]{0};
+        bool rotenc_button[2]{false};
         const char* hostname;
         
     public:
@@ -90,6 +98,7 @@ namespace sensact::hal::SensactUpHs
             temp_handle=tempHandle;
             i2c_bus[(uint8_t)R::I2C_EXT_PORT] = new iI2CPort_Impl(R::I2C_EXT_PORT);
             i2c_bus[(uint8_t)R::I2C_INT_PORT] = new iI2CPort_Impl(R::I2C_INT_PORT);
+
         }
 
         ErrorCode Setup() override
@@ -103,7 +112,14 @@ namespace sensact::hal::SensactUpHs
     
             //I2C::Discover(I2C_EXTERNAL_IDF);
             this->SetupCAN(P::CAN_TX, P::CAN_RX);
-        
+            
+            rotenc[0] = new cRotaryEncoder(P::ROT1_A, P::ROT1_B, P::ROT1_S);
+            rotenc[0]->Init();
+            rotenc[0]->Start();
+            rotenc[1] = new cRotaryEncoder(P::ROT2_A, P::ROT2_B, P::ROT2_S);
+            rotenc[1]->Init();
+            rotenc[1]->Start();
+
             return ErrorCode::OK;
         }
 
@@ -123,6 +139,14 @@ namespace sensact::hal::SensactUpHs
 
         ErrorCode BeforeAppLoop() override
         {
+            int16_t temp;
+            rotenc[0]->GetValue(temp, this->rotenc_button[0], true);
+            temp/=4;
+            this->rotenc_value_with_overflow[0]+=temp;
+            
+            rotenc[1]->GetValue(temp, this->rotenc_button[1], true);
+            temp/=4;
+            this->rotenc_value_with_overflow[1]+=temp;
             return ErrorCode::OK;
         }
 
@@ -143,9 +167,9 @@ namespace sensact::hal::SensactUpHs
 
         ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
         {
-            value=0;
-            isPressed=false;
-            return ErrorCode::FUNCTION_NOT_AVAILABLE;
+            value=this->rotenc_value_with_overflow[static_cast<size_t>(re)];
+            isPressed=this->rotenc_button[static_cast<size_t>(re)];
+            return ErrorCode::OK;
         }
 
         ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
@@ -171,6 +195,58 @@ namespace sensact::hal::SensactUpHs
         ErrorCode StopSound() override
         {
             mp3player->Stop();
+            return ErrorCode::OK;
+        }
+
+        ErrorCode AppendValidGpioInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{
+            twoMostSignificantBits&=0xC000; //only two MSB are relevant
+            ranges.push_back(sensact::Range(twoMostSignificantBits+sensact::magic::INPUT0,twoMostSignificantBits+sensact::magic::INPUT1+1,"CONSTANTS"));
+            ranges.push_back(sensact::Range(twoMostSignificantBits+INPUTS::ROTARY1,twoMostSignificantBits+INPUTS::ROTARY2+1,"ROTENC"));
+            ranges.push_back(sensact::Range(twoMostSignificantBits+INPUTS::CHIP_TEMPERATURE,twoMostSignificantBits+INPUTS::CHIP_TEMPERATURE+1,"CHIP_TEMPERATURE"));
+            return ErrorCode::OK;
+        }
+
+        ErrorCode GetU16Input(InOutId id, uint16_t &inputState) override
+		{
+			if (id == sensact::magic::INPUT0)
+			{
+				inputState = 0;
+				return ErrorCode::OK;
+			}
+			else if (id == sensact::magic::INPUT1)
+			{
+				inputState = UINT16_MAX;
+				return ErrorCode::OK;
+			}
+			else if(id == INPUTS::ROTARY1){
+                inputState = static_cast<uint16_t>(this->rotenc_value_with_overflow[0]);
+                return ErrorCode::OK;
+            }
+            else if(id == INPUTS::ROTARY2){
+                inputState = static_cast<uint16_t>(this->rotenc_value_with_overflow[1]);
+                return ErrorCode::OK;
+            }
+            else if(id == INPUTS::CHIP_TEMPERATURE){
+                if(temp_handle==nullptr){
+                    return ErrorCode::GENERIC_ERROR;
+                }
+                float temperature_celcius=0.0f;
+                esp_err_t err = temperature_sensor_get_celsius(temp_handle, &temperature_celcius);
+                if(err!=ESP_OK){
+                    return ErrorCode::GENERIC_ERROR;
+                }
+                inputState = static_cast<uint16_t>(temperature_celcius*100); //z.B. 2534 = 25.34°C
+                return ErrorCode::OK;
+            }
+            if (id >= GPIO_NUM_MAX)
+			{
+				return ErrorCode::PIN_NOT_AVAILABLE;
+			}
+
+			return gpio_get_level((gpio_num_t)id) == ESP_OK ? ErrorCode::OK : ErrorCode::GENERIC_ERROR;
+		}
+
+        ErrorCode AppendValidGpioOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{
             return ErrorCode::OK;
         }
     };

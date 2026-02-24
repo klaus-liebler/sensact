@@ -3,6 +3,12 @@
 #include <sensact_commons.hh>
 
 namespace sensact{
+    struct Range {
+        u16 start;
+        u16 end;
+        std::string name;
+    };
+
     class iHostContext{
     public:
         virtual tms_t Now()=0;

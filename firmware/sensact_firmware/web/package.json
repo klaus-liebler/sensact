@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "wss": "ts-node ../testserver/index.ts",
+    "dev": "node --import tsx/esm node_modules/vite/bin/vite.js --host",
+    "wss": "npx ts-node ../testserver/index.ts",
     "build": "tsc && vite build",
+    "build:analyze": "tsc && vite build --mode analyze",
     "preview": "vite preview",
     "it": "concurrently \"npm run wss\" \"npm run dev\""
   },
@@ -15,17 +16,25 @@
   "author": "Klaus Liebler, HS Osnabrück",
   "license": "ISC",
   "dependencies": {
+    "@generated/flatbuffers_ts": "file:../../../../generated/flatbuffers_ts",
+    "@generated/runtimeconfig_ts": "file:../../../../generated/runtimeconfig_ts",
+    "@generated/sensact_appsbuilder": "file:../../../../generated/sensact_appsbuilder",
+    "@klaus-liebler/sensact-base": "file:../../../../npm-packages/@klaus-liebler/sensact-base",
     "@klaus-liebler/vite-single-file": "file:../../../../npm-packages/@klaus-liebler/vite-single-file",
     "@klaus-liebler/web-components": "file:../../../../npm-packages/@klaus-liebler/web-components",
     "@klaus-liebler/web-components-sensact": "file:../../../../npm-packages/@klaus-liebler/web-components-sensact",
-    "@klaus-liebler/sensact-base": "file:../../../../npm-packages/@klaus-liebler/sensact-base",
-    "@generated/sensact_appsbuilder": "file:../../../../generated/sensact_appsbuilder",
-    "@generated/runtimeconfig_ts": "file:../../../../generated/runtimeconfig_ts",
     "@types/node": "^22.10.9",
     "esbuild-minify-templates": "^0.11.0",
     "flatbuffers": "25.1.24",
     "lit-html": "^3.2.1",
     "vite": "^6.0.11",
     "vite-plugin-svgo": "^1.6.2"
+  },
+  "devDependencies": {
+    "@klaus-liebler/websocket_file_testserver": "file:../../../../npm-packages/@klaus-liebler/websocket_file_testserver",
+    "@types/ws": "^8.18.1",
+    "rollup-plugin-visualizer": "^7.0.0",
+    "tsx": "^4.20.0",
+    "ws": "^8.19.0"
   }
 }

@@ -5,12 +5,16 @@ import { WebmanagerHandler } from "@klaus-liebler/websocket_file_testserver/webm
 import { JournalHandler } from "@klaus-liebler/websocket_file_testserver/journal"
 import { FingerprintHandler } from "@klaus-liebler/websocket_file_testserver/fingerprint"
 import { SensactHandler } from "./sensact"
+import { CanmonitorHandler } from "./canmonitor"
+import { NodemasterHandler } from "./nodemaster"
 import path from "node:path"
 
-utils.StartServers(path.join(process.env.USERPROFILE, "netcase", "certificates"), [
+utils.StartServers(path.join(process.env.USERPROFILE, "OneDrive - HSOS", "certificates"), [
     new SystemHandler(),
     new WebmanagerHandler(),
     new JournalHandler(),
     new SensactHandler(),
     new FingerprintHandler(),
+    new CanmonitorHandler(),
+    new NodemasterHandler()
 ])

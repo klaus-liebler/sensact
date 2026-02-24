@@ -1,0 +1,67 @@
+namespace nodemaster;
+
+enum Namespace:uint32{
+    Value=21
+}
+
+table Range {
+    start:uint16;
+    end:uint16;
+    name:string;
+}
+
+table RequestOutputs {
+}
+
+table RequestInputs {
+}
+
+table RequestSetOutput {
+    index:uint16;
+    value:uint16;
+}
+
+table RequestGetInput {
+    index:uint16;
+}
+
+table ResponseOutputs {
+    ranges:[Range];
+}
+
+table ResponseInputs {
+    ranges:[Range];
+}
+
+table ResponseGetInput {
+    index:uint16;
+    value:uint16;
+}
+
+table ResponseSetOutput {
+    success:bool;
+    index:uint16;
+    value:uint16;
+}
+
+union Requests{
+    RequestOutputs,   
+    RequestInputs,
+    RequestSetOutput,
+    RequestGetInput,
+}
+
+union Responses{
+    ResponseOutputs,   
+    ResponseInputs,
+    ResponseSetOutput,
+    ResponseGetInput,
+}
+
+table RequestWrapper{
+    request:Requests;
+}
+
+table ResponseWrapper{
+    response:Responses;
+}

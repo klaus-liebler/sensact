@@ -119,6 +119,7 @@ extern "C" void app_main(void)
     assert(halobj);
 
     cNodemaster* nodemaster = new cNodemaster(halobj, &busmasters, canMBP);
+    plugins.push_back(nodemaster);
     std::vector<sensact::iHost *> hosts;
     
     sensact::cApplicationHost* applicationHost{nullptr};

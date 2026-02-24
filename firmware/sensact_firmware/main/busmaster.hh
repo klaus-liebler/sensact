@@ -46,6 +46,9 @@ namespace sensact
 		virtual ErrorCode SetOutput(u16 output, u16 value) = 0;
 		virtual ErrorCode CommitInputs() = 0;
 		virtual ErrorCode CommitOutputs() = 0;
+		virtual ~AbstractBusmaster() = default;
+		virtual ErrorCode AppendValidInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)=0;
+		virtual ErrorCode AppendValidOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)=0;
 	};
 
 	class AbstractSubBusmaster
@@ -182,6 +185,32 @@ namespace sensact
 			return ErrorCode::OK;
 		}
 
+		ErrorCode AppendValidInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)
+		{
+			twoMostSignificantBits&=0xC000; //only two MSB are relevant
+			u16 start=0;
+			u16 end=0;
+			for(size_t i=0;i<this->pca9555_vec.size();i++){
+				start=twoMostSignificantBits + i*16;
+				end=start+16;
+				ranges.push_back({start,end,"pca9555"});
+			}
+			return ErrorCode::OK;
+		}
+
+		ErrorCode AppendValidOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)
+		{
+			twoMostSignificantBits&=0xC000; //only two MSB are relevant
+			u16 start=0;
+			u16 end=0;
+			for(size_t i=0;i<this->pca9685_vec.size();i++){
+				start=twoMostSignificantBits+i*16;
+				end=start+16;
+				ranges.push_back({start,end,"pca9685"});
+			}
+			return ErrorCode::OK;
+		}
+
 
 		ErrorCode GetInput(u16 id, u16 &value) override{
 			id&=0x3FFF; //clear two MSB as they are for selecting one of four busses
@@ -283,6 +312,18 @@ namespace sensact
 		ErrorCode CommitOutputs() override
 		{
 			
+			return ErrorCode::OK;
+		}
+
+		ErrorCode AppendValidInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override
+		{
+			hal->AppendValidGpioOutputRanges(twoMostSignificantBits, ranges);
+			return ErrorCode::OK;
+		}
+
+		ErrorCode AppendValidOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override
+		{
+			hal->AppendValidGpioOutputRanges(twoMostSignificantBits, ranges);
 			return ErrorCode::OK;
 		}
 	};

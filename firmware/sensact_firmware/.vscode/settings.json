@@ -6,5 +6,6 @@
     "*.inc": "cpp",
     "cstdint": "cpp",
     "compare": "cpp"
-  }
+  },
+  "idf.currentSetup": "C:\\Users\\mail\\esp\\v5.5.1\\esp-idf"
 }

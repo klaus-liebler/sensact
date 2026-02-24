@@ -22,6 +22,8 @@
 #include "model_node.hh"
 #include "webmanager_interfaces.hh"
 #include "flatbuffers/flatbuffers.h"
+#include "flatbuffers_cpp/ns21nodemaster_generated.h"
+#include "messagecodes.hh"
 
 
 #include <algorithm>
@@ -55,7 +57,7 @@ namespace sensact
 	led::BlinkPattern SLOW(200, 1000);
 	led::BlinkPattern FAST(200, 200);
 	led::BlinkPattern FLASH(20, 3000);
-	class cNodemaster : public iHostContext
+	class cNodemaster : public iHostContext, public webmanager::iWebmanagerPlugin
 	{
 	private:
 		sensact::hal::iHAL *const hal;
@@ -65,7 +67,6 @@ namespace sensact
 		iHost *currentHost{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
-		webmanager::iWebmanagerCallback * webmanager_callback_i_am_nullptr{nullptr};
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{
@@ -265,7 +266,8 @@ namespace sensact
 			ErrorCode err = hal->TrySendCanMessage(m);
 			if (err != ErrorCode::OK)
 			{
-				LOGE(TAG, "CAN Message couln't be sent out %02X", (int)err);
+				LOGE(TAG, "CAN Message couln't be sent out due to %s", ErrorCodeStr[(int)err]);
+				LOGGER::Journal(messagecodes::C::CAN_ERROR, m.Id);
 			}
 			else
 			{
@@ -315,6 +317,110 @@ namespace sensact
 			}
 			*pointer = '\0';
 			return statusMessageBuffer;
+		}
+
+		void OnBegin(webmanager::iWebmanagerCallback *callback) override
+		{
+			return;
+		}
+		
+        void OnWifiConnect(webmanager::iWebmanagerCallback *callback) override{
+			return;
+		}
+        void OnWifiDisconnect(webmanager::iWebmanagerCallback *callback) override{
+			return;
+		}
+        void OnTimeUpdate(webmanager::iWebmanagerCallback *callback) override{
+			return;
+		}
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf) override{
+			 if (ns != nodemaster::Namespace::Namespace_Value)
+                return webmanager::eMessageReceiverResult::NOT_FOR_ME;
+            
+            auto rw = flatbuffers::GetRoot<nodemaster::RequestWrapper>(buf);
+			if(rw->request_type()==nodemaster::Requests::Requests_RequestInputs){
+				flatbuffers::FlatBufferBuilder b(1024);
+				std::vector<Range> ranges;
+
+				for (size_t busmaster_idx = 0; busmaster_idx < busmasters->size() && busmaster_idx < 4; busmaster_idx++) {
+					auto busmaster = busmasters->at(busmaster_idx);
+					if(busmaster==nullptr) continue;
+					u16 msb_value = (u16)busmaster_idx << 14; // two MSBs select busmaster
+					busmaster->AppendValidInputRanges(msb_value, ranges);
+				}
+				std::vector<flatbuffers::Offset<nodemaster::Range>> fb_ranges;
+				for(auto &r : ranges) {
+					auto name = b.CreateString(r.name);
+					fb_ranges.push_back(nodemaster::CreateRange(b, r.start, r.end, name));
+				}
+				auto response = nodemaster::CreateResponseInputs(b, b.CreateVector(fb_ranges));
+				b.Finish(
+					nodemaster::CreateResponseWrapper(
+						b,
+						nodemaster::Responses::Responses_ResponseInputs,
+						response.Union()
+					)
+				);
+				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}else if(rw->request_type()==nodemaster::Requests::Requests_RequestOutputs){
+				flatbuffers::FlatBufferBuilder b(1024);
+				std::vector<Range> ranges;
+
+				for (size_t busmaster_idx = 0; busmaster_idx < busmasters->size() && busmaster_idx < 4; busmaster_idx++) {
+					auto busmaster = busmasters->at(busmaster_idx);
+					if(busmaster==nullptr) continue;
+					u16 msb_value = (u16)busmaster_idx << 14;
+					busmaster->AppendValidOutputRanges(msb_value, ranges);
+				}
+				std::vector<flatbuffers::Offset<nodemaster::Range>> fb_ranges;
+				for(auto &r : ranges) {
+					auto name = b.CreateString(r.name);
+					fb_ranges.push_back(nodemaster::CreateRange(b, r.start, r.end, name));
+				}
+				auto response = nodemaster::CreateResponseOutputs(b, b.CreateVector(fb_ranges));
+				b.Finish(
+					nodemaster::CreateResponseWrapper(
+						b,
+						nodemaster::Responses::Responses_ResponseOutputs,
+						response.Union()
+					)
+				);
+				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}else if(rw->request_type()==nodemaster::Requests::Requests_RequestSetOutput){
+				auto rso = rw->request_as_RequestSetOutput();
+				u16 index = rso ? rso->index() : 0;
+				u16 value = rso ? rso->value() : 0;
+				u16 busmasterIndex = index >> 14;
+				bool success=false;
+				if (busmasterIndex < busmasters->size() && busmasters->at(busmasterIndex)!=nullptr){
+					u16 localIndex = index & 0x3FFF;
+					success = (busmasters->at(busmasterIndex)->SetOutput(localIndex, value) == ErrorCode::OK);
+				}
+				flatbuffers::FlatBufferBuilder b(128);
+				auto resp = nodemaster::CreateResponseSetOutput(b, success, index, value);
+				b.Finish(nodemaster::CreateResponseWrapper(b, nodemaster::Responses::Responses_ResponseSetOutput, resp.Union()));
+				LOGI(TAG, "SetOutput Request for index %u to value %u was %s", index, value, success?"successful":"unsuccessful");
+				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			} else if(rw->request_type()==nodemaster::Requests::Requests_RequestGetInput){
+				auto rgi = rw->request_as_RequestGetInput();
+				u16 index = rgi ? rgi->index() : 0;
+				u16 value = 0;
+				bool success=false;
+				u16 busmasterIndex = index >> 14;
+				if (busmasterIndex < busmasters->size() && busmasters->at(busmasterIndex)!=nullptr){
+					u16 localIndex = index & 0x3FFF;
+					success = (busmasters->at(busmasterIndex)->GetInput(localIndex, value) == ErrorCode::OK);
+				}
+				flatbuffers::FlatBufferBuilder b(128);
+				auto resp = nodemaster::CreateResponseGetInput(b, index, value);
+				b.Finish(nodemaster::CreateResponseWrapper(b, nodemaster::Responses::Responses_ResponseGetInput, resp.Union()));
+				LOGI(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
+				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
+
+			else{
+                return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
 		}
 	};
 }

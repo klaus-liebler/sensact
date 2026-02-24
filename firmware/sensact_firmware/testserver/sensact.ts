@@ -96,7 +96,7 @@ class BlindTwin extends aStatusProvider {
             }
             this.state[0] = this.blindState; // Update the blind state
             this.state[1] = this.position; // Update the position
-            console.info(`BlindTwin ${ApplicationId[this.appId]} updates state. state[0]=${eCurrentBlindState[this.state[0]]} state[1]=${this.state[1]}`);
+            //console.info(`BlindTwin ${ApplicationId[this.appId]} updates state. state[0]=${eCurrentBlindState[this.state[0]]} state[1]=${this.state[1]}`);
             if(this.sender){
                 let b = new flatbuffers.Builder(1024);
                 NotifyStatus.startNotifyStatus(b);
