@@ -11,21 +11,26 @@ dependencies:
       type: service
     version: 0.1.2
   espressif/esp_tinyusb:
-    component_hash: 9382e15aaacd3f29e2de2360eb266ef1d7e5ebf4fdefbeaebe146e471d341656
+    component_hash: fa0c96d7bdc3fe37383d735e2839a9007200a0b6bc039458d45d004b50146e81
     dependencies:
     - name: idf
       require: private
-      version: ^5.0
+      version: '>=5.0'
     - name: espressif/tinyusb
       registry_url: https://components.espressif.com
       require: public
-      version: '>=0.14.2'
+      version: '>=0.17.0~2'
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.7.2
+    targets:
+    - esp32s2
+    - esp32s3
+    - esp32p4
+    - esp32h4
+    version: 2.1.1
   espressif/mdns:
-    component_hash: 3ec0af5f6bce310512e90f482388d21cc7c0e99668172d2f895356165fc6f7c5
+    component_hash: 1ebe3bd675bb9d1c58f52bc0b609b32f74e572b01c328f9e61282040c775495c
     dependencies:
     - name: idf
       require: private
@@ -33,9 +38,9 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.8.2
+    version: 1.11.0
   espressif/onewire_bus:
-    component_hash: c4c781940d8bd988432b47ac3ee68479c69e14e01fdfba0b61365b233a3ba5d6
+    component_hash: 11729fd9a5de80225177a61e9cd77de91683b8ec300e83710d5327b666dbe884
     dependencies:
     - name: idf
       require: private
@@ -43,9 +48,9 @@ dependencies:
     source:
       registry_url: https://components.espressif.com/
       type: service
-    version: 1.0.2
+    version: 1.0.4
   espressif/tinyusb:
-    component_hash: 10703da2c3cd39a944711ee3d320c6dda54debabf13b4b933a7c90daf102372b
+    component_hash: 5ea9d3b6d6b0734a0a0b3491967aa0e1bece2974132294dbda5dd2839b247bfa
     dependencies:
     - name: idf
       require: private
@@ -57,11 +62,12 @@ dependencies:
     - esp32s2
     - esp32s3
     - esp32p4
-    version: 0.18.0~2
+    - esp32h4
+    version: 0.19.0~2
   idf:
     source:
       type: idf
-    version: 5.5.1
+    version: 6.0.0
   joltwallet/littlefs:
     component_hash: add3caf39a265868f70e55f17e8bfb401f200e45a601dc392832e7ac2c1487bc
     dependencies:
@@ -81,4 +87,4 @@ direct_dependencies:
 - joltwallet/littlefs
 manifest_hash: 096df704ec6878470567d2eb43b2f3597741491bfb32695ea2cca91adc394263
 target: esp32s3
-version: 2.0.0
+version: 3.0.0

@@ -6,14 +6,14 @@
 #include <codec_manager.hh>
 #include <max98357.hh>
 #include <rotenc.hh>
-
+#include <i2c/interfaces.hh>
+#include <i2c.hh>
 #include <driver/spi_master.h>
 #include <driver/ledc.h>
 #include <esp_log.h>
 #include <messagecodes.hh>
 #include <logger.hh>
 #define TAG "HAL"
-
 
 namespace sensact::hal::usb{
     constexpr gpio_num_t VBUS_SENSE{GPIO_NUM_NC};
@@ -51,8 +51,8 @@ namespace sensact::hal::SensactUpHs
         constexpr gpio_num_t PWM5{GPIO_NUM_47};
 
         
-        constexpr gpio_num_t I2C_INT_SDA{GPIO_NUM_37};
-        constexpr gpio_num_t I2C_INT_SCL{GPIO_NUM_38};
+        constexpr gpio_num_t I2C_INT_SDA{GPIO_NUM_38};
+        constexpr gpio_num_t I2C_INT_SCL{GPIO_NUM_37};
 
         
         constexpr gpio_num_t AMP_I2S_DATA{GPIO_NUM_41};
@@ -70,7 +70,7 @@ namespace sensact::hal::SensactUpHs
     namespace R{
         constexpr i2c_port_t I2C_EXT_PORT{I2C_NUM_0};
         constexpr i2c_port_t I2C_INT_PORT{I2C_NUM_1};
-        constexpr i2s_port_t AMP_I2S_PORT{I2S_NUM_0};
+        constexpr int AMP_I2S_PORT{I2S_NUM_0};
     }
 
     namespace INPUTS{
@@ -85,68 +85,76 @@ namespace sensact::hal::SensactUpHs
     class cHAL : public sensact::hal::cESP32
     {
     protected:
-        MAX98357::M *max98357;
-        AudioPlayer::Player *mp3player;
-        iI2CPort* i2c_bus[2];
+        i2c::iI2CBus_Impl i2c_busses[2]{i2c::iI2CBus_Impl{}, i2c::iI2CBus_Impl{}};
         cRotaryEncoder* rotenc[2]{nullptr};
         uint16_t rotenc_value_with_overflow[2]{0};
         bool rotenc_button[2]{false};
+        MAX98357::M *max98357;
+        AudioPlayer::Player *mp3player;
         const char* hostname;
         
     public:
         cHAL(temperature_sensor_handle_t tempHandle){
             temp_handle=tempHandle;
-            i2c_bus[(uint8_t)R::I2C_EXT_PORT] = new iI2CPort_Impl(R::I2C_EXT_PORT);
-            i2c_bus[(uint8_t)R::I2C_INT_PORT] = new iI2CPort_Impl(R::I2C_INT_PORT);
-
         }
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_EXT_PORT, P::I2C_EXT_SCL, P::I2C_EXT_SDA, ESP_INTR_FLAG_SHARED));
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_INT_PORT, P::I2C_INT_SCL, P::I2C_INT_SDA, ESP_INTR_FLAG_SHARED));
-          
+            ESP_LOGI(TAG, "Setup internal I2C bus");
+            i2c_busses[(size_t)R::I2C_INT_PORT].Init(R::I2C_INT_PORT, P::I2C_INT_SCL, P::I2C_INT_SDA);
+            ESP_LOGI(TAG, "Setup external I2C bus");
+            i2c_busses[(size_t)R::I2C_EXT_PORT].Init(R::I2C_EXT_PORT, P::I2C_EXT_SCL, P::I2C_EXT_SDA);
+            
+            ESP_LOGI(TAG, "Setup MAX98357");
             max98357 = new MAX98357::M(GPIO_NUM_NC, P::AMP_POWERDOWN, 127, 44100);
             MESSAGELOG_ON_ERRORCODE(max98357->Init(P::AMP_I2S_LRCLK, P::AMP_I2S_SCLK, P::AMP_I2S_DATA), messagecodes::C::I2S_INIT);
             mp3player = new AudioPlayer::Player(max98357);
     
-            //I2C::Discover(I2C_EXTERNAL_IDF);
+            ESP_LOGI(TAG, "Setup CAN");
             this->SetupCAN(P::CAN_TX, P::CAN_RX);
             
+            ESP_LOGI(TAG, "Setup Rotary Encoders");
             rotenc[0] = new cRotaryEncoder(P::ROT1_A, P::ROT1_B, P::ROT1_S);
-            rotenc[0]->Init();
+            rotenc[0]->Init(cRotaryEncoder::StepMode::Step1);
             rotenc[0]->Start();
             rotenc[1] = new cRotaryEncoder(P::ROT2_A, P::ROT2_B, P::ROT2_S);
-            rotenc[1]->Init();
+            rotenc[1]->Init(cRotaryEncoder::StepMode::Step1);
             rotenc[1]->Start();
 
             return ErrorCode::OK;
         }
-
-        iI2CPort* GetI2CPort(uint8_t portIndex) override{
-            return i2c_bus[portIndex%2];
-        }
-        
         ErrorCode HardwareTest() override
         {
             return ErrorCode::OK;
         }
+
+        i2c::iI2CBus* GetI2CBus(uint8_t portIndex) override{
+            return &i2c_busses[portIndex % 2];
+        }
+
+        ErrorCode BeforeAppLoop() override
+        {
+            int16_t temp;
+            //Wir rufen den aktuellen Wert der Rotary Encoder ab und addieren ihn zum Überlaufzähler.
+            //Die Werte dort bewegen sich zwischen 0 und 65535, bevor sie wieder von vorne beginnen.
+            rotenc[0]->GetValue(temp, this->rotenc_button[0], true);
+            this->rotenc_value_with_overflow[0]+=temp;
+            
+            rotenc[1]->GetValue(temp, this->rotenc_button[1], true);
+            this->rotenc_value_with_overflow[1]+=temp;
+            return ErrorCode::OK;
+        }
+        
         ErrorCode AfterAppLoop() override
         {
             mp3player->Loop();
             return ErrorCode::OK;
         }
 
-        ErrorCode BeforeAppLoop() override
+        ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
         {
-            int16_t temp;
-            rotenc[0]->GetValue(temp, this->rotenc_button[0], true);
-            temp/=4;
-            this->rotenc_value_with_overflow[0]+=temp;
-            
-            rotenc[1]->GetValue(temp, this->rotenc_button[1], true);
-            temp/=4;
-            this->rotenc_value_with_overflow[1]+=temp;
+            value=this->rotenc_value_with_overflow[static_cast<size_t>(re)];
+            isPressed=this->rotenc_button[static_cast<size_t>(re)];
             return ErrorCode::OK;
         }
 
@@ -163,13 +171,6 @@ namespace sensact::hal::SensactUpHs
         ErrorCode CommitRGBLed() override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
-        }
-
-        ErrorCode GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
-        {
-            value=this->rotenc_value_with_overflow[static_cast<size_t>(re)];
-            isPressed=this->rotenc_button[static_cast<size_t>(re)];
-            return ErrorCode::OK;
         }
 
         ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
@@ -203,6 +204,10 @@ namespace sensact::hal::SensactUpHs
             ranges.push_back(sensact::Range(twoMostSignificantBits+sensact::magic::INPUT0,twoMostSignificantBits+sensact::magic::INPUT1+1,"CONSTANTS"));
             ranges.push_back(sensact::Range(twoMostSignificantBits+INPUTS::ROTARY1,twoMostSignificantBits+INPUTS::ROTARY2+1,"ROTENC"));
             ranges.push_back(sensact::Range(twoMostSignificantBits+INPUTS::CHIP_TEMPERATURE,twoMostSignificantBits+INPUTS::CHIP_TEMPERATURE+1,"CHIP_TEMPERATURE"));
+            return ErrorCode::OK;
+        }
+
+        ErrorCode AppendValidGpioOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{
             return ErrorCode::OK;
         }
 
@@ -245,10 +250,6 @@ namespace sensact::hal::SensactUpHs
 
 			return gpio_get_level((gpio_num_t)id) == ESP_OK ? ErrorCode::OK : ErrorCode::GENERIC_ERROR;
 		}
-
-        ErrorCode AppendValidGpioOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{
-            return ErrorCode::OK;
-        }
     };
 }
 #undef TAG

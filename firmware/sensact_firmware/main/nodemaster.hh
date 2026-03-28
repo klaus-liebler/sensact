@@ -10,8 +10,6 @@
 #include <chrono>
 #include <vector>
 
-#include <driver/twai.h>
-
 #include <hal.hh>
 #include <led_animator.hh>
 #include <sensact_logger.hh>
@@ -96,35 +94,25 @@ namespace sensact
 				atLeastHealthWarning=true;
 			}
 			//CAN-Nachrichten
-			twai_status_info_t status_info={};
-			twai_get_status_info(&status_info);
-			if(status_info.tx_error_counter>0){
-				LOGGER::Journal(messagecodes::C::CAN_TX_ERROR_COUNTER, status_info.tx_error_counter);
-				atLeastHealthWarning=true;
-			}
-			if(status_info.rx_error_counter>0){
-				LOGGER::Journal(messagecodes::C::CAN_RX_ERROR_COUNTER, status_info.rx_error_counter);
-				atLeastHealthWarning=true;
-			}
-			if(status_info.tx_failed_count>0){
-				LOGGER::Journal(messagecodes::C::CAN_TX_FAILED_COUNTER, status_info.tx_failed_count);
-				healthError=true;
-			}
-			if(status_info.rx_missed_count>0){
-				LOGGER::Journal(messagecodes::C::CAN_RX_MISSED_COUNTER, status_info.rx_missed_count);
-				healthError=true;
-			}
-			if(status_info.rx_overrun_count>0){
-				LOGGER::Journal(messagecodes::C::CAN_RX_OVERRUN_COUNTER, status_info.rx_overrun_count);
-				healthError=true;
-			}
-			if(status_info.arb_lost_count>0){
-				LOGGER::Journal(messagecodes::C::CAN_ARBITRATION_LOST, status_info.arb_lost_count);
-				healthError=true;
-			}
-			if(status_info.bus_error_count>0){
-				LOGGER::Journal(messagecodes::C::CAN_BUS_ERROR, status_info.bus_error_count);
-				healthError=true;
+			{
+				uint16_t txErrors{0};
+				uint16_t rxErrors{0};
+				uint32_t busErrors{0};
+				if (hal->GetCanDiagnostics(txErrors, rxErrors, busErrors) == ErrorCode::OK)
+				{
+					if(txErrors>0){
+						LOGGER::Journal(messagecodes::C::CAN_TX_ERROR_COUNTER, txErrors);
+						atLeastHealthWarning=true;
+					}
+					if(rxErrors>0){
+						LOGGER::Journal(messagecodes::C::CAN_RX_ERROR_COUNTER, rxErrors);
+						atLeastHealthWarning=true;
+					}
+					if(busErrors>0){
+						LOGGER::Journal(messagecodes::C::CAN_BUS_ERROR, busErrors);
+						healthError=true;
+					}
+				}
 			}
 			//Netzwerk
 			webmanager::M* wm= webmanager::M::GetSingleton();
@@ -239,7 +227,7 @@ namespace sensact
 			hal->Setup();
 			for (auto &bm : *this->busmasters)
 			{
-				if (bm->Setup() != ErrorCode::OK)
+				if (bm->Setup(*hal) != ErrorCode::OK)
 				{
 					LOGE(TAG, "Busmaster reported error on Setup");
 				}

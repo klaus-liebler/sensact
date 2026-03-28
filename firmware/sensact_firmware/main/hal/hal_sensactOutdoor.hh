@@ -164,12 +164,6 @@ namespace sensact::hal::SensactOutdoor
                 this->SetDuty(LEDC_CHANNEL_1,value);
            
         }
-
-        iI2CPort *GetI2CPort(I2CPortIndex portIndex) override
-        {
-            return i2c_bus[0];
-        }
-
         ErrorCode HardwareTest() override
         {
             return ErrorCode::OK;

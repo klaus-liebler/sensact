@@ -28,6 +28,7 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override{
 			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue, isPressedOld);
+			LOGI(TAG, "%s SETUP encoder=%u value=%u pressed=%s", N(), (uint16_t)encoder, lastRotaryValue, isPressedOld?"yes":"no");
 			return eAppCallResult::OK;
 
 		}
@@ -39,8 +40,14 @@ namespace sensact::apps
 			tms_t now=ctx->Now();
 			if (!isPressedOld && isPressed)
 			{
+				LOGI(TAG, "%s SENDS TOGGLE to %s (press edge detected)", N(), NID(target));
 				ctx->SendTOGGLECommand(target);
 				this->lastEdge = now;
+			}
+			else if(isPressedOld && !isPressed)
+			{
+				LOGI(TAG, "%s is released", N());
+
 			}
 			this->isPressedOld = isPressed;
 

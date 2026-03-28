@@ -101,7 +101,7 @@ namespace sensact::hal::SensactHsNano3
             gpio_set_direction(LCD_BUZZER, GPIO_MODE_OUTPUT);
             //Hinweis: Das W5500 kommt faktisch auch ohne die Reset-Leitung aus. In einer Zukünftigen Version könnte deshalb ETH_RESET anders verwendet werden
             ETHERNET::initETH_W5500(true, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
-            tas580x = new TAS580x::M(GetI2CPort(I2C_INTERNAL), TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
+            tas580x = new TAS580x::M(i2c_bus[(uint8_t)I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
             mp3player = new AudioPlayer::Player(tas580x);
             MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
             //MESSAGELOG_ON_ERRORCODE(tas580x->Init(), messagecodes::C::TAS5805_INIT);//is done inside mp3player->Init()
@@ -118,9 +118,8 @@ namespace sensact::hal::SensactHsNano3
             rtp->PlayNotes(BUZZER::POSITIVE);
             return ErrorCode::OK;
         }
-
-        iI2CPort* GetI2CPort(I2CPortIndex portIndex) override{
-            return i2c_bus[((uint8_t)portIndex)%2];
+        i2c_master_bus_handle_t GetI2CBusHandle(uint8_t portIndex) override{
+            return I2C::GetMasterBusHandle((i2c_port_t)(portIndex % 2));
         }
         
         ErrorCode HardwareTest() override

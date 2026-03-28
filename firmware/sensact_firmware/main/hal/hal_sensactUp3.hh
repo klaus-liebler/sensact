@@ -80,9 +80,9 @@ namespace sensact::hal::SensactUp3
             this->rotenc->Start();
             return ErrorCode::OK;
         }
-
-        iI2CPort* GetI2CPort(eI2CPortIndex portIndex) override{
-            return i2c_bus[0];
+        i2c_master_bus_handle_t GetI2CBusHandle(uint8_t portIndex) override{
+            (void)portIndex;
+            return I2C::GetMasterBusHandle(I2C_INTERNAL_IDF);
         }
         
         bool HasRole(NodeRole role) override

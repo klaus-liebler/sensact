@@ -1,7 +1,7 @@
 #pragma once
 #include <sensact_commons.hh>
+#include <i2c/interfaces.hh>
 #include "crgb.hh"
-#include <i2c.hh>
 #include <buzzer.hh>
 #include <led_animator.hh>
 #include <vector>
@@ -36,7 +36,9 @@ namespace sensact::hal
         virtual ErrorCode AfterAppLoop() = 0;
         virtual ErrorCode BeforeAppLoop() = 0;
         virtual tms_t GetMillisS64() = 0;
-        virtual iI2CPort* GetI2CPort(uint8_t portIndex)=0;
+        virtual i2c::iI2CBus* GetI2CBus(uint8_t portIndex){
+            return nullptr;
+        }
         virtual ErrorCode SetU16Output(uint16_t id, uint16_t value) = 0;
         ErrorCode SetU16Output(uint16_t id, bool state)
         {
@@ -76,6 +78,14 @@ namespace sensact::hal
         virtual ErrorCode StopSound() = 0;
         virtual ErrorCode TryReceiveCanMessage(sensact::CANMessage &m) = 0;
         virtual ErrorCode TrySendCanMessage(sensact::CANMessage &m) = 0;
+        virtual ErrorCode GetCanDiagnostics(uint16_t &txErrorCount, uint16_t &rxErrorCount, uint32_t &busErrorCount)
+        {
+            txErrorCount = 0;
+            rxErrorCount = 0;
+            busErrorCount = 0;
+            return ErrorCode::FUNCTION_NOT_AVAILABLE;
+        }
+
 
         virtual ErrorCode GetModbusHoldingRegister(uint16_t regIndexZeroBased, uint16_t &value)=0;
         virtual ErrorCode SetModbusHoldingRegister(uint16_t regIndexZeroBased, uint16_t &value)=0;

@@ -100,12 +100,6 @@ namespace sensact::hal::SensactUpControl
             gpio_set_level(P::MOTOR, value);
             return ErrorCode::OK;
         }
-
-        iI2CPort *GetI2CPort(I2CPortIndex portIndex) override
-        {
-            return i2c_bus[0];
-        }
-
         ErrorCode HardwareTest() override
         {
             return ErrorCode::OK;

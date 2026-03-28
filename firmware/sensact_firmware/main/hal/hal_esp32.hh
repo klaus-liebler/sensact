@@ -2,10 +2,11 @@
 #include "hal.hh"
 #include <sensact_logger.hh>
 #include <driver/gpio.h>
-#include <driver/twai.h>
+#include <esp_twai.h>
+#include <esp_twai_onchip.h>
 #include <driver/uart.h>
 #include <driver/mcpwm_prelude.h>
-#include <i2c.hh>
+#include <freertos/queue.h>
 #include <vector>
 #include <driver/temperature_sensor.h>
 #include <logger.hh>
@@ -18,34 +19,82 @@ using namespace sensact::hal;
 using namespace sensact;
 namespace sensact::hal
 {
+	struct CanRxFrame
+	{
+		uint32_t id;
+		uint8_t len;
+		uint8_t data[8];
+	};
+
 	constexpr ledc_timer_bit_t DUTY_RESOLUTION = LEDC_TIMER_10_BIT;
 	
 	class cESP32 : public iHAL
 	{
+	private:
+		static bool OnCanRxDone(twai_node_handle_t node, const twai_rx_done_event_data_t *edata, void *user_ctx)
+		{
+			(void)edata;
+			auto *self = static_cast<cESP32 *>(user_ctx);
+			if (!self || !self->can_rx_queue)
+			{
+				return false;
+			}
+
+			CanRxFrame out = {};
+			uint8_t payload[8] = {0};
+			twai_frame_t rx_frame = {};
+			rx_frame.buffer = payload;
+			rx_frame.buffer_len = sizeof(payload);
+			if (twai_node_receive_from_isr(node, &rx_frame) != ESP_OK)
+			{
+				return false;
+			}
+
+			out.id = rx_frame.header.id;
+			out.len = static_cast<uint8_t>(twaifd_dlc2len(rx_frame.header.dlc));
+			if (out.len > sizeof(out.data))
+			{
+				out.len = sizeof(out.data);
+			}
+			for (size_t i = 0; i < out.len; i++)
+			{
+				out.data[i] = payload[i];
+			}
+
+			BaseType_t hp_task_woken = pdFALSE;
+			xQueueSendFromISR(self->can_rx_queue, &out, &hp_task_woken);
+			return hp_task_woken == pdTRUE;
+		}
 
 	protected:
 		void *modbus_master_handler{nullptr};
 		temperature_sensor_handle_t temp_handle{nullptr};
-		void SetupCAN(gpio_num_t tx, gpio_num_t rx, int intr_alloc_flags=0)
+		twai_node_handle_t twai_node{nullptr};
+		QueueHandle_t can_rx_queue{nullptr};
+
+		void SetupCAN(gpio_num_t tx, gpio_num_t rx)
 		{
-			twai_general_config_t g_config ={};
-			g_config.controller_id = 0;
-			g_config.mode = TWAI_MODE_NORMAL;
-			g_config.tx_io = tx;
-			g_config.rx_io = rx;        
-			g_config.clkout_io = TWAI_IO_UNUSED;
-			g_config.bus_off_io = TWAI_IO_UNUSED;
-			g_config.tx_queue_len = 16;
-			g_config.rx_queue_len = 5;
-			g_config.alerts_enabled = TWAI_ALERT_ABOVE_ERR_WARN | TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;
-			g_config.clkout_divider = 0;
-			g_config.intr_flags = intr_alloc_flags;
-			g_config.general_flags.sleep_allow_pd=0;
-			
-			twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
-			twai_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
-			ESP_ERROR_CHECK(twai_driver_install(&g_config, &t_config, &f_config));
-			ESP_ERROR_CHECK(twai_start());
+			if (!can_rx_queue)
+			{
+				can_rx_queue = xQueueCreate(32, sizeof(CanRxFrame));
+				assert(can_rx_queue);
+			}
+
+			twai_onchip_node_config_t node_config = {};
+			node_config.io_cfg.tx = tx;
+			node_config.io_cfg.rx = rx;
+			node_config.io_cfg.quanta_clk_out = GPIO_NUM_NC;
+			node_config.io_cfg.bus_off_indicator = GPIO_NUM_NC;
+			node_config.bit_timing.bitrate = 125000;
+			node_config.tx_queue_depth = 16;
+			node_config.fail_retry_cnt = -1;
+
+			ESP_ERROR_CHECK(twai_new_node_onchip(&node_config, &twai_node));
+
+			twai_event_callbacks_t cbs = {};
+			cbs.on_rx_done = OnCanRxDone;
+			ESP_ERROR_CHECK(twai_node_register_event_callbacks(twai_node, &cbs, this));
+			ESP_ERROR_CHECK(twai_node_enable(twai_node));
 		}
 
 		void SetupMCPWMForLEDs(gpio_num_t gpio1, gpio_num_t gpio2)
@@ -55,12 +104,26 @@ namespace sensact::hal
 			const uint32_t CARRIER_FREQ_HZ = 1000'000; // muss nach ersten Experimenten genau so groß sein, wie Resolution_Hz, sonst gibt es "E (1134) mcpwm: mcpwm_set_prescale(279): group prescale conflict, already is 2 but attempt to 32"
 			//configuration objects
 			gpio_num_t gpio_nums[2]{gpio1, gpio2};
-			mcpwm_timer_config_t timer_config{0, MCPWM_TIMER_CLK_SRC_DEFAULT, RESOLUTION_HZ, MCPWM_TIMER_COUNT_MODE_UP, PERIOD_TICKS, 0,0,0,0};
-			mcpwm_operator_config_t operator_config{0,0,false, false, false, false, false, false};
-			mcpwm_comparator_config_t comparator_config = {0, true, false, false};
-			mcpwm_generator_config_t generator_config={0, false, false, false, false, false};
+			mcpwm_timer_config_t timer_config = {};
+			timer_config.group_id = 0;
+			timer_config.clk_src = MCPWM_TIMER_CLK_SRC_DEFAULT;
+			timer_config.resolution_hz = RESOLUTION_HZ;
+			timer_config.count_mode = MCPWM_TIMER_COUNT_MODE_UP;
+			timer_config.period_ticks = PERIOD_TICKS;
+
+			mcpwm_operator_config_t operator_config = {};
+			operator_config.group_id = 0;
+
+			mcpwm_comparator_config_t comparator_config = {};
+			comparator_config.flags.update_cmp_on_tez = true;
+
+			mcpwm_generator_config_t generator_config = {};
 			//PWM hat etwa 1kHz
-			mcpwm_carrier_config_t carrier_config{MCPWM_CARRIER_CLK_SRC_DEFAULT, CARRIER_FREQ_HZ, 1'000'000/CARRIER_FREQ_HZ, 50, false, false};
+			mcpwm_carrier_config_t carrier_config = {};
+			carrier_config.clk_src = MCPWM_CARRIER_CLK_SRC_DEFAULT;
+			carrier_config.frequency_hz = CARRIER_FREQ_HZ;
+			carrier_config.first_pulse_duration_us = 1'000'000 / CARRIER_FREQ_HZ;
+			carrier_config.duty_cycle = 50;
 		
 			//Handles
 			mcpwm_timer_handle_t timer{nullptr};
@@ -104,7 +167,6 @@ namespace sensact::hal
 			ledc_channel.speed_mode     = LEDC_LOW_SPEED_MODE;
 			ledc_channel.channel        = channel;
 			ledc_channel.timer_sel      = timer;
-			ledc_channel.intr_type      = LEDC_INTR_DISABLE;
 			ledc_channel.gpio_num       = (int)gpio;
 			ledc_channel.duty           = initialDuty;
 			ledc_channel.hpoint         = 0;
@@ -116,19 +178,6 @@ namespace sensact::hal
 			ESP_LOGI(TAG, "SetDuty %d/1024 = %6.2f", val, val/1024.0f);
 			ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, val);
 			ledc_update_duty(LEDC_LOW_SPEED_MODE, channel);
-		}
-		
-		
- 		
-		void SetupInternalTemperatureSensor_deprecated_Do_IT_LIKE_SENSACT_UP_CONTROL()
-		{
-			temperature_sensor_config_t temp_sensor_config={};
-			temp_sensor_config.range_min=-10;
-			temp_sensor_config.range_max=+80;
-			temp_sensor_config.clk_src=TEMPERATURE_SENSOR_CLK_SRC_DEFAULT;
-			temp_sensor_config.flags.allow_pd=0;
-			ESP_ERROR_CHECK(temperature_sensor_install(&temp_sensor_config, &this->temp_handle));
-			ESP_ERROR_CHECK(temperature_sensor_enable(this->temp_handle));
 		}
 
 		ErrorCode SetupModbusMaster(uart_port_t uartPort, int baudrate, gpio_num_t tx, gpio_num_t rx, gpio_num_t rts)
@@ -215,33 +264,71 @@ namespace sensact::hal
 
 		ErrorCode TryReceiveCanMessage(CANMessage &m) override
 		{
-			twai_message_t rx_msg;
-			if (twai_receive(&rx_msg, 0) != ESP_OK)
+			if (!can_rx_queue)
+			{
+				return ErrorCode::FUNCTION_NOT_AVAILABLE;
+			}
+
+			CanRxFrame rx = {};
+			if (xQueueReceive(can_rx_queue, &rx, 0) != pdTRUE)
 			{
 				return ErrorCode::NONE_AVAILABLE;
 			}
-			LOGD(TAG, "Received id %lu", rx_msg.identifier);
-			m.Id = rx_msg.identifier;
-			m.DataLen = rx_msg.data_length_code;
-			for (int i = 0; i < rx_msg.data_length_code; i++)
+			LOGD(TAG, "Received id %lu", rx.id);
+			m.Id = rx.id;
+			m.DataLen = rx.len;
+			for (size_t i = 0; i < rx.len; i++)
 			{
-				m.Data[i] = rx_msg.data[i];
+				m.Data[i] = rx.data[i];
 			}
 			return ErrorCode::OK;
 		}
 		ErrorCode TrySendCanMessage(CANMessage &m) override
 		{
-			twai_message_t tx_msg;
-			tx_msg.identifier = m.Id;
-			tx_msg.data_length_code = m.DataLen;
-			for (int i = 0; i < tx_msg.data_length_code; i++)
+			if (!twai_node)
 			{
-				tx_msg.data[i] = m.Data[i];
+				return ErrorCode::FUNCTION_NOT_AVAILABLE;
 			}
-			if (twai_transmit(&tx_msg, pdMS_TO_TICKS(200)) != ESP_OK)
+
+			twai_frame_t tx_frame = {};
+			tx_frame.header.id = m.Id;
+			tx_frame.header.ide = (m.Id > TWAI_STD_ID_MASK) ? 1 : 0;
+			tx_frame.header.dlc = static_cast<uint16_t>(m.DataLen);
+			tx_frame.buffer = m.Data;
+			tx_frame.buffer_len = m.DataLen;
+
+			if (tx_frame.header.dlc > TWAI_FRAME_MAX_DLC)
+			{
+				return ErrorCode::DATA_FORMAT_ERROR;
+			}
+
+			if (twai_node_transmit(twai_node, &tx_frame, 200) != ESP_OK)
 			{
 				return ErrorCode::QUEUE_OVERLOAD;
 			}
+			return ErrorCode::OK;
+		}
+
+		ErrorCode GetCanDiagnostics(uint16_t &txErrorCount, uint16_t &rxErrorCount, uint32_t &busErrorCount)
+		{
+			if (!twai_node)
+			{
+				txErrorCount = 0;
+				rxErrorCount = 0;
+				busErrorCount = 0;
+				return ErrorCode::FUNCTION_NOT_AVAILABLE;
+			}
+
+			twai_node_status_t status = {};
+			twai_node_record_t record = {};
+			if (twai_node_get_info(twai_node, &status, &record) != ESP_OK)
+			{
+				return ErrorCode::GENERIC_ERROR;
+			}
+
+			txErrorCount = status.tx_error_count;
+			rxErrorCount = status.rx_error_count;
+			busErrorCount = record.bus_err_num;
 			return ErrorCode::OK;
 		}
 

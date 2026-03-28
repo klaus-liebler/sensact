@@ -1,11 +1,11 @@
 {
   "C_Cpp.intelliSenseEngine": "default",
-  "idf.portWin": "COM6",
+  "idf.portWin": "COM4",
   "idf.flashType": "UART",
   "files.associations": {
     "*.inc": "cpp",
     "cstdint": "cpp",
     "compare": "cpp"
   },
-  "idf.currentSetup": "C:\\Users\\mail\\esp\\v5.5.1\\esp-idf"
+  "idf.currentSetup": "C:\\Users\\mail\\esp\\.espressif\\v6.0\\esp-idf"
 }

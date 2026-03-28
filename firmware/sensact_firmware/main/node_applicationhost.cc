@@ -30,6 +30,9 @@ void cApplicationHost::OnTimeUpdate(webmanager::iWebmanagerCallback *callback){
 webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const sensact::RequestCommand* req, webmanager::iWebmanagerCallback* callback){
     flatbuffers::FlatBufferBuilder b(1024);
     auto d = req->payload()->data()->data();
+    const uint16_t reqId = (uint16_t)req->id();
+    const char* reqName = reqId < (uint16_t)eApplicationID::CNT ? sensact::ApplicationNames[reqId] : "INVALID_APP_ID";
+    ESP_LOGI(TAG, "WEB CMD target=%s(%u) cmd=%u payloadLen=%u", reqName, reqId, (uint16_t)req->cmd(), (uint16_t)req->payload()->len());
     CommandMessage message{
         (sensact::eApplicationID)req->id(), 
         (sensact::eCommandType)req->cmd(),
@@ -150,6 +153,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         }
 
         sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[(uint16_t)destinationApp];
+        ESP_LOGI(TAG, "CMD DISPATCH target=%s(%u) cmd=%u local=%s payloadLen=%u", sensact::ApplicationNames[(uint16_t)destinationApp], (uint16_t)destinationApp, (uint16_t)commmandType, app != nullptr ? "true" : "false", payloadLength);
         if (app != nullptr)
         {
             // only in this case, the message can be processed local; no need to send it to the CAN bus
@@ -315,6 +319,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                 LOGE(TAG, "Received ApplicationCommand. Unknown target applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
+            ESP_LOGI(TAG, "CAN CMD target=%s(%u) cmd=%u", sensact::ApplicationNames[appId], appId, commandType);
             app = sensact::apps::cApplications::Glo2locCmd[appId];
             if (app != nullptr)
             {
@@ -377,6 +382,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                     LOGW(TAG, "%s raised FillStatusResult %s while publishing because of %s.", sensact::ApplicationNames[appId], eFillStatusResultStr[(int)fillStatusResult], eAppCallResultStr[(int)appResult]);
                 }else if(fillStatusResult!=eFillStatusResult::NO_STATUS){
                     ESP_LOGI(TAG, "%s: Something insteresting happened, namely (%s) -> Publish!", sensact::ApplicationNames[appId], eAppCallResultStr[(int)appResult]);
+                    ESP_LOGI(TAG, "%s: status=[%u,%u,%u,%u]", sensact::ApplicationNames[appId], (uint32_t)this->statusBuffer[appId][0], (uint32_t)this->statusBuffer[appId][1], (uint32_t)this->statusBuffer[appId][2], (uint32_t)this->statusBuffer[appId][3]);
                     PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::CHANGED, this->statusBuffer[appId]);
                 }
                 

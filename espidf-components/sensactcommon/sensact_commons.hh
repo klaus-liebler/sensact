@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <ctime>
+#include <string>
 #include <common.hh>
 #include <errorcodes.hh>
 #include <esp_log.h>
@@ -18,6 +19,12 @@ namespace sensact::strings
 
 namespace sensact
 {
+    struct Range {
+        u16 start;
+        u16 end;
+        std::string name;
+    };
+
     enum class eRotaryEncoder : uint8_t
     {
         ROTENC0,
