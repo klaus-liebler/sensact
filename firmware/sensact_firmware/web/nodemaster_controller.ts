@@ -10,8 +10,7 @@ import { IAppManagement } from "@klaus-liebler/web-components/typescript/utils/i
 export class NodemasterController extends ScreenController {
     
     protected OnRestart(): void {
-        this.requestInputs();
-        this.requestOutputs();
+        this.OnFirstStart();
     }
 
     OnPause(): void {
@@ -25,7 +24,8 @@ export class NodemasterController extends ScreenController {
     private outputSection: Ref<HTMLElement> = createRef();
     private lastRequestedInputIndex: number = 0;
     private inputPollingInterval: NodeJS.Timeout | null = null;
-    private currentInputIndex: number = 0;
+    private currentRangeIndex: number = 0;
+    private currentOffsetInRange: number = 0;
 
     public Template = () => html`
         <div class="buttons">
@@ -94,6 +94,8 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
                         });
                     }
                 }
+                this.currentRangeIndex = 0;
+                this.currentOffsetInRange = 0;
                 console.info(`Received input ranges: ${JSON.stringify(this.inputRanges)}`);
                 if (this.inputSection.value) {
                     render(this.InputTableTemplate(), this.inputSection.value);
@@ -214,15 +216,22 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
         if (this.inputPollingInterval) return; // Already polling
         
         console.info('Starting input polling');
-        this.currentInputIndex = 0;
+        this.currentRangeIndex = 0;
+        this.currentOffsetInRange = 0;
         
         this.inputPollingInterval = setInterval(() => {
-            // Get the total number of inputs
-            const totalInputs = this.inputRanges.reduce((sum, range) => sum + (range.end - range.start), 0);
-            
-            if (totalInputs > 0) {
-                this.updateInput(this.currentInputIndex % totalInputs);
-                this.currentInputIndex++;
+            const rangeCount = this.inputRanges.length;
+            const range = this.inputRanges[this.currentRangeIndex];
+            const actualIndex = range.start + this.currentOffsetInRange;
+            this.updateInput(actualIndex);
+            const rangeLength = range.end - range.start;
+            this.currentOffsetInRange++;
+            if (this.currentOffsetInRange >= rangeLength) {
+                this.currentOffsetInRange = 0;
+                this.currentRangeIndex++;
+                if (this.currentRangeIndex >= rangeCount) {
+                    this.currentRangeIndex = 0;
+                }
             }
         }, 500); // Poll every 500ms
     }

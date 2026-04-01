@@ -248,7 +248,8 @@ namespace sensact::hal::SensactUpHs
 				return ErrorCode::PIN_NOT_AVAILABLE;
 			}
 
-			return gpio_get_level((gpio_num_t)id) == ESP_OK ? ErrorCode::OK : ErrorCode::GENERIC_ERROR;
+            inputState = gpio_get_level((gpio_num_t)id) ? UINT16_MAX : 0;
+            return ErrorCode::OK;
 		}
     };
 }

@@ -278,7 +278,7 @@ namespace fingerprint
                         fingerprint::CreateNotifyFingerDetected(b, errorCode, finger, score).Union()
                     )
                 );
-                callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
+                (void)callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
                 
             }
             if (errorCode == (uint8_t)grow_fingerprint::RET::OK)
@@ -306,7 +306,7 @@ namespace fingerprint
                         fingerprint::CreateNotifyEnrollNewFingerDirect(b, name, fingerIndex, step, errorCode).Union()
                     )
                 );
-                callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
+                (void)callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
             }
         }
     };

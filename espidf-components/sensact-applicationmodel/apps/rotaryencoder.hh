@@ -5,20 +5,21 @@
 
 namespace sensact::apps
 {
-	constexpr uint32_t DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE = 800;
-	constexpr uint32_t DEAD_TIME_FOR_TURN_AFTER_TURN = 10000;
+	constexpr uint32_t DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE = 200;
+	constexpr uint32_t MAX_TIME_BETWEEN_TURNS = 800;
 	
 	class cRotaryEncoder2PWM: public cApplication
 	{
 	private:
 		eRotaryEncoder encoder; 
 		eApplicationID target;
+		uint16_t targetStepsPerPhyicalStep;
 		bool isPressedOld{false};
 		uint16_t lastRotaryValue;
 		tms_t lastEdge{0};
 		tms_t lastRotary{0};
 	public:
-		cRotaryEncoder2PWM(eApplicationID const id, eRotaryEncoder encoder, eApplicationID target):cApplication(id), encoder(encoder), target(target){
+		cRotaryEncoder2PWM(eApplicationID const id, eRotaryEncoder encoder, eApplicationID target, uint16_t targetStepsPerPhyicalStep=4096):cApplication(id), encoder(encoder), target(target), targetStepsPerPhyicalStep(targetStepsPerPhyicalStep){
 		}
 
 		eAppType GetAppType() override
@@ -28,7 +29,7 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override{
 			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue, isPressedOld);
-			LOGI(TAG, "%s SETUP encoder=%u value=%u pressed=%s", N(), (uint16_t)encoder, lastRotaryValue, isPressedOld?"yes":"no");
+			LOGD(TAG, "%s SETUP encoder=%u value=%u pressed=%s", N(), (uint16_t)encoder, lastRotaryValue, isPressedOld?"yes":"no");
 			return eAppCallResult::OK;
 
 		}
@@ -40,13 +41,14 @@ namespace sensact::apps
 			tms_t now=ctx->Now();
 			if (!isPressedOld && isPressed)
 			{
-				LOGI(TAG, "%s SENDS TOGGLE to %s (press edge detected)", N(), NID(target));
+				LOGD(TAG, "%s SENDS TOGGLE to %s (press edge detected)", N(), NID(target));
 				ctx->SendTOGGLECommand(target);
 				this->lastEdge = now;
 			}
 			else if(isPressedOld && !isPressed)
 			{
-				LOGI(TAG, "%s is released", N());
+				LOGD(TAG, "%s is released", N());
+				this->lastEdge = now;
 
 			}
 			this->isPressedOld = isPressed;
@@ -55,10 +57,10 @@ namespace sensact::apps
 			
 			int rotaryChange = currentRotaryValue - lastRotaryValue;
 			if(rotaryChange!=0){
-				if(now - lastRotary < DEAD_TIME_FOR_TURN_AFTER_TURN  && now-lastEdge > DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE)
+				if(now - lastRotary < MAX_TIME_BETWEEN_TURNS  && now-lastEdge > DEAD_TIME_FOR_TURN_AFTER_PRESS_OR_RELEASE)
 				{
-					LOGI(TAG, "%s sends STEP_VERTICALCommand with rotaryChange %i", N(), rotaryChange);
-					ctx->SendSTEP_VERTICALCommand(target, rotaryChange);
+					LOGD(TAG, "%s sends STEP_VERTICALCommand with rotaryChange %i", N(), rotaryChange);
+					ctx->SendSTEP_VERTICALCommand(target, rotaryChange * targetStepsPerPhyicalStep);
 				}
 				lastRotary = now;
 				lastRotaryValue=currentRotaryValue;

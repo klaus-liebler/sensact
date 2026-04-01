@@ -129,7 +129,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                     sensact::CreateNotifyStatus(b, static_cast<sensact::ApplicationId>(sourceApp), &sp).Union()
                 )
             );
-            webmanager_callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b);
+            (void)webmanager_callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b);
 
         }
         CANMessage m;
