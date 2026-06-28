@@ -80,6 +80,18 @@ namespace sensact::hal::SensactUpHs
         constexpr u16 CHIP_TEMPERATURE{258};
     }
 
+    namespace OUTPUTS{
+        constexpr u16 GPIO_MAX{255};
+        constexpr u16 PWM0{256};
+        constexpr u16 PWM1{257};
+        constexpr u16 PWM2{258};
+        constexpr u16 PWM3{259};
+        constexpr u16 PWM4{260};
+        constexpr u16 PWM5{261};
+        constexpr u16 PWM_MAX{262};
+
+    }
+
     constexpr std::array<gpio_num_t, 3U> INTERRUPT_LINES{P::I2C_EXT_INT0, P::I2C_EXT_INT1, P::I2C_EXT_INT2,};
 
     class cHAL : public sensact::hal::cESP32
@@ -120,6 +132,15 @@ namespace sensact::hal::SensactUpHs
             rotenc[1] = new cRotaryEncoder(P::ROT2_A, P::ROT2_B, P::ROT2_S);
             rotenc[1]->Init(cRotaryEncoder::StepMode::Step1);
             rotenc[1]->Start();
+
+            // Setup PWM for RGB LEDs
+            this->SetupLedcCommonTimer(LEDC_TIMER_0, 1000); // 1kHz frequency
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_0, P::PWM0);
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_1, P::PWM1);
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_2, P::PWM2);
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_3, P::PWM3);
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_4, P::PWM4);
+            this->SetupLedcChannel(LEDC_TIMER_0, LEDC_CHANNEL_5, P::PWM5);
 
             return ErrorCode::OK;
         }
@@ -208,6 +229,18 @@ namespace sensact::hal::SensactUpHs
         }
 
         ErrorCode AppendValidGpioOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{
+            twoMostSignificantBits&=0xC000; //only two MSB are relevant
+            ranges.push_back(sensact::Range(twoMostSignificantBits+OUTPUTS::PWM0,twoMostSignificantBits+OUTPUTS::PWM_MAX,"PWM"));
+            
+            return ErrorCode::OK;
+        }
+
+        ErrorCode SetU16Output(u16 id, uint16_t value) override{
+            if(id<OUTPUTS::PWM0 || id>=OUTPUTS::PWM_MAX){
+                return ErrorCode::PIN_NOT_AVAILABLE;
+            }
+            ledc_channel_t channel = static_cast<ledc_channel_t>(id-OUTPUTS::PWM0);
+            this->SetLedcDuty(channel, value);
             return ErrorCode::OK;
         }
 

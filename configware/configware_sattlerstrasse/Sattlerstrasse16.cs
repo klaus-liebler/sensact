@@ -160,6 +160,7 @@ namespace Klli.Sensact.Config
             AddBlindApplication(SNSCT_L0_TECH_HS_1, ApplicationId.BLIND_LX_BACK_J1, "Markise nicht genutzt", BB + I2C + 25,BB + I2C + 35, RelayInterlockMode.R1_POWER__R2_DOWN, 60, 60);//K19 K20
 
             //Front (Klingelknopf, Licht, Bewegungsmelder)
+            //!!!Klingeltaster ist "positiv schaltend", schaltet also nicht auf Masse, sondern auf +3,3V – ist da eine Diode drin?
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_LX_FRON_B1, BB + I2C + 62, ApplicationId.SOUND_L0_TECH_AUDIO);//Klingelknopf
             SNSCT_L0_TECH_HS_1.Applications.Add(new LightbarrierApplication(
                 (ushort)ApplicationId.LIBAR_LX_FRON_B2,
@@ -305,13 +306,13 @@ namespace Klli.Sensact.Config
             //L2.BATH
             AddRotaryEncoder(SNSCT_L3_WORK_HS, ApplicationId.ROTAR_L2_BATH_B11, RotaryEncoder.ROTENC0, ApplicationId.PWM___L2_BATH_S);
             AddRotaryEncoder(SNSCT_L3_WORK_HS, ApplicationId.ROTAR_L2_BATH_B12, RotaryEncoder.ROTENC1, ApplicationId.RGBW__L2_BATH_W);
-            //Start "be careful". These buttons are connected to central sensact
+            //Start "be careful". These buttons to control the blinds are connected to central sensact
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_BATH_B13, BB + I2C + 1,  BB + I2C + 0, ApplicationId.BLIND_L2_BATH_J1);//4 2
             //End "be careful"
-            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 });
-            SNSCT_L3_WORK_HS.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), "Dekolicht", /*Nach L2.Corr!*/BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8 , BUS0 + I2C + 9, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { GPIO + 256 +0 , GPIO+ 256 + 1, GPIO + 256 + 2 });
+            SNSCT_L3_WORK_HS.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), "Dekolicht", BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 , BUS0 + I2C + 3, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_BATH_J1, "Rollo", RB + I2C + 16, RB + I2C + 25, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
-
+            //Be careful: Weiter unten werden die Spots L2.CORR auch an SNSCT_L3_WORK_HS angeschlossen.
 
             //L2.BEDR
             AddToggleButton(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_BEDR_B11, BB + I2C + 3, ApplicationId.POWIT_L2_BEDR_P3); //Erst mal nur Netzfreischaltung
@@ -343,7 +344,7 @@ namespace Klli.Sensact.Config
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_CORR_B42, BB + I2C + 22, BB + I2C + 21, ApplicationId.BLIND_L2_CORR_J1);
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_CORR_J1, "Rollo", RB + I2C + 18, RB + I2C + 27, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
             //Start be careful: The LED Spots are controlled by the bath-sensactUP
-            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5 }, T_2h__ms);
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { GPIO + 256 + 3, GPIO + 256 + 4, GPIO + 256 + 5 }, T_2h__ms);
             //End be careful
 
             //L2.KID1 (Sollte nach der Bennenung im Grundriss Klaras Zimmer sein)
@@ -442,7 +443,11 @@ namespace Klli.Sensact.Config
 
             AddPWMApplication(SNSCT_L3_TECH_HS_1, ApplicationId.PWM___L3_WORK_S, "Spots", ApplicationId.STDBY_L3_TECH_48V, new HashSet<ushort> { RB + I2C + 6, RB + I2C + 7, RB + I2C + 8 });
             AddPowIt(SNSCT_L3_TECH_HS_1, ApplicationId.STDBY_L3_WORK_C1, "Deckenleuchte Netzteil", RB + I2C + 43, DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS);//RL10
-
+            //!!! Der Meanwell-Dimmer von PWM___L3_WORK_C1 wird derzeit [2026-06-26] von einem 0...10V-Signal gesteuert!!
+            //Ausprobiert wurde aber schon mal eine Optokoppler, der mit PWM angesteuert wird -->das soll wieder so werden
+            //Problem: Inverse PWM, d.h. 0% PWM = 100% Licht, 100% PWM = 0% Licht
+            //Der Optokoppler müsste zum Ausschalter der Deckenlampe aktiv sein
+            //Fraglich ist, ob seine interne LED bei Dauerbetrieb über die Jahre Schaden nimmt
             AddPWMApplication(SNSCT_L3_TECH_HS_1, ApplicationId.PWM___L3_WORK_C1, "Deckenleuchte", ApplicationId.STDBY_L3_WORK_C1, new HashSet<ushort> { RB + I2C + 0 });
             #endregion
             #region LS
@@ -513,7 +518,7 @@ namespace Klli.Sensact.Config
                 InputRessource = BUS0 + I2C + 42,
             });
             */
-            //!!!SNSAC_L1_LVNG_UP
+            //!!!SNSCT_L1_LVNG_UP
 
             //Treppenstufen, vom Keller zum Dach
             AddPWMApplication(SNSCT_L1_LVNG_UP, ApplicationId.PWM___LS_STRS_W2, "Treppe L0-L1", ApplicationId.STDBY_L2_CORR_24V, new HashSet<ushort> { BUS0 + I2C + 16 }, 1000*60*60* 6 /*Verzögerung siehe Wand*/);

@@ -147,8 +147,6 @@ namespace sensact::hal
 			ESP_ERROR_CHECK(mcpwm_timer_start_stop(timer, MCPWM_TIMER_START_NO_STOP));
 		}
 
-	
-
 		void SetupLedcCommonTimer(ledc_timer_t timer, uint32_t freq_hz){
 			
 			// Prepare and then apply the LEDC PWM timer configuration
@@ -160,6 +158,7 @@ namespace sensact::hal
 			ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
 			ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 		}
+
 		void SetupLedcChannel(ledc_timer_t timer, ledc_channel_t channel, gpio_num_t gpio, uint32_t initialDuty=0){
 
 			// Prepare and then apply the LEDC PWM channel configuration
@@ -173,7 +172,7 @@ namespace sensact::hal
 			ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
 		}
 
-		void SetDuty(ledc_channel_t channel, uint16_t value_0_65635){
+		void SetLedcDuty(ledc_channel_t channel, uint16_t value_0_65635){
 			uint16_t val = value_0_65635>>(16-DUTY_RESOLUTION);
 			ESP_LOGI(TAG, "SetDuty %d/1024 = %6.2f", val, val/1024.0f);
 			ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, val);
