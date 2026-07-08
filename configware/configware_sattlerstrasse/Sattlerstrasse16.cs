@@ -1,6 +1,5 @@
 ﻿using Klli.Sensact.Model.Common.Applications;
 using Klli.Sensact.Model.Common.Nodes;
-using Klli.Sensact.Model.Common;
 using Klli.Sensact.Model;
 using System.Collections.Generic;
 using Klli.Sensact.Common;
@@ -23,7 +22,7 @@ namespace Klli.Sensact.Config
         private const int DEFAULT_LONG_BLIND_UP_sec = 40;
         private const int DEFAULT_LONG_BLIND_DOWN_sec = 40;
         
-        const ushort INTI = 0x0000;
+        const ushort INTERNAL = 0x0000;
         const ushort BUS0 = 0x4000;
         const ushort BB = BUS0;
         const ushort BUS1 = 0x8000;
@@ -309,7 +308,7 @@ namespace Klli.Sensact.Config
             //Start "be careful". These buttons to control the blinds are connected to central sensact
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_BATH_B13, BB + I2C + 1,  BB + I2C + 0, ApplicationId.BLIND_L2_BATH_J1);//4 2
             //End "be careful"
-            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { GPIO + 256 +0 , GPIO+ 256 + 1, GPIO + 256 + 2 });
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_BATH_S, "Spots",ApplicationId.STDBY_L3_ROOF_48V, new HashSet<ushort> { INTERNAL + 256 +0 , INTERNAL+ 256 + 1, INTERNAL + 256 + 2 });
             SNSCT_L3_WORK_HS.Applications.Add(new RgbwApplication((ushort)ApplicationId.RGBW__L2_BATH_W, ApplicationId.RGBW__L2_BATH_W.ToString(), "Dekolicht", BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2 , BUS0 + I2C + 3, T_2h__ms, (ushort)ApplicationId.STDBY_L3_ROOF_48V));
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_BATH_J1, "Rollo", RB + I2C + 16, RB + I2C + 25, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
             //Be careful: Weiter unten werden die Spots L2.CORR auch an SNSCT_L3_WORK_HS angeschlossen.
@@ -344,7 +343,7 @@ namespace Klli.Sensact.Config
             AddBlindButtons(SNSCT_L3_TECH_HS_1, ApplicationId.PUSHB_L2_CORR_B42, BB + I2C + 22, BB + I2C + 21, ApplicationId.BLIND_L2_CORR_J1);
             AddBlindApplication(SNSCT_L3_TECH_HS_1, ApplicationId.BLIND_L2_CORR_J1, "Rollo", RB + I2C + 18, RB + I2C + 27, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_BLIND_UP_sec, DEFAULT_BLIND_DOWN_sec);
             //Start be careful: The LED Spots are controlled by the bath-sensactUP
-            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { GPIO + 256 + 3, GPIO + 256 + 4, GPIO + 256 + 5 }, T_2h__ms);
+            AddPWMApplication(SNSCT_L3_WORK_HS, ApplicationId.PWM___L2_CORR_S, "Spots", ApplicationId.STDBY_L3_ROOF_48V,new HashSet<ushort> { INTERNAL + 256 + 3, INTERNAL + 256 + 4, INTERNAL + 256 + 5 }, T_2h__ms);
             //End be careful
 
             //L2.KID1 (Sollte nach der Bennenung im Grundriss Klaras Zimmer sein)
@@ -533,12 +532,12 @@ namespace Klli.Sensact.Config
             #endregion
             #region Fingerprint und Terrasse
             AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_L1_UTIL, "Fingerprint Seiteneingang", ApplicationId.POWIT_L1_UTIL_DOOR, ApplicationId.POWIT_L1_UTIL_DOOR, ApplicationId.POWIT_L1_UTIL_DOOR);
-            AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_L1_UTIL_DOOR, "Seiteneingang Öffner", INTI+0, 1000);
+            AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_L1_UTIL_DOOR, "Seiteneingang Öffner", INTERNAL+0, 1000);
 
             AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_LX_BACK, "Milight Controller");
-            AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___LX_BACK_C1, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4}, T_12h__ms, 0, 65535);
-            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J2, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);
-            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J3, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);
+            AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___LX_BACK_C1, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTERNAL+4}, T_12h__ms, 0, 65535);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J2, "Markise Horizontal", INTERNAL+0, INTERNAL+1, RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J3, "Markise Vertikal", INTERNAL+2, INTERNAL+3,  RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);
 
             #endregion
 

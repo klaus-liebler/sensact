@@ -15,6 +15,7 @@ Smarthome system - hardware, firmware, configware, visualization
 
 ## Kommunikation zwischen den Knoten
 Die Knoten sind über einen gemeinsamen CAN-Bus verbunden.
+
 ### Altes Nachrichtenformat ()
 TBD
 

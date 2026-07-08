@@ -5,6 +5,8 @@ import path from "node:path"
 import * as weso from "ws"
 import { visualizer } from 'rollup-plugin-visualizer'
 
+const MICROCONTROLLER_HOST = "192.168.2.84";
+
 const devLoginCookiePlugin = (username:string) => {
   return {
     name: "dev-login-cookie",
@@ -63,7 +65,7 @@ const wsProxyPlugin = () => {
         console.log('Client WebSocket connected to proxy');
         
         // Create connection to upstream server without TLS verification
-        const upstreamWs = new weso.WebSocket('wss://localhost:3000/webmanager_ws', {
+        const upstreamWs = new weso.WebSocket(`wss://${MICROCONTROLLER_HOST}/webmanager_ws`, {
           rejectUnauthorized: false,
         } as any);
         

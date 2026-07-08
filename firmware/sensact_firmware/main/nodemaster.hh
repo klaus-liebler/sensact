@@ -402,7 +402,7 @@ namespace sensact
 				flatbuffers::FlatBufferBuilder b(128);
 				auto resp = nodemaster::CreateResponseGetInput(b, index, value);
 				b.Finish(nodemaster::CreateResponseWrapper(b, nodemaster::Responses::Responses_ResponseGetInput, resp.Union()));
-				LOGI(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
+				LOGD(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
 				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 			}
 
