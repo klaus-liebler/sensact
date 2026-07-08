@@ -270,7 +270,7 @@ namespace Klli.Sensact.Config
             AddBlindApplication(SNSCT_L0_TECH_HS_1, ApplicationId.BLIND_L1_LVNG_J2, "Rollo Terrasse",BUS0 + I2C + 20, BUS0 + I2C + 30,RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_LONG_BLIND_UP_sec, DEFAULT_LONG_BLIND_DOWN_sec);//K9 K10
             AddBlindApplication(SNSCT_L0_TECH_HS_1, ApplicationId.BLIND_L1_LVNG_J3, "Rollo Esszimmer", BUS0 + I2C + 21, BUS0 + I2C + 31, RelayInterlockMode.R1_POWER__R2_UP, DEFAULT_LONG_BLIND_UP_sec, DEFAULT_LONG_BLIND_DOWN_sec);//K11 K12
 
-            AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L1_LVNG_C1, "Wandlampen", BUS0 + I2C + 44);//RL11
+            AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L1_LVNG_C1, "Esszimmerlampe", BUS0 + I2C + 44);//RL11
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L1_LVNG_P4, "Phase 4", BUS0 + I2C + 60);//RL19 K119
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L1_LVNG_P1, "Phase 1" ,BUS0 + I2C + 61);//RL20
             //W2 ist parallel zu W1 geschaltet
