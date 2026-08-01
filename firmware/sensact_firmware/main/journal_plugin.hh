@@ -1,9 +1,9 @@
 #pragma once
 #include <esp_log.h>
+#include <sys/time.h>
 #include <array>
 #include "webmanager_interfaces.hh"
-#include "flatbuffers/flatbuffers.h"
-#include "flatbuffers_cpp/ns10journal_generated.h"
+#include "wsprotocol_cpp/ws_protocol.hh"
 #include "messagecodes.hh"
 #define TAG "JRNL"
 namespace webmanager
@@ -75,36 +75,53 @@ namespace webmanager
         void OnTimeUpdate(iWebmanagerCallback *callback) override{
 
         }
-        eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf)override{
-            if (ns != journal::Namespace::Namespace_Value)
+        eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen)override{
+            if (namespaceId != WsProtocol::journal::NAMESPACE_ID)
                 return webmanager::eMessageReceiverResult::NOT_FOR_ME;
-            
-            auto rw = flatbuffers::GetRoot<journal::RequestWrapper>(buf);
-            if(rw->request_type()!=journal::Requests::Requests_RequestJournal)
+            if (messageTypeId != WsProtocol::journal::RequestJournal::TYPE_ID)
+                return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+            WsProtocol::journal::RequestJournal::Payload reqPayload{};
+            if (!WsProtocol::journal::RequestJournal::Decode(frame, frameLen, reqPayload))
                 return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 
             ESP_LOGI(TAG, "Prepare to send ResponseJournal");
-            flatbuffers::FlatBufferBuilder b(1024);
 
-            std::vector<flatbuffers::Offset<journal::JournalItem>> item_vector;
+            // Grosszuegig bemessen: bis zu STORAGE_LENGTH Eintraege, je [classId:u16][timestamp:8]
+            // [messageCode:4][messageString<=64+null][messageData:4][messageCount:4].
+            static uint8_t items_scratch[STORAGE_LENGTH * 128];
+            size_t items_pos = 0;
+            size_t items_count = 0;
+
             xSemaphoreTake(webmanager_semaphore, portMAX_DELAY);
             // std::sort(BUFFER.rbegin(), BUFFER.rend());
             for (int i = 0; i < messageLog.size(); i++)
             {
                 if (messageLog[i].messageCode == 0)
                     continue;
-                auto itemOffset = journal::CreateJournalItemDirect(b, messageLog[i].lastMessageTimestamp, messageLog[i].messageCode, messagecodes::N[messageLog[i].messageCode], messageLog[i].lastMessageData, messageLog[i].messageCount);
-                item_vector.push_back(itemOffset);
+                WsProtocol::journal::JournalItem::Payload item{};
+                item.lastMessageTimestamp = (uint64_t)messageLog[i].lastMessageTimestamp;
+                item.messageCode = messageLog[i].messageCode;
+                item.messageString = messagecodes::N[messageLog[i].messageCode];
+                item.messageData = messageLog[i].lastMessageData;
+                item.messageCount = messageLog[i].messageCount;
+                size_t newPos = WsProtocol::journal::AppendResponseJournalJournalItemsJournalItemElement(item, items_scratch, items_pos, sizeof(items_scratch));
+                if (newPos > 0)
+                {
+                    items_pos = newPos;
+                    items_count++;
+                }
             }
             xSemaphoreGive(webmanager_semaphore);
-            b.Finish(
-                journal::CreateResponseWrapper(
-                    b,
-                    journal::Responses::Responses_ResponseJournal,
-                    journal::CreateResponseJournalDirect(b, &item_vector).Union()
-                )
-            );
-            return callback->WrapAndSendAsync(journal::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+
+            WsProtocol::journal::ResponseJournal::Payload resp{};
+            resp.requestId = reqPayload.requestId;
+            resp.journalItemsData = items_scratch;
+            resp.journalItemsCount = items_count;
+            resp.journalItemsDataSize = items_pos;
+
+            static uint8_t buf[2560];
+            size_t len = WsProtocol::journal::ResponseJournal::Encode(resp, buf, sizeof(buf));
+            return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
         }
 
         void LogJournal(messagecodes::C messageCode, uint32_t messageData)

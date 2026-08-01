@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Neuer C#-Build-Orchestrator (s. docs/plan_v2/02-builder-migration-csharp.md), Nachfolger des
+    bisherigen Node/TypeScript-Orchestrators unter builder/ (gulpfile.ts). Lebt bewusst als
+    builder_cs/ NEBEN dem bestehenden builder/, bis Parität erreicht ist (Uebergangszustand, s.
+    "Entschieden" im Plan), danach wird builder/ (TS) archiviert/geloescht und builder_cs/ ggf.
+    in builder/ umbenannt. Architektur/Dateizuschnitt orientiert sich am Referenzprojekt
+    C:\repos\factory_in_a_box\firmware_factory_control_unit\builder.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Builder</RootNamespace>
+    <AssemblyName>builder_cs</AssemblyName>
+    <!--
+      BEWUSST NICHT InvariantGlobalization=true (anders als im Referenzprojekt): ModelGeneration/
+      Generator.cs (aus configware uebernommen) verlaesst sich an mehreren Stellen auf
+      DateTime.Now.ToString() OHNE Formatstring, das damit die aktuelle System-/Threadkultur nutzt
+      (auf diesem Rechner Deutsch, "dd.MM.yyyy HH:mm:ss"). Mit InvariantGlobalization=true faellt
+      .NET auf die invariante Kultur zurueck ("MM/dd/yyyy"), beim Vergleich des generierten
+      node_descriptor.json/nodeDescription.inc mit dem bisherigen configware_sattlerstrasse-Output
+      real aufgefallen (identischer Inhalt bis auf das Datumsformat). Da diese Strings in generierte
+      Firmware-Konstanten einfliessen, ist das keine kosmetische Nebensache.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Fuer BuilderOptions.cs (appsettings.json -> typsichere POCO-Klasse, s. dort). -->
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.10" />
+    <!-- Fuer ModelGeneration/Generator.cs (ILogger<T>, aus configware uebernommen, dort per NLog
+         bereitgestellt, hier per einfachem Console-Logger, s. Phases/GenerateModelFiles.cs). -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Eigenstaendige Bibliothek (eigenes Repo, s. dort/README.md) fuer die C#-als-Schema-Definition-
+         Sprache: ersetzt den bisherigen, in Phases/GenerateWsProtocolFiles.cs eingebauten JSON-Schema-
+         Parser+Codegenerator vollstaendig (s. Kommentar dort). -->
+    <ProjectReference Include="C:\repos\dotnet_libs\best_binary_buffers\src\BestBinaryBuffers\BestBinaryBuffers.csproj" />
+  </ItemGroup>
+
+  <!--
+    appsettings.json enthaelt persoenliche Maschinenpfade (OneDrive-Ordner fuer Board-Archiv/CA)
+    und ist gitignored: getrackt ist nur appsettings.json.template. Aus dem Standard-Glob
+    ausgeschlossen und stattdessen von EnsureAppSettings unten explizit (wieder-)hinzugefuegt, s.
+    Kommentar im Referenzprojekt (builder/builder.csproj, EnsureAppSettings).
+  -->
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <Target Name="EnsureAppSettings" BeforeTargets="BeforeBuild">
+    <Copy
+      Condition="!Exists('$(MSBuildProjectDirectory)\appsettings.json')"
+      SourceFiles="$(MSBuildProjectDirectory)\appsettings.json.template"
+      DestinationFiles="$(MSBuildProjectDirectory)\appsettings.json" />
+    <ItemGroup>
+      <None Include="$(MSBuildProjectDirectory)\appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -45,6 +45,7 @@
 #include <busmaster.hh>
 #include <model_node.hh>
 #include <runtimeconfig_cpp/runtimeconfig.hh>
+#include <runtimeconfig_cpp/runtimeconfig_defines.hh>
 #include <webmanager_plugins/systeminfo_plugin.hh>
 
 
@@ -169,7 +170,23 @@ extern "C" void app_main(void)
     
     //Configure Network
     webmanager::M* wm = webmanager::M::GetSingleton();
-    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true, false));
+    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true, false, ESP_LOG_WARN,
+#ifdef __WEBMANAGER_AUTH_USERNAME__
+        cfg::WEBMANAGER_AUTH_USERNAME,
+#else
+        "admin",
+#endif
+#ifdef __WEBMANAGER_AUTH_PASSWORD__
+        cfg::WEBMANAGER_AUTH_PASSWORD,
+#else
+        "password",
+#endif
+#ifdef __WIFIMANAGER_AP_FALLBACK_TIMEOUT_MS__
+        (time_t)cfg::WIFIMANAGER_AP_FALLBACK_TIMEOUT_MS * 1000
+#else
+        webmanager::FAR_FUTURE
+#endif
+    ));
     
     const char *hostname = wm->GetHostname();
 #if defined(HTTPS)

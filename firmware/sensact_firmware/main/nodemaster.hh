@@ -19,8 +19,7 @@
 #include "interfaces.hh"
 #include "model_node.hh"
 #include "webmanager_interfaces.hh"
-#include "flatbuffers/flatbuffers.h"
-#include "flatbuffers_cpp/ns21nodemaster_generated.h"
+#include "wsprotocol_cpp/ws_protocol.hh"
 #include "messagecodes.hh"
 
 
@@ -321,77 +320,105 @@ namespace sensact
         void OnTimeUpdate(webmanager::iWebmanagerCallback *callback) override{
 			return;
 		}
-        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf) override{
-			 if (ns != nodemaster::Namespace::Namespace_Value)
-                return webmanager::eMessageReceiverResult::NOT_FOR_ME;
-            
-            auto rw = flatbuffers::GetRoot<nodemaster::RequestWrapper>(buf);
-			if(rw->request_type()==nodemaster::Requests::Requests_RequestInputs){
-				flatbuffers::FlatBufferBuilder b(1024);
-				std::vector<Range> ranges;
+        // Baut ranges (aus AppendValidInputRanges/AppendValidOutputRanges, s. busmaster.hh) in einen
+        // vorserialisierten Scratch-Puffer -- gemeinsame Hilfsfunktion fuer RequestInputs/Outputs,
+        // die sich nur im Encode-Helper (AppendResponseInputs.../AppendResponseOutputs...) unterscheiden.
+        template <typename AppendFn>
+        static size_t EncodeRanges(const std::vector<sensact::Range> &ranges, uint8_t *scratch, size_t scratchSize, AppendFn &&append, size_t &count)
+        {
+            size_t pos = 0;
+            count = 0;
+            for (auto &r : ranges)
+            {
+                WsProtocol::nodemaster::Range::Payload item{};
+                item.start = r.start;
+                item.end = r.end;
+                item.name = r.name.c_str();
+                size_t newPos = append(item, scratch, pos, scratchSize);
+                if (newPos == 0) break;
+                pos = newPos;
+                count++;
+            }
+            return pos;
+        }
 
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen) override{
+			if (namespaceId != WsProtocol::nodemaster::NAMESPACE_ID)
+                return webmanager::eMessageReceiverResult::NOT_FOR_ME;
+			switch (messageTypeId) {
+			case WsProtocol::nodemaster::RequestInputs::TYPE_ID: {
+				WsProtocol::nodemaster::RequestInputs::Payload req{};
+				if (!WsProtocol::nodemaster::RequestInputs::Decode(frame, frameLen, req))
+					return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				std::vector<sensact::Range> ranges;
 				for (size_t busmaster_idx = 0; busmaster_idx < busmasters->size() && busmaster_idx < 4; busmaster_idx++) {
 					auto busmaster = busmasters->at(busmaster_idx);
 					if(busmaster==nullptr) continue;
 					u16 msb_value = (u16)busmaster_idx << 14; // two MSBs select busmaster
 					busmaster->AppendValidInputRanges(msb_value, ranges);
 				}
-				std::vector<flatbuffers::Offset<nodemaster::Range>> fb_ranges;
-				for(auto &r : ranges) {
-					auto name = b.CreateString(r.name);
-					fb_ranges.push_back(nodemaster::CreateRange(b, r.start, r.end, name));
-				}
-				auto response = nodemaster::CreateResponseInputs(b, b.CreateVector(fb_ranges));
-				b.Finish(
-					nodemaster::CreateResponseWrapper(
-						b,
-						nodemaster::Responses::Responses_ResponseInputs,
-						response.Union()
-					)
-				);
-				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
-			}else if(rw->request_type()==nodemaster::Requests::Requests_RequestOutputs){
-				flatbuffers::FlatBufferBuilder b(1024);
-				std::vector<Range> ranges;
-
+				static uint8_t scratch[4096];
+				size_t count = 0;
+				size_t dataSize = EncodeRanges(ranges, scratch, sizeof(scratch), WsProtocol::nodemaster::AppendResponseInputsRangesRangeElement, count);
+				WsProtocol::nodemaster::ResponseInputs::Payload resp{};
+				resp.requestId = req.requestId;
+				resp.rangesData = scratch;
+				resp.rangesCount = count;
+				resp.rangesDataSize = dataSize;
+				static uint8_t buf[4096];
+				size_t len = WsProtocol::nodemaster::ResponseInputs::Encode(resp, buf, sizeof(buf));
+				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
+			case WsProtocol::nodemaster::RequestOutputs::TYPE_ID: {
+				WsProtocol::nodemaster::RequestOutputs::Payload req{};
+				if (!WsProtocol::nodemaster::RequestOutputs::Decode(frame, frameLen, req))
+					return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				std::vector<sensact::Range> ranges;
 				for (size_t busmaster_idx = 0; busmaster_idx < busmasters->size() && busmaster_idx < 4; busmaster_idx++) {
 					auto busmaster = busmasters->at(busmaster_idx);
 					if(busmaster==nullptr) continue;
 					u16 msb_value = (u16)busmaster_idx << 14;
 					busmaster->AppendValidOutputRanges(msb_value, ranges);
 				}
-				std::vector<flatbuffers::Offset<nodemaster::Range>> fb_ranges;
-				for(auto &r : ranges) {
-					auto name = b.CreateString(r.name);
-					fb_ranges.push_back(nodemaster::CreateRange(b, r.start, r.end, name));
-				}
-				auto response = nodemaster::CreateResponseOutputs(b, b.CreateVector(fb_ranges));
-				b.Finish(
-					nodemaster::CreateResponseWrapper(
-						b,
-						nodemaster::Responses::Responses_ResponseOutputs,
-						response.Union()
-					)
-				);
-				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
-			}else if(rw->request_type()==nodemaster::Requests::Requests_RequestSetOutput){
-				auto rso = rw->request_as_RequestSetOutput();
-				u16 index = rso ? rso->index() : 0;
-				u16 value = rso ? rso->value() : 0;
+				static uint8_t scratch[4096];
+				size_t count = 0;
+				size_t dataSize = EncodeRanges(ranges, scratch, sizeof(scratch), WsProtocol::nodemaster::AppendResponseOutputsRangesRangeElement, count);
+				WsProtocol::nodemaster::ResponseOutputs::Payload resp{};
+				resp.requestId = req.requestId;
+				resp.rangesData = scratch;
+				resp.rangesCount = count;
+				resp.rangesDataSize = dataSize;
+				static uint8_t buf[4096];
+				size_t len = WsProtocol::nodemaster::ResponseOutputs::Encode(resp, buf, sizeof(buf));
+				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
+			case WsProtocol::nodemaster::RequestSetOutput::TYPE_ID: {
+				WsProtocol::nodemaster::RequestSetOutput::Payload req{};
+				if (!WsProtocol::nodemaster::RequestSetOutput::Decode(frame, frameLen, req))
+					return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				u16 index = req.index;
+				u16 value = req.value;
 				u16 busmasterIndex = index >> 14;
 				bool success=false;
 				if (busmasterIndex < busmasters->size() && busmasters->at(busmasterIndex)!=nullptr){
 					u16 localIndex = index & 0x3FFF;
 					success = (busmasters->at(busmasterIndex)->SetOutput(localIndex, value) == ErrorCode::OK);
 				}
-				flatbuffers::FlatBufferBuilder b(128);
-				auto resp = nodemaster::CreateResponseSetOutput(b, success, index, value);
-				b.Finish(nodemaster::CreateResponseWrapper(b, nodemaster::Responses::Responses_ResponseSetOutput, resp.Union()));
+				WsProtocol::nodemaster::ResponseSetOutput::Payload resp{};
+				resp.requestId = req.requestId;
+				resp.success = success;
+				resp.index = index;
+				resp.value = value;
+				uint8_t buf[32];
+				size_t len = WsProtocol::nodemaster::ResponseSetOutput::Encode(resp, buf, sizeof(buf));
 				LOGI(TAG, "SetOutput Request for index %u to value %u was %s", index, value, success?"successful":"unsuccessful");
-				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
-			} else if(rw->request_type()==nodemaster::Requests::Requests_RequestGetInput){
-				auto rgi = rw->request_as_RequestGetInput();
-				u16 index = rgi ? rgi->index() : 0;
+				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
+			case WsProtocol::nodemaster::RequestGetInput::TYPE_ID: {
+				WsProtocol::nodemaster::RequestGetInput::Payload req{};
+				if (!WsProtocol::nodemaster::RequestGetInput::Decode(frame, frameLen, req))
+					return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				u16 index = req.index;
 				u16 value = 0;
 				bool success=false;
 				u16 busmasterIndex = index >> 14;
@@ -399,14 +426,16 @@ namespace sensact
 					u16 localIndex = index & 0x3FFF;
 					success = (busmasters->at(busmasterIndex)->GetInput(localIndex, value) == ErrorCode::OK);
 				}
-				flatbuffers::FlatBufferBuilder b(128);
-				auto resp = nodemaster::CreateResponseGetInput(b, index, value);
-				b.Finish(nodemaster::CreateResponseWrapper(b, nodemaster::Responses::Responses_ResponseGetInput, resp.Union()));
+				WsProtocol::nodemaster::ResponseGetInput::Payload resp{};
+				resp.requestId = req.requestId;
+				resp.index = index;
+				resp.value = value;
+				uint8_t buf[32];
+				size_t len = WsProtocol::nodemaster::ResponseGetInput::Encode(resp, buf, sizeof(buf));
 				LOGD(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
-				return callback->WrapAndSendAsync(nodemaster::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 			}
-
-			else{
+			default:
                 return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 			}
 		}

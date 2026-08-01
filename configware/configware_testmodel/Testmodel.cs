@@ -53,7 +53,7 @@ namespace Klli.Sensact.Config
             AddPowIt(NODE_HS, ApplicationId.STDBY_X1_XX1_15, "Standby für die PWMApplication", BUS0+I2C+7, 10000);//ist der Standny für die PWMApplication
             AddSound(NODE_HS, ApplicationId.SOUND_X2_XX2_0, "Soundgenerator", 20, 1);
 
-            AddRotaryEncoder(NODE_UP,ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTARYENCODER_1, ApplicationId.PWM___X3_XX4_14);
+            AddRotaryEncoder(NODE_UP,ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTENC0, ApplicationId.PWM___X3_XX4_14);
             
             AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42);
             AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);

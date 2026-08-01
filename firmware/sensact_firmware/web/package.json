@@ -18,9 +18,9 @@
   "dependencies": {
     "@generated/flatbuffers_ts": "file:../../../../generated/flatbuffers_ts",
     "@generated/runtimeconfig_ts": "file:../../../../generated/runtimeconfig_ts",
+    "@generated/wsprotocol_ts": "file:../../../../generated/wsprotocol_ts",
     "@generated/sensact_appsbuilder": "file:../../../../generated/sensact_appsbuilder",
     "@klaus-liebler/sensact-base": "file:../../../../npm-packages/@klaus-liebler/sensact-base",
-    "@klaus-liebler/vite-single-file": "file:../../../../npm-packages/@klaus-liebler/vite-single-file",
     "@klaus-liebler/web-components": "file:../../../../npm-packages/@klaus-liebler/web-components",
     "@klaus-liebler/web-components-sensact": "file:../../../../npm-packages/@klaus-liebler/web-components-sensact",
     "@types/node": "^22.10.9",
@@ -33,7 +33,9 @@
   "devDependencies": {
     "@klaus-liebler/websocket_file_testserver": "file:../../../../npm-packages/@klaus-liebler/websocket_file_testserver",
     "@types/ws": "^8.18.1",
+    "html-minifier-terser": "^7.2.0",
     "rollup-plugin-visualizer": "^7.0.0",
+    "terser": "^5.49.0",
     "tsx": "^4.20.0",
     "ws": "^8.19.0"
   }

@@ -27,65 +27,75 @@ void cApplicationHost::OnTimeUpdate(webmanager::iWebmanagerCallback *callback){
     this->webmanager_callback=callback;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const sensact::RequestCommand* req, webmanager::iWebmanagerCallback* callback){
-    flatbuffers::FlatBufferBuilder b(1024);
-    auto d = req->payload()->data()->data();
-    const uint16_t reqId = (uint16_t)req->id();
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const WsProtocol::sensact::RequestCommand::Payload& req, webmanager::iWebmanagerCallback* callback){
+    const uint16_t reqId = (uint16_t)req.id;
     const char* reqName = reqId < (uint16_t)eApplicationID::CNT ? sensact::ApplicationNames[reqId] : "INVALID_APP_ID";
-    ESP_LOGI(TAG, "WEB CMD target=%s(%u) cmd=%u payloadLen=%u", reqName, reqId, (uint16_t)req->cmd(), (uint16_t)req->payload()->len());
+    ESP_LOGI(TAG, "WEB CMD target=%s(%u) cmd=%u payloadLen=%u", reqName, reqId, (uint16_t)req.cmd, (uint16_t)req.payload.len);
     CommandMessage message{
-        (sensact::eApplicationID)req->id(), 
-        (sensact::eCommandType)req->cmd(),
-        {d[0],d[1],d[2],d[3],d[4],d[5],d[6],d[7]},
-        (uint8_t)req->payload()->len()
+        (sensact::eApplicationID)reqId,
+        (sensact::eCommandType)req.cmd,
+        {req.payload.data[0],req.payload.data[1],req.payload.data[2],req.payload.data[3],req.payload.data[4],req.payload.data[5],req.payload.data[6],req.payload.data[7]},
+        (uint8_t)req.payload.len
     };
     xQueueSend(this->webCommandQueue, (void *)&message, pdMS_TO_TICKS(100));
-    b.Finish(
-        sensact::CreateResponseWrapper(
-            b,
-            sensact::Responses::Responses_ResponseCommand,
-            sensact::CreateResponseCommand(b).Union()
-        )
-    );
-    return callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+    WsProtocol::sensact::ResponseCommand::Payload resp{};
+    resp.requestId = req.requestId;
+    uint8_t buf[32];
+    size_t len = WsProtocol::sensact::ResponseCommand::Encode(resp, buf, sizeof(buf));
+    return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const sensact::RequestStatus* req, webmanager::iWebmanagerCallback* callback){
-    flatbuffers::FlatBufferBuilder b(1024);
-    std::vector<sensact::ResponseStatusItem> states;
-    for(int i=0;i<req->ids()->size();i++){
-        auto id = req->ids()->Get(i);
-        auto state=this->statusBuffer[id];
-        states.push_back(sensact::ResponseStatusItem((sensact::ApplicationId)id, sensact::StatusPayload(state)));
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const WsProtocol::sensact::RequestStatus::Payload& req, webmanager::iWebmanagerCallback* callback){
+    static uint8_t states_scratch[(size_t)eApplicationID::CNT * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE];
+    size_t count = 0;
+    for(size_t i=0;i<req.idsCount && count < (size_t)eApplicationID::CNT; i++){
+        WsProtocol::sensact::ApplicationIdValue idVal{};
+        if (!WsProtocol::sensact::DecodeRequestStatusIdsElementAt(req.idsData, i, idVal)) continue;
+        uint16_t id = (uint16_t)idVal.value;
+        if (id >= (uint16_t)eApplicationID::CNT) continue;
+        auto &state = this->statusBuffer[id];
+        WsProtocol::sensact::ResponseStatusItem item{};
+        item.id = idVal.value;
+        for (size_t k=0;k<4;k++) item.status.data[k] = state[k];
+        size_t off = count * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE;
+        size_t written = WsProtocol::sensact::EncodeResponseStatusStatesElement(item, states_scratch + off, sizeof(states_scratch) - off);
+        if (written == 0) break;
+        count++;
     }
-    b.Finish(
-        sensact::CreateResponseWrapper(
-            b,
-            sensact::Responses::Responses_ResponseStatus,
-            sensact::CreateResponseStatusDirect(b, &states).Union()
-        )
-    );
-    return callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b)==ESP_OK?webmanager::eMessageReceiverResult::OK:webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+
+    WsProtocol::sensact::ResponseStatus::Payload resp{};
+    resp.requestId = req.requestId;
+    resp.statesData = states_scratch;
+    resp.statesCount = count;
+
+    static uint8_t buf[(size_t)eApplicationID::CNT * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE + 32];
+    size_t len = WsProtocol::sensact::ResponseStatus::Encode(resp, buf, sizeof(buf));
+    return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf){
+webmanager::eMessageReceiverResult cApplicationHost::ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen){
     this->webmanager_callback=callback;
-    if (ns != sensact::Namespace::Namespace_Value)
+    if (namespaceId != WsProtocol::sensact::NAMESPACE_ID)
         return webmanager::eMessageReceiverResult::NOT_FOR_ME;
-    
-    auto rw = flatbuffers::GetRoot<sensact::RequestWrapper>(buf);
-    switch (rw->request_type())
+
+    switch (messageTypeId)
     {
-    case sensact::Requests::Requests_RequestCommand:{
-        return this->handleRequestCommand(rw->request_as_RequestCommand(), callback);
+    case WsProtocol::sensact::RequestCommand::TYPE_ID:{
+        WsProtocol::sensact::RequestCommand::Payload r{};
+        if (!WsProtocol::sensact::RequestCommand::Decode(frame, frameLen, r))
+            return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+        return this->handleRequestCommand(r, callback);
     }
-    case sensact::Requests::Requests_RequestStatus:{
-        return this->handleRequestStatus(rw->request_as_RequestStatus(), callback);
+    case WsProtocol::sensact::RequestStatus::TYPE_ID:{
+        WsProtocol::sensact::RequestStatus::Payload r{};
+        if (!WsProtocol::sensact::RequestStatus::Decode(frame, frameLen, r))
+            return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+        return this->handleRequestStatus(r, callback);
     }
     default:
         return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
     }
-}    
+}
 
 ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, const uint8_t *const payload, uint8_t payloadLength)
     {
@@ -120,17 +130,13 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         }
         
         if(this->webmanager_callback!=nullptr){
-            flatbuffers::FlatBufferBuilder b(128);
-            auto sp= sensact::StatusPayload(payload);
-            b.Finish(
-                sensact::CreateResponseWrapper(
-                    b,
-                    sensact::Responses::Responses_NotifyStatus,
-                    sensact::CreateNotifyStatus(b, static_cast<sensact::ApplicationId>(sourceApp), &sp).Union()
-                )
-            );
-            (void)webmanager_callback->WrapAndSendAsync(sensact::Namespace::Namespace_Value, b);
-
+            WsProtocol::sensact::NotifyStatus::Payload notify{};
+            notify.requestId = 0; // Server-Push, nicht durch einen Client-Request angestossen
+            notify.id = static_cast<WsProtocol::sensact::ApplicationId>(sourceApp);
+            for (size_t k=0;k<4;k++) notify.status.data[k] = payload[k];
+            uint8_t buf[32];
+            size_t len = WsProtocol::sensact::NotifyStatus::Encode(notify, buf, sizeof(buf));
+            if (len > 0) (void)webmanager_callback->SendRawAsync(buf, len);
         }
         CANMessage m;
         if(canMBP->BuildApplicationStatusMessage((u16)sourceApp, (u8)statusType, byteArray, 8, m)==ErrorCode::OK){

@@ -1,0 +1,78 @@
+// Zentrale Pfad-Konstanten, analog zu Paths.cs im Referenzprojekt (s. Kommentar dort zur
+// AppContext.BaseDirectory-Problematik bei dotnet run/build/publish).
+namespace Builder;
+
+public static class Paths
+{
+	public static readonly string RootDir = FindRootDir();
+
+	private static string FindRootDir()
+	{
+		var dir = new DirectoryInfo(AppContext.BaseDirectory);
+		while (dir is not null)
+		{
+			if (File.Exists(Path.Combine(dir.FullName, "CMakeLists.txt")) && Directory.Exists(Path.Combine(dir.FullName, "builder_cs")))
+			{
+				return dir.FullName;
+			}
+			dir = dir.Parent;
+		}
+		throw new InvalidOperationException(
+			$"Konnte Repo-Wurzel nicht finden (gesucht ab {AppContext.BaseDirectory} nach oben, Marker: CMakeLists.txt + builder_cs/).");
+	}
+
+	// Zwischengespeicherter Stand des zuletzt bekannten Boards (s. context.ts: Context.get() kopiert
+	// die board-spezifische board_info.json hierher, sobald einmal ein Board verbunden war) --
+	// KEINE Live-Abfrage eines angeschlossenen Boards, s. Phases/Info.cs.
+	public static readonly string BoardInfoJsonPath = Path.Combine(RootDir, "board_info.json");
+
+	public static readonly string WsProtocolDir = Path.Combine(RootDir, "ws-protocol");
+
+	// Gemeinsames, externes Ausgabeverzeichnis fuer generierte Dateien, unveraendert aus
+	// gulpfile.ts uebernommen (GENERATED_ROOT = "c:\repos\generated") -- sensacts eigene
+	// Konvention, anders als das repo-interne Core/generated der Referenzvorlage. Analog zu
+	// GENERATED_FLATBUFFERS_CPP/_TS in paths.ts (die dieser Ordner mittelfristig ersetzt, s.
+	// Phases/GenerateWsProtocolFiles.cs), aber mit neuen, eindeutigen Namen, solange beide
+	// Verfahren parallel existieren (Flatbuffers ist noch produktiv im Einsatz).
+	public static readonly string GeneratedRoot = @"c:\repos\generated";
+
+	public static readonly string GeneratedWsProtocolCppDir = Path.Combine(GeneratedRoot, "wsprotocol_cpp");
+
+	public static readonly string GeneratedWsProtocolTsDir = Path.Combine(GeneratedRoot, "wsprotocol_ts");
+
+	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
+	// espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"), unveraendert aus gulpfile.ts
+	// uebernommen (IDF_COMPONENT_WEBMANAGER_ROOT = "C:\repos\espidf-component-webmanager").
+	public static readonly string WebmanagerWsProtocolDir = @"C:\repos\espidf-component-webmanager\ws-protocol";
+
+	// Ziele des Config-/Runtimeconfig-Writers (s. RuntimeConfigWriter.cs/Phases/GenerateRuntimeConfig.cs),
+	// unveraendert aus paths.ts uebernommene Ordnernamen (GENERATED_RUNTIMECONFIG_CPP/_TS, GENERATED_CMAKE).
+	public static readonly string GeneratedRuntimeConfigCppDir = Path.Combine(GeneratedRoot, "runtimeconfig_cpp");
+
+	public static readonly string GeneratedRuntimeConfigTsDir = Path.Combine(GeneratedRoot, "runtimeconfig_ts");
+
+	public static readonly string GeneratedCMakeDir = Path.Combine(GeneratedRoot, "cmake");
+
+	// Sensact-spezifisch: pro-Node generierte Artefakte aus configware (s. Plan-Doc "configware wird
+	// voll in den Orchestrator verschmolzen"), unveraendert aus gulpfile.ts uebernommen
+	// (SENSACT_COMPONENT_GENERATED_PATH). Solange GenerateModelFiles (Schritt 7) noch nicht portiert
+	// ist, ist dies weiterhin der Output-Ordner des bestehenden configware_*-Konsolenprogramms.
+	public static readonly string SensactModelGeneratedDir = @"C:\repos\generated\sensact_model";
+
+	// TS-Template-Dateien fuer die Sensact-Codegenerierung (s. sensact_code_generator.ts:
+	// P_WEB/"templates"), Phases/GenerateSensactFiles.cs.
+	public static readonly string WebTemplatesDir = Path.Combine(RootDir, "web", "templates");
+
+	// Web-Projekt (Vite) + dessen Ausgabeverzeichnis, s. Phases/BuildWebApp.cs. GENERATED_WEB aus
+	// paths.ts uebernommen.
+	public static readonly string WebDir = Path.Combine(RootDir, "web");
+
+	public static readonly string GeneratedWebDir = Path.Combine(GeneratedRoot, "web");
+
+	// ESP-IDF-eigenes, repo-lokales Build-Verzeichnis (bootloader.bin/sensact_firmware.bin/
+	// flasher_args.json, von "idf.py build" erzeugt) -- bewusst NICHT unter GeneratedRoot, das ist
+	// ESP-IDF's eigene, feste Konvention (s. Phases/BuildFirmware.cs/FlashFirmware.cs).
+	public static readonly string BuildDir = Path.Combine(RootDir, "build");
+
+	public static readonly string PartitionsCsvPath = Path.Combine(RootDir, "partitions.csv");
+}

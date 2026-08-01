@@ -6,7 +6,7 @@
 #include "hal.hh"
 #include <cApplication.hh>
 #include <webmanager_interfaces.hh>
-#include "flatbuffers_cpp/ns20sensact_generated.h"
+#include "wsprotocol_cpp/ws_protocol.hh"
 namespace sensact
 {
     class cApplicationHost : public iHost, public sensact::apps::iSensactContext, public webmanager::iWebmanagerPlugin
@@ -31,10 +31,10 @@ namespace sensact
         void PublishApplicationEventToMessageBus(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength);
         ErrorCode OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, const uint8_t *const payload, uint8_t payloadLength);
 
-		webmanager::eMessageReceiverResult handleRequestCommand(const sensact::RequestCommand* req, webmanager::iWebmanagerCallback* callback);
+		webmanager::eMessageReceiverResult handleRequestCommand(const WsProtocol::sensact::RequestCommand::Payload& req, webmanager::iWebmanagerCallback* callback);
 
 
-		webmanager::eMessageReceiverResult handleRequestStatus(const sensact::RequestStatus* req, webmanager::iWebmanagerCallback* callback);
+		webmanager::eMessageReceiverResult handleRequestStatus(const WsProtocol::sensact::RequestStatus::Payload& req, webmanager::iWebmanagerCallback* callback);
     public:
         cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP);
         ErrorCode Setup(iHostContext &ctx) override;
@@ -54,7 +54,7 @@ namespace sensact
         void OnWifiConnect(webmanager::iWebmanagerCallback *callback) override;
         void OnWifiDisconnect(webmanager::iWebmanagerCallback *callback) override;
         void OnTimeUpdate(webmanager::iWebmanagerCallback *callback)override;
-        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t* buf) override;
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen) override;
         #include <common/sendCommandDeclarationsOverride.inc>
         #include <common/publishEventDeclarationsOverride.inc>
     };

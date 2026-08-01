@@ -2,7 +2,7 @@
 #include <r503pro_manager.hh>
 #include <apps/fingerprint.hh>
 #include <hal.hh>
-#include "flatbuffers_cpp/ns07fingerprint_generated.h"
+#include "wsprotocol_cpp/ws_protocol.hh"
 #define TAG "FGRADPTR"
 namespace fingerprint
 {
@@ -17,6 +17,7 @@ namespace fingerprint
         sensact::apps::cFingerprint *myFingerprintSensactApp{nullptr};
         fingerprint::R503ProManager *fpm{nullptr};
         scheduler::Scheduler* sched{nullptr};
+        uint16_t lastRequestId{0};
     public:
         FingerprintWebmanagerSensactAdapter(
             sensact::hal::iHAL *hal,
@@ -51,147 +52,130 @@ namespace fingerprint
         {
             this->callback = callback;
         }
-        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint32_t ns, uint8_t *buf) override
+
+        template <typename TPayload>
+        webmanager::eMessageReceiverResult sendResponse(size_t (*encode)(const TPayload&, uint8_t*, size_t), const TPayload &payload)
+        {
+            uint8_t buf[1024];
+            size_t len = encode(payload, buf, sizeof(buf));
+            return (len > 0 && callback->SendRawAsync(buf, len) == ESP_OK)
+                ? webmanager::eMessageReceiverResult::OK
+                : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+        }
+
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen) override
         {
             this->callback = callback;
-            if (ns != fingerprint::Namespace::Namespace_Value)
+            if (namespaceId != WsProtocol::fingerprint::NAMESPACE_ID)
                 return webmanager::eMessageReceiverResult::NOT_FOR_ME;
-            auto rw = flatbuffers::GetRoot<fingerprint::RequestWrapper>(buf);
-            flatbuffers::FlatBufferBuilder b(1024);
-            switch (rw->request_type())
+            switch (messageTypeId)
             {
-            case fingerprint::Requests::Requests_RequestEnrollNewFinger:
+            case WsProtocol::fingerprint::RequestEnrollNewFinger::TYPE_ID:
             {
-                const char *name = rw->request_as_RequestEnrollNewFinger()->name()->c_str();
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseEnrollNewFinger,
-                        fingerprint::CreateResponseEnrollNewFinger(b, (uint16_t)fpm->TryEnrollAndStore(name)).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestEnrollNewFinger::Payload r{};
+                if (!WsProtocol::fingerprint::RequestEnrollNewFinger::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseEnrollNewFinger::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.errorcode = (uint16_t)fpm->TryEnrollAndStore(r.name);
+                return sendResponse(WsProtocol::fingerprint::ResponseEnrollNewFinger::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestDeleteAllFingers:
+            case WsProtocol::fingerprint::RequestDeleteAllFingers::TYPE_ID:
             {
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseDeleteAllFingers,
-                        fingerprint::CreateResponseDeleteAllFingers(b, (uint16_t)fpm->TryDeleteAll()).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestDeleteAllFingers::Payload r{};
+                if (!WsProtocol::fingerprint::RequestDeleteAllFingers::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseDeleteAllFingers::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.errorcode = (uint16_t)fpm->TryDeleteAll();
+                return sendResponse(WsProtocol::fingerprint::ResponseDeleteAllFingers::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestDeleteFinger:
+            case WsProtocol::fingerprint::RequestDeleteFinger::TYPE_ID:
             {
-                const char *name = rw->request_as_RequestDeleteFinger()->name()->c_str();
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseDeleteFinger,
-                        fingerprint::CreateResponseDeleteFingerDirect(b, (uint16_t)fpm->TryDelete(name), name).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestDeleteFinger::Payload r{};
+                if (!WsProtocol::fingerprint::RequestDeleteFinger::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseDeleteFinger::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.errorcode = (uint16_t)fpm->TryDelete(r.name);
+                resp.name = r.name;
+                return sendResponse(WsProtocol::fingerprint::ResponseDeleteFinger::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestCancelInstruction:
+            case WsProtocol::fingerprint::RequestCancelInstruction::TYPE_ID:
             {
-                 b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseCancelInstruction,
-                        fingerprint::CreateResponseCancelInstruction(b, (uint16_t)fpm->CancelInstruction()).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestCancelInstruction::Payload r{};
+                if (!WsProtocol::fingerprint::RequestCancelInstruction::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseCancelInstruction::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.errorcode = (uint16_t)fpm->CancelInstruction();
+                return sendResponse(WsProtocol::fingerprint::ResponseCancelInstruction::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestRenameFinger:
+            case WsProtocol::fingerprint::RequestRenameFinger::TYPE_ID:
             {
-                const char *oldName = rw->request_as_RequestRenameFinger()->old_name()->c_str();
-                const char *newName = rw->request_as_RequestRenameFinger()->new_name()->c_str();
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseRenameFinger,
-                        fingerprint::CreateResponseRenameFinger(b, (uint16_t)fpm->TryRename(oldName, newName)).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestRenameFinger::Payload r{};
+                if (!WsProtocol::fingerprint::RequestRenameFinger::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseRenameFinger::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.errorcode = (uint16_t)fpm->TryRename(r.oldName, r.newName);
+                return sendResponse(WsProtocol::fingerprint::ResponseRenameFinger::Encode, resp);
             }
-            case fingerprint::Requests_RequestFingerprintSensorInfo:
+            case WsProtocol::fingerprint::RequestFingerprintSensorInfo::TYPE_ID:
             {
+                WsProtocol::fingerprint::RequestFingerprintSensorInfo::Payload r{};
+                if (!WsProtocol::fingerprint::RequestFingerprintSensorInfo::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
                 auto p = fpm->GetAllParams();
-
-                fingerprint::Uint8x32 usedIndices(p->libraryIndicesUsed);
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseFingerprintSensorInfo,
-                        fingerprint::CreateResponseFingerprintSensorInfoDirect(b,
-                                                                                                                 p->status,
-                                                                                                                 p->librarySizeMax,
-                                                                                                                 p->librarySizeUsed,
-                                                                                                                 &usedIndices,
-                                                                                                                 p->securityLevel,
-                                                                                                                 p->deviceAddress,
-                                                                                                                 p->dataPacketSizeCode,
-                                                                                                                 p->baudRateTimes9600,
-                                                                                                                 p->algVer, p->fwVer)
-                                                               .Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::ResponseFingerprintSensorInfo::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.status = p->status;
+                resp.librarySizeMax = p->librarySizeMax;
+                resp.librarySizeUsed = p->librarySizeUsed;
+                static_assert(sizeof(resp.libraryUsedIndices.v) == sizeof(p->libraryIndicesUsed), "size mismatch");
+                memcpy(resp.libraryUsedIndices.v, p->libraryIndicesUsed, sizeof(resp.libraryUsedIndices.v));
+                resp.securityLevel = p->securityLevel;
+                resp.deviceAddress = p->deviceAddress;
+                resp.dataPacketSizeCode = p->dataPacketSizeCode;
+                resp.baudRateTimes9600 = p->baudRateTimes9600;
+                resp.algVer = p->algVer;
+                resp.fwVer = p->fwVer;
+                return sendResponse(WsProtocol::fingerprint::ResponseFingerprintSensorInfo::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestStoreFingerAction:
+            case WsProtocol::fingerprint::RequestStoreFingerAction::TYPE_ID:
             {
-                auto s =rw->request_as_RequestStoreFingerAction();
-                fpm->TryStoreFingerAction(s->finger_index(), s->action_index());
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseStoreFingerAction,
-                        fingerprint::CreateResponseStoreFingerAction(b).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestStoreFingerAction::Payload r{};
+                if (!WsProtocol::fingerprint::RequestStoreFingerAction::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                fpm->TryStoreFingerAction(r.fingerIndex, r.actionIndex);
+                WsProtocol::fingerprint::ResponseStoreFingerAction::Payload resp{};
+                resp.requestId = r.requestId;
+                return sendResponse(WsProtocol::fingerprint::ResponseStoreFingerAction::Encode, resp);
             }
-
-            case fingerprint::Requests::Requests_RequestStoreFingerSchedule:
+            case WsProtocol::fingerprint::RequestStoreFingerSchedule::TYPE_ID:
             {
-                auto s =rw->request_as_RequestStoreFingerSchedule();
-                fpm->TryStoreFingerScheduler(s->finger_index(), s->schedule_name()->c_str());
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseStoreFingerSchedule,
-                        fingerprint::CreateResponseStoreFingerSchedule(b).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                WsProtocol::fingerprint::RequestStoreFingerSchedule::Payload r{};
+                if (!WsProtocol::fingerprint::RequestStoreFingerSchedule::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                fpm->TryStoreFingerScheduler(r.fingerIndex, r.scheduleName);
+                WsProtocol::fingerprint::ResponseStoreFingerSchedule::Payload resp{};
+                resp.requestId = r.requestId;
+                return sendResponse(WsProtocol::fingerprint::ResponseStoreFingerSchedule::Encode, resp);
             }
-            case fingerprint::Requests::Requests_RequestFingers:
+            case WsProtocol::fingerprint::RequestFingers::TYPE_ID:
             {
-                std::vector<flatbuffers::Offset<flatbuffers::String>> scheduleNames;
-                sched->FillFlatbufferWithAvailableNames(b, scheduleNames);
+                WsProtocol::fingerprint::RequestFingers::Payload r{};
+                if (!WsProtocol::fingerprint::RequestFingers::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 
-                std::vector<flatbuffers::Offset<fingerprint::Finger>> fingers_vector;
+                std::vector<std::string> scheduleNames;
+                sched->FillAvailableScheduleNames(scheduleNames);
+                // Sequenz null-terminierter Strings, keine Praefixierung je Element (UniformVariableArrayField).
+                static uint8_t scheduleNames_scratch[64 * 33];
+                size_t scheduleNames_pos = 0;
+                for (auto &n : scheduleNames)
+                {
+                    size_t len = n.size();
+                    if (scheduleNames_pos + len + 1 > sizeof(scheduleNames_scratch)) break;
+                    memcpy(scheduleNames_scratch + scheduleNames_pos, n.c_str(), len);
+                    scheduleNames_pos += len;
+                    scheduleNames_scratch[scheduleNames_pos++] = 0;
+                }
+
+                static uint8_t fingers_scratch[64 * 96];
+                size_t fingers_pos = 0;
+                size_t fingers_count = 0;
 
                 nvs_iterator_t it{nullptr};
                 esp_err_t res = nvs_entry_find(NVS_PARTITION_NAME, NVS_FINGER_NAME_2_FINGER_INDEX_NAMESPACE, NVS_TYPE_U16, &it);
@@ -220,44 +204,52 @@ namespace fingerprint
                         ESP_LOGW(TAG, "Problem while fetching scheduleName for fingerIndex %s (%s). Error=%s. Assuming empty string.", fingerIndexAsString, info.key, esp_err_to_name(err));
                         scheduleName[0] = 0;
                     }
-                    fingers_vector.push_back(fingerprint::CreateFingerDirect(b, info.key, fingerIndex, scheduleName, actionIndex));
+                    WsProtocol::fingerprint::Finger::Payload item{};
+                    item.name = info.key;
+                    item.index = fingerIndex;
+                    item.scheduleName = scheduleName;
+                    item.actionIndex = actionIndex;
+                    size_t newPos = WsProtocol::fingerprint::AppendResponseFingersFingersFingerElement(item, fingers_scratch, fingers_pos, sizeof(fingers_scratch));
+                    if (newPos > 0)
+                    {
+                        fingers_pos = newPos;
+                        fingers_count++;
+                    }
                     res = nvs_entry_next(&it);
                 }
                 nvs_release_iterator(it);
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseFingers,
-                        fingerprint::CreateResponseFingersDirect(b, &scheduleNames, &fingers_vector).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
+
+                WsProtocol::fingerprint::ResponseFingers::Payload resp{};
+                resp.requestId = r.requestId;
+                resp.scheduleNamesData = scheduleNames_scratch;
+                resp.scheduleNamesCount = scheduleNames.size();
+                resp.scheduleNamesDataSize = scheduleNames_pos;
+                resp.fingersData = fingers_scratch;
+                resp.fingersCount = fingers_count;
+                resp.fingersDataSize = fingers_pos;
+
+                static uint8_t buf[8192];
+                size_t len = WsProtocol::fingerprint::ResponseFingers::Encode(resp, buf, sizeof(buf));
+                return (len > 0 && callback->SendRawAsync(buf, len) == ESP_OK)
                     ? webmanager::eMessageReceiverResult::OK
                     : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
             }
 
-            case fingerprint::Requests::Requests_RequestFingerActionManually:
+            case WsProtocol::fingerprint::RequestFingerActionManually::TYPE_ID:
             {
-                auto fingerIndex = rw->request_as_RequestFingerActionManually()->finger_index();
-                auto actionIndex = rw->request_as_RequestFingerActionManually()->action_index();
+                WsProtocol::fingerprint::RequestFingerActionManually::Payload r{};
+                if (!WsProtocol::fingerprint::RequestFingerActionManually::Decode(frame, frameLen, r)) return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
                 ESP_LOGI(TAG, "Manually do FingerprintAction");
-                this->HandleFingerprintAction(fingerIndex, actionIndex);
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_ResponseFingerActionManually,
-                        fingerprint::CreateResponseFingerActionManually(b).Union()
-                    )
-                );
-                return callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b) == ESP_OK
-                    ? webmanager::eMessageReceiverResult::OK
-                    : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                this->HandleFingerprintAction(r.fingerIndex, r.actionIndex);
+                WsProtocol::fingerprint::ResponseFingerActionManually::Payload resp{};
+                resp.requestId = r.requestId;
+                return sendResponse(WsProtocol::fingerprint::ResponseFingerActionManually::Encode, resp);
             }
 
             default:
                 break;
             }
-            return webmanager::eMessageReceiverResult::NOT_FOR_ME;
+            return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
         }
 
         void HandleFingerprintAction(uint16_t fingerIndex, int action) override
@@ -270,16 +262,14 @@ namespace fingerprint
         {
             if (callback)
             {
-                flatbuffers::FlatBufferBuilder b(256);
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_NotifyFingerDetected,
-                        fingerprint::CreateNotifyFingerDetected(b, errorCode, finger, score).Union()
-                    )
-                );
-                (void)callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
-                
+                WsProtocol::fingerprint::NotifyFingerDetected::Payload notify{};
+                notify.requestId = 0; // Server-Push, nicht durch einen Client-Request angestossen
+                notify.errorcode = errorCode;
+                notify.index = finger;
+                notify.score = (uint8_t)score;
+                uint8_t buf[64];
+                size_t len = WsProtocol::fingerprint::NotifyFingerDetected::Encode(notify, buf, sizeof(buf));
+                if (len > 0) (void)callback->SendRawAsync(buf, len);
             }
             if (errorCode == (uint8_t)grow_fingerprint::RET::OK)
             {
@@ -298,15 +288,15 @@ namespace fingerprint
         {
             if (callback)
             {
-                flatbuffers::FlatBufferBuilder b(256);
-                b.Finish(
-                    fingerprint::CreateResponseWrapper(
-                        b,
-                        fingerprint::Responses::Responses_NotifyEnrollNewFinger,
-                        fingerprint::CreateNotifyEnrollNewFingerDirect(b, name, fingerIndex, step, errorCode).Union()
-                    )
-                );
-                (void)callback->WrapAndSendAsync(fingerprint::Namespace::Namespace_Value, b);
+                WsProtocol::fingerprint::NotifyEnrollNewFinger::Payload notify{};
+                notify.requestId = 0; // Server-Push, nicht durch einen Client-Request angestossen
+                notify.name = name;
+                notify.index = fingerIndex;
+                notify.step = step;
+                notify.errorcode = errorCode;
+                uint8_t buf[128];
+                size_t len = WsProtocol::fingerprint::NotifyEnrollNewFinger::Encode(notify, buf, sizeof(buf));
+                if (len > 0) (void)callback->SendRawAsync(buf, len);
             }
         }
     };

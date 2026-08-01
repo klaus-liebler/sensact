@@ -1,11 +1,61 @@
 import { defineConfig} from 'vite'
-import { viteSingleFile } from "@klaus-liebler/vite-single-file"
+import { singleFileFirmwareAssetPlugin } from "./vite-plugin-single-file-firmware-asset.ts"
 import fs from "node:fs"
 import path from "node:path"
+import https from "node:https"
 import * as weso from "ws"
 import { visualizer } from 'rollup-plugin-visualizer'
 
-const MICROCONTROLLER_HOST = "192.168.2.84";
+const WEBSOCKET_HOST = "192.168.2.42";
+const WEBSOCKET_USERNAME = "admin";
+const WEBSOCKET_PASSWORD = "password";
+
+// Browser and dev server run on a different origin than the microcontroller, so the
+// real session cookie set by the device's /login endpoint never reaches it. Instead,
+// the proxy itself logs in once and reuses the resulting session cookie for every
+// upstream connection.
+let cachedSessionCookie: string | null = null;
+
+function loginToMicrocontroller(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const body = `username=${encodeURIComponent(WEBSOCKET_USERNAME)}&password=${encodeURIComponent(WEBSOCKET_PASSWORD)}`;
+    const req = https.request(
+      {
+        host: WEBSOCKET_HOST,
+        path: "/login",
+        method: "POST",
+        rejectUnauthorized: false,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(body),
+        },
+      },
+      (res) => {
+        res.resume();
+        const setCookie = res.headers["set-cookie"] ?? [];
+        const sessionCookie = setCookie
+          .map((c) => c.split(";")[0])
+          .find((c) => c.startsWith("session="));
+        if (sessionCookie) {
+          resolve(sessionCookie);
+        } else {
+          reject(new Error(`Login at https://${WEBSOCKET_HOST}/login failed (HTTP ${res.statusCode})`));
+        }
+      }
+    );
+    req.on("error", reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+async function getSessionCookie(): Promise<string> {
+  if (!cachedSessionCookie) {
+    cachedSessionCookie = await loginToMicrocontroller();
+    console.log("Logged in to microcontroller, obtained session cookie");
+  }
+  return cachedSessionCookie;
+}
 
 const devLoginCookiePlugin = (username:string) => {
   return {
@@ -61,14 +111,33 @@ const wsProxyPlugin = () => {
     configureServer(server: any) {
       const wss = new weso.WebSocketServer({ noServer: true });
       
-      wss.on('connection', (clientWs: weso.WebSocket) => {
+      wss.on('connection', async (clientWs: weso.WebSocket) => {
         console.log('Client WebSocket connected to proxy');
-        
+
+        let sessionCookie: string;
+        try {
+          sessionCookie = await getSessionCookie();
+        } catch (error) {
+          console.error('Login to microcontroller failed:', error);
+          clientWs.close();
+          return;
+        }
+
         // Create connection to upstream server without TLS verification
-        const upstreamWs = new weso.WebSocket(`wss://${MICROCONTROLLER_HOST}/webmanager_ws`, {
+        const upstreamWs = new weso.WebSocket(`wss://${WEBSOCKET_HOST}/webmanager_ws`, {
           rejectUnauthorized: false,
+          perMessageDeflate: false,
+          headers: { Cookie: sessionCookie },
         } as any);
-        
+
+        upstreamWs.on('unexpected-response', (_req: any, res: any) => {
+          console.error(`Upstream handshake rejected: HTTP ${res.statusCode}`);
+          if (res.statusCode === 401) {
+            cachedSessionCookie = null; // force re-login on next connection attempt
+          }
+          clientWs.close();
+        });
+
         upstreamWs.on('open', () => {
           console.log('Connected to upstream WebSocket server');
           
@@ -145,11 +214,11 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
         brotliSize: true,
         template: 'treemap',
       }),
-      !isAnalyze && viteSingleFile(),
+      !isAnalyze && singleFileFirmwareAssetPlugin("index.compressed.br"),
       devLoginCookiePlugin("devuser"),
       fileServerPlugin(path.join(process.cwd(),"..", "testserver", "files")),
       wsProxyPlugin(),
-    ].filter(Boolean),//removeViteModuleLoader=true for viteSingleFile had no effect on bundle size
+    ].filter(Boolean),
     build: {
       //minify: false,
       cssCodeSplit: false,

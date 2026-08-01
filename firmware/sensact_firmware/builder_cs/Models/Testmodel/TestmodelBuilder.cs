@@ -1,0 +1,70 @@
+﻿using Klli.Sensact.Model.Common.Applications;
+using Klli.Sensact.Model.Common.Nodes;
+using Klli.Sensact.Model.Common;
+// Using-Alias statt "using Klli.Sensact.Model.Testmodel;" -- sonst mehrdeutig mit dem (durch
+// ImplicitUsings global eingebundenen) System.ApplicationId (.NET-BCL-Typ).
+using ApplicationId = Klli.Sensact.Model.Testmodel.ApplicationId;
+using System.Collections.Generic;
+using Klli.Sensact.Common;
+
+namespace Klli.Sensact.Config
+{
+    public class TestModelBuilder:ModelBuilder<ApplicationId>
+    {
+        const ushort INTI = 0x0000;
+        const ushort BUS0 = 0x4000;
+        const ushort BUS1 = 0x8000;
+        const ushort BUS2 = 0xC000;
+        const ushort BUS3 = 0xF000;
+        const ushort I2C = 0x0000;
+        const ushort OW0 = 0x0400;
+        const ushort OW1 = 0x0800;
+        const ushort OW2 = 0x0C00;
+        const ushort OW3 = 0x1000;
+
+        const int MS_12H = 1000 * 60 * 60 * 12;
+        const int MS_1H = 1000 * 60 * 60;
+
+        public TestModelBuilder(): base("TwoNodesDemo")
+        {
+        }
+        
+        protected override void BuildModel()
+        {
+            Node NODE_HS = new SensactHsNano3((ushort)ApplicationId.SNSCT_NODE_HS, ApplicationId.SNSCT_NODE_HS.ToString());
+            model.Nodes.Add(NODE_HS);
+            Node NODE_UP = new SensactUp03((ushort)ApplicationId.SNSCT_NODE_UP, ApplicationId.SNSCT_NODE_UP.ToString());
+            model.Nodes.Add(NODE_UP);
+            Node NODE_SIDEDOOR = new SensactUpControl((ushort)ApplicationId.SNSCT_NODE_SIDEDOOR, ApplicationId.SNSCT_NODE_SIDEDOOR.ToString());
+            model.Nodes.Add(NODE_SIDEDOOR);
+            Node NODE_TERRASSE = new SensactOutdoor((ushort)ApplicationId.SNSCT_NODE_TERRASSE, ApplicationId.SNSCT_NODE_TERRASSE.ToString());
+            model.Nodes.Add(NODE_TERRASSE);
+            AddToggleButton(NODE_HS, ApplicationId.PUSHB_X1_XX1_3, BUS0+I2C+0, ApplicationId.POWIT_X1_XX3_9);//macht erstes Licht an
+            AddToggleButton(NODE_HS, ApplicationId.PUSHB_X2_XX2_4, BUS0+I2C+1, ApplicationId.SOUND_X2_XX2_0);//Klingel
+            AddToggleButton(NODE_HS, ApplicationId.PUSHB_X3_XX3_5, BUS0+I2C+2, new HashSet<ApplicationId>{ApplicationId.POWIT_X1_XX3_9,ApplicationId.POWIT_X2_XX4_10});//erstes und zweites Licht
+            AddToggleButton(NODE_HS, ApplicationId.PUSHB_X1_XX4__6, BUS0+I2C+3, new HashSet<ApplicationId>{ApplicationId.POWIT_X3_XX1_11,ApplicationId.POWIT_X1_XX2_12});//drittes und viertes Licht
+            AddBlindButtons(NODE_HS, ApplicationId.BLINDB_X2_XX1_7, BUS0+I2C+4, BUS0+I2C+5, ApplicationId.BLIND_X2_XX3_13);
+            AddTwoDimButtons(NODE_HS, ApplicationId.DIM2B_X3_XX2_8, BUS0+I2C+6, BUS0+I2C+7, ApplicationId.PWM___X3_XX4_14);
+
+            AddPowIt(NODE_HS, ApplicationId.POWIT_X1_XX3_9, "erstes Licht", BUS0+I2C+0, 5000);//erstes Licht
+            AddPowIt(NODE_HS, ApplicationId.POWIT_X2_XX4_10, "zweites Licht", BUS0+I2C+1, 5000);//zweites Licht
+            AddPowIt(NODE_HS, ApplicationId.POWIT_X3_XX1_11, "drittes Licht", BUS0+I2C+2, 5000);//drittes Licht
+            AddPowIt(NODE_HS, ApplicationId.POWIT_X1_XX2_12, "viertes Licht", BUS0+I2C+3, 5000);//viertes Licht
+            AddBlindApplication(NODE_HS, ApplicationId.BLIND_X2_XX3_13, "Test-Rollade", BUS0+I2C+4, BUS0+I2C+5, RelayInterlockMode.R1_DOWN__R2_POWER, 8, 5);
+            AddPWMApplication(NODE_HS, ApplicationId.PWM___X3_XX4_14, "Dimmbares Licht", ApplicationId.STDBY_X1_XX1_15, new HashSet<ushort>{BUS0+I2C+6}, 5000, 20, 255);
+            AddPowIt(NODE_HS, ApplicationId.STDBY_X1_XX1_15, "Standby für die PWMApplication", BUS0+I2C+7, 10000);//ist der Standny für die PWMApplication
+            AddSound(NODE_HS, ApplicationId.SOUND_X2_XX2_0, "Soundgenerator", 20, 1);
+
+            AddRotaryEncoder(NODE_UP,ApplicationId.ROTAR_X3_XX3_0, RotaryEncoder.ROTENC0, ApplicationId.PWM___X3_XX4_14);
+            
+            AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42);
+            AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
+
+            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
+            AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, MS_12H, 512, 65535);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
+            AddSound(NODE_TERRASSE, ApplicationId.SOUND_X1_XX1_44, "Soundgenerator", 65535, 1);
+        }
+    }
+}

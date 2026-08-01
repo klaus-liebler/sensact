@@ -262,6 +262,31 @@ namespace Klli.Sensact.Config
             sb_c.AF2L("CNT={0},", CNT + 1);
             this.WriteCommonFile("applicationIds", sb_c);
             this.WriteCommonFile("applicationIds.fbs", sb_flatc);
+
+            // Ws-protocol-Nachfolger fuer applicationIds.fbs (s. sensact_firmware/docs/plan_v2/
+            // 02-builder-migration-csharp.md, Abschnitt "Flatbuffers wird durch ws-protocol
+            // ersetzt") -- eigenstaendige BestBinaryBuffers-Schema-Datei (C# selbst als Schema-
+            // Definition-Sprache, s. C:\repos\dotnet_libs\best_binary_buffers\README.md) statt
+            // Flatbuffers-Enum-Text. Laeuft VORLAEUFIG parallel zum bisherigen .fbs-Output (s.o.), bis
+            // die ws-protocol-basierte Codegenerierung den Flatbuffers-Pfad fuer sensact vollstaendig
+            // ersetzt hat. Werte werden bewusst IMMER explizit ausgeschrieben (nicht auf Auto-Increment
+            // verlassen) -- ApplicationIdType-Werte muessen nicht lueckenlos/aufsteigend sein.
+            var applicationIdEnumCs = new StringBuilder()
+                .AppendLine("using BestBinaryBuffers;")
+                .AppendLine()
+                .AppendLine("namespace sensact;")
+                .AppendLine()
+                .AppendLine("/// Von configware generiert (GenerateApplicationIds) -- Anwendungs-IDs des jeweiligen Hausmodells.")
+                .AppendLine("[BinaryType]")
+                .AppendLine("public enum ApplicationId : ushort")
+                .AppendLine("{");
+            foreach (var id in Enum.GetValues<ApplicationIdType>())
+            {
+                applicationIdEnumCs.AppendLine($"\t{id} = {Convert.ToUInt16(id)},");
+            }
+            applicationIdEnumCs.AppendLine("}");
+            this.WriteCommonCsFile("applicationIds.enums", applicationIdEnumCs.ToString());
+
             LOG.LogInformation("Successfully created appids");
             return;
         }
@@ -926,6 +951,18 @@ namespace Klli.Sensact.Config
             File.WriteAllText(path, content.ToString());
         }
 
+        // Wie WriteCommonFile, aber fuer bereits vollstaendige, eigenstaendige BestBinaryBuffers-Schema-
+        // Dateien (echter, mit [BinaryType]/... annotierter C#-Code, s. Kommentar bei
+        // GenerateApplicationIds) -- im Gegensatz zu den ".inc"-Textschnipseln der Flatbuffers-Aera
+        // braucht dieses Format keine Template-Substitution mehr, deshalb ".cs" statt ".inc" als Endung.
+        protected void WriteCommonCsFile(string filenameWithoutExtension, string csContent)
+        {
+            string directory = Path.Combine(this.appSettings.BasePath!, "common");
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, filenameWithoutExtension + ".cs");
+            File.WriteAllText(path, csContent);
+        }
+
         internal void GenerateCommandTypes(ModelContainer model)
         {
             StringBuilder sb_c = new StringBuilder();
@@ -939,6 +976,26 @@ namespace Klli.Sensact.Config
             WriteCommonFile("commandTypes", sb_c);
             WriteCommonFile("commandTypes.fbs", sb_protobuf);
 
+            // Ws-protocol-Nachfolger fuer commandTypes.fbs, analog zu applicationIds.enums.cs (s.
+            // Kommentar dort). Name bewusst "Command" (nicht "CommandType"), um denselben Namen wie die
+            // bisherige Flatbuffers-Enum "Command" zu tragen (s. commandTypes.template.fbs: "enum
+            // Command:byte" -- der C#-interne Typname "CommandType" wurde nie auf die Wire-Ebene
+            // durchgereicht) -- [BinaryType] uebernimmt den C#-Bezeichner unten deshalb unveraendert.
+            var commandTypeEnumCs = new StringBuilder()
+                .AppendLine("using BestBinaryBuffers;")
+                .AppendLine()
+                .AppendLine("namespace sensact;")
+                .AppendLine()
+                .AppendLine("/// Von configware generiert (GenerateCommandTypes) -- Kommando-Typen, ueber alle Anwendungen hinweg geteilt.")
+                .AppendLine("[BinaryType]")
+                .AppendLine("public enum Command : byte")
+                .AppendLine("{");
+            foreach (CommandType ct in Enum.GetValues(typeof(CommandType)))
+            {
+                commandTypeEnumCs.AppendLine($"\t{ct} = {(int)ct},");
+            }
+            commandTypeEnumCs.AppendLine("}");
+            WriteCommonCsFile("commandTypes.enums", commandTypeEnumCs.ToString());
         }
 
         internal void GenerateEventTypes(ModelContainer model)
