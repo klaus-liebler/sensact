@@ -13,9 +13,12 @@
 // falls/wenn tatsaechlich ein Board verschluesselt werden soll.
 //
 // NVS-Ueberschreiben (OVERWRITE_NVS_TO_DELETE_WIFI_SETTINGS_AND_ALL_OTHER_SETTINGS in gulpfile.ts)
-// ist dort bereits per Konstante auf false gesetzt -- der NVS-Zweig braucht zusaetzlich die (noch
-// nicht portierte) Usersettings-NVS-Codegenerierung (nvs_partition_gen/GENERATED_USERSETTINGS) und
-// wurde deshalb hier konsequent ausgelassen statt eine Kopie toten Codes mitzuschleppen.
+// ist dort bereits per Konstante auf false gesetzt. Das dortige "Ueberschreiben mit einem generierten
+// Usersettings-Image" braucht die (noch nicht portierte) nvs_partition_gen/GENERATED_USERSETTINGS-Kette
+// und wurde deshalb nicht mitportiert. Was resetNvsPartition hier stattdessen macht, ist einfacher und
+// deckt den eigentlichen Bedarf (Board soll seine WLAN-/Usersettings vergessen): die nvs-Partition wird
+// per "esptool erase-region" geloescht, NACHDEM die uebrigen Sektionen geschrieben wurden -- die App
+// bootet danach mit leerer NVS und faellt auf den Access-Point-Modus zurueck.
 namespace Builder.Phases;
 
 public static class FlashFirmware
@@ -24,7 +27,7 @@ public static class FlashFirmware
 	// WLAN-/Usersettings-NVS-Partition NICHT, schreibt aber jedes Mal die Storage-Partition (LittleFS) neu.
 	private const bool WriteStorage = true;
 
-	public static void Run()
+	public static void Run(bool resetNvsPartition = false)
 	{
 		var ctx = BoardContext.LoadCached();
 		if (ctx.Board.FlashEncryptionKeyBurnedAndActivated)
@@ -57,5 +60,17 @@ public static class FlashFirmware
 		Console.WriteLine($"Flashe {sections.Count} Sektionen (unverschluesselt) auf Board {ctx.Board.BoardName}...");
 		EspTool.WriteFlash(sections);
 		Console.WriteLine("Flash (nicht verschluesselt) abgeschlossen.");
+
+		if (resetNvsPartition)
+		{
+			var nvs = PartitionsCsv.Find(Path.Combine(Paths.RootDir, "partitions.csv"), "nvs");
+			if (nvs.Offset is null)
+			{
+				throw new InvalidOperationException("nvs-Partition hat kein Offset in partitions.csv -- kann nicht geloescht werden.");
+			}
+			Console.WriteLine($"--resetNVSPartition: loesche nvs-Partition (Offset 0x{nvs.Offset:X}, Groesse 0x{nvs.Size:X}) -- WLAN-/Usersettings gehen verloren.");
+			EspTool.EraseRegion($"0x{nvs.Offset:X}", nvs.Size);
+			Console.WriteLine("nvs-Partition geloescht.");
+		}
 	}
 }

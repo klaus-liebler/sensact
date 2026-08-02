@@ -88,4 +88,31 @@ public static class ProcessRunner
 			throw new ProcessException($"{fileName} beendet mit Exit-Code {process.ExitCode}.", process.ExitCode, "", "");
 		}
 	}
+
+	// Fuer Befehle, die ueber "cmd.exe /c" ausgefuehrt werden muessen (z.B. verkettete
+	// "export.bat && idf.py build"-Aufrufe, deren Umgebungsvariablen nur innerhalb DESSELBEN
+	// Prozesses gelten). WICHTIG: hier NICHT ArgumentList verwenden -- .NET wuerde in "command"
+	// enthaltene Anfuehrungszeichen mit Backslash escapen (C-Runtime-Konvention), aber cmd.exe
+	// kennt kein "\"" und interpretiert die Backslashes dann als Teil des Dateinamens, was den
+	// Aufruf zerstoert. Stattdessen wird die komplette Befehlszeile als rohe Arguments-Zeichenkette
+	// gesetzt und in ein zusaetzliches Anfuehrungszeichen-Paar gewickelt -- der von cmd.exe selbst
+	// dokumentierte Trick, damit intern bereits gequotete Pfade (z.B. "C:\...\export.bat") erhalten
+	// bleiben (s. cmd /? bzw. https://learn.microsoft.com/windows-server/administration/windows-commands/cmd).
+	public static void RunInheritShellCommand(string command, string? workingDirectory = null)
+	{
+		var psi = new ProcessStartInfo("cmd.exe")
+		{
+			WorkingDirectory = workingDirectory ?? Paths.RootDir,
+			RedirectStandardOutput = false,
+			RedirectStandardError = false,
+			UseShellExecute = false,
+			Arguments = $"/c \"{command}\"",
+		};
+		using var process = StartOrThrow(psi);
+		process.WaitForExit();
+		if (process.ExitCode != 0)
+		{
+			throw new ProcessException($"cmd.exe beendet mit Exit-Code {process.ExitCode}.", process.ExitCode, "", "");
+		}
+	}
 }

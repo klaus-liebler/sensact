@@ -131,4 +131,12 @@ public static class EspTool
 		}
 		ProcessRunner.RunInherit("esptool", args);
 	}
+
+	// Fuer --resetNVSPartition (s. FlashFirmware.Run): loescht NUR die angegebene Region (z.B. die
+	// nvs-Partition), ohne die restlichen Partitionen anzufassen -- im Gegensatz zu "erase-flash",
+	// das den GESAMTEN Chip loescht.
+	public static void EraseRegion(string offset, long size)
+	{
+		ProcessRunner.RunInherit("esptool", ["erase-region", offset, $"0x{size:X}"]);
+	}
 }

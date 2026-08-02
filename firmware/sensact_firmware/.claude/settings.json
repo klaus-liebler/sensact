@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m esptool --help)",
+      "Bash(python -m esptool read-mac --help)",
+      "Bash(python -m esptool read-mac)",
+      "Bash(where espefuse *)",
+      "Bash(cp c:/repos/sensact/firmware/sensact_firmware/board_info.json /c/Users/mail/AppData/Local/Temp/claude/c--repos-sensact-firmware-sensact-firmware/4b882704-3249-4a67-9cee-d13b4c04869f/scratchpad/board_info_before.json)",
+      "Bash(cp '/c/Users/mail/OneDrive - HSOS/esp32_boards/d24e64_79336146357860_4827e2d24e64/board_info.json' /c/Users/mail/AppData/Local/Temp/claude/c--repos-sensact-firmware-sensact-firmware/4b882704-3249-4a67-9cee-d13b4c04869f/scratchpad/board_info_specific_before.json)",
+      "Bash(grep -n \"^  11\\\\. \\\\`ReadHardwareIds\\\\`\" \"c:/repos/sensact/firmware/sensact_firmware/docs/plan_v2/02-builder-migration-csharp.md\")",
+      "Bash(stat -c \"%y %n\" \"c:/repos/sensact/firmware/sensact_firmware/build/sensact_firmware.bin\" 2>&1)",
+      "Read(//c/repos/sensact/firmware/sensact_firmware/**)",
+      "Bash(grep -n \"^  12\\\\. \\\\`FlashFirmware\\\\`\" \"c:/repos/sensact/firmware/sensact_firmware/docs/plan_v2/02-builder-migration-csharp.md\")",
+      "Bash(dotnet new *)",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet add *)",
+      "Bash(npx --version)",
+      "Bash(timeout 90 npx --yes -p typescript tsc --version)",
+      "Bash(rm -f /c/repos/dotnet_libs/best_binary_buffers/test/BestBinaryBuffers.Tests/UnitTest1.cs *)",
+      "Bash(dotnet test *)",
+      "Bash(timeout 90 npx --yes -p typescript tsc -p tsconfig.json)",
+      "Bash(node dist/roundtrip.js)",
+      "Bash(git commit -m ' *)",
+      "Bash(node -e ' *)",
+      "Bash(cp /c/repos/generated/wsprotocol_cpp/ws_protocol.hh /tmp/ws_protocol_run1.hh)",
+      "Bash(cp /c/repos/generated/wsprotocol_ts/ws-protocol.ts /tmp/ws_protocol_run1.ts)",
+      "Bash(cp /c/repos/sensact/firmware/sensact_firmware/ws-protocol/ids.txt /tmp/ids_run1.txt)",
+      "Bash(awk '/^export namespace wifimanager \\\\{/{c++} c==3{print} /^export namespace wifimanager \\\\{/{if\\(c==3\\)f=1} f && /^}/{print; if\\(!/^\\\\t/\\) exit}' /c/repos/generated/wsprotocol_ts/ws-protocol.ts)",
+      "Bash(awk '/^namespace wifimanager \\\\{/{n++; if\\(n==3\\) start=NR} start && NR>=start {print; if\\(NR>start && /^} \\\\/\\\\/ namespace wifimanager/\\) exit}' /c/repos/generated/wsprotocol_cpp/ws_protocol.hh)",
+      "Bash(npm install *)",
+      "Bash(mkdir -p /tmp/npm_workaround_stash)",
+      "Bash(mv node_modules/@generated /tmp/npm_workaround_stash/generated)",
+      "Bash(mv node_modules/@klaus-liebler /tmp/npm_workaround_stash/klaus-liebler)"
+    ],
+    "additionalDirectories": [
+      "C:\\repos\\dotnet_libs\\best_binary_buffers",
+      "C:\\repos\\dotnet_libs\\best_binary_buffers\\test\\BestBinaryBuffers.Tests",
+      "C:\\repos\\dotnet_libs\\best_binary_buffers\\src\\BestBinaryBuffers\\Parsing",
+      "C:\\repos\\dotnet_libs\\best_binary_buffers\\src\\BestBinaryBuffers\\Generators",
+      "C:\\repos\\npm-packages\\@klaus-liebler\\web-components\\typescript\\screen_controller",
+      "C:\\repos\\npm-packages\\@klaus-liebler\\web-components\\typescript",
+      "C:\\repos\\generated\\wsprotocol_ts",
+      "C:\\repos\\npm-packages\\@klaus-liebler\\web-components"
+    ]
+  }
+}

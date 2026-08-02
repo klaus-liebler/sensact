@@ -15,7 +15,14 @@
 //   BuildWebApp
 //   BuildFirmware
 //   ReadHardwareIds
-//   FlashFirmware
+//   FlashFirmware [--resetNVSPartition]
+//   Pipeline --model Sattlerstrasse16|Testmodel [--resetNVSPartition]
+//     Kompletter Build-Flash-Zyklus: ruft die obigen Phasen (ausser Info/GitStatus)
+//     einmal nacheinander in genau dieser Reihenfolge auf.
+//
+// --resetNVSPartition ist ein reiner An/Aus-Schalter (keine Werte-Angabe noetig). Standardmaessig NICHT
+// gesetzt -- ein normaler Flash-Vorgang laesst die nvs-Partition (WLAN-/Usersettings) unangetastet. Nur
+// mit explizit gesetztem Schalter wird die nvs-Partition nach dem Flashen geloescht (s. FlashFirmware.cs).
 using Builder;
 using Builder.Phases;
 
@@ -33,6 +40,8 @@ static string GetRequiredArgValue(string[] args, string flag)
 	}
 	return args[i + 1];
 }
+
+static bool HasFlag(string[] args, string flag) => Array.IndexOf(args, flag) >= 0;
 
 switch (args[0])
 {
@@ -70,7 +79,20 @@ switch (args[0])
 		ReadHardwareIds.Run();
 		break;
 	case "FlashFirmware":
-		FlashFirmware.Run();
+		FlashFirmware.Run(HasFlag(args, "--resetNVSPartition"));
+		break;
+	case "Pipeline":
+		var model = GetRequiredArgValue(args, "--model");
+		var resetNvsPartition = HasFlag(args, "--resetNVSPartition");
+		GenerateWsProtocolFiles.Run([Paths.WsProtocolDir, Paths.WebmanagerWsProtocolDir]);
+		GenerateRuntimeConfig.Run();
+		GenerateCertificates.Run();
+		GenerateModelFiles.Run(model);
+		GenerateSensactFiles.Run();
+		BuildWebApp.Run();
+		BuildFirmware.Run();
+		ReadHardwareIds.Run();
+		FlashFirmware.Run(resetNvsPartition);
 		break;
 	default:
 		throw new ArgumentException($"Unbekannte Phase \"{args[0]}\".");

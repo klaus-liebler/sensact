@@ -3,12 +3,9 @@
 // diese Umgebungsvariablen gelten nur innerhalb DESSELBEN Prozesses, deshalb export.bat und
 // "idf.py build" ALS EIN EINZIGER, per "&&" verketteter Befehl ueber cmd.exe ausgefuehrt (analog zu
 // espidf.ts: `"${exportBat}" && ${command}`, dort per execSync/cmd.exe unter Windows), nicht als
-// zwei getrennte ProcessRunner-Aufrufe.
-//
-// NICHT end-to-end verifizierbar in dieser Session: export.bat scheiterte beim Testen an einer
-// kaputten Python-venv-Aktivierung auf diesem Rechner (activate_venv.py fand
-// C:\Users\mail\scoop\apps\python313\current\python.exe nicht, Exit-Code 103) -- ein
-// Umgebungsproblem unabhaengig von diesem Code, s. docs/plan_v2/02-builder-migration-csharp.md.
+// zwei getrennte ProcessRunner-Aufrufe. Ueber ProcessRunner.RunInheritShellCommand() (nicht
+// RunInherit()!), weil "export.bat" selbst gequotet ist -- s. Kommentar dort, warum eine
+// ArgumentList das kaputt escaped haette.
 namespace Builder.Phases;
 
 public static class BuildFirmware
@@ -28,7 +25,7 @@ public static class BuildFirmware
 				$"IDF_PATH ist auf \"{idfPath}\" gesetzt, aber \"{exportBat}\" existiert nicht -- IDF_PATH korrigieren.");
 		}
 
-		ProcessRunner.RunInherit("cmd.exe", ["/c", $"\"{exportBat}\" && idf.py build"], Paths.RootDir);
+		ProcessRunner.RunInheritShellCommand($"\"{exportBat}\" && idf.py build", Paths.RootDir);
 		Console.WriteLine("Firmware gebaut.");
 	}
 }

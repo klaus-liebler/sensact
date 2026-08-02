@@ -419,9 +419,9 @@ namespace Klli.Sensact.Model
 
         PWM___LX_BACK_C1,//Terrassendach, 5 der 9 Leuchten (mittlere dreierreihe und die äußeren Einzel-LEDs)
         PWM___LX_BACK_C2,//Terrassendach, 4 der 9 Leuchten (links und rechts der Mitte, jeweils zwei LEDs)
-        REMOT_LX_BACK, //Der spezielle Typ Fernbedienung mit Hardcodierten Aktivitäten, wenn ein Knopf gedrückt wird
+        REMOT_LX_BACK_1, //Der spezielle Typ Fernbedienung mit Hardcodierten Aktivitäten, wenn ein Knopf gedrückt wird
 
-        FINGR_L1_UTIL,//Fingerprint
+        FINGR_L1_UTIL_1,//Fingerprint
         POWIT_L1_UTIL_DOOR,//Türöffner, der mit dem Fingerabdrucksensor verbunden ist
 
 
