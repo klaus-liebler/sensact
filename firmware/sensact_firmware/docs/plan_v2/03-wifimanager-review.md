@@ -193,27 +193,33 @@ einen Access Point öffnen, stattdessen für immer weitere Verbindungsversuche s
       eigenstaendiges Plugin extrahiert), s. "ws-protocol-Migration" unten fuer die
       Begruendung.
 
-## Offene Punkte (2026-08-01)
+## Offene Punkte (Stand 2026-08-17)
 
-- **Kein Firmware-Build in dieser Session moeglich**: die ESP-IDF-Python-venv auf
-  dieser Maschine ist kaputt (vorbestehendes, aus Stufe 2 bereits dokumentiertes
-  Problem, nicht durch diese Aenderungen verursacht). Alle C++-Aenderungen (Server,
-  beide Repos) sind dadurch **nicht compile-getestet** – Absicherung erfolgte
-  ausschliesslich durch genaues Nachvollziehen der generierten
-  `WsProtocol::<namespace>::*`-API und Feld-fuer-Feld-Diff gegen die bisherige
-  Flatbuffers-Logik. Vor dem naechsten echten Flash-Vorgang: `idf.py build`
-  (sobald die venv repariert ist) einmal vollstaendig durchlaufen lassen und alle
-  Compile-Fehler beheben, bevor auf einem echten Board getestet wird.
-- **TypeScript-Seite ist verifiziert**: `tsc --noEmit` in `web/` (deckt
+- **Firmware-Build ist jetzt gruen**: die ESP-IDF-Python-venv war kaputt
+  (Basis-Interpreter durch ein Scoop-Update verschwunden), per `install.bat`
+  gegen die verbliebene Python-3.14-Installation neu aufgesetzt. Der erste echte
+  `idf.py build` gegen den migrierten Code deckte danach zwei Codegenerator-Bugs
+  in `BestBinaryBuffers` auf (Structs/Classes wurden in Schema-Deklarations-
+  statt Abhaengigkeits-Reihenfolge emittiert → C++-Vorwaertsreferenzfehler;
+  Append/Encode/Decode-Helper waren unnoetig eine Namespace-Ebene zu tief
+  verschachtelt) – beide in `CppGenerator.cs` gefixt (topologische Sortierung,
+  Helper-Emission auf die Owner-Namespace-Ebene gehoben). Dazu ein paar kleinere
+  Bugs im migrierten Code (fehlendes `ret` fuer `ESP_GOTO_ON_FALSE`, Parameter-
+  Shadowing in `journal_plugin.hh`, fehlendes `<sys/time.h>`, `std::string`→
+  `const char*`-Konvertierung in `nodemaster.hh`, zu kleiner Cookie-Puffer). Alle
+  drei Repos (`sensact`, `espidf-component-webmanager`, `best_binary_buffers`)
+  committet, erste zwei gepusht.
+- **TypeScript-Seite weiterhin verifiziert**: `tsc --noEmit` in `web/` (deckt
   `web-components`, `web-components-sensact`, `sensact-base`,
   `usersettings_runtime` ueber die npm-`file:`-Abhaengigkeiten mit ab) laeuft
-  fehlerfrei durch (Exit Code 0) – das prueft aber nur Typkorrektheit, nicht
-  tatsaechliches Laufzeitverhalten gegen einen echten Server.
-- **Kein End-to-End-Test gegen ein echtes Board** fuer keinen der 8 migrierten
-  Namespaces (wifimanager, scheduler, systeminfo, usersettings, nodemaster,
-  sensact, journal, fingerprint) – steht aus, sobald ein Firmware-Build wieder
-  moeglich ist. Das in einer frueheren Session verbundene `SENSACT_L3_WORK`-Board
-  (physisch weiterhin angeschlossen gewesen) eignet sich dafuer.
+  fehlerfrei durch – das prueft aber nur Typkorrektheit, nicht tatsaechliches
+  Laufzeitverhalten gegen einen echten Server.
+- **Immer noch offen: End-to-End-Test gegen ein echtes Board** fuer keinen der 8
+  migrierten Namespaces (wifimanager, scheduler, systeminfo, usersettings,
+  nodemaster, sensact, journal, fingerprint) – jetzt, wo der Build durchlaeuft,
+  ist das der naechste sinnvolle Schritt. Das `SENSACT_L3_WORK`-Board eignet sich
+  dafuer (AP-Fallback-Timeout + Sentinel-Wert testen, danach alle 8 Namespaces
+  einmal durchspielen).
 
 ## Entschieden
 
