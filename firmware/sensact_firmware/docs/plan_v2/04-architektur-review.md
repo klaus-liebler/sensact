@@ -125,6 +125,79 @@ Status-Legende: 🔴 Offen · 🟡 In Arbeit · 🟢 Erledigt
   "optional/stretch" in Stufe 3) – als eigenständiger Backlog-Punkt festhalten, falls
   später Kapazität dafür da ist.
 
+### 🔴 Login-Browser merkt sich Zugangsdaten nicht (analysiert 2026-08-17)
+- **Mechanische Ursache gefunden**: `main/main.cc:1-2` hat `HTTP`/`HTTPS` fest
+  einkompiliert (`//#define HTTP` / `#define HTTPS`) statt über den generischen
+  `board_settings.firmware`-Mechanismus konfigurierbar zu sein – der Server läuft
+  deshalb IMMER über `httpd_ssl_start` mit einem selbstsignierten Zertifikat
+  (`builder/Certificates.cs`, signiert von einer privaten Root-CA unter
+  `OneDrive - HSOS\certificates\rootCA.pem.crt`). Nichts deutet darauf hin, dass
+  diese Root-CA je in einem Betriebssystem-/Browser-Truststore installiert wurde.
+- Browser (v.a. Chrome/Edge) zeigen bei einer HTTPS-Seite mit nicht vertrauens-
+  würdigem Zertifikat eine Warn-Zwischenseite, die bei jedem Besuch neu bestätigt
+  werden muss – UND (das ist der eigentliche Grund für das gemeldete Symptom):
+  **Chrome bietet auf einer per Zertifikatswarnung erreichten Seite grundsätzlich
+  kein "Passwort speichern?"-Prompt an** (bewusste Sicherheitsentscheidung, keine
+  Zugangsdaten gegen eine nicht verifizierbare Identität zu speichern).
+- Kleinere Mitursachen: `<input>`-Felder im Login-Formular
+  (`espidf-component-webmanager/cpp/webmanager.hh`,
+  `handle_login_form`) haben kein `autocomplete="username"`/
+  `"current-password"`; das Session-Cookie hat trotz HTTPS kein `Secure`-Attribut;
+  das externe `<link href='https://fonts.googleapis.com/...'>` kann im
+  AP-Fallback-Modus (kein Internet) ohnehin nie geladen werden.
+- **Vorgeschlagene Alternativen** (Trade-off, keine davon eindeutig "richtig" –
+  Entscheidung steht noch aus):
+  1. **Private Root-CA einmalig im Client-Truststore installieren** (dokumentierter
+     Provisioning-Schritt, z.B. Download-Link auf der AP-Fallback-Startseite).
+     Sauberste Lösung (echtes TLS, normales Browser-Passwort-Verhalten danach),
+     aber Einrichtungsaufwand pro Client-Gerät/Browser.
+  2. **Auf Klartext-HTTP umschalten** für das rein lokale Admin-Interface (der
+     `HTTP`-Zweig existiert bereits, ist nur auskommentiert) – Chrome bietet auf
+     HTTP-Formularen im privaten/lokalen Netz ganz normal das Passwort-Speichern
+     an. Trade-off: Zugangsdaten/Session-Cookie gehen unverschlüsselt übers WLAN
+     (bei einem rein lokal genutzten Smart-Home-Gerät oft akzeptabel, s.
+     vergleichbare Consumer-IoT-Geräte).
+  3. **HTTP Basic Auth statt Formular-Login.** Browser merken sich Basic-Auth-
+     Zugangsdaten sehr zuverlässig (auch über HTTP), kein `<form>`/Cookie-Handling
+     nötig. Nachteil: nicht stylebarer nativer Browser-Dialog, kein sauberer
+     Logout-Mechanismus.
+  4. **SPA-seitiges Session-Persistieren** (`localStorage`/langlebiges Token) als
+     Ergänzung zu jeder der obigen Optionen – löst das eigentliche
+     "Browser-Autofill"-Problem nicht, reduziert aber, wie oft überhaupt neu
+     eingeloggt werden muss.
+  - Empfehlung fürs Erste (niedrigster Aufwand, behebt das gemeldete Symptom
+    direkt): Option 2, `HTTP`/`HTTPS` dabei über `board_settings.firmware` statt
+    hart im Quellcode umschaltbar machen (konsistent mit allen anderen
+    board-spezifischen Einstellungen).
+
+### 🟡 Builder soll über sensact hinaus wiederverwendbar werden
+- Nutzerwunsch (2026-08-17): der C#-Builder (`builder/`) soll künftig auch in
+  anderen, ähnlich aufgebauten ESP32-Firmware-Projekten (s. z.B.
+  `C:\repos\labathome\labathome_firmware`) einsetzbar sein. Zielbild: pro
+  Projekt bleiben nur `builder/appsettings.json` + eine dünne `builder/Program.cs`
+  übrig, der gesamte übrige Code (`Paths.cs`, `Phases/*.cs`, `ModelGeneration/*`,
+  `NpmProject.cs`, `Certificates.cs` etc.) wandert in ein eigenständiges,
+  gemeinsames Repo/Paket (z.B. `C:\repos\dotnet_libs\firmware_builder`, analog zu
+  `best_binary_buffers`) und wird von dort per `ProjectReference`/NuGet
+  eingebunden statt pro Projekt kopiert zu werden.
+- Voraussetzung/Vorarbeit bereits erledigt: `Paths.FindRootDir()` verlässt sich
+  nicht mehr auf eine unbegrenzte Aufwärtssuche, sondern ausschließlich auf das
+  unmittelbar übergeordnete Verzeichnis von `builder/` (s. Commit vom
+  2026-08-17) – Voraussetzung dafür, dass derselbe Code in unterschiedlich
+  verschachtelten Projektstrukturen zuverlässig funktioniert. Maschinen-/
+  Projekt-abhängige absolute Pfade liegen ebenfalls bereits vollständig in
+  `appsettings.json` (`NpmPackagesDir`, `WebmanagerWsProtocolDir`,
+  `BoardsDir`, `CertsDir`), nicht mehr im Code.
+- Noch offen/zu klären, bevor die Extraktion angegangen wird: welche Teile sind
+  wirklich sensact-agnostisch (`ModelGeneration/*`, `GenerateSensactFiles.cs`
+  sind z.B. eng an das sensact-Anwendungsmodell gekoppelt – klare Trennung
+  "generischer Kern" vs. "projektspezifische Phase" nötig), wie Versionierung
+  zwischen mehreren Konsumenten-Projekten funktioniert (ProjectReference wie bei
+  `best_binary_buffers` vs. echtes NuGet-Paket), und ob `labathome_firmware`
+  überhaupt zuerst auf das neue ws-protocol/BestBinaryBuffers migriert sein muss
+  (s. dortige `docs/MIGRATION_TO_BESTBINARYBUFFERS.md`), bevor eine Builder-
+  Wiederverwendung dort sinnvoll ist.
+
 ## Vorgehen für neue Funde
 
 - [ ] Neuer Fund → hier als eigener Abschnitt mit Status 🔴, kurzer Beschreibung,
