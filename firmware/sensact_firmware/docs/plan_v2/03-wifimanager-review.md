@@ -317,7 +317,7 @@ uebernommen und in der Response zurueckgegeben (bei asynchron gepushten Notifica
   `DecodeRequestSetUserSettingsSettingsElements`-Visitor mit `if constexpr`-
   Typunterscheidung. `usersettings::Setting`-Enum (Flatbuffers) durch neues,
   protokoll-unabhaengiges `SettingKind`-Enum in `usersettings_plugin.hh` ersetzt;
-  `usersettings/nvs_accessor.hh.inc` (generierte, aber nicht durch `builder_cs`
+  `usersettings/nvs_accessor.hh.inc` (generierte, aber nicht durch `builder`
   erzeugte Konfigurationsdatei unter `C:\repos\generated\usersettings\`) direkt
   angepasst. Client: `usersettings_runtime`-Paket (separates npm-Paket,
   `ConfigItemRT.WriteToFlatbufferBufferAndReturnSettingWrapperOffset`/
@@ -366,7 +366,7 @@ lassen. Alle 4 Dateien wurden nachtraeglich auf die neue `wsprotocol_ts`-API
 umgestellt (inkl. `sensact-base/can_message_utils.ts`,
 `application_id_utils.ts`, `interfaces.ts` und der generierten Vorlagen
 `web/templates/sendCommandImplementation.template.ts`/`sensactapps.template.ts` in
-`builder_cs`), `tsc --noEmit` in `web/` laeuft jetzt fehlerfrei durch (Exit Code 0).
+`builder`), `tsc --noEmit` in `web/` laeuft jetzt fehlerfrei durch (Exit Code 0).
 
 ### Echter Bug gefunden und gefixt: Namespace-ID-Kollision
 
@@ -397,9 +397,9 @@ functionblock=3, heaterexperiment=4 im alten Schema).
 `main/node_applicationhost.hh`/`.cc`, `main/journal_plugin.hh`,
 `main/fingerprint/fingerprint_webmanager_sensact_adapter.hh`, `web/vite.config.mts`,
 `web/nodemaster_controller.ts`, `web/templates/sendCommandImplementation.template.ts`,
-`web/templates/sensactapps.template.ts`, `builder_cs/Phases/GenerateWsProtocolFiles.cs`
+`web/templates/sensactapps.template.ts`, `builder/Phases/GenerateWsProtocolFiles.cs`
 (package.json-Generierung fuer `@generated/wsprotocol_ts` ergaenzt),
-`builder_cs/Phases/GenerateSensactFiles.cs` (Abhaengigkeiten umgestellt),
+`builder/Phases/GenerateSensactFiles.cs` (Abhaengigkeiten umgestellt),
 `ws-protocol/ids.txt` (Kollisionsfix).
 
 **`npm-packages`**: `@klaus-liebler/web-components/typescript/utils/interfaces.ts`,
@@ -422,4 +422,4 @@ sensactapps_base}.ts`, sowie diverse `package.json`-Anpassungen (Abhaengigkeit v
 **Neu**: `C:\repos\generated\wsprotocol_ts\package.json` (macht `wsprotocol_ts` als
 npm-Paket konsumierbar, analog zu `flatbuffers_ts`).
 
-Kein Code-Change in `builder_cs/ModelGeneration/` noetig.
+Kein Code-Change in `builder/ModelGeneration/` noetig.

@@ -5,9 +5,14 @@ managed_components/
 CMakeFiles/
 CMakeCache.txt
 
-# builder_cs/ -- appsettings.json enthaelt persoenliche Maschinenpfade und ist gitignored, getrackt
-# ist nur appsettings.json.template; builder_cs.csproj legt die reale Datei bei Bedarf automatisch
+# builder/ -- appsettings.json enthaelt persoenliche Maschinenpfade und ist gitignored, getrackt
+# ist nur appsettings.json.template; builder.csproj legt die reale Datei bei Bedarf automatisch
 # an (s. EnsureAppSettings-Target).
-/builder_cs/appsettings.json
-/builder_cs/bin/
-/builder_cs/obj/
+/builder/appsettings.json
+/builder/bin/
+/builder/obj/
+
+# Projektlokales Ausgabeverzeichnis fuer generierte Dateien (s. builder/Paths.cs: GeneratedRoot) --
+# reine Build-Artefakte (wsprotocol_cpp/_ts, runtimeconfig_cpp/_ts, cmake/, web/, sensact_appsbuilder/,
+# sensact_sendCommandImplementation/), von "dotnet run --project builder -- ..." bei Bedarf neu erzeugt.
+/generated/

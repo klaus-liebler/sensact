@@ -55,7 +55,7 @@ public static class GenerateSensactFiles
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
-				["@klaus-liebler/sensact-base"] = @"file:../../npm-packages/@klaus-liebler/sensact-base",
+				["@klaus-liebler/sensact-base"] = Paths.RelativeFileDependency(sendCommandProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
 			},
 		});
 
@@ -74,8 +74,8 @@ public static class GenerateSensactFiles
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
-				["@klaus-liebler/sensact-base"] = @"file:../../npm-packages/@klaus-liebler/sensact-base",
-				["@klaus-liebler/web-components-sensact"] = @"file:../../npm-packages/@klaus-liebler/web-components-sensact",
+				["@klaus-liebler/sensact-base"] = Paths.RelativeFileDependency(appsBuilderProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
+				["@klaus-liebler/web-components-sensact"] = Paths.RelativeFileDependency(appsBuilderProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "web-components-sensact")),
 			},
 		});
 

@@ -1,6 +1,6 @@
 // Konfiguration ueber appsettings.json -> typsichere POCO-Klasse, analog zu BuilderOptions.cs im
 // Referenzprojekt. appsettings.json selbst ist gitignored (persoenliche Maschinenpfade), getrackt
-// ist nur appsettings.json.template (s. builder_cs.csproj, EnsureAppSettings-Target).
+// ist nur appsettings.json.template (s. builder.csproj, EnsureAppSettings-Target).
 using Microsoft.Extensions.Configuration;
 
 namespace Builder;

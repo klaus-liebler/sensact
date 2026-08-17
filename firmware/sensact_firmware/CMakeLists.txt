@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 set(PROJECT_VER "0.0.0.1")
 
-set(GENERATED_DIR "C:/repos/generated/")
+set(GENERATED_DIR "${CMAKE_CURRENT_LIST_DIR}/generated/")
 set(USERPROFILE $ENV{USERPROFILE})
 
 set(EXTRA_COMPONENT_DIRS "C:/repos/espidf-components" "C:/repos/sensact/espidf-components" "C:/repos/espidf-components-lcd" "C:/repos/espidf-component-webmanager")

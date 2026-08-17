@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Neuer C#-Build-Orchestrator (s. docs/plan_v2/02-builder-migration-csharp.md), Nachfolger des
-    bisherigen Node/TypeScript-Orchestrators unter builder/ (gulpfile.ts). Lebt bewusst als
-    builder_cs/ NEBEN dem bestehenden builder/, bis Parität erreicht ist (Uebergangszustand, s.
-    "Entschieden" im Plan), danach wird builder/ (TS) archiviert/geloescht und builder_cs/ ggf.
-    in builder/ umbenannt. Architektur/Dateizuschnitt orientiert sich am Referenzprojekt
+    C#-Build-Orchestrator (s. docs/plan_v2/02-builder-migration-csharp.md), Nachfolger des
+    frueheren Node/TypeScript-Orchestrators (gulpfile.ts, archiviert/geloescht). Lebte uebergangsweise
+    als builder_cs/ NEBEN dem alten builder/, bis Paritaet erreicht war (s. "Entschieden" im Plan);
+    seitdem alter builder/ geloescht und dieses Verzeichnis zu builder/ umbenannt. Architektur/
+    Dateizuschnitt orientiert sich am Referenzprojekt
     C:\repos\factory_in_a_box\firmware_factory_control_unit\builder.
   -->
 
@@ -15,7 +15,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Builder</RootNamespace>
-    <AssemblyName>builder_cs</AssemblyName>
+    <AssemblyName>builder</AssemblyName>
     <!--
       BEWUSST NICHT InvariantGlobalization=true (anders als im Referenzprojekt): ModelGeneration/
       Generator.cs (aus configware uebernommen) verlaesst sich an mehreren Stellen auf

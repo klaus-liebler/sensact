@@ -11,14 +11,14 @@ public static class Paths
 		var dir = new DirectoryInfo(AppContext.BaseDirectory);
 		while (dir is not null)
 		{
-			if (File.Exists(Path.Combine(dir.FullName, "CMakeLists.txt")) && Directory.Exists(Path.Combine(dir.FullName, "builder_cs")))
+			if (File.Exists(Path.Combine(dir.FullName, "CMakeLists.txt")) && Directory.Exists(Path.Combine(dir.FullName, "builder")))
 			{
 				return dir.FullName;
 			}
 			dir = dir.Parent;
 		}
 		throw new InvalidOperationException(
-			$"Konnte Repo-Wurzel nicht finden (gesucht ab {AppContext.BaseDirectory} nach oben, Marker: CMakeLists.txt + builder_cs/).");
+			$"Konnte Repo-Wurzel nicht finden (gesucht ab {AppContext.BaseDirectory} nach oben, Marker: CMakeLists.txt + builder/).");
 	}
 
 	// Zwischengespeicherter Stand des zuletzt bekannten Boards (s. context.ts: Context.get() kopiert
@@ -28,17 +28,33 @@ public static class Paths
 
 	public static readonly string WsProtocolDir = Path.Combine(RootDir, "ws-protocol");
 
-	// Gemeinsames, externes Ausgabeverzeichnis fuer generierte Dateien, unveraendert aus
-	// gulpfile.ts uebernommen (GENERATED_ROOT = "c:\repos\generated") -- sensacts eigene
-	// Konvention, anders als das repo-interne Core/generated der Referenzvorlage. Analog zu
-	// GENERATED_FLATBUFFERS_CPP/_TS in paths.ts (die dieser Ordner mittelfristig ersetzt, s.
-	// Phases/GenerateWsProtocolFiles.cs), aber mit neuen, eindeutigen Namen, solange beide
-	// Verfahren parallel existieren (Flatbuffers ist noch produktiv im Einsatz).
-	public static readonly string GeneratedRoot = @"c:\repos\generated";
+	// Projektlokales Ausgabeverzeichnis fuer generierte Dateien (wsprotocol_cpp/_ts,
+	// runtimeconfig_cpp/_ts, cmake/, web/ -- alles, was builder selbst erzeugt). Lag bis August 2026
+	// unter dem repo-fremden "c:\repos\generated" (gemeinsames Scratch-Verzeichnis, unveraendert aus
+	// gulpfile.ts uebernommen, GENERATED_ROOT) -- umgestellt auf RootDir/generated, weil das externe
+	// Verzeichnis nirgends versioniert war und Konsumenten (npm-packages, CMake) nur ueber einen
+	// impliziten, undokumentierten Pfad-Vertrag zusammenfanden. Cross-Repo-Konsumenten
+	// (npm-packages/*, s. deren package.json "file:"-Abhaengigkeiten) zeigen seitdem per relativem
+	// Sibling-Pfad hierher, statt auf ein drittes, repo-loses Verzeichnis.
+	public static readonly string GeneratedRoot = Path.Combine(RootDir, "generated");
 
 	public static readonly string GeneratedWsProtocolCppDir = Path.Combine(GeneratedRoot, "wsprotocol_cpp");
 
 	public static readonly string GeneratedWsProtocolTsDir = Path.Combine(GeneratedRoot, "wsprotocol_ts");
+
+	// Eigenstaendiges Repo (Remote klaus-liebler/npm-packages), von mehreren generierten npm-Projekten
+	// unten per relativem "file:"-Pfad referenziert (s. RelativeFileDependency) -- die Pfadtiefe von
+	// GeneratedRoot dorthin ist NICHT fest (haengt davon ab, wo GeneratedRoot gerade liegt), deshalb
+	// nie als literaler "../../..."-String hartkodieren, sondern immer ueber RelativeFileDependency
+	// berechnen.
+	public static readonly string NpmPackagesDir = @"C:\repos\npm-packages";
+
+	// "file:"-Abhaengigkeitswert fuer ein generiertes npm-Projekt unter "from" auf ein Zielverzeichnis
+	// "to" (z.B. Paths.NpmPackagesDir + "@klaus-liebler/sensact-base") -- npm versteht sowohl "/" als
+	// auch "\" in file:-Pfaden unter Windows, hier trotzdem einheitlich "/" fuer bessere Lesbarkeit/
+	// Diff-Stabilitaet.
+	public static string RelativeFileDependency(string from, string to) =>
+		"file:" + Path.GetRelativePath(from, to).Replace('\\', '/');
 
 	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
 	// espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"), unveraendert aus gulpfile.ts
@@ -56,8 +72,13 @@ public static class Paths
 	// Sensact-spezifisch: pro-Node generierte Artefakte aus configware (s. Plan-Doc "configware wird
 	// voll in den Orchestrator verschmolzen"), unveraendert aus gulpfile.ts uebernommen
 	// (SENSACT_COMPONENT_GENERATED_PATH). Solange GenerateModelFiles (Schritt 7) noch nicht portiert
-	// ist, ist dies weiterhin der Output-Ordner des bestehenden configware_*-Konsolenprogramms.
-	public static readonly string SensactModelGeneratedDir = @"C:\repos\generated\sensact_model";
+	// ist, ist dies weiterhin der Output-Ordner des bestehenden configware_*-Konsolenprogramms (dessen
+	// appsettings.json "SourceCodeGenerator.BasePath" entsprechend hierher zeigen muss). Unter
+	// GeneratedRoot, weil sensact-applicationmodel/CMakeLists.txt es ueber
+	// "${GENERATED_DIR}/sensact_model" einbindet -- derselbe GENERATED_DIR wie fuer alle anderen
+	// generierten Dateien, die Trennung "von builder vs. von configware erzeugt" spielt fuer die
+	// Include-Pfad-Aufloesung keine Rolle.
+	public static readonly string SensactModelGeneratedDir = Path.Combine(GeneratedRoot, "sensact_model");
 
 	// TS-Template-Dateien fuer die Sensact-Codegenerierung (s. sensact_code_generator.ts:
 	// P_WEB/"templates"), Phases/GenerateSensactFiles.cs.

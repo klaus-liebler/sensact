@@ -17,7 +17,7 @@
 //
 // ANGEPASST: das Referenzprojekt schreibt fest nach "../build/assets/index.html.br" (relativ zur
 // Plugin-Datei, STM32-spezifische Konvention). sensact schreibt generierte Dateien stattdessen in
-// ein gemeinsames, externes Verzeichnis (s. builder_cs/Paths.cs: GeneratedWebDir), das Vite selbst
+// ein gemeinsames, externes Verzeichnis (s. builder/Paths.cs: GeneratedWebDir), das Vite selbst
 // schon als Build-outDir bekommt -- deshalb wird HIER options.dir (der von Vite aufgeloeste
 // tatsaechliche Ausgabeordner, unabhaengig davon ob per Config-Datei oder --outDir-CLI-Flag
 // gesetzt) statt eines fest verdrahteten relativen Pfads verwendet, und der Dateiname ist

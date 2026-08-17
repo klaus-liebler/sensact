@@ -1,7 +1,7 @@
 // Einstiegspunkt fuer alle Build-Phasen, analog zu Program.cs im Referenzprojekt.
 //
 // Aufruf:
-//   dotnet run --project builder_cs -- <Phase> [--model Sattlerstrasse16|Testmodel]
+//   dotnet run --project builder -- <Phase> [--model Sattlerstrasse16|Testmodel]
 //
 // Einzelne Phasen (s. docs/plan_v2/02-builder-migration-csharp.md, "Migrationsstrategie" fuer die
 // geplante Reihenfolge):
@@ -28,7 +28,7 @@ using Builder.Phases;
 
 if (args.Length == 0)
 {
-	throw new ArgumentException("Kein Phasenname angegeben. Beispiel: dotnet run --project builder_cs -- Info");
+	throw new ArgumentException("Kein Phasenname angegeben. Beispiel: dotnet run --project builder -- Info");
 }
 
 static string GetRequiredArgValue(string[] args, string flag)

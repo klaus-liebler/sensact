@@ -581,11 +581,11 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
 
 ## Migrationsstrategie
 
-- [x] Neues C#-Projekt `builder_cs/` neben dem bestehenden `builder/` angelegt
-      (`sensact_firmware/builder_cs/`) – **erledigt (2026-08-01)**. Grundgerüst
-      analog zum Referenzprojekt: `builder_cs.csproj` (net10.0, `Exe`,
+- [x] Neues C#-Projekt `builder/` neben dem bestehenden `builder/` angelegt
+      (`sensact_firmware/builder/`) – **erledigt (2026-08-01)**. Grundgerüst
+      analog zum Referenzprojekt: `builder.csproj` (net10.0, `Exe`,
       `Microsoft.Extensions.Configuration`-basiert), `Paths.cs`
-      (Root-Suche über `CMakeLists.txt` + `builder_cs/`-Sibling, analog zur
+      (Root-Suche über `CMakeLists.txt` + `builder/`-Sibling, analog zur
       Vorlage), `BuilderOptions.cs` (`appsettings.json`/`.template`-Muster
       1:1 übernommen, `BoardsDir`/`CertsDir` aus `gulpfile.ts` befüllt: `OneDrive
       - HSOS\esp32_boards`/`...\certificates`), `IBoardInfo.cs` (C#-Äquivalent
@@ -594,7 +594,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
       `paths.ts`s `mac_6char`/`mac_12char`/`Paths.boardSpecificPath` –
       Verzeichniskonvention `<mac6hex>_<macDezimal>_<mac12hex>` gegen die
       echte, real existierende Board-Archiv-Struktur verifiziert). `.gitignore`
-      um `builder_cs/appsettings.json`/`bin/`/`obj/` ergänzt (Muster von
+      um `builder/appsettings.json`/`bin/`/`obj/` ergänzt (Muster von
       `factory_in_a_box/.gitignore` übernommen).
 - [ ] Reihenfolge der Portierung (kleinstes Risiko zuerst):
   1. `Info`-Phase (nur Lesen, kein Risiko) – **erledigt (2026-08-01), mit
@@ -626,7 +626,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      (`gulpfile.ts`: `createObjectWithDefines()` → `cfg.create*`, s. Mapping-
      Tabelle Unterschritt 4) – die eigentliche Dateigenerierung entsteht daher
      erst dort, nicht als eigene Phase. Bis dahin per eigenständiger
-     `GitStatus`-Phase (`dotnet run --project builder_cs -- GitStatus`)
+     `GitStatus`-Phase (`dotnet run --project builder -- GitStatus`)
      verifizierbar – gegen rohe `git`-Befehle geprüft (Commit-Hash/Branch/Tag/
      Autor/Message/Dirty-Status stimmen exakt überein, `IsDirty` erkennt den
      echten, zum Testzeitpunkt tatsächlich unsauberen Arbeitsbaum korrekt).
@@ -659,7 +659,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      Nachrichtensatz ergeben.
 
      **Echt end-to-end verifiziert** (nicht nur kompiliert): `dotnet run
-     --project builder_cs -- GenerateWsProtocolFiles` liest tatsächlich 14
+     --project builder -- GenerateWsProtocolFiles` liest tatsächlich 14
      Dateien aus beiden Repos (die 4 unter `sensact_firmware/ws-protocol/` +
      die 10 unter `espidf-component-webmanager/ws-protocol/`) und erzeugt ein
      gemeinsames `ws_protocol.hh`/`ws-protocol.ts` mit allen 12 echten
@@ -828,13 +828,13 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      `.fbs`-Text umgestellt – **portiert (2026-08-01)**.
 
      Wie in "Entschieden (Ergänzung)" oben festgelegt: `configware/common` →
-     `builder_cs/ModelGeneration/` verschoben (Generator, `ModelBuilder<T>`,
+     `builder/ModelGeneration/` verschoben (Generator, `ModelBuilder<T>`,
      `SourceCodeGenerator<T>`, `Node`, `SensactApplication`, `Applications/`,
      `Nodes/`, ... – **unverändert**, keine Namensraum-Anpassung nötig, da
      `common/` nachweislich (per Grep verifiziert) nie direkt von der
      modellspezifischen `ApplicationId` abhing, sondern ausschließlich über den
      generischen Typparameter). `configware_sattlerstrasse`/`configware_testmodel`
-     → `builder_cs/Models/Sattlerstrasse16/`
+     → `builder/Models/Sattlerstrasse16/`
      bzw. `.../Models/Testmodel/` (Dateinamen `ApplicationId.cs`/
      `Sattlerstrasse16Builder.cs`/`TestmodelBuilder.cs`, s. Zielstruktur oben),
      `ApplicationId`-Namespace disambiguiert zu `Klli.Sensact.Model.Sattlerstrasse16`
@@ -862,11 +862,11 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
         eine Ebene tiefer liegt (`Klli.Sensact.Model.<Modell>`). Behoben durch
         einheitliches Ersetzen von `Model.ApplicationId` → `ApplicationId` (matcht
         jetzt den Alias aus Punkt 1) in beiden Dateien.
-     3. `ILogger<T>` fehlte (`ModelGeneration/Generator.cs` nutzt es, `builder_cs.csproj`
+     3. `ILogger<T>` fehlte (`ModelGeneration/Generator.cs` nutzt es, `builder.csproj`
         hatte aber keine `Microsoft.Extensions.Logging`-Pakete) – ergänzt.
 
      **Kritischer Fund beim End-to-End-Vergleich, betrifft reale
-     Hausautomatisierungs-Firmware**: `builder_cs.csproj` hatte
+     Hausautomatisierungs-Firmware**: `builder.csproj` hatte
      `<InvariantGlobalization>true</InvariantGlobalization>` (unreflektiert aus
      dem STM32-Referenzprojekt übernommen). `ModelGeneration/Generator.cs`
      verlässt sich an zwei Stellen auf `DateTime.Now.ToString()` OHNE
@@ -895,7 +895,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      Schritte** (generiert echten Code für die real betriebene Hausautomatisierung):
      das bestehende `configware_sattlerstrasse`-Programm frisch laufen lassen und
      seinen kompletten Output (88 Dateien unter `C:/repos/generated/sensact_model`)
-     als Referenz-Snapshot gesichert, danach `builder_cs -- GenerateModelFiles
+     als Referenz-Snapshot gesichert, danach `builder -- GenerateModelFiles
      --model Sattlerstrasse16` laufen lassen und rekursiv verglichen
      (`diff -rq`): **alle 88 Dateien identisch bis auf die beiden erwartbar
      zeitstempelbehafteten Dateien pro Node** (`node_descriptor.json`,
@@ -911,7 +911,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      **Noch nicht erledigt**: das alte `configware/`-Verzeichnis (drei
      `.csproj`, weiterhin lauffähig) wurde bewusst NICHT gelöscht – dient
      vorerst als Fallback/Vergleichsreferenz, bis mehr Vertrauen in den neuen
-     Pfad besteht. Löschen erst, wenn `builder_cs` produktiv genutzt wird (s.
+     Pfad besteht. Löschen erst, wenn `builder` produktiv genutzt wird (s.
      generelle Regel unten: alte Pfade erst entfernen, wenn der neue
      nachweislich dasselbe tut).
   8. Sensact-Codegenerierung (jetzt nur noch der verbleibende Template-Teil, s.o.)
@@ -977,7 +977,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      `zlib.brotliCompressSync()`-Standardeinstellung) statt Node dafür ein
      zweites Mal aufzurufen.
 
-     **Echt end-to-end verifiziert**: `dotnet run --project builder_cs --
+     **Echt end-to-end verifiziert**: `dotnet run --project builder --
      BuildWebApp` gegen das echte Web-Projekt laufen lassen – Vite-Build lief
      durch (152 Module transformiert, `viteSingleFile`-Plugin inlined JS/CSS
      wie gewohnt), komprimierte Größe (29.710 Byte) praktisch identisch zum
@@ -1194,7 +1194,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
 - SQLite-basierte Board-Typ-Historie wird **nicht** übernommen, dateibasiertes
   Konzept (`board_info.json`) bleibt Zielarchitektur – siehe eigener Abschnitt oben
   ("Bestätigt: SQLite war für ESP32-Boards eine Interims-Lösung...").
-- `builder_cs/` neben dem bestehenden `builder/` als Übergangszustand während der
+- `builder/` neben dem bestehenden `builder/` als Übergangszustand während der
   Migration ist ok (bestätigt).
 - `ns09usersettings`-Umbau auf 4 eigenständige Classes statt einer Union-in-Class
   (s. Mapping-Tabelle oben) ist so gewünscht (bestätigt).
