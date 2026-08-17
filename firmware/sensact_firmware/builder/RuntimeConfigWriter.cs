@@ -54,10 +54,11 @@ public static class RuntimeConfigWriter
 			sb.Append($"export const {k}={StringifyValue(v)}\n");
 		}
 		File.WriteAllText(Path.Combine(outDir, "index.ts"), sb.ToString());
-		// TODO(npm.CreateAndInstallNpmProjectLazily-Aequivalent): die Vorlage (npm.ts) legt hier
-		// zusaetzlich ein eigenstaendiges npm-Paket (package.json + npm install) an, damit
-		// web/ diesen generierten Ordner per Workspace-Referenz importieren kann. Fuer die reine
-		// Text-Generierung nicht noetig -- wird nachgeholt, sobald diese Phase tatsaechlich in den
-		// Web-Build eingehaengt wird.
+		// Minimales package.json, analog zu den anderen generierten npm-Paketen (z.B.
+		// generated/wsprotocol_ts/package.json von BestBinaryBuffers) -- ohne das kann Rollup/Vite
+		// "@generated/runtimeconfig_ts" beim web/-Build nicht ueber den node_modules-Symlink aufloesen
+		// ("Rollup failed to resolve import").
+		File.WriteAllText(Path.Combine(outDir, "package.json"),
+			"""{"name":"@generated/runtimeconfig_ts","version":"1.0.0","main":"index.ts","license":"No License","description":"Generated during build (s. builder/Phases/GenerateRuntimeConfig.cs)."}""");
 	}
 }
