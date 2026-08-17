@@ -3,5 +3,5 @@
   "CertsDir": "C:\\Users\\mail\\OneDrive - HSOS\\certificates",
   "SubjectPrefix": "/C=DE/ST=NRW/L=Greven/O=Klaus Liebler personal",
   "NpmPackagesDir": "C:\\repos\\npm-packages",
-  "WebmanagerWsProtocolDir": "C:\\repos\\espidf-component-webmanager\\ws-protocol"
+  "WebmanagerBestBinaryBuffersSchemaDir": "C:\\repos\\espidf-component-webmanager\\best_binary_buffers_schema"
 }

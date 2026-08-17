@@ -1,9 +1,11 @@
 # sensact
-Smarthome system - hardware, firmware, configware, visualization
+Smarthome system - hardware, firmware, visualization
 
 ## Architektur
 * Verteiltes System. Modellbasierte Codeerzeugung.
-* Grundlage ist sensact/configware. Hier ein Projekt analog Beispielprojekt "sattlerstraße" anlegen. 
+* Grundlage ist `firmware/sensact_firmware/builder/Models/` (Phase `GenerateModelFiles`).
+  Hier ein Projekt analog Beispielprojekt "Sattlerstrasse16" anlegen (s.
+  `firmware/sensact_firmware/docs/build-process.md`).
 * Kleinste Einheit ist eine "Application", die eine eindeutige ID besitzt. Beispiele für Applications sind "Taster", "Drehencoder", "Jalousie" oder "PWM-Licht"
 
 

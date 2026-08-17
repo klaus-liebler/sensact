@@ -311,7 +311,7 @@ uebernommen und in der Response zurueckgegeben (bei asynchron gepushten Notifica
   ueber generierte Struct-/Class-Encode-Funktionen, `partitions`-Liste ueber
   `AppendResponseSystemDataPartitionsPartitionInfoElement`.
 - **usersettings**: `cpp/webmanager_plugins/usersettings_plugin.hh`. Design-Aenderung
-  im Schema selbst (bewusst, s. `ws-protocol/usersettings.cs`-Kommentar): statt einer
+  im Schema selbst (bewusst, s. `best_binary_buffers_schema/usersettings.cs`-Kommentar): statt einer
   Flatbuffers-Union `Setting{Integer,Enum,Boolean,String}` jetzt 4 eigenstaendige
   getaggte Wrapper-Klassen (`IntegerSettingWrapper` etc.), decodiert per
   `DecodeRequestSetUserSettingsSettingsElements`-Visitor mit `if constexpr`-
@@ -377,7 +377,7 @@ Flatbuffers-`Namespace.Value`s der nicht migrierten Namespaces: neues `fingerpri
 Wert 3. Da `AppController` nach der Migration nur noch EINE Dispatch-Map hat (per
 Absicht, s.o.), haette das dazu gefuehrt, dass `FingerprintScreenController` und
 `DevelopCFCController` (functionblock) sich gegenseitig Nachrichten "gestohlen"
-haetten. Behoben durch manuelle Korrektur in `ws-protocol/ids.txt`
+haetten. Behoben durch manuelle Korrektur in `best_binary_buffers_schema/ids.txt`
 (`namespace fingerprint 3` → `namespace fingerprint 13`, einmalig vertretbar, da
 diese ID nie ausgeliefert wurde) und Neu-Generierung via
 `dotnet run -- GenerateWsProtocolFiles`. **Wichtig fuer zukuenftige Migrationen**:
@@ -400,7 +400,7 @@ functionblock=3, heaterexperiment=4 im alten Schema).
 `web/templates/sensactapps.template.ts`, `builder/Phases/GenerateWsProtocolFiles.cs`
 (package.json-Generierung fuer `@generated/wsprotocol_ts` ergaenzt),
 `builder/Phases/GenerateSensactFiles.cs` (Abhaengigkeiten umgestellt),
-`ws-protocol/ids.txt` (Kollisionsfix).
+`best_binary_buffers_schema/ids.txt` (Kollisionsfix).
 
 **`npm-packages`**: `@klaus-liebler/web-components/typescript/utils/interfaces.ts`,
 `.../screen_controller/screen_controller.ts`, `.../app_controller.ts`,

@@ -25,7 +25,7 @@ public sealed class BoardContext
 	public required long Mac { get; init; }
 
 	// GetNodeId() aus sensact_code_generator.ts -- board-spezifische sensact.json (NICHT zu
-	// verwechseln mit ws-protocol/sensact.json!), enthaelt nur {"node_id": "..."}, bestimmt analog
+	// verwechseln mit best_binary_buffers_schema/sensact.cs!), enthaelt nur {"node_id": "..."}, bestimmt analog
 	// zu heute schon NODE_ID, welches main/hal/<NODE_ID>/ aktiv ist.
 	public string GetNodeId()
 	{

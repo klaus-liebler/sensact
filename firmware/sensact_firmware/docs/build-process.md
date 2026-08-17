@@ -1,10 +1,7 @@
 # Build-Prozess
 
 Diese Seite beschreibt, wie ein Build/Flash-Durchlauf für `sensact_firmware`
-heute abläuft. Der frühere Gulp/TypeScript-Orchestrator (`builder/gulpfile.ts`)
-ist seit August 2026 vollständig durch ein C#-Tool ersetzt (`builder/`, s.
-[plan_v2/02-builder-migration-csharp.md](plan_v2/02-builder-migration-csharp.md));
-diese Seite beschreibt den **aktuellen** Stand.
+abläuft.
 
 ## Voraussetzungen
 
@@ -12,7 +9,7 @@ diese Seite beschreibt den **aktuellen** Stand.
   Umgebungsvariable `IDF_PATH` muss gesetzt sein (`BuildFirmware`/`FlashFirmware`
   prüfen das explizit und brechen mit einer klaren Fehlermeldung ab, wenn nicht);
   der Build ruft intern `%IDF_PATH%\export.bat` auf, bevor er `idf.py` aufruft.
-- **.NET SDK** (aktuell `net10.0`) für `builder/` selbst.
+- **.NET SDK** (aktuell `net10.0`) für `builder/`.
 - **Node.js/npm** im `web/`-Ordner (für den Vite-Build) sowie in den generierten
   npm-Projekten unter `generated/` (werden vom Builder bei Bedarf selbst per
   `npm install` initialisiert).
@@ -27,40 +24,35 @@ diese Seite beschreibt den **aktuellen** Stand.
   | `CertsDir` | Private CA + Server-Root-Zertifikat. |
   | `SubjectPrefix` | Zertifikats-Subject-Präfix (`/C=.../ST=.../L=.../O=...`). |
   | `NpmPackagesDir` | Checkout-Pfad des `npm-packages`-Repos (klaus-liebler/npm-packages) – von generierten npm-Projekten per relativem `file:`-Pfad referenziert. |
-  | `WebmanagerWsProtocolDir` | Checkout-Pfad von `espidf-component-webmanager/ws-protocol` – zweite ws-protocol-Schema-Quelle neben dem eigenen `ws-protocol/`. |
+  | `WebmanagerBestBinaryBuffersSchemaDir` | Checkout-Pfad von `espidf-component-webmanager/best_binary_buffers_schema` – zweite BestBinaryBuffers-Schema-Quelle neben dem eigenen `best_binary_buffers_schema/`. |
 
   Alles andere (generierte Dateien, Repo-interne Pfade) ist projektlokal und
   braucht keine Konfiguration, s. unten.
 
-## Vorgelagerter Schritt: Hausmodell-Codegenerierung (`configware`)
+## Hausmodell-Codegenerierung (`GenerateModelFiles`)
 
-**Bevor** `builder` überhaupt läuft, muss das Hausautomations-Modell generiert
-sein: `C:\repos\sensact\configware\` (C#, selbes Repo) definiert – als
-C#-Klassen mit IntelliSense-Unterstützung – welche Apps auf welchem Node
-existieren und wie sie verdrahtet sind (`configware_sattlerstrasse`/
-`configware_testmodel`, jeweils per `dotnet run` manuell gestartet). Der
-Generator schreibt u.a. die `.inc`-Dateien, die `sensact-applicationmodel`
-direkt einbindet, sowie `node_descriptor.json` nach
-`sensact_firmware/generated/sensact_model/` (Ziel kommt aus der jeweiligen
-`appsettings.json` des configware-Konsolenprojekts, Key
-`SourceCodeGenerator.BasePath`) – **derselbe Ordner**, den
-`sensact-applicationmodel/CMakeLists.txt` über `${GENERATED_DIR}/sensact_model`
-einbindet.
+Das Hausautomations-Modell (welche Apps auf welchem Node existieren und wie sie
+verdrahtet sind, definiert als C#-Klassen mit IntelliSense-Unterstützung) wird
+über die Phase `GenerateModelFiles --model Sattlerstrasse16|Testmodel` erzeugt.
+Die Generierungs-Engine (`ModelGeneration/Generator.cs`, `SourceCodeGenerator<T>`,
+`ModelBuilder<T>`, ...) sowie die beiden Hausmodelle selbst
+(`Models/Sattlerstrasse16/`, `Models/Testmodel/`) liegen unter `builder/`.
 
-**Das ist weiterhin ein manueller, undokumentierter Schritt** – wird
-`configware` nach einer Modelländerung nicht neu ausgeführt, baut die Firmware
-mit veraltetem Modell. Soll laut
-[plan_v2/02-builder-migration-csharp.md](plan_v2/02-builder-migration-csharp.md)
-vollständig in `builder` verschmolzen werden (eigene Phase, liefe automatisch
-vor der restlichen Codegenerierung) – bisher nicht umgesetzt.
+Schreibt u.a. die `.inc`-Dateien, die `sensact-applicationmodel` direkt
+einbindet, nach `generated/sensact_model/` (Teil des projektlokalen
+`GeneratedRoot`, s. unten). Kopiert danach zusätzlich die beiden ws-protocol-
+Enum-Quellen (`generated/sensact_model/common/applicationIds.enums.cs` /
+`commandTypes.enums.cs`) nach `best_binary_buffers_schema/`
+(`sensact_applicationIds.enums.cs` / `sensact_commandTypes.enums.cs`) – dort
+git-getrackt, damit eine echte Modelländerung als normaler `git diff` sichtbar
+wird, statt still in einem gitignorten Verzeichnis zu verschwinden. Deshalb
+muss `GenerateModelFiles` vor `GenerateWsProtocolFiles` laufen (`Pipeline`
+macht das in der richtigen Reihenfolge).
 
 ## Generierte Dateien: projektlokal
 
-Alle von `builder` selbst erzeugten Dateien liegen unter
-`sensact_firmware/generated/` (`builder/Paths.cs`: `GeneratedRoot = RootDir +
-"/generated"`, gitignored). Bis August 2026 lag das in einem repo-losen,
-nirgends versionierten Verzeichnis `C:\repos\generated\` – das ist Geschichte,
-`C:\repos\generated\` existiert nicht mehr.
+Alle von `builder` erzeugten Dateien liegen unter `sensact_firmware/generated/`
+(`builder/Paths.cs`: `GeneratedRoot = RootDir + "/generated"`, gitignored).
 
 | Artefakt | Zielpfad | Erzeugt von (Phase) |
 |---|---|---|
@@ -69,7 +61,7 @@ nirgends versionierten Verzeichnis `C:\repos\generated\` – das ist Geschichte,
 | Runtimeconfig C++ | `generated/runtimeconfig_cpp/` | `GenerateRuntimeConfig` |
 | Runtimeconfig TS | `generated/runtimeconfig_ts/` (eigenes npm-Paket) | `GenerateRuntimeConfig` |
 | CMake-Config | `generated/cmake/config.json` | `GenerateRuntimeConfig` |
-| Sensact-Model | `generated/sensact_model/` | `configware_*` (s.o., **nicht** von `builder`) |
+| Sensact-Model | `generated/sensact_model/` | `GenerateModelFiles` (s.o.) |
 | `sendCommandImplementation` | `generated/sensact_sendCommandImplementation/` (eigenes npm-Paket) | `GenerateSensactFiles` |
 | `sensactapps` (digitaler Zwilling für Web-UI) | `generated/sensact_appsbuilder/` (eigenes npm-Paket) | `GenerateSensactFiles` |
 | Web-Bundle (komprimiert) | `generated/web/index.compressed.br` | `BuildWebApp`, eingebettet via `main/CMakeLists.txt` (`EMBED_FILES`) |
@@ -81,10 +73,9 @@ Cross-Repo-Konsumenten (die npm-Pakete in `npm-packages/@klaus-liebler/*` sowie
 (`../../../sensact/firmware/sensact_firmware/generated/...`), für `web/`
 (gleiches Repo) ein kurzer (`../generated/...`).
 
-Flatbuffers gibt es hier nicht mehr – alle Namespaces mit echter
-Server-Implementierung sind auf [BestBinaryBuffers](https://github.com/klaus-liebler/best_binary_buffers)
-umgestellt (s. [plan_v2/03-wifimanager-review.md](plan_v2/03-wifimanager-review.md),
-Abschnitt "ws-protocol-Migration").
+Alle Namespaces mit echter Server-Implementierung nutzen
+[BestBinaryBuffers](https://github.com/klaus-liebler/best_binary_buffers) als
+Wire-Format (Schema als annotierter C#-Code unter `best_binary_buffers_schema/`).
 
 ## Die Repo-Abhängigkeiten für einen Build
 
@@ -97,18 +88,18 @@ aus drei weiteren Repos/Ordnern hinzu; `web/package.json` zieht npm-Pakete aus
 ## Die Phasen von `builder`
 
 Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
-`builder/`-Verzeichnis auch ohne `--project builder`). Vollständige, aktuelle
-Liste s. Kopfkommentar in `builder/Program.cs`.
+`builder/`-Verzeichnis auch ohne `--project builder`). Vollständige Liste s.
+Kopfkommentar in `builder/Program.cs`.
 
 | Phase | Was passiert |
 |---|---|
 | `Info` | Zeigt aktuellen Board-/Verbindungsstatus. |
 | `GitStatus` | Git-Kurz-Hash etc. für den Build-Banner. |
-| `GenerateWsProtocolFiles` | Liest `*.cs`-Schema-Dateien aus `ws-protocol/` (eigenes Repo) **und** `WebmanagerWsProtocolDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
+| `GenerateWsProtocolFiles` | Liest `*.cs`-Schema-Dateien aus `best_binary_buffers_schema/` (eigenes Repo) **und** `WebmanagerBestBinaryBuffersSchemaDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
 | `GenerateRuntimeConfig` | Sammelt Build-Defines (Board-Settings, Node-Descriptor, Git-Hash, Zeitstempel, Banner …), schreibt `cmake/config.json`, `runtimeconfig.hh`/`runtimeconfig_defines.hh`, `runtimeconfig_ts`. |
 | `GenerateCertificates` | Lazy: Board-Zertifikat (node-forge, signiert mit der Root-CA aus `CertsDir`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
-| `GenerateModelFiles --model <Name>` | Noch nicht portiert (s.o.) – `configware_*` bleibt ein separater, manueller Schritt. |
-| `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + `configware`-`.inc`-Snippets. |
+| `GenerateModelFiles --model <Name>` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
+| `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |
 | `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess, s. Kommentar in `BuildFirmware.cs` zur `PATH`-Vererbung). |
 | `ReadHardwareIds` | Liest MAC etc. vom per USB verbundenen Board. |

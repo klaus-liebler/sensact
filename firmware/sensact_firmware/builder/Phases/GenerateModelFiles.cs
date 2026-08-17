@@ -62,5 +62,20 @@ public static class GenerateModelFiles
 		generator.DeleteBaseDirectory();
 		generator.generateAll(mc);
 		Console.WriteLine($"Modell-Dateien -> {Paths.SensactModelGeneratedDir}");
+
+		// Die beiden ws-protocol-Enum-Quellen (ApplicationId/Command, generiert nach
+		// SensactModelGeneratedDir/common/, s. Generator.GenerateApplicationIds/GenerateCommandTypes)
+		// muessen zusaetzlich im git-getrackten BestBinaryBuffersSchemaDir liegen, damit
+		// GenerateWsProtocolFiles sie als Schema-Quelle findet -- das ist bewusst kein Kopieren "ins
+		// Leere": beide Dateien bleiben git-getrackte Dateien, eine echte Modelaenderung zeigt sich
+		// also weiterhin als normaler, review-barer "git diff" hier, nur ohne den manuellen
+		// Kopier-Schritt davor.
+		foreach (var enumFile in new[] { "applicationIds.enums.cs", "commandTypes.enums.cs" })
+		{
+			var source = Path.Combine(Paths.SensactModelGeneratedDir, "common", enumFile);
+			var dest = Path.Combine(Paths.BestBinaryBuffersSchemaDir, $"sensact_{enumFile}");
+			File.Copy(source, dest, overwrite: true);
+		}
+		Console.WriteLine($"ws-protocol-Enum-Quellen aktualisiert -> {Paths.BestBinaryBuffersSchemaDir}");
 	}
 }

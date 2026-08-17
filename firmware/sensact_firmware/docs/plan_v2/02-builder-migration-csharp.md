@@ -268,7 +268,7 @@ ModelGeneration/             – ehemals configware/common: Generator, ModelBuil
 
 Nachtrag (2026-07-31): Klaus hatte eine parallele Änderung im Referenzprojekt
 (`factory_in_a_box`) entdeckt: dort wurde Flatbuffers durch ein eigenes, viel
-schlankeres binäres Nachrichtenprotokoll (`ws-protocol/*.json` →
+schlankeres binäres Nachrichtenprotokoll (`best_binary_buffers_schema/*.json` →
 `builder/Phases/ReadWebSocketProtocol.cs` → generiertes `ws_protocol.hh`/
 `ws-protocol.ts`) ersetzt. Auf Wunsch wurde zunächst geprüft, ob dieses Verfahren
 sensacts tatsächliche Flatbuffers-Nutzung (12 Namespaces, sowohl in
@@ -346,7 +346,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
 
 - **`sensact`** (dieses Repo, umfasst sowohl `firmware/sensact_firmware/` als auch
   `configware/` – s. [repo-map.md](../repo-map.md)):
-  - `ns20sensact`/`ns21nodemaster` → neue `ws-protocol/*.json`-Dateien; `main/`
+  - `ns20sensact`/`ns21nodemaster` → neue `best_binary_buffers_schema/*.json`-Dateien; `main/`
     (Nutzung der generierten Typen in C++).
   - `configware` muss statt `.fbs`-Text für `ApplicationId`/`CommandType`
     (`GenerateApplicationIds`/`GenerateCommandTypes` in `Generator.cs`) eine
@@ -354,7 +354,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
     `configware`-Verschmelzung (s. oben) zusammen, sollte im selben Zug erledigt
     werden.
 - **`espidf-component-webmanager`** (eigenes Repo): `ns01`–`ns10` → neue
-  `ws-protocol/*.json`-Dateien; `webmanager.hh` (Dispatch-Umstellung, s.o.).
+  `best_binary_buffers_schema/*.json`-Dateien; `webmanager.hh` (Dispatch-Umstellung, s.o.).
 - **`npm-packages`** (eigenes Repo): `web-components`s `AppController`/
   `WifimanagerController` u.a. Screen-Controller müssen von der generierten
   `flatbuffers`-JS-API auf die neue generierte `ws-protocol.ts`-API umgestellt
@@ -472,8 +472,8 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
         (s. Status oben) – **erledigt**.
   - [x] `wifimanager`/`systeminfo`/`functionblock`/`heaterexperiment`/`chatbot`/
         `canmonitor`/`fingerprint`/`usersettings`/`journal` (die übrigen 9
-        Namespaces) als `ws-protocol/*.json` neu geschrieben (in
-        `espidf-component-webmanager/ws-protocol/`) – **erledigt (2026-08-01)**.
+        Namespaces) als `best_binary_buffers_schema/*.json` neu geschrieben (in
+        `espidf-component-webmanager/best_binary_buffers_schema/`) – **erledigt (2026-08-01)**.
         Alle 10 Namespaces (inkl. `scheduler`) zusammen gegen den
         Referenzgenerator verifiziert (`--ws-protocol-path` auf das gesamte
         Verzeichnis): `arm-none-eabi-g++ -fsyntax-only` auf das generierte
@@ -494,7 +494,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
         waren (anders als `canmonitor.NotifyCanMessage`, das außerhalb beider
         Unions stand und deshalb `kind:"event"` ist).
 
-        Nach jedem Testlauf wurde `ws-protocol/ids.txt` (im Referenzprojekt)
+        Nach jedem Testlauf wurde `best_binary_buffers_schema/ids.txt` (im Referenzprojekt)
         auf seine 2-Zeilen-Baseline zurückgesetzt und der (aus einem
         physischen Board gecachte) `build/.last-board-id` vor jedem Testlauf
         beiseite verschoben und danach wiederhergestellt – sonst hätte
@@ -506,8 +506,8 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
         neu generiert) – **Vorsicht bei künftigen Testläufen mit
         `--ws-protocol-path` in diesem Referenzprojekt**, falls ein Board
         gerade angeschlossen war/ist.
-  - [x] `ns20sensact`/`ns21nodemaster` als `ws-protocol/*.json` neu geschrieben
-        (in `sensact_firmware/ws-protocol/`) – **erledigt (2026-08-01)**.
+  - [x] `ns20sensact`/`ns21nodemaster` als `best_binary_buffers_schema/*.json` neu geschrieben
+        (in `sensact_firmware/best_binary_buffers_schema/`) – **erledigt (2026-08-01)**.
   - [x] `configware`s `GenerateApplicationIds`/`GenerateCommandTypes` geben jetzt
         ZUSÄTZLICH (nicht ersetzend – s. unten) eine ws-protocol-`"enums"`-JSON
         aus – **erledigt (2026-08-01), aber bewusst nur ein Zwischenschritt**:
@@ -527,7 +527,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
         `configware_sattlerstrasse` tatsächlich laufen lassen (liefert die
         ECHTEN ~360 `ApplicationId`-Werte des realen Sattlerstrasse16-Hausmodells,
         nicht nur Testdaten), die beiden erzeugten `.enums.json`-Dateien nach
-        `sensact_firmware/ws-protocol/` kopiert (`sensact_applicationIds.enums.json`/
+        `sensact_firmware/best_binary_buffers_schema/` kopiert (`sensact_applicationIds.enums.json`/
         `sensact_commandTypes.enums.json`), `sensact.json`/`nodemaster.json`
         dagegen geschrieben (referenzieren die Enums per `enumRef`), dann mit dem
         Referenzgenerator generiert, `arm-none-eabi-g++ -fsyntax-only` +
@@ -660,8 +660,8 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
 
      **Echt end-to-end verifiziert** (nicht nur kompiliert): `dotnet run
      --project builder -- GenerateWsProtocolFiles` liest tatsächlich 14
-     Dateien aus beiden Repos (die 4 unter `sensact_firmware/ws-protocol/` +
-     die 10 unter `espidf-component-webmanager/ws-protocol/`) und erzeugt ein
+     Dateien aus beiden Repos (die 4 unter `sensact_firmware/best_binary_buffers_schema/` +
+     die 10 unter `espidf-component-webmanager/best_binary_buffers_schema/`) und erzeugt ein
      gemeinsames `ws_protocol.hh`/`ws-protocol.ts` mit allen 12 echten
      Namespaces (`canmonitor`, `chatbot`, `fingerprint`, `functionblock`,
      `heaterexperiment`, `journal`, `nodemaster`, `scheduler`, `sensact`,
@@ -669,7 +669,7 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      gehört nur zu `factory_in_a_box`). `arm-none-eabi-g++ -fsyntax-only` und
      `tsc --strict --noEmit` beide fehlerfrei auf dem echten Output. Zweiter
      Lauf bestätigt Idempotenz (keine neuen Zeilen in `ids.txt`). Dabei
-     entstand `sensact_firmware/ws-protocol/ids.txt` als ECHTE, eigene
+     entstand `sensact_firmware/best_binary_buffers_schema/ids.txt` als ECHTE, eigene
      ID-Tabelle dieses Projekts (unabhängig von der Tabelle im
      Referenzprojekt) – **muss mitversioniert werden** (nicht gitignored, s.
      docs/websocket-protocol.md Abschnitt 8.5), analog zu
@@ -908,12 +908,16 @@ Referenzprojekt als Vorlage für das Dispatch-Muster.
      danach den gemeinsamen, externen `C:/repos/generated/sensact_model`-Ordner
      wieder auf den echten Sattlerstrasse16-Stand zurückgesetzt.
 
-     **Noch nicht erledigt**: das alte `configware/`-Verzeichnis (drei
-     `.csproj`, weiterhin lauffähig) wurde bewusst NICHT gelöscht – dient
-     vorerst als Fallback/Vergleichsreferenz, bis mehr Vertrauen in den neuen
-     Pfad besteht. Löschen erst, wenn `builder` produktiv genutzt wird (s.
-     generelle Regel unten: alte Pfade erst entfernen, wenn der neue
-     nachweislich dasselbe tut).
+     **Erledigt (2026-08-17)**: das alte `configware/`-Verzeichnis (drei
+     `.csproj`) wurde gelöscht. Anlass: die beiden parallel gepflegten Kopien
+     der Generierungs-Engine (`configware/common/Generator.cs` vs.
+     `builder/ModelGeneration/Generator.cs`) waren real auseinandergelaufen
+     (JSON->`.cs`-Enum-Format-Umstellung hatte nur eine Kopie erreicht) – bei
+     der Fehlersuche dafür bestätigt, dass `builder -- GenerateModelFiles`
+     inzwischen production-tauglich ist (end-to-end gegen das echte
+     Sattlerstrasse16-Modell verifiziert), also war die "Fallback/
+     Vergleichsreferenz"-Begründung von oben nicht mehr nötig. Bei Bedarf über
+     die Git-Historie wiederherstellbar.
   8. Sensact-Codegenerierung (jetzt nur noch der verbleibende Template-Teil, s.o.)
      – **portiert (2026-08-01)**.
 

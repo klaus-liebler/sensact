@@ -28,9 +28,9 @@ public sealed class BuilderOptions
 	// hartkodiert in Paths.cs.
 	public string NpmPackagesDir { get; set; } = "";
 
-	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
-	// espidf-component-webmanager. Ebenfalls maschinenabhaengig.
-	public string WebmanagerWsProtocolDir { get; set; } = "";
+	// Zweite BestBinaryBuffers-Schema-Quelle: die anderen 10 (von 12) Namespaces liegen im
+	// Nachbar-Repo espidf-component-webmanager. Ebenfalls maschinenabhaengig.
+	public string WebmanagerBestBinaryBuffersSchemaDir { get; set; } = "";
 
 	private static readonly Lazy<BuilderOptions> LazyCurrent = new(Load);
 

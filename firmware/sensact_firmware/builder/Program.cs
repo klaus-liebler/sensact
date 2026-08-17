@@ -53,9 +53,9 @@ switch (args[0])
 		break;
 	case "GenerateWsProtocolFiles":
 		// Beide Quellen explizit (s. Kommentar bei GenerateWsProtocolFiles.Run): sensacts eigene
-		// ws-protocol/-Dateien (sensact.json/nodemaster.json + configware-Enums) UND die 10
+		// best_binary_buffers_schema/-Dateien (sensact.cs/nodemaster.cs + Hausmodell-Enums) UND die 10
 		// Namespaces aus dem Nachbar-Repo espidf-component-webmanager.
-		GenerateWsProtocolFiles.Run([Paths.WsProtocolDir, Paths.WebmanagerWsProtocolDir]);
+		GenerateWsProtocolFiles.Run([Paths.BestBinaryBuffersSchemaDir, Paths.WebmanagerBestBinaryBuffersSchemaDir]);
 		break;
 	case "GenerateRuntimeConfig":
 		GenerateRuntimeConfig.Run();
@@ -84,10 +84,15 @@ switch (args[0])
 	case "Pipeline":
 		var model = GetRequiredArgValue(args, "--model");
 		var resetNvsPartition = HasFlag(args, "--resetNVSPartition");
-		GenerateWsProtocolFiles.Run([Paths.WsProtocolDir, Paths.WebmanagerWsProtocolDir]);
+		// GenerateModelFiles muss zuerst laufen: sowohl GenerateWsProtocolFiles (liest die von
+		// GenerateModelFiles nach BestBinaryBuffersSchemaDir kopierten ws-protocol-Enum-Quellen) als
+		// auch GenerateRuntimeConfig (liest node_descriptor.json aus SensactModelGeneratedDir) haengen
+		// von dessen Output ab -- vorher liefen beide gegen den Stand vom jeweils letzten Lauf, nicht
+		// gegen den gerade eben gebauten.
+		GenerateModelFiles.Run(model);
+		GenerateWsProtocolFiles.Run([Paths.BestBinaryBuffersSchemaDir, Paths.WebmanagerBestBinaryBuffersSchemaDir]);
 		GenerateRuntimeConfig.Run();
 		GenerateCertificates.Run();
-		GenerateModelFiles.Run(model);
 		GenerateSensactFiles.Run();
 		BuildWebApp.Run();
 		BuildFirmware.Run();

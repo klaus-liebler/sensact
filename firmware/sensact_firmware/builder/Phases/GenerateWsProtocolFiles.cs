@@ -12,8 +12,9 @@
 //
 // Wire-Format-Aenderungen ggue. dem bisherigen JSON-Schema-Generator (s. BestBinaryBuffers/README.md):
 // Strings sind jetzt null-terminiert statt laengenpraefigiert, Array-Count-Praefixe sind jetzt 2 statt
-// 4 Byte (ushort statt uint32). Unkritisch, weil ws-protocol/ zum Zeitpunkt der Umstellung noch nie
-// committet war (kein ausgeliefertes Geraet haengt an der alten Kodierung).
+// 4 Byte (ushort statt uint32). Unkritisch, weil best_binary_buffers_schema/ (damals noch
+// "ws-protocol/") zum Zeitpunkt der Umstellung noch nie committet war (kein ausgeliefertes Geraet
+// haengt an der alten Kodierung).
 using BestBinaryBuffers;
 
 namespace Builder.Phases;
@@ -41,13 +42,14 @@ public static class GenerateWsProtocolFiles
 
 	// 'sources' -- Verzeichnisse und/oder einzelne *.cs-Dateien, deren Inhalte zu EINEM gemeinsamen
 	// ws_protocol.hh/ws-protocol.ts zusammengefasst werden. Ohne Angabe (null/leer) faellt das auf
-	// Paths.WsProtocolDir zurueck ("ws-protocol/" im Repo-Root von sensact_firmware) -- fuer den
-	// kompletten sensact-Datenaustausch braucht es aber IMMER zusaetzlich
-	// espidf-component-webmanager/ws-protocol (die anderen Namespaces), deshalb ruft Program.cs diese
-	// Phase mit beiden Quellen explizit auf, statt sich auf den Default zu verlassen.
+	// Paths.BestBinaryBuffersSchemaDir zurueck ("best_binary_buffers_schema/" im Repo-Root von
+	// sensact_firmware) -- fuer den kompletten sensact-Datenaustausch braucht es aber IMMER
+	// zusaetzlich espidf-component-webmanager/best_binary_buffers_schema (die anderen Namespaces),
+	// deshalb ruft Program.cs diese Phase mit beiden Quellen explizit auf, statt sich auf den
+	// Default zu verlassen.
 	public static void Run(IReadOnlyList<string>? sources = null)
 	{
-		var effectiveSources = (sources is { Count: > 0 }) ? sources : [Paths.WsProtocolDir];
+		var effectiveSources = (sources is { Count: > 0 }) ? sources : [Paths.BestBinaryBuffersSchemaDir];
 
 		var files = effectiveSources.SelectMany(ResolveSourceFiles)
 			.Select(Path.GetFullPath)
@@ -60,7 +62,7 @@ public static class GenerateWsProtocolFiles
 				$"Keine ws-protocol-*.cs-Dateien gefunden (durchsucht: {string.Join(", ", effectiveSources)}).");
 		}
 
-		var idMapPath = Path.Combine(Paths.WsProtocolDir, "ids.txt");
+		var idMapPath = Path.Combine(Paths.BestBinaryBuffersSchemaDir, "ids.txt");
 		var idMap = IdMap.Load(idMapPath);
 
 		Directory.CreateDirectory(Paths.GeneratedWsProtocolCppDir);

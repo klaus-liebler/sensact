@@ -36,15 +36,19 @@ Nicht alles auf einmal – pro Sitzung ein Modul, mit kurzem Ergebnis-Vermerk hi
 
 Status-Legende: 🔴 Offen · 🟡 In Arbeit · 🟢 Erledigt
 
-### 🟡 `configware` war ein unentdeckter, manueller Pipeline-Schritt
+### 🟢 `configware` war ein unentdeckter, manueller Pipeline-Schritt (erledigt 2026-08-17)
 - `C:\repos\sensact\configware\` (C#-Hausmodell-Generator, erzeugt die meisten
-  `.inc`-Dateien für `sensact-applicationmodel`) lief bisher komplett manuell und
-  unabhängig vom Gulp-Build – nirgends dokumentiert, keine Automatisierung,
-  Fehlerquelle bei vergessener Neugenerierung nach Modelländerungen.
-- Entschieden (2026-07-31): wird vollständig in den neuen C#-Build-Orchestrator
-  verschmolzen, siehe
-  [02-builder-migration-csharp.md](02-builder-migration-csharp.md). Status 🟡, da
-  die Entscheidung getroffen, die Umsetzung aber Teil von Stufe 2 ist.
+  `.inc`-Dateien für `sensact-applicationmodel`) lief ursprünglich komplett
+  manuell und unabhängig vom Gulp-Build – nirgends dokumentiert, keine
+  Automatisierung, Fehlerquelle bei vergessener Neugenerierung nach
+  Modelländerungen.
+- Entschieden (2026-07-31), umgesetzt (2026-08-01): vollständig in den
+  C#-Build-Orchestrator verschmolzen (Phase `GenerateModelFiles`), siehe
+  [02-builder-migration-csharp.md](02-builder-migration-csharp.md).
+  `configware/`-Verzeichnis selbst am 2026-08-17 gelöscht, nachdem eine
+  zwischenzeitliche Divergenz der zwei parallel gepflegten Generator-Kopien
+  bestätigte, dass der alte Pfad nur noch Risiko ohne Nutzen war (s.
+  [build-process.md](../build-process.md)).
 
 ### 🔴 Tote Dateien in `main/__archive/`
 - Dateien: `busmaster.ccold`, `nodemaster.ccold`, `connect.hhold`, `updater.hh`,
@@ -194,7 +198,7 @@ Status-Legende: 🔴 Offen · 🟡 In Arbeit · 🟢 Erledigt
   "generischer Kern" vs. "projektspezifische Phase" nötig), wie Versionierung
   zwischen mehreren Konsumenten-Projekten funktioniert (ProjectReference wie bei
   `best_binary_buffers` vs. echtes NuGet-Paket), und ob `labathome_firmware`
-  überhaupt zuerst auf das neue ws-protocol/BestBinaryBuffers migriert sein muss
+  überhaupt zuerst auf das neue best_binary_buffers_schema/BestBinaryBuffers migriert sein muss
   (s. dortige `docs/MIGRATION_TO_BESTBINARYBUFFERS.md`), bevor eine Builder-
   Wiederverwendung dort sinnvoll ist.
 

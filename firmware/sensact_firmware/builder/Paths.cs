@@ -39,7 +39,7 @@ public static class Paths
 	// KEINE Live-Abfrage eines angeschlossenen Boards, s. Phases/Info.cs.
 	public static readonly string BoardInfoJsonPath = Path.Combine(RootDir, "board_info.json");
 
-	public static readonly string WsProtocolDir = Path.Combine(RootDir, "ws-protocol");
+	public static readonly string BestBinaryBuffersSchemaDir = Path.Combine(RootDir, "best_binary_buffers_schema");
 
 	// Projektlokales Ausgabeverzeichnis fuer generierte Dateien (wsprotocol_cpp/_ts,
 	// runtimeconfig_cpp/_ts, cmake/, web/ -- alles, was builder selbst erzeugt). Lag bis August 2026
@@ -70,10 +70,10 @@ public static class Paths
 	public static string RelativeFileDependency(string from, string to) =>
 		"file:" + Path.GetRelativePath(from, to).Replace('\\', '/');
 
-	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
-	// espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"). Maschinenabhaengiger absoluter
-	// Pfad -- kommt aus appsettings.json (s. BuilderOptions), nicht hartkodiert.
-	public static string WebmanagerWsProtocolDir => BuilderOptions.Current.WebmanagerWsProtocolDir;
+	// Zweite BestBinaryBuffers-Schema-Quelle: die anderen 10 (von 12) Namespaces liegen im
+	// Nachbar-Repo espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"). Maschinenabhaengiger
+	// absoluter Pfad -- kommt aus appsettings.json (s. BuilderOptions), nicht hartkodiert.
+	public static string WebmanagerBestBinaryBuffersSchemaDir => BuilderOptions.Current.WebmanagerBestBinaryBuffersSchemaDir;
 
 	// Ziele des Config-/Runtimeconfig-Writers (s. RuntimeConfigWriter.cs/Phases/GenerateRuntimeConfig.cs),
 	// unveraendert aus paths.ts uebernommene Ordnernamen (GENERATED_RUNTIMECONFIG_CPP/_TS, GENERATED_CMAKE).

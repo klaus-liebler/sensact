@@ -13,7 +13,7 @@ eigenem Remote.
 
 | Repo (Remote) | Lokaler Pfad | Enthält |
 |---|---|---|
-| `klaus-liebler/sensact` | `C:\repos\sensact` | Dieses Firmware-Projekt (`firmware/sensact_firmware`), die eigentlichen "sensact apps" (`espidf-components/sensact-applicationmodel`), HAL-Basis (`espidf-components/sensact-hal`), CAN-Middleware (`espidf-components/sensact-middleware`), der Hausmodell-Codegenerator (`configware/`, siehe unten), Hardware-Doku/PCB-Layouts (`doc/`, `pcb/`) |
+| `klaus-liebler/sensact` | `C:\repos\sensact` | Dieses Firmware-Projekt (`firmware/sensact_firmware`, inkl. Hausmodell-Codegenerator als Phase `GenerateModelFiles` im `builder/`), die eigentlichen "sensact apps" (`espidf-components/sensact-applicationmodel`), HAL-Basis (`espidf-components/sensact-hal`), CAN-Middleware (`espidf-components/sensact-middleware`), Hardware-Doku/PCB-Layouts (`doc/`, `pcb/`) |
 | `klaus-liebler/espidf-component-webmanager` | `C:\repos\espidf-component-webmanager` | Wifimanager + genereller Web-/OTA-/Login-Server (`cpp/webmanager.hh`), Flatbuffers-Schemas für Wifimanager/Systeminfo/Scheduler/Journal/Fingerprint u.a. |
 | `klaus-liebler/npm-packages` | `C:\repos\npm-packages` | Alle `@klaus-liebler/*`-npm-Pakete: Build-Tools (`espidf-vite-secure-build-tools`), Web-UI-Bausteine (`web-components`, `web-components-sensact` – **hier liegt auch das Wifimanager-Frontend**), Test-Server-Helfer (`websocket_file_testserver`), gemeinsame Utilities (`commons`, `sensact-base`, `usersettings_codegeneration`) |
 | `klaus-liebler/factory_in_a_box` | `C:\repos\factory_in_a_box\firmware_factory_control_unit` | Referenz-C#-Builder (`builder/`), Vorlage für die Migration in [plan_v2/02-builder-migration-csharp.md](plan_v2/02-builder-migration-csharp.md) |
@@ -24,27 +24,19 @@ eigenem Remote.
   anderen Repos ein: `C:/repos/espidf-components`,
   `C:/repos/sensact/espidf-components`, `C:/repos/espidf-components-lcd`,
   `C:/repos/espidf-component-webmanager`.
-- **`builder/package.json`** hat `file:`-Abhängigkeiten auf
-  `../../../../npm-packages/@klaus-liebler/...` (die Build-Tools selbst).
 - **`web/package.json`** hat `file:`-Abhängigkeiten sowohl auf
   `../../../../npm-packages/@klaus-liebler/...` (Web-UI-Bausteine, inkl.
-  Wifimanager-Frontend) als auch auf `../../../../generated/...` (generierte
-  Flatbuffers/Runtimeconfig/Sensact-Apps-TS-Pakete, siehe
+  Wifimanager-Frontend) als auch auf `../generated/...` (generierte
+  best_binary_buffers_schema/Runtimeconfig/Sensact-Apps-TS-Pakete, siehe
   [build-process.md](build-process.md)).
-- Generierte Artefakte landen zentral unter `C:\repos\generated\` (aktuell
-  hart codiert – siehe die Diskussion in
-  [plan_v2/04-architektur-review.md](plan_v2/04-architektur-review.md), ob das
-  projekt-lokal werden soll), board-spezifische Secrets/Zertifikate unter
-  `%USERPROFILE%\OneDrive - HSOS\esp32_boards\<mac-dir>\` und
+- Generierte Artefakte landen projektlokal unter
+  `firmware/sensact_firmware/generated/` (s. `builder/Paths.cs`,
+  [build-process.md](build-process.md)), board-spezifische Secrets/Zertifikate
+  unter `%USERPROFILE%\OneDrive - HSOS\esp32_boards\<mac-dir>\` und
   `%USERPROFILE%\OneDrive - HSOS\certificates\`.
-- **`C:\repos\sensact\configware\`** ist ein weiterer, bisher separater
-  Build-Baustein im selben Repo: ein C#-Generator, der das Hausautomations-Modell
-  (welche Apps auf welchem Node, verdrahtet mit welchen Pins) aus C#-Klassen
-  (IntelliSense-gestützt) erzeugt und daraus C++-/Flatbuffers-/TypeScript-Dateien
-  generiert – ebenfalls nach `C:\repos\generated\sensact_model\`. Läuft heute
-  manuell und unabhängig vom Gulp-Build; wird laut
-  [plan_v2/02-builder-migration-csharp.md](plan_v2/02-builder-migration-csharp.md)
-  vollständig in den neuen C#-Build-Orchestrator verschmolzen.
+- Der Hausmodell-Codegenerator (welche Apps auf welchem Node, verdrahtet mit
+  welchen Pins, aus C#-Klassen mit IntelliSense-Unterstützung) ist Teil von
+  `builder/` selbst (Phase `GenerateModelFiles`), kein separates Tool mehr.
 
 ## Praktische Konsequenz für die Arbeit an diesem Plan
 

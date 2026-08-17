@@ -51,12 +51,14 @@ public static class GenerateRuntimeConfig
 			defines[prop.Name] = JsonElementToObject(prop.Value);
 		}
 
-		// board_settings.web/firmware -- fuer alle real bekannten Boards aktuell leer ({}), daher
-		// hier (noch) folgenlos, aber der Vollstaendigkeit halber genauso uebernommen wie in
-		// gulpfile.ts: JEDER Wert wird VOR dem Einfuegen bereits einmal JSON-stringifiziert (nicht
-		// nur beim finalen Rendering) -- so verhaelt sich auch das TS-Original (moeglicherweise ein
-		// Bestandteil, der nie mit echten Settings getestet wurde; hier bewusst 1:1 uebernommen statt
-		// stillschweigend "korrigiert").
+		// board_settings.web/firmware. Bug gefunden und behoben (2026-08-17): dieser Pfad
+		// stringifizierte jeden Wert bereits hier ein zweites Mal (JsonSerializer.Serialize VOR dem
+		// Einfuegen, obendrauf zum finalen Rendering in RuntimeConfigWriter.StringifyValue) -- 1:1 aus
+		// gulpfile.ts uebernommen und nie mit echten Settings getestet (fuer alle bisher bekannten
+		// Boards war board_settings immer leer {}). Erstmals mit echten Werten
+		// (WEBMANAGER_AUTH_USERNAME/_PASSWORD) ausgeloest: erzeugte Werte mit doppelt eingebetteten
+		// Anfuehrungszeichen und kaputt escapten Unicode-Zeichen. Jetzt wie jeder andere Define: roher
+		// Wert rein, Stringifizierung einmalig beim Rendern.
 		if (b.BoardSettings.ValueKind == JsonValueKind.Object)
 		{
 			foreach (var group in new[] { "web", "firmware" })
@@ -64,7 +66,7 @@ public static class GenerateRuntimeConfig
 				if (!b.BoardSettings.TryGetProperty(group, out var groupEl) || groupEl.ValueKind != JsonValueKind.Object) continue;
 				foreach (var prop in groupEl.EnumerateObject())
 				{
-					defines[prop.Name] = JsonSerializer.Serialize(JsonElementToObject(prop.Value));
+					defines[prop.Name] = JsonElementToObject(prop.Value);
 				}
 			}
 		}
