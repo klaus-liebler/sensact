@@ -1,5 +1,7 @@
 {
   "BoardsDir": "C:\\Users\\mail\\OneDrive - HSOS\\esp32_boards",
   "CertsDir": "C:\\Users\\mail\\OneDrive - HSOS\\certificates",
-  "SubjectPrefix": "/C=DE/ST=NRW/L=Greven/O=Klaus Liebler personal"
+  "SubjectPrefix": "/C=DE/ST=NRW/L=Greven/O=Klaus Liebler personal",
+  "NpmPackagesDir": "C:\\repos\\npm-packages",
+  "WebmanagerWsProtocolDir": "C:\\repos\\espidf-component-webmanager\\ws-protocol"
 }

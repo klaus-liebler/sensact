@@ -22,6 +22,16 @@ public sealed class BuilderOptions
 	// Code zu hinterlegen (s. Certificates.cs: BuildSubject() parst diesen String).
 	public string SubjectPrefix { get; set; } = "";
 
+	// Eigenstaendiges Repo (Remote klaus-liebler/npm-packages), von mehreren generierten npm-Projekten
+	// per relativem "file:"-Pfad referenziert (s. Paths.RelativeFileDependency). Maschinenabhaengig
+	// (jeder Entwickler kann seine Repos woanders auschecken) -- deshalb appsettings.json statt
+	// hartkodiert in Paths.cs.
+	public string NpmPackagesDir { get; set; } = "";
+
+	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
+	// espidf-component-webmanager. Ebenfalls maschinenabhaengig.
+	public string WebmanagerWsProtocolDir { get; set; } = "";
+
 	private static readonly Lazy<BuilderOptions> LazyCurrent = new(Load);
 
 	public static BuilderOptions Current => LazyCurrent.Value;

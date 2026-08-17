@@ -6,19 +6,32 @@ public static class Paths
 {
 	public static readonly string RootDir = FindRootDir();
 
+	// Klettert von AppContext.BaseDirectory (z.B. builder/bin/Debug/net10.0/) aufwaerts, bis ein
+	// Verzeichnis namens "builder" gefunden wird -- dieser Teil des Aufstiegs ist noetig, weil die
+	// bin/obj-Verschachtelungstiefe je nach Debug/Release/TargetFramework variiert. Das Projekt-
+	// Wurzelverzeichnis ist danach ausschliesslich das UNMITTELBAR uebergeordnete Verzeichnis von
+	// "builder" -- kein weiteres Aufwaertssuchen darueber hinaus (anders als zuvor, das generisch bis
+	// zur Wurzel des Dateisystems haette weitersuchen koennen und dabei z.B. einen entfernten
+	// Vorfahren mit zufaellig gleichnamigem "builder"-Ordner faelschlich als Repo-Wurzel haette
+	// akzeptieren koennen). Fehlt dort die CMakeLists.txt, wird sofort abgebrochen statt weiterzusuchen
+	// -- wichtig, sobald "builder" (s. Zukunftsplan: Extraktion nach C:\repos\dotnet_libs\
+	// firmware_builder o.ae.) in mehreren, unterschiedlich verschachtelten ESP32-Projekten eingebunden
+	// wird und sich nicht auf eine bestimmte Aufstiegstiefe verlassen darf.
 	private static string FindRootDir()
 	{
 		var dir = new DirectoryInfo(AppContext.BaseDirectory);
-		while (dir is not null)
+		while (dir is not null && !string.Equals(dir.Name, "builder", StringComparison.OrdinalIgnoreCase))
 		{
-			if (File.Exists(Path.Combine(dir.FullName, "CMakeLists.txt")) && Directory.Exists(Path.Combine(dir.FullName, "builder")))
-			{
-				return dir.FullName;
-			}
 			dir = dir.Parent;
 		}
-		throw new InvalidOperationException(
-			$"Konnte Repo-Wurzel nicht finden (gesucht ab {AppContext.BaseDirectory} nach oben, Marker: CMakeLists.txt + builder/).");
+		var root = dir?.Parent;
+		if (root is null || !File.Exists(Path.Combine(root.FullName, "CMakeLists.txt")))
+		{
+			throw new InvalidOperationException(
+				"Konnte Repo-Wurzel nicht finden: das unmittelbar uebergeordnete Verzeichnis von 'builder/' " +
+				$"(gesucht ab {AppContext.BaseDirectory} aufwaerts) enthaelt keine CMakeLists.txt.");
+		}
+		return root.FullName;
 	}
 
 	// Zwischengespeicherter Stand des zuletzt bekannten Boards (s. context.ts: Context.get() kopiert
@@ -46,8 +59,9 @@ public static class Paths
 	// unten per relativem "file:"-Pfad referenziert (s. RelativeFileDependency) -- die Pfadtiefe von
 	// GeneratedRoot dorthin ist NICHT fest (haengt davon ab, wo GeneratedRoot gerade liegt), deshalb
 	// nie als literaler "../../..."-String hartkodieren, sondern immer ueber RelativeFileDependency
-	// berechnen.
-	public static readonly string NpmPackagesDir = @"C:\repos\npm-packages";
+	// berechnen. Maschinenabhaengiger absoluter Pfad -- kommt aus appsettings.json (s.
+	// BuilderOptions), nicht hartkodiert, da jeder Entwickler seine Repos woanders auschecken kann.
+	public static string NpmPackagesDir => BuilderOptions.Current.NpmPackagesDir;
 
 	// "file:"-Abhaengigkeitswert fuer ein generiertes npm-Projekt unter "from" auf ein Zielverzeichnis
 	// "to" (z.B. Paths.NpmPackagesDir + "@klaus-liebler/sensact-base") -- npm versteht sowohl "/" als
@@ -57,9 +71,9 @@ public static class Paths
 		"file:" + Path.GetRelativePath(from, to).Replace('\\', '/');
 
 	// Zweite ws-protocol-Quelle: die anderen 10 (von 12) Namespaces liegen im Nachbar-Repo
-	// espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"), unveraendert aus gulpfile.ts
-	// uebernommen (IDF_COMPONENT_WEBMANAGER_ROOT = "C:\repos\espidf-component-webmanager").
-	public static readonly string WebmanagerWsProtocolDir = @"C:\repos\espidf-component-webmanager\ws-protocol";
+	// espidf-component-webmanager (s. Plan-Doc "Betroffene Repos"). Maschinenabhaengiger absoluter
+	// Pfad -- kommt aus appsettings.json (s. BuilderOptions), nicht hartkodiert.
+	public static string WebmanagerWsProtocolDir => BuilderOptions.Current.WebmanagerWsProtocolDir;
 
 	// Ziele des Config-/Runtimeconfig-Writers (s. RuntimeConfigWriter.cs/Phases/GenerateRuntimeConfig.cs),
 	// unveraendert aus paths.ts uebernommene Ordnernamen (GENERATED_RUNTIMECONFIG_CPP/_TS, GENERATED_CMAKE).
