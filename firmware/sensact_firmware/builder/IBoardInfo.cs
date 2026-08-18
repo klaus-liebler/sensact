@@ -31,6 +31,13 @@ public sealed class IBoardInfo
 	[JsonPropertyName("board_settings")]
 	public JsonElement BoardSettings { get; set; }
 
+	// Top-Level statt Unterobjekt von board_settings (bewusst, s. Kommentar bei
+	// GenerateRuntimeConfig.cs): ein Login-Passwort ist kein beliebiges Firmware-Setting, sondern
+	// gehoert allein dem Auth-Mechanismus. Erster Schritt Richtung Mehr-User/Rollen-Konzept (aktuell
+	// nur der eine feste User "admin", s. Memory "Auth redesign concept").
+	[JsonPropertyName("web_admin_password")]
+	public string? WebAdminPassword { get; set; }
+
 	[JsonPropertyName("flash_encryption_key_burned_and_activated")]
 	public bool FlashEncryptionKeyBurnedAndActivated { get; set; }
 

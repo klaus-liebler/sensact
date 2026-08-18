@@ -32,10 +32,7 @@ namespace Klli.Sensact.Config
                 throw new ArgumentException("BasePath in applicationSettings cannot be null. Please set it in the configuration file.");
             }
             
-            if (!Directory.Exists(this.appSettings.BasePath))
-            {
-                throw new DirectoryNotFoundException($"BasePath '{this.appSettings.BasePath}' does not exist.");
-            }
+            Directory.CreateDirectory(this.appSettings.BasePath);
             
             if (!Enum.TryParse("NO_APPLICATION", out noAppId) || Convert.ToUInt16(noAppId) != Sensact.Model.Common.Model.NO_APPLICATION_ID)
             {

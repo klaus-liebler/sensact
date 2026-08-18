@@ -40,10 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Eigenstaendige Bibliothek (eigenes Repo, s. dort/README.md) fuer die C#-als-Schema-Definition-
-         Sprache: ersetzt den bisherigen, in Phases/GenerateWsProtocolFiles.cs eingebauten JSON-Schema-
-         Parser+Codegenerator vollstaendig (s. Kommentar dort). -->
-    <ProjectReference Include="C:\repos\dotnet_libs\best_binary_buffers\src\BestBinaryBuffers\BestBinaryBuffers.csproj" />
+    <ProjectReference Include="C:\repos\dotnet_libs\firmware_builder_common\src\FirmwareBuilder.Common\FirmwareBuilder.Common.csproj" />
   </ItemGroup>
 
   <!--

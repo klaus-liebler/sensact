@@ -2,6 +2,7 @@
 // Referenzprojekt. appsettings.json selbst ist gitignored (persoenliche Maschinenpfade), getrackt
 // ist nur appsettings.json.template (s. builder.csproj, EnsureAppSettings-Target).
 using Microsoft.Extensions.Configuration;
+using FirmwareBuilder.Common;
 
 namespace Builder;
 
@@ -22,6 +23,17 @@ public sealed class BuilderOptions
 	// Code zu hinterlegen (s. Certificates.cs: BuildSubject() parst diesen String).
 	public string SubjectPrefix { get; set; } = "";
 
+	public string CertDays { get; set; } = "3000";
+	public string KeyAlgorithm { get; set; } = "RSA_2048";
+	public bool IncludeServerAuthEku { get; set; } = true;
+	public bool IncludeClientAuthEku { get; set; } = true;
+	public bool IncludeSubjectKeyIdentifier { get; set; } = false;
+	public bool IncludeAuthorityKeyIdentifier { get; set; } = true;
+	public int NotBeforeBackdateDays { get; set; } = 1;
+	public string? SanIpAddress { get; set; } = "192.168.4.1";
+	public List<string> SanDnsEntries { get; set; } = ["{hostname}", "{hostname}.local", "{hostname}.fritz.box"];
+	public string RootCaCommonName { get; set; } = "sensact-root-ca";
+
 	// Eigenstaendiges Repo (Remote klaus-liebler/npm-packages), von mehreren generierten npm-Projekten
 	// per relativem "file:"-Pfad referenziert (s. Paths.RelativeFileDependency). Maschinenabhaengig
 	// (jeder Entwickler kann seine Repos woanders auschecken) -- deshalb appsettings.json statt
@@ -38,11 +50,25 @@ public sealed class BuilderOptions
 
 	private static BuilderOptions Load()
 	{
-		var config = new ConfigurationBuilder()
-			.SetBasePath(AppContext.BaseDirectory)
-			.AddJsonFile("appsettings.json", optional: false)
-			.Build();
-		return config.Get<BuilderOptions>()
-			?? throw new InvalidOperationException("appsettings.json konnte nicht gebunden werden.");
+		return BuilderAppSettings.LoadFromAppBase<BuilderOptions>();
+	}
+
+	public ICertificateAuthorityOptions ToCertificateAuthorityOptions() => new CertificateAuthorityOptionsAdapter(this);
+
+	private sealed class CertificateAuthorityOptionsAdapter(BuilderOptions options) : ICertificateAuthorityOptions
+	{
+		public string CertsDir => options.CertsDir;
+		public string SubjectPrefix => options.SubjectPrefix;
+		public string CertDays => options.CertDays;
+		public string CaCertPath => Path.Combine(options.CertsDir, "rootCA.pem.crt");
+		public string CaKeyPath => Path.Combine(options.CertsDir, "rootCA.pem.key");
+		public string KeyAlgorithm => options.KeyAlgorithm;
+		public bool IncludeServerAuthEku => options.IncludeServerAuthEku;
+		public bool IncludeClientAuthEku => options.IncludeClientAuthEku;
+		public bool IncludeSubjectKeyIdentifier => options.IncludeSubjectKeyIdentifier;
+		public bool IncludeAuthorityKeyIdentifier => options.IncludeAuthorityKeyIdentifier;
+		public int NotBeforeBackdateDays => options.NotBeforeBackdateDays;
+		public string? SanIpAddress => options.SanIpAddress;
+		public IReadOnlyList<string> SanDnsEntries => options.SanDnsEntries;
 	}
 }
