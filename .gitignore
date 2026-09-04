@@ -9,7 +9,9 @@ firmware_sensactOutdoor/sdkconfig.old
 **/node_modules/
 **/package-lock.json
 **/board_info.json
+**/board_info_*.json
 **/secrets.ts
+**/build_check.log
 pcb/sensactUp_as_Hs/fp-info-cache
 pcb/sensactHs_modular_esp32/.history/
 pcb/sensactUp_as_Hs/.history/
