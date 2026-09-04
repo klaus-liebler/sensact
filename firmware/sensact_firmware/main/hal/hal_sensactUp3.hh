@@ -5,6 +5,7 @@
 #include <driver/spi_master.h>
 #include <esp_log.h>
 #include <webmanager.hh>
+#include <i2c.hh>
 #define TAG "HAL"
 
 namespace sensact::hal::SensactUp3
@@ -20,7 +21,7 @@ namespace sensact::hal::SensactUp3
     constexpr gpio_num_t LCD_RS{GPIO_NUM_16};
     
 
-    constexpr i2s_port_t AMP_I2S_PORT{I2S_NUM_0};
+    constexpr int AMP_I2S_PORT{I2S_NUM_0};
     constexpr gpio_num_t AMP_I2S_DATA{GPIO_NUM_17};
     constexpr gpio_num_t AMP_I2S_SCLK{GPIO_NUM_18};
     constexpr gpio_num_t AMP_I2S_LRCLK{GPIO_NUM_8};
@@ -46,7 +47,6 @@ namespace sensact::hal::SensactUp3
     constexpr gpio_num_t ROT_C{GPIO_NUM_42};
 
     constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
-    constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
     constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_10};
     constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_9};
 
@@ -56,40 +56,33 @@ namespace sensact::hal::SensactUp3
     {
     protected:
         AudioPlayer::Player *mp3player;
-        iI2CPort* i2c_bus[1];
+        i2c::iI2CBus_Impl i2c_bus{};
         uint8_t volume_0mute_255max{120};
         cRotaryEncoder* rotenc{nullptr};
         uint16_t rotenc_value_with_overflow{0};
         bool rotenc_button{false};
 
     public:
-        cHAL(){
-            i2c_bus[(uint8_t)I2C_INTERNAL] = new MyI2CPort(I2C_INTERNAL_IDF);
+        cHAL(temperature_sensor_handle_t tempHandle){
+            temp_handle=tempHandle;
         }
 
         ErrorCode Setup() override
         {
-
-            ESP_ERROR_CHECK(I2C::Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA));
+            i2c_bus.Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA);
             mp3player = new AudioPlayer::Player();
             mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, nullptr);
-            this->SetupCAN(CAN_TX, CAN_RX, ESP_INTR_FLAG_LOWMED);
-            this->SetupInternalTemperatureSensor();
+            this->SetupCAN(CAN_TX, CAN_RX);
             this->rotenc = new cRotaryEncoder(ROT_A, ROT_B, ROT_C);
             this->rotenc->Init();
             this->rotenc->Start();
             return ErrorCode::OK;
         }
-        i2c_master_bus_handle_t GetI2CBusHandle(uint8_t portIndex) override{
+        i2c::iI2CBus* GetI2CBus(uint8_t portIndex) override{
             (void)portIndex;
-            return I2C::GetMasterBusHandle(I2C_INTERNAL_IDF);
+            return &i2c_bus;
         }
-        
-        bool HasRole(NodeRole role) override
-        {
-            return role == NodeRole::APPLICATION_HOST;
-        }
-        
+
         ErrorCode HardwareTest() override
         {
             return ErrorCode::OK;
@@ -138,17 +131,6 @@ namespace sensact::hal::SensactUp3
             isPressed=this->rotenc_button;
             return ErrorCode::OK;
 
-        }
-        ErrorCode SetAmplifierVolume(uint8_t volume0_255) override
-        {
-            this->volume_0mute_255max=volume_0mute_255max;
-            ESP_LOGI(TAG, "Set Amplifier Volume to %d", volume_0mute_255max);
-            this->mp3player->SetGainU8(volume0_255);
-            return ErrorCode::OK;
-        }
-
-        uint8_t GetAmplifierVolume() override{
-            return this->volume_0mute_255max;
         }
         /**
          * @brief

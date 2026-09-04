@@ -3,7 +3,7 @@
 #include <driver/spi_master.h>
 #include <esp_log.h>
 #include <buzzer.hh>
-#include <led_animator.hh>
+#include <single_led.hh>
 #include <i2c.hh>
 #define TAG "HAL"
 
@@ -62,33 +62,36 @@ namespace sensact::hal::SensactUpControl
     namespace R
     {
         constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
-        constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
     }
 
     class cHAL : public sensact::hal::cESP32
     {
     protected:
-        iI2CPort *i2c_bus[1];
+        i2c::iI2CBus_Impl i2c_bus{};
         BUZZER::M *buzzer{nullptr};
-        led::Animator* led{nullptr};
+        led::SingleLed* led{nullptr};
 
     public:
         cHAL(temperature_sensor_handle_t tempHandle)
         {
             temp_handle=tempHandle;
-            i2c_bus[(uint8_t)R::I2C_INTERNAL] = new iI2CPort_Impl(R::I2C_INTERNAL_IDF);
         }
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_INTERNAL_SCL, P::I2C_INTERNAL_SDA, ESP_INTR_FLAG_SHARED));
+            i2c_bus.Init(R::I2C_INTERNAL_IDF, P::I2C_INTERNAL_SCL, P::I2C_INTERNAL_SDA);
             this->buzzer = new BUZZER::M();
             this->buzzer->Begin(P::BUZZER);
-            this->led = new led::Animator(P::LED1);
+            this->led = new led::SingleLed(P::LED1, CRGB::Red);
             this->led->Begin();
-            this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
+            this->SetupCAN(P::CAN_TX, P::CAN_RX);
             gpio_set_direction(P::MOTOR, GPIO_MODE_OUTPUT);
             return ErrorCode::OK;
+        }
+
+        i2c::iI2CBus* GetI2CBus(uint8_t portIndex) override
+        {
+            return &i2c_bus;
         }
         // The only output is the motor output. So always use the appropriate pin. No inversion, Logic 1 means: Motor On
         ErrorCode SetU16Output(InOutId id, uint16_t value) override
@@ -117,7 +120,7 @@ namespace sensact::hal::SensactUpControl
         }
 
         ErrorCode SetInfoLed(led::AnimationPattern* pattern, tms_t timeToAutoOff) override{
-            this->led->AnimatePixel(pattern, timeToAutoOff);
+            this->led->AnimatePixel(0, pattern, timeToAutoOff);
             return ErrorCode::OK;
         }
         ErrorCode StageUnColorizeAllRGBLed() override

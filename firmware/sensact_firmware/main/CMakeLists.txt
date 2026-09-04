@@ -2,7 +2,7 @@
 idf_component_register(
     SRCS "journal_plugin.cc" "node_applicationhost.cc" "model_node.cc" "main.cc"
     INCLUDE_DIRS "." "hal/${NODE_ID}" "${GENERATED_DIR}"
-    REQUIRES "sensact-applicationmodel" "sensact-middleware" "espidf-component-webmanager" "adc_buttons_and_encoder" "audio" "common" "ethernet" "errorcodes" "i2c" "i2c_sensor" "ledanimator" "max98357" "milight" "pca9555" "pca9685" "ringtones" "rotenc" "tas580x" "lcd_spi_16bpp" "lcd_common" "fatfs" "esp_http_server" "esp_driver_twai" "esp_driver_gpio" "esp_driver_uart" "esp_driver_mcpwm" "rgbled"
+    REQUIRES "sensact-applicationmodel" "sensact-middleware" "espidf-component-webmanager" "adc_buttons_and_encoder" "audio" "common" "ethernet" "errorcodes" "hoymiles" "i2c" "i2c_sensor" "led" "max98357" "milight" "nrf24" "pca9555" "pca9685" "ringtones" "rotenc" "tas580x" "lcd_spi_16bpp" "lcd_common" "fatfs" "esp_http_server" "esp_driver_twai" "esp_driver_gpio" "esp_driver_uart" "esp_driver_mcpwm"
     EMBED_FILES "${GENERATED_DIR}/web/index.compressed.br"
     EMBED_TXTFILES "${BOARD_DIRECTORY}/certificates/esp32.pem.crt" "${BOARD_DIRECTORY}/certificates/esp32.pem.key" "${USERPROFILE}/OneDrive - HSOS/certificates/rootCA.pem.crt"
 )

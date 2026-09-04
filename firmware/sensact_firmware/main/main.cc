@@ -52,14 +52,12 @@
 constexpr const char* NVS_PARTITION_NAME{NVS_DEFAULT_PART_NAME};
 
 //board specific includes
-#include <hal.inc>
+#include "hal/board_init_interface.hh"
+#include <board_init.hh>
 #include <cApplications.hh>
 
 #define TAG "main"
 using namespace sensact;
-
-
-iHAL* halobj{nullptr};
 
 httpd_handle_t http_server{nullptr};
 
@@ -111,7 +109,9 @@ extern "C" void app_main(void)
 {
     //ESP_LOGI(TAG, "\n%s", cfg::BANNER);
     ESP_LOGI(TAG, "%s is booting up. Firmware build at %s on Git %s", cfg::NODE_ID, cfg::CREATION_DT_STR, cfg::GIT_SHORT_HASH);
-    
+
+    sensact::BoardInit boardInit;
+
     // Configure NVS and SPIFFS
     size_t total = 0, used = 0;
     esp_vfs_littlefs_conf_t conf = {"/spiffs", "storage", nullptr, 0,0,0,0};
@@ -129,7 +129,7 @@ extern "C" void app_main(void)
     tusb_cfg.descriptor.string_count = 5; // indices 0-4
     tusb_cfg.descriptor.full_speed_config = s_usb_cfg_desc;
     tusb_cfg.phy.self_powered = true;
-    tusb_cfg.phy.vbus_monitor_io = sensact::hal::usb::VBUS_SENSE;
+    tusb_cfg.phy.vbus_monitor_io = boardInit.VbusSensePin();
     ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
     tinyusb_config_cdcacm_t acm_cfg = {}; // the configuration uses default values
     ESP_ERROR_CHECK(tinyusb_cdcacm_init(&acm_cfg));
@@ -153,19 +153,16 @@ extern "C" void app_main(void)
         canMBP = new cCANMessageBuilderParserOld();
     }
     
-    #include <station_config_hardware.inc>
+    IInitializationContext initCtx{tempHandle, canMBP, NVS_PARTITION_NAME, cfg::HOSTNAME, &plugins};
+    std::vector<AbstractBusmaster*> busmasters;
+    iHAL* halobj = boardInit.CreateHalAndBusmasters(initCtx, busmasters);
     assert(halobj);
 
     cNodemaster* nodemaster = new cNodemaster(halobj, &busmasters, canMBP);
     plugins.push_back(nodemaster);
     std::vector<sensact::iHost *> hosts;
-    
-    sensact::cApplicationHost* applicationHost{nullptr};
 
-    #include <station_config_hosts.inc>
-    if(applicationHost!=nullptr){
-        plugins.push_back(applicationHost);
-    }
+    boardInit.CreateHosts(initCtx, nodemaster, hosts);
     nodemaster->Setup(hosts);
     
     //Configure Network

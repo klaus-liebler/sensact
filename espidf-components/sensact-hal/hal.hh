@@ -1,9 +1,8 @@
 #pragma once
 #include <sensact_commons.hh>
 #include <i2c/interfaces.hh>
-#include "crgb.hh"
 #include <buzzer.hh>
-#include <led_animator.hh>
+#include <animation_pattern.hh>
 #include <vector>
 
 /*

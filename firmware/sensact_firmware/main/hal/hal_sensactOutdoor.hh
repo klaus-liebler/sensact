@@ -2,10 +2,10 @@
 #include <driver/spi_master.h>
 #include <i2c.hh>
 #include <audioplayer.hh>
-#include "../max98357.hh"
+#include <max98357.hh>
 #include "hal_ESP32.hh"
-#include <led_animator.hh>
-#include <rgbled.hh>
+#include <single_led.hh>
+#include <rgb_strip.hh>
 #include <esp_log.h>
 #define TAG "HAL"
 
@@ -69,18 +69,15 @@ namespace sensact::hal::SensactOutdoor
     namespace R
     {
         constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
-        constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
- 
-        
     }
 
     namespace BlinkPatterns
     {
-        led::BlinkPattern BlinkSlow(1000, 1000);
-        led::BlinkPattern BlinkFast(200, 200);
-        led::BlinkPattern Flash(50, 3000);
-        RGBLED::BlinkPattern BlinkSlowGreen(CRGB::DarkGreen, 50, CRGB::Black, 10000);
-        RGBLED::BlinkPattern BlinkFastRed(CRGB::Red, 200, CRGB::Black, 200);
+        led::BlinkPattern BlinkSlow(CRGB::Black, 1000, CRGB::Red, 1000);
+        led::BlinkPattern BlinkFast(CRGB::Black, 200, CRGB::Red, 200);
+        led::BlinkPattern Flash(CRGB::Black, 3000, CRGB::Red, 50);
+        led::BlinkPattern BlinkSlowGreen(CRGB::DarkGreen, 50, CRGB::Black, 10000);
+        led::BlinkPattern BlinkFastRed(CRGB::Red, 200, CRGB::Black, 200);
     }
 
     class cHAL : public sensact::hal::cESP32
@@ -88,35 +85,38 @@ namespace sensact::hal::SensactOutdoor
     protected:
         MAX98357::M *max98357;
         AudioPlayer::Player *mp3player;
-        iI2CPort *i2c_bus[1];
-        led::Animator* led{nullptr};
-        RGBLED::M<2, RGBLED::DeviceType::PL9823> *rgbled{nullptr};
+        i2c::iI2CBus_Impl i2c_bus{};
+        led::SingleLed* led{nullptr};
+        led::RgbStrip<2, led::DeviceType::PL9823> *rgbled{nullptr};
 
     public:
         cHAL(temperature_sensor_handle_t tempHandle)
         {
             temp_handle=tempHandle;
-            i2c_bus[(uint8_t)R::I2C_INTERNAL] = new iI2CPort_Impl(R::I2C_INTERNAL_IDF);
+        }
+
+        i2c::iI2CBus* GetI2CBus(uint8_t portIndex) override
+        {
+            return &i2c_bus;
         }
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(R::I2C_INTERNAL_IDF, P::I2C_SCL, P::I2C_SDA));
+            i2c_bus.Init(R::I2C_INTERNAL_IDF, P::I2C_SCL, P::I2C_SDA);
 
             max98357 = new MAX98357::M(P::I2S_GAIN, P::I2S_SD);
             max98357->Init(P::I2S_BCLK, P::I2S_LRC, P::I2S_DATA);
             mp3player = new AudioPlayer::Player(max98357);
-            MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
-            this->led = new led::Animator(P::LED_INFO, false, &BlinkPatterns::BlinkSlow);
+            this->led = new led::SingleLed(P::LED_INFO, CRGB::Red, false, &BlinkPatterns::BlinkSlow);
             this->led->Begin(&BlinkPatterns::BlinkFast);
 
-            this->rgbled = new RGBLED::M<2, RGBLED::DeviceType::PL9823>();
+            this->rgbled = new led::RgbStrip<2, led::DeviceType::PL9823>();
             ERRORCODE_CHECK(this->rgbled->Begin(SPI3_HOST, P::LED_PL9823));
             ERRORCODE_CHECK(this->rgbled->AnimatePixel(0, &BlinkPatterns::BlinkSlowGreen));
             ERRORCODE_CHECK(this->rgbled->AnimatePixel(1, &BlinkPatterns::BlinkSlowGreen));
             ERRORCODE_CHECK(this->rgbled->Refresh(1000, true));
 
-            this->SetupCAN(P::CAN_TX, P::CAN_RX, ESP_INTR_FLAG_LOWMED);
+            this->SetupCAN(P::CAN_TX, P::CAN_RX);
             gpio_set_direction(P::K1, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K2, GPIO_MODE_OUTPUT);
             gpio_set_direction(P::K3, GPIO_MODE_OUTPUT);
@@ -157,12 +157,12 @@ namespace sensact::hal::SensactOutdoor
 
         bool highPowerMode{true};
 
-        void SetPowerLed(uint16_t value) 
+        void SetPowerLed(uint16_t value)
         {
-            
-                this->SetDuty(LEDC_CHANNEL_0,value);
-                this->SetDuty(LEDC_CHANNEL_1,value);
-           
+
+                this->SetLedcDuty(LEDC_CHANNEL_0,value);
+                this->SetLedcDuty(LEDC_CHANNEL_1,value);
+
         }
         ErrorCode HardwareTest() override
         {
@@ -187,7 +187,7 @@ namespace sensact::hal::SensactOutdoor
         }
 
         ErrorCode SetInfoLed(led::AnimationPattern* pattern, tms_t timeToAutoOff) override{
-            this->led->AnimatePixel(pattern, timeToAutoOff);
+            this->led->AnimatePixel(0, pattern, timeToAutoOff);
             return ErrorCode::OK;
         }
         

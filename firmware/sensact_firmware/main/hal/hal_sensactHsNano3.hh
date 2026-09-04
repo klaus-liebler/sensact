@@ -5,6 +5,7 @@
 #include <driver/spi_master.h>
 #include <driver/ledc.h>
 #include <ethernet.hh>
+#include <i2c.hh>
 #include <esp_log.h>
 #include <adc_buttons.hh>
 #include <messagecodes.hh>
@@ -21,7 +22,7 @@ namespace sensact::hal::SensactHsNano3
     constexpr gpio_num_t SW_PIN{GPIO_NUM_2};
     constexpr gpio_num_t RS485_DE{GPIO_NUM_3};
 
-    constexpr i2s_port_t AMP_I2S_PORT{I2S_NUM_0};
+    constexpr int AMP_I2S_PORT{I2S_NUM_0};
     constexpr gpio_num_t AMP_I2S_DATA{GPIO_NUM_4};
     constexpr gpio_num_t AMP_I2S_SCLK{GPIO_NUM_5};
     constexpr gpio_num_t AMP_I2S_LRCLK{GPIO_NUM_6};
@@ -67,12 +68,12 @@ namespace sensact::hal::SensactHsNano3
     constexpr gpio_num_t ANALOG_OUT_B{GPIO_NUM_36};
 
     constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
-    constexpr sensact::hal::I2CPortIndex I2C_INTERNAL{sensact::hal::I2CPortIndex::I2C_0};
+    constexpr uint8_t I2C_INTERNAL{0};
     constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_42};
     constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_41};
 
     constexpr i2c_port_t I2C_EXTERNAL_IDF{I2C_NUM_1};
-    constexpr sensact::hal::I2CPortIndex I2C_EXTERNAL{sensact::hal::I2CPortIndex::I2C_1};
+    constexpr uint8_t I2C_EXTERNAL{1};
     constexpr gpio_num_t I2C_EXTERNAL_SCL{GPIO_NUM_38};
     constexpr gpio_num_t I2C_EXTERNAL_SDA{GPIO_NUM_37};
 
@@ -84,44 +85,44 @@ namespace sensact::hal::SensactHsNano3
         TAS580x::M *tas580x;
         AudioPlayer::Player *mp3player;
         BUZZER::M *rtp;
-        iI2CPort* i2c_bus[2];
+        i2c::iI2CBus_Impl i2c_busses[2]{};
         const char* hostname;
-        
+        uint8_t volume_0mute_255max{120};
+
     public:
-        cHAL(const char* hostname):hostname(hostname){
-            i2c_bus[(uint8_t)I2C_EXTERNAL] = I2C::GetPort_DoNotForgetToDelete(I2C_EXTERNAL_IDF);
-            i2c_bus[(uint8_t)I2C_INTERNAL] = I2C::GetPort_DoNotForgetToDelete(I2C_INTERNAL_IDF);
+        cHAL(const char* hostname, temperature_sensor_handle_t tempHandle):hostname(hostname){
+            temp_handle=tempHandle;
         }
 
         ErrorCode Setup() override
         {
-            ESP_ERROR_CHECK(I2C::Init(I2C_EXTERNAL_IDF, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA, ESP_INTR_FLAG_SHARED));
-            ESP_ERROR_CHECK(I2C::Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA, ESP_INTR_FLAG_SHARED));
+            i2c_busses[I2C_EXTERNAL].Init(I2C_EXTERNAL_IDF, I2C_EXTERNAL_SCL, I2C_EXTERNAL_SDA);
+            i2c_busses[I2C_INTERNAL].Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA);
             gpio_set_level(LCD_BUZZER, 0);
             gpio_set_direction(LCD_BUZZER, GPIO_MODE_OUTPUT);
             //Hinweis: Das W5500 kommt faktisch auch ohne die Reset-Leitung aus. In einer Zukünftigen Version könnte deshalb ETH_RESET anders verwendet werden
             ETHERNET::initETH_W5500(true, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
-            tas580x = new TAS580x::M(i2c_bus[(uint8_t)I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
+            tas580x = new TAS580x::M(&i2c_busses[I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
             mp3player = new AudioPlayer::Player(tas580x);
-            MESSAGELOG_ON_ERRORCODE(mp3player->Init(), messagecodes::C::I2S_INIT);
-            //MESSAGELOG_ON_ERRORCODE(tas580x->Init(), messagecodes::C::TAS5805_INIT);//is done inside mp3player->Init()
 
             rtp = new BUZZER::M(BUZZER_CHANNEL, BUZZER_TIMER);
             rtp->Begin(LCD_BUZZER);
 
             //I2C::Discover(I2C_EXTERNAL_IDF);
             this->SetupCAN(CAN_TX, CAN_RX);
-            this->SetupInternalTemperatureSensor();
             //LCD::InitLCD(LCD_SPI_HOST, LCD_MOSI, LCD_SCLK, SPI_MASTER_FREQ_20M, LCD_CS, GPIO_NUM_NC, LCD_RS, LCD_BACKLIGHT, 135, 52, 240, 40, LCD_TIMER, LCD_INTR_FLAGS);
             AdcButtons::InitAdcButtons(SW_PIN);
-            
-            rtp->PlayNotes(BUZZER::POSITIVE);
+
+            // BUZZER::RINGTONE_SONG ist nur vorwaertsdeklariert (Definition liegt in songs.hh.inc,
+            // privat in buzzer.cc eingebunden) -- von aussen nur ueber den Index erreichbar. Index 1
+            // = POSITIVE (s. RINGTONE_SOUNDS/enum-Reihenfolge in songs.hh.inc).
+            rtp->PlaySong((uint32_t)1);
             return ErrorCode::OK;
         }
-        i2c_master_bus_handle_t GetI2CBusHandle(uint8_t portIndex) override{
-            return I2C::GetMasterBusHandle((i2c_port_t)(portIndex % 2));
+        i2c::iI2CBus* GetI2CBus(uint8_t portIndex) override{
+            return &i2c_busses[portIndex % 2];
         }
-        
+
         ErrorCode HardwareTest() override
         {
             return ErrorCode::OK;
@@ -173,6 +174,11 @@ namespace sensact::hal::SensactHsNano3
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
             return ErrorCode::FUNCTION_NOT_AVAILABLE;
+        }
+
+        ErrorCode PlayNotes(const BUZZER::Note *note) override{
+            rtp->PlayNotes(note);
+            return ErrorCode::OK;
         }
 
         ErrorCode StopSound() override

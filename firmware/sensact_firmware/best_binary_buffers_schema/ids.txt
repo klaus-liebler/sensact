@@ -95,3 +95,7 @@ namespace sensact 9
 namespace systeminfo 10
 namespace usersettings 11
 namespace wifimanager 12
+message hoymiles.RequestLiveData 1
+message hoymiles.ResponseLiveData 2
+message hoymiles.NotifyLiveData 3
+namespace hoymiles 14

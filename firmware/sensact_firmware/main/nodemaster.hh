@@ -11,7 +11,7 @@
 #include <vector>
 
 #include <hal.hh>
-#include <led_animator.hh>
+#include <animation_pattern.hh>
 #include <sensact_logger.hh>
 #include "node_applicationhost.hh"
 #include "node_gatewayhost.hh"
@@ -50,10 +50,16 @@
 namespace sensact
 {
 	constexpr size_t STATUS_MESSAGE_BUFLEN{256};
-	
-	led::BlinkPattern SLOW(200, 1000);
-	led::BlinkPattern FAST(200, 200);
-	led::BlinkPattern FLASH(20, 3000);
+
+	// Status-LEDs sollen nach Power-On/Statuswechsel nur eine begrenzte Zeit leuchten und dann
+	// komplett ausgehen (s. led::IAnimatableLED::AnimatePixel -- die Deadline wird nur bei einem
+	// tatsaechlichen Pattern-Wechsel neu gestellt, ein wiederholter Aufruf mit demselben Pattern
+	// wie hier alle 100ms in CheckAndLogHealth() verlaengert sie NICHT).
+	constexpr tms_t STATUS_LED_DEFAULT_AUTO_OFF_MS{5 * 60 * 1000};
+
+	led::BlinkPattern SLOW(CRGB::Black, 1000, CRGB::Orange, 200);
+	led::BlinkPattern FAST(CRGB::Black, 200, CRGB::Red, 200);
+	led::BlinkPattern FLASH(CRGB::Black, 3000, CRGB::Green, 20);
 	class cNodemaster : public iHostContext, public webmanager::iWebmanagerPlugin
 	{
 	private:
@@ -134,11 +140,11 @@ namespace sensact
 				previousHasRealtime=hasRealtime;
 			}
 			if(healthError){
-				hal->SetInfoLed(&sensact::FAST);
+				hal->SetInfoLed(&sensact::FAST, STATUS_LED_DEFAULT_AUTO_OFF_MS);
 			}else if(atLeastHealthWarning){
-				hal->SetInfoLed(&sensact::SLOW);
+				hal->SetInfoLed(&sensact::SLOW, STATUS_LED_DEFAULT_AUTO_OFF_MS);
 			}else{
-				hal->SetInfoLed(&sensact::FLASH);
+				hal->SetInfoLed(&sensact::FLASH, STATUS_LED_DEFAULT_AUTO_OFF_MS);
 			}
 
 			return healthError?ErrorCode::HEALTH_ERROR:atLeastHealthWarning?ErrorCode::HEALTH_WARNING:ErrorCode::OK;
