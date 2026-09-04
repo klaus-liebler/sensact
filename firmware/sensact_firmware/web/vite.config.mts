@@ -1,5 +1,8 @@
 import { defineConfig} from 'vite'
-import { singleFileFirmwareAssetPlugin } from "./vite-plugin-single-file-firmware-asset.ts"
+// Geteiltes Plugin (s. npm-packages/@klaus-liebler/vite-firmware-single-file) -- frueher als
+// vite-plugin-single-file-firmware-asset.ts/singlefile-minify.ts hier dupliziert (uebernommen aus
+// factory_in_a_box), jetzt EIN gemeinsamer Code fuer factory_in_a_box/sensact/labathome.
+import { singleFileFirmwareAssetPlugin } from "@klaus-liebler/vite-firmware-single-file"
 import fs from "node:fs"
 import path from "node:path"
 import https from "node:https"
