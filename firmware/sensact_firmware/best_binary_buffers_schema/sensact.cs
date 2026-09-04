@@ -53,7 +53,9 @@ public class ResponseCommand
 [BinaryMessage(MessageKind.Request)]
 public class RequestStatus
 {
-	public ApplicationIdValue[] Ids;
+	// 128: groesster aktuell generierter Knoten (SNSCT_L0_TECH_HS_1) hat 89 Applikationen, s.
+	// generated/sensact_model/SNSCT_L0_TECH_HS_1/applicationInitializers.inc -- Rundung mit Puffer.
+	[BinaryMaxItemCount(128)] public ApplicationIdValue[] Ids;
 }
 
 /// Server-Push (Statusaenderung einer Applikation) -- Teil der urspruenglichen 'Responses'-Union.
@@ -67,5 +69,5 @@ public class NotifyStatus
 [BinaryMessage(MessageKind.Response)]
 public class ResponseStatus
 {
-	public ResponseStatusItem[] States;
+	[BinaryMaxItemCount(128)] public ResponseStatusItem[] States;
 }

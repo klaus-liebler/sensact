@@ -1,4 +1,6 @@
 using System.Text.Json;
+using FirmwareBuilder.Common;
+using FirmwareBuilder.Common.Esp32;
 using Klli.Sensact.Config;
 using Klli.Sensact.Model.Common;
 using Microsoft.Extensions.Logging;
@@ -7,144 +9,56 @@ namespace Builder;
 
 internal static class Program
 {
-	public static void Main(string[] args)
-	{
-		if (args.Length == 0)
+	public static void Main(string[] args) =>
+		BuildStepRunner.Run(args, a => new SensactBuildContext(a), typeof(Program));
+
+	[BuildStep]
+	public static void Info(IBuildContextEsp32 ctx) =>
+		Esp32ConsoleReport.WriteBoardInfo(ctx, "board_info.json", () =>
 		{
-			throw new ArgumentException("Kein Phasenname angegeben. Beispiel: dotnet run --project builder -- Info");
-		}
+			try
+			{
+				return [("NodeId", SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId)];
+			}
+			catch (Exception ex)
+			{
+				return [("NodeId", $"(unbekannt -- {ex.Message})")];
+			}
+		});
 
-		var model = GetOptionalArgValue(args, "--model");
-		var resetNvsPartition = HasFlag(args, "--resetNVSPartition");
-		var registry = new CommandPipelineRegistry(StringComparer.Ordinal);
-		registry.AddCommand("Info", RunInfo);
-		registry.AddCommand("GitStatus", RunGitStatus);
-		registry.AddCommand("GenerateBestBinaryBufferFiles", () => RunGenerateBestBinaryBufferFiles([Paths.BestBinaryBuffersSchemaDir, Paths.WebmanagerBestBinaryBuffersSchemaDir]));
-		registry.AddCommand("GenerateRuntimeConfig", RunGenerateRuntimeConfig);
-		registry.AddCommand("GenerateCertificates", RunGenerateCertificates);
-		registry.AddCommand("GenerateModelFiles", () => RunGenerateModelFiles(model ?? throw new ArgumentException("Fehlendes Argument \"--model <Wert>\".")));
-		registry.AddCommand("GenerateSensactFiles", RunGenerateSensactFiles);
-		registry.AddCommand("BuildWebApp", RunBuildWebApp);
-		registry.AddCommand("BuildFirmware", RunBuildFirmware);
-		registry.AddCommand("ReadHardwareIds", RunReadHardwareIds);
-		registry.AddCommand("FlashFirmware", () => RunFlashFirmware(resetNvsPartition));
-		registry.AddPipeline("Pipeline",
-		[
-			"GenerateModelFiles",
-			"GenerateBestBinaryBufferFiles",
-			"GenerateRuntimeConfig",
-			"GenerateCertificates",
-			"GenerateSensactFiles",
-			"BuildWebApp",
-			"BuildFirmware",
-			"ReadHardwareIds",
-			"FlashFirmware",
-		]);
+	[BuildStep]
+	public static void GitStatus(IBuildContextEsp32 ctx) => BuilderConsoleReport.WriteGitStatus(ctx.Git);
 
-		registry.Run(args[0]);
+	// Nachfolger von ReadHardwareIds: liest die echte MAC vom angeschlossenen Board. Analog zu
+	// STM32s PrepareContextWithRealHardware ein einzelner Aufruf in die (geteilte) Buildercommons.
+	[BuildStep]
+	public static void PrepareContextWithRealHardware(IBuildContextEsp32 ctx) =>
+		Esp32BoardProvisioningService.PrepareContextWithRealHardware(
+			ctx,
+			createDefaultRecord: mac => SensactBuildContext.NewDefaultBoardRecord(mac),
+			onBoardArchiveReady: recordPath => File.Copy(recordPath, ctx.BoardInfoJsonPath, overwrite: true));
+
+	// Nachfolger von SelectOfflineBoard: baut die Board-Identitaet ohne angeschlossene Hardware rein
+	// aus --nodeId auf (deterministisch abgeleitete synthetische MAC, s. SensactBuildContext).
+	[BuildStep]
+	public static void PrepareContextWithCommandLineArguments(IBuildContextEsp32 ctx)
+	{
+		var nodeId = Cli.GetRequiredArgValue(ctx.Args, "--nodeId");
+		var board = SensactBuildContext.EnsureBoardForOfflineNodeId(nodeId);
+		var mac = board.Mac ?? throw new InvalidOperationException("EnsureBoardForOfflineNodeId hat kein Mac-Feld gesetzt (unerwartet).");
+		var boardDir = BoardPaths.BoardSpecificPath(ctx.BoardsDir, mac);
+		Console.WriteLine($"Offline-Board fuer NODE_ID \"{nodeId}\" ausgewaehlt (synthetische MAC, kein Board angeschlossen).");
+		Console.WriteLine("              MAC: " + BoardPaths.Mac6Char(mac) + " (decimal: " + mac + ")");
+		Console.WriteLine("Board-Verzeichnis: " + boardDir);
 	}
 
-	private static string GetRequiredArgValue(string[] args, string flag)
-	{
-		var i = Array.IndexOf(args, flag);
-		if (i < 0 || i + 1 >= args.Length)
-		{
-			throw new ArgumentException($"Fehlendes Argument \"{flag} <Wert>\".");
-		}
-		return args[i + 1];
-	}
-
-	private static string? GetOptionalArgValue(string[] args, string flag)
-	{
-		var i = Array.IndexOf(args, flag);
-		if (i < 0 || i + 1 >= args.Length)
-		{
-			return null;
-		}
-		return args[i + 1];
-	}
-
-	private static bool HasFlag(string[] args, string flag) => Array.IndexOf(args, flag) >= 0;
-
-	private static void RunInfo()
-	{
-		if (!File.Exists(Paths.BoardInfoJsonPath))
-		{
-			Console.WriteLine($"Keine board_info.json unter {Paths.BoardInfoJsonPath} gefunden -- noch kein Board jemals verbunden gewesen (oder Cache geloescht).");
-			return;
-		}
-
-		var cached = JsonSerializer.Deserialize<IBoardInfo>(File.ReadAllText(Paths.BoardInfoJsonPath))
-			?? throw new InvalidOperationException($"{Paths.BoardInfoJsonPath} konnte nicht gelesen werden.");
-
-		Console.WriteLine("              MAC: " + BoardPaths.Mac6Char(cached.Mac) + " (decimal: " + cached.Mac + ")");
-		try
-		{
-			var hw = EspToolService.ReadHardwareIds(Paths.RootDir);
-			Console.WriteLine("       Chip type: " + hw.ChipType + " (live)");
-			Console.WriteLine(" Is current board: " + (hw.Mac == cached.Mac ? "yes" : "no"));
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($" Is current board: (unbekannt -- Live-Board-Abfrage nicht moeglich: {ex.Message})");
-		}
-
-		var boardsDir = BuilderOptions.Current.BoardsDir;
-		var boardDir = BoardPaths.BoardSpecificPath(boardsDir, cached.Mac);
-		if (!Directory.Exists(boardDir))
-		{
-			Console.WriteLine($"Kein Board-Archiv unter {boardDir} gefunden -- dieses Board ist noch nicht bekannt.");
-			return;
-		}
-
-		var boardInfoJsonPath = BoardPaths.BoardSpecificPath(boardsDir, cached.Mac, "board_info.json");
-		if (!File.Exists(boardInfoJsonPath))
-		{
-			Console.WriteLine($"Board-Archiv {boardDir} existiert, enthaelt aber keine board_info.json.");
-			return;
-		}
-
-		var b = JsonSerializer.Deserialize<IBoardInfo>(File.ReadAllText(boardInfoJsonPath))
-			?? throw new InvalidOperationException($"{boardInfoJsonPath} konnte nicht gelesen werden.");
-
-		Console.WriteLine("       Board Name: " + b.BoardName);
-		Console.WriteLine("    Board Version: " + b.BoardVersion);
-		Console.WriteLine("      Board Roles: " + b.BoardRolesDisplay);
-		Console.WriteLine("   Board Settings: " + b.BoardSettingsDisplay);
-		Console.WriteLine("  First connected: " + IBoardInfo.FromUnixMillis(b.FirstConnectedDt));
-		Console.WriteLine("   Last connected: " + IBoardInfo.FromUnixMillis(b.LastConnectedDt));
-		Console.WriteLine("Encryption active: " + (b.FlashEncryptionKeyBurnedAndActivated ? "yes" : "no"));
-	}
-
-	private static void RunGitStatus()
-	{
-		var info = GitInfoReader.ReadGitInfo(Paths.RootDir);
-		Console.WriteLine("      Commit Hash: " + info.CommitHash);
-		Console.WriteLine("            Branch: " + info.Branch);
-		Console.WriteLine("               Tag: " + info.Tag);
-		Console.WriteLine("       Commit Date: " + DateTimeOffset.FromUnixTimeSeconds(info.CommitDateEpoch).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
-		Console.WriteLine("     Commit Author: " + info.CommitAuthor);
-		Console.WriteLine("    Commit Message: " + info.CommitMessage);
-		Console.WriteLine("         Is Dirty?: " + (info.IsDirty ? "yes" : "no"));
-		Console.WriteLine("           Version: " + info.Version);
-	}
-
-	private static void RunGenerateBestBinaryBufferFiles(IReadOnlyList<string>? sources = null)
-	{
-		var files = BestBinaryBuffersProtocolGenerator.Generate(new BestBinaryBuffersGenerateParams(
-			RootDir: Paths.RootDir,
-			Sources: sources ?? [],
-			DefaultSource: Paths.BestBinaryBuffersSchemaDir,
-			IdMapPath: Path.Combine(Paths.BestBinaryBuffersSchemaDir, "ids.txt"),
-			CppOutputFilePath: Path.Combine(Paths.GeneratedWsProtocolCppDir, "ws_protocol.hh"),
-			TsOutputFilePath: Path.Combine(Paths.GeneratedWsProtocolTsDir, "ws-protocol.ts"),
-			TsPackageJsonOutputPath: Path.Combine(Paths.GeneratedWsProtocolTsDir, "package.json"),
-			TsPackageJsonContent: """{"name":"@generated/wsprotocol_ts","version":"1.0.0","main":"ws-protocol.ts","author":"BestBinaryBuffers","license":"No License","description":"Generated during build from BestBinaryBuffers (s. C:\\repos\\dotnet_libs\\best_binary_buffers)."}"""));
-
-		var effectiveSources = (sources is { Count: > 0 }) ? sources : [Paths.BestBinaryBuffersSchemaDir];
-		var sourcesLabel = string.Join(", ", effectiveSources);
-		Console.WriteLine($"{files.Count} Datei(en) aus {effectiveSources.Count} Quelle(n) ({sourcesLabel}) -> {Paths.GeneratedWsProtocolCppDir} / {Paths.GeneratedWsProtocolTsDir}");
-	}
+	[BuildStep]
+	public static void GenerateBestBinaryBufferFiles(IBuildContextEsp32 ctx) => WsProtocolBuildService.Generate(
+		ctx,
+		sourceDirs: [ctx.BestBinaryBuffersSchemaDir, ctx.WebmanagerBestBinaryBuffersSchemaDir],
+		cppOutputDir: SensactBuildContext.GeneratedWsProtocolCppDir,
+		tsOutputDir: SensactBuildContext.GeneratedWsProtocolTsDir,
+		tsPackageName: "@generated/wsprotocol_ts");
 
 	private static object JsonElementToObject(JsonElement el) => el.ValueKind switch
 	{
@@ -156,23 +70,23 @@ internal static class Program
 		_ => el.GetRawText(),
 	};
 
-	private static void RunGenerateRuntimeConfig()
+	[BuildStep]
+	public static void GenerateRuntimeConfig(IBuildContextEsp32 ctx)
 	{
 		var appName = "sensact";
 		var appVersion = "1.0";
 		var defines = new Dictionary<string, object>();
 		var clientDefines = new Dictionary<string, object>();
 
-		var ctx = BoardContext.LoadCached();
-		var b = ctx.Board;
-		var boardDir = ctx.BoardDirectory;
-		var nodeId = ctx.GetNodeId();
+		var board = SensactBuildContext.LoadBoardRecord(ctx.BoardArchiveDir);
+		var sensact = SensactContextLoader.Load(ctx.BoardArchiveDir);
+		var nodeId = sensact.NodeId;
 
-		var nodeDescriptorPath = Path.Combine(Paths.SensactModelGeneratedDir, nodeId, "node_descriptor.json");
+		var nodeDescriptorPath = Path.Combine(SensactBuildContext.SensactModelGeneratedDir, nodeId, "node_descriptor.json");
 		if (!File.Exists(nodeDescriptorPath))
 		{
 			throw new InvalidOperationException(
-				$"Keine node_descriptor.json unter {nodeDescriptorPath} -- configware_sattlerstrasse/_testmodel muss vor dieser Phase einmal gelaufen sein.");
+				$"Keine node_descriptor.json unter {nodeDescriptorPath} -- GenerateModelFiles muss vor diesem Schritt einmal gelaufen sein.");
 		}
 
 		foreach (var prop in JsonDocument.Parse(File.ReadAllText(nodeDescriptorPath)).RootElement.EnumerateObject())
@@ -182,28 +96,17 @@ internal static class Program
 			clientDefines[prop.Name] = value;
 		}
 
-		if (b.BoardSettings.ValueKind == JsonValueKind.Object)
+		foreach (var (key, value) in sensact.WebSettings)
 		{
-			if (b.BoardSettings.TryGetProperty("web", out var webEl) && webEl.ValueKind == JsonValueKind.Object)
-			{
-				foreach (var prop in webEl.EnumerateObject())
-				{
-					var value = JsonElementToObject(prop.Value);
-					defines[prop.Name] = value;
-					clientDefines[prop.Name] = value;
-				}
-			}
-			if (b.BoardSettings.TryGetProperty("firmware", out var firmwareEl) && firmwareEl.ValueKind == JsonValueKind.Object)
-			{
-				foreach (var prop in firmwareEl.EnumerateObject())
-				{
-					defines[prop.Name] = JsonElementToObject(prop.Value);
-				}
-			}
+			defines[key] = value;
+			clientDefines[key] = value;
+		}
+		foreach (var (key, value) in sensact.FirmwareSettings)
+		{
+			defines[key] = value;
 		}
 
 		var now = DateTimeOffset.UtcNow;
-		var git = GitInfoReader.ReadGitInfo(Paths.RootDir);
 
 		void SetShared(string key, object value)
 		{
@@ -212,92 +115,63 @@ internal static class Program
 		}
 
 		defines["WEBMANAGER_AUTH_USERNAME"] = "admin";
-		defines["WEBMANAGER_AUTH_PASSWORD"] = string.IsNullOrEmpty(b.WebAdminPassword)
-			? $"{b.BoardName}_admin".ToLowerInvariant()
-			: b.WebAdminPassword;
+		defines["WEBMANAGER_AUTH_PASSWORD"] = string.IsNullOrEmpty(ctx.WebAdminPassword)
+			? $"{ctx.Hostname}_admin".ToLowerInvariant()
+			: ctx.WebAdminPassword;
 
 		SetShared("NODE_ID", nodeId);
-		SetShared("HOSTNAME", nodeId);
-		SetShared("BOARD_NAME", b.BoardName);
-		SetShared("BOARD_VERSION", b.BoardVersion);
-		SetShared("BOARD_ROLES", JsonElementToObject(b.BoardRoles));
-		SetShared("BOARD_MAC", b.Mac);
-		defines["BOARD_DIRECTORY"] = boardDir;
+		SetShared("HOSTNAME", ctx.Hostname);
+		SetShared("BOARD_NAME", ctx.Hostname);
+		SetShared("BOARD_VERSION", board.BoardVersion ?? 0);
+		SetShared("BOARD_MAC", ctx.ChipId.ToEsp32Mac48());
+		defines["BOARD_DIRECTORY"] = ctx.BoardArchiveDir;
 		SetShared("APP_NAME", appName);
 		SetShared("APP_VERSION", appVersion);
 		SetShared("CREATION_DT", now.ToUnixTimeSeconds());
 		SetShared("CREATION_DT_STR", now.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
-		SetShared("GIT_SHORT_HASH", git.CommitHash);
+		SetShared("GIT_SHORT_HASH", ctx.Git.CommitHash);
 		SetShared("BANNER", $"{appName} {nodeId}");
 
-		RuntimeConfigWriter.CreateCppConfigurationHeader(Paths.GeneratedRuntimeConfigCppDir, defines);
-		RuntimeConfigWriter.CreateCMakeJsonConfigFile(Paths.GeneratedCMakeDir, defines);
-		RuntimeConfigWriter.CreateTypeScriptRuntimeConfig(Paths.GeneratedRuntimeConfigTsDir, clientDefines);
+		RuntimeConfigWriter.CreateCppConfigurationHeader(SensactBuildContext.GeneratedRuntimeConfigCppDir, defines);
+		RuntimeConfigWriter.CreateCMakeJsonConfigFile(SensactBuildContext.GeneratedCMakeDir, defines);
+		RuntimeConfigWriter.CreateTypeScriptRuntimeConfig(SensactBuildContext.GeneratedRuntimeConfigTsDir, clientDefines);
 
-		Console.WriteLine($"{defines.Count} Defines -> {Paths.GeneratedRuntimeConfigCppDir}, {Paths.GeneratedCMakeDir}; {clientDefines.Count} Defines -> {Paths.GeneratedRuntimeConfigTsDir}");
+		Console.WriteLine($"{defines.Count} Defines -> {SensactBuildContext.GeneratedRuntimeConfigCppDir}, {SensactBuildContext.GeneratedCMakeDir}; {clientDefines.Count} Defines -> {SensactBuildContext.GeneratedRuntimeConfigTsDir}");
 	}
 
-	private static void RunGenerateCertificates()
+	[BuildStep]
+	public static void GenerateCertificates(IBuildContextEsp32 ctx) => BoardCertificateService.EnsureBoardCertificate(
+		ctx,
+		rootCaCommonName: BuilderOptions.Current.Certificates.RootCaCommonName,
+		hostname: ctx.Hostname,
+		outputFileBaseName: "esp32");
+
+	[BuildStep]
+	public static void GenerateModelFiles(IBuildContextEsp32 ctx)
 	{
-		var ctx = BoardContext.LoadCached();
-		var boardDir = ctx.BoardDirectory;
-		var nodeId = ctx.GetNodeId();
-		var options = BuilderOptions.Current;
-		var certOptions = options.ToCertificateAuthorityOptions();
-
-		var keyPath = Path.Combine(boardDir, "certificates", "esp32.pem.key");
-		var crtPath = Path.Combine(boardDir, "certificates", "esp32.pem.crt");
-		if (File.Exists(keyPath) && File.Exists(crtPath))
-		{
-			Console.WriteLine($"Board-Zertifikat existiert bereits ({crtPath}) -- nichts zu tun (lazy).");
-			return;
-		}
-
-		DotNetCertificateService.EnsureRootCertificateAuthority(certOptions, options.RootCaCommonName, force: false);
-
-		var dnsEntries = certOptions.SanDnsEntries
-			.Select(e => (e ?? string.Empty).Trim())
-			.Where(e => e.Length > 0)
-			.Select(e => e.Replace("{hostname}", nodeId, StringComparison.OrdinalIgnoreCase))
-			.Distinct(StringComparer.OrdinalIgnoreCase)
-			.ToArray();
-
-		Directory.CreateDirectory(Path.GetDirectoryName(keyPath)!);
-		DotNetCertificateService.EnsureBoardCertificate(
-			certOptions,
-			commonName: nodeId,
-			boardDir: Path.GetDirectoryName(keyPath)!,
-			force: false,
-			ipAddress: certOptions.SanIpAddress,
-			dnsHostnames: dnsEntries,
-			outputFileBaseName: "esp32");
-		Console.WriteLine($"Neues Board-Zertifikat erzeugt -> {crtPath}");
-	}
-
-	private static void RunGenerateModelFiles(string modelName)
-	{
+		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
 		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
 
 		switch (modelName)
 		{
 			case "Sattlerstrasse16":
 				RunModelFor<Klli.Sensact.Model.Sattlerstrasse16.ApplicationId>(
-					new Sattlerstrasse16Builder().BuildAndFinalizeAndReturnModelContainer(), loggerFactory);
+					ctx, new Sattlerstrasse16Builder().BuildAndFinalizeAndReturnModelContainer(), loggerFactory);
 				break;
 			case "Testmodel":
 				RunModelFor<Klli.Sensact.Model.Testmodel.ApplicationId>(
-					new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer(), loggerFactory);
+					ctx, new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer(), loggerFactory);
 				break;
 			default:
 				throw new ArgumentException($"Unbekanntes Modell \"{modelName}\" (gueltig: Sattlerstrasse16, Testmodel).");
 		}
 	}
 
-	private static void RunModelFor<ApplicationIdType>(ModelContainer mc, ILoggerFactory loggerFactory) where ApplicationIdType : struct, Enum
+	private static void RunModelFor<ApplicationIdType>(IBuildContextEsp32 ctx, ModelContainer mc, ILoggerFactory loggerFactory) where ApplicationIdType : struct, Enum
 	{
 		var appSettings = new AppSettings
 		{
-			SourceCodeGenerator = new SourceCodeGeneratorOptions { BasePath = Paths.SensactModelGeneratedDir },
+			SourceCodeGenerator = new SourceCodeGeneratorOptions { BasePath = SensactBuildContext.SensactModelGeneratedDir },
 		};
 		var logger = loggerFactory.CreateLogger<SourceCodeGenerator<ApplicationIdType>>();
 		var generator = new SourceCodeGenerator<ApplicationIdType>(appSettings, logger);
@@ -308,15 +182,15 @@ internal static class Program
 		}
 		generator.DeleteBaseDirectory();
 		generator.generateAll(mc);
-		Console.WriteLine($"Modell-Dateien -> {Paths.SensactModelGeneratedDir}");
+		Console.WriteLine($"Modell-Dateien -> {SensactBuildContext.SensactModelGeneratedDir}");
 
 		foreach (var enumFile in new[] { "applicationIds.enums.cs", "commandTypes.enums.cs" })
 		{
-			var source = Path.Combine(Paths.SensactModelGeneratedDir, "common", enumFile);
-			var dest = Path.Combine(Paths.BestBinaryBuffersSchemaDir, $"sensact_{enumFile}");
+			var source = Path.Combine(SensactBuildContext.SensactModelGeneratedDir, "common", enumFile);
+			var dest = Path.Combine(ctx.BestBinaryBuffersSchemaDir, $"sensact_{enumFile}");
 			File.Copy(source, dest, overwrite: true);
 		}
-		Console.WriteLine($"ws-protocol-Enum-Quellen aktualisiert -> {Paths.BestBinaryBuffersSchemaDir}");
+		Console.WriteLine($"ws-protocol-Enum-Quellen aktualisiert -> {ctx.BestBinaryBuffersSchemaDir}");
 	}
 
 	private static void TemplateHere(string templatePath, string incPath, string destPath)
@@ -334,15 +208,15 @@ internal static class Program
 		File.WriteAllText(destPath, content.Replace("//TEMPLATE_HERE", File.ReadAllText(incPath)));
 	}
 
-	private static void RunGenerateSensactFiles()
+	[BuildStep]
+	public static void GenerateSensactFiles(IBuildContextEsp32 ctx)
 	{
-		var ctx = BoardContext.LoadCached();
-		var nodeId = ctx.GetNodeId();
+		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
 
-		var sendCommandProject = Path.Combine(Paths.GeneratedRoot, "sensact_sendCommandImplementation");
+		var sendCommandProject = Path.Combine(SensactBuildContext.GeneratedRoot, "sensact_sendCommandImplementation");
 		TemplateHere(
-			Path.Combine(Paths.WebTemplatesDir, "sendCommandImplementation.template.ts"),
-			Path.Combine(Paths.SensactModelGeneratedDir, "common", "sendCommandImplementation.ts.inc"),
+			Path.Combine(SensactBuildContext.WebTemplatesDir, "sendCommandImplementation.template.ts"),
+			Path.Combine(SensactBuildContext.SensactModelGeneratedDir, "common", "sendCommandImplementation.ts.inc"),
 			Path.Combine(sendCommandProject, "sendCommandImplementation.ts"));
 		NpmProject.CreateAndInstallLazily(sendCommandProject, new PackageJson
 		{
@@ -353,14 +227,14 @@ internal static class Program
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
-				["@klaus-liebler/sensact-base"] = Paths.RelativeFileDependency(sendCommandProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
+				["@klaus-liebler/sensact-base"] = SensactBuildContext.RelativeFileDependency(sendCommandProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
 			},
 		});
 
-		var appsBuilderProject = Path.Combine(Paths.GeneratedRoot, "sensact_appsbuilder");
+		var appsBuilderProject = Path.Combine(SensactBuildContext.GeneratedRoot, "sensact_appsbuilder");
 		TemplateHere(
-			Path.Combine(Paths.WebTemplatesDir, "sensactapps.template.ts"),
-			Path.Combine(Paths.SensactModelGeneratedDir, nodeId, "sensactapps_local.ts.inc"),
+			Path.Combine(SensactBuildContext.WebTemplatesDir, "sensactapps.template.ts"),
+			Path.Combine(SensactBuildContext.SensactModelGeneratedDir, nodeId, "sensactapps_local.ts.inc"),
 			Path.Combine(appsBuilderProject, "sensactapps.ts"));
 		NpmProject.CreateAndInstallLazily(appsBuilderProject, new PackageJson
 		{
@@ -371,118 +245,53 @@ internal static class Program
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
-				["@klaus-liebler/sensact-base"] = Paths.RelativeFileDependency(appsBuilderProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
-				["@klaus-liebler/web-components-sensact"] = Paths.RelativeFileDependency(appsBuilderProject, Path.Combine(Paths.NpmPackagesDir, "@klaus-liebler", "web-components-sensact")),
+				["@klaus-liebler/sensact-base"] = SensactBuildContext.RelativeFileDependency(appsBuilderProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
+				["@klaus-liebler/web-components-sensact"] = SensactBuildContext.RelativeFileDependency(appsBuilderProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "web-components-sensact")),
 			},
 		});
 
 		Console.WriteLine($"Sensact-Dateien -> {sendCommandProject}, {appsBuilderProject}");
 	}
 
-	private static void RunBuildWebApp()
+	[BuildStep]
+	public static void BuildWebApp(IBuildContextEsp32 ctx) => WebAppBuildService.Run(
+		ctx,
+		["--outDir", ctx.WebGeneratedDir, "--sourcemap", "true", "--emptyOutDir"],
+		Path.Combine(ctx.WebGeneratedDir, "index.compressed.br"));
+
+	[BuildStep]
+	public static void BuildFirmware(IBuildContextEsp32 ctx) => Esp32FirmwareBuildService.Run(ctx);
+
+	[BuildStep]
+	public static void FlashFirmware(IBuildContextEsp32 ctx) => Esp32FlashService.Run(ctx);
+
+	[BuildStep]
+	public static void Pipeline(IBuildContextEsp32 ctx)
 	{
-		var viteEntry = Path.Combine(Paths.WebDir, "node_modules", "vite", "bin", "vite.js");
-		if (!File.Exists(viteEntry))
-		{
-			throw new InvalidOperationException($"Vite nicht gefunden unter {viteEntry} -- zuerst \"npm install\" in {Paths.WebDir} ausfuehren.");
-		}
-
-		ProcessRunner.RunInherit("node", [
-			viteEntry, "build", Paths.WebDir,
-			"--outDir", Paths.GeneratedWebDir,
-			"--sourcemap", "true",
-			"--emptyOutDir",
-		], Paths.WebDir);
-
-		var compressedPath = Path.Combine(Paths.GeneratedWebDir, "index.compressed.br");
-		if (!File.Exists(compressedPath))
-		{
-			throw new InvalidOperationException($"Vite-Build fertig, aber {compressedPath} wurde nicht erzeugt -- singleFileFirmwareAssetPlugin nicht aktiv?");
-		}
-		var compressedSize = new FileInfo(compressedPath).Length;
-		Console.WriteLine($"Web-App gebaut, {compressedPath} geschrieben. Brotli-komprimierte Groesse = {compressedSize} Byte = {compressedSize / 1024.0:F2} kiB");
+		BuildStepRunner.Invoke(ctx, PrepareContextWithRealHardware);
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
+		BuildStepRunner.Invoke(ctx, GenerateCertificates);
+		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
+		BuildStepRunner.Invoke(ctx, BuildWebApp);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, FlashFirmware);
 	}
 
-	private static void RunBuildFirmware()
+	// Wie Pipeline, aber PrepareContextWithCommandLineArguments (--nodeId) statt
+	// PrepareContextWithRealHardware, und ohne FlashFirmware -- fuer Builds ohne angeschlossenes
+	// Board. Beispiel: PipelineOffline --nodeId SNSCT_NODE_SIDEDOOR --model Sattlerstrasse16.
+	[BuildStep]
+	public static void PipelineOffline(IBuildContextEsp32 ctx)
 	{
-		var idfPath = Environment.GetEnvironmentVariable("IDF_PATH");
-		if (string.IsNullOrWhiteSpace(idfPath))
-		{
-			throw new InvalidOperationException("IDF_PATH ist nicht gesetzt -- muss auf die ESP-IDF-Installationswurzel zeigen (enthaelt export.bat).");
-		}
-		var exportBat = Path.Combine(idfPath, "export.bat");
-		if (!File.Exists(exportBat))
-		{
-			throw new InvalidOperationException($"IDF_PATH ist auf \"{idfPath}\" gesetzt, aber \"{exportBat}\" existiert nicht -- IDF_PATH korrigieren.");
-		}
-
-		ProcessRunner.RunInheritShellCommand($"\"{exportBat}\" && idf.py build", Paths.RootDir);
-		Console.WriteLine("Firmware gebaut.");
-	}
-
-	private static void RunReadHardwareIds()
-	{
-		var hw = EspToolService.ReadHardwareIds(Paths.RootDir);
-		Console.WriteLine("      Chip type: " + hw.ChipType);
-		Console.WriteLine("            MAC: " + BoardPaths.Mac6Char(hw.Mac) + " (decimal: " + hw.Mac + ")");
-		Console.WriteLine("Flash-Encryption-Key vorhanden: " + (hw.HasFlashEncryptionKey ? "yes" : "no"));
-
-		var boardDir = BoardPaths.BoardSpecificPath(BuilderOptions.Current.BoardsDir, hw.Mac);
-		var wasKnown = Directory.Exists(boardDir);
-
-		var ctx = BoardContext.LoadFromLiveMac(hw.Mac);
-
-		Console.WriteLine(wasKnown
-			? $"Board bekannt ({ctx.Board.BoardName}) -- last_connected_dt aktualisiert."
-			: "NEUES Board -- Eintrag mit Default-Werten angelegt.");
-		Console.WriteLine($"Board-Verzeichnis: {ctx.BoardDirectory}");
-	}
-
-	private static void RunFlashFirmware(bool resetNvsPartition = false)
-	{
-		const bool writeStorage = true;
-
-		var ctx = BoardContext.LoadCached();
-		if (ctx.Board.FlashEncryptionKeyBurnedAndActivated)
-		{
-			throw new NotImplementedException("Verschluesselter Flash-Pfad ist bewusst nicht implementiert (brennt EFuses permanent).");
-		}
-
-		var f = EspIdfFlasherArgs.Load(Paths.BuildDir);
-		List<(string Offset, string File)> sections =
-		[
-			(f.Bootloader.Offset, Path.Combine(Paths.BuildDir, f.Bootloader.File)),
-			(f.App.Offset, Path.Combine(Paths.BuildDir, f.App.File)),
-			(f.PartitionTable.Offset, Path.Combine(Paths.BuildDir, f.PartitionTable.File)),
-			(f.Otadata.Offset, Path.Combine(Paths.BuildDir, f.Otadata.File)),
-		];
-		if (writeStorage && f.Storage is not null)
-		{
-			sections.Add((f.Storage.Offset, Path.Combine(Paths.BuildDir, f.Storage.File)));
-		}
-
-		foreach (var (_, file) in sections)
-		{
-			if (!File.Exists(file))
-			{
-				throw new InvalidOperationException($"Zu flashende Datei nicht gefunden: {file} -- zuerst BuildFirmware ausfuehren.");
-			}
-		}
-
-		Console.WriteLine($"Flashe {sections.Count} Sektionen (unverschluesselt) auf Board {ctx.Board.BoardName}...");
-		EspToolService.WriteFlash(sections, Paths.RootDir);
-		Console.WriteLine("Flash (nicht verschluesselt) abgeschlossen.");
-
-		if (resetNvsPartition)
-		{
-			var nvs = PartitionsCsv.Find(Path.Combine(Paths.RootDir, "partitions.csv"), "nvs");
-			if (nvs.Offset is null)
-			{
-				throw new InvalidOperationException("nvs-Partition hat kein Offset in partitions.csv -- kann nicht geloescht werden.");
-			}
-			Console.WriteLine($"--resetNVSPartition: loesche nvs-Partition (Offset 0x{nvs.Offset:X}, Groesse 0x{nvs.Size:X}) -- WLAN-/Usersettings gehen verloren.");
-			EspToolService.EraseRegion($"0x{nvs.Offset:X}", nvs.Size, Paths.RootDir);
-			Console.WriteLine("nvs-Partition geloescht.");
-		}
+		BuildStepRunner.Invoke(ctx, PrepareContextWithCommandLineArguments);
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
+		BuildStepRunner.Invoke(ctx, GenerateCertificates);
+		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
+		BuildStepRunner.Invoke(ctx, BuildWebApp);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
 	}
 }

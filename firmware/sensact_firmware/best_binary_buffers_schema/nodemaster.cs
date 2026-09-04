@@ -16,7 +16,7 @@ public class Range : IRange
 {
 	public ushort Start;
 	public ushort End;
-	public string Name;
+	[BinaryMaxEncodedByteLength(31)] public string Name;
 }
 
 [BinaryMessage(MessageKind.Request)]
@@ -45,13 +45,13 @@ public class RequestGetInput
 [BinaryMessage(MessageKind.Response)]
 public class ResponseOutputs
 {
-	public IRange[] Ranges;
+	[BinaryMaxItemCount(16)] public IRange[] Ranges;
 }
 
 [BinaryMessage(MessageKind.Response)]
 public class ResponseInputs
 {
-	public IRange[] Ranges;
+	[BinaryMaxItemCount(16)] public IRange[] Ranges;
 }
 
 [BinaryMessage(MessageKind.Response)]

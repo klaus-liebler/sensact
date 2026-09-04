@@ -127,7 +127,7 @@ namespace fingerprint
                 resp.librarySizeMax = p->librarySizeMax;
                 resp.librarySizeUsed = p->librarySizeUsed;
                 static_assert(sizeof(resp.libraryUsedIndices.v) == sizeof(p->libraryIndicesUsed), "size mismatch");
-                memcpy(resp.libraryUsedIndices.v, p->libraryIndicesUsed, sizeof(resp.libraryUsedIndices.v));
+                memcpy(resp.libraryUsedIndices.v, p->libraryIndicesUsed.data(), sizeof(resp.libraryUsedIndices.v));
                 resp.securityLevel = p->securityLevel;
                 resp.deviceAddress = p->deviceAddress;
                 resp.dataPacketSizeCode = p->dataPacketSizeCode;
