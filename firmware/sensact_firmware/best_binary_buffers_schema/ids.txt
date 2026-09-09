@@ -99,3 +99,5 @@ message hoymiles.RequestLiveData 1
 message hoymiles.ResponseLiveData 2
 message hoymiles.NotifyLiveData 3
 namespace hoymiles 14
+message usermanagement.UserRecord 1
+namespace usermanagement 15

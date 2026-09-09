@@ -3,6 +3,7 @@
 #include "cApplications.hh"
 #include "apps/blind.hh"
 #include "apps/fingerprint.hh"
+#include "apps/lightbarrier.hh"
 #include "apps/node.hh"
 #include "apps/onoff.hh"
 #include "apps/pump.hh"

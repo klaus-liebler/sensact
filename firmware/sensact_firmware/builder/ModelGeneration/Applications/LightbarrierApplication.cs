@@ -45,10 +45,10 @@ namespace Klli.Sensact.Model.Common.Applications
         public override string GenerateCPPConstructor(ModelContainerForCodeGenerator m)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("sensact::apps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4})", 
-                ApplicationName, InputRessource, 
+            sb.AppendFormat("sensact::apps::cLightbarrier {0}(eApplicationID::{0}, {1}, {2}, eApplicationID::{3}, eApplicationID::{4})",
+                ApplicationName, InputRessource,
                 ActiveSignalLevel.ToString().ToLower(),
-                BrightnessSensor,
+                m.GetNameFromId(BrightnessSensor),
                 m.GetNameFromId(FinalTarget));
 
             return sb.ToString();
