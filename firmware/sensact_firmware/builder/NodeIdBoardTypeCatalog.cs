@@ -13,6 +13,7 @@ public static class NodeIdBoardTypeCatalog
 		{
 			["MONITORING"] = ("SensactHsNano3", "1.0.0"),
 			["SNSCT_NODE_HS"] = ("SensactHsNano3", "1.0.0"),
+			["SNSCT_L0_TECH_HS_1"] = ("SensactHsNano3", "1.0.0"),
 			["SNSCT_L3_WORK_HS"] = ("SensactUpHs", "1.0.0"),
 			["SNSCT_NODE_SIDEDOOR"] = ("SensactUpControl", "1.0.0"),
 			["SNSCT_NODE_TERRASSE"] = ("SensactOutdoor", "1.0.0"),
