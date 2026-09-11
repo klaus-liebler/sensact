@@ -310,7 +310,14 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         ErrorCode err = canMBP->ParseCanMessageType(m, type);
         if (err != ErrorCode::OK)
         {
-            LOGE(TAG, "canMBP->ParseCanMessageType(m, type) raised error %s", ErrorCodeStr[(int)err]);
+            char dataHex[3 * sizeof(m.Data) + 1];
+            for (size_t i = 0; i < m.DataLen && i < sizeof(m.Data); i++)
+            {
+                sprintf(&dataHex[3 * i], "%02X ", m.Data[i]);
+            }
+            dataHex[3 * (m.DataLen < sizeof(m.Data) ? m.DataLen : sizeof(m.Data))] = '\0';
+            LOGE(TAG, "canMBP->ParseCanMessageType(m, type) raised error %s (USE_NEW_CAN_ID=%d); m.Id=0x%08" PRIX32 " (type-mask-byte=0x%02X) m.DataLen=%u m.Data=[%s]",
+                 ErrorCodeStr[(int)err], (int)sensact::config::USE_NEW_CAN_ID, m.Id, (unsigned)((m.Id & MessageTypeMask) >> 24), (unsigned)m.DataLen, dataHex);
             return err;
         }
 

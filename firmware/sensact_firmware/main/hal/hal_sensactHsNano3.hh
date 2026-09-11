@@ -101,7 +101,10 @@ namespace sensact::hal::SensactHsNano3
             gpio_set_level(LCD_BUZZER, 0);
             gpio_set_direction(LCD_BUZZER, GPIO_MODE_OUTPUT);
             //Hinweis: Das W5500 kommt faktisch auch ohne die Reset-Leitung aus. In einer Zukünftigen Version könnte deshalb ETH_RESET anders verwendet werden
-            ETHERNET::initETH_W5500(true, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
+            // esp_netif_init()/esp_event_loop_create_default() sind an dieser Stelle (vor
+            // webmanager::M::Begin() in main.cc) noch NICHT aufgerufen worden -- initETH_W5500 muss
+            // das hier selbst tun (false), sonst crasht esp_netif_attach() mit EXCVADDR=0.
+            ETHERNET::initETH_W5500(false, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
             tas580x = new TAS580x::M(&i2c_busses[I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
             mp3player = new AudioPlayer::Player(tas580x);
 

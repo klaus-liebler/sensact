@@ -48,6 +48,11 @@ namespace sensact::apps
 		else if(autoOffCfg!=0){
 			this->autoOffCalc=ctx->Now()+autoOffCfg;
 		}
+		else{
+			// Weder ein expliziter Timer noch ein konfiguriertes autoOffCfg -- "bleib an, bis
+			// OnOFFCommand kommt" (s. gleiche Fallunterscheidung im Konstruktor fuer initialState=AN).
+			this->autoOffCalc=sensact::magic::TIME_MAX;
+		}
 		LOGI(TAG, "%s OnONCommand called", N());
 	}
 

@@ -20,8 +20,10 @@ public:
         auto* pca9555_3 = new PCA9555::M(PCA9555::Device::Dev3, 0x0000, 0xFFFF, 0xFFFF);
         std::vector<PCA9555::M*> pca9555_vec{pca9555_0, pca9555_1, pca9555_2, pca9555_3};
         auto* pca9685_0 = new PCA9685::M(PCA9685::Device::Dev00, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
-        auto* pca9685_1 = new PCA9685::M(PCA9685::Device::Dev00, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
-        std::vector<PCA9685::M*> pca9685_vec{pca9685_0, pca9685_1};
+        auto* pca9685_1 = new PCA9685::M(PCA9685::Device::Dev01, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
+        auto* pca9685_2 = new PCA9685::M(PCA9685::Device::Dev02, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
+        auto* pca9685_3 = new PCA9685::M(PCA9685::Device::Dev03, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
+        std::vector<PCA9685::M*> pca9685_vec{pca9685_0, pca9685_1, pca9685_2, pca9685_3};
 
         outBusmasters.push_back(new DirectGPIOBusmaster("GPIO", h));
         outBusmasters.push_back(new I2CBusmaster("SensactBus", (uint8_t)sensact::hal::SensactHsNano3::I2C_EXTERNAL, sensact::hal::SensactHsNano3::INTERRUPT_LINES, pca9555_vec, pca9685_vec));

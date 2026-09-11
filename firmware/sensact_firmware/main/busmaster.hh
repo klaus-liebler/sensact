@@ -118,6 +118,11 @@ namespace sensact
 		const std::array<gpio_num_t, 3> interruptlines; // array with 3 elements!
 		std::vector<PCA9555::M *> pca9555_vec;
 		std::vector<PCA9685::M *> pca9685_vec;
+		// -1 = "noch nie gesetzt" (u16-Werte 0..65535 sind vollstaendig belegt, u.a. 0/UINT16_MAX fuer
+		// FULL_OFF/FULL_ON, deshalb int32_t statt eines u16-Sentinelwerts). Vermeidet, dass Apps wie
+		// cOnOff, die SetOutput() bei jedem Loop-Tick fuer jeden Output erneut aufrufen, das Log mit
+		// identischen Werten fluten.
+		std::vector<int32_t> lastOutputValue;
 
 		static void StaticTask(void *pvParameters)
 		{
@@ -157,7 +162,8 @@ namespace sensact
 			uint8_t i2c_port_index,
 			std::array<gpio_num_t, 3> interruptlines,
 			std::vector<PCA9555::M *> pca9555_vec,
-			std::vector<PCA9685::M *> pca9685_vec) : name(name), i2c_port_index(i2c_port_index), i2c_master_bus(nullptr), interruptlines(interruptlines), pca9555_vec(pca9555_vec), pca9685_vec(pca9685_vec)
+			std::vector<PCA9685::M *> pca9685_vec) : name(name), i2c_port_index(i2c_port_index), i2c_master_bus(nullptr), interruptlines(interruptlines), pca9555_vec(pca9555_vec), pca9685_vec(pca9685_vec),
+			lastOutputValue(pca9685_vec.size() * 16, -1)
 		{
 		}
 
@@ -256,6 +262,10 @@ namespace sensact
 			if(pca9685==nullptr){
 				return ErrorCode::GENERIC_ERROR;
 			}
+			if(this->lastOutputValue[id] == (int32_t)value){
+				return ErrorCode::OK;
+			}
+			this->lastOutputValue[id] = value;
 			int locIndex=id & 0x0F;
 			ESP_LOGI(TAG, "PCA9685 SetOutput called for global index %u (local index %u on chip index %u) with value %u", id, locIndex, io16Index, value);
 			return pca9685->SetOutput(locIndex, value);

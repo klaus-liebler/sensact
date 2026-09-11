@@ -1,6 +1,6 @@
 {
   "C_Cpp.intelliSenseEngine": "default",
-  "idf.portWin": "COM4",
+  "idf.portWin": "COM12",
   "idf.flashType": "UART",
   "files.associations": {
     "*.inc": "cpp",

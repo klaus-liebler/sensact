@@ -13,3 +13,9 @@ CONFIG_SPIRAM=y
 CONFIG_LOG_COLORS=y
 CONFIG_LWIP_HOOK_IP6_INPUT_NONE=y
 CONFIG_MBEDTLS_ECP_FIXED_POINT_OPTIM=y
+# mbedTLS default (internal-only) buffer allocation exhausts internal DRAM once a
+# second concurrent TLS connection is opened (e.g. dashboard page + websocket upgrade
+# in parallel), even though PSRAM is available -- fails with PSA_ERROR_INSUFFICIENT_MEMORY
+# (mbedtls_ssl_setup returns -0x008D) on the second connection. Let mbedTLS's allocator
+# follow normal ESP-IDF malloc() behavior instead so it can spill into PSRAM.
+CONFIG_MBEDTLS_DEFAULT_MEM_ALLOC=y
