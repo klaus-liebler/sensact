@@ -15,7 +15,6 @@
 
 
 
-
 namespace sensact::hal::SensactHsNano3
 {
     constexpr gpio_num_t MON{GPIO_NUM_1};
@@ -105,8 +104,26 @@ namespace sensact::hal::SensactHsNano3
             // webmanager::M::Begin() in main.cc) noch NICHT aufgerufen worden -- initETH_W5500 muss
             // das hier selbst tun (false), sonst crasht esp_netif_attach() mit EXCVADDR=0.
             ETHERNET::initETH_W5500(false, ETH_SPI_HOST, ETH_MISO, ETH_MOSI, ETH_CLK, SPI_MASTER_FREQ_20M, ETH_CS, GPIO_NUM_NC, ETH_INT, 1, ETH_INTR_FLAGS, hostname);
-            tas580x = new TAS580x::M(&i2c_busses[I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, GPIO_NUM_NC, volume_0mute_255max);
+            // Ctor-Reihenfolge ist (power_down, mclk, bck, ws, data) -- MCLK wird hier nicht
+            // verwendet (GPIO_NUM_NC), die drei echten I2S-Leitungen sind SCLK=bck, LRCLK=ws,
+            // DATA=data. Vorher fehlte das mclk-Argument, wodurch sich alles um eine Position
+            // verschoben hatte und die eigentliche Datenleitung auf GPIO_NUM_NC (unbenutzt) landete.
+            tas580x = new TAS580x::M(&i2c_busses[I2C_INTERNAL], TAS580x::ADDR7bit::DVDD_4k7, AMP_POWERDOWN, GPIO_NUM_NC, AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, volume_0mute_255max);
+            tas580x->Init();
             mp3player = new AudioPlayer::Player(tas580x);
+            // mp3player->Loop() blocking-writes PCM to the I2S codec and must not run on the
+            // shared NodemasterTask (CAN-bus + app logic, 100ms cycle) -- doing so caused heap
+            // corruption (buffer under/overrun while another task's 100ms cycle raced the I2S
+            // write). Give it its own dedicated task instead, same as labathome_firmware's
+            // proven-good AudioLoop/audioTask config (32KB stack, prio 8, pinned to core 1,
+            // Loop() called every 20ms).
+            xTaskCreatePinnedToCore([](void *p){
+                    AudioPlayer::Player *player = (AudioPlayer::Player*)p;
+                    while (true){
+                        player->Loop();
+                        vTaskDelay(pdMS_TO_TICKS(20));
+                    }
+                }, "audioTask", 8192 * 4, mp3player, 8, nullptr, 1);
 
             rtp = new BUZZER::M(BUZZER_CHANNEL, BUZZER_TIMER);
             rtp->Begin(LCD_BUZZER);

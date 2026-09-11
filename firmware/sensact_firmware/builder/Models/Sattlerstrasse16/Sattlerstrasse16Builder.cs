@@ -131,7 +131,10 @@ namespace Klli.Sensact.Config
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_TECH_B11, BB + I2C + 7, ApplicationId.POWIT_L0_TECH_C1);//24
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L0_TECH_C1, "Deckenlicht", BB + I2C + 38, T_30m__ms);//RL5
             //SNSCT_L0_TECH_HS_1.Applications.AddToggleButton(ID.DEVCE_L0_TECH_PUMP, InputPin.I14, ID.NO_APPLICATION);//56
-            SNSCT_L0_TECH_HS_1.Applications.Add(new SoundApplication((ushort)ApplicationId.SOUND_L0_TECH_AUDIO, ApplicationId.SOUND_L0_TECH_AUDIO.ToString(), "Türklingel", 17));
+            //75% der maximalen Lautstaerke. Achtung, invertierte TAS5805M-Skala (currentVolume>>8 landet
+            //roh im DIG_VOL_CTRL-Register, s. tas580x.hh SetDigitalVolume): 0=lautest, 254=leisest,
+            //255=Mute -- deshalb hier ein NIEDRIGER Byte-Wert (64 = 25% des Wegs von 0 nach 254).
+            AddSound(SNSCT_L0_TECH_HS_1, ApplicationId.SOUND_L0_TECH_AUDIO, "Türklingel", initialVolume: 64 << 8);
             SNSCT_L0_TECH_HS_1.Applications.Add(new PumpApplication((ushort)ApplicationId.PUMP__L0_TECH_PUMP, ApplicationId.PUMP__L0_TECH_PUMP.ToString(), "Hebepumpe", BUS0 + I2C + 45, T_5m__ms, T_2h__ms)); // RL14
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.STDBY_L0_TECH_48V, "Netzteil 48V", BB + I2C + 48, DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS);//RL15 K115
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.STDBY_L2_CORR_24V, "Netzteil 24V", BB + I2C + 49, DEFAULT_STANDBYCONTROLLER_WAITTIME_MSECS );//RL17 K117
