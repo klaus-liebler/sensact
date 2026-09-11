@@ -108,14 +108,14 @@ namespace Klli.Sensact.Config
             #region L0
             //CORR
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_CORR_B11, BB + I2C + 13, //36,
-                 new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W2});
+                 new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W1});
 
                 
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_CORR_B21, BB + I2C + 12, //34
-                new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W2});
+                new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W1});
 
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_CORR_B31, BB + I2C + 11,//33
-                new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W2});
+                new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W1});
                                                                                                                                   
             AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L0_CORR_C1, "Deckenlicht", BB + I2C + 40, T_30m__ms); //RL7
 

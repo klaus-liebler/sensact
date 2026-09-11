@@ -15,6 +15,8 @@ namespace Klli.Sensact.Model.Sattlerstrasse16
         SNSCT_L1_KTCH_UP,
         SNSCT_L3_WORK_HS,
 
+        SNSCT_XX_DUMMY_1,//Just to fix the numbering of the enum, do not use this value
+
         //Keller
         PUSHB_L0_CORR_B11, //STRS.W1. Das ist immer der rechte Taster
         PUSHB_L0_CORR_B21, // das ist der linke Taster vor dem Technikraum
