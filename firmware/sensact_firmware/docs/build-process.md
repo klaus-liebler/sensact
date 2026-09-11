@@ -33,6 +33,38 @@ abläuft.
   Alles andere (generierte Dateien, Repo-interne Pfade) ist projektlokal und
   braucht keine Konfiguration, s. unten.
 
+## Einmalige manuelle Vorbereitung (neue Maschine)
+
+Diese Schritte sind pro Maschine (nicht pro Checkout) genau einmal nötig, bevor der
+erste `Pipeline`/`PipelineOffline`-Lauf durchläuft. Der Builder prüft/automatisiert
+das nicht selbst.
+
+- **ESP-IDF installieren**: Ziel-Version (s. `dependencies.lock`) irgendwohin
+  auschecken (z.B. `C:\esp\v6.0\esp-idf`), darin einmalig `install.ps1`
+  (bzw. `install.bat`) ausführen – legt das Python-Venv samt Toolchain unter
+  `%USERPROFILE%\.espressif\python_env\` an (u.a. `esptool.exe`/`espefuse.exe`,
+  von `PrepareContextWithRealHardware`/`FlashFirmware` gebraucht). Danach `IDF_PATH`
+  dauerhaft (User-Umgebungsvariable) auf dieses Verzeichnis setzen.
+- **Vor jedem Builder-Aufruf in einer neuen Shell**: `& "$env:IDF_PATH\export.ps1"`
+  (bzw. `%IDF_PATH%\export.bat` in `cmd.exe`) einmal ausführen. Das bringt
+  `esptool`/`espefuse` (und `idf.py`) auf `PATH`. Wichtig: `PrepareContextWithRealHardware`
+  läuft in `Pipeline` **vor** `BuildFirmware` und damit vor dessen eigenem internen
+  `export.bat`-Aufruf – ohne vorher von Hand ausgeführtes `export.ps1`/`export.bat`
+  schlägt schon dieser erste Schritt mit "Datei nicht gefunden: esptool" fehl.
+- **`npm-packages`-Repo** (`klaus-liebler/npm-packages`, Pfad s. `NpmPackagesDir`
+  oben): `web/` referenziert mehrere `@klaus-liebler/*`-Unterpakete dort per
+  `file:`-Pfad. npm legt `file:`-Abhängigkeiten als Symlink an; Imports innerhalb
+  eines so verlinkten Pakets löst Node über dessen echten (Symlink-aufgelösten)
+  Pfad auf, nicht über `web/node_modules` – ein `npm install` in `web/` allein
+  installiert diese Unterpakete also nicht. Jedes Unterpaket, das selbst
+  `dependencies` in seiner `package.json` hat, braucht deshalb einmalig ein
+  **eigenes** `npm install` direkt in seinem Ordner. Aktuell betroffen:
+  `sensact-base`, `usersettings_runtime`, `web-components`,
+  `web-components-sensact` (nicht `commons`/`svgs` – die haben keine eigenen
+  Dependencies). Fehlt das, bricht `BuildWebApp` mit einem Vite/Rollup-Fehler wie
+  `Rollup failed to resolve import "@generated/wsprotocol_ts/..."` ab.
+- **`npm install` in `web/`** selbst (für Vite & Co.).
+
 ## Hausmodell-Codegenerierung (`GenerateModelFiles`)
 
 Das Hausautomations-Modell (welche Apps auf welchem Node existieren und wie sie
@@ -127,6 +159,14 @@ Verbindungen.
 
 ## Troubleshooting
 
+- **`PrepareContextWithRealHardware`/`FlashFirmware` schlägt mit "Datei nicht
+  gefunden: esptool" (o.ä. für `espefuse`) fehl**: `export.ps1`/`export.bat` wurde
+  in der aktuellen Shell noch nicht ausgeführt, s. "Einmalige manuelle
+  Vorbereitung" oben.
+- **`BuildWebApp` schlägt mit `[vite]: Rollup failed to resolve import
+  "@generated/..."` (oder einem `@klaus-liebler/...`-Import) fehl**: In einem der
+  `npm-packages/@klaus-liebler/*`-Unterpakete fehlt `node_modules` – s. "Einmalige
+  manuelle Vorbereitung" oben, Abschnitt `npm-packages`-Repo.
 - **`idf.py build` schlägt mit "config.json not found" fehl**:
   `GenerateRuntimeConfig` wurde noch nicht ausgeführt – muss vor jedem
   CMake-Konfigurationslauf gelaufen sein (`Pipeline` macht das automatisch).

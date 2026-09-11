@@ -2,7 +2,7 @@
 
 > **Archiviert.** Dies ist ein historisches Planungsdokument (Stand 2026-07-31) und
 > wird nicht mehr aktuell gehalten. Für den aktuellen Stand des Projekts siehe
-> [../README.md](../README.md) und die dort verlinkten Seiten. Die Checklisten in
+> [../../README.md](../../README.md) und die dort verlinkten Seiten. Die Checklisten in
 > diesem Ordner spiegeln den Bearbeitungsstand zum Zeitpunkt der Archivierung, nicht
 > notwendigerweise den heutigen.
 
