@@ -132,6 +132,15 @@ internal static class Program
 		SetShared("GIT_SHORT_HASH", ctx.Git.CommitHash);
 		SetShared("BANNER", $"{appName} {nodeId}");
 
+		// Default: WiFi aktiv (webmanager::M). Boards mit funktionierendem Ethernet koennen WiFi
+		// per sensact.json ("board_settings": { "firmware": { "WIFI_ENABLED": false } }) abschalten --
+		// main.cc waehlt dann webmanager_eth_only::M statt webmanager::M, und das Web-Frontend blendet
+		// die Wifimanager-Seite aus (s. WIFI_ENABLED in runtimeconfig_ts).
+		var wifiEnabled = defines.TryGetValue("WIFI_ENABLED", out var wifiEnabledRaw) && wifiEnabledRaw is bool wifiEnabledBool
+			? wifiEnabledBool
+			: true;
+		SetShared("WIFI_ENABLED", wifiEnabled);
+
 		RuntimeConfigWriter.CreateCppConfigurationHeader(SensactBuildContext.GeneratedRuntimeConfigCppDir, defines);
 		RuntimeConfigWriter.CreateCMakeJsonConfigFile(SensactBuildContext.GeneratedCMakeDir, defines);
 		RuntimeConfigWriter.CreateTypeScriptRuntimeConfig(SensactBuildContext.GeneratedRuntimeConfigTsDir, clientDefines);

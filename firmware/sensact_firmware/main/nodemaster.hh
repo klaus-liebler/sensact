@@ -19,6 +19,7 @@
 #include "interfaces.hh"
 #include "model_node.hh"
 #include "webmanager_interfaces.hh"
+#include "webmanager_base.hh"
 #include "wsprotocol_cpp/ws_protocol.hh"
 #include "messagecodes.hh"
 
@@ -119,9 +120,10 @@ namespace sensact
 					}
 				}
 			}
-			//Netzwerk
-			webmanager::M* wm= webmanager::M::GetSingleton();
-			bool state= wm->GetStaState();
+			//Netzwerk (WLAN- oder Ethernet-only-Webmanager, s. main.cc -- funktioniert mit
+			//beiden ueber die gemeinsame Basisklasse)
+			webmanager::aWebmanagerBase* wm= webmanager::aWebmanagerBase::GetActiveInstance();
+			bool state= wm->IsNetworkUp();
 			if(state!=previousWifiState){
 				if(state){
 					LOGGER::Journal(messagecodes::C::WIFI_CONNECTED, (uint32_t)state);

@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
   app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>&#127760;</span><span>Home</span>`, new DefaultScreenController(app)) 
   app.AddScreenController("system", new RegExp("^/system$"), html`<span>🧰</span><span>System Settings</span>`, new SystemController(app))
-  app.AddScreenController("wifiman", new RegExp("^/wifiman$"), html`<span>📶</span><span>Wifi Manager</span>`, new WifimanagerController(app))
+  if(CFG.WIFI_ENABLED)
+    app.AddScreenController("wifiman", new RegExp("^/wifiman$"), html`<span>📶</span><span>Wifi Manager</span>`, new WifimanagerController(app))
   app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>🔬</span><span>Can Bus Monitor</span>`, new CanMonitorScreenController(app))
   app.AddScreenController("nodemaster", new RegExp("^/nodemaster$"), html`<span>🧩</span><span>Node Master</span>`, new NodemasterController(app))
   const s = new SensactController(app);

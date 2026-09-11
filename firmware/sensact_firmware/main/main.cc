@@ -37,6 +37,7 @@
 #include <common-esp32.hh>
 #include <adc_buttons.hh>
 #include <webmanager.hh>
+#include <webmanager_eth_only.hh>
 
 //sensact in
 #include <sensact_projectconfig.hh>
@@ -165,26 +166,54 @@ extern "C" void app_main(void)
     boardInit.CreateHosts(initCtx, nodemaster, hosts);
     nodemaster->Setup(hosts);
     
-    //Configure Network
-    webmanager::M* wm = webmanager::M::GetSingleton();
-    ESP_ERROR_CHECK(wm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true, false, ESP_LOG_WARN,
+    //Configure Network -- Boards mit funktionierendem Ethernet koennen WiFi per sensact.json
+    //("board_settings": {"firmware": {"WIFI_ENABLED": false}}) abschalten; main.cc waehlt dann
+    //webmanager_eth_only::M statt webmanager::M (gemeinsame Basisklasse aWebmanagerBase fuer den
+    //Rest dieser Funktion, s. webmanager_base.hh).
+    webmanager::aWebmanagerBase* wm;
+    if (cfg::WIFI_ENABLED)
+    {
+        auto* wifiWm = webmanager::M::GetSingleton();
+        ESP_ERROR_CHECK(wifiWm->Begin(cfg::NODE_ID, "sensact1", cfg::NODE_ID, false, &plugins, true, false, ESP_LOG_WARN,
 #ifdef __WEBMANAGER_AUTH_USERNAME__
-        cfg::WEBMANAGER_AUTH_USERNAME,
+            cfg::WEBMANAGER_AUTH_USERNAME,
 #else
-        "admin",
+            "admin",
 #endif
 #ifdef __WEBMANAGER_AUTH_PASSWORD__
-        cfg::WEBMANAGER_AUTH_PASSWORD,
+            cfg::WEBMANAGER_AUTH_PASSWORD,
 #else
-        "password",
+            "password",
 #endif
 #ifdef __WIFIMANAGER_AP_FALLBACK_TIMEOUT_MS__
-        (time_t)cfg::WIFIMANAGER_AP_FALLBACK_TIMEOUT_MS * 1000
+            (time_t)cfg::WIFIMANAGER_AP_FALLBACK_TIMEOUT_MS * 1000
 #else
-        webmanager::FAR_FUTURE
+            webmanager::FAR_FUTURE
 #endif
-    ));
-    
+        ));
+        wm = wifiWm;
+    }
+    else
+    {
+        // Ethernet ist zu diesem Zeitpunkt bereits ueber die Board-HAL hochgefahren (inkl. eigenem
+        // esp_netif_init()/Event-Loop, s. Kommentar bei initETH_W5500 in den hal_*.hh-Dateien) --
+        // init_netif_and_create_event_loop bleibt deshalb false (Default).
+        auto* ethWm = webmanager_eth_only::M::GetSingleton();
+        ESP_ERROR_CHECK(ethWm->Begin(cfg::NODE_ID, &plugins, false,
+#ifdef __WEBMANAGER_AUTH_USERNAME__
+            cfg::WEBMANAGER_AUTH_USERNAME,
+#else
+            "admin",
+#endif
+#ifdef __WEBMANAGER_AUTH_PASSWORD__
+            cfg::WEBMANAGER_AUTH_PASSWORD
+#else
+            "password"
+#endif
+        ));
+        wm = ethWm;
+    }
+
     const char *hostname = wm->GetHostname();
 #if defined(HTTPS)
     httpd_ssl_config_t httpd_conf = HTTPD_SSL_CONFIG_DEFAULT();
