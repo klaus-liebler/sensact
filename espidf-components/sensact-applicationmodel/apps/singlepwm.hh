@@ -22,6 +22,7 @@ namespace sensact::apps
 		s16 autoDimPreset{+256};
 		tms_t lastAutoDimSignal{0};
 		tms_t lastHeartbeatSent{0};
+		tms_t lastLevelUpdate{0};//Zeitstempel des letzten Loop()-Durchlaufs, fuer zeitbasierte (statt taktzahlbasierte) Fade-Schrittweite
 		std::atomic<bool> targetChangedFlag;
 		
 		

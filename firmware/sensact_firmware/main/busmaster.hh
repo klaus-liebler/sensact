@@ -136,7 +136,14 @@ namespace sensact
 			ESP_LOGI(TAG, "I2CBusmaster task started");
 		
 			TickType_t xLastWakeTime{0};
-			const TickType_t xTimeIncrement = pdMS_TO_TICKS(100);
+			// War 100ms -- eine willkuerlich gewaehlte Konstante, keine echte I2C-Bandbreitengrenze
+			// (ein PCA9685-Registerblock-Write ist sehr schnell). Dieser Task macht nur I2C-Writes/
+			// PCA9555-Polling, keine CAN-/Audio-Arbeit, ist also fuer eine schnellere Taktung
+			// unkritisch. Gesenkt auf 20ms, damit von cSinglePWM::Loop() (NodemasterTask, 100ms)
+			// frisch berechnete PWM-Werte deutlich schneller an die Hardware committet werden,
+			// statt bis zu 100ms zusaetzliche Latenz zur ohnehin sichtbaren Fade-Stufigkeit
+			// draufzuschlagen.
+			const TickType_t xTimeIncrement = pdMS_TO_TICKS(20);
 			xLastWakeTime = xTaskGetTickCount();
 			while (true)
 			{

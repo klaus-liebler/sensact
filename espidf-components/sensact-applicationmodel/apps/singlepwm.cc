@@ -9,7 +9,14 @@ namespace sensact::apps
 {
 	constexpr int MAXIMUM_LEVEL = UINT16_MAX;
 	constexpr tms_t TIME_TO_FORGET_DIM_DIRECTION = 5000;
-	constexpr int DIM_TO_TARGET_STEP = 32*256;
+	// Vorher: fixe Schrittweite von 32*256 PRO Loop()-Aufruf (angenommen alle 100ms, s.
+	// NodemasterTask) -- das kombiniert zwei Probleme: (1) die tatsaechliche Fade-Dauer haengt
+	// von der (nicht garantierten) Taktung von Loop() ab, nicht von echter Zeit, (2) bei einem
+	// verzoegerten Loop()-Aufruf (z.B. durch CAN-Last im selben Task) wird der Sprung trotzdem
+	// nur um den fixen Betrag gemacht -- der Fade dauert dann laenger als beabsichtigt, statt
+	// den verpassten Fortschritt aufzuholen. Jetzt zeitbasiert: dieselbe Rate (Einheiten/ms), aber
+	// multipliziert mit der tatsaechlich seit dem letzten Loop()-Aufruf vergangenen Zeit.
+	constexpr double DIM_RATE_PER_MS = (32.0 * 256.0) / 100.0;
 /**
  * 
  */
@@ -233,6 +240,7 @@ namespace sensact::apps
 		LOGI(TAG, "Build cSinglePWM for id:%s, pwmFirst:%d autoOffMsecs:%lld", N(), pwmOutputs[0], autoOffCfg);
 		currentLevel = 0;
 		targetLevel = 0;
+		lastLevelUpdate = ctx->Now();
 		WriteCurrentLevelToOutput(ctx);
 		return eAppCallResult::OK;
 	}
@@ -283,14 +291,17 @@ namespace sensact::apps
 			lastHeartbeatSent = ctx->Now();
 		}
 
+		tms_t elapsedMs = ctx->Now() - lastLevelUpdate;
+		lastLevelUpdate = ctx->Now();
+		int step = std::max(1, (int)(DIM_RATE_PER_MS * elapsedMs));
 		if (currentLevel < targetLevel)
 		{
-			currentLevel = std::min(currentLevel + DIM_TO_TARGET_STEP, (int)targetLevel);
+			currentLevel = std::min(currentLevel + step, (int)targetLevel);
 			WriteCurrentLevelToOutput(ctx);
 		}
 		else if (targetLevel < currentLevel)
 		{
-			currentLevel = std::max(currentLevel - DIM_TO_TARGET_STEP, (int)targetLevel);
+			currentLevel = std::max(currentLevel - step, (int)targetLevel);
 			WriteCurrentLevelToOutput(ctx);
 		}
 		if(targetChangedFlag.exchange(false)){
