@@ -1,3 +1,5 @@
 (sym_lib_table
-  (lib (name sensactHsExt-rescue)(type Legacy)(uri ${KIPRJMOD}/sensactHsExt-rescue.lib)(options "")(descr ""))
+	(version 7)
+	(lib (name "sensactHsExt-rescue") (type "Legacy") (uri "${KIPRJMOD}/sensactHsExt-rescue.lib") (options "") (descr ""))
+	(lib (name "sensactHsExt-cache") (type "Legacy") (uri "C:/repos/sensact/pcb/sensactHsExt/sensactHsExt-cache.lib") (options "") (descr "Legacy project cache library"))
 )

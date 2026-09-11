@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "sensactHsRelay-cache") (type "Legacy") (uri "C:/repos/sensact/pcb/sensactHsRelay/sensactHsRelay-cache.lib") (options "") (descr "Legacy project cache library"))
+)
