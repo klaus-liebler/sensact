@@ -1,6 +1,12 @@
 # Plan v2 – Überarbeitung sensact_firmware & Umfeld
 
-Stand: 2026-07-31. Dies ist der Einstiegspunkt für die mehrstufige Überarbeitung.
+> **Archiviert.** Dies ist ein historisches Planungsdokument (Stand 2026-07-31) und
+> wird nicht mehr aktuell gehalten. Für den aktuellen Stand des Projekts siehe
+> [../README.md](../README.md) und die dort verlinkten Seiten. Die Checklisten in
+> diesem Ordner spiegeln den Bearbeitungsstand zum Zeitpunkt der Archivierung, nicht
+> notwendigerweise den heutigen.
+
+Dies ist der Einstiegspunkt für die mehrstufige Überarbeitung.
 Jede Stufe hat eine eigene Datei in diesem Ordner. Die Dateien sind so geschrieben,
 dass sowohl Klaus als auch Claude (in einer neuen Session) ohne weiteren Kontext
 direkt einsteigen können.

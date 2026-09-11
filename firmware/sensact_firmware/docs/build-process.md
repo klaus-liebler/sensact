@@ -9,6 +9,10 @@ abläuft.
   Umgebungsvariable `IDF_PATH` muss gesetzt sein (`BuildFirmware`/`FlashFirmware`
   prüfen das explizit und brechen mit einer klaren Fehlermeldung ab, wenn nicht);
   der Build ruft intern `%IDF_PATH%\export.bat` auf, bevor er `idf.py` aufruft.
+  `export.bat` bricht unter MSYS-artigen Shells (git-bash: `MSYSTEM` gesetzt) sofort
+  mit "This .bat file is for Windows CMD.EXE shell only." ab – Builder-Aufrufe, die
+  bis `BuildFirmware`/`FlashFirmware` kommen sollen, brauchen daher eine echte
+  `cmd.exe`/PowerShell-Umgebung.
 - **.NET SDK** (aktuell `net10.0`) für `builder/`.
 - **Node.js/npm** im `web/`-Ordner (für den Vite-Build) sowie in den generierten
   npm-Projekten unter `generated/` (werden vom Builder bei Bedarf selbst per
@@ -20,9 +24,9 @@ abläuft.
 
   | Key | Bedeutung |
   |---|---|
-  | `BoardsDir` | Board-Archiv (pro Board ein Unterordner `<mac6hex>_<macDecimal>_<mac12hex>`: Zertifikate, Flash-Encryption-Key, `board_info.json`). |
-  | `CertsDir` | Private CA + Server-Root-Zertifikat. |
-  | `SubjectPrefix` | Zertifikats-Subject-Präfix (`/C=.../ST=.../L=.../O=...`). |
+  | `BoardStorage.BoardsDir` | Board-Archiv (pro Board ein Unterordner `<mac6hex>_<macDecimal>_<mac12hex>`: Zertifikate, Flash-Encryption-Key, `board_info.json`, `sensact.json`). |
+  | `Certificates.CertsDir` | Private CA + Server-Root-Zertifikat. |
+  | `Certificates.SubjectPrefix` | Zertifikats-Subject-Präfix (`/C=.../ST=.../L=.../O=...`). |
   | `NpmPackagesDir` | Checkout-Pfad des `npm-packages`-Repos (klaus-liebler/npm-packages) – von generierten npm-Projekten per relativem `file:`-Pfad referenziert. |
   | `WebmanagerBestBinaryBuffersSchemaDir` | Checkout-Pfad von `espidf-component-webmanager/best_binary_buffers_schema` – zweite BestBinaryBuffers-Schema-Quelle neben dem eigenen `best_binary_buffers_schema/`. |
 
@@ -46,18 +50,18 @@ Enum-Quellen (`generated/sensact_model/common/applicationIds.enums.cs` /
 (`sensact_applicationIds.enums.cs` / `sensact_commandTypes.enums.cs`) – dort
 git-getrackt, damit eine echte Modelländerung als normaler `git diff` sichtbar
 wird, statt still in einem gitignorten Verzeichnis zu verschwinden. Deshalb
-muss `GenerateModelFiles` vor `GenerateWsProtocolFiles` laufen (`Pipeline`
+muss `GenerateModelFiles` vor `GenerateBestBinaryBufferFiles` laufen (`Pipeline`
 macht das in der richtigen Reihenfolge).
 
 ## Generierte Dateien: projektlokal
 
 Alle von `builder` erzeugten Dateien liegen unter `sensact_firmware/generated/`
-(`builder/Paths.cs`: `GeneratedRoot = RootDir + "/generated"`, gitignored).
+(`SensactBuildContext.GeneratedRoot`, gitignored).
 
 | Artefakt | Zielpfad | Erzeugt von (Phase) |
 |---|---|---|
-| ws-protocol C++ | `generated/wsprotocol_cpp/ws_protocol.hh` | `GenerateWsProtocolFiles` |
-| ws-protocol TS | `generated/wsprotocol_ts/` (eigenes npm-Paket) | `GenerateWsProtocolFiles` |
+| ws-protocol C++ | `generated/wsprotocol_cpp/ws_protocol.hh` | `GenerateBestBinaryBufferFiles` |
+| ws-protocol TS | `generated/wsprotocol_ts/` (eigenes npm-Paket) | `GenerateBestBinaryBufferFiles` |
 | Runtimeconfig C++ | `generated/runtimeconfig_cpp/` | `GenerateRuntimeConfig` |
 | Runtimeconfig TS | `generated/runtimeconfig_ts/` (eigenes npm-Paket) | `GenerateRuntimeConfig` |
 | CMake-Config | `generated/cmake/config.json` | `GenerateRuntimeConfig` |
@@ -89,22 +93,24 @@ aus drei weiteren Repos/Ordnern hinzu; `web/package.json` zieht npm-Pakete aus
 
 Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 `builder/`-Verzeichnis auch ohne `--project builder`). Vollständige Liste s.
-Kopfkommentar in `builder/Program.cs`.
+`builder/Program.cs`.
 
 | Phase | Was passiert |
 |---|---|
-| `Info` | Zeigt aktuellen Board-/Verbindungsstatus. |
+| `Info` | Zeigt aktuellen Board-/Verbindungsstatus (`board_info.json`, aufgelöste NodeId). |
 | `GitStatus` | Git-Kurz-Hash etc. für den Build-Banner. |
-| `GenerateWsProtocolFiles` | Liest `*.cs`-Schema-Dateien aus `best_binary_buffers_schema/` (eigenes Repo) **und** `WebmanagerBestBinaryBuffersSchemaDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
+| `PrepareContextWithRealHardware` | Liest Chip-Typ/MAC vom per USB verbundenen Board (über `esptool`), legt/aktualisiert dessen Board-Archiv und kopiert es als aktives Board in den Repo-Root (`board_info.json`). |
+| `PrepareContextWithCommandLineArguments --nodeId <NODE_ID>` | Wählt ohne angeschlossenes Board ein (deterministisch aus der `NODE_ID` abgeleitetes, synthetisches) Board-Archiv – für Offline-Builds, s. [board-provisioning.md](board-provisioning.md). |
+| `GenerateBestBinaryBufferFiles` | Liest `*.cs`-Schema-Dateien aus `best_binary_buffers_schema/` (eigenes Repo) **und** `WebmanagerBestBinaryBuffersSchemaDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
 | `GenerateRuntimeConfig` | Sammelt Build-Defines (Board-Settings, Node-Descriptor, Git-Hash, Zeitstempel, Banner …), schreibt `cmake/config.json`, `runtimeconfig.hh`/`runtimeconfig_defines.hh`, `runtimeconfig_ts`. |
 | `GenerateCertificates` | Lazy: Board-Zertifikat (node-forge, signiert mit der Root-CA aus `CertsDir`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
 | `GenerateModelFiles --model <Name>` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |
-| `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess, s. Kommentar in `BuildFirmware.cs` zur `PATH`-Vererbung). |
-| `ReadHardwareIds` | Liest MAC etc. vom per USB verbundenen Board. |
-| `FlashFirmware [--resetNVSPartition]` | Flasht (nur unverschlüsselter Pfad implementiert, s. Kommentar in `FlashFirmware.cs`); `--resetNVSPartition` löscht zusätzlich die NVS-Partition (WLAN-/Usersettings vergessen). |
-| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus: alle obigen Phasen (außer `Info`/`GitStatus`) einmal nacheinander, endet mit `FlashFirmware`. |
+| `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess). |
+| `FlashFirmware [--resetNVSPartition]` | Flasht (nur unverschlüsselter Pfad implementiert; ist der Flash-Encryption-Key im Board-Archiv als aktiviert markiert, bricht die Phase bewusst ab). `--resetNVSPartition` löscht zusätzlich die NVS-Partition (WLAN-/Usersettings vergessen). |
+| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `FlashFirmware`. |
+| `PipelineOffline --nodeId <NODE_ID> --model <Name>` | Wie `Pipeline`, aber mit `PrepareContextWithCommandLineArguments` statt echter Hardware und ohne `FlashFirmware` – für Builds ohne angeschlossenes Board. |
 
 ## Neues Board anlegen / in Betrieb nehmen
 
@@ -117,14 +123,18 @@ Siehe [board-provisioning.md](board-provisioning.md) für den vollständigen Abl
 (Dev-Server-Origin) und Board unterschiedliche Origins haben und das Session-Cookie
 sonst nicht mitgeschickt würde – der Proxy loggt sich selbst einmalig gegen
 `/login` ein und cached das resultierende Session-Cookie für nachfolgende
-Verbindungen. Dieser Teil hängt eng mit dem Login/Session-Code im Wifimanager
-zusammen, siehe [plan_v2/03-wifimanager-review.md](plan_v2/03-wifimanager-review.md).
+Verbindungen.
 
 ## Troubleshooting
 
 - **`idf.py build` schlägt mit "config.json not found" fehl**:
   `GenerateRuntimeConfig` wurde noch nicht ausgeführt – muss vor jedem
   CMake-Konfigurationslauf gelaufen sein (`Pipeline` macht das automatisch).
+- **`idf.py` "nicht gefunden" / `export.bat`-Meldung "for Windows CMD.EXE shell only"**:
+  die Shell, in der der Builder läuft, hat `MSYSTEM` gesetzt (git-bash/MSYS2) –
+  `export.bat` bricht darin sofort ab, ohne `idf.py` in den `PATH` zu bringen.
+  Builder-Aufrufe bis `BuildFirmware`/`FlashFirmware` in PowerShell oder `cmd.exe`
+  ausführen.
 - **`Konnte Repo-Wurzel nicht finden`**: `builder/Paths.cs`s `FindRootDir()`
   erwartet die `CMakeLists.txt` ausschließlich im unmittelbar übergeordneten
   Verzeichnis von `builder/` – kein generisches Aufwärtssuchen darüber hinaus.
