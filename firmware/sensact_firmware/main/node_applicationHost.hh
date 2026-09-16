@@ -17,6 +17,15 @@ namespace sensact
         u16 nextStatusApp{0};
         size_t nextStatusAppListIndex{SIZE_MAX};
         std::vector<u16> localAppIds;
+        // Bucket-Rotation (s. Loop()): jede App in localAppIds gehoert per (Index % LOOP_BUCKET_COUNT)
+        // zu genau einem Bucket, pro Tick ist nur ein Bucket "dran" -- plus alle Apps, die beim
+        // letzten Aufruf NeedsFastLoop()==true zurueckgegeben haben (z.B. eine PWM-App waehrend
+        // eines Fades), die laufen jeden Tick. So bleibt die Worst-Case-Taktung "kalter" Apps exakt
+        // wie zuvor (LOOP_BUCKET_COUNT * NodemasterTask-Periode), waehrend aktiv veraendernde Apps
+        // jeden Tick drankommen.
+        static constexpr size_t LOOP_BUCKET_COUNT = 5;
+        uint16_t currentLoopBucket{0};
+        std::vector<bool> appNeedsFastLoop;
         u16 appCnt{0};
         size_t statusBufferLength{0};
         tms_t lastSentMessageOnMessageBus{0};

@@ -1,6 +1,7 @@
 #pragma once
 #include "hal_ESP32.hh"
 #include <audioplayer.hh>
+#include <ns4168.hh>
 #include <rotenc.hh>
 #include <driver/spi_master.h>
 #include <esp_log.h>
@@ -55,6 +56,7 @@ namespace sensact::hal::SensactUp3
     class cHAL : public sensact::hal::cESP32
     {
     protected:
+        NS4168::M *ns4168;
         AudioPlayer::Player *mp3player;
         i2c::iI2CBus_Impl i2c_bus{};
         uint8_t volume_0mute_255max{120};
@@ -70,8 +72,16 @@ namespace sensact::hal::SensactUp3
         ErrorCode Setup() override
         {
             i2c_bus.Init(I2C_INTERNAL_IDF, I2C_INTERNAL_SCL, I2C_INTERNAL_SDA);
-            mp3player = new AudioPlayer::Player();
-            mp3player->InitExternalI2SDAC(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA, nullptr);
+            // Laut BOM (pcb/sensactUp3/production/bom.csv, U6) ist der bestueckte Verstaerker ein
+            // NS4168 (Mono-I2S-Class-D, kein I2C). Vorher stand hier ein Aufruf einer nie
+            // existierenden Methode AudioPlayer::Player::InitExternalI2SDAC() -- kompilierte nie,
+            // fiel aber nicht auf, weil SNSCT_NODE_UP kein aktuell gebautes Board ist. DAC (GPIO_NUM_4)
+            // als Shutdown/Enable-Pin ist aus dem Platinenlayout plausibel hergeleitet, aber NICHT
+            // gegen den Schaltplan-Netz verifiziert -- bei Bedarf pruefen, ob GPIO_NUM_4 wirklich am
+            // NS4168-SD-Pin haengt.
+            ns4168 = new NS4168::M(DAC);
+            ns4168->Init(AMP_I2S_SCLK, AMP_I2S_LRCLK, AMP_I2S_DATA);
+            mp3player = new AudioPlayer::Player(ns4168);
             this->SetupCAN(CAN_TX, CAN_RX);
             this->rotenc = new cRotaryEncoder(ROT_A, ROT_B, ROT_C);
             this->rotenc->Init();

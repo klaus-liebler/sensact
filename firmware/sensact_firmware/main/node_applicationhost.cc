@@ -334,6 +334,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
             //delete[] statusBuffer;
             appCnt++;
         }
+        this->appNeedsFastLoop.assign(this->localAppIds.size(), false);
         FindNextStatusApp();
         LOGI(TAG, "%u local applications have been configured.", appCnt);
         return ErrorCode::OK;
@@ -409,10 +410,21 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         {
             this->SendApplicationCommandToMessageBus(message.target, message.command, message.payload, message.payloadLength);
         }
-        for (u16 appId : this->localAppIds)
+        uint16_t bucket = this->currentLoopBucket;
+        this->currentLoopBucket = (uint16_t)((this->currentLoopBucket + 1) % LOOP_BUCKET_COUNT);
+        for (size_t i = 0; i < this->localAppIds.size(); i++)
         {
+            bool inBucketThisTick = (i % LOOP_BUCKET_COUNT) == bucket;
+            if (!inBucketThisTick && !this->appNeedsFastLoop[i])
+            {
+                // "Kalte" App, dieses Mal nicht dran -- kommt spaetestens in LOOP_BUCKET_COUNT
+                // Ticks wieder an die Reihe (gleiche Worst-Case-Taktung wie vor der Bucket-Rotation).
+                continue;
+            }
+            u16 appId = this->localAppIds[i];
             sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
             eAppCallResult appResult = app->Loop(this);
+            this->appNeedsFastLoop[i] = app->NeedsFastLoop();
             if ((uint8_t)appResult >=(uint8_t)eAppCallResult::GENERIC_ERROR)
             {
                 ESP_LOGW(TAG, "%s: Error %s happened during loop ->Publish!", sensact::ApplicationNames[appId], eAppCallResultStr[(int)appResult]);

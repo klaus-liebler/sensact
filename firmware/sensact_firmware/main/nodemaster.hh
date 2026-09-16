@@ -55,7 +55,7 @@ namespace sensact
 	// Status-LEDs sollen nach Power-On/Statuswechsel nur eine begrenzte Zeit leuchten und dann
 	// komplett ausgehen (s. led::IAnimatableLED::AnimatePixel -- die Deadline wird nur bei einem
 	// tatsaechlichen Pattern-Wechsel neu gestellt, ein wiederholter Aufruf mit demselben Pattern
-	// wie hier alle 100ms in CheckAndLogHealth() verlaengert sie NICHT).
+	// wie hier bei jedem Tick in CheckAndLogHealth() verlaengert sie NICHT).
 	constexpr tms_t STATUS_LED_DEFAULT_AUTO_OFF_MS{5 * 60 * 1000};
 
 	led::BlinkPattern SLOW(CRGB::Black, 1000, CRGB::Orange, 200);
@@ -168,7 +168,12 @@ namespace sensact
 		void task()
 		{
 			TickType_t xLastWakeTime = xTaskGetTickCount();
-			const TickType_t xFrequency = pdMS_TO_TICKS(100);
+			// War 100ms. Gesenkt auf 20ms, jetzt vertretbar, weil cApplicationHost::Loop() seit der
+			// Bucket-Rotation (s. dort, LOOP_BUCKET_COUNT=5) pro Tick nur noch ~20% der Apps plus
+			// die gerade aktiv veraendernden (NeedsFastLoop()==true, z.B. PWM waehrend eines Fades)
+			// tatsaechlich aufruft -- "kalte" Apps behalten dieselbe max. 100ms-Taktung wie zuvor,
+			// waehrend PWM-Fades jetzt alle 20ms statt alle 100ms einen Schritt machen.
+			const TickType_t xFrequency = pdMS_TO_TICKS(20);
 			
 			switch (auto reason = esp_reset_reason())
             {
