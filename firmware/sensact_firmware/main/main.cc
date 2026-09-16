@@ -48,6 +48,7 @@
 #include <runtimeconfig_cpp/runtimeconfig.hh>
 #include <runtimeconfig_cpp/runtimeconfig_defines.hh>
 #include <webmanager_plugins/systeminfo_plugin.hh>
+#include <webmanager_plugins/usersettings_plugin.hh>
 
 
 constexpr const char* NVS_PARTITION_NAME{NVS_DEFAULT_PART_NAME};
@@ -146,6 +147,8 @@ extern "C" void app_main(void)
     
     std::vector<webmanager::iWebmanagerPlugin*> plugins;
     plugins.push_back(new SystemInfoPlugin(tempHandle));
+    UsersettingsPlugin* usersettingsPlugin = new UsersettingsPlugin(NVS_PARTITION_NAME);
+    plugins.push_back(usersettingsPlugin);
 
     aCANMessageBuilderParser* canMBP;
     if(sensact::config::USE_NEW_CAN_ID){
@@ -153,8 +156,8 @@ extern "C" void app_main(void)
     } else{
         canMBP = new cCANMessageBuilderParserOld();
     }
-    
-    IInitializationContext initCtx{tempHandle, canMBP, NVS_PARTITION_NAME, cfg::HOSTNAME, &plugins};
+
+    IInitializationContext initCtx{tempHandle, canMBP, NVS_PARTITION_NAME, cfg::HOSTNAME, &plugins, usersettingsPlugin};
     std::vector<AbstractBusmaster*> busmasters;
     iHAL* halobj = boardInit.CreateHalAndBusmasters(initCtx, busmasters);
     assert(halobj);

@@ -26,3 +26,7 @@ CONFIG_MBEDTLS_ECP_FIXED_POINT_OPTIM=y
 # (mbedtls_ssl_setup returns -0x008D) on the second connection. Let mbedTLS's allocator
 # follow normal ESP-IDF malloc() behavior instead so it can spill into PSRAM.
 CONFIG_MBEDTLS_DEFAULT_MEM_ALLOC=y
+# Fuer die Task-CPU-Auslastungsstatistik (vTaskGetRunTimeStats in nodemaster.hh)
+# benoetigt -- ohne dieses Flag liefert vTaskGetRunTimeStats() nur einen leeren
+# String, keinen Fehler, also leicht zu uebersehen wenn man es vergisst.
+CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=y

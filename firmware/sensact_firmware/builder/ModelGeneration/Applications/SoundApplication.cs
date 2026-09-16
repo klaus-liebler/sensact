@@ -49,6 +49,18 @@ namespace Klli.Sensact.Model.Common.Applications
             base.OnSET_VERTICAL_TARGETCommand(target);
         }
 
+        [SensactCommandMethod]
+        public override void OnSET_PARAMCommand(ushort paramIndex, int value)
+        {
+            base.OnSET_PARAMCommand(paramIndex, value);
+        }
+
+        [SensactCommandMethod]
+        public override void OnSAVE_PARAMCommand()
+        {
+            base.OnSAVE_PARAMCommand();
+        }
+
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();
@@ -65,7 +77,10 @@ namespace Klli.Sensact.Model.Common.Applications
 
         public override string GenerateTypescriptConstructor(ModelContainerForCodeGenerator m)
         {
-            return string.Empty;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("new Apps.SoundApplication(ApplicationId.{1}, '{2}', ctx)",
+                ApplicationId, ApplicationName, ApplicationDescription);
+            return sb.ToString();
         }
 
         public override string CheckAndAddUsedPins(HashSet<string> usedInputPins, HashSet<string> usedOutputPins)

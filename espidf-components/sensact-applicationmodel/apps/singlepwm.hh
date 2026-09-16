@@ -39,6 +39,7 @@ namespace sensact::apps
 		eAppCallResult Setup(iSensactContext *ctx) override;
 		eAppCallResult Loop(iSensactContext *ctx) override;
 		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
+		bool NeedsFastLoop() override;
 		
 		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, uint16_t minimalLevel, uint16_t initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
 		void OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx) override;

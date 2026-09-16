@@ -196,8 +196,12 @@ namespace sensact::hal::SensactUpHs
 
         ErrorCode PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override
         {
-            mp3player->PlayMP3(buf, len, volume0_255, true);
-            return ErrorCode::OK;
+            ErrorCode err = mp3player->PlayMP3({buf, len}, volume0_255, true);
+            if (err != ErrorCode::OK)
+            {
+                LOGE(TAG, "mp3player->PlayMP3 raised error %s", ErrorCodeStr[(int)err]);
+            }
+            return err;
         }
 
         ErrorCode IsPlayingMP3(bool& isPlaying) override{
@@ -216,8 +220,12 @@ namespace sensact::hal::SensactUpHs
 
         ErrorCode StopSound() override
         {
-            mp3player->Stop();
-            return ErrorCode::OK;
+            ErrorCode err = mp3player->Stop();
+            if (err != ErrorCode::OK)
+            {
+                LOGE(TAG, "mp3player->Stop raised error %s", ErrorCodeStr[(int)err]);
+            }
+            return err;
         }
 
         ErrorCode AppendValidGpioInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges) override{

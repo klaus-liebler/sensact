@@ -1,5 +1,11 @@
 [Tt]emp/
 generated/
+# firmware/sensact_firmware/generated/usersettings/ enthaelt eine von Hand gepflegte, getrackte
+# Datei (s. firmware/sensact_firmware/.gitignore) -- die pauschale "generated/"-Regel oben muss
+# dafuer explizit zurueckgenommen werden, git wertet Negationen innerhalb eines schon per Verzeichnis
+# ignorierten Pfads sonst nicht aus (s. gitignore(5)). Die eigentlichen Build-Artefakte darunter
+# werden von der nested .gitignore dort wieder gezielt ignoriert.
+!/firmware/sensact_firmware/generated/
 configware/Klli.Sensact.Config/configgitkey.txt
 firmware_sensactOutdoor/sdkconfig
 firmware_sensactOutdoor/sdkconfig.old

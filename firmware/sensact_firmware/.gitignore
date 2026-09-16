@@ -13,6 +13,21 @@ CMakeCache.txt
 /builder/obj/
 
 # Projektlokales Ausgabeverzeichnis fuer generierte Dateien (s. builder/Paths.cs: GeneratedRoot) --
-# reine Build-Artefakte (wsprotocol_cpp/_ts, runtimeconfig_cpp/_ts, cmake/, web/, sensact_appsbuilder/,
-# sensact_sendCommandImplementation/), von "dotnet run --project builder -- ..." bei Bedarf neu erzeugt.
-/generated/
+# reine Build-Artefakte, von "dotnet run --project builder -- ..." bei Bedarf neu erzeugt. Einzeln
+# aufgelistet (statt "/generated/" pauschal) statt, weil git Negationsmuster fuer Dateien innerhalb
+# eines pauschal ignorierten Verzeichnisses grundsaetzlich nicht auswertet (s. gitignore(5)) --
+# /generated/usersettings/ muss aber getrackt werden (s. dort).
+/generated/cmake/
+/generated/runtimeconfig_cpp/
+/generated/runtimeconfig_ts/
+/generated/sensact_appsbuilder/
+/generated/sensact_model/
+/generated/sensact_sendCommandImplementation/
+/generated/web/
+/generated/wsprotocol_cpp/
+/generated/wsprotocol_ts/
+# usersettings_plugin.hh (espidf-component-webmanager) inkludiert
+# "usersettings/nvs_accessor.hh.inc" ueber den gemeinsamen ${GENERATED_DIR}-Include-Pfad, aber diese
+# Datei (GroupCfg/SettingCfg-Deklaration) ist projektspezifisch von Hand gepflegt, nicht vom builder
+# generiert -- deshalb bewusst NICHT in der Liste oben und damit getrackt, obwohl sie unter
+# generated/ liegt.

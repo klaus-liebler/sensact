@@ -289,8 +289,20 @@ namespace Klli.Sensact.Model.Common
         public virtual void OnTOGGLE_FILTERCommand(ushort targetApplicationId) { }
         [SensactCommandMethod]
         public virtual void OnTOGGLE_SPECIALCommand() { }
+        /// <summary>
+        /// Setzt einen generischen, app-spezifisch interpretierten Parameter. Wird nicht
+        /// automatisch persistiert -- dafuer s. OnSAVE_PARAMCommand.
+        /// </summary>
+        /// <param name="paramIndex">welcher Parameter (app-spezifisch nummeriert, beginnend bei 1)</param>
+        /// <param name="value">der neue Wert</param>
         [SensactCommandMethod]
-        public virtual void OnSET_PARAMCommand() { }
+        public virtual void OnSET_PARAMCommand(ushort paramIndex, int value) { }
+        /// <summary>
+        /// Persistiert die zuletzt per SET_PARAM gesetzten Werte dauerhaft (z.B. NVS), getrennt
+        /// von SET_PARAM selbst, damit nicht bei jeder Live-Aenderung (z.B. Slider-Drag) geschrieben wird.
+        /// </summary>
+        [SensactCommandMethod]
+        public virtual void OnSAVE_PARAMCommand() { }
         [SensactCommandMethod]
         public virtual void OnSET_HORIZONTAL_TARGETCommand(ushort target) { }
         [SensactCommandMethod]

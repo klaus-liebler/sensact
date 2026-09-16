@@ -672,7 +672,12 @@ namespace Klli.Sensact.Config
         private string CS2TSWriter(ParameterInfo pi, ref int offset)
         {
             string ret;
-            if (pi.ParameterType == typeof(uint))
+            if (pi.ParameterType == typeof(int))
+            {
+                ret = "view.setInt32(" + offset + "," + pi.Name + ", true);";
+                offset += 4;
+            }
+            else if (pi.ParameterType == typeof(uint))
             {
                 ret = "view.setUint32(" + offset + "," + pi.Name + ", true);";
                 offset += 4;

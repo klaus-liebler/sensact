@@ -28,5 +28,9 @@ namespace sensact::apps
         - Target (target dim value, target blindsposition)
         */
         virtual eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) = 0;
+        // true, solange diese App eine feinere Loop()-Taktung braucht, um fluessig zu wirken
+        // (z.B. eine PWM-App waehrend eines Fades). Default false: die meisten Apps sind
+        // ereignisgetrieben und brauchen keine schnellere Taktung als der normale Zyklus.
+        virtual bool NeedsFastLoop() { return false; }
     };
 }

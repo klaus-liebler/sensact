@@ -111,14 +111,12 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
 
     void cApplicationHost::FindNextStatusApp()
     {
-        do
+        if (localAppIds.empty())
         {
-            nextStatusApp++;
-            if (nextStatusApp == (uint16_t)eApplicationID::CNT)
-            {
-                nextStatusApp = 0;
-            }
-        } while (sensact::apps::cApplications::Glo2locCmd[nextStatusApp] == 0);
+            return;
+        }
+        nextStatusAppListIndex = (nextStatusAppListIndex + 1) % localAppIds.size();
+        nextStatusApp = localAppIds[nextStatusAppListIndex];
     }
 
     ErrorCode cApplicationHost::PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, std::array<uint16_t,4> &payload)
@@ -191,7 +189,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         this->lastSentMessageOnMessageBus =  hal->GetMillisS64();
     }
 
-    cApplicationHost::cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP) : hal(hal), hostCtx(hostCtx), canMBP(canMBP)
+    cApplicationHost::cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP, UsersettingsPlugin *usersettingsPlugin) : hal(hal), hostCtx(hostCtx), canMBP(canMBP), usersettingsPlugin(usersettingsPlugin)
     {
         this->webCommandQueue = xQueueCreate(3, sizeof(CommandMessage));
     }
@@ -221,7 +219,47 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
             LOGE(TAG, "StopSound raised error %s", ErrorCodeStr[(int)err]);
         }
     }
-    
+
+    void cApplicationHost::LoadPersistedParams(eApplicationID appId, std::array<uint16_t, 4> &params)
+    {
+        if (!usersettingsPlugin)
+        {
+            return;
+        }
+        for (size_t slot = 0; slot < params.size(); slot++)
+        {
+            char key[16];
+            snprintf(key, sizeof(key), "a%u_p%u", (unsigned)appId, (unsigned)slot);
+            int32_t value{0};
+            // Absichtlich kein Log bei ESP_ERR_NVS_NOT_FOUND -- das ist der Normalfall vor dem
+            // allerersten "Speichern"-Klick und params[slot] behaelt dann einfach seinen (vom
+            // Aufrufer vorgegebenen) Default-Wert.
+            if (usersettingsPlugin->GetIntegerSetting({"appparams", key}, &value) == ESP_OK)
+            {
+                params[slot] = (uint16_t)value;
+            }
+        }
+    }
+
+    void cApplicationHost::SavePersistedParams(eApplicationID appId, const std::array<uint16_t, 4> &params)
+    {
+        if (!usersettingsPlugin)
+        {
+            return;
+        }
+        for (size_t slot = 0; slot < params.size(); slot++)
+        {
+            char key[16];
+            snprintf(key, sizeof(key), "a%u_p%u", (unsigned)appId, (unsigned)slot);
+            esp_err_t err = usersettingsPlugin->SetIntegerSetting({"appparams", key}, (int32_t)params[slot]);
+            if (err != ESP_OK)
+            {
+                LOGE(TAG, "SavePersistedParams: SetIntegerSetting(%s) raised error %s", key, esp_err_to_name(err));
+            }
+        }
+    }
+
+
     tms_t cApplicationHost::Now()
     {
         return nowForCurrentLoop;
@@ -280,6 +318,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
             this->statusBuffer[appId].fill(0xFFFF); //for all apps, even for the nonlocal.  fill with 0xFFFF, so that we can see, if the app has provided a status or not
             sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
             if (!app) continue;
+            this->localAppIds.push_back(appId);
             sensact::eAppCallResult appResult = app->Setup(this);
             if ((uint8_t)appResult < (uint8_t)eAppCallResult::GENERIC_ERROR)
             {
@@ -370,11 +409,9 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         {
             this->SendApplicationCommandToMessageBus(message.target, message.command, message.payload, message.payloadLength);
         }
-        for (u16 appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
+        for (u16 appId : this->localAppIds)
         {
             sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
-            if (!app)
-                continue;
             eAppCallResult appResult = app->Loop(this);
             if ((uint8_t)appResult >=(uint8_t)eAppCallResult::GENERIC_ERROR)
             {

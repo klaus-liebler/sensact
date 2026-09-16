@@ -1,11 +1,13 @@
 #pragma once
 
+#include <vector>
 #include "can_message_builder_parser.hh"
 #include "iSensactContext.hh"
 #include "interfaces.hh"
 #include "hal.hh"
 #include <cApplication.hh>
 #include <webmanager_interfaces.hh>
+#include <webmanager_plugins/usersettings_plugin.hh>
 #include "wsprotocol_cpp/ws_protocol.hh"
 namespace sensact
 {
@@ -13,6 +15,8 @@ namespace sensact
     {
     private:
         u16 nextStatusApp{0};
+        size_t nextStatusAppListIndex{SIZE_MAX};
+        std::vector<u16> localAppIds;
         u16 appCnt{0};
         size_t statusBufferLength{0};
         tms_t lastSentMessageOnMessageBus{0};
@@ -20,6 +24,7 @@ namespace sensact
         sensact::hal::iHAL *hal;
         iHostContext *hostCtx;
         aCANMessageBuilderParser *canMBP;
+        UsersettingsPlugin *usersettingsPlugin;
 
         QueueHandle_t webCommandQueue{nullptr};
         webmanager::iWebmanagerCallback *webmanager_callback{nullptr};
@@ -36,7 +41,7 @@ namespace sensact
 
 		webmanager::eMessageReceiverResult handleRequestStatus(const WsProtocol::sensact::RequestStatus::Payload& req, webmanager::iWebmanagerCallback* callback);
     public:
-        cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP);
+        cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP, UsersettingsPlugin *usersettingsPlugin);
         ErrorCode Setup(iHostContext &ctx) override;
         ErrorCode Loop(iHostContext &ctx) override;
         ErrorCode OfferMessage(iHostContext &ctx, CANMessage &m) override;
@@ -50,6 +55,8 @@ namespace sensact
         void PlayMP3(uint8_t volume0_255, const uint8_t *buf, size_t len) override;
         void IsPlayingMP3(bool &isPlaying) override;
         void StopSound() override;
+        void LoadPersistedParams(eApplicationID appId, std::array<uint16_t, 4> &params) override;
+        void SavePersistedParams(eApplicationID appId, const std::array<uint16_t, 4> &params) override;
         void OnBegin(webmanager::iWebmanagerCallback *callback) override;
         void OnWifiConnect(webmanager::iWebmanagerCallback *callback) override;
         void OnWifiDisconnect(webmanager::iWebmanagerCallback *callback) override;

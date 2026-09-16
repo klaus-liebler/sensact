@@ -311,6 +311,10 @@ namespace sensact::apps
 		}
 	}
 
+	bool cSinglePWM::NeedsFastLoop(){
+		return currentLevel != targetLevel;
+	}
+
 	eFillStatusResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
 			buf[0]=targetLevel==0?0:1; // 1=ON, 0=OFF
 			buf[1]=storedLevel;

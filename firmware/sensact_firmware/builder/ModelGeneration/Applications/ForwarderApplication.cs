@@ -46,7 +46,7 @@ namespace Klli.Sensact.Model.Common.Applications
         [SensactCommandMethod]
         public override void OnTOGGLE_SPECIALCommand() { }
         [SensactCommandMethod]
-        public override void OnSET_PARAMCommand() { }
+        public override void OnSET_PARAMCommand(ushort paramIndex, int value) { }
         [SensactCommandMethod]
         public override void OnSET_HORIZONTAL_TARGETCommand(ushort target) { }
         [SensactCommandMethod]

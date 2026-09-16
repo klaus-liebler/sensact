@@ -3,6 +3,7 @@
 #include "busmaster.hh"
 #include "interfaces.hh"
 #include <webmanager.hh>
+#include <webmanager_plugins/usersettings_plugin.hh>
 #include <can_message_builder_parser.hh>
 #include <driver/temperature_sensor.h>
 #include <vector>
@@ -29,6 +30,10 @@ struct IInitializationContext {
     // Hook-Punkt fuer board-eigene Zusatz-Plugins (Fingerprint/Journal/etc., bisher SIDEDOORs
     // hal.inc-Sonderweg). Board-Init darf hier push_back()en.
     std::vector<webmanager::iWebmanagerPlugin*>* Plugins;
+    // Fuer persistente, pro-App-ID gespeicherte Parameter (s. iSensactContext::
+    // LoadPersistedParams/SavePersistedParams) -- CreateHosts() reicht das an den
+    // cApplicationHost-Konstruktor durch.
+    UsersettingsPlugin* Usersettings;
 };
 
 class IBoardInit {

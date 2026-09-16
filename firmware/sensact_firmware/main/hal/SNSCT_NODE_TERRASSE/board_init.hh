@@ -27,7 +27,7 @@ public:
 
     void CreateHosts(IInitializationContext& ctx, sensact::iHostContext* hostCtx, std::vector<sensact::iHost*>& outHosts) override
     {
-        auto* applicationHost = new cApplicationHost(this->hal, hostCtx, ctx.CanMBP);
+        auto* applicationHost = new cApplicationHost(this->hal, hostCtx, ctx.CanMBP, ctx.Usersettings);
         outHosts.push_back(applicationHost);
         ctx.Plugins->push_back(applicationHost);
 

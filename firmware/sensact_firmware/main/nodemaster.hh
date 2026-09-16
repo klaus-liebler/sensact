@@ -83,8 +83,21 @@ namespace sensact
 			return hal->TrySendCanMessage(m);
 		}
 
-		ErrorCode CheckAndLogHealth(){
+		void LogCpuLoadStats(){
+			// vTaskGetRunTimeStats() ist selbst nicht ganz billig (iteriert alle Tasks, mehrere
+			// snprintf-Aufrufe) -- deshalb hart auf alle 30s gedrosselt statt bei jedem 100ms-Tick.
+			static tms_t lastCpuStatsLog{0};
+			if(currentNow - lastCpuStatsLog < 30000){
+				return;
+			}
+			lastCpuStatsLog = currentNow;
+			static char cpuStatsBuffer[2048];
+			vTaskGetRunTimeStats(cpuStatsBuffer);
+			ESP_LOGI(TAG, "CPU load per task (name\truntime\t%%):\n%s", cpuStatsBuffer);
+		}
 
+		ErrorCode CheckAndLogHealth(){
+			LogCpuLoadStats();
 			bool atLeastHealthWarning{false};
 			bool healthError{false};
 			static bool previousWifiState{false};
