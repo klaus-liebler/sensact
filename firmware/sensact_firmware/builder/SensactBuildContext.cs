@@ -6,21 +6,14 @@ using FirmwareBuilder.Common.Esp32;
 
 namespace Builder;
 
-// Implementiert IBuildContextEsp32 auf Basis von AbstractBuildContext (geteilte Lib) -- ersetzt
-// BoardContext.cs. Board-Identitaets-Properties (BoardUid/ChipId/BoardArchiveDir/WebAdminPassword/
-// BoardSettings/BoardTypeName/BoardTypeVersion/Hostname) lesen bei JEDEM Zugriff frisch von der
-// Platte (kein gecachtes Feld), damit ein PrepareContextWithRealHardware/
-// PrepareContextWithCommandLineArguments-Aufruf FRUEHER in derselben Pipeline auch fuer spaeter
-// aufgerufene Schritte sofort sichtbar ist.
-public sealed class SensactBuildContext : AbstractBuildContext, IBuildContextEsp32
+// Projekteigene Konventionen auf Basis von Esp32BuildContextBase (geteilte Lib) -- alles
+// chip-generische (IdfPath/PartitionsCsvPath/BuildDir/ChipId/BoardUid/BoardArchiveDir/
+// WebAdminPassword/BoardSettings/FlashEncryptionKeyBurnedAndActivated/NpmPackagesDir/
+// WebmanagerBestBinaryBuffersSchemaDir) lebt dort. Hier bleibt, was sensact-spezifisch ist: die
+// generated/-Unterstruktur, NodeId-basierte BoardTypeName/BoardTypeVersion/Hostname-Ableitung
+// (s. NodeIdBoardTypeCatalog/SensactContextLoader) und das Offline-Board-Handling.
+public sealed class SensactBuildContext : Esp32BuildContextBase
 {
-	// --- Sensact-eigene Pfade, NICHT Teil von AbstractBuildContext (andere generated/-Unterstruktur,
-	// sensact_model, npm-Pakete, Web-Templates...). Diejenigen, die nur von dieser Klasse selbst
-	// gebraucht werden (Backing fuer die Properties unten), sind privat; die von Program.cs direkt
-	// referenzierten bleiben public static.
-	private static readonly string _buildDir = BuildContextPaths.BuildDir(RootDirStatic);
-	private static readonly string _partitionsCsvPath = Path.Combine(RootDirStatic, "partitions.csv");
-
 	// Projektlokales Ausgabeverzeichnis fuer generierte Dateien (wsprotocol_cpp/_ts,
 	// runtimeconfig_cpp/_ts, cmake/, web/ -- alles, was builder selbst erzeugt). Lag bis August 2026
 	// unter dem repo-fremden "c:\repos\generated" (gemeinsames Scratch-Verzeichnis, unveraendert aus
@@ -34,7 +27,7 @@ public sealed class SensactBuildContext : AbstractBuildContext, IBuildContextEsp
 	// gruppiert nach Erzeugungszweck (wsprotocol_cpp/, wsprotocol_ts/, runtimeconfig_cpp/, ...) unter
 	// einem gemeinsamen GeneratedRoot, waehrend STM32 gar kein gemeinsames Wurzelverzeichnis hat
 	// (Core/generated/ und web/generated/ sind bei STM32 voneinander unabhaengig). Deshalb bleibt
-	// GeneratedRoot sensact-spezifisch statt Teil von AbstractBuildContext.
+	// GeneratedRoot sensact-spezifisch statt Teil der geteilten Basisklasse.
 	public static readonly string GeneratedRoot = Path.Combine(RootDirStatic, "generated");
 
 	// Muss NACH GeneratedRoot deklariert sein -- C# initialisiert statische Felder in Deklarationsreihenfolge.
@@ -65,82 +58,10 @@ public sealed class SensactBuildContext : AbstractBuildContext, IBuildContextEsp
 	{
 	}
 
-	protected override IBuilderAppSettings Settings => BuilderOptions.Current;
-
-	public string NpmPackagesDir => BuilderOptions.Current.NpmPackagesDir;
-	public string WebmanagerBestBinaryBuffersSchemaDir => BuilderOptions.Current.WebmanagerBestBinaryBuffersSchemaDir;
+	protected override IBuilderAppSettingsEsp32 Esp32Settings => BuilderOptions.Current;
 
 	public override string WebGeneratedDir => _generatedWebDir;
 	public override string FirmwareGeneratedDir => GeneratedRoot;
-	public string BuildDir => _buildDir;
-	public string PartitionsCsvPath => _partitionsCsvPath;
-
-	public string IdfPath
-	{
-		get
-		{
-			var idfPath = Environment.GetEnvironmentVariable("IDF_PATH");
-			if (string.IsNullOrWhiteSpace(idfPath))
-			{
-				throw new InvalidOperationException("IDF_PATH ist nicht gesetzt -- muss auf die ESP-IDF-Installationswurzel zeigen (enthaelt export.bat).");
-			}
-			if (!File.Exists(Path.Combine(idfPath, "export.bat")))
-			{
-				throw new InvalidOperationException($"IDF_PATH ist auf \"{idfPath}\" gesetzt, aber \"export.bat\" existiert dort nicht -- IDF_PATH korrigieren.");
-			}
-			return idfPath;
-		}
-	}
-
-	// Liest die gecachte board_info.json aus dem Repo-Root frisch (kein gecachtes Feld). Nutzt den
-	// geteilten BoardRecord-Typ (FirmwareBuilder.Common) -- gleiches JSON-Schema wie STM32s
-	// board_info.json (s. BoardRecord-Klassenkommentar dort).
-	public BoardRecord Board
-	{
-		get
-		{
-			if (!File.Exists(BoardInfoJsonPath))
-			{
-				throw new InvalidOperationException(
-					$"Keine board_info.json unter {BoardInfoJsonPath} -- noch kein Board jemals verbunden gewesen " +
-					"(fuer eine Live-Board-Abfrage s. PrepareContextWithRealHardware, fuer Offline-Arbeit s. PrepareContextWithCommandLineArguments).");
-			}
-			return JsonSerializer.Deserialize<BoardRecord>(File.ReadAllText(BoardInfoJsonPath))
-				?? throw new InvalidOperationException($"{BoardInfoJsonPath} konnte nicht gelesen werden.");
-		}
-	}
-
-	// Liest board_info.json direkt aus dem Board-Archiv (nicht aus dem Repo-Root-Cache) -- fuer
-	// [BuildStep]-Methoden, die nur IBuildContextEsp32 (nicht die konkrete SensactBuildContext-
-	// Klasse) entgegennehmen und trotzdem an Felder wollen, die nicht Teil des Interfaces sind
-	// (BoardVersion, Zeitstempel). Board-Archiv-Kopie und Repo-Root-Cache werden von EnsureBoard
-	// immer synchron gehalten.
-	public static BoardRecord LoadBoardRecord(string boardArchiveDir)
-	{
-		var path = Path.Combine(boardArchiveDir, "board_info.json");
-		if (!File.Exists(path))
-		{
-			throw new InvalidOperationException($"Keine board_info.json im Board-Archiv gefunden ({path}).");
-		}
-		return JsonSerializer.Deserialize<BoardRecord>(File.ReadAllText(path))
-			?? throw new InvalidOperationException($"{path} konnte nicht gelesen werden.");
-	}
-
-	// Privat statt oeffentliches IBuildContextEsp32-Property (das gibt es nicht mehr) -- nur noch
-	// intern gebraucht, um BoardUid/ChipId aus dem persistierten board_info.json-Feld "mac"
-	// aufzuloesen. Aufrufer verwenden stattdessen ctx.ChipId.ToEsp32Mac48().
-	private long BoardMac => Board.Mac ?? throw new InvalidOperationException($"{BoardInfoJsonPath}: Feld \"mac\" fehlt (unerwartet fuer ein sensact-Board-Archiv).");
-
-	public override ChipId ChipId => ChipId.FromEsp32Mac48(BoardMac);
-
-	// Identisches Konzept wie bei STM32 (dort: ChipUid) -- der Unterordnername unter BoardsDir, ueber
-	// den BoardArchiveContext.BoardArchiveDir (geteilte Lib) genau wie bei STM32 aufgeloest wird.
-	public override string BoardUid => BoardPaths.BoardDirectoryName(BoardMac);
-	public override string BoardArchiveDir => BoardArchiveContext.BoardArchiveDir(BuilderOptions.Current.BoardStorage, BoardUid);
-
-	public override string? WebAdminPassword => Board.WebAdminPassword;
-	public override IReadOnlyDictionary<string, string> BoardSettings => Board.BoardSettings ?? [];
-	public bool FlashEncryptionKeyBurnedAndActivated => Board.FlashEncryptionKeyBurnedAndActivated ?? false;
 
 	// node_id (aus sensact.json) bestimmt indirekt, welche hal_sensact*.hh eingebunden wird -- DAS
 	// ist der eigentliche Board-Typ (physische Hardware-Familie). NICHT dasselbe wie node_id selbst
@@ -192,7 +113,8 @@ public sealed class SensactBuildContext : AbstractBuildContext, IBuildContextEsp
 
 		var mac = ComputeOfflineMac(nodeId);
 		var board = EnsureBoard(mac, updateLastConnected: false);
-		var boardDir = BoardPaths.BoardSpecificPath(BuilderOptions.Current.BoardStorage.BoardsDir, mac);
+		var boardId = ChipIdEsp32.FromEsp32Mac48(mac).ToBoardUid();
+		var boardDir = BoardArchiveContext.BoardArchiveDir(BuilderOptions.Current.BoardStorage, boardId);
 
 		var sensactConfigPath = Path.Combine(boardDir, "sensact.json");
 		if (!File.Exists(sensactConfigPath))
@@ -215,13 +137,30 @@ public sealed class SensactBuildContext : AbstractBuildContext, IBuildContextEsp
 		return board;
 	}
 
+	// Oeffentlich, damit IBuildContextEsp32-Konsumenten (Program.cs), die nur das Interface (nicht
+	// die konkrete SensactBuildContext-Klasse) entgegennehmen und trotzdem an Felder wollen, die
+	// nicht Teil des Interfaces sind (BoardVersion, Zeitstempel), board_info.json direkt aus dem
+	// Board-Archiv lesen koennen (nicht aus dem Repo-Root-Cache). Board-Archiv-Kopie und
+	// Repo-Root-Cache werden von EnsureBoard immer synchron gehalten.
+	public static BoardRecord LoadBoardRecord(string boardArchiveDir)
+	{
+		var path = Path.Combine(boardArchiveDir, "board_info.json");
+		if (!File.Exists(path))
+		{
+			throw new InvalidOperationException($"Keine board_info.json im Board-Archiv gefunden ({path}).");
+		}
+		return JsonSerializer.Deserialize<BoardRecord>(File.ReadAllText(path))
+			?? throw new InvalidOperationException($"{path} konnte nicht gelesen werden.");
+	}
+
 	// Kernlogik (lesen-oder-mit-Defaults-anlegen, optional last-connected auffrischen) ist
 	// BoardStateStore.EnsureBoard (geteilte Lib) -- hier bleibt nur sensact-Spezifisches: die
-	// Verzeichnisnamens-Konvention (BoardPaths), die Default-Feldwerte, und der Repo-Root-Cache.
+	// Default-Feldwerte und der Repo-Root-Cache. Die Verzeichnisnamens-Konvention selbst ist keine
+	// sensact-Spezialitaet mehr, sondern ChipId.ToBoardUid() (s. ChipIdEsp32).
 	private static BoardRecord EnsureBoard(long mac, bool updateLastConnected)
 	{
-		var boardsDir = BuilderOptions.Current.BoardStorage.BoardsDir;
-		var boardInfoJsonPath = BoardPaths.BoardSpecificPath(boardsDir, mac, "board_info.json");
+		var boardId = ChipIdEsp32.FromEsp32Mac48(mac).ToBoardUid();
+		var boardInfoJsonPath = BoardStateStore.BoardJsonPath(BuilderOptions.Current.BoardStorage, boardId);
 
 		var board = BoardStateStore.EnsureBoard(boardInfoJsonPath, updateLastConnected, _ => NewDefaultBoardRecord(mac));
 

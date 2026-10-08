@@ -10,7 +10,7 @@ namespace Builder;
 internal static class Program
 {
 	public static void Main(string[] args) =>
-		BuildStepRunner.Run(args, a => new SensactBuildContext(a), typeof(Program));
+		BuildStepRunner.Run(args, a => Esp32Toolchain.CreateBuildContext(a, x => new SensactBuildContext(x)), typeof(Program));
 
 	[BuildStep]
 	public static void Info(IBuildContextEsp32 ctx) =>
@@ -46,7 +46,8 @@ internal static class Program
 		var nodeId = Cli.GetRequiredArgValue(ctx.Args, "--nodeId");
 		var board = SensactBuildContext.EnsureBoardForOfflineNodeId(nodeId);
 		var mac = board.Mac ?? throw new InvalidOperationException("EnsureBoardForOfflineNodeId hat kein Mac-Feld gesetzt (unerwartet).");
-		var boardDir = BoardPaths.BoardSpecificPath(ctx.BoardsDir, mac);
+		var boardId = ChipIdEsp32.FromEsp32Mac48(mac).ToBoardUid();
+		var boardDir = BoardArchiveContext.BoardArchiveDir(ctx.BoardStorage, boardId);
 		Console.WriteLine($"Offline-Board fuer NODE_ID \"{nodeId}\" ausgewaehlt (synthetische MAC, kein Board angeschlossen).");
 		Console.WriteLine("              MAC: " + BoardPaths.Mac6Char(mac) + " (decimal: " + mac + ")");
 		Console.WriteLine("Board-Verzeichnis: " + boardDir);
@@ -151,7 +152,6 @@ internal static class Program
 	[BuildStep]
 	public static void GenerateCertificates(IBuildContextEsp32 ctx) => BoardCertificateService.EnsureBoardCertificate(
 		ctx,
-		rootCaCommonName: BuilderOptions.Current.Certificates.RootCaCommonName,
 		hostname: ctx.Hostname,
 		outputFileBaseName: "esp32");
 

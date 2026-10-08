@@ -8,7 +8,7 @@ using FirmwareBuilder.Common;
 
 namespace Builder;
 
-public sealed class BuilderOptions : IBuilderAppSettings
+public sealed class BuilderOptions : IBuilderAppSettingsEsp32
 {
 	public BoardsDirectoryOptions BoardStorage { get; set; } = new();
 
