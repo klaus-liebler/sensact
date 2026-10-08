@@ -9,7 +9,10 @@ import https from "node:https"
 import * as weso from "ws"
 import { visualizer } from 'rollup-plugin-visualizer'
 
-const WEBSOCKET_HOST = "192.168.2.42";
+// Ziel des Websocket-Proxys: das echte Board, oder mit "--mode testserver" (npm run dev:testserver /
+// npm run it) der lokale Testserver (../testserver, Port 3000). Wird in defineConfig gesetzt.
+let WEBSOCKET_HOST = "192.168.2.42";
+const TESTSERVER_HOST = "localhost:3000";
 const WEBSOCKET_USERNAME = "admin";
 const WEBSOCKET_PASSWORD = "password";
 
@@ -22,9 +25,11 @@ let cachedSessionCookie: string | null = null;
 function loginToMicrocontroller(): Promise<string> {
   return new Promise((resolve, reject) => {
     const body = `username=${encodeURIComponent(WEBSOCKET_USERNAME)}&password=${encodeURIComponent(WEBSOCKET_PASSWORD)}`;
+    const [hostname, port] = WEBSOCKET_HOST.split(":");
     const req = https.request(
       {
-        host: WEBSOCKET_HOST,
+        host: hostname,
+        port: port ? Number(port) : 443,
         path: "/login",
         method: "POST",
         rejectUnauthorized: false,
@@ -204,7 +209,10 @@ const wsProxyPlugin = () => {
 // @ts-ignore
 export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
   const isAnalyze = mode === 'analyze';
-  
+  if (mode === 'testserver') {
+    WEBSOCKET_HOST = TESTSERVER_HOST;
+  }
+
   return {
     resolve: {
       dedupe: ['flatbuffers', 'lit-html'],

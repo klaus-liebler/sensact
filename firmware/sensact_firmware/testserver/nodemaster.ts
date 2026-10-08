@@ -1,118 +1,72 @@
 
-import * as flatbuffers from "flatbuffers";
-import { ISender, NamespaceAndHandler } from "@klaus-liebler/websocket_file_testserver/utils";
-import { Namespace, Requests, Responses, RequestWrapper, ResponseWrapper, RequestGetInput, ResponseInputs, ResponseOutputs, RequestSetOutput, ResponseSetOutput, ResponseGetInput, Range } from "@generated/flatbuffers_ts/nodemaster";
+import { ISender, NamespaceAndHandler } from "@klaus-liebler/websocket_file_testserver/utils"
+import { nodemaster } from "@generated/wsprotocol_ts/ws-protocol";
 
 const UINT16_MAX = 0xFFFF;
 
+type Range = { start: number, end: number, name: string };
+
 export class NodemasterHandler extends NamespaceAndHandler {
-    private inputs: Uint16Array;
-    private outputs: Uint16Array;
-    private inputRanges: Array<{start: number, end: number, name: string}>;
-    private outputRanges: Array<{start: number, end: number, name: string}>;
+    // Simuliert einen I2CBusmaster an Busmaster-Index 1 (Bits 15..14 = 01): ein konfigurierter und ein
+    // per Discovery gefundener Chip je Typ, Namensschema wie in der Firmware (busmaster.hh).
+    private static readonly BUSMASTER_BASE = 1 << 14;
+    private inputRanges: Range[] = [
+        { start: NodemasterHandler.BUSMASTER_BASE + 0, end: NodemasterHandler.BUSMASTER_BASE + 16, name: "pca9555@0x20" },
+        { start: NodemasterHandler.BUSMASTER_BASE + 16, end: NodemasterHandler.BUSMASTER_BASE + 32, name: "pca9555@0x21 (discovered)" },
+    ];
+    private outputRanges: Range[] = [
+        { start: NodemasterHandler.BUSMASTER_BASE + 0, end: NodemasterHandler.BUSMASTER_BASE + 16, name: "pca9685@0x41" },
+        { start: NodemasterHandler.BUSMASTER_BASE + 16, end: NodemasterHandler.BUSMASTER_BASE + 32, name: "pca9685@0x42 (discovered)" },
+    ];
+    private outputs = new Map<number, number>();
+    private manualMode = false;
 
     constructor() {
-        super(Namespace.Value);
-        // Simulate 32 inputs/outputs across 2 groups of 16 each
-        this.inputs = new Uint16Array(32);
-        this.outputs = new Uint16Array(32);
-        for (let i = 0; i < this.inputs.length; i++) {
-            this.inputs[i] = 0;
-            this.outputs[i] = 0;
-        }
-        // Define valid ranges: two groups of 16 each
-        this.inputRanges = [
-            {start: 0, end: 16, name: "Input Group 0"},
-            {start: 16, end: 32, name: "Input Group 1"}
-        ];
-        this.outputRanges = [
-            {start: 0, end: 16, name: "Output Group 0"},
-            {start: 16, end: 32, name: "Output Group 1"}
-        ];
+        super(nodemaster.NAMESPACE_ID);
     }
 
-    private sendResponseInputs(sender: ISender) {
-        const b = new flatbuffers.Builder(1024);
-        const rangeOffsets = this.inputRanges.map(({start, end, name}) => {
-            const nameOffset = b.createString(name);
-            return Range.createRange(b, start, end, nameOffset);
-        });
-        const rangesVec = ResponseInputs.createRangesVector(b, rangeOffsets);
-        const resp = ResponseInputs.createResponseInputs(b, rangesVec);
-        b.finish(ResponseWrapper.createResponseWrapper(b, Responses.ResponseInputs, resp));
-        sender.send(Namespace.Value, b);
+    private static toWire(ranges: Range[]) {
+        return ranges.map(r => ({ classId: nodemaster.Range.CLASS_ID, ...r } as const));
     }
 
-    private sendResponseOutputs(sender: ISender) {
-        const b = new flatbuffers.Builder(1024);
-        const rangeOffsets = this.outputRanges.map(({start, end, name}) => {
-            const nameOffset = b.createString(name);
-            return Range.createRange(b, start, end, nameOffset);
-        });
-        const rangesVec = ResponseOutputs.createRangesVector(b, rangeOffsets);
-        const resp = ResponseOutputs.createResponseOutputs(b, rangesVec);
-        b.finish(ResponseWrapper.createResponseWrapper(b, Responses.ResponseOutputs, resp));
-        sender.send(Namespace.Value, b);
-    }
-
-    private sendResponseSetOutput(sender: ISender, index: number, value: number, success: boolean) {
-        const b = new flatbuffers.Builder(256);
-        const resp = ResponseSetOutput.createResponseSetOutput(b, success, index, value);
-        b.finish(ResponseWrapper.createResponseWrapper(b, Responses.ResponseSetOutput, resp));
-        sender.send(Namespace.Value, b);
-    }
-
-
-    public Handle(buffer: flatbuffers.ByteBuffer, sender: ISender) {
+    public Handle(messageTypeId: number, view: DataView, sender: ISender) {
         this.SetSender(sender);
-        const rw = RequestWrapper.getRootAsRequestWrapper(buffer);
-        switch (rw.requestType()) {
-            case Requests.RequestInputs: {
+        switch (messageTypeId) {
+            case nodemaster.RequestInputs.TYPE_ID: {
+                const req = nodemaster.RequestInputs.decode(view, 0);
                 console.info(`Nodemaster: RequestInputs -> ranges=${JSON.stringify(this.inputRanges)}`);
-                this.sendResponseInputs(sender);
+                sender.send(nodemaster.ResponseInputs.encode({ requestId: req.requestId, ranges: NodemasterHandler.toWire(this.inputRanges) }));
                 break;
             }
-            case Requests.RequestOutputs: {
+            case nodemaster.RequestOutputs.TYPE_ID: {
+                const req = nodemaster.RequestOutputs.decode(view, 0);
                 console.info(`Nodemaster: RequestOutputs -> ranges=${JSON.stringify(this.outputRanges)}`);
-                this.sendResponseOutputs(sender);
+                sender.send(nodemaster.ResponseOutputs.encode({ requestId: req.requestId, ranges: NodemasterHandler.toWire(this.outputRanges) }));
                 break;
             }
-            case Requests.RequestSetOutput: {
-                const r = rw.request(new RequestSetOutput());
-                const idx = r.index();
-                const val = r.value();
-                let ok = false;
-                if (idx >= 0 && idx < this.outputs.length) {
-                    this.outputs[idx] = val;
-                    // Loopback: mirror outputs to inputs
-                    if (idx < this.inputs.length) {
-                        this.inputs[idx] = val;
-                    }
-                    ok = true;
-                }
-                console.info(`Nodemaster: RequestSetOutput idx=${idx} value=${val} ok=${ok}`);
-                this.sendResponseSetOutput(sender, idx, val, ok);
+            case nodemaster.RequestSetOutput.TYPE_ID: {
+                const req = nodemaster.RequestSetOutput.decode(view, 0);
+                const ok = this.outputRanges.some(r => req.index >= r.start && req.index < r.end);
+                if (ok) this.outputs.set(req.index, req.value);
+                console.info(`Nodemaster: RequestSetOutput idx=${req.index} value=${req.value} ok=${ok} (manualMode=${this.manualMode})`);
+                sender.send(nodemaster.ResponseSetOutput.encode({ requestId: req.requestId, success: ok, index: req.index, value: req.value }));
                 break;
             }
-            case Requests.RequestGetInput: {
-                const req = rw.request(new RequestGetInput());
-                const index = req.index();
-    
-                var randomValue = Math.floor(Math.random() * 2 * UINT16_MAX); // Simulate a random input index
-                if(randomValue > UINT16_MAX) {
-                    randomValue=0; //50% chance to return 0 to simulate inactive input
-                }
-                this.inputs[index] = randomValue;
-                console.info(`Nodemaster: RequestGetInput -> returning value=${randomValue} from index=${index}`);
-                const b = new flatbuffers.Builder(256);
-                const resp = ResponseGetInput.createResponseGetInput(b, index, randomValue);
-                b.finish(ResponseWrapper.createResponseWrapper(b, Responses.ResponseGetInput, resp));
-                sender.send(Namespace.Value, b);
+            case nodemaster.RequestGetInput.TYPE_ID: {
+                const req = nodemaster.RequestGetInput.decode(view, 0);
+                // Zufallswert, in 50% der Faelle 0 (inaktiver Eingang)
+                const value = Math.random() < 0.5 ? 0 : Math.floor(Math.random() * UINT16_MAX);
+                console.info(`Nodemaster: RequestGetInput -> returning value=${value} from index=${req.index}`);
+                sender.send(nodemaster.ResponseGetInput.encode({ requestId: req.requestId, index: req.index, value }));
                 break;
             }
-            default:
-                // Ignore unknowns
+            case nodemaster.RequestSetMode.TYPE_ID: {
+                const req = nodemaster.RequestSetMode.decode(view, 0);
+                if (!req.queryOnly) this.manualMode = req.manual;
+                console.info(`Nodemaster: RequestSetMode manual=${req.manual} queryOnly=${req.queryOnly} -> manualMode=${this.manualMode}`);
+                sender.send(nodemaster.ResponseMode.encode({ requestId: req.requestId, manual: this.manualMode }));
                 break;
+            }
         }
     }
 }

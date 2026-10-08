@@ -2,6 +2,10 @@
     "compilerOptions": {
       "module": "NodeNext",
       "moduleResolution": "NodeNext",
-      "target": "ESNext"
+      "target": "ESNext",
+      "skipLibCheck": true,
+      // Wie zur Laufzeit (node --preserve-symlinks): die per file: verlinkten Pakete (insb.
+      // websocket_file_testserver) loesen @generated/wsprotocol_ts aus DIESEM Projekt auf.
+      "preserveSymlinks": true
     }
   }

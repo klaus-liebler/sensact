@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "dev": "node --import tsx/esm node_modules/vite/bin/vite.js --host",
-    "wss": "npx ts-node ../testserver/index.ts",
+    "dev:testserver": "node --import tsx/esm node_modules/vite/bin/vite.js --host --mode testserver",
+    "wss": "npm --prefix ../testserver start",
     "build": "tsc && vite build",
     "build:analyze": "tsc && vite build --mode analyze",
     "preview": "vite preview",
-    "it": "concurrently \"npm run wss\" \"npm run dev\""
+    "it": "concurrently \"npm run wss\" \"npm run dev:testserver\""
   },
   "keywords": [],
   "author": "Klaus Liebler, HS Osnabrück",
