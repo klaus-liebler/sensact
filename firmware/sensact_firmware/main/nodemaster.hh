@@ -26,6 +26,8 @@
 
 #include <algorithm>
 #include <iterator>
+#include <atomic>
+#include <map>
 
 
 #define TAG "NODEMSTR"
@@ -71,6 +73,24 @@ namespace sensact
 		iHost *currentHost{nullptr};
 		tms_t currentNow{0}; // das "jetzt" soll bei einem Aufruf konstant gehalten werden
 		char statusMessageBuffer[STATUS_MESSAGE_BUFLEN]{0};
+		// true = Ein-/Ausgaenge werden manuell von der Nodemaster-Webseite gesteuert: Hosts (und damit
+		// alle Sensact-Apps) laufen nicht, empfangene CAN-Nachrichten werden verworfen. Bewusst nicht
+		// persistiert -- nach einem Reboot steuern immer die Apps.
+		std::atomic<bool> manualMode{false};
+		// Letzter von den Hosts gewuenschter Wert je Output. Wird beim Zurueckschalten in den App-Modus
+		// einmal auf die Hardware geschrieben, damit nicht manuell gesetzte Werte haengen bleiben (viele
+		// Apps schreiben nur bei Aenderungen). Nur im NodemasterTask benutzt.
+		std::map<u16, u16> appOutputShadow;
+
+		void ReplayAppOutputs()
+		{
+			for (auto &[id, value] : appOutputShadow)
+			{
+				u16 busmasterIndex = id >> 14;
+				if (busmasterIndex < busmasters->size())
+					busmasters->at(busmasterIndex)->SetOutput(id & 0x3FFF, value);
+			}
+		}
 
 		ErrorCode PublishNodeEvent(tms_t now, eNodeID sourceNode, eNodeEventType event, uint8_t *payload, uint8_t payloadLength)
 		{
@@ -207,14 +227,23 @@ namespace sensact
 
 
 
+			bool wasManual{false};
 			while (true)
 			{
 				currentNow = hal->GetMillisS64();
+				bool manual = manualMode.load();
+				if (wasManual && !manual)
+				{
+					LOGI(TAG, "Switching back to app mode, restoring %u app outputs", (unsigned)appOutputShadow.size());
+					ReplayAppOutputs();
+				}
+				wasManual = manual;
 				ESP_LOGD(TAG, "Before Apploop");
 				hal->BeforeAppLoop();
 				CANMessage message;
 				while (hal->TryReceiveCanMessage(message) == ErrorCode::OK)
 				{
+					if (manual) continue;
 					for (auto &rr : hosts)
 					{
 						this->currentHost = rr;
@@ -224,6 +253,7 @@ namespace sensact
 
 				for (auto &rr : hosts)
 				{
+					if (manual) break;
 					this->currentHost = rr;
 					rr->Loop(*this);
 				}
@@ -298,6 +328,9 @@ namespace sensact
 
 		ErrorCode SetU16Output(u16 id, uint16_t value) override
 		{
+			appOutputShadow[id] = value;
+			if (manualMode)
+				return ErrorCode::OK;
 			u16 busmasterIndex = id >> 14;
 			if (this->busmasters->size() <= busmasterIndex)
 				return ErrorCode::INDEX_OUT_OF_BOUNDS;
@@ -459,6 +492,19 @@ namespace sensact
 				uint8_t buf[32];
 				size_t len = WsProtocol::nodemaster::ResponseGetInput::Encode(resp, buf, sizeof(buf));
 				LOGD(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
+				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+			}
+			case WsProtocol::nodemaster::RequestSetMode::TYPE_ID: {
+				WsProtocol::nodemaster::RequestSetMode::Payload req{};
+				if (!WsProtocol::nodemaster::RequestSetMode::Decode(frame, frameLen, req))
+					return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				if (!req.queryOnly && manualMode.exchange(req.manual) != req.manual)
+					LOGI(TAG, "IO mode switched to %s", req.manual ? "MANUAL (apps stopped)" : "APPS");
+				WsProtocol::nodemaster::ResponseMode::Payload resp{};
+				resp.requestId = req.requestId;
+				resp.manual = manualMode.load();
+				uint8_t buf[32];
+				size_t len = WsProtocol::nodemaster::ResponseMode::Encode(resp, buf, sizeof(buf));
 				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
 			}
 			default:

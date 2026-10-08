@@ -21,12 +21,16 @@ export class NodemasterController extends ScreenController {
     private outputValues: (number | null)[] = Array(32).fill(null);
     private inputSection: Ref<HTMLElement> = createRef();
     private outputSection: Ref<HTMLElement> = createRef();
+    private modeSection: Ref<HTMLElement> = createRef();
+    // true = Ein-/Ausgaenge werden von dieser Seite gesteuert (Sensact-Apps gestoppt), null = noch unbekannt
+    private manualMode: boolean | null = null;
     private lastRequestedInputIndex: number = 0;
     private inputPollingInterval: NodeJS.Timeout | null = null;
     private currentRangeIndex: number = 0;
     private currentOffsetInRange: number = 0;
 
     public Template = () => html`
+        <section ${ref(this.modeSection)}></section>
         <div class="buttons">
             <button class="withsvg" @click=${() => this.requestInputs()}>⟳ Refresh Inputs</button>
             <button class="withsvg" @click=${() => this.requestOutputs()}>⟳ Refresh Outputs</button>
@@ -36,6 +40,20 @@ export class NodemasterController extends ScreenController {
         <h2>Outputs</h2>
         <section ${ref(this.outputSection)}></section>
     `;
+
+    public ModeTemplate = () => html`
+        <div class="buttons">
+            <span>Ein-/Ausgänge gesteuert von:</span>
+            <label><input type="radio" name="nodemaster-mode" .checked=${this.manualMode === false} @change=${() => this.setMode(false)}/> Sensact-Apps</label>
+            <label><input type="radio" name="nodemaster-mode" .checked=${this.manualMode === true} @change=${() => this.setMode(true)}/> dieser Seite (Apps gestoppt)</label>
+        </div>
+    `;
+
+    private renderAll() {
+        if (this.modeSection.value) render(this.ModeTemplate(), this.modeSection.value);
+        if (this.inputSection.value) render(this.InputTableTemplate(), this.inputSection.value);
+        if (this.outputSection.value) render(this.OutputTableTemplate(), this.outputSection.value);
+    }
 
     private getInputRowClass = (idx: number) => {
         const value = this.inputValues[idx];
@@ -62,11 +80,12 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
                 <thead><tr><th>Index</th><th>Value</th><th>Actions</th></tr></thead>
                 <tbody>
                     ${Array.from({length: end - start}, (_, i) => start + i).map(idx => {
-                        return html`<tr><td>${idx}</td><td>${this.outputValues[idx] ?? '-'}</td><td><button @click=${() => this.updateOutput(idx, 0)}>Set 0</button><button style="margin-left: 5px;" @click=${() => this.updateOutput(idx, 1)}>Set 1</button><button style="margin-left: 15px;" @click=${(e: Event) => {
+                        const disabled = this.manualMode !== true;
+                        return html`<tr><td>${idx}</td><td>${this.outputValues[idx] ?? '-'}</td><td><button ?disabled=${disabled} @click=${() => this.updateOutput(idx, 0)}>Set 0</button><button ?disabled=${disabled} style="margin-left: 5px;" @click=${() => this.updateOutput(idx, 1)}>Set 1</button><button ?disabled=${disabled} style="margin-left: 15px;" @click=${(e: Event) => {
                             const input = (e.target as HTMLElement).parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
                             const value = input ? Number(input.value) : 0;
                             this.updateOutput(idx, value);
-                        }}>Set</button><input type="number" min="0" max="65535" value="0" style="width:60px;"/></td></tr>`;
+                        }}>Set</button><input ?disabled=${disabled} type="number" min="0" max="65535" value="0" style="width:60px;"/></td></tr>`;
                     })}
                 </tbody>
             </table>
@@ -115,9 +134,16 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
                 }
                 break;
             }
+            case nodemaster.ResponseMode.TYPE_ID: {
+                const rm = nodemaster.ResponseMode.decode(view, 0);
+                this.manualMode = rm.manual;
+                console.info(`Nodemaster IO mode: ${rm.manual ? 'manual' : 'apps'}`);
+                this.renderAll();
+                break;
+            }
             case nodemaster.ResponseGetInput.TYPE_ID: {
                 const rgi = nodemaster.ResponseGetInput.decode(view, 0);
-                const idx = this.lastRequestedInputIndex;
+                const idx = rgi.index;
                 console.info(`Received input value at index ${idx}: ${rgi.value}`);
 
                 // Update the value in our data store
@@ -143,6 +169,7 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
 
 
     OnFirstStart(): void {
+        this.queryMode();
         this.requestInputs();
         this.requestOutputs();
         this.startInputPolling();
@@ -155,6 +182,16 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
 
     private requestOutputs() {
         const bytes = nodemaster.RequestOutputs.encode({ requestId: 0 });
+        this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
+    }
+
+    private queryMode() {
+        const bytes = nodemaster.RequestSetMode.encode({ requestId: 0, manual: false, queryOnly: true });
+        this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
+    }
+
+    private setMode(manual: boolean) {
+        const bytes = nodemaster.RequestSetMode.encode({ requestId: 0, manual, queryOnly: false });
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
@@ -181,6 +218,7 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
         this.inputPollingInterval = setInterval(() => {
             const rangeCount = this.inputRanges.length;
             const range = this.inputRanges[this.currentRangeIndex];
+            if (!range) return;
             const actualIndex = range.start + this.currentOffsetInRange;
             this.updateInput(actualIndex);
             const rangeLength = range.end - range.start;

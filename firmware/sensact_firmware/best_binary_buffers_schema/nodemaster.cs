@@ -42,6 +42,22 @@ public class RequestGetInput
 	public ushort Index;
 }
 
+// Umschalten (oder mit QueryOnly=true nur Abfragen), ob die Ein-/Ausgaenge von den Sensact-Apps
+// (Manual=false) oder manuell von der Nodemaster-Webseite (Manual=true) gesteuert werden.
+// Antwort ist immer ResponseMode mit dem dann aktuellen Zustand.
+[BinaryMessage(MessageKind.Request)]
+public class RequestSetMode
+{
+	public bool Manual;
+	public bool QueryOnly;
+}
+
+[BinaryMessage(MessageKind.Response)]
+public class ResponseMode
+{
+	public bool Manual;
+}
+
 [BinaryMessage(MessageKind.Response)]
 public class ResponseOutputs
 {

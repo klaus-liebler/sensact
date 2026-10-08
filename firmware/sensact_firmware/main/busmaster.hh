@@ -5,6 +5,7 @@
 #include <freertos/task.h>
 #include <array>
 #include <vector>
+#include <algorithm>
 #include <sensact_commons.hh>
 #include <hal.hh>
 #include <sensact_logger.hh>
@@ -123,6 +124,9 @@ namespace sensact
 		// cOnOff, die SetOutput() bei jedem Loop-Tick fuer jeden Output erneut aufrufen, das Log mit
 		// identischen Werten fluten.
 		std::vector<int32_t> lastOutputValue;
+		// parallel zu pca9555_vec/pca9685_vec: true = per DiscoverAdditionalDevices() gefunden, nicht konfiguriert
+		std::vector<bool> discoveredPca9555;
+		std::vector<bool> discoveredPca9685;
 
 		static void StaticTask(void *pvParameters)
 		{
@@ -163,6 +167,51 @@ namespace sensact
 			}
 		}
 
+		// Die in board_init.hh konfigurierten Chips sind das Minimum (und bleiben vorne in den Vektoren,
+		// damit sich die Indizes der Apps nicht verschieben). Alle zusaetzlich auf dem Bus gefundenen
+		// PCA9555 (0x20..0x27) und PCA9685 (0x40..0x7F ohne ALL_CALL-Adresse 0x70) werden hinten
+		// angehaengt und sind damit ueber den Nodemaster (Webseite) ebenfalls nutzbar. Laeuft vor dem
+		// Start des Tasks, die Vektoren aendern sich danach nicht mehr.
+		// Annahme: Auf 0x40..0x7F haengen ausschliesslich PCA9685.
+		void DiscoverAdditionalDevices()
+		{
+			const uint8_t allCallAddress = PCA9685::ALL_CALL >> 1;
+			for (uint8_t addr = PCA9555::DEVICE_ADDRESS_BASE; addr < PCA9555::DEVICE_ADDRESS_BASE + 8; addr++)
+			{
+				bool known = std::any_of(pca9555_vec.begin(), pca9555_vec.end(), [addr](PCA9555::M *d){ return d->GetDeviceAddress() == addr; });
+				if (known || this->i2c_master_bus->ProbeAddress(addr) != ErrorCode::OK) continue;
+				auto *dev = new PCA9555::M((PCA9555::Device)addr);
+				if (dev->Setup(this->i2c_master_bus) != ErrorCode::OK) { delete dev; continue; }
+				LOGI(TAG, "Discovered additional PCA9555 at 0x%02X", addr);
+				pca9555_vec.push_back(dev);
+				discoveredPca9555.push_back(true);
+			}
+			for (uint8_t addr = PCA9685::DEVICE_ADDRESS_BASE; addr < 0x80; addr++)
+			{
+				if (addr == allCallAddress) continue;
+				bool known = std::any_of(pca9685_vec.begin(), pca9685_vec.end(), [addr](PCA9685::M *d){ return d->GetDeviceAddress() == addr; });
+				if (known || this->i2c_master_bus->ProbeAddress(addr) != ErrorCode::OK) continue;
+				auto *dev = new PCA9685::M((PCA9685::Device)addr, PCA9685::InvOutputs::NotInvOutputs, PCA9685::OutputDriver::TotemPole, PCA9685::OutputNotEn::OutputNotEn_0, PCA9685::Frequency::Frequency_400Hz);
+				if (dev->Setup(this->i2c_master_bus) != ErrorCode::OK) { delete dev; continue; }
+				LOGI(TAG, "Discovered additional PCA9685 at 0x%02X", addr);
+				pca9685_vec.push_back(dev);
+				discoveredPca9685.push_back(true);
+			}
+			lastOutputValue.resize(pca9685_vec.size() * 16, -1);
+		}
+
+		static void AppendRanges(u16 twoMostSignificantBits, const char *type, const std::vector<uint8_t> &addresses, const std::vector<bool> &discovered, std::vector<sensact::Range> &ranges)
+		{
+			twoMostSignificantBits &= 0xC000; // only two MSB are relevant
+			for (size_t i = 0; i < addresses.size(); i++)
+			{
+				char name[32];
+				snprintf(name, sizeof(name), "%s@0x%02X%s", type, addresses[i], discovered[i] ? " (discovered)" : "");
+				u16 start = twoMostSignificantBits + i * 16;
+				ranges.push_back({start, (u16)(start + 16), name});
+			}
+		}
+
 	public:
 		I2CBusmaster(
 			const char * name,
@@ -170,7 +219,7 @@ namespace sensact
 			std::array<gpio_num_t, 3> interruptlines,
 			std::vector<PCA9555::M *> pca9555_vec,
 			std::vector<PCA9685::M *> pca9685_vec) : name(name), i2c_port_index(i2c_port_index), i2c_master_bus(nullptr), interruptlines(interruptlines), pca9555_vec(pca9555_vec), pca9685_vec(pca9685_vec),
-			lastOutputValue(pca9685_vec.size() * 16, -1)
+			lastOutputValue(pca9685_vec.size() * 16, -1), discoveredPca9555(pca9555_vec.size(), false), discoveredPca9685(pca9685_vec.size(), false)
 		{
 		}
 
@@ -204,6 +253,7 @@ namespace sensact
 					LOGGER::Journal(messagecodes::C::I2C_SETUP_DEVICE, pca9555->GetDeviceAddress());
 				}
 			}
+			DiscoverAdditionalDevices();
 
 			xTaskCreate(I2CBusmaster::StaticTask, "I2CBusmaster::Task", 4096 * 4, (void*)this, 6, nullptr);
 			return ErrorCode::OK;
@@ -211,27 +261,17 @@ namespace sensact
 
 		ErrorCode AppendValidInputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)
 		{
-			twoMostSignificantBits&=0xC000; //only two MSB are relevant
-			u16 start=0;
-			u16 end=0;
-			for(size_t i=0;i<this->pca9555_vec.size();i++){
-				start=twoMostSignificantBits + i*16;
-				end=start+16;
-				ranges.push_back({start,end,"pca9555"});
-			}
+			std::vector<uint8_t> addresses;
+			for (auto *d : pca9555_vec) addresses.push_back(d->GetDeviceAddress());
+			AppendRanges(twoMostSignificantBits, "pca9555", addresses, discoveredPca9555, ranges);
 			return ErrorCode::OK;
 		}
 
 		ErrorCode AppendValidOutputRanges(u16 twoMostSignificantBits, std::vector<sensact::Range> &ranges)
 		{
-			twoMostSignificantBits&=0xC000; //only two MSB are relevant
-			u16 start=0;
-			u16 end=0;
-			for(size_t i=0;i<this->pca9685_vec.size();i++){
-				start=twoMostSignificantBits+i*16;
-				end=start+16;
-				ranges.push_back({start,end,"pca9685"});
-			}
+			std::vector<uint8_t> addresses;
+			for (auto *d : pca9685_vec) addresses.push_back(d->GetDeviceAddress());
+			AppendRanges(twoMostSignificantBits, "pca9685", addresses, discoveredPca9685, ranges);
 			return ErrorCode::OK;
 		}
 
