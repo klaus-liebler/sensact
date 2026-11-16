@@ -227,7 +227,7 @@ namespace Klli.Sensact.Config
             //Einzelspot
             AddPWMApplication(SNSCT_L1_KTCH_UP, ApplicationId.PWM___L1_KTCH_S2, "Einzelspot Spüle", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 4 } );
             //Wandlampen
-            AddPWMApplication(SNSCT_L1_KTCH_UP, ApplicationId.PWM___L1_KTCH_W1, "Wandlampen", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 5 }, 1000*60*360, 150 ); //hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
+            AddPWMApplication(SNSCT_L1_KTCH_UP, ApplicationId.PWM___L1_KTCH_W1, "Wandlampen", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 5 }, 1000*60*360, MIN_DIM_LEVEL_5_PERCENT_PWM ); //hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
 
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L1_KTCH_B11, BUS0 + I2C + 29, ApplicationId.POWIT_L1_KTCH_C1);//80
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L1_KTCH_B12, BUS0 + I2C + 28, ApplicationId.POWIT_LX_BACK_W1);//78
@@ -248,7 +248,7 @@ namespace Klli.Sensact.Config
             AddOneDimButton(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B43, SensactUp02.IO7, ApplicationId.PWM___L1_LVNG_W1);
             AddOneDimButton(SNSCT_L1_LVNG_UP, ApplicationId.PUSHB_L1_LVNG_B44, SensactUp02.IO8, ApplicationId.PWM___L1_LVNG_C2);
             AddPWMApplication(SNSCT_L1_LVNG_UP, ApplicationId.PWM___L1_LVNG_S, "Spots", ApplicationId.STDBY_L2_CORR_24V, new HashSet<ushort> { BUS0 + I2C + 0, BUS0 + I2C + 1, BUS0 + I2C + 2, BUS0 + I2C + 3, BUS0 + I2C + 4, BUS0 + I2C + 5, BUS0 + I2C + 6, BUS0 + I2C + 7, BUS0 + I2C + 8, BUS0 + I2C + 9, BUS0 + I2C + 10, BUS0 + I2C + 11 } );
-            AddPWMApplication(SNSCT_L1_LVNG_UP, ApplicationId.PWM___L1_LVNG_W1, "Wandleuchten", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 12 }, 1000 * 60 * 360, 150);//hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
+            AddPWMApplication(SNSCT_L1_LVNG_UP, ApplicationId.PWM___L1_LVNG_W1, "Wandleuchten", ApplicationId.STDBY_L0_TECH_48V, new HashSet<ushort> { BUS0 + I2C + 12 }, 1000 * 60 * 360, MIN_DIM_LEVEL_5_PERCENT_PWM);//hohes minimales DIM-Level, um "Verschmierungen" durch lange Leitungen zu kompensieren
             //TODO: C2 soll mal eine RGBW-Applikation werden und es braucht dann 3 oder 4 Outputs
             AddPWMApplication(SNSCT_L1_LVNG_UP, ApplicationId.PWM___L1_LVNG_C2, "Lampe Deko?", ApplicationId.STDBY_L2_CORR_24V, new HashSet<ushort> { BUS0 + I2C + 13 /*14+15?*/ } );
             //Erinnerung: Treppenstufenbeleuchtung und Wandlampen im Treppenhaus werden auch von diesem SensactUP gesteuert

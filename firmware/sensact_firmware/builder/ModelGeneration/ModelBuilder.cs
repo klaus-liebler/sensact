@@ -8,6 +8,10 @@ namespace Klli.Sensact.Common
     {
         protected Model.Common.Model model;
         const ushort DEFAULT_MIN_DIM_LEVEL=512;
+        // Helligkeitsskala von cSinglePWM: 0..65535, am Ausgang level2pwm[level >> 8]
+        // (s. sensact-applicationmodel/apps/singlepwm.cc). level2pwm[59] = 3247 = 4,95 % PWM --
+        // naechster Tabellenwert an 5 %.
+        protected const ushort MIN_DIM_LEVEL_5_PERCENT_PWM = 59 * 256;
         public ModelBuilder(string name){
             model=new Model.Common.Model(name);
 

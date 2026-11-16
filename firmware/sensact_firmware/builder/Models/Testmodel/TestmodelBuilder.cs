@@ -51,7 +51,7 @@ namespace Klli.Sensact.Config
             AddPowIt(NODE_HS, ApplicationId.POWIT_X3_XX1_11, "drittes Licht", BUS0+I2C+2, 5000);//drittes Licht
             AddPowIt(NODE_HS, ApplicationId.POWIT_X1_XX2_12, "viertes Licht", BUS0+I2C+3, 5000);//viertes Licht
             AddBlindApplication(NODE_HS, ApplicationId.BLIND_X2_XX3_13, "Test-Rollade", BUS0+I2C+4, BUS0+I2C+5, RelayInterlockMode.R1_DOWN__R2_POWER, 8, 5);
-            AddPWMApplication(NODE_HS, ApplicationId.PWM___X3_XX4_14, "Dimmbares Licht", ApplicationId.STDBY_X1_XX1_15, new HashSet<ushort>{BUS0+I2C+6}, 5000, 20, 255);
+            AddPWMApplication(NODE_HS, ApplicationId.PWM___X3_XX4_14, "Dimmbares Licht", ApplicationId.STDBY_X1_XX1_15, new HashSet<ushort>{BUS0+I2C+6}, 5000, MIN_DIM_LEVEL_5_PERCENT_PWM, 65535);
             AddPowIt(NODE_HS, ApplicationId.STDBY_X1_XX1_15, "Standby für die PWMApplication", BUS0+I2C+7, 10000);//ist der Standny für die PWMApplication
             AddSound(NODE_HS, ApplicationId.SOUND_X2_XX2_0, "Soundgenerator", 20, 1);
 
