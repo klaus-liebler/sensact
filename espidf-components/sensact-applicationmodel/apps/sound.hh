@@ -23,7 +23,11 @@ namespace sensact::apps
 		uint16_t highVolumeEndQuarterHour{0};
 
 		uint8_t ComputeAutomaticVolume() const;
+		void Play(iSensactContext *ctx, uint8_t volume);
 	public:
+		// true, wenn quarterHour (0..95) im "lauten" Zeitfenster [start, end) liegt. Oeffentlich und
+		// statisch, damit die Fensterlogik ohne echte Uhrzeit testbar ist.
+		static bool IsHighVolumePeriod(uint16_t quarterHour, uint16_t start, uint16_t end);
 		eAppType GetAppType() override;
 		eAppCallResult Setup(iSensactContext *ctx) override;
 		eAppCallResult Loop(iSensactContext *ctx) override;

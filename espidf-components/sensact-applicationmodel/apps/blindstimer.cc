@@ -23,12 +23,19 @@ namespace sensact::apps
 		return eAppType::BLITIM;
 	}
 
+	// TODO: naechsten Zeitpunkt aus sunsetsunrise::NextSunriseAndSunset + fixedOffset +
+	// Zufallsanteil berechnen (s. Kommentar zu BlindsTimerApplication in
+	// web-components-sensact/sensactapps_base.ts). Dafuer braucht iSensactContext erst Zugriff
+	// auf die Wanduhrzeit (s. firmware/sensact_firmware/docs/known-issues.md, T2/T3). Bis dahin:
+	// nie ausloesen --
+	// vorher stand hier 0, d.h. "laengst faellig", und Loop() sendete in JEDEM Durchlauf UP und
+	// DOWN.
 	void cBlindsTimer::UpdateClosing(size_t i){
-
+		this->nextClosings[i] = sensact::magic::TIME_MAX;
 	}
 
 	void cBlindsTimer::UpdateOpening(size_t i){
-		
+		this->nextOpenings[i] = sensact::magic::TIME_MAX;
 	}
 
 	eAppCallResult cBlindsTimer::Setup(iSensactContext *ctx)
@@ -47,7 +54,7 @@ namespace sensact::apps
 		for(size_t i =0; i<this->nextOpenings.size(); i++){
 			tms_t t = nextOpenings[i];
 			if(ctx->Now()>t){
-				if(this->timerActive)ctx->SendUPCommand(this->id, false);
+				if(this->timerActive)ctx->SendUPCommand((*this->blindTargets)[i], false);
 				UpdateOpening(i);
 			}
 		}
@@ -55,7 +62,7 @@ namespace sensact::apps
 		for(size_t i =0; i<this->nextClosings.size(); i++){
 			tms_t t = nextClosings[i];
 			if(ctx->Now()>t){
-				if(this->timerActive)ctx->SendDOWNCommand(this->id, false);
+				if(this->timerActive)ctx->SendDOWNCommand((*this->blindTargets)[i], false);
 				UpdateClosing(i);
 			}
 		}

@@ -1,6 +1,6 @@
 #pragma once
 #include "cApplication.hh"
-#define TAG "ROTENC"
+#define TAG "FINGR"
 #include <sensact_logger.hh>
 
 namespace sensact::apps
@@ -44,7 +44,7 @@ namespace sensact::apps
 		}
 
 		void NotifyFingerDetected(int action){
-			fireEvent=target[action%3];
+			fireEvent=target[(unsigned)action%3];
 		}
 	};
 }

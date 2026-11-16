@@ -20,16 +20,22 @@ namespace sensact::apps
 	eAppCallResult cOnOff::Setup(iSensactContext *ctx)
 	{
 		ctx->SetU16Output(this->relay, sensact::magic::INACTIVE);
+		this->outputActive = false;
 		return eAppCallResult::OK;
 	}
 
 	eAppCallResult cOnOff::Loop(iSensactContext *ctx)
 	{
-		if (autoOffCalc < ctx->Now())
+		const bool active = autoOffCalc > ctx->Now(); // gleiche Bedingung wie in FillStatus
+		// Ausgang bewusst in jedem Durchlauf schreiben (idempotent; heilt einen evtl. von aussen
+		// verfaelschten Ausgang), aber nur eine echte Zustandsaenderung als OK_CHANGED melden --
+		// sonst veroeffentlicht cApplicationHost den neuen Zustand erst beim naechsten regulaeren
+		// Status-Durchlauf.
+		ctx->SetU16Output(relay, active ? sensact::magic::ACTIVE : sensact::magic::INACTIVE);
+		if (active != this->outputActive)
 		{
-			ctx->SetU16Output(relay, sensact::magic::INACTIVE);
-		}else{
-			ctx->SetU16Output(relay, sensact::magic::ACTIVE);
+			this->outputActive = active;
+			return eAppCallResult::OK_CHANGED;
 		}
 		return eAppCallResult::OK;
 	}
@@ -62,16 +68,14 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnOFFCommand called", N());
 	}
 
+	// Heartbeat einer abhaengigen App (z.B. cSinglePWM fuer ihr Standby-Netzteil): "ich brauche
+	// dich noch mindestens fuer ...". Darf eine bereits laengere Einschaltdauer (z.B. manuell
+	// dauerhaft eingeschaltet) nie verkuerzen.
 	void cOnOff::OnHEARTBEATCommand(uint32_t sender, iSensactContext *ctx)
 	{
-
-		if(autoOffCfg==0){
-			this->autoOffCalc=ctx->Now()+sensact::magic::HEARTBEAT_STANDBY_RECEIVER;
-		}
-		else{
-			this->autoOffCalc=ctx->Now()+autoOffCfg;
-		}
-		LOGI(TAG, "%s OnHEARTBEATCommand called ", N());
+		const tms_t requested = ctx->Now() + (autoOffCfg == 0 ? sensact::magic::HEARTBEAT_STANDBY_RECEIVER : autoOffCfg);
+		this->autoOffCalc = std::max(this->autoOffCalc, requested);
+		LOGD(TAG, "%s OnHEARTBEATCommand called ", N());
 	}
 
 	void cOnOff::OnTOGGLE_SPECIALCommand(iSensactContext *ctx)

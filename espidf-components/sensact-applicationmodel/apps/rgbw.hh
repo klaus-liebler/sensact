@@ -28,11 +28,12 @@ class cRgbw: public cApplication
 		tms_t lastHeartbeatToStandbycontroller;
 		size_t lastColorIndex;
 		Color lastColor{0,0,0,0};
+		Color lastOnColor{0,0,0,0}; // zuletzt gezeigte Farbe != schwarz, fuer TOGGLE
 		ePowerState state;
 		bool changeRecorded;
-		
+
 		tms_t autoOffCalc;
-		void showColorOfIndex(iSensactContext*, uint8_t);
+		void showColorOfIndex(iSensactContext*, size_t);
 		void showColorOfRGBW(iSensactContext*, Color c);
 		void switchOff(iSensactContext*);
 

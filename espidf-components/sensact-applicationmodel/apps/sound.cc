@@ -52,17 +52,30 @@ namespace sensact::apps
 			return (uint8_t)(highVolume >> 8);
 		}
 		uint16_t quarterHour = localTimeResult->tm_hour * 4 + localTimeResult->tm_min / 15;
-		bool isHighVolumePeriod;
-		if (highVolumeStartQuarterHour <= highVolumeEndQuarterHour)
-		{
-			isHighVolumePeriod = quarterHour >= highVolumeStartQuarterHour && quarterHour < highVolumeEndQuarterHour;
-		}
-		else
-		{
-			// Fenster geht ueber Mitternacht (z.B. "hoch" von 22:00 bis 06:00)
-			isHighVolumePeriod = quarterHour >= highVolumeStartQuarterHour || quarterHour < highVolumeEndQuarterHour;
-		}
+		bool isHighVolumePeriod = IsHighVolumePeriod(quarterHour, highVolumeStartQuarterHour, highVolumeEndQuarterHour);
 		return (uint8_t)((isHighVolumePeriod ? highVolume : lowVolume) >> 8);
+	}
+
+	// [start, end) in Viertelstunden; start > end = Fenster ueber Mitternacht; start == end = leer
+	bool cSound::IsHighVolumePeriod(uint16_t quarterHour, uint16_t start, uint16_t end)
+	{
+		if (start <= end)
+		{
+			return quarterHour >= start && quarterHour < end;
+		}
+		// Fenster geht ueber Mitternacht (z.B. "hoch" von 22:00 bis 06:00)
+		return quarterHour >= start || quarterHour < end;
+	}
+
+	// SOUNDS[0] ist "kein Sound" (nullptr) -- nie an die HAL durchreichen
+	void cSound::Play(iSensactContext *ctx, uint8_t volume)
+	{
+		if (SOUNDS[sound] == nullptr)
+		{
+			ctx->StopSound();
+			return;
+		}
+		ctx->PlayMP3(this->muted ? 0 : volume, SOUNDS[sound], SONGS_LEN[sound]);
 	}
 	eAppCallResult cSound::Loop(iSensactContext *ctx)
 	{
@@ -88,16 +101,16 @@ namespace sensact::apps
 		if (signal >= sizeof(SOUNDS) / sizeof(uint8_t *))
 			signal = 0;
 		this->sound = signal;
-		ctx->PlayMP3(this->muted ? 0 : ComputeAutomaticVolume(), SOUNDS[sound], SONGS_LEN[sound]);
-		LOGI(TAG, "OnTOGGLECommand plays sound %d at automatic (Tag/Nacht) volume", sound);
+		Play(ctx, ComputeAutomaticVolume());
+		LOGI(TAG, "OnTOGGLECommand plays sound %d at automatic (Tag/Nacht) volume", (int)sound);
 	}
 	void cSound::OnSET_SIGNALCommand(uint16_t signal, iSensactContext *ctx)
 	{
 		if (signal >= sizeof(SOUNDS) / sizeof(uint8_t *))
 			signal = 0;
 		this->sound = signal;
-		ctx->PlayMP3(this->muted?0:this->currentVolume>>8, SOUNDS[sound], SONGS_LEN[sound]);
-		LOGI(TAG, "Set Sound to %d", sound);
+		Play(ctx, this->currentVolume >> 8);
+		LOGI(TAG, "Set Sound to %d", (int)sound);
 	}
 
 	void cSound::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx){

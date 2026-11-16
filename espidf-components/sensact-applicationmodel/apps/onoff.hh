@@ -9,6 +9,7 @@ namespace sensact::apps
 		const InOutId relay;
 		tms_t autoOffCfg{sensact::magic::TIME_MAX};
 		tms_t autoOffCalc{sensact::magic::TIME_MAX};
+		bool outputActive{false}; // zuletzt geschriebener Ausgangszustand, fuer OK_CHANGED
 	public:
 		eAppType GetAppType() override;
 		eAppCallResult Setup(iSensactContext *ctx) override;

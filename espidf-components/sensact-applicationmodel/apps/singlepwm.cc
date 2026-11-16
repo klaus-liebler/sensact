@@ -9,19 +9,18 @@ namespace sensact::apps
 {
 	constexpr int MAXIMUM_LEVEL = UINT16_MAX;
 	constexpr tms_t TIME_TO_FORGET_DIM_DIRECTION = 5000;
-	// Vorher: fixe Schrittweite von 32*256 PRO Loop()-Aufruf (angenommen alle 100ms, s.
-	// NodemasterTask) -- das kombiniert zwei Probleme: (1) die tatsaechliche Fade-Dauer haengt
-	// von der (nicht garantierten) Taktung von Loop() ab, nicht von echter Zeit, (2) bei einem
-	// verzoegerten Loop()-Aufruf (z.B. durch CAN-Last im selben Task) wird der Sprung trotzdem
-	// nur um den fixen Betrag gemacht -- der Fade dauert dann laenger als beabsichtigt, statt
-	// den verpassten Fortschritt aufzuholen. Jetzt zeitbasiert: dieselbe Rate (Einheiten/ms), aber
-	// multipliziert mit der tatsaechlich seit dem letzten Loop()-Aufruf vergangenen Zeit.
+	// Fade-Geschwindigkeit, wenn sich targetLevel sprunghaft aendert (Ein/Aus, Slider, ...):
+	// zeitbasiert (Einheiten/ms * tatsaechlich vergangene Zeit), damit die Fade-Dauer nicht von
+	// der (nicht garantierten) Taktung von Loop() abhaengt. Voller Bereich in ~800 ms.
 	constexpr double DIM_RATE_PER_MS = (32.0 * 256.0) / 100.0;
-/**
- * 
- */
+	// Geschwindigkeit beim Dimmen per Gedrueckthalten (UP/DOWN/START ... STOP): voller Bereich
+	// (0..65535) in AUTO_DIM_FULL_RANGE_MS. Frueher: +-1 pro Loop()-Aufruf -- stammte noch aus der
+	// Zeit, als die Helligkeit 0..255 lief, und war nach der Umstellung auf 0..65535 praktisch
+	// nicht mehr wahrnehmbar (voller Bereich in ~20 min).
+	constexpr tms_t AUTO_DIM_FULL_RANGE_MS = 5000;
+	constexpr double AUTO_DIM_RATE_PER_MS = (double)MAXIMUM_LEVEL / AUTO_DIM_FULL_RANGE_MS;
 
-
+	// Wahrnehmungsangepasste Kennlinie: Index = level >> 8
 	constexpr const uint16_t level2pwm[256] = {
 		0, 655, 657, 659, 662, 666, 672, 679,
 		687, 696, 707, 719, 733, 748, 764, 782,
@@ -55,27 +54,17 @@ namespace sensact::apps
 		53353, 53854, 54358, 54864, 55373, 55884, 56398, 56915,
 		57434, 57956, 58480, 59007, 59537, 60069, 60604, 61141,
 		61681, 62224, 62769, 63317, 63868, 64421, 64977, 65535,
-		};
-		
-	enum class ePWMState : uint8_t
-	{
-		CONSTANT,
-		DIM_UP,
-		DIM_DOWN,
-		GOTO_TARGET,
-		SINGLE_BUTTON_MODE
 	};
 
 	cSinglePWM::cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, uint16_t minimalLevel, uint16_t initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController) :
-		cApplication(id), 
-		pwmOutputs(pwmOutputs), 
-		minimalLevel(minimalLevel), 
-		storedLevel(initialLevel), 
-		autoOffCfg(autoOffMsecs), 
+		cApplication(id),
+		pwmOutputs(pwmOutputs),
+		minimalLevel(minimalLevel),
+		storedLevel(initialLevel),
+		autoOffCfg(autoOffMsecs),
 		idOfStandbyController(idOfStandbyController),
 		targetChangedFlag(false)
 	{
-		
 	}
 
 	eAppType cSinglePWM::GetAppType()
@@ -83,14 +72,27 @@ namespace sensact::apps
 		return eAppType::PWM;
 	}
 
+	// Kleinste Helligkeit, die als "an" gilt (minimalLevel 0 ist erlaubt, 0 selbst heisst aber "aus")
+	int cSinglePWM::LowestOnLevel() const
+	{
+		return std::max(1, (int)minimalLevel);
+	}
+
+	// Helligkeit beim (Wieder-)Einschalten: die zuletzt eingestellte; 0 kann es nur durch eine
+	// Konfiguration mit initialLevel=0 geben -- dann voll statt "Einschalten tut nichts".
+	uint16_t cSinglePWM::LevelForSwitchOn() const
+	{
+		return storedLevel != 0 ? storedLevel : MAXIMUM_LEVEL;
+	}
+
 	void cSinglePWM::OnONCommand(uint32_t autoReturnToOffMsecs, iSensactContext *ctx)
 	{
-		SetTargetAbsolute(storedLevel, ctx);
+		SetTargetAbsolute(LevelForSwitchOn(), ctx);
 		if (autoReturnToOffMsecs != 0)
 		{
 			autoOffCalc = ctx->Now() + autoReturnToOffMsecs;
 		}
-		LOGI(TAG, "%s OnONCommand called resulting in targetLevel %d, autoOff @ %lld", N(), targetLevel, autoOffCalc);
+		LOGI(TAG, "%s OnONCommand called resulting in targetLevel %d, autoOff @ %lld", N(), targetLevel, (long long)autoOffCalc);
 	}
 
 	void cSinglePWM::OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx)
@@ -100,14 +102,14 @@ namespace sensact::apps
 		{
 			autoOnCalc = ctx->Now() + autoReturnToOnMsecs;
 		}
-		LOGI(TAG, "%s OnOFFCommand called resulting in {'targetLevel':%d, 'storedLevel':%d, 'autoOn':%lld}", N(), targetLevel, storedLevel, autoOnCalc);
+		LOGI(TAG, "%s OnOFFCommand called resulting in {'targetLevel':%d, 'storedLevel':%d, 'autoOn':%lld}", N(), targetLevel, storedLevel, (long long)autoOnCalc);
 	}
 
 	void cSinglePWM::OnTOGGLECommand(iSensactContext *ctx)
 	{
 		if (targetLevel == 0)
 		{
-			SetTargetAbsolute(storedLevel, ctx);
+			SetTargetAbsolute(LevelForSwitchOn(), ctx);
 		}
 		else
 		{
@@ -116,19 +118,21 @@ namespace sensact::apps
 		LOGD(TAG, "%s OnTOGGLECommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
+	// 0 = aus (storedLevel bleibt erhalten), sonst mindestens minimalLevel
 	void cSinglePWM::OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx)
 	{
 		SetTargetAbsolute(target, ctx);
 		LOGD(TAG, "%s OnSET_VERTICAL_TARGETCommand called with target %d resulting in targetLevel %d", N(), target, targetLevel);
 	}
-	
-	// gesendet vom Inkrementalgeber
+
+	// gesendet vom Inkrementalgeber. Komfortfunktion bei ausgeschalteter Lampe: Drehen nach
+	// rechts schaltet mit minimaler, nach links mit maximaler Helligkeit ein.
 	void cSinglePWM::OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx)
 	{
 		if (targetLevel == 0)
 		{
 			if (step > 0)
-				SetTargetAbsolute(minimalLevel, ctx);
+				SetTargetAbsolute(LowestOnLevel(), ctx);
 			else
 				SetTargetAbsolute(MAXIMUM_LEVEL, ctx);
 		}
@@ -139,12 +143,13 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnSTEP_VERTICALCommand called with step %d resulting in targetLevel %d", N(), step, targetLevel);
 	}
 
-	// gesendet vom 1BP
+	// gesendet vom 1BP beim Gedrueckthalten: dimmt abwechselnd hoch und runter; nach
+	// TIME_TO_FORGET_DIM_DIRECTION ohne Dimmen beginnt es wieder mit "hoch".
 	void cSinglePWM::OnSTARTCommand(iSensactContext *ctx)
 	{
 		if (this->lastAutoDimSignal + TIME_TO_FORGET_DIM_DIRECTION < ctx->Now())
 		{
-			this->autoDimPreset = 1;
+			this->autoDimPreset = +1;
 		}
 		else
 		{
@@ -155,7 +160,7 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnSTARTCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
-	// gesendet vom 1PB
+	// gesendet vom 1PB/2PB beim Loslassen
 	void cSinglePWM::OnSTOPCommand(iSensactContext *ctx)
 	{
 		StopMove(ctx);
@@ -168,7 +173,7 @@ namespace sensact::apps
 		MoveInDirection(+1, ctx);
 		LOGI(TAG, "%s OnUPCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
-	
+
 	void cSinglePWM::OnDOWNCommand(uint8_t forced, iSensactContext *ctx)
 	{
 		(void)(forced);
@@ -176,20 +181,35 @@ namespace sensact::apps
 		LOGI(TAG, "%s OnDOWNCommand called resulting in targetLevel %d", N(), targetLevel);
 	}
 
-
-	void cSinglePWM::SetTargetAbsolute(uint16_t level, iSensactContext *ctx)
+	// Jede bewusste Bedienung verwirft ein evtl. noch ausstehendes Auto-On (OFF mit
+	// autoReturnToOnMsecs) -- sonst schaltet sich die Lampe spaeter scheinbar grundlos ein -- und
+	// startet die Auto-Off-Zeit neu.
+	void cSinglePWM::RestartTimersAfterUserAction(iSensactContext *ctx)
 	{
-		this->targetLevel = std::max(level, minimalLevel);
-		this->storedLevel = targetLevel;
+		autoOnCalc = sensact::magic::TIME_MAX;
 		if (autoOffCfg != 0)
 		{
 			autoOffCalc = ctx->Now() + autoOffCfg;
 		}
+	}
+
+	void cSinglePWM::SetTargetAbsolute(uint16_t level, iSensactContext *ctx)
+	{
+		if (level == 0)
+		{
+			SetOff(ctx);
+			return;
+		}
+		this->targetLevel = std::max((int)level, LowestOnLevel());
+		this->storedLevel = targetLevel;
+		RestartTimersAfterUserAction(ctx);
 		targetChangedFlag.store(true);
 	}
 
 	void cSinglePWM::SetOff(iSensactContext *ctx)
 	{
+		autoOnCalc = sensact::magic::TIME_MAX;
+		autoDim = 0;
 		if(this->targetLevel==0) return; //andernfalls würde storedLevel mit 0 überschrieben, nur weil man zweimal auf OFF drückt
 		this->storedLevel = targetLevel;
 		this->targetLevel = 0;
@@ -200,12 +220,9 @@ namespace sensact::apps
 	void cSinglePWM::SetTargetRelative(int step, iSensactContext *ctx)
 	{
 		int level = targetLevel + step;
-		this->targetLevel=clamp_kl(level, (int)minimalLevel, (int)MAXIMUM_LEVEL);
+		this->targetLevel=clamp_kl(level, LowestOnLevel(), (int)MAXIMUM_LEVEL);
 		this->storedLevel = targetLevel;
-		if (autoOffCfg != 0)
-		{
-			autoOffCalc = ctx->Now() + autoOffCfg;
-		}
+		RestartTimersAfterUserAction(ctx);
 		targetChangedFlag.store(true);
 	}
 
@@ -213,10 +230,7 @@ namespace sensact::apps
 	{
 		autoDim = dir;
 		lastAutoDimSignal=ctx->Now();
-		if (autoOffCfg != 0)
-		{
-			autoOffCalc = ctx->Now() + autoOffCfg;
-		}
+		RestartTimersAfterUserAction(ctx);
 		targetChangedFlag.store(true);
 	}
 
@@ -228,7 +242,7 @@ namespace sensact::apps
 	void cSinglePWM::WriteCurrentLevelToOutput(iSensactContext *ctx)
 	{
 		uint16_t val = level2pwm[currentLevel>>8];
-		
+
 		for (auto &io : this->pwmOutputs)
 		{
 			ctx->SetU16Output(io, val);
@@ -237,7 +251,7 @@ namespace sensact::apps
 
 	eAppCallResult cSinglePWM::Setup(iSensactContext *ctx)
 	{
-		LOGI(TAG, "Build cSinglePWM for id:%s, pwmFirst:%d autoOffMsecs:%lld", N(), pwmOutputs[0], autoOffCfg);
+		LOGI(TAG, "Build cSinglePWM for id:%s, pwmFirst:%d autoOffMsecs:%lld", N(), pwmOutputs.empty() ? -1 : (int)pwmOutputs[0], (long long)autoOffCfg);
 		currentLevel = 0;
 		targetLevel = 0;
 		lastLevelUpdate = ctx->Now();
@@ -247,53 +261,68 @@ namespace sensact::apps
 
 	eAppCallResult cSinglePWM::Loop(iSensactContext *ctx)
 	{
-		
-		// Die drei folgenden IFs sollten exklusiv sein, wenn doch nicht, dann gewinnt das Automatische dimmen
-		// Gemeinsamkeit dieser IFs: Sie verändert das targetLevel
-		if (autoDim > 0)
+		const tms_t now = ctx->Now();
+		const tms_t elapsedMs = now - lastLevelUpdate;
+		lastLevelUpdate = now;
+
+		// Die folgenden IFs sind exklusiv; das automatische Dimmen hat Vorrang.
+		// Gemeinsamkeit: sie veraendern das targetLevel.
+		if (autoDim != 0)
 		{
-			if (targetLevel == 0)
+			const int delta = std::max(1, (int)(AUTO_DIM_RATE_PER_MS * elapsedMs));
+			int newTarget;
+			if (autoDim > 0)
 			{
-				targetLevel = minimalLevel;
-				targetChangedFlag.store(true);
+				newTarget = targetLevel == 0 ? LowestOnLevel() : std::min(MAXIMUM_LEVEL, targetLevel + delta);
 			}
 			else
 			{
-				targetLevel = std::min(MAXIMUM_LEVEL, targetLevel + autoDim);
+				// Bewusst auch bei ausgeschalteter Lampe: "runter" gedrueckt halten schaltet mit
+				// minimaler Helligkeit ein (Nachtlicht).
+				newTarget = std::max(LowestOnLevel(), targetLevel - delta);
+			}
+			if (newTarget != targetLevel)
+			{
+				targetLevel = newTarget;
 				targetChangedFlag.store(true);
 			}
+			// Am Anschlag ist das Dimmen zu Ende -- auch ohne STOP (das z.B. bei einem CAN-Fehler
+			// verloren gehen kann). Sonst bliebe autoDim fuer immer aktiv und Auto-Off (s.u.)
+			// wuerde nie mehr ausgewertet.
+			if (targetLevel == MAXIMUM_LEVEL || targetLevel == LowestOnLevel())
+			{
+				autoDim = 0;
+			}
 		}
-		else if (autoDim < 0)
-		{
-			targetLevel = std::max((int)minimalLevel, targetLevel + autoDim); // Addition, weil autoDim ja kleiner 0 ist!
-			targetChangedFlag.store(true);
-		}
-		else if (ctx->Now() > autoOffCalc)
+		else if (now > autoOffCalc)
 		{
 			LOGI(TAG, "%s does AutoOff", N());
-			storedLevel=targetLevel;
+			if (targetLevel != 0)
+				storedLevel = targetLevel;
 			targetLevel = 0;
 			targetChangedFlag.store(true);
 			autoOffCalc = sensact::magic::TIME_MAX;
 		}
-		else if (ctx->Now() > autoOnCalc)
+		else if (now > autoOnCalc)
 		{
 			LOGI(TAG, "%s does AutoOn", N());
-			targetLevel = storedLevel;
+			targetLevel = LevelForSwitchOn();
 			targetChangedFlag.store(true);
 			autoOnCalc = sensact::magic::TIME_MAX;
+			if (autoOffCfg != 0)
+			{
+				autoOffCalc = now + autoOffCfg;
+			}
 		}
 
-		if (idOfStandbyController != eApplicationID::NO_APPLICATION && currentLevel > 0 && lastHeartbeatSent + sensact::magic::HEARTBEAT_STANDBY_SENDER < ctx->Now())
+		if (idOfStandbyController != eApplicationID::NO_APPLICATION && currentLevel > 0 && lastHeartbeatSent + sensact::magic::HEARTBEAT_STANDBY_SENDER < now)
 		{
 			LOGI(TAG, "%s sends heartbeat to id %s", N(), NID(idOfStandbyController));
 			ctx->SendHEARTBEATCommand(idOfStandbyController, (uint32_t)id);
-			lastHeartbeatSent = ctx->Now();
+			lastHeartbeatSent = now;
 		}
 
-		tms_t elapsedMs = ctx->Now() - lastLevelUpdate;
-		lastLevelUpdate = ctx->Now();
-		int step = std::max(1, (int)(DIM_RATE_PER_MS * elapsedMs));
+		const int step = std::max(1, (int)(DIM_RATE_PER_MS * elapsedMs));
 		if (currentLevel < targetLevel)
 		{
 			currentLevel = std::min(currentLevel + step, (int)targetLevel);
@@ -312,275 +341,14 @@ namespace sensact::apps
 	}
 
 	bool cSinglePWM::NeedsFastLoop(){
-		return currentLevel != targetLevel;
+		return currentLevel != targetLevel || autoDim != 0;
 	}
 
 	eFillStatusResult cSinglePWM::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-			buf[0]=targetLevel==0?0:1; // 1=ON, 0=OFF
-			buf[1]=storedLevel;
-			buf[2]=autoDim;
-			buf[3]=targetLevel;
-			return eFillStatusResult::OK;
-		}
+		buf[0]=targetLevel==0?0:1; // 1=ON, 0=OFF
+		buf[1]=storedLevel;
+		buf[2]=(uint16_t)autoDim;
+		buf[3]=targetLevel;
+		return eFillStatusResult::OK;
+	}
 }
-
-/*
-
-constexpr const uint16_t level2pwm[256] = {
-		65,
-		66,
-		68,
-		70,
-		72,
-		74,
-		76,
-		78,
-		80,
-		82,
-		85,
-		87,
-		89,
-		92,
-		94,
-		97,
-		100,
-		102,
-		105,
-		108,
-		111,
-		114,
-		117,
-		120,
-		124,
-		127,
-		131,
-		134,
-		138,
-		142,
-		146,
-		150,
-		154,
-		158,
-		162,
-		167,
-		171,
-		176,
-		181,
-		186,
-		191,
-		196,
-		202,
-		207,
-		213,
-		219,
-		225,
-		231,
-		237,
-		244,
-		251,
-		258,
-		265,
-		272,
-		279,
-		287,
-		295,
-		303,
-		312,
-		320,
-		329,
-		338,
-		347,
-		357,
-		367,
-		377,
-		387,
-		398,
-		409,
-		420,
-		432,
-		443,
-		456,
-		468,
-		481,
-		494,
-		508,
-		522,
-		536,
-		551,
-		566,
-		582,
-		598,
-		614,
-		631,
-		648,
-		666,
-		685,
-		703,
-		723,
-		743,
-		763,
-		784,
-		806,
-		828,
-		851,
-		874,
-		898,
-		923,
-		948,
-		974,
-		1001,
-		1029,
-		1057,
-		1086,
-		1116,
-		1147,
-		1178,
-		1211,
-		1244,
-		1278,
-		1314,
-		1350,
-		1387,
-		1425,
-		1464,
-		1505,
-		1546,
-		1589,
-		1632,
-		1677,
-		1723,
-		1771,
-		1820,
-		1870,
-		1921,
-		1974,
-		2028,
-		2084,
-		2141,
-		2200,
-		2261,
-		2323,
-		2387,
-		2453,
-		2520,
-		2590,
-		2661,
-		2734,
-		2810,
-		2887,
-		2966,
-		3048,
-		3132,
-		3218,
-		3307,
-		3398,
-		3491,
-		3587,
-		3686,
-		3787,
-		3892,
-		3999,
-		4109,
-		4222,
-		4338,
-		4458,
-		4580,
-		4706,
-		4836,
-		4969,
-		5106,
-		5246,
-		5391,
-		5539,
-		5691,
-		5848,
-		6009,
-		6174,
-		6344,
-		6519,
-		6698,
-		6883,
-		7072,
-		7267,
-		7467,
-		7672,
-		7884,
-		8100,
-		8323,
-		8553,
-		8788,
-		9030,
-		9278,
-		9534,
-		9796,
-		10066,
-		10343,
-		10627,
-		10920,
-		11220,
-		11529,
-		11847,
-		12173,
-		12508,
-		12852,
-		13206,
-		13569,
-		13943,
-		14326,
-		14721,
-		15126,
-		15542,
-		15970,
-		16410,
-		16861,
-		17325,
-		17802,
-		18292,
-		18796,
-		19313,
-		19844,
-		20391,
-		20952,
-		21528,
-		22121,
-		22730,
-		23355,
-		23998,
-		24659,
-		25337,
-		26035,
-		26751,
-		27488,
-		28244,
-		29022,
-		29820,
-		30641,
-		31485,
-		32351,
-		33241,
-		34156,
-		35096,
-		36062,
-		37055,
-		38075,
-		39123,
-		40200,
-		41306,
-		42443,
-		43611,
-		44811,
-		46045,
-		47312,
-		48614,
-		49952,
-		51327,
-		52740,
-		54192,
-		55683,
-		57216,
-		58790,
-		60409,
-		62071,
-		63780,
-		65535};
-*/

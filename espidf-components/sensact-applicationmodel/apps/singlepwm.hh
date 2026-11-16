@@ -18,10 +18,10 @@ namespace sensact::apps
 		tms_t autoOnCalc{sensact::magic::TIME_MAX}; //die nach dem Anschalten oder Bedienen immer neu berechnete Auto-On-Zeit
 		uint16_t targetLevel{0};//Zielhelligkeit, nur diese wird gesetzt durch die Helper-Funktionen
 		uint16_t currentLevel{0};//aktuelle Helligkeit
-		s16 autoDim{0};
-		s16 autoDimPreset{+256};
-		tms_t lastAutoDimSignal{0};
-		tms_t lastHeartbeatSent{0};
+		s16 autoDim{0}; // -1, 0, +1: Richtung beim Dimmen per Gedrueckthalten (Geschwindigkeit s. singlepwm.cc)
+		s16 autoDimPreset{+1};
+		tms_t lastAutoDimSignal{INT64_MIN / 2}; // "lange her" -- das erste START dimmt aufwaerts
+		tms_t lastHeartbeatSent{INT64_MIN / 2}; // "lange her" -- erster Heartbeat sofort, auch kurz nach dem Booten
 		tms_t lastLevelUpdate{0};//Zeitstempel des letzten Loop()-Durchlaufs, fuer zeitbasierte (statt taktzahlbasierte) Fade-Schrittweite
 		std::atomic<bool> targetChangedFlag;
 		
@@ -33,6 +33,9 @@ namespace sensact::apps
 		void MoveInDirection(int16_t dir, iSensactContext *ctx);
 		void StopMove(iSensactContext *ctx);
 		void WriteCurrentLevelToOutput(iSensactContext *ctx);
+		void RestartTimersAfterUserAction(iSensactContext *ctx);
+		int LowestOnLevel() const;
+		uint16_t LevelForSwitchOn() const;
 
 	public:
 		eAppType GetAppType() override;
