@@ -176,11 +176,26 @@ internal static class Program
 		}
 	}
 
-	private static void RunModelFor<ApplicationIdType>(IBuildContextEsp32 ctx, ModelContainer mc, ILoggerFactory loggerFactory) where ApplicationIdType : struct, Enum
+	// Erzeugt die Modell-Dateien fuer die Host-Unit-Tests der Sensact-Apps
+	// (sensact/espidf-components/sensact-applicationmodel/host_test) in ein frei waehlbares
+	// Verzeichnis (--out). Immer aus dem Testmodel und -- anders als GenerateModelFiles -- OHNE die
+	// Enum-Quellen nach best_binary_buffers_schema/ zu kopieren: das wuerde die dort git-getrackten
+	// Schema-Dateien des echten Hausmodells mit denen des Testmodells ueberschreiben. Wird vom
+	// CMake-Projekt der Host-Tests automatisch aufgerufen, s. dortige README.md.
+	[BuildStep]
+	public static void GenerateModelFilesForHostTests(IBuildContextEsp32 ctx)
+	{
+		var outDir = Path.GetFullPath(Cli.GetRequiredArgValue(ctx.Args, "--out"));
+		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Warning));
+		GenerateModelInto<Klli.Sensact.Model.Testmodel.ApplicationId>(
+			new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer(), outDir, loggerFactory);
+	}
+
+	private static void GenerateModelInto<ApplicationIdType>(ModelContainer mc, string outDir, ILoggerFactory loggerFactory) where ApplicationIdType : struct, Enum
 	{
 		var appSettings = new AppSettings
 		{
-			SourceCodeGenerator = new SourceCodeGeneratorOptions { BasePath = SensactBuildContext.SensactModelGeneratedDir },
+			SourceCodeGenerator = new SourceCodeGeneratorOptions { BasePath = outDir },
 		};
 		var logger = loggerFactory.CreateLogger<SourceCodeGenerator<ApplicationIdType>>();
 		var generator = new SourceCodeGenerator<ApplicationIdType>(appSettings, logger);
@@ -191,7 +206,12 @@ internal static class Program
 		}
 		generator.DeleteBaseDirectory();
 		generator.generateAll(mc);
-		Console.WriteLine($"Modell-Dateien -> {SensactBuildContext.SensactModelGeneratedDir}");
+		Console.WriteLine($"Modell-Dateien -> {outDir}");
+	}
+
+	private static void RunModelFor<ApplicationIdType>(IBuildContextEsp32 ctx, ModelContainer mc, ILoggerFactory loggerFactory) where ApplicationIdType : struct, Enum
+	{
+		GenerateModelInto<ApplicationIdType>(mc, SensactBuildContext.SensactModelGeneratedDir, loggerFactory);
 
 		foreach (var enumFile in new[] { "applicationIds.enums.cs", "commandTypes.enums.cs" })
 		{
