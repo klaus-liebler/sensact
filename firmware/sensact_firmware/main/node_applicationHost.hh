@@ -45,10 +45,10 @@ namespace sensact
         void PublishApplicationEventToMessageBus(eApplicationID sourceApp, eEventType event, const uint8_t *const payload, uint8_t payloadLength);
         ErrorCode OnApplicationCommand(sensact::apps::cApplication *app, eCommandType command, const uint8_t *const payload, uint8_t payloadLength);
 
-		webmanager::eMessageReceiverResult handleRequestCommand(const WsProtocol::sensact::RequestCommand::Payload& req, webmanager::iWebmanagerCallback* callback);
+		webmanager::eMessageReceiverResult handleRequestCommand(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestCommand::Payload& req);
 
 
-		webmanager::eMessageReceiverResult handleRequestStatus(const WsProtocol::sensact::RequestStatus::Payload& req, webmanager::iWebmanagerCallback* callback);
+		webmanager::eMessageReceiverResult handleRequestStatus(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestStatus::Payload& req);
     public:
         cApplicationHost(sensact::hal::iHAL *hal, iHostContext *hostCtx, aCANMessageBuilderParser *canMBP, UsersettingsPlugin *usersettingsPlugin);
         ErrorCode Setup(iHostContext &ctx) override;
@@ -70,7 +70,7 @@ namespace sensact
         void OnWifiConnect(webmanager::iWebmanagerCallback *callback) override;
         void OnWifiDisconnect(webmanager::iWebmanagerCallback *callback) override;
         void OnTimeUpdate(webmanager::iWebmanagerCallback *callback)override;
-        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen) override;
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, WsProtocol::Responder &reply, const uint8_t *frame, size_t frameLen) override;
         #include <common/sendCommandDeclarationsOverride.inc>
         #include <common/publishEventDeclarationsOverride.inc>
     };

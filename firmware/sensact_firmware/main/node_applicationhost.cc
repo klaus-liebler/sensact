@@ -27,7 +27,7 @@ void cApplicationHost::OnTimeUpdate(webmanager::iWebmanagerCallback *callback){
     this->webmanager_callback=callback;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const WsProtocol::sensact::RequestCommand::Payload& req, webmanager::iWebmanagerCallback* callback){
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestCommand::Payload& req){
     const uint16_t reqId = (uint16_t)req.id;
     const char* reqName = reqId < (uint16_t)eApplicationID::CNT ? sensact::ApplicationNames[reqId] : "INVALID_APP_ID";
     ESP_LOGI(TAG, "WEB CMD target=%s(%u) cmd=%u payloadLen=%u", reqName, reqId, (uint16_t)req.cmd, (uint16_t)req.payload.len);
@@ -38,14 +38,11 @@ webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(const 
         (uint8_t)req.payload.len
     };
     xQueueSend(this->webCommandQueue, (void *)&message, pdMS_TO_TICKS(100));
-    WsProtocol::sensact::ResponseCommand::Payload resp{};
-    resp.requestId = req.requestId;
-    uint8_t buf[32];
-    size_t len = WsProtocol::sensact::ResponseCommand::Encode(resp, buf, sizeof(buf));
-    return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+    reply.Send(WsProtocol::sensact::ResponseCommand::Encode, WsProtocol::sensact::ResponseCommand::Payload{});
+    return webmanager::eMessageReceiverResult::OK;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const WsProtocol::sensact::RequestStatus::Payload& req, webmanager::iWebmanagerCallback* callback){
+webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestStatus::Payload& req){
     static uint8_t states_scratch[(size_t)eApplicationID::CNT * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE];
     size_t count = 0;
     for(size_t i=0;i<req.idsCount && count < (size_t)eApplicationID::CNT; i++){
@@ -64,36 +61,29 @@ webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(const W
     }
 
     WsProtocol::sensact::ResponseStatus::Payload resp{};
-    resp.requestId = req.requestId;
     resp.statesData = states_scratch;
     resp.statesCount = count;
 
-    static uint8_t buf[(size_t)eApplicationID::CNT * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE + 32];
-    size_t len = WsProtocol::sensact::ResponseStatus::Encode(resp, buf, sizeof(buf));
-    return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+    reply.Send(WsProtocol::sensact::ResponseStatus::Encode, resp);
+    return webmanager::eMessageReceiverResult::OK;
 }
 
-webmanager::eMessageReceiverResult cApplicationHost::ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen){
+webmanager::eMessageReceiverResult cApplicationHost::ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, WsProtocol::Responder &reply, const uint8_t *frame, size_t frameLen){
+    namespace sa = WsProtocol::sensact;
     this->webmanager_callback=callback;
-    if (namespaceId != WsProtocol::sensact::NAMESPACE_ID)
+    if (reply.Request().namespaceId != sa::NAMESPACE_ID)
         return webmanager::eMessageReceiverResult::NOT_FOR_ME;
 
-    switch (messageTypeId)
+    switch (reply.Request().messageTypeId)
     {
-    case WsProtocol::sensact::RequestCommand::TYPE_ID:{
-        WsProtocol::sensact::RequestCommand::Payload r{};
-        if (!WsProtocol::sensact::RequestCommand::Decode(frame, frameLen, r))
-            return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
-        return this->handleRequestCommand(r, callback);
-    }
-    case WsProtocol::sensact::RequestStatus::TYPE_ID:{
-        WsProtocol::sensact::RequestStatus::Payload r{};
-        if (!WsProtocol::sensact::RequestStatus::Decode(frame, frameLen, r))
-            return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
-        return this->handleRequestStatus(r, callback);
-    }
+    case sa::RequestCommand::TYPE_ID:
+        return webmanager::Handle(reply, frame, frameLen, sa::RequestCommand::Decode,
+                                  [this](WsProtocol::Responder& r, const sa::RequestCommand::Payload& q) { return handleRequestCommand(r, q); });
+    case sa::RequestStatus::TYPE_ID:
+        return webmanager::Handle(reply, frame, frameLen, sa::RequestStatus::Decode,
+                                  [this](WsProtocol::Responder& r, const sa::RequestStatus::Payload& q) { return handleRequestStatus(r, q); });
     default:
-        return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+        return webmanager::eMessageReceiverResult::NOT_FOR_ME;  // the requester gets UnknownMessage
     }
 }
 
@@ -129,7 +119,6 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         
         if(this->webmanager_callback!=nullptr){
             WsProtocol::sensact::NotifyStatus::Payload notify{};
-            notify.requestId = 0; // Server-Push, nicht durch einen Client-Request angestossen
             notify.id = static_cast<WsProtocol::sensact::ApplicationId>(sourceApp);
             for (size_t k=0;k<4;k++) notify.status.data[k] = payload[k];
             uint8_t buf[32];

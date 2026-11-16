@@ -2,7 +2,7 @@
 // werden von configware generiert (s. sensact_applicationIds.enums.cs/sensact_commandTypes.enums.cs,
 // configware/common/Generator.cs) -- selbes Schema-Namespace "sensact", deshalb hier unqualifiziert
 // referenzierbar. NotifyStatus war im Original Teil der 'Responses'-Union (nicht ausserhalb wie
-// canmonitor.NotifyCanMessage), deshalb 'Response' statt 'Event'.
+// canmonitor.NotifyCanMessage); als Push ist es aber ein 'Event' (keine Korrelation).
 using BestBinaryBuffers;
 
 namespace sensact;
@@ -59,7 +59,7 @@ public class RequestStatus
 }
 
 /// Server-Push (Statusaenderung einer Applikation) -- Teil der urspruenglichen 'Responses'-Union.
-[BinaryMessage(MessageKind.Response)]
+[BinaryMessage(MessageKind.Event)]
 public class NotifyStatus
 {
 	public ApplicationId Id;

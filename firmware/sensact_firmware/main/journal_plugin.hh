@@ -75,11 +75,12 @@ namespace webmanager
         void OnTimeUpdate(iWebmanagerCallback *callback) override{
 
         }
-        eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen)override{
+        eMessageReceiverResult ProvideWebsocketMessage(iWebmanagerCallback *callback, WsProtocol::Responder &reply, const uint8_t *frame, size_t frameLen)override{
+			const uint16_t namespaceId = reply.Request().namespaceId, messageTypeId = reply.Request().messageTypeId;
             if (namespaceId != WsProtocol::journal::NAMESPACE_ID)
                 return webmanager::eMessageReceiverResult::NOT_FOR_ME;
             if (messageTypeId != WsProtocol::journal::RequestJournal::TYPE_ID)
-                return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                return webmanager::eMessageReceiverResult::NOT_FOR_ME;  // the requester gets UnknownMessage
             WsProtocol::journal::RequestJournal::Payload reqPayload{};
             if (!WsProtocol::journal::RequestJournal::Decode(frame, frameLen, reqPayload))
                 return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
@@ -114,14 +115,12 @@ namespace webmanager
             xSemaphoreGive(webmanager_semaphore);
 
             WsProtocol::journal::ResponseJournal::Payload resp{};
-            resp.requestId = reqPayload.requestId;
             resp.journalItemsData = items_scratch;
             resp.journalItemsCount = items_count;
             resp.journalItemsDataSize = items_pos;
 
-            static uint8_t buf[2560];
-            size_t len = WsProtocol::journal::ResponseJournal::Encode(resp, buf, sizeof(buf));
-            return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+            reply.Send(WsProtocol::journal::ResponseJournal::Encode, resp);
+            return webmanager::eMessageReceiverResult::OK;
         }
 
         void LogJournal(messagecodes::C messageCode, uint32_t messageData)

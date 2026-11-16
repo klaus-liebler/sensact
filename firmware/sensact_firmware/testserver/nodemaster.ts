@@ -35,13 +35,13 @@ export class NodemasterHandler extends NamespaceAndHandler {
             case nodemaster.RequestInputs.TYPE_ID: {
                 const req = nodemaster.RequestInputs.decode(view, 0);
                 console.info(`Nodemaster: RequestInputs -> ranges=${JSON.stringify(this.inputRanges)}`);
-                sender.send(nodemaster.ResponseInputs.encode({ requestId: req.requestId, ranges: NodemasterHandler.toWire(this.inputRanges) }));
+                sender.respond(nodemaster.ResponseInputs.encode, { ranges: NodemasterHandler.toWire(this.inputRanges) });
                 break;
             }
             case nodemaster.RequestOutputs.TYPE_ID: {
                 const req = nodemaster.RequestOutputs.decode(view, 0);
                 console.info(`Nodemaster: RequestOutputs -> ranges=${JSON.stringify(this.outputRanges)}`);
-                sender.send(nodemaster.ResponseOutputs.encode({ requestId: req.requestId, ranges: NodemasterHandler.toWire(this.outputRanges) }));
+                sender.respond(nodemaster.ResponseOutputs.encode, { ranges: NodemasterHandler.toWire(this.outputRanges) });
                 break;
             }
             case nodemaster.RequestSetOutput.TYPE_ID: {
@@ -49,7 +49,7 @@ export class NodemasterHandler extends NamespaceAndHandler {
                 const ok = this.outputRanges.some(r => req.index >= r.start && req.index < r.end);
                 if (ok) this.outputs.set(req.index, req.value);
                 console.info(`Nodemaster: RequestSetOutput idx=${req.index} value=${req.value} ok=${ok} (manualMode=${this.manualMode})`);
-                sender.send(nodemaster.ResponseSetOutput.encode({ requestId: req.requestId, success: ok, index: req.index, value: req.value }));
+                sender.respond(nodemaster.ResponseSetOutput.encode, { success: ok, index: req.index, value: req.value });
                 break;
             }
             case nodemaster.RequestGetInput.TYPE_ID: {
@@ -57,14 +57,14 @@ export class NodemasterHandler extends NamespaceAndHandler {
                 // Zufallswert, in 50% der Faelle 0 (inaktiver Eingang)
                 const value = Math.random() < 0.5 ? 0 : Math.floor(Math.random() * UINT16_MAX);
                 console.info(`Nodemaster: RequestGetInput -> returning value=${value} from index=${req.index}`);
-                sender.send(nodemaster.ResponseGetInput.encode({ requestId: req.requestId, index: req.index, value }));
+                sender.respond(nodemaster.ResponseGetInput.encode, { index: req.index, value });
                 break;
             }
             case nodemaster.RequestSetMode.TYPE_ID: {
                 const req = nodemaster.RequestSetMode.decode(view, 0);
                 if (!req.queryOnly) this.manualMode = req.manual;
                 console.info(`Nodemaster: RequestSetMode manual=${req.manual} queryOnly=${req.queryOnly} -> manualMode=${this.manualMode}`);
-                sender.send(nodemaster.ResponseMode.encode({ requestId: req.requestId, manual: this.manualMode }));
+                sender.respond(nodemaster.ResponseMode.encode, { manual: this.manualMode });
                 break;
             }
         }

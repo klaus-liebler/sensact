@@ -7,7 +7,7 @@ const Command = sensact.Command;
 type ApplicationId = sensact.ApplicationId;
 
 function sendStatus(sender: ISender, appId: ApplicationId, state: number[]) {
-    sender.send(sensact.NotifyStatus.encode({ requestId: 0, id: appId, status: { data: state } }));
+    sender.send(sensact.NotifyStatus.encode({ id: appId, status: { data: state } }));
 }
 
 abstract class aStatusProvider {
@@ -136,14 +136,14 @@ export class SensactHandler extends NamespaceAndHandler {
                     console.info(`Sensact Status Request ${id} [${ApplicationId[id]}] ${payload[0]} ${payload[1]} ${payload[2]} ${payload[3]}`);
                     return { id, status: { data: payload } };
                 });
-                sender.send(sensact.ResponseStatus.encode({ requestId: req.requestId, states }));
+                sender.respond(sensact.ResponseStatus.encode, { states });
                 break;
             }
             case sensact.RequestCommand.TYPE_ID: {
                 const req = sensact.RequestCommand.decode(view, 0);
                 console.log(`Sensact Command ${Command[req.cmd]} to ${ApplicationId[req.id]}`)
                 this.Map.get(req.id)?.UpdateStateWithCommand(req, sender);
-                sender.send(sensact.ResponseCommand.encode({ requestId: req.requestId }));
+                sender.respond(sensact.ResponseCommand.encode, {});
                 break;
             }
         }

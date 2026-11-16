@@ -401,7 +401,8 @@ namespace sensact
             return pos;
         }
 
-        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, httpd_req_t *req, httpd_ws_frame_t *ws_pkt, uint16_t namespaceId, uint16_t messageTypeId, const uint8_t *frame, size_t frameLen) override{
+        webmanager::eMessageReceiverResult ProvideWebsocketMessage(webmanager::iWebmanagerCallback *callback, WsProtocol::Responder &reply, const uint8_t *frame, size_t frameLen) override{
+			const uint16_t namespaceId = reply.Request().namespaceId, messageTypeId = reply.Request().messageTypeId;
 			if (namespaceId != WsProtocol::nodemaster::NAMESPACE_ID)
                 return webmanager::eMessageReceiverResult::NOT_FOR_ME;
 			switch (messageTypeId) {
@@ -420,13 +421,11 @@ namespace sensact
 				size_t count = 0;
 				size_t dataSize = EncodeRanges(ranges, scratch, sizeof(scratch), WsProtocol::nodemaster::AppendResponseInputsRangesRangeElement, count);
 				WsProtocol::nodemaster::ResponseInputs::Payload resp{};
-				resp.requestId = req.requestId;
 				resp.rangesData = scratch;
 				resp.rangesCount = count;
 				resp.rangesDataSize = dataSize;
-				static uint8_t buf[4096];
-				size_t len = WsProtocol::nodemaster::ResponseInputs::Encode(resp, buf, sizeof(buf));
-				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				reply.Send(WsProtocol::nodemaster::ResponseInputs::Encode, resp);
+				return webmanager::eMessageReceiverResult::OK;
 			}
 			case WsProtocol::nodemaster::RequestOutputs::TYPE_ID: {
 				WsProtocol::nodemaster::RequestOutputs::Payload req{};
@@ -443,13 +442,11 @@ namespace sensact
 				size_t count = 0;
 				size_t dataSize = EncodeRanges(ranges, scratch, sizeof(scratch), WsProtocol::nodemaster::AppendResponseOutputsRangesRangeElement, count);
 				WsProtocol::nodemaster::ResponseOutputs::Payload resp{};
-				resp.requestId = req.requestId;
 				resp.rangesData = scratch;
 				resp.rangesCount = count;
 				resp.rangesDataSize = dataSize;
-				static uint8_t buf[4096];
-				size_t len = WsProtocol::nodemaster::ResponseOutputs::Encode(resp, buf, sizeof(buf));
-				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				reply.Send(WsProtocol::nodemaster::ResponseOutputs::Encode, resp);
+				return webmanager::eMessageReceiverResult::OK;
 			}
 			case WsProtocol::nodemaster::RequestSetOutput::TYPE_ID: {
 				WsProtocol::nodemaster::RequestSetOutput::Payload req{};
@@ -464,14 +461,12 @@ namespace sensact
 					success = (busmasters->at(busmasterIndex)->SetOutput(localIndex, value) == ErrorCode::OK);
 				}
 				WsProtocol::nodemaster::ResponseSetOutput::Payload resp{};
-				resp.requestId = req.requestId;
 				resp.success = success;
 				resp.index = index;
 				resp.value = value;
-				uint8_t buf[32];
-				size_t len = WsProtocol::nodemaster::ResponseSetOutput::Encode(resp, buf, sizeof(buf));
 				LOGI(TAG, "SetOutput Request for index %u to value %u was %s", index, value, success?"successful":"unsuccessful");
-				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				reply.Send(WsProtocol::nodemaster::ResponseSetOutput::Encode, resp);
+				return webmanager::eMessageReceiverResult::OK;
 			}
 			case WsProtocol::nodemaster::RequestGetInput::TYPE_ID: {
 				WsProtocol::nodemaster::RequestGetInput::Payload req{};
@@ -486,13 +481,11 @@ namespace sensact
 					success = (busmasters->at(busmasterIndex)->GetInput(localIndex, value) == ErrorCode::OK);
 				}
 				WsProtocol::nodemaster::ResponseGetInput::Payload resp{};
-				resp.requestId = req.requestId;
 				resp.index = index;
 				resp.value = value;
-				uint8_t buf[32];
-				size_t len = WsProtocol::nodemaster::ResponseGetInput::Encode(resp, buf, sizeof(buf));
 				LOGD(TAG, "GetInput Request for index %u was %s with value %u", index, success?"successful":"unsuccessful", value);
-				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				reply.Send(WsProtocol::nodemaster::ResponseGetInput::Encode, resp);
+				return webmanager::eMessageReceiverResult::OK;
 			}
 			case WsProtocol::nodemaster::RequestSetMode::TYPE_ID: {
 				WsProtocol::nodemaster::RequestSetMode::Payload req{};
@@ -501,14 +494,12 @@ namespace sensact
 				if (!req.queryOnly && manualMode.exchange(req.manual) != req.manual)
 					LOGI(TAG, "IO mode switched to %s", req.manual ? "MANUAL (apps stopped)" : "APPS");
 				WsProtocol::nodemaster::ResponseMode::Payload resp{};
-				resp.requestId = req.requestId;
 				resp.manual = manualMode.load();
-				uint8_t buf[32];
-				size_t len = WsProtocol::nodemaster::ResponseMode::Encode(resp, buf, sizeof(buf));
-				return (len > 0 && callback->SendRawAsync(buf, len)==ESP_OK) ? webmanager::eMessageReceiverResult::OK : webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+				reply.Send(WsProtocol::nodemaster::ResponseMode::Encode, resp);
+				return webmanager::eMessageReceiverResult::OK;
 			}
 			default:
-                return webmanager::eMessageReceiverResult::FOR_ME_BUT_FAILED;
+                return webmanager::eMessageReceiverResult::NOT_FOR_ME;  // the requester gets UnknownMessage
 			}
 		}
 	};

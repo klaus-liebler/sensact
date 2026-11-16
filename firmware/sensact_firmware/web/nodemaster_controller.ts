@@ -176,27 +176,27 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
     }
 
     private requestInputs() {
-        const bytes = nodemaster.RequestInputs.encode({ requestId: 0 });
+        const bytes = nodemaster.RequestInputs.encode({}, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
     private requestOutputs() {
-        const bytes = nodemaster.RequestOutputs.encode({ requestId: 0 });
+        const bytes = nodemaster.RequestOutputs.encode({}, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
     private queryMode() {
-        const bytes = nodemaster.RequestSetMode.encode({ requestId: 0, manual: false, queryOnly: true });
+        const bytes = nodemaster.RequestSetMode.encode({ manual: false, queryOnly: true }, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
     private setMode(manual: boolean) {
-        const bytes = nodemaster.RequestSetMode.encode({ requestId: 0, manual, queryOnly: false });
+        const bytes = nodemaster.RequestSetMode.encode({ manual, queryOnly: false }, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
     private updateOutput(index: number, value: number) {
-        const bytes = nodemaster.RequestSetOutput.encode({ requestId: 0, index, value });
+        const bytes = nodemaster.RequestSetOutput.encode({ index, value }, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
@@ -204,7 +204,7 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
         console.info(`Requesting input value at index ${index}`);
         this.lastRequestedInputIndex = index;
         // Don't reset to null - keep the old value until new one arrives to avoid flickering
-        const bytes = nodemaster.RequestGetInput.encode({ requestId: 0, index });
+        const bytes = nodemaster.RequestGetInput.encode({ index }, 0);
         this.appManagement.SendFrame(nodemaster.NAMESPACE_ID, bytes);
     }
 
