@@ -9,7 +9,9 @@ main.cc (app_main)
   └─ webmanager::M (eigenes Repo: espidf-component-webmanager)
        – Wifi-Statemachine, HTTPS-Server, OTA, Login, Plugin-Dispatch
   └─ cNodemaster (nodemaster.hh)
-       – 100ms-Zyklus: CAN-RX -> OfferMessage(hosts) -> Loop(hosts) -> AfterAppLoop -> Health-Check
+       – 20-ms-Tick: CAN-RX -> OfferMessage(hosts) -> Loop(hosts) -> AfterAppLoop -> Health-Check
+       – cApplicationHost verteilt die Apps per Bucket-Rotation: jede App spätestens alle 100 ms,
+         Apps mit NeedsFastLoop() (z.B. PWM-Fade) in jedem Tick
        – implementiert iHostContext (Services für Hosts) und webmanager::iWebmanagerPlugin
        ├─ AbstractBusmaster[] (busmaster.hh)
        │    ├─ I2CBusmaster       – PCA9555/PCA9685 über I2C, eigener FreeRTOS-Task
@@ -87,6 +89,14 @@ bildet `eApplicationID` auf konkrete Instanzen ab (oder `nullptr`, falls die App
 einem anderen Node gehostet wird). Alle App-Methoden hängen nur am Interface
 `iSensactContext`, nicht an ESP-IDF-Typen direkt.
 
+- Kommandos und Statusbelegung jeder App:
+  [sensact-applicationmodel/README.md](../../../espidf-components/sensact-applicationmodel/README.md)
+  (verbindliche Referenz, auch für die Web-UI).
+- Host-Unit-Tests (GoogleTest, ohne ESP32):
+  [sensact-applicationmodel/host_test/README.md](../../../espidf-components/sensact-applicationmodel/host_test/README.md).
+  Einzige Ausnahme von der ESP-IDF-Freiheit: `milightcontroller.cc` (FreeRTOS-Queue,
+  `esp_timer`, fest eincodierte App-IDs von Sattlerstrasse16).
+
 ## Cross-Cutting
 
 - `messagecodes.hh` – X-Macro-generiertes `enum class messagecodes::C` +
@@ -103,7 +113,7 @@ veraltete APIs).
 
 ## Wifimanager
 
-Server-seitig eine einzelne ~2000-Zeilen-Klasse `webmanager::M`
-(`espidf-component-webmanager/cpp/webmanager.hh`), die WLAN-Statemachine,
-HTTP-Fileserver, OTA, Login/Session und Wifimanager-Protokoll in einer Klasse
-vereint.
+Server-seitig die Klasse `webmanager::M` (`espidf-component-webmanager/cpp/webmanager.hh`,
+eigenes Repo): WLAN-Statemachine, HTTP(S)-Server, OTA, Login/Session, Plugin-Dispatch.
+Boards mit Ethernet können per `WIFI_ENABLED=false` (Board-Settings) stattdessen
+`webmanager_eth_only::M` verwenden (s. `main.cc`).

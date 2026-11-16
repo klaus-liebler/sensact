@@ -9,6 +9,14 @@ Projekts gebraucht wird.
 - [docs/board-provisioning.md](docs/board-provisioning.md) – Wie ein neues Board angelegt
   und in Betrieb genommen wird
 - [docs/architecture.md](docs/architecture.md) – Node-/HAL-/App-Architektur der Firmware
+- [Sensact-Apps: Kommandos & Status](../../espidf-components/sensact-applicationmodel/README.md)
+  – verbindliche Referenz aller Apps (auch für die Web-UI)
+- [Host-Unit-Tests der Apps](../../espidf-components/sensact-applicationmodel/host_test/README.md)
+  – GoogleTest auf dem PC, kein Board nötig
+- [docs/concept-modular-firmware.md](docs/concept-modular-firmware.md) – Konzept Basis-Firmware
+  + Hardware-/App-Konfiguration (Entwurf)
+- [docs/known-issues.md](docs/known-issues.md) – offene Punkte, Entscheidungsfragen und
+  Erledigtes
 - [docs/plan_v2/00-overview.md](docs/plan_v2/00-overview.md) – Archiviertes
   Planungsdokument einer früheren Überarbeitungsphase, falls historischer Kontext
   gebraucht wird

@@ -135,14 +135,24 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 | `PrepareContextWithCommandLineArguments --nodeId <NODE_ID>` | Wählt ohne angeschlossenes Board ein (deterministisch aus der `NODE_ID` abgeleitetes, synthetisches) Board-Archiv – für Offline-Builds, s. [board-provisioning.md](board-provisioning.md). |
 | `GenerateBestBinaryBufferFiles` | Liest `*.cs`-Schema-Dateien aus `best_binary_buffers_schema/` (eigenes Repo) **und** `WebmanagerBestBinaryBuffersSchemaDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
 | `GenerateRuntimeConfig` | Sammelt Build-Defines (Board-Settings, Node-Descriptor, Git-Hash, Zeitstempel, Banner …), schreibt `cmake/config.json`, `runtimeconfig.hh`/`runtimeconfig_defines.hh`, `runtimeconfig_ts`. |
-| `GenerateCertificates` | Lazy: Board-Zertifikat (node-forge, signiert mit der Root-CA aus `CertsDir`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
+| `GenerateCertificates` | Lazy: Board-Zertifikat (.NET-Kryptografie aus `FirmwareBuilder.Common`, signiert mit der Root-CA aus `CertsDir`, Parameter s. `Certificates.*` in `appsettings.json`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
 | `GenerateModelFiles --model <Name>` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
+| `GenerateModelFilesForHostTests --out <Verzeichnis>` | Wie `GenerateModelFiles`, aber immer aus dem Testmodel, in ein beliebiges Verzeichnis und **ohne** die Enum-Quellen nach `best_binary_buffers_schema/` zu kopieren. Wird automatisch von den Host-Unit-Tests der Apps aufgerufen (s. "Tests" unten). |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |
 | `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess). |
 | `FlashFirmware [--resetNVSPartition]` | Flasht (nur unverschlüsselter Pfad implementiert; ist der Flash-Encryption-Key im Board-Archiv als aktiviert markiert, bricht die Phase bewusst ab). `--resetNVSPartition` löscht zusätzlich die NVS-Partition (WLAN-/Usersettings vergessen). |
 | `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `FlashFirmware`. |
 | `PipelineOffline --nodeId <NODE_ID> --model <Name>` | Wie `Pipeline`, aber mit `PrepareContextWithCommandLineArguments` statt echter Hardware und ohne `FlashFirmware` – für Builds ohne angeschlossenes Board. |
+
+## Tests
+
+Die Sensact-Apps haben Host-Unit-Tests (GoogleTest, laufen auf dem PC, kein Board nötig):
+`espidf-components/sensact-applicationmodel/host_test`, Bedienung s. dortige
+[README.md](../../../espidf-components/sensact-applicationmodel/host_test/README.md).
+Kurz (aus PowerShell, nicht Git-Bash): `cmake -S . -B build -G Ninja`,
+`cmake --build build`, `ctest --test-dir build`. Nicht Teil von `Pipeline` – vor dem
+Flashen geänderter App-Logik bitte manuell ausführen.
 
 ## Neues Board anlegen / in Betrieb nehmen
 
@@ -175,7 +185,8 @@ Verbindungen.
   `export.bat` bricht darin sofort ab, ohne `idf.py` in den `PATH` zu bringen.
   Builder-Aufrufe bis `BuildFirmware`/`FlashFirmware` in PowerShell oder `cmd.exe`
   ausführen.
-- **`Konnte Repo-Wurzel nicht finden`**: `builder/Paths.cs`s `FindRootDir()`
+- **`Konnte Repo-Wurzel nicht finden`**: `FindRootDir()` (gemeinsame Bibliothek
+  `dotnet_libs/firmware_builder_common`, `BuildContextPaths.cs`)
   erwartet die `CMakeLists.txt` ausschließlich im unmittelbar übergeordneten
   Verzeichnis von `builder/` – kein generisches Aufwärtssuchen darüber hinaus.
   Tritt z.B. auf, wenn `builder/` versehentlich in ein anderes Verzeichnis
