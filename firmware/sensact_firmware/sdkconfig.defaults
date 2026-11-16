@@ -27,6 +27,9 @@ CONFIG_MBEDTLS_ECP_FIXED_POINT_OPTIM=y
 # follow normal ESP-IDF malloc() behavior instead so it can spill into PSRAM.
 CONFIG_MBEDTLS_DEFAULT_MEM_ALLOC=y
 # Fuer die Task-CPU-Auslastungsstatistik (vTaskGetRunTimeStats in nodemaster.hh)
-# benoetigt -- ohne dieses Flag liefert vTaskGetRunTimeStats() nur einen leeren
-# String, keinen Fehler, also leicht zu uebersehen wenn man es vergisst.
+# benoetigt; vTaskGetRunTimeStats() existiert nur mit allen drei Optionen (sonst
+# ueberspringt nodemaster.hh das Logging). Achtung: sdkconfig.defaults wirkt erst, wenn
+# sdkconfig neu erzeugt wird (idf.py menuconfig/reconfigure nach Loeschen von sdkconfig).
 CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=y
+CONFIG_FREERTOS_USE_TRACE_FACILITY=y
+CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS=y

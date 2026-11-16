@@ -104,6 +104,11 @@ namespace sensact
 		}
 
 		void LogCpuLoadStats(){
+#if !(CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS && CONFIG_FREERTOS_USE_TRACE_FACILITY && CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS)
+			// vTaskGetRunTimeStats() existiert nur mit diesen drei FreeRTOS-Optionen (s.
+			// sdkconfig.defaults). Ohne sie: nichts loggen statt nicht linken.
+			return;
+#else
 			// vTaskGetRunTimeStats() ist selbst nicht ganz billig (iteriert alle Tasks, mehrere
 			// snprintf-Aufrufe) -- deshalb hart auf alle 30s gedrosselt statt bei jedem 100ms-Tick.
 			static tms_t lastCpuStatsLog{0};
@@ -114,6 +119,7 @@ namespace sensact
 			static char cpuStatsBuffer[2048];
 			vTaskGetRunTimeStats(cpuStatsBuffer);
 			ESP_LOGI(TAG, "CPU load per task (name\truntime\t%%):\n%s", cpuStatsBuffer);
+#endif
 		}
 
 		ErrorCode CheckAndLogHealth(){
