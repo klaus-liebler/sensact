@@ -318,7 +318,8 @@ in den XML-Dateien gepflegt, und die C#-Hausmodelle entfallen.
 Ein Teil der Stationen läuft noch länger auf der alten STM32-Firmware: F407 (sensactHS) und
 F103 (sensactUp, 20 KB RAM). Deren Quellcode ist eine eigene Codebasis
 (PlatformIO/STM32Cube, eigene App-Implementierungen in `lib/core` bzw. `modules/core`), liegt
-im Repo aber nur als Archiv (`firmware/firmware_stm32.7z`, `firmwareCubeIDE.7z`). Sie bindet
+seit 2026-11-17 als normale Dateien im Repo (`firmware/sensact_firmware_stm32/` – PlatformIO,
+`firmware/firmwareCubeIDE/` – ältere STM32CubeIDE-Projekte). Sie bindet
 das Hausmodell bereits heute genauso ein wie die ESP32-Firmware: über generierte
 `applicationInitializers.inc`/`glo2LocPointers.inc`.
 
@@ -341,5 +342,3 @@ Kommandos verwendet, die ihre Firmware-Familie kennt.
 2. Hausmodell als **eine** XML-Datei (plus Katalog).
 3. STM32-Altknoten: **L1** (Code-Export).
 
-Noch offen: den Quellcode der STM32-Altfirmware aus den 7z-Archiven als normale Dateien ins
-Repo holen (s. `known-issues.md`, E13).

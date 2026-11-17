@@ -6,10 +6,7 @@ offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS 
 
 ## Entscheidung nötig
 
-| # | Thema | Stand / Vorschlag |
-|---|---|---|
-| E13 | **Quellcode der STM32-Altfirmware** liegt nur als 7z-Archiv im Repo (`firmware/firmware_stm32.7z`, `firmwareCubeIDE.7z`): Änderungen sind nicht vergleichbar, der künftige Code-Export (L1) dort nicht testbar. | Vorschlag: einmalig als normale Dateien einchecken (z. B. `firmware/sensact_firmware_stm32/`), Archive danach entfernen. |
-| E14 | **CI**: Host-Tests laufen jetzt in `Pipeline`/`PipelineOffline` (T8), aber nicht automatisch bei jedem Push. | GitHub Actions bräuchte Checkouts mehrerer Repos (sensact, espidf-components, dotnet_libs …) mit .NET und GCC – lohnt sich das? |
+Zurzeit keine.
 
 ## Offen (technisch)
 
@@ -17,10 +14,34 @@ offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS 
 |---|---|---|
 | T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Auffällig: das Image von `SNSCT_L0_TECH_HS_1` ist am 2026-11-17 von 1,31 auf 0,95 MB geschrumpft – es enthält jetzt (passend zu `WIFI_ENABLED=false` im Board-Archiv) nur die Ethernet-Variante des Webmanagers, keinen WLAN-Stack; warum frühere Builds mit derselben Konfiguration größer waren, ist ungeklärt. Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
 | T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
-| T13 | **Standort des Webmanager-Schedulers fest eincodiert** (Greven, 52.0965 N / 7.6171 E, `scheduler.hh`). Für den Rollladen-Timer kommt der Standort bereits aus dem Modell. | Webmanager |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
+
+- **E13**: Quellcode der STM32-Altfirmware als normale Dateien eingecheckt:
+  `firmware/sensact_firmware_stm32/` (PlatformIO, aus `firmware/firmware_stm32.7z`) und
+  `firmware/firmwareCubeIDE/` (STM32CubeIDE-Projekte, aus `firmwareCubeIDE.7z`); Archive entfernt
+  (in der Git-Historie weiter vorhanden). Nicht übernommen: Eclipse-`.metadata`, Build-Ordner,
+  CMSIS-Binärbibliotheken/DSP-Beispiele/Doku und Gerätheader nicht verwendeter Controller
+  (s. `firmware/firmwareCubeIDE/.gitignore`, alles aus STM32Cube wiederherstellbar). Das
+  WLAN-Passwort in `esp8266ntp/esp8266ntp.ino` ist durch Platzhalter ersetzt.
+  `firmware/sensactOutdoor.7z` ist unverändert geblieben.
+- **E14** (CI per GitHub Actions): entschieden – nein. Host-Tests laufen über den Builder
+  (`RunHostTests`).
+- **T13** (Scheduler-Standort Greven fest eincodiert): bewusst so belassen.
+- **Türklingel spielte zu schnell und nur auf einem Lautsprecher** (`SNSCT_L0_TECH_HS_1`,
+  TAS5805M): zwei Softwarefehler, kein Hardwaredefekt.
+  - `aI2sCodecManager::WriteAudioData` (espidf-components/audio) schrieb bei Stereo-Material nur
+    die halbe Datenmenge (Samples pro Kanal statt L+R-Werte) – von jedem dekodierten Block fehlte
+    die zweite Hälfte, die Wiedergabe klang gehetzt/zu schnell. Alle vier eingebetteten MP3s sind
+    Stereo (dingdong/siren 44,1 kHz, positive/negative 24 kHz).
+  - Die aus ESP-ADF (Korvo DU1906, ein Lautsprecher) übernommene TAS5805M-DSP-Konfiguration
+    mischte (L+R)/2 nur auf den linken Ausgang, der rechte bekam 0. Jetzt bekommen beide
+    Ausgänge (L+R)/2.
+  - Nebenbei: `TAS580x::SetControlState` verknüpfte mit `&&` statt `&` (Hi-Z beim Init wurde zu PLAY).
+  - Am Gerät noch zu prüfen (s. T1).
 
 ### 2026-11-17 (2) – Antworten zu E5–E12, T2–T10 umgesetzt
 
