@@ -17,9 +17,16 @@
     "NONE"                   unbeschalteter Ausgang
     "#0x400D"                rohe InOutId (nur fuer Faelle, die sich nicht benennen lassen)
 
-  Konventionen fuer gute Diffs: Stationen und Apps in fester Reihenfolge (der Export sortiert
-  nach Nummer), ein Element pro App, Attribute statt Kindelemente, Zeiten in ms bzw. s mit
-  Einheit im Namen.
+  Reihenfolge hat Bedeutung:
+    - Stationen: ihre Reihenfolge ergibt heute die Werte von eNodeID (C++-Enum ohne explizite
+      Werte, u. a. in Node-Events auf dem CAN-Bus): nicht umsortieren, neue Stationen hinten
+      anfuegen.
+    - Apps innerhalb einer Station: Reihenfolge der Anzeige im Web-UI; zur Laufzeit ohne
+      Bedeutung (Zugriff ueber die Nummer).
+    - Erweiterungen gleichen Typs auf einem Bus: Chip-Index (s. ExtensionInstance).
+
+  Konventionen fuer gute Diffs: ein Element pro App, Attribute statt Kindelemente, Zeiten in
+  ms bzw. s mit Einheit im Namen, Standardwerte weglassen.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 

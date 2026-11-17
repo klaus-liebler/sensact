@@ -29,10 +29,10 @@
   </station>
   <station id="SNSCT_NODE_TERRASSE" number="4" board="SensactOutdoor">
     <milightController id="REMOT_X1_XX1_42" number="22" description="Milight Controller" light="PWM___X1_XX1_42" blinds="BLIND_X1_XX1_42 BLIND_X1_XX1_43" />
+    <blindsTimer id="BLTIM_X1_XX1_45" number="27" description="Markisen-Timer" blinds="BLIND_X1_XX1_42 BLIND_X1_XX1_43" openOffsetMin="30" closeOffsetMin="-15" maxRandomMin="20" />
     <singlePwm id="PWM___X1_XX1_42" number="23" description="Spots Terrassendach" outputs="POWER_LED GPIO.5" minimalOnLevel="512" autoOffMs="43200000" />
     <blind id="BLIND_X1_XX1_42" number="24" description="Markise Horizontal" relay1="K1" relay2="K2" relayMode="R1_DOWN__R2_UP" upTimeSec="20" downTimeSec="15" />
     <blind id="BLIND_X1_XX1_43" number="25" description="Markise Vertikal" relay1="K3" relay2="K4" relayMode="R1_DOWN__R2_UP" upTimeSec="20" downTimeSec="15" />
     <sound id="SOUND_X1_XX1_44" number="26" description="Soundgenerator" defaultSignalOnToggle="1" />
-    <blindsTimer id="BLTIM_X1_XX1_45" number="27" description="Markisen-Timer" blinds="BLIND_X1_XX1_42 BLIND_X1_XX1_43" openOffsetMin="30" closeOffsetMin="-15" maxRandomMin="20" />
   </station>
 </house>

@@ -15,15 +15,20 @@ namespace Klli.Sensact.Config
         NODE_SPECIFIC,
     }
 
-    public class SourceCodeGenerator<ApplicationIdType> where ApplicationIdType : struct, Enum
+    public class SourceCodeGenerator
     {
-        private ILogger<SourceCodeGenerator<ApplicationIdType>> LOG;
+        private ILogger<SourceCodeGenerator> LOG;
         private SourceCodeGeneratorOptions appSettings;
 
-        private ApplicationIdType noAppId;
-        private ApplicationIdType masterAppId;
-        public SourceCodeGenerator(AppSettings appSettings, ILogger<SourceCodeGenerator<ApplicationIdType>> LOG)
+        // Alle App-IDs des Hausmodells (aus dem C#-Enum oder dem XML-Hausmodell), s. AppIdTable
+        private readonly AppIdTable ids;
+        private readonly AppIdEntry noAppId;
+        private readonly AppIdEntry masterAppId;
+        public SourceCodeGenerator(AppSettings appSettings, AppIdTable ids, ILogger<SourceCodeGenerator> LOG)
         {
+            this.ids = ids;
+            this.noAppId = ids.NoApp;
+            this.masterAppId = ids.Master;
             this.appSettings = appSettings.SourceCodeGenerator!;
             this.LOG = LOG;
 
@@ -34,15 +39,6 @@ namespace Klli.Sensact.Config
             
             Directory.CreateDirectory(this.appSettings.BasePath);
             
-            if (!Enum.TryParse("NO_APPLICATION", out noAppId) || Convert.ToUInt16(noAppId) != Sensact.Model.Common.Model.NO_APPLICATION_ID)
-            {
-                throw new ArgumentException("Enum validation failed: NO_APPLICATION not found in " + typeof(ApplicationIdType).Name);
-            }
-
-            if (!Enum.TryParse("MASTER", out masterAppId) || Convert.ToUInt16(masterAppId) != Sensact.Model.Common.Model.MASTER_APPLICATION_ID)
-            {
-                throw new ArgumentException("Enum validation failed: MASTER not found in " + typeof(ApplicationIdType).Name);
-            }
           
         }
 
@@ -81,17 +77,12 @@ namespace Klli.Sensact.Config
         public bool CheckAndPrepare(ModelContainer mc)
         {
 
-            HashSet<ushort> predefinedAppIds = [.. Enum.GetValues<ApplicationIdType>().Select(x => Convert.ToUInt16(x))];
-           
-            if (Convert.ToUInt16(noAppId) != predefinedAppIds.Max())
-            {
-                LOG.LogError($"Enum validation failed: NO_APPLICATION should have the highest value in {typeof(ApplicationIdType).Name}");
-                return false;
-            }
-            mc.NextFreeIndex = (ushort)(1 + predefinedAppIds.Where(x => x != Convert.ToUInt16(noAppId)).Max());
+            HashSet<ushort> predefinedAppIds = [.. ids.Entries.Select(x => x.Number)];
+            // NO_APPLICATION hat per Konstruktion von AppIdTable die hoechste Nummer
+            mc.NextFreeIndex = (ushort)(1 + predefinedAppIds.Where(x => x != noAppId.Number).Max());
             Node nullNode = new NullNode(0, "NullNode");
             Node monitoring_node = new MonitoringNode(ushort.MaxValue, "MONITORING");
-            SensactApplicationContainer masterApp = new(nullNode, new MasterApplication(Convert.ToUInt16(masterAppId), masterAppId.ToString()));
+            SensactApplicationContainer masterApp = new(nullNode, new MasterApplication(masterAppId.Number, masterAppId.Name));
             mc.id2app[masterApp.Application.ApplicationId] = masterApp;
             mc.Model.Nodes.Add(monitoring_node);
 
@@ -200,7 +191,7 @@ namespace Klli.Sensact.Config
                     {
                         if (!mc.id2app.TryGetValue(cmd.TargetAppId, out SensactApplicationContainer? target))
                         {
-                            if (cmd.TargetAppId != Convert.ToUInt16(noAppId))
+                            if (cmd.TargetAppId != noAppId.Number)
                             {
                                 LOG.LogError($"AppId {app.ApplicationId} sends command to non-existent AppId {cmd.TargetAppId}.");
                                 return false;
@@ -237,23 +228,16 @@ namespace Klli.Sensact.Config
             StringBuilder sb_c = new StringBuilder();
             StringBuilder sb_flatc = new StringBuilder();
 
-            ApplicationIdType noAppId;
-            if (!Enum.TryParse("NO_APPLICATION", out noAppId))
-            {
-                LOG.LogError("Enum {0} does not contain NO_APPLICATION", typeof(ApplicationIdType).Name);
-                return;
-            }
-
             //mc.Model.Nodes.ForEach(n => page.Nodes.Add(n.Id));
             //page.Nodes.Add("CNT");
             ushort CNT = 0;
-            foreach (var id in Enum.GetValues<ApplicationIdType>())
+            foreach (var id in ids.Entries)
             {
-                sb_c.AppendLine("\t" + id.ToString() + "=" + Convert.ToUInt16(id) + ",");
-                sb_flatc.AppendLine("\t" + id.ToString() + "=" + Convert.ToUInt16(id) + ",");
+                sb_c.AppendLine("\t" + id.Name + "=" + id.Number + ",");
+                sb_flatc.AppendLine("\t" + id.Name + "=" + id.Number + ",");
                 if (!id.Equals(noAppId))
                 {
-                    CNT = Math.Max(CNT, Convert.ToUInt16(id));
+                    CNT = Math.Max(CNT, id.Number);
                 }
             }
             sb_c.AF2L("CNT={0},", CNT + 1);
@@ -267,7 +251,7 @@ namespace Klli.Sensact.Config
             // Flatbuffers-Enum-Text. Laeuft VORLAEUFIG parallel zum bisherigen .fbs-Output (s.o.), bis
             // die ws-protocol-basierte Codegenerierung den Flatbuffers-Pfad fuer sensact vollstaendig
             // ersetzt hat. Werte werden bewusst IMMER explizit ausgeschrieben (nicht auf Auto-Increment
-            // verlassen) -- ApplicationIdType-Werte muessen nicht lueckenlos/aufsteigend sein.
+            // verlassen) -- App-Nummern muessen nicht lueckenlos/aufsteigend sein.
             var applicationIdEnumCs = new StringBuilder()
                 .AppendLine("using BestBinaryBuffers;")
                 .AppendLine()
@@ -277,9 +261,9 @@ namespace Klli.Sensact.Config
                 .AppendLine("[BinaryType]")
                 .AppendLine("public enum ApplicationId : ushort")
                 .AppendLine("{");
-            foreach (var id in Enum.GetValues<ApplicationIdType>())
+            foreach (var id in ids.Entries)
             {
-                applicationIdEnumCs.AppendLine($"\t{id} = {Convert.ToUInt16(id)},");
+                applicationIdEnumCs.AppendLine($"\t{id.Name} = {id.Number},");
             }
             applicationIdEnumCs.AppendLine("}");
             this.WriteCommonCsFile("applicationIds.enums", applicationIdEnumCs.ToString());
@@ -721,11 +705,9 @@ namespace Klli.Sensact.Config
         internal void GenerateApplicationNames(ModelContainer mc)
         {
             var ApplicationNames = new string[mc.NextFreeIndex];
-            ApplicationIdType noAppId;
-            Enum.TryParse("NO_APPLICATION", out noAppId);
-            foreach (var kv in Enum.GetValues<ApplicationIdType>().Where(x => !x.Equals(noAppId)))
+            foreach (var kv in ids.Entries.Where(x => !x.Equals(noAppId)))
             {
-                ApplicationNames[Convert.ToUInt16(kv)] = kv.ToString();
+                ApplicationNames[kv.Number] = kv.Name;
                 //Alle vordefinierten Indizes müssen bekannt sein, auch wenn die App (noch) nicht definiert ist
             }
             foreach (var appc in mc.id2app.Values)

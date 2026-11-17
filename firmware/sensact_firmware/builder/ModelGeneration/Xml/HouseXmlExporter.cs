@@ -65,7 +65,7 @@ public sealed class HouseXmlExporter<TId> where TId : struct, Enum
 				new XAttribute("longitudeDeg", Num(timer.LongitudeDeg))));
 		}
 
-		foreach (var node in model.Nodes.OrderBy(n => n.NodeId))
+		foreach (var node in model.Nodes) // Reihenfolge erhalten: bestimmt eNodeID
 		{
 			used.Add(node.NodeId);
 			string board = boardTypeOfNodeId(node.NodeName) ?? node.GetType().Name;
@@ -84,7 +84,7 @@ public sealed class HouseXmlExporter<TId> where TId : struct, Enum
 					new XAttribute("bus", e.Bus),
 					new XAttribute("address", $"0x{e.Address:X2}")));
 			}
-			foreach (var app in node.Applications.OrderBy(a => a.ApplicationId))
+			foreach (var app in node.Applications) // Reihenfolge erhalten: Anzeige im Web-UI
 			{
 				used.Add(app.ApplicationId);
 				station.Add(ExportApp(app, io, timer));

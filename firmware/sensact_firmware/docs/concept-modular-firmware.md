@@ -312,9 +312,18 @@ Beim Export aufgefallen: Die C#-Node-Klassen stimmen nicht mit der realen Hardwa
 ist `SensactUp02`, läuft auf `SensactUpHs`). Das XML nimmt den Board-Typ aus
 `NodeIdBoardTypeCatalog` (also die reale Hardware); die C#-Klassen sind für die Codegenerierung
 ohne Bedeutung.
-**Übergang**: Der Export (`ExportModelXml`) erzeugt das Hausmodell aus den heutigen C#-Klassen
-(`ModelGeneration/Nodes/*`, `Sattlerstrasse16Builder.cs`); danach wird nur noch im Editor bzw.
-in den XML-Dateien gepflegt, und die C#-Hausmodelle entfallen.
+**Übergang**: Der Export (`ExportModelXml`) erzeugt das Hausmodell aus den heutigen C#-Klassen.
+Der **Rückweg** existiert ebenfalls (2026-11-17): `HouseXmlImporter` liest das XML und baut
+dieselben Modellobjekte; die Codegenerierung bekommt die App-IDs als Tabelle (`AppIdTable`)
+statt aus dem C#-Enum. `VerifyModelXml` zeigt, dass alle generierten Dateien aus XML und aus
+C# identisch sind. Umschalten: `GenerateModelFiles --source xml`; danach entfallen die
+C#-Hausmodelle, und gepflegt wird nur noch das XML (zunächst von Hand bzw. in VS Code mit
+XSD-Unterstützung, später im Editor).
+
+Beim Rückweg aufgefallen: Die **Reihenfolge der Stationen** ergibt die Werte von `eNodeID`
+(C++-Enum ohne explizite Werte, u. a. in Node-Events auf dem CAN-Bus) – im XML also nicht
+umsortieren. Besser wäre langfristig `eNodeID` mit expliziten Werten (= Stationsnummer); das
+ändert aber Werte auf dem Bus und muss mit den STM32-Altknoten abgestimmt werden.
 
 ## STM32-Altknoten
 
