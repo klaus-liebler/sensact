@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<house name="Sattlerstraße 16" schemaVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/sensact-house.xsd">
+<house name="Sattlerstraße 16" schemaVersion="2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/sensact-house.xsd">
   <station id="SNSCT_L0_TECH_HS_1" number="1" board="SensactHsNano3">
     <extension name="IN0" type="PCA9555" bus="SensactBus" address="0x20" />
     <extension name="IN1" type="PCA9555" bus="SensactBus" address="0x21" />
@@ -14,41 +14,41 @@
     <toggleButton id="PUSHB_L0_CORR_B31" number="11" input="IN0.11" targets="POWIT_L0_CORR_C1 PWM___LS_STRS_W1" />
     <onOff id="POWIT_L0_CORR_C1" number="12" description="Deckenlicht" output="OUT2.8" />
     <dualDimButtons id="PUSHB_L0_PRTY_B11" number="14" inputUp="IN0.10" inputDown="IN0.9" target="PWM___L0_PRTY_S" />
-    <singlePwm id="PWM___L0_PRTY_S" number="18" description="Spots" outputs="OUT0.13 OUT0.12 OUT0.11 OUT0.10" minimalOnLevel="512" autoOffMs="43200000" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L0_PRTY_S" number="18" description="Spots" outputs="OUT0.13 OUT0.12 OUT0.11 OUT0.10" minimalBrightness="0.781" autoOff="PT12H" standbyController="STDBY_L0_TECH_48V" />
     <toggleButton id="PUSHB_L0_STO1_B11" number="22" input="IN0.8" targets="POWIT_L0_STO1_C1" />
-    <onOff id="POWIT_L0_STO1_C1" number="23" description="Deckenlicht" output="OUT2.7" autoOffMs="1800000" />
+    <onOff id="POWIT_L0_STO1_C1" number="23" description="Deckenlicht" output="OUT2.7" autoOff="PT30M" />
     <toggleButton id="PUSHB_L0_TECH_B11" number="25" input="IN0.7" targets="POWIT_L0_TECH_C1" />
-    <onOff id="POWIT_L0_TECH_C1" number="26" description="Deckenlicht" output="OUT2.6" autoOffMs="1800000" />
+    <onOff id="POWIT_L0_TECH_C1" number="26" description="Deckenlicht" output="OUT2.6" autoOff="PT30M" />
     <sound id="SOUND_L0_TECH_AUDIO" number="59" description="Türklingel" initialVolume="16384" defaultSignalOnToggle="1" />
-    <pump id="PUMP__L0_TECH_PUMP" number="29" description="Hebepumpe" output="OUT2.13" onIntervalMs="300000" offIntervalMs="7200000" />
-    <onOff id="STDBY_L0_TECH_48V" number="351" description="Netzteil 48V" output="OUT3.0" autoOffMs="20000" />
-    <onOff id="STDBY_L2_CORR_24V" number="352" description="Netzteil 24V" output="OUT3.1" autoOffMs="20000" />
+    <pump id="PUMP__L0_TECH_PUMP" number="29" description="Hebepumpe" output="OUT2.13" onInterval="PT5M" offInterval="PT2H" />
+    <onOff id="STDBY_L0_TECH_48V" number="351" description="Netzteil 48V" output="OUT3.0" autoOff="PT20S" />
+    <onOff id="STDBY_L2_CORR_24V" number="352" description="Netzteil 24V" output="OUT3.1" autoOff="PT20S" />
     <toggleButton id="PUSHB_L0_WELL_B11" number="34" input="IN0.6" targets="POWIT_L0_WELL_C1" />
     <dimButton id="PUSHB_L0_WELL_B12" number="35" input="IN0.5" target="PWM___L0_WELL_S1" />
     <dimButton id="PUSHB_L0_WELL_B21" number="36" input="IN0.4" target="PWM___L0_WELL_S2" />
-    <onOff id="POWIT_L0_WELL_C1" number="38" description="Deckenlicht" output="OUT2.5" autoOffMs="14400000" />
-    <singlePwm id="PWM___L0_WELL_S1" number="41" description="Spot Dusche" outputs="OUT0.9" minimalOnLevel="512" autoOffMs="1800000" standbyController="STDBY_L0_TECH_48V" />
-    <singlePwm id="PWM___L0_WELL_S2" number="42" description="Spot WC" outputs="OUT0.8" minimalOnLevel="512" autoOffMs="1800000" standbyController="STDBY_L0_TECH_48V" />
+    <onOff id="POWIT_L0_WELL_C1" number="38" description="Deckenlicht" output="OUT2.5" autoOff="PT4H" />
+    <singlePwm id="PWM___L0_WELL_S1" number="41" description="Spot Dusche" outputs="OUT0.9" minimalBrightness="0.781" autoOff="PT30M" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L0_WELL_S2" number="42" description="Spot WC" outputs="OUT0.8" minimalBrightness="0.781" autoOff="PT30M" standbyController="STDBY_L0_TECH_48V" />
     <toggleButton id="PUSHB_L0_WORK_B11" number="45" input="IN0.3" targets="POWIT_L0_WORK_C1" />
-    <onOff id="POWIT_L0_WORK_C1" number="46" description="Deckenlicht" output="OUT2.4" autoOffMs="14400000" />
-    <onOff id="POWIT_LX_BACK_P1" number="179" description="Phase1" output="OUT3.11" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_BACK_P3" number="181" description="Phase3" output="OUT3.10" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_BACK_W1" number="183" description="Wandlicht Küche" output="OUT3.5" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_BACK_W2" number="184" description="Wandlicht mitte" output="OUT3.4" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_BACK_W3" number="185" description="Wandlicht Wohnen" output="OUT3.3" autoOffMs="21600000" />
-    <blind id="BLIND_LX_BACK_J1" number="178" description="Markise nicht genutzt" relay1="OUT1.9" relay2="OUT2.3" relayMode="R1_POWER__R2_DOWN" upTimeSec="60" downTimeSec="60" />
+    <onOff id="POWIT_L0_WORK_C1" number="46" description="Deckenlicht" output="OUT2.4" autoOff="PT4H" />
+    <onOff id="POWIT_LX_BACK_P1" number="179" description="Phase1" output="OUT3.11" autoOff="PT6H" />
+    <onOff id="POWIT_LX_BACK_P3" number="181" description="Phase3" output="OUT3.10" autoOff="PT6H" />
+    <onOff id="POWIT_LX_BACK_W1" number="183" description="Wandlicht Küche" output="OUT3.5" autoOff="PT6H" />
+    <onOff id="POWIT_LX_BACK_W2" number="184" description="Wandlicht mitte" output="OUT3.4" autoOff="PT6H" />
+    <onOff id="POWIT_LX_BACK_W3" number="185" description="Wandlicht Wohnen" output="OUT3.3" autoOff="PT6H" />
+    <blind id="BLIND_LX_BACK_J1" number="178" description="Markise nicht genutzt" relay1="OUT1.9" relay2="OUT2.3" relayMode="R1_POWER__R2_DOWN" upTime="PT1M" downTime="PT1M" />
     <toggleButton id="PUSHB_LX_FRON_B1" number="188" input="IN3.14" targets="SOUND_L0_TECH_AUDIO" />
     <lightbarrier id="LIBAR_LX_FRON_B2" number="189" description="Bewegungsmelder" input="IN3.15" activeHigh="false" />
-    <onOff id="POWIT_LX_FRON_W1" number="190" description="Außenleuchte" output="OUT3.9" autoOffMs="120000" />
+    <onOff id="POWIT_LX_FRON_W1" number="190" description="Außenleuchte" output="OUT3.9" autoOff="PT2M" />
     <toggleButton id="PUSHB_LX_GARA_B11" number="191" input="IN0.2" targets="POWIT_LX_GARA_C1" />
-    <onOff id="POWIT_LX_GARA_C1" number="193" description="Deckenlicht" output="OUT3.8" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_LEFT_W1" number="197" description="Außenlicht links" output="OUT3.7" autoOffMs="21600000" />
-    <onOff id="POWIT_LX_RGHT_W1" number="198" description="Außenlicht rechts" output="OUT3.6" autoOffMs="21600000" />
+    <onOff id="POWIT_LX_GARA_C1" number="193" description="Deckenlicht" output="OUT3.8" autoOff="PT6H" />
+    <onOff id="POWIT_LX_LEFT_W1" number="197" description="Außenlicht links" output="OUT3.7" autoOff="PT6H" />
+    <onOff id="POWIT_LX_RGHT_W1" number="198" description="Außenlicht rechts" output="OUT3.6" autoOff="PT6H" />
     <toggleButton id="PUSHB_L1_BATH_B11" number="49" input="IN2.6" targets="RGBW__L1_BATH_W1 PWM___L1_BATH_S" />
     <blindButtons id="PUSHB_L1_BATH_B12" number="50" inputUp="IN2.5" inputDown="IN2.4" target="BLIND_L1_BATH_J1" />
-    <singlePwm id="PWM___L1_BATH_S" number="53" description="Spots" outputs="OUT0.3" minimalOnLevel="512" autoOffMs="3600000" standbyController="STDBY_L0_TECH_48V" />
-    <blind id="BLIND_L1_BATH_J1" number="52" description="Rolladen" relay1="OUT1.0" relay2="OUT1.10" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <rgbw id="RGBW__L1_BATH_W1" number="54" description="Dekolicht" outputR="OUT0.7" outputG="OUT0.6" outputB="OUT0.5" outputW="NONE" autoOffMs="7200000" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_BATH_S" number="53" description="Spots" outputs="OUT0.3" minimalBrightness="0.781" autoOff="PT1H" standbyController="STDBY_L0_TECH_48V" />
+    <blind id="BLIND_L1_BATH_J1" number="52" description="Rolladen" relay1="OUT1.0" relay2="OUT1.10" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <rgbw id="RGBW__L1_BATH_W1" number="54" description="Dekolicht" outputR="OUT0.7" outputG="OUT0.6" outputB="OUT0.5" outputW="NONE" autoOff="PT2H" standbyController="STDBY_L0_TECH_48V" />
     <dimButton id="PUSHB_L1_CORR_B11" number="60" input="IN1.0" target="PWM___L1_CORR_S" />
     <dimButton id="PUSHB_L1_CORR_B21" number="61" input="IN2.3" target="PWM___L1_CORR_S" />
     <dimButton id="PUSHB_L1_CORR_B22" number="62" input="IN2.2" target="PWM___L1_CORR_W1" />
@@ -56,15 +56,15 @@
     <dimButton id="PUSHB_L1_CORR_B24" number="64" input="IN2.0" target="PWM___L1_CORR_W1" />
     <toggleButton id="PUSHB_L1_CORR_B25" number="65" input="IN1.15" targets="POWIT_LX_FRON_W1" />
     <toggleButton id="PUSHB_L1_CORR_B26" number="66" input="IN1.14" targets="POWIT_LX_LEFT_W1" />
-    <singlePwm id="PWM___L1_CORR_S" number="69" description="Spots" outputs="OUT0.2 OUT0.1 OUT0.0" minimalOnLevel="512" autoOffMs="7200000" standbyController="STDBY_L0_TECH_48V" />
-    <singlePwm id="PWM___L1_CORR_W1" number="71" description="Wandlicht" outputs="OUT0.4" minimalOnLevel="512" autoOffMs="7200000" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_CORR_S" number="69" description="Spots" outputs="OUT0.2 OUT0.1 OUT0.0" minimalBrightness="0.781" autoOff="PT2H" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_CORR_W1" number="71" description="Wandlicht" outputs="OUT0.4" minimalBrightness="0.781" autoOff="PT2H" standbyController="STDBY_L0_TECH_48V" />
     <toggleButton id="PUSHB_L1_KTCH_B11" number="76" input="IN1.13" targets="POWIT_L1_KTCH_C1" />
     <toggleButton id="PUSHB_L1_KTCH_B12" number="77" input="IN1.12" targets="POWIT_LX_BACK_W1" />
     <dimButton id="PUSHB_L1_KTCH_B31" number="86" input="IN1.11" target="PWM___L1_KTCH_S2" />
     <dimButton id="PUSHB_L1_KTCH_B32" number="87" input="IN1.10" target="PWM___L1_KTCH_S1" />
     <onOff id="POWIT_L1_KTCH_C1" number="88" description="Deckenleuchte" output="OUT3.2" />
-    <blind id="BLIND_L1_KTCH_J1" number="90" description="Rollo Garten" relay1="OUT1.2" relay2="OUT1.12" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <blind id="BLIND_L1_KTCH_J2" number="91" description="Rollo Garage" relay1="OUT1.1" relay2="OUT1.11" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L1_KTCH_J1" number="90" description="Rollo Garten" relay1="OUT1.2" relay2="OUT1.12" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <blind id="BLIND_L1_KTCH_J2" number="91" description="Rollo Garage" relay1="OUT1.1" relay2="OUT1.11" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <blindButtons id="PUSHB_L1_LVNG_B11" number="103" inputUp="IN1.9" inputDown="IN1.8" target="BLIND_LX_BACK_J1" />
     <toggleButton id="PUSHB_L1_LVNG_B13" number="105" input="IN1.7" targets="POWIT_LX_BACK_W2" />
     <toggleButton id="PUSHB_L1_LVNG_B14" number="106" input="IN1.3" targets="POWIT_LX_BACK_W3" />
@@ -75,19 +75,19 @@
     <dimButton id="PUSHB_L1_LVNG_B51" number="122" input="IN3.13" target="PWM___L1_LVNG_S" />
     <dimButton id="PUSHB_L1_LVNG_B52" number="123" input="IN3.12" target="PWM___L1_KTCH_S1" />
     <toggleButton id="PUSHB_L1_LVNG_B53" number="124" input="IN3.11" targets="POWIT_L1_KTCH_C1" />
-    <blind id="BLIND_L1_LVNG_J1" number="127" description="Rollo Kaninchen" relay1="OUT1.3" relay2="OUT1.13" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <blind id="BLIND_L1_LVNG_J2" number="128" description="Rollo Terrasse" relay1="OUT1.4" relay2="OUT1.14" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <blind id="BLIND_L1_LVNG_J3" number="129" description="Rollo Esszimmer" relay1="OUT1.5" relay2="OUT1.15" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L1_LVNG_J1" number="127" description="Rollo Kaninchen" relay1="OUT1.3" relay2="OUT1.13" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <blind id="BLIND_L1_LVNG_J2" number="128" description="Rollo Terrasse" relay1="OUT1.4" relay2="OUT1.14" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <blind id="BLIND_L1_LVNG_J3" number="129" description="Rollo Esszimmer" relay1="OUT1.5" relay2="OUT1.15" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <onOff id="POWIT_L1_LVNG_C1" number="125" description="Esszimmerlampe" output="OUT2.12" />
     <onOff id="POWIT_L1_LVNG_P4" number="132" description="Phase 4" output="OUT3.12" />
     <onOff id="POWIT_L1_LVNG_P1" number="130" description="Phase 1" output="OUT3.13" />
-    <singlePwm id="PWM___L1_LVNG_W4" number="138" description="??LVNG_W4??," outputs="OUT0.14" minimalOnLevel="512" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_LVNG_W4" number="138" description="??LVNG_W4??," outputs="OUT0.14" minimalBrightness="0.781" standbyController="STDBY_L0_TECH_48V" />
     <blindButtons id="PUSHB_L1_UTIL_B11" number="146" inputUp="IN3.10" inputDown="IN3.9" target="BLIND_L1_UTIL_J1" />
     <dimButton id="PUSHB_L1_UTIL_B13" number="148" input="IN3.8" target="PWM___L1_KTCH_S1" />
     <toggleButton id="PUSHB_L1_UTIL_B21" number="149" input="IN3.7" targets="POWIT_L1_UTIL_C1" />
     <toggleButton id="PUSHB_L1_UTIL_B22" number="150" input="IN3.6" targets="POWIT_LX_LEFT_W1" />
     <onOff id="POWIT_L1_UTIL_C1" number="153" description="Deckenleuchte" output="OUT2.9" />
-    <blind id="BLIND_L1_UTIL_J1" number="154" description="Rollo" relay1="OUT1.6" relay2="OUT2.0" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L1_UTIL_J1" number="154" description="Rollo" relay1="OUT1.6" relay2="OUT2.0" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <toggleButton id="PUSHB_L1_WORK_B11" number="160" input="IN2.9" targets="POWIT_L1_WORK_C1" />
     <toggleButton id="PUSHB_L1_WORK_B12" number="161" input="IN2.8" targets="POWIT_L1_WORK_C2" />
     <blindButtons id="PUSHB_L1_WORK_B13" number="162" inputUp="IN2.7" inputDown="IN3.3" target="BLIND_L1_WORK_J1" />
@@ -95,12 +95,12 @@
     <toggleButton id="PUSHB_L1_WORK_B17" number="166" input="IN3.0" targets="POWIT_LX_RGHT_W1" />
     <onOff id="POWIT_L1_WORK_C1" number="167" description="Deckenleuchte 1" output="OUT2.11" />
     <onOff id="POWIT_L1_WORK_C2" number="168" description="Deckenleuchte 2 (na)" output="OUT2.10" />
-    <blind id="BLIND_L1_WORK_J1" number="169" description="Rollo Stellplatz" relay1="OUT1.7" relay2="OUT2.1" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <blind id="BLIND_L1_WORK_J2" number="170" description="Rollo Straße" relay1="OUT1.8" relay2="OUT2.2" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L1_WORK_J1" number="169" description="Rollo Stellplatz" relay1="OUT1.7" relay2="OUT2.1" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <blind id="BLIND_L1_WORK_J2" number="170" description="Rollo Straße" relay1="OUT1.8" relay2="OUT2.2" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
   </station>
   <station id="SNSCT_L3_TECH_HS_1" number="3" board="SensactHs08">
     <blindButtons id="PUSHB_L2_BATH_B13" number="201" inputUp="BB.1" inputDown="BB.0" target="BLIND_L2_BATH_J1" />
-    <blind id="BLIND_L2_BATH_J1" number="203" description="Rollo" relay1="RB.16" relay2="RB.25" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L2_BATH_J1" number="203" description="Rollo" relay1="RB.16" relay2="RB.25" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <toggleButton id="PUSHB_L2_BEDR_B11" number="212" input="BB.3" targets="POWIT_L2_BEDR_P3" />
     <toggleButton id="PUSHB_L2_BEDR_B12" number="213" input="BB.2" targets="POWIT_L2_BEDR_P1" />
     <dimButton id="PUSHB_L2_BEDR_B13" number="214" input="BB.6" target="PWM___L2_BEDR_S" />
@@ -113,8 +113,8 @@
     <toggleButton id="PUSHB_L2_BEDR_B33" number="224" input="BB.12" targets="POWIT_L2_BEDR_P1" />
     <toggleButton id="PUSHB_L2_BEDR_B34" number="225" input="BB.17" targets="POWIT_L2_BEDR_P2" />
     <blindButtons id="PUSHB_L2_BEDR_B35" number="226" inputUp="BB.14" inputDown="BB.16" target="BLIND_L2_BEDR_J1" />
-    <blind id="BLIND_L2_BEDR_J1" number="228" description="Rollo" relay1="RB.17" relay2="RB.26" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <singlePwm id="PWM___L2_BEDR_S" number="232" description="Spots" outputs="RB.1 RB.2" minimalOnLevel="512" standbyController="STDBY_L3_TECH_48V" />
+    <blind id="BLIND_L2_BEDR_J1" number="228" description="Rollo" relay1="RB.17" relay2="RB.26" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <singlePwm id="PWM___L2_BEDR_S" number="232" description="Spots" outputs="RB.1 RB.2" minimalBrightness="0.781" standbyController="STDBY_L3_TECH_48V" />
     <onOff id="POWIT_L2_BEDR_P1" number="229" description="Phase 1" output="RB.44" />
     <onOff id="POWIT_L2_BEDR_P2" number="230" description="Phase 2" output="RB.45" />
     <onOff id="POWIT_L2_BEDR_P3" number="231" description="Phase 3" output="RB.46" />
@@ -123,38 +123,38 @@
     <dimButton id="PUSHB_L2_CORR_B31" number="239" input="BB.18" target="PWM___L2_CORR_S" />
     <dimButton id="PUSHB_L2_CORR_B41" number="240" input="BB.23" target="PWM___L2_CORR_S" />
     <blindButtons id="PUSHB_L2_CORR_B42" number="241" inputUp="BB.22" inputDown="BB.21" target="BLIND_L2_CORR_J1" />
-    <blind id="BLIND_L2_CORR_J1" number="243" description="Rollo" relay1="RB.18" relay2="RB.27" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <blind id="BLIND_L2_CORR_J1" number="243" description="Rollo" relay1="RB.18" relay2="RB.27" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <toggleButton id="PUSHB_L2_KID1_B11" number="251" input="BB.26" targets="POWIT_L2_KID1_C1" />
     <blindButtons id="PUSHB_L2_KID1_B12" number="252" inputUp="BB.25" inputDown="BB.24" target="BLIND_L2_KID1_J1" />
     <toggleButton id="PUSHB_L2_KID1_B21" number="254" input="BB.28" targets="POWIT_L2_KID1_C1" />
     <toggleButton id="PUSHB_L2_KID1_B22" number="255" input="BB.27" targets="POWIT_L2_KID1_C2" />
-    <onOff id="POWIT_L2_KID1_C1" number="257" description="Deckenleuchte KLA?" output="RB.39" autoOffMs="43200000" />
-    <onOff id="POWIT_L2_KID1_C2" number="258" description="Deckenleuchte KLA na?" output="RB.40" autoOffMs="43200000" />
-    <blind id="BLIND_L2_KID1_J1" number="259" description="Rollo KLA?" relay1="RB.19" relay2="RB.28" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <onOff id="POWIT_L2_KID1_C1" number="257" description="Deckenleuchte KLA?" output="RB.39" autoOff="PT12H" />
+    <onOff id="POWIT_L2_KID1_C2" number="258" description="Deckenleuchte KLA na?" output="RB.40" autoOff="PT12H" />
+    <blind id="BLIND_L2_KID1_J1" number="259" description="Rollo KLA?" relay1="RB.19" relay2="RB.28" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <toggleButton id="PUSHB_L2_KID2_B11" number="266" input="BB.31" targets="POWIT_L2_KID2_C1" />
     <blindButtons id="PUSHB_L2_KID2_B12" number="267" inputUp="BB.30" inputDown="BB.29" target="BLIND_L2_KID2_J1" />
-    <onOff id="POWIT_L2_KID2_C1" number="270" description="Deckenleuchte SIM?" output="RB.41" autoOffMs="43200000" />
-    <blind id="BLIND_L2_KID2_J1" number="271" description="Rollo SIM?" relay1="RB.20" relay2="RB.29" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
+    <onOff id="POWIT_L2_KID2_C1" number="270" description="Deckenleuchte SIM?" output="RB.41" autoOff="PT12H" />
+    <blind id="BLIND_L2_KID2_J1" number="271" description="Rollo SIM?" relay1="RB.20" relay2="RB.29" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
     <dimButton id="PUSHB_L2_WORK_B11" number="278" input="BB.34" target="PWM___L2_WORK_S" />
     <blindButtons id="PUSHB_L2_WORK_B12" number="279" inputUp="BB.33" inputDown="BB.32" target="BLIND_L2_WORK_J1" />
-    <blind id="BLIND_L2_WORK_J1" number="281" description="Rollo Garten" relay1="RB.21" relay2="RB.30" relayMode="R1_POWER__R2_UP" upTimeSec="40" downTimeSec="40" />
-    <singlePwm id="PWM___L2_WORK_S" number="282" description="Spots Klavier" outputs="RB.3 RB.4" minimalOnLevel="512" autoOffMs="43200000" standbyController="STDBY_L3_TECH_48V" />
+    <blind id="BLIND_L2_WORK_J1" number="281" description="Rollo Garten" relay1="RB.21" relay2="RB.30" relayMode="R1_POWER__R2_UP" upTime="PT40S" downTime="PT40S" />
+    <singlePwm id="PWM___L2_WORK_S" number="282" description="Spots Klavier" outputs="RB.3 RB.4" minimalBrightness="0.781" autoOff="PT12H" standbyController="STDBY_L3_TECH_48V" />
     <toggleButton id="PUSHB_L3_BEDR_B11" number="287" input="BB.38" targets="POWIT_L3_BEDR_C1" />
     <dimButton id="PUSHB_L3_BEDR_B12" number="288" input="BB.37" target="PWM___LS_STRS_W6" />
     <blindButtons id="PUSHB_L3_BEDR_B13" number="289" inputUp="BB.36" inputDown="BB.35" target="BLIND_L3_BEDR_J1" />
-    <onOff id="POWIT_L3_BEDR_C1" number="291" description="Deckenleuchte" output="RB.42" autoOffMs="7200000" />
-    <blind id="BLIND_L3_BEDR_J1" number="292" description="Rollo" relay1="RB.23" relay2="RB.32" relayMode="R1_POWER__R2_DOWN" upTimeSec="40" downTimeSec="40" />
-    <singlePwm id="PWM___L3_CORR_S" number="301" description="Spots" outputs="RB.5" minimalOnLevel="512" autoOffMs="600000" standbyController="STDBY_L3_TECH_48V" />
-    <onOff id="STDBY_L3_TECH_48V" number="353" description="Standby Kabuff 48V" output="RB.35" autoOffMs="20000" />
-    <onOff id="STDBY_L3_ROOF_48V" number="354" description="Standby Dach 48V" output="RB.34" autoOffMs="20000" />
+    <onOff id="POWIT_L3_BEDR_C1" number="291" description="Deckenleuchte" output="RB.42" autoOff="PT2H" />
+    <blind id="BLIND_L3_BEDR_J1" number="292" description="Rollo" relay1="RB.23" relay2="RB.32" relayMode="R1_POWER__R2_DOWN" upTime="PT40S" downTime="PT40S" />
+    <singlePwm id="PWM___L3_CORR_S" number="301" description="Spots" outputs="RB.5" minimalBrightness="0.781" autoOff="PT10M" standbyController="STDBY_L3_TECH_48V" />
+    <onOff id="STDBY_L3_TECH_48V" number="353" description="Standby Kabuff 48V" output="RB.35" autoOff="PT20S" />
+    <onOff id="STDBY_L3_ROOF_48V" number="354" description="Standby Dach 48V" output="RB.34" autoOff="PT20S" />
     <dimButton id="PUSHB_L3_WORK_B11" number="305" input="BB.41" target="PWM___L3_WORK_C1" />
     <dimButton id="PUSHB_L3_WORK_B12" number="306" input="BB.40" target="PWM___L3_WORK_S" />
     <blindButtons id="PUSHB_L3_WORK_B13" number="307" inputUp="BB.39" inputDown="BB.44" target="BLIND_L3_WORK_J1" />
     <dimButton id="PUSHB_L3_WORK_B15" number="309" input="BB.43" target="PWM___LS_STRS_W6" />
-    <blind id="BLIND_L3_WORK_J1" number="311" description="Rollo" relay1="RB.22" relay2="RB.31" relayMode="R1_UP__R2_DOWN" upTimeSec="40" downTimeSec="40" />
-    <singlePwm id="PWM___L3_WORK_S" number="315" description="Spots" outputs="RB.6 RB.7 RB.8" minimalOnLevel="512" standbyController="STDBY_L3_TECH_48V" />
-    <onOff id="STDBY_L3_WORK_C1" number="355" description="Deckenleuchte Netzteil" output="RB.43" autoOffMs="20000" />
-    <singlePwm id="PWM___L3_WORK_C1" number="310" description="Deckenleuchte" outputs="RB.0" minimalOnLevel="512" standbyController="STDBY_L3_WORK_C1" />
+    <blind id="BLIND_L3_WORK_J1" number="311" description="Rollo" relay1="RB.22" relay2="RB.31" relayMode="R1_UP__R2_DOWN" upTime="PT40S" downTime="PT40S" />
+    <singlePwm id="PWM___L3_WORK_S" number="315" description="Spots" outputs="RB.6 RB.7 RB.8" minimalBrightness="0.781" standbyController="STDBY_L3_TECH_48V" />
+    <onOff id="STDBY_L3_WORK_C1" number="355" description="Deckenleuchte Netzteil" output="RB.43" autoOff="PT20S" />
+    <singlePwm id="PWM___L3_WORK_C1" number="310" description="Deckenleuchte" outputs="RB.0" minimalBrightness="0.781" standbyController="STDBY_L3_WORK_C1" />
     <dimButton id="PUSHB_LS_STRS_B21" number="321" input="BB.48" target="PWM___LS_STRS_W4" />
     <dimButton id="PUSHB_LS_STRS_B22" number="322" input="BB.47" target="PWM___L1_CORR_S" />
     <toggleButton id="PUSHB_LS_STRS_B23" number="323" input="BB.46" targets="POWIT_L0_CORR_C1 PWM___LS_STRS_W2" />
@@ -169,9 +169,9 @@
     <dimButton id="PUSHB_L1_KTCH_B24" number="81" input="INTERNAL.17" target="PWM___L1_KTCH_S2" />
     <blindButtons id="PUSHB_L1_KTCH_B25" number="82" inputUp="INTERNAL.6" inputDown="INTERNAL.7" target="BLIND_L1_KTCH_J1" />
     <blindButtons id="PUSHB_L1_KTCH_B27" number="84" inputUp="INTERNAL.4" inputDown="INTERNAL.5" target="BLIND_L1_KTCH_J2" />
-    <singlePwm id="PWM___L1_KTCH_S1" number="94" description="Spots" outputs="BB.0 BB.1 BB.2 BB.3" minimalOnLevel="512" standbyController="STDBY_L0_TECH_48V" />
-    <singlePwm id="PWM___L1_KTCH_S2" number="95" description="Einzelspot Spüle" outputs="BB.4" minimalOnLevel="512" standbyController="STDBY_L0_TECH_48V" />
-    <singlePwm id="PWM___L1_KTCH_W1" number="97" description="Wandlampen" outputs="BB.5" minimalOnLevel="15104" autoOffMs="21600000" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_KTCH_S1" number="94" description="Spots" outputs="BB.0 BB.1 BB.2 BB.3" minimalBrightness="0.781" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_KTCH_S2" number="95" description="Einzelspot Spüle" outputs="BB.4" minimalBrightness="0.781" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_KTCH_W1" number="97" description="Wandlampen" outputs="BB.5" minimalBrightness="23.047" autoOff="PT6H" standbyController="STDBY_L0_TECH_48V" />
   </station>
   <station id="SNSCT_L1_LVNG_UP" number="5" board="SensactUp02">
     <blindButtons id="PUSHB_L1_LVNG_B31" number="112" inputUp="INTERNAL.16" inputDown="INTERNAL.17" target="BLIND_L1_LVNG_J1" />
@@ -181,33 +181,33 @@
     <toggleButton id="PUSHB_L1_LVNG_B42" number="119" input="INTERNAL.19" targets="POWIT_L1_LVNG_C1" />
     <dimButton id="PUSHB_L1_LVNG_B43" number="120" input="INTERNAL.2" target="PWM___L1_LVNG_W1" />
     <dimButton id="PUSHB_L1_LVNG_B44" number="121" input="INTERNAL.3" target="PWM___L1_LVNG_C2" />
-    <singlePwm id="PWM___L1_LVNG_S" number="134" description="Spots" outputs="BB.0 BB.1 BB.2 BB.3 BB.4 BB.5 BB.6 BB.7 BB.8 BB.9 BB.10 BB.11" minimalOnLevel="512" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___L1_LVNG_W1" number="136" description="Wandleuchten" outputs="BB.12" minimalOnLevel="15104" autoOffMs="21600000" standbyController="STDBY_L0_TECH_48V" />
-    <singlePwm id="PWM___L1_LVNG_C2" number="126" description="Lampe Deko?" outputs="BB.13" minimalOnLevel="512" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W2" number="333" description="Treppe L0-L1" outputs="BB.16" minimalOnLevel="512" autoOffMs="21600000" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W4" number="335" description="Treppe L1-L2" outputs="BB.17" minimalOnLevel="512" autoOffMs="120000" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W6" number="337" description="Treppe L2-L3" outputs="BB.18" minimalOnLevel="512" autoOffMs="120000" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W1" number="332" description="Wand L0-L1" outputs="BB.19" minimalOnLevel="512" autoOffMs="21600000" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W3" number="334" description="Wand L1-L2" outputs="BB.20" minimalOnLevel="512" autoOffMs="120000" standbyController="STDBY_L2_CORR_24V" />
-    <singlePwm id="PWM___LS_STRS_W5" number="336" description="Wand L2-L3" outputs="BB.21" minimalOnLevel="512" autoOffMs="120000" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___L1_LVNG_S" number="134" description="Spots" outputs="BB.0 BB.1 BB.2 BB.3 BB.4 BB.5 BB.6 BB.7 BB.8 BB.9 BB.10 BB.11" minimalBrightness="0.781" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___L1_LVNG_W1" number="136" description="Wandleuchten" outputs="BB.12" minimalBrightness="23.047" autoOff="PT6H" standbyController="STDBY_L0_TECH_48V" />
+    <singlePwm id="PWM___L1_LVNG_C2" number="126" description="Lampe Deko?" outputs="BB.13" minimalBrightness="0.781" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W2" number="333" description="Treppe L0-L1" outputs="BB.16" minimalBrightness="0.781" autoOff="PT6H" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W4" number="335" description="Treppe L1-L2" outputs="BB.17" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W6" number="337" description="Treppe L2-L3" outputs="BB.18" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W1" number="332" description="Wand L0-L1" outputs="BB.19" minimalBrightness="0.781" autoOff="PT6H" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W3" number="334" description="Wand L1-L2" outputs="BB.20" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
+    <singlePwm id="PWM___LS_STRS_W5" number="336" description="Wand L2-L3" outputs="BB.21" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
   </station>
   <station id="SNSCT_L3_WORK_HS" number="7" board="SensactUpHs">
     <extension name="OUT0" type="PCA9685" bus="SensactBus" address="0x41" />
     <rotaryEncoder id="ROTAR_L2_BATH_B11" number="199" encoder="ROTENC0" target="PWM___L2_BATH_S" />
     <rotaryEncoder id="ROTAR_L2_BATH_B12" number="200" encoder="ROTENC1" target="RGBW__L2_BATH_W" />
-    <singlePwm id="PWM___L2_BATH_S" number="204" description="Spots" outputs="PWM0 PWM1 PWM2" minimalOnLevel="512" standbyController="STDBY_L3_ROOF_48V" />
-    <rgbw id="RGBW__L2_BATH_W" number="207" description="Dekolicht" outputR="OUT0.0" outputG="OUT0.1" outputB="OUT0.2" outputW="OUT0.3" autoOffMs="7200000" standbyController="STDBY_L3_ROOF_48V" />
-    <singlePwm id="PWM___L2_CORR_S" number="246" description="Spots" outputs="PWM3 PWM4 PWM5" minimalOnLevel="512" autoOffMs="7200000" standbyController="STDBY_L3_ROOF_48V" />
+    <singlePwm id="PWM___L2_BATH_S" number="204" description="Spots" outputs="PWM0 PWM1 PWM2" minimalBrightness="0.781" standbyController="STDBY_L3_ROOF_48V" />
+    <rgbw id="RGBW__L2_BATH_W" number="207" description="Dekolicht" outputR="OUT0.0" outputG="OUT0.1" outputB="OUT0.2" outputW="OUT0.3" autoOff="PT2H" standbyController="STDBY_L3_ROOF_48V" />
+    <singlePwm id="PWM___L2_CORR_S" number="246" description="Spots" outputs="PWM3 PWM4 PWM5" minimalBrightness="0.781" autoOff="PT2H" standbyController="STDBY_L3_ROOF_48V" />
   </station>
   <station id="SNSCT_NODE_SIDEDOOR" number="2" board="SensactUpControl">
     <fingerprint id="FINGR_L1_UTIL_1" number="361" description="Fingerprint Seiteneingang" target1="POWIT_L1_UTIL_DOOR" target2="POWIT_L1_UTIL_DOOR" target3="POWIT_L1_UTIL_DOOR" />
-    <onOff id="POWIT_L1_UTIL_DOOR" number="362" description="Seiteneingang Öffner" output="MOTOR" autoOffMs="1000" />
+    <onOff id="POWIT_L1_UTIL_DOOR" number="362" description="Seiteneingang Öffner" output="MOTOR" autoOff="PT1S" />
   </station>
   <station id="SNSCT_NODE_TERRASSE" number="4" board="SensactOutdoor">
     <milightController id="REMOT_LX_BACK_1" number="360" description="Milight Controller" light="PWM___LX_BACK_C1" blinds="BLIND_LX_BACK_J2 BLIND_LX_BACK_J3" />
-    <singlePwm id="PWM___LX_BACK_C1" number="358" description="Spots Terrassendach" outputs="POWER_LED" minimalOnLevel="0" autoOffMs="43200000" />
-    <blind id="BLIND_LX_BACK_J2" number="356" description="Markise Horizontal" relay1="K1" relay2="K2" relayMode="R1_DOWN__R2_UP" upTimeSec="60" downTimeSec="60" />
-    <blind id="BLIND_LX_BACK_J3" number="357" description="Markise Vertikal" relay1="K3" relay2="K4" relayMode="R1_DOWN__R2_UP" upTimeSec="60" downTimeSec="60" />
+    <singlePwm id="PWM___LX_BACK_C1" number="358" description="Spots Terrassendach" outputs="POWER_LED" minimalBrightness="0" autoOff="PT12H" />
+    <blind id="BLIND_LX_BACK_J2" number="356" description="Markise Horizontal" relay1="K1" relay2="K2" relayMode="R1_DOWN__R2_UP" upTime="PT1M" downTime="PT1M" />
+    <blind id="BLIND_LX_BACK_J3" number="357" description="Markise Vertikal" relay1="K3" relay2="K4" relayMode="R1_DOWN__R2_UP" upTime="PT1M" downTime="PT1M" />
   </station>
   <reserved id="SNSCT_XX_DUMMY_1" number="8" />
   <reserved id="SCLIM_L0_CORR_AIR" number="13" />

@@ -3,7 +3,17 @@ using Microsoft.Extensions.FileProviders;
 using SensactEditor.Services;
 
 // Arbeitet auf einer Kopie von model/ -- die echten Dateien bleiben unberuehrt
-var source = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "model"));
+// model/ suchen: vom Arbeitsverzeichnis bzw. Programmverzeichnis aufwaerts (Ausgabeverzeichnis kann abweichen)
+static string? FindModelDir(string start)
+{
+	for (var d = new DirectoryInfo(start); d != null; d = d.Parent)
+	{
+		if (File.Exists(Path.Combine(d.FullName, "model", "catalog.xml"))) return Path.Combine(d.FullName, "model");
+	}
+	return null;
+}
+var source = FindModelDir(Environment.CurrentDirectory) ?? FindModelDir(AppContext.BaseDirectory)
+	?? throw new DirectoryNotFoundException("model/catalog.xml nicht gefunden (aus sensact_firmware heraus starten).");
 var dir = Path.Combine(Path.GetTempPath(), "sensact_editor_tests", Guid.NewGuid().ToString("N"));
 foreach (var f in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
 {
@@ -27,7 +37,7 @@ Check(File.ReadAllText(path) == original, "Speichern ohne inhaltliche Aenderung 
 // 2) Schema-Typen
 Check(svc.Schema.Types.Count == 18, $"18 App-Typen aus dem XSD (gefunden {svc.Schema.Types.Count})");
 var blind = svc.Schema.Types["blind"];
-Check(blind.Fields.Select(f => f.Name).SequenceEqual(["id", "number", "description", "relay1", "relay2", "relayMode", "upTimeSec", "downTimeSec"]), "Feldreihenfolge blind");
+Check(blind.Fields.Select(f => f.Name).SequenceEqual(["id", "number", "description", "relay1", "relay2", "relayMode", "upTime", "downTime"]), "Feldreihenfolge blind");
 Check(blind.Fields.First(f => f.Name == "relayMode").Choices.Count == 6, "relayMode als Auswahl mit 6 Werten");
 Check(svc.Schema.Types["toggleButton"].Fields.First(f => f.Name == "targets").Kind == FieldKind.AppRefList, "targets = App-Liste");
 Check(svc.Schema.Types["toggleButton"].Fields.First(f => f.Name == "input").Direction == IoDirectionHint.Input, "input = Eingang");
@@ -73,6 +83,32 @@ saved = XDocument.Load(path);
 Check(saved.Root!.Elements("reserved").Any(r => (string?)r.Attribute("id") == "POWIT_X9_XX9_TEST" && (int)r.Attribute("number")! == next), "geloeschte App als reserved mit ihrer Nummer");
 Check(svc.NextFreeNumber == next + 1, "Nummer wird nicht wiederverwendet");
 try { svc.AddApp(hs, "onOff", "POWIT_X9_XX9_TEST", null); Check(false, "Name einer reservierten App nicht neu vergeben"); } catch (ArgumentException) { Check(true, "Name einer reservierten App nicht neu vergeben"); }
+
+// 7) Einheiten: Dauer und Prozent
+svc.Reload();
+hs = svc.Stations.First();
+var lamp = HouseModelService.AppsOf(hs).First(a => a.Name == "onOff");
+Check(svc.Schema.Types["onOff"].Fields.First(f => f.Name == "autoOff").Kind == FieldKind.Duration, "autoOff = Dauer");
+Check(svc.Schema.Types["singlePwm"].Fields.First(f => f.Name == "minimalBrightness").Kind == FieldKind.Percent, "minimalBrightness = Prozent");
+svc.SetAttribute(lamp, "autoOff", "PT1H30M");
+Check(svc.Issues.Count == 0, "PT1H30M gueltig");
+Check(AppSchema.DescribeDuration("PT1H30M") == "= 1 h 30 min", "Anzeige 1 h 30 min: " + AppSchema.DescribeDuration("PT1H30M"));
+svc.SetAttribute(lamp, "autoOff", "30 Minuten");
+Check(svc.Issues.Any(i => i.Message.Contains("autoOff")), "Freitext statt ISO wird gemeldet");
+svc.SetAttribute(lamp, "autoOff", "P60D");
+Check(svc.Issues.Any(i => i.Message.Contains("autoOff")), "60 Tage (> u32 ms) wird gemeldet: " + string.Join(" | ", svc.Issues.Select(i => i.Message)));
+svc.SetAttribute(lamp, "autoOff", "PT30M");
+var pwm = svc.AllApps.First(a => a.Name == "singlePwm");
+svc.SetAttribute(pwm, "minimalBrightness", "5");
+Check(svc.Issues.Count == 0, "5 % gueltig");
+svc.SetAttribute(pwm, "minimalBrightness", "120");
+Check(svc.Issues.Any(), "120 % wird gemeldet");
+svc.Reload();
+Check(Klli.Sensact.Model.Xml.Units.PercentToU16("23.047") == 15104 && Klli.Sensact.Model.Xml.Units.U16ToPercent(512) == "0.781", "Prozent <-> u16 exakt");
+var blindApp = svc.AllApps.First(a => a.Name == "blind");
+svc.SetAttribute(blindApp, "upTime", "PT2.5S");
+Check(svc.Issues.Any(i => i.Message.Contains("ganze Sekunden")), "Rollladen-Fahrzeit nur ganze Sekunden");
+svc.Reload();
 
 Console.WriteLine(fails == 0 ? "ALLE TESTS OK" : $"{fails} FEHLGESCHLAGEN");
 return fails;

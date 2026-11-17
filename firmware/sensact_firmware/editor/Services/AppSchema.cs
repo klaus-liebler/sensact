@@ -5,7 +5,7 @@ using System.Xml.Schema;
 namespace SensactEditor.Services;
 
 /// <summary>Art eines App-Attributs, bestimmt das Eingabefeld im Formular.</summary>
-public enum FieldKind { Text, Number, Boolean, Choice, AppRef, AppRefList, IoRef, IoRefList }
+public enum FieldKind { Text, Number, Boolean, Choice, AppRef, AppRefList, IoRef, IoRefList, Duration, Percent }
 
 public sealed record FieldInfo(
 	string Name,
@@ -99,6 +99,8 @@ public sealed class AppSchema
 			"IoRef" => FieldKind.IoRef,
 			"IoRefList" => FieldKind.IoRefList,
 			"AppRefList" => FieldKind.AppRefList,
+			"Duration" => FieldKind.Duration,
+			"Percent" => FieldKind.Percent,
 			_ when choices.Count > 0 => FieldKind.Choice,
 			_ when st.Datatype!.TypeCode == XmlTypeCode.Idref && st.Datatype.Variety == XmlSchemaDatatypeVariety.List => FieldKind.AppRefList,
 			_ => st.Datatype!.TypeCode switch
@@ -132,6 +134,41 @@ public sealed class AppSchema
 			}
 		}
 		return result;
+	}
+
+	/// <summary>Vorgabewerte fuer Zeitangaben (ISO-8601-Dauer, Anzeigetext)</summary>
+	public static readonly IReadOnlyList<(string Iso, string Label)> DurationPresets =
+	[
+		("PT0S", "0 – unbegrenzt / aus"),
+		("PT1S", "1 Sekunde"),
+		("PT5S", "5 Sekunden"),
+		("PT20S", "20 Sekunden"),
+		("PT40S", "40 Sekunden"),
+		("PT1M", "1 Minute"),
+		("PT2M", "2 Minuten"),
+		("PT5M", "5 Minuten"),
+		("PT10M", "10 Minuten"),
+		("PT30M", "30 Minuten"),
+		("PT1H", "1 Stunde"),
+		("PT2H", "2 Stunden"),
+		("PT4H", "4 Stunden"),
+		("PT6H", "6 Stunden"),
+		("PT12H", "12 Stunden"),
+		("P1D", "1 Tag"),
+	];
+
+	/// <summary>Lesbare Form einer ISO-Dauer fuer die Anzeige neben dem Eingabefeld, oder Fehlertext.</summary>
+	public static string DescribeDuration(string? iso)
+	{
+		if (string.IsNullOrWhiteSpace(iso)) return "";
+		try
+		{
+			return "= " + Klli.Sensact.Model.Xml.Units.Describe(Klli.Sensact.Model.Xml.Units.ParseDuration(iso));
+		}
+		catch (FormatException)
+		{
+			return "keine gültige ISO-Dauer (z. B. PT30S, PT5M, PT1H30M, P1D)";
+		}
 	}
 
 	private static string Clean(string comment) =>

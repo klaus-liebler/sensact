@@ -132,6 +132,27 @@
                                 }
                             </select>
                             break;
+                        case FieldKind.Duration:
+                            <div class="unit">
+                                <input value="@current" list="@listId" placeholder="@(f.Default != null ? "Standard: " + f.Default : "z. B. PT30M")"
+                                       @onchange="e => Set(app, f.Name, (string?)e.Value)" />
+                                <span class="muted">@AppSchema.DescribeDuration(current ?? f.Default)</span>
+                            </div>
+                            <datalist id="@listId">
+                                @foreach (var (iso, label) in AppSchema.DurationPresets)
+                                {
+                                    <option value="@iso">@label</option>
+                                }
+                            </datalist>
+                            break;
+                        case FieldKind.Percent:
+                            <div class="unit">
+                                <input type="number" min="0" max="100" step="any" value="@current"
+                                       placeholder="@(f.Default != null ? "Standard: " + f.Default : "")"
+                                       @onchange="e => Set(app, f.Name, (string?)e.Value)" />
+                                <span>%</span>
+                            </div>
+                            break;
                         default:
                             <input value="@current" list="@listId" placeholder="@(f.Default != null ? "Standard: " + f.Default : "")"
                                    @onchange="e => Set(app, f.Name, (string?)e.Value)" />

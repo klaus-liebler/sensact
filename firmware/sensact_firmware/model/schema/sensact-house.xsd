@@ -30,7 +30,7 @@
     - Erweiterungen gleichen Typs auf einem Bus: Chip-Index (s. ExtensionInstance).
 
   Konventionen fuer gute Diffs: ein Element pro App, Attribute statt Kindelemente, Zeiten in
-  ms bzw. s mit Einheit im Namen, Standardwerte weglassen.
+  ISO-8601-Dauer (PT30M), Helligkeiten in Prozent, Standardwerte weglassen.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
@@ -98,12 +98,28 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <!-- Dauer in Millisekunden; 0 = unbegrenzt bzw. Funktion aus -->
-  <xs:simpleType name="Millis">
-    <xs:restriction base="xs:unsignedInt" />
+  <!-- Dauer als ISO-8601-Dauer, z. B. PT30S, PT5M, PT2H, PT1H30M, P1D; Sekunden mit bis zu drei
+       Nachkommastellen (PT0.5S). PT0S = unbegrenzt bzw. Funktion aus. Intern rechnet die Firmware in
+       Millisekunden (u32, hoechstens rund 49 Tage). -->
+  <xs:simpleType name="Duration">
+    <xs:restriction base="xs:duration">
+      <xs:pattern value="P(\d+D)?(T(\d+H)?(\d+M)?(\d+(\.\d{1,3})?S)?)?" />
+    </xs:restriction>
   </xs:simpleType>
 
-  <!-- Helligkeit/Lautstaerke/Position auf der vollen u16-Skala 0..65535 -->
+  <!-- Prozent 0..100 mit bis zu drei Nachkommastellen. Intern rechnet die Firmware auf der u16-Skala
+       0..65535 (Prozent * 655,35, gerundet); drei Nachkommastellen genuegen, um jeden u16-Wert
+       exakt darzustellen. -->
+  <xs:simpleType name="Percent">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="100" />
+      <xs:fractionDigits value="3" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Lautstaerke als Rohwert 0..65535. Achtung, Bedeutung haengt vom Verstaerker ab (TAS5805M:
+       Registerwert = Wert >> 8, 0 = lautest, 254 = leisest, 255 = stumm). -->
   <xs:simpleType name="Level">
     <xs:restriction base="xs:unsignedShort" />
   </xs:simpleType>
@@ -221,9 +237,10 @@
             </xs:restriction>
           </xs:simpleType>
         </xs:attribute>
-        <!-- Fahrzeit ganz zu -> ganz auf bzw. umgekehrt -->
-        <xs:attribute name="upTimeSec" type="xs:unsignedShort" use="required" />
-        <xs:attribute name="downTimeSec" type="xs:unsignedShort" use="required" />
+        <!-- Fahrzeit ganz zu -> ganz auf (ganze Sekunden) -->
+        <xs:attribute name="upTime" type="Duration" use="required" />
+        <!-- Fahrzeit ganz auf -> ganz zu (ganze Sekunden) -->
+        <xs:attribute name="downTime" type="Duration" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -233,7 +250,8 @@
     <xs:complexContent>
       <xs:extension base="App">
         <xs:attribute name="output" type="IoRef" use="required" />
-        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <!-- automatisch aus nach dieser Dauer; PT0S = nie -->
+        <xs:attribute name="autoOff" type="Duration" default="PT0S" />
         <xs:attribute name="initiallyOn" type="xs:boolean" default="false" />
       </xs:extension>
     </xs:complexContent>
@@ -244,11 +262,13 @@
     <xs:complexContent>
       <xs:extension base="App">
         <xs:attribute name="outputs" type="IoRefList" use="required" />
-        <!-- kleinste Helligkeit im eingeschalteten Zustand (u16-Skala, 59*256 = 5 % PWM) -->
-        <xs:attribute name="minimalOnLevel" type="Level" use="required" />
-        <!-- Helligkeit beim ersten Einschalten nach dem Booten -->
-        <xs:attribute name="initialLevel" type="Level" default="65535" />
-        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <!-- kleinste Helligkeit im eingeschalteten Zustand in Prozent (23,047 % ergibt 5 % PWM,
+             s. level2pwm in singlepwm.cc) -->
+        <xs:attribute name="minimalBrightness" type="Percent" use="required" />
+        <!-- Helligkeit beim ersten Einschalten nach dem Booten in Prozent -->
+        <xs:attribute name="initialBrightness" type="Percent" default="100" />
+        <!-- automatisch aus nach dieser Dauer; PT0S = nie -->
+        <xs:attribute name="autoOff" type="Duration" default="PT0S" />
         <!-- Netzteil, das vor dem Einschalten aktiviert wird -->
         <xs:attribute name="standbyController" type="xs:IDREF" use="optional" />
       </xs:extension>
@@ -263,7 +283,8 @@
         <xs:attribute name="outputG" type="IoRef" use="required" />
         <xs:attribute name="outputB" type="IoRef" use="required" />
         <xs:attribute name="outputW" type="IoRef" use="required" />
-        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <!-- automatisch aus nach dieser Dauer; PT0S = nie -->
+        <xs:attribute name="autoOff" type="Duration" default="PT0S" />
         <xs:attribute name="standbyController" type="xs:IDREF" use="optional" />
       </xs:extension>
     </xs:complexContent>
@@ -284,8 +305,10 @@
     <xs:complexContent>
       <xs:extension base="App">
         <xs:attribute name="output" type="IoRef" use="required" />
-        <xs:attribute name="onIntervalMs" type="Millis" use="required" />
-        <xs:attribute name="offIntervalMs" type="Millis" use="required" />
+        <!-- Dauer der Ein-Phase -->
+        <xs:attribute name="onInterval" type="Duration" use="required" />
+        <!-- Dauer der Aus-Phase -->
+        <xs:attribute name="offInterval" type="Duration" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -378,7 +401,8 @@
         <xs:attribute name="light" type="xs:IDREF" use="optional" />
         <!-- Rollladen der Tastengruppen 1..8, in dieser Reihenfolge -->
         <xs:attribute name="blinds" type="xs:IDREFS" use="optional" />
-        <xs:attribute name="lightOnMs" type="Millis" default="43200000" />
+        <!-- Licht geht nach dieser Dauer wieder aus -->
+        <xs:attribute name="lightOn" type="Duration" default="PT12H" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

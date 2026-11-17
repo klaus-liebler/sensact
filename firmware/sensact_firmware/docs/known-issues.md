@@ -42,6 +42,11 @@ Zurzeit keine.
 - `builder/ModelGeneration` → Bibliothek `modellib/` (gemeinsam mit dem Editor); Builder, Bibliothek
   und Editor auf .NET 11.
 - Editor, erste Version (`editor/`, Selbsttest `editor_tests/`), s. `editor/README.md`.
+- Hausmodell `schemaVersion` 2: Zeiten als ISO-8601-Dauer (`autoOff="PT30M"` statt
+  `autoOffMs="1800000"`, `upTime="PT40S"` statt `upTimeSec="40"` …), Helligkeiten in Prozent
+  (`minimalBrightness="0.781"` statt `minimalOnLevel="512"`). Umrechnung beim Import
+  (`Units`), generierter Code unverändert. Lautstärke (`sound.initialVolume`) bleibt Rohwert,
+  weil ihre Bedeutung vom Verstärker abhängt (TAS5805M: invertiert).
 
 ### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
 

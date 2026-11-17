@@ -27,6 +27,9 @@ Regeln, die man kennen muss (Details im XSD):
 - **Stationen nicht umsortieren**, neue hinten anfügen: ihre Reihenfolge ergibt `eNodeID`.
 - **Erweiterungen gleichen Typs nicht umsortieren**: ihre Reihenfolge ergibt den Chip-Index.
 - Die Reihenfolge der Apps einer Station ist die Anzeigereihenfolge im Web-UI.
+- Zeiten als ISO-8601-Dauer: `PT20S`, `PT5M`, `PT1H30M`, `P1D`; `PT0S` = unbegrenzt/aus.
+  Helligkeiten in Prozent 0…100 (bis drei Nachkommastellen). Der Builder rechnet beim Generieren
+  in die internen Werte um (Millisekunden, u16-Skala); im XML stehen nur die lesbaren Werte.
 - Ein-/Ausgänge: `IN0.13` (Erweiterung.Kanal), `K1` (benannter Pin aus dem Katalog),
   `GPIO.21` / `BB.13` (Bus.Index), `INPUT0`, `INPUT1`, `NONE`.
 

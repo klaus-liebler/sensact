@@ -14,7 +14,9 @@ dotnet run --project editor_tests    # Selbsttest der Editor-Logik auf einer Kop
 - Hausmodell wählen (`model/*.xml`), Stationen mit Board und Erweiterungen ansehen, Apps je Station.
 - App bearbeiten: Das Formular entsteht aus `model/schema/sensact-house.xsd` (Auswahllisten für
   Aufzählungen, Vorschläge für Ein-/Ausgänge der Station aus dem Katalog und für Ziele aus allen
-  Apps, Standardwerte, Hilfetexte aus den XSD-Kommentaren).
+  Apps, Standardwerte, Hilfetexte aus den XSD-Kommentaren). Zeitangaben mit benannten
+  Vorgabewerten (5 Minuten, 2 Stunden …) oder als ISO-8601-Dauer, daneben lesbar angezeigt
+  ("= 1 h 30 min"); Helligkeiten als Prozent 0…100.
 - App hinzufügen (bekommt die nächste nie vergebene Nummer) und löschen (nur ohne Verweise; die
   Nummer bleibt als `<reserved>` vergeben).
 - Prüfung nach jeder Änderung mit denselben Regeln wie der Builder: XSD, Katalog

@@ -117,6 +117,23 @@ public static class HouseModelChecker
 					}
 				}
 
+				// Zeitangaben muessen in die internen Typen passen (u32 ms bzw. ganze Sekunden)
+				foreach (var attr in a.Attributes())
+				{
+					try
+					{
+						switch (attr.Name.LocalName)
+						{
+							case "autoOff" or "onInterval" or "offInterval" or "lightOn": Units.DurationToMs(attr.Value); break;
+							case "upTime" or "downTime": Units.DurationToWholeSeconds(attr.Value); break;
+						}
+					}
+					catch (FormatException ex)
+					{
+						Err(attr, $"{appId}.{attr.Name}: {ex.Message}");
+					}
+				}
+
 				if (RequiredFeature.TryGetValue(kind, out var feature) && !board.Features.ContainsKey(feature))
 				{
 					Err(a, $"{appId}: <{kind}> braucht das Board-Feature \"{feature}\", das {boardType} nicht hat.");
