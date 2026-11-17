@@ -292,7 +292,9 @@ namespace sensact::hal
 
 			twai_frame_t tx_frame = {};
 			tx_frame.header.id = m.Id;
-			tx_frame.header.ide = (m.Id > TWAI_STD_ID_MASK) ? 1 : 0;
+			// sensact uses 29-bit IDs exclusively (old and new scheme). Never send standard frames:
+			// old STM32 nodes only evaluate RxHeader.ExtId, which the HAL leaves stale on standard frames.
+			tx_frame.header.ide = 1;
 			tx_frame.header.dlc = static_cast<uint16_t>(m.DataLen);
 			tx_frame.buffer = m.Data;
 			tx_frame.buffer_len = m.DataLen;

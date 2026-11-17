@@ -37,10 +37,12 @@ namespace Klli.Sensact.Config
         const ushort OW2 = 0x0C00;
         const ushort OW3 = 0x1000;
 
+        const uint T_FOREVER__ms = 0;
         const uint T_5m__ms = 5*60*1000;
         const uint T_30m__ms = 30*60*1000;
         const uint T_2h__ms = 120*60*1000;
         const uint T_12h__ms = 720*60*1000;
+        
 
         const ushort INPUT1 = 0x3FFF;      // steht für einen Input mit dauerhaft 1 (letzte Bits sind 1 (wie I=input)-1)
         const ushort INPUT0 = 0x3FFE;      // steht für einen Input mit dauerhaft 0 (letzte Bits sind 1 (wie I=input)-0)
@@ -117,7 +119,7 @@ namespace Klli.Sensact.Config
             AddToggleButton(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_CORR_B31, BB + I2C + 11,//33
                 new HashSet<ApplicationId>{ApplicationId.POWIT_L0_CORR_C1, ApplicationId.PWM___LS_STRS_W1});
                                                                                                                                   
-            AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L0_CORR_C1, "Deckenlicht", BB + I2C + 40, T_30m__ms); //RL7
+            AddPowIt(SNSCT_L0_TECH_HS_1, ApplicationId.POWIT_L0_CORR_C1, "Deckenlicht", BB + I2C + 40); //RL7
 
             //PRTY
             AddTwoDimButtons(SNSCT_L0_TECH_HS_1, ApplicationId.PUSHB_L0_PRTY_B11, BB + I2C + 10, BB + I2C + 9, ApplicationId.PWM___L0_PRTY_S);//32, 30
