@@ -61,8 +61,8 @@ public sealed record ExtensionInstance(string Name, string Type, string Bus, byt
 
 /// <summary>
 /// Uebersetzt zwischen der heutigen numerischen InOutId und der lesbaren Schreibweise im
-/// Hausmodell (Typ IoRef, s. sensact-house.xsd) -- in beide Richtungen, damit der Export per
-/// Rueckuebersetzung pruefen kann, dass nichts verloren geht.
+/// Hausmodell (Typ IoRef, s. sensact-house.xsd) -- in beide Richtungen (ToRef fuer
+/// Anzeigen/kuenftigen Editor, FromRef beim Import).
 /// </summary>
 public sealed class IoAddressing
 {

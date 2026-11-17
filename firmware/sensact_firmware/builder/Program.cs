@@ -155,29 +155,18 @@ internal static class Program
 		hostname: ctx.Hostname,
 		outputFileBaseName: "esp32");
 
-	// Quelle des Hausmodells: "cs" = C#-Hausmodell (builder/Models/*, bisher), "xml" = model/<Modell>.xml
-	// (s. model/README.md). Beide liefern dieselben Modellobjekte; VerifyModelXml prueft, dass die
-	// daraus generierten Dateien byte-gleich sind.
-	private static (ModelContainer Mc, AppIdTable Ids) LoadModel(string modelName, string source)
+	// Hausmodell aus model/<Modell>.xml (s. model/README.md): Stationen, Apps und App-IDs.
+	private static (ModelContainer Mc, AppIdTable Ids) LoadModel(string modelName)
 	{
-		switch (source)
+		var dir = ModelXmlDir();
+		var path = Path.Combine(dir, modelName + ".xml");
+		if (!File.Exists(path))
 		{
-			case "cs":
-				return modelName switch
-				{
-					"Sattlerstrasse16" => (new Sattlerstrasse16Builder().BuildAndFinalizeAndReturnModelContainer(), AppIdTable.FromEnum<Klli.Sensact.Model.Sattlerstrasse16.ApplicationId>()),
-					"Testmodel" => (new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer(), AppIdTable.FromEnum<Klli.Sensact.Model.Testmodel.ApplicationId>()),
-					_ => throw new ArgumentException($"Unbekanntes Modell \"{modelName}\" (gueltig: Sattlerstrasse16, Testmodel)."),
-				};
-			case "xml":
-				var dir = ModelXmlDir();
-				var path = Path.Combine(dir, modelName + ".xml");
-				if (!File.Exists(path)) throw new ArgumentException($"Kein XML-Hausmodell {path}.");
-				var result = new Klli.Sensact.Model.Xml.HouseXmlImporter(LoadCatalog()).Import(path, Path.Combine(dir, "schema", "sensact-house.xsd"));
-				return (new ModelContainer(result.Model), result.Ids);
-			default:
-				throw new ArgumentException($"Unbekannte Modellquelle \"{source}\" (gueltig: cs, xml).");
+			var known = string.Join(", ", Directory.EnumerateFiles(dir, "*.xml").Select(Path.GetFileNameWithoutExtension).Where(n => n != "catalog"));
+			throw new ArgumentException($"Kein Hausmodell {path} (vorhanden: {known}).");
 		}
+		var result = new Klli.Sensact.Model.Xml.HouseXmlImporter(LoadCatalog()).Import(path, Path.Combine(dir, "schema", "sensact-house.xsd"));
+		return (new ModelContainer(result.Model), result.Ids);
 	}
 
 	private static string ModelXmlDir() => Path.Combine(Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!, "model");
@@ -202,93 +191,9 @@ internal static class Program
 	public static void GenerateModelFiles(IBuildContextEsp32 ctx)
 	{
 		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
-		var source = ModelSource(ctx);
 		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
-		var (mc, ids) = LoadModel(modelName, source);
-		Console.WriteLine($"Hausmodell {modelName} aus Quelle \"{source}\"");
+		var (mc, ids) = LoadModel(modelName);
 		RunModelFor(ctx, mc, ids, loggerFactory);
-	}
-
-	// --source cs|xml, Vorgabe cs (bis die C#-Hausmodelle entfallen)
-	private static string ModelSource(IBuildContextEsp32 ctx)
-	{
-		int i = ctx.Args.ToList().IndexOf("--source");
-		return i >= 0 && i + 1 < ctx.Args.Count ? ctx.Args[i + 1] : "cs";
-	}
-
-	// Uebergang zum XML-Hausmodell (docs/concept-modular-firmware.md): schreibt beide C#-Modelle
-	// nach model/<Modell>.xml, prueft Katalog und Ergebnis gegen die XSDs und jede
-	// Ein-/Ausgangsadresse per Rueckuebersetzung. Aendert nichts an Firmware oder Codegenerierung.
-	[BuildStep]
-	public static void ExportModelXml(IBuildContextEsp32 ctx)
-	{
-		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
-		var modelDir = ModelXmlDir();
-		var catalog = LoadCatalog();
-		var houseXsd = Path.Combine(modelDir, "schema", "sensact-house.xsd");
-
-		void Export<TId>(string name, Klli.Sensact.Model.Common.Model model) where TId : struct, Enum
-		{
-			var exporter = new Klli.Sensact.Model.Xml.HouseXmlExporter<TId>(catalog, firmwareRoot, NodeIdBoardTypeCatalog.TryResolveBoardType);
-			var doc = exporter.Export(model);
-			Klli.Sensact.Model.Xml.HouseXmlExporter<TId>.Validate(doc, houseXsd);
-			var path = Path.Combine(modelDir, name + ".xml");
-			Klli.Sensact.Model.Xml.HouseXmlExporter<TId>.Save(doc, path);
-			Console.WriteLine($"{path}: {doc.Root!.Elements("station").Count()} Stationen, {doc.Root!.Elements("station").SelectMany(s => s.Elements()).Count(e => e.Attribute("number") != null)} Apps, gueltig.");
-		}
-
-		Export<Klli.Sensact.Model.Sattlerstrasse16.ApplicationId>("Sattlerstrasse16", new Sattlerstrasse16Builder().BuildAndFinalizeAndReturnModelContainer().Model);
-		Export<Klli.Sensact.Model.Testmodel.ApplicationId>("Testmodel", new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer().Model);
-	}
-
-	// Rueckweg pruefen: generiert jedes Hausmodell einmal aus dem C#-Modell und einmal aus dem XML
-	// (in temporaere Verzeichnisse) und vergleicht alle erzeugten Dateien zeilengenau.
-	[BuildStep]
-	public static void VerifyModelXml(IBuildContextEsp32 ctx)
-	{
-		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Warning));
-		var root = Path.Combine(Path.GetTempPath(), "sensact_verify_model_xml");
-		var failures = new List<string>();
-		foreach (var modelName in new[] { "Sattlerstrasse16", "Testmodel" })
-		{
-			var dirs = new Dictionary<string, string>();
-			foreach (var source in new[] { "cs", "xml" })
-			{
-				var dir = Path.Combine(root, modelName, source);
-				var (mc, ids) = LoadModel(modelName, source);
-				GenerateModelInto(mc, ids, dir, loggerFactory);
-				dirs[source] = dir;
-			}
-			var files = Directory.EnumerateFiles(dirs["cs"], "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(dirs["cs"], f))
-				.Union(Directory.EnumerateFiles(dirs["xml"], "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(dirs["xml"], f)))
-				.OrderBy(f => f, StringComparer.Ordinal).ToList();
-			int same = 0;
-			foreach (var rel in files)
-			{
-				var a = Path.Combine(dirs["cs"], rel);
-				var b = Path.Combine(dirs["xml"], rel);
-				if (!File.Exists(a) || !File.Exists(b))
-				{
-					failures.Add($"{modelName}/{rel}: nur in {(File.Exists(a) ? "cs" : "xml")}");
-					continue;
-				}
-				var la = File.ReadAllLines(a);
-				var lb = File.ReadAllLines(b);
-				int line = Enumerable.Range(0, Math.Max(la.Length, lb.Length)).FirstOrDefault(i => i >= la.Length || i >= lb.Length || la[i] != lb[i], -1);
-				if (line < 0)
-				{
-					same++;
-					continue;
-				}
-				failures.Add($"{modelName}/{rel}, Zeile {line + 1}:\n  cs : {(line < la.Length ? la[line] : "<Ende>")}\n  xml: {(line < lb.Length ? lb[line] : "<Ende>")}");
-			}
-			Console.WriteLine($"{modelName}: {same} von {files.Count} Dateien gleich.");
-		}
-		if (failures.Count > 0)
-		{
-			throw new InvalidOperationException("Generierung aus XML weicht ab:\n" + string.Join('\n', failures));
-		}
-		Console.WriteLine("Generierung aus XML und aus C# ist identisch.");
 	}
 
 	// Erzeugt die Modell-Dateien fuer die Host-Unit-Tests der Sensact-Apps
@@ -302,7 +207,7 @@ internal static class Program
 	{
 		var outDir = Path.GetFullPath(Cli.GetRequiredArgValue(ctx.Args, "--out"));
 		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Warning));
-		var (mc, ids) = LoadModel("Testmodel", ModelSource(ctx));
+		var (mc, ids) = LoadModel("Testmodel");
 		GenerateModelInto(mc, ids, outDir, loggerFactory);
 	}
 

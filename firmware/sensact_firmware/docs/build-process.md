@@ -68,11 +68,10 @@ das nicht selbst.
 ## Hausmodell-Codegenerierung (`GenerateModelFiles`)
 
 Das Hausautomations-Modell (welche Apps auf welchem Node existieren und wie sie
-verdrahtet sind, definiert als C#-Klassen mit IntelliSense-Unterstützung) wird
-über die Phase `GenerateModelFiles --model Sattlerstrasse16|Testmodel` erzeugt.
-Die Generierungs-Engine (`ModelGeneration/Generator.cs`, `SourceCodeGenerator<T>`,
-`ModelBuilder<T>`, ...) sowie die beiden Hausmodelle selbst
-(`Models/Sattlerstrasse16/`, `Models/Testmodel/`) liegen unter `builder/`.
+verdrahtet sind) steht als XML in `model/<Name>.xml` (s. [model/README.md](../model/README.md))
+und wird über die Phase `GenerateModelFiles --model Sattlerstrasse16|Testmodel` in Code
+übersetzt. Import und Codegenerierung (`ModelGeneration/Xml/HouseXmlImporter.cs`,
+`ModelGeneration/Generator.cs`, `SourceCodeGenerator`, ...) liegen unter `builder/`.
 
 Schreibt u.a. die `.inc`-Dateien, die `sensact-applicationmodel` direkt
 einbindet, nach `generated/sensact_model/` (Teil des projektlokalen
@@ -136,10 +135,8 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 | `GenerateBestBinaryBufferFiles` | Liest `*.cs`-Schema-Dateien aus `best_binary_buffers_schema/` (eigenes Repo) **und** `WebmanagerBestBinaryBuffersSchemaDir` (s.o.), generiert `ws_protocol.hh`/`ws-protocol.ts` über `BestBinaryBuffers`. |
 | `GenerateRuntimeConfig` | Sammelt Build-Defines (Board-Settings, Node-Descriptor, Git-Hash, Zeitstempel, Banner …), schreibt `cmake/config.json`, `runtimeconfig.hh`/`runtimeconfig_defines.hh`, `runtimeconfig_ts`. |
 | `GenerateCertificates` | Lazy: Board-Zertifikat (.NET-Kryptografie aus `FirmwareBuilder.Common`, signiert mit der Root-CA aus `CertsDir`, Parameter s. `Certificates.*` in `appsettings.json`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
-| `GenerateModelFiles --model <Name> [--source cs\|xml]` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. Quelle: C#-Hausmodell (`cs`, Vorgabe) oder `model/<Name>.xml` (`xml`), s. [model/README.md](../model/README.md). |
+| `GenerateModelFiles --model <Name>` | Erzeugt aus `model/<Name>.xml` die Modell-Dateien (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
 | `GenerateModelFilesForHostTests --out <Verzeichnis>` | Wie `GenerateModelFiles`, aber immer aus dem Testmodel, in ein beliebiges Verzeichnis und **ohne** die Enum-Quellen nach `best_binary_buffers_schema/` zu kopieren. Wird automatisch von den Host-Unit-Tests der Apps aufgerufen (s. "Tests" unten). |
-| `ExportModelXml` | Übergang zum XML-Hausmodell: schreibt beide C#-Modelle nach `model/<Modell>.xml`, prüft `model/catalog.xml` und das Ergebnis gegen die XSDs in `model/schema/` und jede Ein-/Ausgangsadresse per Rückübersetzung. Ändert nichts an Firmware oder Codegenerierung; nicht Teil der Pipelines. |
-| `VerifyModelXml` | Generiert beide Hausmodelle aus C# und aus XML und vergleicht alle erzeugten Dateien zeilengenau; bricht bei Abweichung ab. |
 | `RunHostTests` | Baut und startet die Host-Unit-Tests der Apps (s. "Tests"); Teil von `Pipeline`/`PipelineOffline`. |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |

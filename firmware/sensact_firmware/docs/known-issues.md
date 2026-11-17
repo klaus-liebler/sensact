@@ -18,6 +18,18 @@ Zurzeit keine.
 
 ## Erledigt
 
+### 2026-11-17 (4) – XML-Hausmodell ist die Quelle der Wahrheit
+
+- Schema (`model/schema/*.xsd`), Katalog (`model/catalog.xml`) und Hausmodelle
+  (`model/Sattlerstrasse16.xml`, `model/Testmodel.xml`); `GenerateModelFiles` und die Host-Tests
+  lesen das XML. C#-Hausmodelle, `ModelBuilder`, Exporter und die nicht mehr benötigten
+  C#-Node-Klassen gelöscht. Generierte Dateien vor/nach der Umstellung identisch (bis auf
+  den Erzeugungszeitpunkt). Details: `model/README.md`.
+- App-Nummern stehen jetzt ausdrücklich im XML; vorher ergaben sie sich aus der Reihenfolge
+  im C#-Enum (eine eingefügte Zeile hätte alle folgenden IDs verschoben).
+- Die C#-Node-Klassen passten nicht zur realen Hardware (`SNSCT_L0_TECH_HS_1` als
+  `SensactHs08`, `SNSCT_L3_WORK_HS` als `SensactUp02`); das XML nennt die realen Boards.
+
 ### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
 
 - **E13**: Quellcode der STM32-Altfirmware als normale Dateien eingecheckt:

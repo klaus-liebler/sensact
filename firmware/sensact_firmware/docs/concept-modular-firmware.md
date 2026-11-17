@@ -128,7 +128,7 @@ optionaler App-Typ `ELF_APP`, der ein `elf_loader`-Modul lädt, das genau eine `
    Versionen, Sicherheitsmodus; App-Liste zur Laufzeit statt generiertem `sensactapps.ts`.
 6. **Editor** (s. unten) – kann parallel zu 2–5 entstehen, sobald die Schemas aus 0 stehen.
    Sinnvolle Reihenfolge innerhalb: Katalog-XML → Hausmodell-XML (einmaliger Import aus dem
-   heutigen C#-Modell) → Code-Export für die bestehenden Firmwares (ESP32 und STM32, ersetzt
+   C#-Modell, erledigt 2026-11-17) → Code-Export für die bestehenden Firmwares (ESP32 und STM32, ersetzt
    `GenerateModelFiles`) → Bearbeitungsoberfläche → BestBinaryBuffers-Export für die neue Basis.
    So ist der Editor schon nützlich, bevor die modulare Basis-Firmware fertig ist.
 7. Optional: `ELF_APP` (C).
@@ -213,8 +213,9 @@ wenn Klassen umbenannt werden.
 
 ## Editor
 
-Ein Werkzeug, mit dem das ganze Haus gepflegt wird. Es ersetzt die heutigen C#-Hausmodelle
-(`Sattlerstrasse16Builder.cs`) als Quelle der Wahrheit.
+Ein Werkzeug, mit dem das ganze Haus gepflegt wird. Es bearbeitet das XML-Hausmodell
+(`model/Sattlerstrasse16.xml`), das seit 2026-11-17 die Quelle der Wahrheit ist und bis dahin
+von Hand gepflegt wird.
 
 ### Funktionen
 
@@ -268,7 +269,7 @@ haben sie keinen Einfluss.
 Alle Konfigurationsdaten liegen in XML-Dateien, die direkt lesbar und in Git sinnvoll
 vergleichbar sind. Zwei Arten:
 
-**Umgesetzt (2026-11-17): Schema, Katalog und Export.** Die Dateien liegen in
+**Umgesetzt (2026-11-17): Schema, Katalog, Umstellung.** Die Dateien liegen in
 [`model/`](../model/README.md):
 
 | Datei | Inhalt |
@@ -276,7 +277,7 @@ vergleichbar sind. Zwei Arten:
 | `schema/sensact-catalog.xsd` | Schema des Katalogs: Boards (MCU, Firmware-Familie `esp32`/`stm32-legacy`, RAM), ihre Busse (Index 0..3, Art `gpio`/`i2c`/`legacy`) mit benannten Pins, Features (Audio, Drehgeber, Fingerprint …) und Erweiterungs-Chips (PCA9555, PCA9685). |
 | `catalog.xml` | Katalog der heute verwendeten Boards. |
 | `schema/sensact-house.xsd` | Schema des Hausmodells: Stationen, verbaute Erweiterungen, ein Element je App-Typ mit typisierten Attributen. |
-| `Sattlerstrasse16.xml`, `Testmodel.xml` | Aus den C#-Modellen exportiert (Builder-Schritt `ExportModelXml`). |
+| `Sattlerstrasse16.xml`, `Testmodel.xml` | Die Hausmodelle (einmalig aus den C#-Modellen exportiert). |
 
 Festlegungen im Schema:
 
@@ -312,13 +313,12 @@ Beim Export aufgefallen: Die C#-Node-Klassen stimmen nicht mit der realen Hardwa
 ist `SensactUp02`, läuft auf `SensactUpHs`). Das XML nimmt den Board-Typ aus
 `NodeIdBoardTypeCatalog` (also die reale Hardware); die C#-Klassen sind für die Codegenerierung
 ohne Bedeutung.
-**Übergang**: Der Export (`ExportModelXml`) erzeugt das Hausmodell aus den heutigen C#-Klassen.
-Der **Rückweg** existiert ebenfalls (2026-11-17): `HouseXmlImporter` liest das XML und baut
-dieselben Modellobjekte; die Codegenerierung bekommt die App-IDs als Tabelle (`AppIdTable`)
-statt aus dem C#-Enum. `VerifyModelXml` zeigt, dass alle generierten Dateien aus XML und aus
-C# identisch sind. Umschalten: `GenerateModelFiles --source xml`; danach entfallen die
-C#-Hausmodelle, und gepflegt wird nur noch das XML (zunächst von Hand bzw. in VS Code mit
-XSD-Unterstützung, später im Editor).
+**Übergang (erledigt 2026-11-17)**: Ein Export hat das Hausmodell aus den C#-Klassen erzeugt;
+`HouseXmlImporter` liest es und baut dieselben Modellobjekte, die Codegenerierung bekommt die
+App-IDs als Tabelle (`AppIdTable`) statt aus dem C#-Enum. Vor der Umstellung waren alle
+generierten Dateien beider Modelle aus XML und aus C# identisch (88 + 64 Dateien, bis auf den
+Erzeugungszeitpunkt). Danach wurden die C#-Hausmodelle, `ModelBuilder` und Export gelöscht
+(Git-Historie bis `3f54589`); gepflegt wird nur noch das XML, s. [model/README.md](../model/README.md).
 
 Beim Rückweg aufgefallen: Die **Reihenfolge der Stationen** ergibt die Werte von `eNodeID`
 (C++-Enum ohne explizite Werte, u. a. in Node-Events auf dem CAN-Bus) – im XML also nicht

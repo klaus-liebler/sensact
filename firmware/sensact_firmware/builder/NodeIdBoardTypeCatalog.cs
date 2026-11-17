@@ -1,4 +1,4 @@
-// Kleiner, von Hand gepflegter Katalog NODE_ID -> (BoardTypeName, BoardTypeVersion) -- backt
+﻿// Kleiner, von Hand gepflegter Katalog NODE_ID -> (BoardTypeName, BoardTypeVersion) -- backt
 // IBuildContext.BoardTypeName/BoardTypeVersion auf Sensact-Seite. BoardTypeName entspricht dem
 // Namespace-Namen der jeweiligen main/hal/hal_sensact*.hh, die main/hal/<NODE_ID>/ (aktuell
 // hal.inc, nach der HAL-Init-Klassen-Migration board_init.hh) einbindet -- MUSS parallel zu
@@ -19,10 +19,6 @@ public static class NodeIdBoardTypeCatalog
 			["SNSCT_NODE_TERRASSE"] = ("SensactOutdoor", "1.0.0"),
 			["SNSCT_NODE_UP"] = ("SensactUp3", "1.0.0"),
 		};
-
-	/// <summary>Board-Typ einer ESP32-Station oder null (z. B. STM32-Altknoten).</summary>
-	public static string? TryResolveBoardType(string nodeId) =>
-		Catalog.TryGetValue(nodeId, out var entry) ? entry.BoardTypeName : null;
 
 	public static (string BoardTypeName, string BoardTypeVersion) Resolve(string nodeId)
 	{

@@ -14,10 +14,10 @@ public sealed class XmlStation(ushort nodeId, string nodeName, string boardType)
 }
 
 /// <summary>
-/// Rueckweg XML -> Modellobjekte: liest ein Hausmodell nach model/schema/sensact-house.xsd und
-/// baut daraus dieselben Objekte (Model, Node, *Application), die bisher die C#-Hausmodelle
-/// erzeugen, plus die Tabelle aller App-IDs. Die Codegenerierung (SourceCodeGenerator) bleibt
-/// unveraendert. Gegenstueck zu HouseXmlExporter; Standardwerte wie im XSD.
+/// Liest ein Hausmodell nach model/schema/sensact-house.xsd und
+/// baut daraus die Objekte (Model, Node, *Application), die bis 2026-11-17 die C#-Hausmodelle
+/// erzeugt haben, plus die Tabelle aller App-IDs. Die Codegenerierung (SourceCodeGenerator) bleibt
+/// unveraendert. Standardwerte wie im XSD.
 /// </summary>
 public sealed class HouseXmlImporter
 {

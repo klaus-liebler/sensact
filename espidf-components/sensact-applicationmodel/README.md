@@ -2,8 +2,8 @@
 
 Eine *App* ist die kleinste adressierbare Einheit des Systems (Taster, Rollladen, Dimmer, …),
 eindeutig über ihre `eApplicationID`. Welche App auf welchem Knoten läuft und wie sie verdrahtet
-ist, beschreibt das Hausmodell im C#-Builder
-(`firmware/sensact_firmware/builder/Models/`); daraus werden die `.inc`-Dateien erzeugt, die
+ist, beschreibt das Hausmodell
+(`firmware/sensact_firmware/model/Sattlerstrasse16.xml`, s. dortige README); daraus werden die `.inc`-Dateien erzeugt, die
 dieses Verzeichnis einbindet (s. `firmware/sensact_firmware/docs/build-process.md`).
 
 Diese Seite ist die **verbindliche Beschreibung von Kommandos und Statusmeldungen** der Apps.
@@ -161,7 +161,7 @@ Die Reihenfolge der Sounds ist Teil des Protokolls und in der Web-UI dupliziert.
 
 ### `cBlindsTimer` – Rollläden nach Dämmerung – `blindstimer.cc`
 
-Modell: `AddBlindsTimer(node, id, beschreibung, rollläden, breiteGrad, längeGrad, dawn, openOffsetMinutes, closeOffsetMinutes, maxRandomMinutes)`.
+Modell: `<blindsTimer id=… number=… blinds="…" [latitudeDeg/longitudeDeg, sonst `<location>` des Hauses] dawn="CIVIL" openOffsetMin closeOffsetMin maxRandomMin />`.
 
 - Öffnet jeden Rollladen zur Morgendämmerung (`dawn`: Sonnenaufgang, bürgerliche/nautische/
   astronomische Dämmerung) + `openOffsetMinutes` + Zufall 0..`maxRandomMinutes`, schließt zur

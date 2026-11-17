@@ -32,7 +32,7 @@ Beim Konfigurieren ruft CMake deshalb den Builder auf:
 dotnet run --project firmware/sensact_firmware/builder -- GenerateModelFilesForHostTests --out build/sensact_model
 ```
 
-Der Schritt erzeugt die Dateien immer aus dem **Testmodel** (`builder/Models/Testmodel`) und
+Der Schritt erzeugt die Dateien immer aus dem **Testmodel** (`model/Testmodel.xml`) und
 nur in das Build-Verzeichnis – `generated/` der Firmware und die getrackten Schema-Dateien
 bleiben unberührt. Ändern sich Generator oder Testmodel, konfiguriert CMake beim nächsten
 Build automatisch neu. Ohne .NET-SDK kann man mit `-DSENSACT_MODEL_DIR=<Pfad>` ein vorab
