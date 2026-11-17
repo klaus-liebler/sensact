@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Katalog der Boards und Erweiterungen. Schema: schema/sensact-catalog.xsd.
+  ESP32-Boards: Busse in der Reihenfolge der Busmaster in main/hal/<NODE_ID>/board_init.hh,
+  benannte Pins aus der jeweiligen main/hal/hal_sensact*.hh (Get/SetU16Output).
+  STM32-Altboards: Busse wie die Konstanten INTERNAL/BUS0(BB)/BUS1(RB)/BUS2 der Altfirmware;
+  die Bedeutung der lokalen Indizes legt die Altfirmware fest.
+-->
+<catalog schemaVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/sensact-catalog.xsd">
+
+  <!-- ============================================================ ESP32 -->
+
+  <board type="SensactHsNano3" mcu="ESP32-S3" firmware="esp32">
+    <description>Hutschienen-Basisknoten (Nano-Modul), Relais- und Tasterplatinen ueber den SensactBus</description>
+    <bus index="0" name="GPIO" kind="gpio" />
+    <bus index="1" name="SensactBus" kind="i2c" />
+    <feature kind="can" />
+    <feature kind="ethernet" chip="W5500" />
+    <feature kind="wifi" />
+    <feature kind="audio" chip="TAS5805M" />
+    <feature kind="display" />
+  </board>
+
+  <board type="SensactUpHs" mcu="ESP32-S3" firmware="esp32">
+    <description>Unterputz-Knoten mit sechs PWM-Kanaelen und zwei Drehgebern</description>
+    <bus index="0" name="GPIO" kind="gpio">
+      <pin name="PWM0" index="256" direction="output" />
+      <pin name="PWM1" index="257" direction="output" />
+      <pin name="PWM2" index="258" direction="output" />
+      <pin name="PWM3" index="259" direction="output" />
+      <pin name="PWM4" index="260" direction="output" />
+      <pin name="PWM5" index="261" direction="output" />
+      <pin name="ROTARY1" index="256" direction="input" description="Zaehlerstand Drehgeber 1" />
+      <pin name="ROTARY2" index="257" direction="input" description="Zaehlerstand Drehgeber 2" />
+      <pin name="CHIP_TEMPERATURE" index="258" direction="input" description="1/100 Grad Celsius" />
+    </bus>
+    <bus index="1" name="SensactBus" kind="i2c" />
+    <feature kind="can" />
+    <feature kind="wifi" />
+    <feature kind="audio" chip="MAX98357" />
+    <feature kind="rotaryEncoder" count="2" />
+  </board>
+
+  <board type="SensactUp3" mcu="ESP32-S3" firmware="esp32">
+    <description>Unterputz-Knoten</description>
+    <bus index="0" name="GPIO" kind="gpio" />
+    <bus index="1" name="SensactBus" kind="i2c" />
+    <feature kind="can" />
+    <feature kind="wifi" />
+    <feature kind="audio" chip="NS4168" />
+    <feature kind="rotaryEncoder" count="2" />
+  </board>
+
+  <board type="SensactUpControl" mcu="ESP32-S3" firmware="esp32">
+    <description>Tuersteuerung (Seiteneingang) mit Fingerabdruckleser</description>
+    <bus index="0" name="GPIO" kind="gpio">
+      <pin name="MOTOR" index="0" direction="output" description="Tueroeffner" />
+    </bus>
+    <feature kind="can" />
+    <feature kind="wifi" />
+    <feature kind="fingerprint" />
+    <feature kind="rgbLed" count="1" />
+  </board>
+
+  <board type="SensactOutdoor" mcu="ESP32-S3" firmware="esp32">
+    <description>Aussenknoten (Terrasse): vier Relais, LED-Leistungsausgang, Milight-Funk</description>
+    <bus index="0" name="GPIO" kind="gpio">
+      <pin name="K1" index="0" direction="output" />
+      <pin name="K2" index="1" direction="output" />
+      <pin name="K3" index="2" direction="output" />
+      <pin name="K4" index="3" direction="output" />
+      <pin name="POWER_LED" index="4" direction="output" description="PWM-Leistungsausgang" />
+    </bus>
+    <feature kind="can" />
+    <feature kind="wifi" />
+    <feature kind="audio" chip="MAX98357" />
+    <feature kind="milight" />
+    <feature kind="rgbLed" count="2" />
+  </board>
+
+  <!-- ============================================================ STM32-Altknoten -->
+
+  <board type="SensactHs08" mcu="STM32F407VE" firmware="stm32-legacy" ramKiB="192">
+    <description>Hutschienen-Knoten der Altfirmware</description>
+    <bus index="0" name="INTERNAL" kind="legacy" />
+    <bus index="1" name="BB" kind="legacy" />
+    <bus index="2" name="RB" kind="legacy" />
+    <bus index="3" name="BUS2" kind="legacy" />
+    <feature kind="can" />
+    <feature kind="ethernet" />
+  </board>
+
+  <board type="SensactUp02" mcu="STM32F103" firmware="stm32-legacy" ramKiB="20">
+    <description>Unterputz-Knoten der Altfirmware</description>
+    <bus index="0" name="INTERNAL" kind="legacy" />
+    <bus index="1" name="BB" kind="legacy" />
+    <bus index="2" name="RB" kind="legacy" />
+    <bus index="3" name="BUS2" kind="legacy" />
+    <feature kind="can" />
+    <feature kind="rotaryEncoder" count="2" />
+  </board>
+
+  <!-- ============================================================ Erweiterungen -->
+
+  <extension type="PCA9555" direction="input" channels="16" busKind="i2c" addressFrom="0x20" addressTo="0x27"
+             description="16 digitale Eingaenge (Taster)" />
+  <extension type="PCA9685" direction="output" channels="16" busKind="i2c" addressFrom="0x40" addressTo="0x7F"
+             description="16 PWM-Ausgaenge (Dimmer, Relaistreiber); 0x70 ist die ALL_CALL-Adresse" />
+
+</catalog>

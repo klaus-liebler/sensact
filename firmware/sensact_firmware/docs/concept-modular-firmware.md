@@ -268,48 +268,51 @@ haben sie keinen Einfluss.
 Alle Konfigurationsdaten liegen in XML-Dateien, die direkt lesbar und in Git sinnvoll
 vergleichbar sind. Zwei Arten:
 
-**Katalog (Basisinformationen)** – welche Boards und Erweiterungen es gibt und was sie können;
-ändert sich selten, wird mit der Firmware gepflegt:
+**Umgesetzt (2026-11-17): Schema, Katalog und Export.** Die Dateien liegen in
+[`model/`](../model/README.md):
 
-```xml
-<catalog>
-  <board type="SensactHsNano3" mcu="ESP32-S3" firmware="esp32-base">
-    <canBus />
-    <i2cBus id="0" />
-    <audio kind="TAS580x" />
-    <ethernet />
-  </board>
-  <board type="SensactUp02" mcu="STM32F103" ramKiB="20" firmware="stm32-legacy">
-    <io id="IO1" kind="input" /> <!-- ... -->
-  </board>
-  <extension type="PCA9555" kind="io" channels="16" bus="i2c" addressRange="0x20-0x27" />
-  <extension type="PCA9685" kind="pwm" channels="16" bus="i2c" addressRange="0x40-0x7F" />
-</catalog>
-```
+| Datei | Inhalt |
+|---|---|
+| `schema/sensact-catalog.xsd` | Schema des Katalogs: Boards (MCU, Firmware-Familie `esp32`/`stm32-legacy`, RAM), ihre Busse (Index 0..3, Art `gpio`/`i2c`/`legacy`) mit benannten Pins, Features (Audio, Drehgeber, Fingerprint …) und Erweiterungs-Chips (PCA9555, PCA9685). |
+| `catalog.xml` | Katalog der heute verwendeten Boards. |
+| `schema/sensact-house.xsd` | Schema des Hausmodells: Stationen, verbaute Erweiterungen, ein Element je App-Typ mit typisierten Attributen. |
+| `Sattlerstrasse16.xml`, `Testmodel.xml` | Aus den C#-Modellen exportiert (Builder-Schritt `ExportModelXml`). |
 
-**Hausmodell** – Stationen, ihre Hardware und Apps, in **einer** Datei (entschieden):
+Festlegungen im Schema:
 
-```xml
-<house name="Sattlerstraße 16" schemaVersion="1">
-  <station node="SNSCT_L0_TECH_HS_1" board="SensactHsNano3" hostname="l0tech">
-    <setting name="WIFI_ENABLED" value="false" />
-    <extension type="PCA9555" bus="0" address="0x20" name="Relais 1" />
-    <app id="BLIND_L0_CORR_J1" type="Blind" description="Flur">
-      <relay1 io="Relais 1/3" /> <relay2 io="Relais 1/4" />
-      <mode>R1_DOWN__R2_POWER</mode>
-      <upTimeMs>25000</upTimeMs> <downTimeMs>22000</downTimeMs>
-    </app>
-  </station>
-</house>
-```
+- **App-Nummern stehen ausdrücklich im XML** (`number`). Heute ergeben sie sich nur aus der
+  Reihenfolge im C#-Enum `ApplicationId` – eine eingefügte Zeile verschiebt alle folgenden
+  IDs. Das Schema prüft, dass Nummern und Namen hausweit eindeutig sind (Namen als `xs:ID`).
+  Vergebene, aber keiner App zugeordnete Nummern stehen als `<reserved>` am Ende und werden
+  nicht neu vergeben.
+- **Ziele** (`target`, `targets`, `standbyController` …) sind `xs:IDREF(S)`: das Schema prüft,
+  dass es die App gibt, auch stationsübergreifend. Kein Ziel = Attribut weglassen (statt
+  `NO_APPLICATION`).
+- **Ein-/Ausgänge über Namen** statt `BB + I2C + 13`: `IN0.13` (Kanal 13 der Erweiterung `IN0`
+  der Station), `K1` (benannter Pin des Boards), `GPIO.21` bzw. `BB.13` (lokaler Index auf
+  einem Bus), `INPUT0`/`INPUT1`/`NONE`, notfalls `#0x400D`. Die Übersetzung in die heutige
+  InOutId (Bus-Index << 14 | Chip-Index · 16 + Kanal; Chip-Index zählt je Richtung –
+  Eingänge PCA9555, Ausgänge PCA9685 – in Deklarationsreihenfolge) steht in
+  `builder/ModelGeneration/Xml/IoAddressing.cs`, in beide Richtungen.
+- **Standardwerte** stehen im XSD; der Export lässt Attribute mit Standardwert weg.
+- Ein `<location>` des Hauses ist die Vorgabe für sonnenstandsabhängige Apps.
 
-Regeln für gute Diffs: feste Reihenfolge (Stationen, Apps nach ID), ein Element pro App,
-Ein-/Ausgänge und Ziele über lesbare Namen, keine generierten Zusatzdaten. Die XML-Abbildung der
-App-Parameter folgt aus den (generierten) C#-Klassen, damit Schema, XML und Gerätedatei nicht
-auseinanderlaufen können. Eine XSD erleichtert das Bearbeiten in anderen Editoren, die
-inhaltliche Prüfung macht das Backend beim Laden und Speichern.
+Was das XSD nicht prüfen kann (braucht den Katalog), prüft künftig das Backend beim Laden:
+Board-Typ und Bus-/Erweiterungsnamen existieren, Ein-/Ausgang doppelt belegt, Ziel versteht
+das gesendete Kommando, App-Typ passt zur Firmware-Familie. Eine XSD erleichtert außerdem
+das Bearbeiten in anderen Editoren (VS Code mit XML-Erweiterung zeigt Fehler und ergänzt
+Attribute).
 
-**Übergang**: Ein einmaliger Import erzeugt Katalog und Hausmodell aus den heutigen C#-Klassen
+Abweichend vom ersten Entwurf ist die App-Konfiguration vorerst **handgeschrieben** im XSD
+(ein Typ je App) statt aus generierten BestBinaryBuffers-C#-Klassen abgeleitet; das lässt sich
+nachziehen, wenn der C#-Generator für BestBinaryBuffers existiert.
+
+Beim Export aufgefallen: Die C#-Node-Klassen stimmen nicht mit der realen Hardware überein
+(`SNSCT_L0_TECH_HS_1` ist `SensactHs08`, läuft aber auf `SensactHsNano3`; `SNSCT_L3_WORK_HS`
+ist `SensactUp02`, läuft auf `SensactUpHs`). Das XML nimmt den Board-Typ aus
+`NodeIdBoardTypeCatalog` (also die reale Hardware); die C#-Klassen sind für die Codegenerierung
+ohne Bedeutung.
+**Übergang**: Der Export (`ExportModelXml`) erzeugt das Hausmodell aus den heutigen C#-Klassen
 (`ModelGeneration/Nodes/*`, `Sattlerstrasse16Builder.cs`); danach wird nur noch im Editor bzw.
 in den XML-Dateien gepflegt, und die C#-Hausmodelle entfallen.
 

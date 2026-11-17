@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<house name="TwoNodesDemo" schemaVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/sensact-house.xsd">
+  <location latitudeDeg="52.0965" longitudeDeg="7.6171" />
+  <station id="SNSCT_NODE_HS" number="1" board="SensactHsNano3">
+    <extension name="IN0" type="PCA9555" bus="SensactBus" address="0x20" />
+    <extension name="OUT0" type="PCA9685" bus="SensactBus" address="0x40" />
+    <toggleButton id="PUSHB_X1_XX1_3" number="5" input="IN0.0" targets="POWIT_X1_XX3_9" />
+    <toggleButton id="PUSHB_X2_XX2_4" number="6" input="IN0.1" targets="SOUND_X2_XX2_0" />
+    <toggleButton id="PUSHB_X3_XX3_5" number="7" input="IN0.2" targets="POWIT_X1_XX3_9 POWIT_X2_XX4_10" />
+    <toggleButton id="PUSHB_X1_XX4__6" number="8" input="IN0.3" targets="POWIT_X3_XX1_11 POWIT_X1_XX2_12" />
+    <blindButtons id="BLINDB_X2_XX1_7" number="9" inputUp="IN0.4" inputDown="IN0.5" target="BLIND_X2_XX3_13" />
+    <dualDimButtons id="DIM2B_X3_XX2_8" number="10" inputUp="IN0.6" inputDown="IN0.7" target="PWM___X3_XX4_14" />
+    <onOff id="POWIT_X1_XX3_9" number="11" description="erstes Licht" output="OUT0.0" autoOffMs="5000" />
+    <onOff id="POWIT_X2_XX4_10" number="12" description="zweites Licht" output="OUT0.1" autoOffMs="5000" />
+    <onOff id="POWIT_X3_XX1_11" number="13" description="drittes Licht" output="OUT0.2" autoOffMs="5000" />
+    <onOff id="POWIT_X1_XX2_12" number="14" description="viertes Licht" output="OUT0.3" autoOffMs="5000" />
+    <blind id="BLIND_X2_XX3_13" number="15" description="Test-Rollade" relay1="OUT0.4" relay2="OUT0.5" relayMode="R1_DOWN__R2_POWER" upTimeSec="8" downTimeSec="5" />
+    <singlePwm id="PWM___X3_XX4_14" number="16" description="Dimmbares Licht" outputs="OUT0.6" minimalOnLevel="15104" autoOffMs="5000" standbyController="STDBY_X1_XX1_15" />
+    <onOff id="STDBY_X1_XX1_15" number="17" description="Standby für die PWMApplication" output="OUT0.7" autoOffMs="10000" />
+    <sound id="SOUND_X2_XX2_0" number="18" description="Soundgenerator" initialVolume="20" defaultSignalOnToggle="1" />
+  </station>
+  <station id="SNSCT_NODE_UP" number="2" board="SensactUp3">
+    <extension name="IN0" type="PCA9555" bus="SensactBus" address="0x20" />
+    <rotaryEncoder id="ROTAR_X3_XX3_0" number="19" encoder="ROTENC0" target="PWM___X3_XX4_14" />
+  </station>
+  <station id="SNSCT_NODE_SIDEDOOR" number="3" board="SensactUpControl">
+    <fingerprint id="FINGR_X1_XX1_42" number="20" description="Fingerprint Seiteneingang" target1="POWIT_X1_XX1_42" target2="POWIT_X1_XX1_42" target3="POWIT_X1_XX1_42" />
+    <onOff id="POWIT_X1_XX1_42" number="21" description="Fingerprint Seiteneingang" output="MOTOR" autoOffMs="1000" />
+  </station>
+  <station id="SNSCT_NODE_TERRASSE" number="4" board="SensactOutdoor">
+    <milightController id="REMOT_X1_XX1_42" number="22" description="Milight Controller" light="PWM___X1_XX1_42" blinds="BLIND_X1_XX1_42 BLIND_X1_XX1_43" />
+    <singlePwm id="PWM___X1_XX1_42" number="23" description="Spots Terrassendach" outputs="POWER_LED GPIO.5" minimalOnLevel="512" autoOffMs="43200000" />
+    <blind id="BLIND_X1_XX1_42" number="24" description="Markise Horizontal" relay1="K1" relay2="K2" relayMode="R1_DOWN__R2_UP" upTimeSec="20" downTimeSec="15" />
+    <blind id="BLIND_X1_XX1_43" number="25" description="Markise Vertikal" relay1="K3" relay2="K4" relayMode="R1_DOWN__R2_UP" upTimeSec="20" downTimeSec="15" />
+    <sound id="SOUND_X1_XX1_44" number="26" description="Soundgenerator" defaultSignalOnToggle="1" />
+    <blindsTimer id="BLTIM_X1_XX1_45" number="27" description="Markisen-Timer" blinds="BLIND_X1_XX1_42 BLIND_X1_XX1_43" openOffsetMin="30" closeOffsetMin="-15" maxRandomMin="20" />
+  </station>
+</house>

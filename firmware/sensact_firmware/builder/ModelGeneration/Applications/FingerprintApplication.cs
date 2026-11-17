@@ -7,6 +7,9 @@ namespace Klli.Sensact.Model.Common.Applications
     {
         
         public ushort TargetApplication{get;}
+        public ushort Target1 { get; } = TargetApplication1;
+        public ushort Target2 { get; } = TargetApplication2;
+        public ushort Target3 { get; } = TargetApplication3;
 
 
 
@@ -35,9 +38,9 @@ namespace Klli.Sensact.Model.Common.Applications
             StringBuilder sb = new();
             sb.AppendFormat("sensact::apps::cFingerprint {0}(eApplicationID::{0}, eApplicationID::{1}, eApplicationID::{2}, eApplicationID::{3})", 
                 m.GetNameFromId(ApplicationId),
-                m.GetNameFromId(TargetApplication1),
-                m.GetNameFromId(TargetApplication2),
-                m.GetNameFromId(TargetApplication3)
+                m.GetNameFromId(Target1),
+                m.GetNameFromId(Target2),
+                m.GetNameFromId(Target3)
                 );
 
             return sb.ToString();

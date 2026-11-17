@@ -176,6 +176,41 @@ internal static class Program
 		}
 	}
 
+	// Uebergang zum XML-Hausmodell (docs/concept-modular-firmware.md): schreibt beide C#-Modelle
+	// nach model/<Modell>.xml, prueft Katalog und Ergebnis gegen die XSDs und jede
+	// Ein-/Ausgangsadresse per Rueckuebersetzung. Aendert nichts an Firmware oder Codegenerierung.
+	[BuildStep]
+	public static void ExportModelXml(IBuildContextEsp32 ctx)
+	{
+		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
+		var modelDir = Path.Combine(firmwareRoot, "model");
+		var catalogPath = Path.Combine(modelDir, "catalog.xml");
+		var catalogDoc = System.Xml.Linq.XDocument.Load(catalogPath);
+		var catalogSchemas = new System.Xml.Schema.XmlSchemaSet();
+		catalogSchemas.Add(null, Path.Combine(modelDir, "schema", "sensact-catalog.xsd"));
+		var catalogErrors = new List<string>();
+		System.Xml.Schema.Extensions.Validate(catalogDoc, catalogSchemas, (_, e) => catalogErrors.Add(e.Message));
+		if (catalogErrors.Count > 0)
+		{
+			throw new InvalidOperationException("catalog.xml verletzt das Schema:\n" + string.Join('\n', catalogErrors));
+		}
+		var catalog = Klli.Sensact.Model.Xml.Catalog.Load(catalogPath);
+		var houseXsd = Path.Combine(modelDir, "schema", "sensact-house.xsd");
+
+		void Export<TId>(string name, Klli.Sensact.Model.Common.Model model) where TId : struct, Enum
+		{
+			var exporter = new Klli.Sensact.Model.Xml.HouseXmlExporter<TId>(catalog, firmwareRoot, NodeIdBoardTypeCatalog.TryResolveBoardType);
+			var doc = exporter.Export(model);
+			Klli.Sensact.Model.Xml.HouseXmlExporter<TId>.Validate(doc, houseXsd);
+			var path = Path.Combine(modelDir, name + ".xml");
+			Klli.Sensact.Model.Xml.HouseXmlExporter<TId>.Save(doc, path);
+			Console.WriteLine($"{path}: {doc.Root!.Elements("station").Count()} Stationen, {doc.Root!.Elements("station").SelectMany(s => s.Elements()).Count(e => e.Attribute("number") != null)} Apps, gueltig.");
+		}
+
+		Export<Klli.Sensact.Model.Sattlerstrasse16.ApplicationId>("Sattlerstrasse16", new Sattlerstrasse16Builder().BuildAndFinalizeAndReturnModelContainer().Model);
+		Export<Klli.Sensact.Model.Testmodel.ApplicationId>("Testmodel", new TestModelBuilder().BuildAndFinalizeAndReturnModelContainer().Model);
+	}
+
 	// Erzeugt die Modell-Dateien fuer die Host-Unit-Tests der Sensact-Apps
 	// (sensact/espidf-components/sensact-applicationmodel/host_test) in ein frei waehlbares
 	// Verzeichnis (--out). Immer aus dem Testmodel und -- anders als GenerateModelFiles -- OHNE die

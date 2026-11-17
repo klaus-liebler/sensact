@@ -138,6 +138,7 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 | `GenerateCertificates` | Lazy: Board-Zertifikat (.NET-Kryptografie aus `FirmwareBuilder.Common`, signiert mit der Root-CA aus `CertsDir`, Parameter s. `Certificates.*` in `appsettings.json`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
 | `GenerateModelFiles --model <Name>` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
 | `GenerateModelFilesForHostTests --out <Verzeichnis>` | Wie `GenerateModelFiles`, aber immer aus dem Testmodel, in ein beliebiges Verzeichnis und **ohne** die Enum-Quellen nach `best_binary_buffers_schema/` zu kopieren. Wird automatisch von den Host-Unit-Tests der Apps aufgerufen (s. "Tests" unten). |
+| `ExportModelXml` | Übergang zum XML-Hausmodell: schreibt beide C#-Modelle nach `model/<Modell>.xml`, prüft `model/catalog.xml` und das Ergebnis gegen die XSDs in `model/schema/` und jede Ein-/Ausgangsadresse per Rückübersetzung. Ändert nichts an Firmware oder Codegenerierung; nicht Teil der Pipelines. |
 | `RunHostTests` | Baut und startet die Host-Unit-Tests der Apps (s. "Tests"); Teil von `Pipeline`/`PipelineOffline`. |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |

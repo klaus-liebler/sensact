@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Katalog der Boards und Erweiterungen (Basisinformationen), s. docs/concept-modular-firmware.md.
+  Beschreibt, WAS eine Hardware kann; WELCHE Hardware wo verbaut ist, steht im Hausmodell
+  (sensact-house.xsd). Wird mit der Firmware gepflegt, aendert sich selten.
+
+  Adressierung der Ein-/Ausgaenge (so, wie die Firmware sie heute zerlegt, s. main/nodemaster.hh,
+  main/busmaster.hh): InOutId = (Bus-Index << 14) | lokaler Index.
+    - Bus-Index 0..3 = Position des Busmasters in board_init.hh (bzw. bei STM32-Altknoten die
+      Konstanten INTERNAL/BUS0(BB)/BUS1(RB)/BUS2).
+    - Bus-Art "i2c": lokaler Index = Chip-Index * 16 + Kanal. Chip-Index zaehlt getrennt je
+      Richtung: Eingaenge adressieren die PCA9555, Ausgaenge die PCA9685, jeweils in der
+      Reihenfolge, in der die Station sie deklariert.
+    - Bus-Art "gpio": lokaler Index = das, was die Board-HAL in GetU16Input/SetU16Output
+      erwartet (meist die GPIO-Nummer; boardspezifische Namen stehen als <pin>).
+    - Bus-Art "legacy": STM32-Altfirmware, lokaler Index wird unveraendert durchgereicht.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="catalog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="board" type="Board" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="schemaVersion" type="xs:positiveInteger" use="required" />
+    </xs:complexType>
+    <xs:unique name="uniqueBoardType">
+      <xs:selector xpath="board" />
+      <xs:field xpath="@type" />
+    </xs:unique>
+    <xs:unique name="uniqueExtensionType">
+      <xs:selector xpath="extension" />
+      <xs:field xpath="@type" />
+    </xs:unique>
+  </xs:element>
+
+  <xs:simpleType name="Name">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Za-z][A-Za-z0-9_\-]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FirmwareFamily">
+    <xs:restriction base="xs:token">
+      <!-- heutige ESP32-Firmware (sensact_firmware), Code-Export der .inc-Dateien -->
+      <xs:enumeration value="esp32" />
+      <!-- STM32-Altfirmware (firmware/sensact_firmware_stm32), Code-Export (Variante L1) -->
+      <xs:enumeration value="stm32-legacy" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BusKind">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="gpio" />
+      <xs:enumeration value="i2c" />
+      <xs:enumeration value="legacy" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Direction">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="input" />
+      <xs:enumeration value="output" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="HexByte">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="0x[0-9A-Fa-f]{2}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Board">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0" />
+      <xs:element name="bus" type="Bus" minOccurs="0" maxOccurs="4" />
+      <!-- Peripherie, die Apps voraussetzen (z. B. Sound braucht audio, Drehgeber-App rotaryEncoder) -->
+      <xs:element name="feature" type="Feature" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <!-- entspricht heute dem Namespace der main/hal/hal_sensact*.hh bzw. der Node-Klasse (Altknoten) -->
+    <xs:attribute name="type" type="Name" use="required" />
+    <xs:attribute name="mcu" type="xs:token" use="required" />
+    <xs:attribute name="firmware" type="FirmwareFamily" use="required" />
+    <xs:attribute name="ramKiB" type="xs:positiveInteger" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Bus">
+    <xs:sequence>
+      <xs:element name="pin" type="Pin" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="index" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:unsignedByte">
+          <xs:maxInclusive value="3" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <!-- Name, unter dem das Hausmodell den Bus anspricht (z. B. "GPIO", "SensactBus", "BB") -->
+    <xs:attribute name="name" type="Name" use="required" />
+    <xs:attribute name="kind" type="BusKind" use="required" />
+  </xs:complexType>
+
+  <!-- Benannter Ein-/Ausgang eines Busses (z. B. Relais K1 der Outdoor-Platine) -->
+  <xs:complexType name="Pin">
+    <xs:attribute name="name" type="Name" use="required" />
+    <xs:attribute name="index" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="direction" type="Direction" use="required" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Feature">
+    <xs:attribute name="kind" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="can" />
+          <xs:enumeration value="ethernet" />
+          <xs:enumeration value="wifi" />
+          <xs:enumeration value="audio" />
+          <xs:enumeration value="rotaryEncoder" />
+          <xs:enumeration value="rgbLed" />
+          <xs:enumeration value="fingerprint" />
+          <xs:enumeration value="milight" />
+          <xs:enumeration value="display" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="chip" type="xs:token" use="optional" />
+    <xs:attribute name="count" type="xs:positiveInteger" use="optional" />
+  </xs:complexType>
+
+  <!-- Erweiterungs-Chip, der an einen Bus der Art "i2c" angeschlossen wird -->
+  <xs:complexType name="Extension">
+    <xs:attribute name="type" type="Name" use="required" />
+    <xs:attribute name="direction" type="Direction" use="required" />
+    <xs:attribute name="channels" type="xs:positiveInteger" use="required" />
+    <xs:attribute name="busKind" type="BusKind" use="required" />
+    <xs:attribute name="addressFrom" type="HexByte" use="required" />
+    <xs:attribute name="addressTo" type="HexByte" use="required" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+</xs:schema>

@@ -20,6 +20,10 @@ public static class NodeIdBoardTypeCatalog
 			["SNSCT_NODE_UP"] = ("SensactUp3", "1.0.0"),
 		};
 
+	/// <summary>Board-Typ einer ESP32-Station oder null (z. B. STM32-Altknoten).</summary>
+	public static string? TryResolveBoardType(string nodeId) =>
+		Catalog.TryGetValue(nodeId, out var entry) ? entry.BoardTypeName : null;
+
 	public static (string BoardTypeName, string BoardTypeVersion) Resolve(string nodeId)
 	{
 		if (Catalog.TryGetValue(nodeId, out var entry))

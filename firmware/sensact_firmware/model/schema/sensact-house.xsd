@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Hausmodell: Stationen, ihre Hardware und ihre Apps, in EINER Datei (s.
+  docs/concept-modular-firmware.md). Quelle der Wahrheit fuer Editor und Code-Export.
+
+  Was dieses Schema prueft: Aufbau, Datentypen, Wertebereiche, eindeutige App-Namen (xs:ID) und
+  -Nummern, dass jedes Ziel (xs:IDREF) eine im Haus definierte App oder Station ist.
+  Was das Backend zusaetzlich prueft (braucht den Katalog): Board-Typ existiert, Bus- und
+  Erweiterungsnamen, Ein-/Ausgang doppelt belegt, Ziel versteht das gesendete Kommando,
+  App-Typ wird von der Firmware-Familie der Station unterstuetzt.
+
+  Ein-/Ausgaenge (Typ IoRef) werden ueber Namen angesprochen:
+    "<Erweiterung>.<Kanal>"  z. B. "IN0.13"     Kanal 13 der Erweiterung IN0 (Station)
+    "<Pin>"                  z. B. "K1"         benannter Pin des Boards (Katalog)
+    "<Bus>.<Index>"          z. B. "GPIO.21"    lokaler Index auf einem Bus des Boards (Katalog)
+    "INPUT0" / "INPUT1"      Eingang, der immer 0 bzw. 1 liefert
+    "NONE"                   unbeschalteter Ausgang
+    "#0x400D"                rohe InOutId (nur fuer Faelle, die sich nicht benennen lassen)
+
+  Konventionen fuer gute Diffs: Stationen und Apps in fester Reihenfolge (der Export sortiert
+  nach Nummer), ein Element pro App, Attribute statt Kindelemente, Zeiten in ms bzw. s mit
+  Einheit im Namen.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="house">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="location" type="Location" minOccurs="0" />
+        <xs:element name="station" type="Station" minOccurs="0" maxOccurs="unbounded" />
+        <!-- Nummern, die vergeben, aber (noch) keiner App zugeordnet sind, oder die zu
+             geloeschten Apps gehoerten: werden nicht neu vergeben. -->
+        <xs:element name="reserved" type="Reserved" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="schemaVersion" type="xs:positiveInteger" use="required" />
+    </xs:complexType>
+    <!-- App-/Stationsnummern sind die IDs auf dem CAN-Bus: hausweit eindeutig, einmal vergeben
+         und danach nicht mehr veraendert. -->
+    <xs:unique name="uniqueNumber">
+      <xs:selector xpath="station|station/*|reserved" />
+      <xs:field xpath="@number" />
+    </xs:unique>
+  </xs:element>
+
+  <!-- ===================================================================== Grundtypen -->
+
+  <xs:simpleType name="AppName">
+    <xs:restriction base="xs:ID">
+      <!-- wird zum C++/TS-Enum-Bezeichner (eApplicationID) -->
+      <xs:pattern value="[A-Z][A-Za-z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- 0 = MASTER und 65535 = NO_APPLICATION sind reserviert -->
+  <xs:simpleType name="AppNumber">
+    <xs:restriction base="xs:unsignedShort">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="65534" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Name">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Za-z][A-Za-z0-9_\-]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IoRef">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="INPUT0|INPUT1|NONE|#0x[0-9A-Fa-f]{4}|[A-Za-z][A-Za-z0-9_\-]*(\.[0-9]+)?" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IoRefList">
+    <xs:restriction>
+      <xs:simpleType>
+        <xs:list itemType="IoRef" />
+      </xs:simpleType>
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AppRefList">
+    <xs:restriction base="xs:IDREFS">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Dauer in Millisekunden; 0 = unbegrenzt bzw. Funktion aus -->
+  <xs:simpleType name="Millis">
+    <xs:restriction base="xs:unsignedInt" />
+  </xs:simpleType>
+
+  <!-- Helligkeit/Lautstaerke/Position auf der vollen u16-Skala 0..65535 -->
+  <xs:simpleType name="Level">
+    <xs:restriction base="xs:unsignedShort" />
+  </xs:simpleType>
+
+  <xs:simpleType name="HexByte">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="0x[0-9A-Fa-f]{2}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Latitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-90" />
+      <xs:maxInclusive value="90" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Longitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-180" />
+      <xs:maxInclusive value="180" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ===================================================================== Haus/Station -->
+
+  <!-- Standort des Hauses: Vorgabe fuer sonnenstandsabhaengige Apps (blindsTimer) -->
+  <xs:complexType name="Location">
+    <xs:attribute name="latitudeDeg" type="Latitude" use="required" />
+    <xs:attribute name="longitudeDeg" type="Longitude" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="Reserved">
+    <xs:attribute name="id" type="AppName" use="required" />
+    <xs:attribute name="number" type="AppNumber" use="required" />
+    <xs:attribute name="note" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="Station">
+    <xs:sequence>
+      <xs:element name="setting" type="Setting" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="extension" type="ExtensionInstance" minOccurs="0" maxOccurs="unbounded" />
+      <xs:group ref="Apps" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <!-- Die Station ist selbst eine App (Node-App) und teilt den Nummernraum mit den Apps -->
+    <xs:attribute name="id" type="AppName" use="required" />
+    <xs:attribute name="number" type="AppNumber" use="required" />
+    <!-- Board-Typ aus dem Katalog -->
+    <xs:attribute name="board" type="Name" use="required" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <!-- Board-Einstellung, z. B. WIFI_ENABLED; Bedeutung legt die Firmware-Familie fest -->
+  <xs:complexType name="Setting">
+    <xs:attribute name="name" type="Name" use="required" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <!-- Verbauter Erweiterungs-Chip. Die Reihenfolge der Chips gleichen Typs auf einem Bus legt
+       ihren Chip-Index fest (s. sensact-catalog.xsd) und darf deshalb nicht umsortiert werden. -->
+  <xs:complexType name="ExtensionInstance">
+    <xs:attribute name="name" type="Name" use="required" />
+    <xs:attribute name="type" type="Name" use="required" />
+    <xs:attribute name="bus" type="Name" use="required" />
+    <xs:attribute name="address" type="HexByte" use="required" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <!-- ===================================================================== Apps -->
+
+  <xs:group name="Apps">
+    <xs:choice>
+      <xs:element name="blind" type="Blind" />
+      <xs:element name="onOff" type="OnOff" />
+      <xs:element name="singlePwm" type="SinglePwm" />
+      <xs:element name="rgbw" type="Rgbw" />
+      <xs:element name="sound" type="Sound" />
+      <xs:element name="pump" type="Pump" />
+      <xs:element name="toggleButton" type="ToggleButton" />
+      <xs:element name="dimButton" type="DimButton" />
+      <xs:element name="dualDimButtons" type="DualButtons" />
+      <xs:element name="blindButtons" type="DualButtons" />
+      <xs:element name="rotaryEncoder" type="RotaryEncoder" />
+      <xs:element name="lightbarrier" type="Lightbarrier" />
+      <xs:element name="brightnessSensor" type="BrightnessSensor" />
+      <xs:element name="fingerprint" type="Fingerprint" />
+      <xs:element name="milightController" type="MilightController" />
+      <xs:element name="blindsTimer" type="BlindsTimer" />
+      <xs:element name="forwarder" type="Forwarder" />
+      <xs:element name="placeholder" type="App" />
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="App">
+    <xs:attribute name="id" type="AppName" use="required" />
+    <xs:attribute name="number" type="AppNumber" use="required" />
+    <xs:attribute name="description" type="xs:string" use="optional" />
+  </xs:complexType>
+
+  <!-- Rollladen/Markise (cBlind). Zwei Relais, Verriegelungsart s. relayMode. -->
+  <xs:complexType name="Blind">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="relay1" type="IoRef" use="required" />
+        <xs:attribute name="relay2" type="IoRef" use="required" />
+        <xs:attribute name="relayMode" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="R1_UP__R2_DOWN" />
+              <xs:enumeration value="R1_DOWN__R2_UP" />
+              <xs:enumeration value="R1_POWER__R2_UP" />
+              <xs:enumeration value="R1_POWER__R2_DOWN" />
+              <xs:enumeration value="R1_UP__R2_POWER" />
+              <xs:enumeration value="R1_DOWN__R2_POWER" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <!-- Fahrzeit ganz zu -> ganz auf bzw. umgekehrt -->
+        <xs:attribute name="upTimeSec" type="xs:unsignedShort" use="required" />
+        <xs:attribute name="downTimeSec" type="xs:unsignedShort" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Schaltausgang (cOnOff), z. B. Deckenlicht oder Netzteil (Standby-Controller) -->
+  <xs:complexType name="OnOff">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="output" type="IoRef" use="required" />
+        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <xs:attribute name="initiallyOn" type="xs:boolean" default="false" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Dimmbare Lampe an einem oder mehreren PWM-Ausgaengen (cSinglePWM) -->
+  <xs:complexType name="SinglePwm">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="outputs" type="IoRefList" use="required" />
+        <!-- kleinste Helligkeit im eingeschalteten Zustand (u16-Skala, 59*256 = 5 % PWM) -->
+        <xs:attribute name="minimalOnLevel" type="Level" use="required" />
+        <!-- Helligkeit beim ersten Einschalten nach dem Booten -->
+        <xs:attribute name="initialLevel" type="Level" default="65535" />
+        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <!-- Netzteil, das vor dem Einschalten aktiviert wird -->
+        <xs:attribute name="standbyController" type="xs:IDREF" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- RGBW-Leuchte (cRgbw) -->
+  <xs:complexType name="Rgbw">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="outputR" type="IoRef" use="required" />
+        <xs:attribute name="outputG" type="IoRef" use="required" />
+        <xs:attribute name="outputB" type="IoRef" use="required" />
+        <xs:attribute name="outputW" type="IoRef" use="required" />
+        <xs:attribute name="autoOffMs" type="Millis" default="0" />
+        <xs:attribute name="standbyController" type="xs:IDREF" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Tonausgabe/Tuerklingel (cSound); braucht Board-Feature "audio" -->
+  <xs:complexType name="Sound">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="initialVolume" type="Level" default="65535" />
+        <xs:attribute name="defaultSignalOnToggle" type="xs:unsignedShort" default="0" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Pumpe mit Ein-/Aus-Intervall (cPump) -->
+  <xs:complexType name="Pump">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="output" type="IoRef" use="required" />
+        <xs:attribute name="onIntervalMs" type="Millis" use="required" />
+        <xs:attribute name="offIntervalMs" type="Millis" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Taster: TOGGLE an alle Ziele -->
+  <xs:complexType name="ToggleButton">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="input" type="IoRef" use="required" />
+        <xs:attribute name="targets" type="AppRefList" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Ein Taster dimmt eine Lampe (kurz: an/aus, lang: dimmen) -->
+  <xs:complexType name="DimButton">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="input" type="IoRef" use="required" />
+        <xs:attribute name="target" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Tasterpaar auf/ab fuer eine Lampe (dualDimButtons) oder einen Rollladen (blindButtons) -->
+  <xs:complexType name="DualButtons">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="inputUp" type="IoRef" use="required" />
+        <xs:attribute name="inputDown" type="IoRef" use="required" />
+        <xs:attribute name="target" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Drehgeber mit Taster an eine dimmbare Lampe; braucht Board-Feature "rotaryEncoder" -->
+  <xs:complexType name="RotaryEncoder">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="encoder" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="ROTENC0" />
+              <xs:enumeration value="ROTENC1" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="target" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Lichtschranke/Bewegungsmelder -->
+  <xs:complexType name="Lightbarrier">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="input" type="IoRef" use="required" />
+        <xs:attribute name="activeHigh" type="xs:boolean" use="required" />
+        <xs:attribute name="target" type="xs:IDREF" use="optional" />
+        <xs:attribute name="brightnessSensor" type="xs:IDREF" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="BrightnessSensor">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="sensorName" type="xs:string" use="required" />
+        <xs:attribute name="toggleTarget" type="xs:IDREF" use="optional" />
+        <xs:attribute name="limitForPassingToggle" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Fingerabdruckleser; braucht Board-Feature "fingerprint" -->
+  <xs:complexType name="Fingerprint">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="target1" type="xs:IDREF" use="optional" />
+        <xs:attribute name="target2" type="xs:IDREF" use="optional" />
+        <xs:attribute name="target3" type="xs:IDREF" use="optional" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Milight-Fernbedienung; braucht Board-Feature "milight" -->
+  <xs:complexType name="MilightController">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="light" type="xs:IDREF" use="optional" />
+        <!-- Rollladen der Tastengruppen 1..8, in dieser Reihenfolge -->
+        <xs:attribute name="blinds" type="xs:IDREFS" use="optional" />
+        <xs:attribute name="lightOnMs" type="Millis" default="43200000" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Rollladen-Zeitschaltung nach Sonnenauf-/-untergang (cBlindsTimer) -->
+  <xs:complexType name="BlindsTimer">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="blinds" type="AppRefList" use="required" />
+        <!-- ohne Angabe: Standort des Hauses (<location>) -->
+        <xs:attribute name="latitudeDeg" type="Latitude" use="optional" />
+        <xs:attribute name="longitudeDeg" type="Longitude" use="optional" />
+        <xs:attribute name="dawn" default="CIVIL">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="NORMAL" />
+              <xs:enumeration value="CIVIL" />
+              <xs:enumeration value="NAUTIC" />
+              <xs:enumeration value="ASTRONOMIC" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="openOffsetMin" type="xs:short" default="0" />
+        <xs:attribute name="closeOffsetMin" type="xs:short" default="0" />
+        <xs:attribute name="maxRandomMin" type="xs:unsignedShort" default="0" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Leitet Kommandos an ein anderes Ziel weiter -->
+  <xs:complexType name="Forwarder">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <xs:attribute name="target" type="xs:IDREF" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>
