@@ -225,8 +225,11 @@ Ein Werkzeug, mit dem das ganze Haus gepflegt wird. Es ersetzt die heutigen C#-H
 - **Prüfen** wie heute `CheckAndPrepare` im Builder: doppelt belegte Ein-/Ausgänge, doppelte
   App-IDs, Ziele, die das gesendete Kommando nicht verstehen, Werte außerhalb des Bereichs
   (z. B. die alte 0..255-Helligkeitsskala).
-- **App-IDs** werden einmal vergeben und nie wiederverwendet (sie stehen in CAN-Nachrichten
-  anderer Stationen).
+- **App-IDs** werden einmal vergeben und danach **nicht mehr verändert**. Ändern geht nur
+  nach einer sehr deutlichen Sicherheitsabfrage, weil die ID in den Konfigurationen und
+  CAN-Nachrichten anderer Stationen steht und all diese Stationen danach neu konfiguriert werden
+  müssen (der Editor zeigt an, welche betroffen sind). Zusätzlich empfehlenswert: IDs gelöschter
+  Apps nicht neu vergeben, damit eine noch nicht aktualisierte Station keine fremde App anspricht.
 - **Export** je Station: Hardware- und App-Konfiguration als BestBinaryBuffers-Datei. Später
   (mit der Modularisierung) direkt hochladen, mit Versionsvergleich gegen das Gerät.
 
