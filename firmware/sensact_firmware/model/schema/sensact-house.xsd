@@ -5,9 +5,13 @@
 
   Was dieses Schema prueft: Aufbau, Datentypen, Wertebereiche, eindeutige App-Namen (xs:ID) und
   -Nummern, dass jedes Ziel (xs:IDREF) eine im Haus definierte App oder Station ist.
-  Was das Backend zusaetzlich prueft (braucht den Katalog): Board-Typ existiert, Bus- und
-  Erweiterungsnamen, Ein-/Ausgang doppelt belegt, Ziel versteht das gesendete Kommando,
-  App-Typ wird von der Firmware-Familie der Station unterstuetzt.
+  Was der Builder beim Laden zusaetzlich prueft (HouseModelChecker, braucht den Katalog):
+  Board-Typ existiert; Erweiterungen (Typ, Bus und Busart, Adressbereich, Namen und Adressen
+  eindeutig); jede Ein-/Ausgangsangabe ist aufloesbar und nicht doppelt belegt; App-Typen
+  mit Hardware-Voraussetzung (sound, rotaryEncoder, fingerprint, milightController) nur auf
+  Boards mit dem Feature. Die Codegenerierung prueft danach, ob jedes Ziel das gesendete
+  Kommando versteht. Noch nicht geprueft: ob die Firmware-Familie der Station (stm32-legacy)
+  den App-Typ kennt.
 
   Ein-/Ausgaenge (Typ IoRef) werden ueber Namen angesprochen:
     "<Erweiterung>.<Kanal>"  z. B. "IN0.13"     Kanal 13 der Erweiterung IN0 (Station)

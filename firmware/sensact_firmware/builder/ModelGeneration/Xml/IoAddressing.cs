@@ -6,15 +6,16 @@ namespace Klli.Sensact.Model.Xml;
 public enum IoDirection { Input, Output }
 
 /// <summary>
-/// Katalog (model/catalog.xml) als Objekte -- nur das, was fuer die Adressierung der
-/// Ein-/Ausgaenge gebraucht wird. Regeln s. model/schema/sensact-catalog.xsd.
+/// Katalog (model/catalog.xml) als Objekte -- was fuer die Adressierung der Ein-/Ausgaenge und
+/// die Pruefungen beim Laden (HouseModelChecker) gebraucht wird. Regeln s. model/schema/sensact-catalog.xsd.
 /// </summary>
 public sealed class Catalog
 {
 	public sealed record Pin(string Name, ushort Index, IoDirection Direction);
 	public sealed record Bus(int Index, string Name, string Kind, IReadOnlyList<Pin> Pins);
-	public sealed record Board(string Type, string Firmware, IReadOnlyList<Bus> Buses);
-	public sealed record ExtensionType(string Type, IoDirection Direction, int Channels);
+	/// <param name="Features">Feature-Art -> Anzahl (1, wenn im Katalog ohne count)</param>
+	public sealed record Board(string Type, string Firmware, IReadOnlyList<Bus> Buses, IReadOnlyDictionary<string, int> Features);
+	public sealed record ExtensionType(string Type, IoDirection Direction, int Channels, string BusKind, byte AddressFrom, byte AddressTo);
 
 	public IReadOnlyDictionary<string, Board> Boards { get; }
 	public IReadOnlyDictionary<string, ExtensionType> Extensions { get; }
@@ -38,15 +39,22 @@ public sealed class Catalog
 				bus.Elements("pin").Select(p => new Pin(
 					(string)p.Attribute("name")!,
 					(ushort)(int)p.Attribute("index")!,
-					ParseDirection((string)p.Attribute("direction")!))).ToList())).ToList()))
+					ParseDirection((string)p.Attribute("direction")!))).ToList())).ToList(),
+			b.Elements("feature").ToDictionary(f => (string)f.Attribute("kind")!, f => (int?)f.Attribute("count") ?? 1, StringComparer.Ordinal)))
 			.ToDictionary(b => b.Type, StringComparer.Ordinal);
 		var extensions = doc.Root!.Elements("extension").Select(e => new ExtensionType(
 			(string)e.Attribute("type")!,
 			ParseDirection((string)e.Attribute("direction")!),
-			(int)e.Attribute("channels")!))
+			(int)e.Attribute("channels")!,
+			(string)e.Attribute("busKind")!,
+			ParseHexByte((string)e.Attribute("addressFrom")!),
+			ParseHexByte((string)e.Attribute("addressTo")!)))
 			.ToDictionary(e => e.Type, StringComparer.Ordinal);
 		return new Catalog(boards, extensions);
 	}
+
+	/// <summary>"0x20" -> 0x20</summary>
+	public static byte ParseHexByte(string s) => byte.Parse(s.AsSpan(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
 	public static IoDirection ParseDirection(string s) => s switch
 	{

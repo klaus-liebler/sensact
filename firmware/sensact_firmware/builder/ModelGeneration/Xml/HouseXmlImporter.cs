@@ -41,6 +41,11 @@ public sealed class HouseXmlImporter
 		{
 			throw new InvalidOperationException($"{housePath} verletzt das Schema:\n" + string.Join('\n', errors));
 		}
+		errors = HouseModelChecker.Check(doc, catalog);
+		if (errors.Count > 0)
+		{
+			throw new InvalidOperationException($"{housePath} passt nicht zum Katalog:\n" + string.Join('\n', errors));
+		}
 		return Import(doc);
 	}
 

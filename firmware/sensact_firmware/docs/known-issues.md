@@ -29,6 +29,11 @@ Zurzeit keine.
   im C#-Enum (eine eingefügte Zeile hätte alle folgenden IDs verschoben).
 - Die C#-Node-Klassen passten nicht zur realen Hardware (`SNSCT_L0_TECH_HS_1` als
   `SensactHs08`, `SNSCT_L3_WORK_HS` als `SensactUp02`); das XML nennt die realen Boards.
+- Board-Typ einer NODE_ID kommt aus der `<station>` im XML (`NodeIdBoardTypeCatalog.cs` war eine
+  zweite, von Hand gepflegte Tabelle); nur `MONITORING` (keine Station eines Hauses) steht noch dort.
+- Prüfungen beim Laden gegen den Katalog (`HouseModelChecker`): Erweiterungen, Adressen, doppelt
+  belegte Ein-/Ausgänge mit lesbaren Namen, Hardware-Voraussetzungen der Apps, alle Fehler mit
+  Zeilennummer. Weboberfläche (`sensactapps*.ts.inc`) nachweislich unverändert.
 
 ### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
 

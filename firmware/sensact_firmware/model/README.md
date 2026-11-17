@@ -35,9 +35,16 @@ Regeln, die man kennen muss (Details im XSD):
 dotnet run --project builder -- GenerateModelFiles --model Sattlerstrasse16
 ```
 
-liest `model/Sattlerstrasse16.xml`, prüft es gegen das XSD (mit Zeilennummer bei Fehlern) und
-erzeugt die Firmware-Dateien; ist Teil von `Pipeline`/`PipelineOffline`. Die Host-Tests
+liest `model/Sattlerstrasse16.xml`, prüft es gegen das XSD und gegen den Katalog (Erweiterungen,
+Adressen, doppelt belegte Ein-/Ausgänge, Hardware-Voraussetzungen der Apps; alle Fehler auf
+einmal, mit Zeilennummer) und erzeugt die Firmware-Dateien – C++ für die Firmware und
+TypeScript für die Weboberfläche (`sensactapps*.ts.inc`, daraus `GenerateSensactFiles`); ist Teil von `Pipeline`/`PipelineOffline`. Die Host-Tests
 erzeugen ihre Dateien aus `Testmodel.xml`.
+
+Achtung: `GenerateModelFiles --model Testmodel` überschreibt die eingecheckten Enum-Quellen in
+`best_binary_buffers_schema/` mit denen des Testmodells (danach `git checkout -- best_binary_buffers_schema`
+bzw. wieder mit `--model Sattlerstrasse16` generieren). Für die Host-Tests ist das nicht nötig,
+sie verwenden `GenerateModelFilesForHostTests`.
 
 ## Neuer App-Typ
 
