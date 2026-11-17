@@ -5,6 +5,9 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class RotaryEncoder2PWMApplication : SensorApplication
     {
+        // gesendete Kommandos: rotaryencoder.hh
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(TargetApplication, CommandType.TOGGLE, CommandType.STEP_VERTICAL);
+
          public RotaryEncoder2PWMApplication(ushort ApplicationId, string ApplicationName, ushort InputRotaryRessource, ushort targetApplication, string ApplicationDescription=""):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.InputRotaryRessource=InputRotaryRessource;
             this.TargetApplication=targetApplication;

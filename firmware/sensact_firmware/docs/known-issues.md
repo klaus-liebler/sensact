@@ -34,6 +34,14 @@ Zurzeit keine.
 - Prüfungen beim Laden gegen den Katalog (`HouseModelChecker`): Erweiterungen, Adressen, doppelt
   belegte Ein-/Ausgänge mit lesbaren Namen, Hardware-Voraussetzungen der Apps, alle Fehler mit
   Zeilennummer. Weboberfläche (`sensactapps*.ts.inc`) nachweislich unverändert.
+- Kommando-Prüfung war wirkungslos: `CheckAndPrepare` las gesendete Kommandos nur aus Feldern
+  `Command…`, die keine heutige App hat. Jetzt meldet jede App-Klasse `SentCommands()` (aus den
+  `ctx->Send…Command()`-Aufrufen der C++-Apps), der Generator prüft gegen
+  `ICanReactOnTheseCommands()` des Ziels. Beide Hausmodelle bestehen. Dabei gefunden:
+  `RgbwApplication.ICanSendTheseEvents` war fälschlich als Kommando-Methode markiert.
+- `builder/ModelGeneration` → Bibliothek `modellib/` (gemeinsam mit dem Editor); Builder, Bibliothek
+  und Editor auf .NET 11.
+- Editor, erste Version (`editor/`, Selbsttest `editor_tests/`), s. `editor/README.md`.
 
 ### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
 

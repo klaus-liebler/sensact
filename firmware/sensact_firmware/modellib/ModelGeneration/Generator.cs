@@ -77,6 +77,7 @@ namespace Klli.Sensact.Config
         public bool CheckAndPrepare(ModelContainer mc)
         {
 
+            bool sentCommandsOk = true;
             HashSet<ushort> predefinedAppIds = [.. ids.Entries.Select(x => x.Number)];
             // NO_APPLICATION hat per Konstruktion von AppIdTable die hoechste Nummer
             mc.NextFreeIndex = (ushort)(1 + predefinedAppIds.Where(x => x != noAppId.Number).Max());
@@ -207,10 +208,28 @@ namespace Klli.Sensact.Config
                         }
                     }
 
+                    // Was die App laut C++-Code tatsaechlich sendet (SentCommands); alle Fehler sammeln
+                    foreach (var (targetId, command) in app.SentCommands())
+                    {
+                        if (targetId == noAppId.Number)
+                        {
+                            continue;
+                        }
+                        if (!mc.id2app.TryGetValue(targetId, out SensactApplicationContainer? target))
+                        {
+                            LOG.LogError($"{app.ApplicationName} sendet {command} an die App-Nummer {targetId}, die es nicht gibt.");
+                            sentCommandsOk = false;
+                        }
+                        else if (!target.Application.ICanReactOnTheseCommands().Contains(command))
+                        {
+                            LOG.LogError($"{app.ApplicationName} sendet {command} an {target.Application.ApplicationName} ({target.Application.GetType().Name}), das dieses Kommando nicht versteht.");
+                            sentCommandsOk = false;
+                        }
+                    }
                 }
             }
 
-            return true;
+            return sentCommandsOk;
         }
 
         public string AssemblyDirectory

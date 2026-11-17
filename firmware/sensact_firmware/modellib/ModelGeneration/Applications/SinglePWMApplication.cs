@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 namespace Klli.Sensact.Model.Common.Applications
 {
     public class SinglePWMApplication:ActorApplication{
+        // gesendete Kommandos: singlepwm.cc
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(StandbyController, CommandType.HEARTBEAT);
+
         public SinglePWMApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ISet<ushort> OutputResources,  ushort MinimalOnLevel, ushort InitialStoredTargetLevel, uint AutoOffIntervalMsecs, ushort StandbyController):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.OutputResources=OutputResources;
             this.MinimalOnLevel=MinimalOnLevel;

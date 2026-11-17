@@ -14,7 +14,8 @@ unter `builder/Models/`, in der Git-Historie bis `3f54589`). Konzept:
 
 ## Bearbeiten
 
-Von Hand, bis der Editor existiert. VS Code mit der Erweiterung "XML" (Red Hat) liest die
+Im Editor (`dotnet run --project editor`, s. [editor/README.md](../editor/README.md)) oder von Hand.
+VS Code mit der Erweiterung "XML" (Red Hat) liest die
 XSDs über `xsi:noNamespaceSchemaLocation`, zeigt Fehler sofort an und schlägt Elemente und
 Attribute vor.
 
@@ -48,7 +49,9 @@ sie verwenden `GenerateModelFilesForHostTests`.
 
 ## Neuer App-Typ
 
-1. App in `sensact-applicationmodel` (C++) und `builder/ModelGeneration/Applications/*Application.cs`
-   (Codegenerierung) wie bisher.
+1. App in `sensact-applicationmodel` (C++) und `modellib/ModelGeneration/Applications/*Application.cs`
+   (Codegenerierung) wie bisher; dort `SentCommands()` passend zu den `ctx->Send...Command()`-Aufrufen
+   der C++-App ueberschreiben (prueft, dass die Ziele das Kommando verstehen).
 2. Element und Typ in `schema/sensact-house.xsd` (Gruppe `Apps`).
-3. Abbildung Element → Objekt in `builder/ModelGeneration/Xml/HouseXmlImporter.cs`.
+3. Abbildung Element → Objekt in `modellib/ModelGeneration/Xml/HouseXmlImporter.cs`. Der Editor
+   übernimmt den neuen Typ automatisch aus dem XSD.

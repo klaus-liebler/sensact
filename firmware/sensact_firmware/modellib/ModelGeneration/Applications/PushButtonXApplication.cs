@@ -72,6 +72,9 @@ namespace Klli.Sensact.Model.Common.Applications
 
 
     public class PushButtonSingle2ToggleApplication :PushButtonSingleApplication{
+        // gesendete Kommandos: pushbutton.hh cPushbuttonSingle2Toggle
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(TargetApplicationIds, CommandType.TOGGLE);
+
         
         public PushButtonSingle2ToggleApplication(ushort ApplicationId, string ApplicationName, ushort InputResource, ICollection<ushort> TargetApplicationIds):base(ApplicationId, ApplicationName, InputResource){
             this.TargetApplicationIds=TargetApplicationIds;
@@ -98,6 +101,9 @@ namespace Klli.Sensact.Model.Common.Applications
     }
 
     public class PushButtonSingle2PwmSingleApplication :PushButtonSingleApplication{
+        // gesendete Kommandos: pushbutton.hh cPushbuttonSingle2PwmSingle
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(TargetApplicationId, CommandType.TOGGLE, CommandType.START, CommandType.STOP, CommandType.ON);
+
         
         public PushButtonSingle2PwmSingleApplication(ushort ApplicationId, string ApplicationName, ushort InputResource, ushort TargetApplicationId):base(ApplicationId, ApplicationName, InputResource){
             this.TargetApplicationId=TargetApplicationId;
@@ -122,6 +128,9 @@ namespace Klli.Sensact.Model.Common.Applications
     }
 
     public class PushButtonDual2BlindApplication :PushButtonDualApplication{
+        // gesendete Kommandos: pushbutton.hh cPushbuttonDual2Blind
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(TargetApplicationId, CommandType.UP, CommandType.DOWN, CommandType.STOP);
+
         
         public PushButtonDual2BlindApplication(ushort ApplicationId, string ApplicationName, ushort InputResource1, ushort InputResource2, ushort TargetApplicationId):base(ApplicationId, ApplicationName, InputResource1, InputResource2){
             this.TargetApplicationId=TargetApplicationId;
@@ -147,6 +156,9 @@ namespace Klli.Sensact.Model.Common.Applications
     }
 
     public class PushButtonDual2PWMApplication :PushButtonDualApplication{
+        // gesendete Kommandos: pushbutton.hh cPushbuttonDual2PWM
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(TargetApplicationId, CommandType.TOGGLE, CommandType.UP, CommandType.DOWN, CommandType.STOP);
+
         
         public PushButtonDual2PWMApplication(ushort ApplicationId, string ApplicationName, ushort InputResource1, ushort InputResource2, ushort TargetApplicationIds):base(ApplicationId, ApplicationName, InputResource1, InputResource2){
             this.TargetApplicationId=TargetApplicationIds;

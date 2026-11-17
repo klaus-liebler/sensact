@@ -113,6 +113,21 @@ namespace Klli.Sensact.Model.Common
             return (CommandType)Enum.Parse(typeof(CommandType), cmdName);
         }
 
+        /// <summary>
+        /// Kommandos, die diese App zur Laufzeit an andere Apps sendet (Ziel, Kommando). Muss zu den
+        /// ctx->Send...Command()-Aufrufen der C++-App (sensact-applicationmodel/apps) passen. Der
+        /// Generator prueft damit, dass jedes Ziel das Kommando versteht (ICanReactOnTheseCommands).
+        /// Ersetzt fuer die heutigen Apps ISendTheseCommands(), das nur Felder "Command..." kennt,
+        /// die keine heutige App mehr hat.
+        /// </summary>
+        public virtual IEnumerable<(ushort Target, CommandType Command)> SentCommands() => [];
+
+        protected static IEnumerable<(ushort Target, CommandType Command)> To(ushort target, params CommandType[] commands) =>
+            commands.Select(c => (target, c));
+
+        protected static IEnumerable<(ushort Target, CommandType Command)> To(IEnumerable<ushort> targets, params CommandType[] commands) =>
+            targets.SelectMany(t => To(t, commands));
+
         public HashSet<Command> ISendTheseCommands()
         {
             HashSet<Command> ret = new HashSet<Command>();

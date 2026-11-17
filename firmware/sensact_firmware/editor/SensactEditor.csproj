@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!--
+    Editor fuer das XML-Hausmodell (model/*.xml), s. docs/concept-modular-firmware.md, Abschnitt
+    "Editor". Lokales Werkzeug: Blazor mit interaktivem Server-Rendering, liest und schreibt die
+    XML-Dateien direkt im Git-Arbeitsverzeichnis. Import, Pruefungen und Codegenerierung kommen aus
+    derselben Bibliothek wie beim Builder (modellib/).
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\modellib\SensactModel.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,6 +5,9 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class LightbarrierApplication : SensorApplication
     {
+        // gesendete Kommandos: lightbarrier.cc
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(FinalTarget, CommandType.ON);
+
         public LightbarrierApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort InputRessource, ushort FinalTarget, ushort BrightnessSensor, bool ActiveSignalLevel):base(ApplicationId, ApplicationName, ApplicationDescription){
             this.InputRessource=InputRessource;
             this.FinalTarget=FinalTarget;

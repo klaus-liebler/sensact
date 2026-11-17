@@ -1,0 +1,228 @@
+﻿@page "/"
+@using System.Xml.Linq
+@using SensactEditor.Services
+@implements IDisposable
+@inject HouseModelService Model
+
+<PageTitle>Sensact – @Model.HouseName</PageTitle>
+
+<header class="topbar">
+    <strong>Sensact-Hausmodell</strong>
+    <select value="@Model.HouseName" @onchange="e => Run(() => { Model.Open((string)e.Value!); selectedStation = null; selectedApp = null; })">
+        @foreach (var h in Model.AvailableHouses())
+        {
+            <option value="@h">@h</option>
+        }
+    </select>
+    <span class="muted">@Model.HousePath</span>
+    <span class="spacer"></span>
+    @if (Model.Dirty)
+    {
+        <span class="badge warn">ungespeichert</span>
+    }
+    else if (Model.LastSaved is DateTime saved)
+    {
+        <span class="badge ok">gespeichert @saved.ToString("HH:mm:ss")</span>
+    }
+    <span class="badge @(Model.Issues.Count == 0 ? "ok" : "err")">@(Model.Issues.Count == 0 ? "keine Fehler" : $"{Model.Issues.Count} Fehler")</span>
+    <button disabled="@(!Model.Dirty || Model.Issues.Count > 0)" @onclick="() => Run(Model.Save)">Speichern</button>
+    <button disabled="@(!Model.Dirty)" @onclick="() => Run(() => { Model.Reload(); selectedApp = null; })">Änderungen verwerfen</button>
+</header>
+
+@if (message != null)
+{
+    <div class="message" @onclick="() => message = null">@message</div>
+}
+
+<main class="columns">
+    <nav class="stations">
+        <h3>Stationen</h3>
+        @foreach (var s in Model.Stations)
+        {
+            <div class="station @(s == selectedStation ? "selected" : "")" @onclick="() => { selectedStation = s; selectedApp = null; }">
+                <div><strong>@HouseModelService.Id(s)</strong> <span class="muted">#@s.Attribute("number")?.Value</span></div>
+                <div class="muted">@s.Attribute("board")?.Value · @HouseModelService.AppsOf(s).Count() Apps</div>
+            </div>
+        }
+    </nav>
+
+    <section class="apps">
+        @if (selectedStation is XElement st)
+        {
+            <h3>@HouseModelService.Id(st) <span class="muted">(@st.Attribute("board")?.Value)</span></h3>
+            @if (st.Elements("extension").Any())
+            {
+                <details>
+                    <summary>Erweiterungen (@st.Elements("extension").Count())</summary>
+                    <table>
+                        <tr><th>Name</th><th>Typ</th><th>Bus</th><th>Adresse</th></tr>
+                        @foreach (var e in st.Elements("extension"))
+                        {
+                            <tr><td>@e.Attribute("name")?.Value</td><td>@e.Attribute("type")?.Value</td><td>@e.Attribute("bus")?.Value</td><td>@e.Attribute("address")?.Value</td></tr>
+                        }
+                    </table>
+                </details>
+            }
+            <table class="applist">
+                <tr><th>Typ</th><th>Name</th><th>Nr.</th><th>Beschreibung</th></tr>
+                @foreach (var a in HouseModelService.AppsOf(st))
+                {
+                    <tr class="@(a == selectedApp ? "selected" : "")" @onclick="() => selectedApp = a">
+                        <td>@a.Name.LocalName</td>
+                        <td>@HouseModelService.Id(a)</td>
+                        <td>@a.Attribute("number")?.Value</td>
+                        <td>@a.Attribute("description")?.Value</td>
+                    </tr>
+                }
+            </table>
+
+            <div class="addapp">
+                <h4>App hinzufügen</h4>
+                <select @bind="newType">
+                    @foreach (var t in Model.Schema.Types.Keys.Order())
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+                <input placeholder="Name, z. B. PWM___L1_CORR_S2" @bind="newId" />
+                <input placeholder="Beschreibung" @bind="newDescription" />
+                <button @onclick="AddApp">Hinzufügen (Nr. @Model.NextFreeNumber)</button>
+                @if (Model.Schema.Types.TryGetValue(newType, out var nt) && nt.Doc != null)
+                {
+                    <div class="muted">@nt.Doc</div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="muted">Station links auswählen.</p>
+        }
+    </section>
+
+    <aside class="form">
+        @if (selectedApp is XElement app && selectedStation is XElement station && Model.Schema.Types.TryGetValue(app.Name.LocalName, out var type))
+        {
+            <h3>@HouseModelService.Id(app)</h3>
+            <div class="muted">&lt;@type.Element&gt; · Nummer @app.Attribute("number")?.Value (wird nie geändert)</div>
+            @if (type.Doc != null)
+            {
+                <p class="doc">@type.Doc</p>
+            }
+            @foreach (var f in type.Fields.Where(f => f.Name is not ("id" or "number")))
+            {
+                var current = app.Attribute(f.Name)?.Value;
+                var listId = $"list-{f.Name}";
+                <label title="@f.Doc">
+                    <span>@f.Name@(f.Required ? " *" : "")</span>
+                    @switch (f.Kind)
+                    {
+                        case FieldKind.Boolean:
+                            <select value="@(current ?? "")" @onchange="e => Set(app, f.Name, (string?)e.Value)">
+                                <option value="">(Standard: @(f.Default ?? "–"))</option>
+                                <option value="true">true</option>
+                                <option value="false">false</option>
+                            </select>
+                            break;
+                        case FieldKind.Choice:
+                            <select value="@(current ?? "")" @onchange="e => Set(app, f.Name, (string?)e.Value)">
+                                <option value="">(@(f.Default != null ? "Standard: " + f.Default : "bitte wählen"))</option>
+                                @foreach (var c in f.Choices)
+                                {
+                                    <option value="@c">@c</option>
+                                }
+                            </select>
+                            break;
+                        default:
+                            <input value="@current" list="@listId" placeholder="@(f.Default != null ? "Standard: " + f.Default : "")"
+                                   @onchange="e => Set(app, f.Name, (string?)e.Value)" />
+                            break;
+                    }
+                    @if (f.Kind is FieldKind.IoRef or FieldKind.IoRefList)
+                    {
+                        <datalist id="@listId">
+                            @foreach (var s in Model.IoSuggestions(station, f.Direction))
+                            {
+                                <option value="@s"></option>
+                            }
+                        </datalist>
+                    }
+                    else if (f.Kind is FieldKind.AppRef or FieldKind.AppRefList)
+                    {
+                        <datalist id="@listId">
+                            @foreach (var s in Model.AllTargetNames)
+                            {
+                                <option value="@s"></option>
+                            }
+                        </datalist>
+                    }
+                    @if (f.Kind is FieldKind.IoRefList or FieldKind.AppRefList)
+                    {
+                        <small class="muted">mehrere Werte durch Leerzeichen trennen</small>
+                    }
+                </label>
+            }
+            var refs = Model.ReferencesTo(HouseModelService.Id(app));
+            <p class="muted">Verwendet von: @(refs.Count == 0 ? "–" : string.Join(", ", refs))</p>
+            <button class="danger" disabled="@(refs.Count > 0)" @onclick="() => Run(() => { Model.DeleteApp(app); selectedApp = null; })">Löschen (Nummer bleibt reserviert)</button>
+        }
+    </aside>
+</main>
+
+<footer class="issues">
+    <h3>Prüfung</h3>
+    @if (Model.Issues.Count == 0)
+    {
+        <p class="muted">Schema, Katalog und Kommandos: alles in Ordnung.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var i in Model.Issues)
+            {
+                <li><span class="badge err">@i.Source</span> @i.Message</li>
+            }
+        </ul>
+    }
+</footer>
+
+@code {
+    private XElement? selectedStation;
+    private XElement? selectedApp;
+    private string newType = "onOff";
+    private string newId = "";
+    private string newDescription = "";
+    private string? message;
+
+    protected override void OnInitialized()
+    {
+        Model.Changed += OnModelChanged;
+        selectedStation = Model.Stations.FirstOrDefault();
+    }
+
+    private void OnModelChanged() => _ = InvokeAsync(StateHasChanged);
+
+    private void Set(XElement app, string name, string? value) => Run(() => Model.SetAttribute(app, name, value));
+
+    private void AddApp() => Run(() =>
+    {
+        if (selectedStation == null) return;
+        selectedApp = Model.AddApp(selectedStation, newType, newId.Trim(), newDescription);
+        newId = "";
+        newDescription = "";
+    });
+
+    private void Run(Action action)
+    {
+        try
+        {
+            action();
+            message = null;
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    public void Dispose() => Model.Changed -= OnModelChanged;
+}

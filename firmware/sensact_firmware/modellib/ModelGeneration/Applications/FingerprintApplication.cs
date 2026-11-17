@@ -5,6 +5,9 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class FingerprintApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ushort TargetApplication1, ushort TargetApplication2, ushort TargetApplication3):SensorApplication(ApplicationId, ApplicationName, ApplicationDescription)
     {
+        // gesendete Kommandos: fingerprint.hh
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To([Target1, Target2, Target3], CommandType.ON);
+
         
         public ushort TargetApplication{get;}
         public ushort Target1 { get; } = TargetApplication1;

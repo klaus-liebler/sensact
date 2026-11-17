@@ -5,6 +5,9 @@ namespace Klli.Sensact.Model.Common.Applications
 {
     public class MilightControllerApplication : SensorApplication
     {
+        // gesendete Kommandos: milightcontroller.cc
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(Light, CommandType.ON, CommandType.OFF, CommandType.SET_VERTICAL_TARGET).Concat(To(Blinds, CommandType.UP, CommandType.DOWN));
+
         /// <param name="Light">Lampe fuer ON/OFF/Dimmer-Rad</param>
         /// <param name="Blinds">Rolllaeden fuer die Tastengruppen 1..8 ("0" = hoch, "1" = runter); NO_APPLICATION = unbelegt</param>
         /// <param name="LightOnMsecs">Einschaltdauer bei ON</param>

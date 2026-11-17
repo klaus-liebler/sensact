@@ -6,6 +6,9 @@ namespace Klli.Sensact.Model.Common.Applications
 
     public class RgbwApplication : ActorApplication
     {
+        // gesendete Kommandos: rgbw.cc
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(IdOfStandbyController, CommandType.HEARTBEAT);
+
         public RgbwApplication(ushort ApplicationId, string ApplicationName,  string ApplicationDescription, ushort OutputRessourceR, ushort OutputRessourceG, ushort OutputRessourceB, ushort OutputRessourceW, uint AutoOffIntervalMsecs, ushort idOfStandbyController) : base(ApplicationId, ApplicationName, ApplicationDescription)
         {
             this.OutputRessourceR = OutputRessourceR;
@@ -41,7 +44,6 @@ namespace Klli.Sensact.Model.Common.Applications
         {
             base.OnSTEP_VERTICALCommand(step);
         }
-        [SensactCommandMethod]
         public override HashSet<EventType> ICanSendTheseEvents()
         {
             return new HashSet<EventType>();

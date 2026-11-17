@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Hausmodell als Bibliothek: Modellklassen (Applications, Nodes), XML-Import und -Pruefung
+    (ModelGeneration/Xml) und Codegenerierung (ModelGeneration/Generator.cs). Gemeinsam genutzt
+    vom Builder (builder/) und vom Editor (editor/), damit beide dasselbe Modell mit denselben
+    Regeln sehen. Bis 2026-11-17 Teil von builder/.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Klli.Sensact.Model</RootNamespace>
+    <AssemblyName>SensactModel</AssemblyName>
+  </PropertyGroup>
+
+</Project>

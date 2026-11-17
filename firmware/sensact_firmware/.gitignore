@@ -31,3 +31,9 @@ CMakeCache.txt
 # Datei (GroupCfg/SettingCfg-Deklaration) ist projektspezifisch von Hand gepflegt, nicht vom builder
 # generiert -- deshalb bewusst NICHT in der Liste oben und damit getrackt, obwohl sie unter
 # generated/ liegt.
+/modellib/bin/
+/modellib/obj/
+/editor/bin/
+/editor/obj/
+/editor_tests/bin/
+/editor_tests/obj/

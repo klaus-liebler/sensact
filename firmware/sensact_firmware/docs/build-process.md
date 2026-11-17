@@ -70,8 +70,8 @@ das nicht selbst.
 Das Hausautomations-Modell (welche Apps auf welchem Node existieren und wie sie
 verdrahtet sind) steht als XML in `model/<Name>.xml` (s. [model/README.md](../model/README.md))
 und wird über die Phase `GenerateModelFiles --model Sattlerstrasse16|Testmodel` in Code
-übersetzt. Import und Codegenerierung (`ModelGeneration/Xml/HouseXmlImporter.cs`,
-`ModelGeneration/Generator.cs`, `SourceCodeGenerator`, ...) liegen unter `builder/`.
+übersetzt. Import und Codegenerierung (Bibliothek `modellib/`: `ModelGeneration/Xml/HouseXmlImporter.cs`,
+`ModelGeneration/Generator.cs`, `SourceCodeGenerator`, ...) nutzen Builder und Editor gemeinsam.
 
 Schreibt u.a. die `.inc`-Dateien, die `sensact-applicationmodel` direkt
 einbindet, nach `generated/sensact_model/` (Teil des projektlokalen

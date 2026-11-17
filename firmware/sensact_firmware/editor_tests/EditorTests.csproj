@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Selbsttest der Editor-Logik (HouseModelService, AppSchema) auf einer temporaeren Kopie von
+    model/: Schema-Auswertung, Pruefungen, Aendern, Hinzufuegen, Loeschen, byte-gleiches Speichern.
+    Aufruf: dotnet run, Projekt editor_tests (Exit-Code = Anzahl Fehlschlaege)
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Using Include="Microsoft.Extensions.Configuration" />
+    <Using Include="Microsoft.AspNetCore.Hosting" />
+    <ProjectReference Include="..\editor\SensactEditor.csproj" />
+  </ItemGroup>
+
+</Project>

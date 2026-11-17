@@ -243,6 +243,9 @@ von Hand gepflegt wird.
   Firmwares. Später (mit der Modularisierung) direkt hochladen, mit Versionsvergleich gegen
   das Gerät.
 
+**Stand 2026-11-17:** erste Version in [`editor/`](../editor/README.md) (Apps ansehen, bearbeiten,
+hinzufügen, löschen; Formulare aus dem XSD; Prüfung wie im Builder; byte-genaues Speichern).
+
 ### Technik: ASP.NET Core mit Blazor (entschieden)
 
 Bedienung im Browser, Backend in .NET. Empfehlung: Blazor mit **interaktivem Server-Rendering**
@@ -294,7 +297,7 @@ Festlegungen im Schema:
   einem Bus), `INPUT0`/`INPUT1`/`NONE`, notfalls `#0x400D`. Die Übersetzung in die heutige
   InOutId (Bus-Index << 14 | Chip-Index · 16 + Kanal; Chip-Index zählt je Richtung –
   Eingänge PCA9555, Ausgänge PCA9685 – in Deklarationsreihenfolge) steht in
-  `builder/ModelGeneration/Xml/IoAddressing.cs`, in beide Richtungen.
+  `modellib/ModelGeneration/Xml/IoAddressing.cs`, in beide Richtungen.
 - **Standardwerte** stehen im XSD; der Export lässt Attribute mit Standardwert weg.
 - Ein `<location>` des Hauses ist die Vorgabe für sonnenstandsabhängige Apps.
 

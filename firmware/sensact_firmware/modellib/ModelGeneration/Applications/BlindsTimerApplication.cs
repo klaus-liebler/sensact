@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 namespace Klli.Sensact.Model.Common.Applications
@@ -16,6 +16,9 @@ namespace Klli.Sensact.Model.Common.Applications
     /// Morgen- und schliesst sie zur Abenddaemmerung, mit Versatz und Zufallsanteil je Rollladen.</summary>
     public class BlindsTimerApplication : ActorApplication
     {
+        // gesendete Kommandos: blindstimer.cc
+        public override IEnumerable<(ushort Target, CommandType Command)> SentCommands() => To(BlindTargets, CommandType.SET_VERTICAL_TARGET);
+
         public BlindsTimerApplication(ushort ApplicationId, string ApplicationName, string ApplicationDescription, ISet<ushort> BlindTargets,
             double LatitudeDeg, double LongitudeDeg, Dawn Dawn, int OpenOffsetMinutes, int CloseOffsetMinutes, ushort MaxRandomMinutes)
             : base(ApplicationId, ApplicationName, ApplicationDescription)
