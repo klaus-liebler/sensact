@@ -55,6 +55,12 @@ namespace sensact::test
     public:
         // ---- vom Test gesteuert ------------------------------------------------------------
         tms_t now{0};
+        // Wanduhr: Unix-Zeit in Sekunden; clockSet=false wie vor dem ersten SNTP-Abgleich.
+        // Lokale Zeit = UTC + utcOffsetSecs (feste Zone, damit Tests nicht von der Host-Zeitzone
+        // abhaengen).
+        bool clockSet{false};
+        int64_t unixTime{0};
+        int32_t utcOffsetSecs{3600};
         std::map<InOutId, uint16_t> inputs;
         std::map<eRotaryEncoder, std::pair<uint16_t, bool>> rotaryEncoders;
         bool isPlayingMp3{false};
@@ -97,6 +103,24 @@ namespace sensact::test
 
         // ---- iSensactContext -----------------------------------------------------------------
         tms_t Now() override { return now; }
+        // Wanduhr laeuft mit now mit (now in ms)
+        int64_t UnixTimeNow() const { return unixTime + now / 1000; }
+        bool GetUnixTime(int64_t &unixSecs) override
+        {
+            unixSecs = UnixTimeNow();
+            return clockSet;
+        }
+        bool GetLocalTime(struct tm &localTime) override
+        {
+            time_t t = (time_t)(UnixTimeNow() + utcOffsetSecs);
+            return clockSet && gmtime_r(&t, &localTime) != nullptr;
+        }
+        // Stellt die Wanduhr so, dass sie JETZT (bei now) unixSecs zeigt
+        void SetClock(int64_t unixSecs)
+        {
+            clockSet = true;
+            unixTime = unixSecs - now / 1000;
+        }
         void SetU16Output(InOutId id, u16 value) override
         {
             outputs[id] = value;

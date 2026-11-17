@@ -95,6 +95,40 @@ TEST_F(SoundTest, ParamsArePersistedAndRestoredOnSetup)
     EXPECT_EQ(ctx.persistedParams[(uint16_t)app.id], (std::array<uint16_t, 4>{1000, 2000, 28, 88}));
 }
 
+TEST_F(SoundTest, FactoryDefaultIsLoudFrom7To22)
+{
+    app.OnSAVE_PARAMCommand(&ctx);
+    auto p = ctx.persistedParams[(uint16_t)app.id];
+    EXPECT_EQ(p[2], 28); // 07:00
+    EXPECT_EQ(p[3], 88); // 22:00
+}
+
+// Fake-Zeitzone UTC+1; 2024-01-01T00:00:00Z = 1704067200
+constexpr int64_t JAN1_2024_UTC = 1704067200;
+
+TEST_F(SoundTest, DoorbellIsLoudDuringTheDay)
+{
+    ctx.SetClock(JAN1_2024_UTC + 11 * 3600); // 12:00 lokal
+    app.OnTOGGLECommand(&ctx);
+    ASSERT_EQ(ctx.mp3Plays.size(), 1u);
+    EXPECT_EQ(ctx.mp3Plays[0].volume, 255); // highVolume 65535 >> 8
+}
+
+TEST_F(SoundTest, DoorbellIsQuietAtNight)
+{
+    ctx.SetClock(JAN1_2024_UTC + 22 * 3600); // 23:00 lokal
+    app.OnTOGGLECommand(&ctx);
+    ASSERT_EQ(ctx.mp3Plays.size(), 1u);
+    EXPECT_EQ(ctx.mp3Plays[0].volume, 64); // lowVolume 16384 >> 8
+}
+
+TEST_F(SoundTest, DoorbellIsLoudWhileClockIsNotSet)
+{
+    app.OnTOGGLECommand(&ctx); // noch kein SNTP
+    ASSERT_EQ(ctx.mp3Plays.size(), 1u);
+    EXPECT_EQ(ctx.mp3Plays[0].volume, 255);
+}
+
 TEST(SoundVolumeWindow, NormalWindow)
 {
     // "laut" von 07:00 (28) bis 22:00 (88)

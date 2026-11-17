@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <ctime>
 #include <sensact_commons.hh>
 #include "applicationmodel_enums_and_structs.hh"
 #include <crgb.hh>
@@ -10,6 +11,10 @@ namespace sensact::apps
     { // all void functions. Fehlerbehandlung darf nicht den Apps angelastet werden. Fehlerausgabe und Standardwert zurück geben --> the show must go on!!!
     public:
         virtual tms_t Now() = 0;
+        // Wanduhrzeit (per SNTP gestellt). false, solange die Uhr noch nicht gestellt ist -- dann
+        // sind die Ausgabewerte undefiniert. Now() dagegen ist die Zeit seit dem Booten in ms.
+        virtual bool GetUnixTime(int64_t &unixSecs) = 0;      // UTC, Sekunden seit 1970
+        virtual bool GetLocalTime(struct tm &localTime) = 0; // in der Zeitzone des Knotens
         virtual void SetU16Output(InOutId id, u16 value) = 0;
         virtual void GetU16Input(InOutId id, u16 &value) = 0;
         virtual void SetRGBLed(uint8_t index, CRGB color) = 0;

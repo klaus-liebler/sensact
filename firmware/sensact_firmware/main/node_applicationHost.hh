@@ -56,6 +56,8 @@ namespace sensact
         ErrorCode OfferMessage(iHostContext &ctx, CANMessage &m) override;
         int GetStatusMessage(iHostContext& ctx, char* buffer, size_t remainingLen) override;
         tms_t Now() override;
+        bool GetUnixTime(int64_t &unixSecs) override;
+        bool GetLocalTime(struct tm &localTime) override;
         void SetU16Output(InOutId id, u16 value) override;
         void GetU16Input(InOutId id, u16 &value) override;
         void SetRGBLed(uint8_t index, CRGB color) override;

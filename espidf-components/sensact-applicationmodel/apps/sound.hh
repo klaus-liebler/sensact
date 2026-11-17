@@ -16,13 +16,13 @@ namespace sensact::apps
 		// Wiedergabe, z.B. per Klingeltaster (s. OnTOGGLECommand). Persistiert per
 		// iSensactContext::SavePersistedParams/LoadPersistedParams (SET_PARAM/SAVE_PARAM-Commands,
 		// s. Web-UI). highVolumeStartQuarterHour/-EndQuarterHour: 0..95, je 15-Minuten-Schritt
-		// eines Tages (0=00:00, 95=23:45).
+		// eines Tages (0=00:00, 95=23:45). Ab Werk: laut von 07:00 (28) bis 22:00 (88).
 		uint16_t highVolume{65535};
 		uint16_t lowVolume{16384};
-		uint16_t highVolumeStartQuarterHour{0};
-		uint16_t highVolumeEndQuarterHour{0};
+		uint16_t highVolumeStartQuarterHour{28};
+		uint16_t highVolumeEndQuarterHour{88};
 
-		uint8_t ComputeAutomaticVolume() const;
+		uint8_t ComputeAutomaticVolume(iSensactContext *ctx) const;
 		void Play(iSensactContext *ctx, uint8_t volume);
 	public:
 		// true, wenn quarterHour (0..95) im "lauten" Zeitfenster [start, end) liegt. Oeffentlich und

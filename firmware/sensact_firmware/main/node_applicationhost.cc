@@ -254,6 +254,23 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         return nowForCurrentLoop;
     }
 
+    // Vor dem ersten SNTP-Abgleich steht die Uhr irgendwo bei 1970 -- alles vor 2024 gilt als
+    // "nicht gestellt". Die Zeitzone setzt der Webmanager (TZ, s. webmanager_base.hh).
+    static constexpr time_t CLOCK_VALID_AFTER = 1704067200; // 2024-01-01T00:00:00Z
+
+    bool cApplicationHost::GetUnixTime(int64_t &unixSecs)
+    {
+        time_t now = time(nullptr);
+        unixSecs = (int64_t)now;
+        return now >= CLOCK_VALID_AFTER;
+    }
+
+    bool cApplicationHost::GetLocalTime(struct tm &localTime)
+    {
+        time_t now = time(nullptr);
+        return now >= CLOCK_VALID_AFTER && localtime_r(&now, &localTime) != nullptr;
+    }
+
     void cApplicationHost::SetRGBLed(uint8_t index, CRGB color)
     {
         ErrorCode err = hal->StageRGBLed(index, color);

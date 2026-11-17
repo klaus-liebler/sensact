@@ -3,7 +3,6 @@
 #define TAG "SOUND"
 #include <sensact_logger.hh>
 #include <common-esp32.hh>
-#include <ctime>
 using namespace std;
 
 FLASH_FILE(dingdong_mp3)
@@ -41,17 +40,15 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
-	uint8_t cSound::ComputeAutomaticVolume() const
+	// Uhrzeit unbekannt (noch kein SNTP): laut -- eine Klingel, die man nicht hoert, ist schlimmer
+	uint8_t cSound::ComputeAutomaticVolume(iSensactContext *ctx) const
 	{
-		time_t now;
-		::time(&now);
-		struct tm localTimeBuf;
-		struct tm *localTimeResult = localtime_r(&now, &localTimeBuf);
-		if (!localTimeResult)
+		struct tm localTime{};
+		if (!ctx->GetLocalTime(localTime))
 		{
 			return (uint8_t)(highVolume >> 8);
 		}
-		uint16_t quarterHour = localTimeResult->tm_hour * 4 + localTimeResult->tm_min / 15;
+		uint16_t quarterHour = localTime.tm_hour * 4 + localTime.tm_min / 15;
 		bool isHighVolumePeriod = IsHighVolumePeriod(quarterHour, highVolumeStartQuarterHour, highVolumeEndQuarterHour);
 		return (uint8_t)((isHighVolumePeriod ? highVolume : lowVolume) >> 8);
 	}
@@ -101,7 +98,7 @@ namespace sensact::apps
 		if (signal >= sizeof(SOUNDS) / sizeof(uint8_t *))
 			signal = 0;
 		this->sound = signal;
-		Play(ctx, ComputeAutomaticVolume());
+		Play(ctx, ComputeAutomaticVolume(ctx));
 		LOGI(TAG, "OnTOGGLECommand plays sound %d at automatic (Tag/Nacht) volume", (int)sound);
 	}
 	void cSound::OnSET_SIGNALCommand(uint16_t signal, iSensactContext *ctx)
