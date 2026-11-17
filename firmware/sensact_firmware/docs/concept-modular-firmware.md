@@ -132,9 +132,18 @@ können im Editor als Feldbeschreibung erscheinen.
 
 ### Struktur: flache Liste von Varianten
 
-Regel von BestBinaryBuffers: Ein Array mit Längenpräfix darf es nur als **letztes Feld einer
-Message** geben, und nur eines; Klassen enthalten keine Listen. Deshalb ist jede Konfiguration
-eine Message mit Kopf und *einer* abschließenden polymorphen Liste (`[BinaryUnion]`):
+Regeln von BestBinaryBuffers (Stand Code, `Model/Fields.cs`; die README dort ist älter):
+
+- Listen mit Elementen fester Größe und Listen von Strings: beliebig viele, an beliebiger
+  Stelle – aber **nur in Messages**, nicht in Klassen.
+- Polymorphe Listen (`[BinaryUnion]`): höchstens **eine pro Message bzw. Klasse**, und sie muss
+  das **letzte Feld** sein. Grund: Damit der Decoder auf dem ESP32 ohne Heap und ohne doppeltes
+  Parsen auskommt, liest `Decode()` die Elemente noch nicht, sondern merkt sich nur Anzahl und
+  Startzeiger und springt ans Frame-Ende; die Elemente dekodiert erst der Visitor. Wo die Liste
+  endet, ist deshalb beim Dekodieren unbekannt, also darf nichts mehr folgen.
+
+Deshalb ist jede Konfiguration eine Message mit Kopf und *einer* abschließenden polymorphen
+Liste:
 
 ```csharp
 [BinaryMessage(MessageKind.Event)]
@@ -174,10 +183,15 @@ Einige Apps brauchen selbst eine Liste variabler Länge: `cSinglePWM` (mehrere A
 
 1. **Feste Kapazität** mit `[BinaryCount(N)]` + Zählerfeld (z. B. bis 16 Ausgänge) – geht
    sofort, verschwendet ein paar Bytes, harte Obergrenze.
-2. **BestBinaryBuffers erweitern**: Arrays mit Längenpräfix auch in Klassen erlauben.
-   Sauberste Lösung, betrifft aber den Kern der Bibliothek (Präfix wie bei Message-Arrays
-   `ushort`; die Regel "polymorphes Feld muss das letzte sein" und die lazy Dekodierung müssen
-   dafür überdacht werden).
+2. **BestBinaryBuffers erweitern**: Listen fester Elementgröße (und String-Listen) auch in
+   Klassen erlauben. Für diese beiden Arten unkritisch, weil ihre Länge beim Dekodieren sofort
+   bekannt ist; soweit erkennbar, ist die Einschränkung auf Messages hier keine technische
+   Notwendigkeit, sondern bisher einfach nicht implementiert.
+   Weitergehend, falls nötig: polymorphe Listen tragen heute nur die Anzahl (2 Byte), ihre
+   Byte-Länge ergibt sich aus "Rest des Frames". Mit einem zusätzlichen Byte-Längenpräfix
+   dürften auch sie an beliebiger Stelle stehen (und mehrfach), ohne die verzögerte
+   Dekodierung aufzugeben. Kosten: 2–4 Byte pro Liste; der Encoder kennt die Länge schon
+   (er kopiert die vorab serialisierten Elemente als Block mit bekannter `DataSize`).
 3. **Eigene Listenelemente** in der flachen Liste (`PwmOutput{AppId, Output}`,
    `ToggleTarget{AppId, Target}`) – kein Bibliotheksumbau, aber die Fabrik muss die Elemente
    einer App einsammeln.
