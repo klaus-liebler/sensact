@@ -422,6 +422,71 @@ internal static class Program
 		BuildStepRunner.Invoke(ctx, FlashFirmware);
 	}
 
+	// Macht das ECHTE Board einer Station zum aktiven Board (board_info.json), ohne dass es
+	// angeschlossen ist: sucht im Board-Archiv (BoardStorage) die Boards mit dieser node_id
+	// (sensact.json), laesst synthetische (PrepareContextWithCommandLineArguments, "locally
+	// administered"-MAC) weg und nimmt bei mehreren das zuletzt angeschlossene. Voraussetzung: das
+	// Board war mindestens einmal per USB angeschlossen (Pipeline/PrepareContextWithRealHardware).
+	// Beispiel: SelectBoard --nodeId SNSCT_L0_TECH_HS_1
+	[BuildStep]
+	public static void SelectBoard(IBuildContextEsp32 ctx)
+	{
+		var nodeId = Cli.GetRequiredArgValue(ctx.Args, "--nodeId");
+		var root = BuilderOptions.Current.BoardStorage.BoardsDir;
+		var candidates = new List<(string Dir, BoardRecord Record)>();
+		foreach (var dir in Directory.Exists(root) ? Directory.EnumerateDirectories(root) : [])
+		{
+			var sensactJson = Path.Combine(dir, "sensact.json");
+			if (!File.Exists(sensactJson) || !File.Exists(Path.Combine(dir, "board_info.json"))) continue;
+			string? id;
+			try
+			{
+				id = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(File.ReadAllText(sensactJson))?
+					.GetValueOrDefault("node_id").GetString();
+			}
+			catch (JsonException)
+			{
+				continue;
+			}
+			if (id != nodeId) continue;
+			var record = SensactBuildContext.LoadBoardRecord(dir);
+			bool synthetic = record.Mac is long mac && (((mac >> 40) & 0x02) != 0);
+			if (!synthetic) candidates.Add((dir, record));
+		}
+		if (candidates.Count == 0)
+		{
+			throw new InvalidOperationException(
+				$"Kein echtes Board fuer {nodeId} im Board-Archiv ({root}). Das Board muss einmal per USB " +
+				"angeschlossen und mit Pipeline bzw. PrepareContextWithRealHardware vorbereitet werden.");
+		}
+		var (chosenDir, chosen) = candidates.OrderByDescending(c => c.Record.LastConnectedAtEpoch).First();
+		File.Copy(Path.Combine(chosenDir, "board_info.json"), ctx.BoardInfoJsonPath, overwrite: true);
+		Console.WriteLine($"Aktives Board: {nodeId} ({chosenDir}){(candidates.Count > 1 ? $", zuletzt angeschlossenes von {candidates.Count}" : "")}");
+	}
+
+	// Fuer den Editor: Board der Station waehlen und ihr Stationspaket bauen. Das vorher aktive Board
+	// wird danach wiederhergestellt -- ein spaeterer BuildForOta auf der Kommandozeile baut also nicht
+	// ueberraschend fuer die zuletzt im Editor gebaute Station.
+	// Beispiel: BuildPackageFor --nodeId SNSCT_L0_TECH_HS_1 --model Sattlerstrasse16
+	[BuildStep]
+	public static void BuildPackageFor(IBuildContextEsp32 ctx)
+	{
+		var previous = File.Exists(ctx.BoardInfoJsonPath) ? File.ReadAllBytes(ctx.BoardInfoJsonPath) : null;
+		try
+		{
+			BuildStepRunner.Invoke(ctx, SelectBoard);
+			BuildStepRunner.Invoke(ctx, BuildPackage);
+		}
+		finally
+		{
+			if (previous != null)
+			{
+				File.WriteAllBytes(ctx.BoardInfoJsonPath, previous);
+				Console.WriteLine("Vorher aktives Board wiederhergestellt.");
+			}
+		}
+	}
+
 	// Nach einer Aenderung am Hausmodell (Editor): nur das Stationspaket (Konfiguration + Web-UI) fuer
 	// das AKTIVE Board neu bauen, KEINE Firmware -- die Basis-Firmware ist stationsneutral. Ergebnis:
 	// deploy/<NODE_ID>/<NODE_ID>.pkg, hochladen ueber die Weboberflaeche (System, "Station Package").

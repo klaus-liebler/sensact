@@ -3,6 +3,7 @@
 @using SensactEditor.Services
 @implements IDisposable
 @inject HouseModelService Model
+@inject PackageBuildService Builds
 
 <PageTitle>Sensact – @Model.HouseName</PageTitle>
 
@@ -50,6 +51,46 @@
         @if (selectedStation is XElement st)
         {
             <h3>@HouseModelService.Id(st) <span class="muted">(@st.Attribute("board")?.Value)</span></h3>
+            var stId = HouseModelService.Id(st);
+            var isEsp32 = Model.Catalog.Boards.TryGetValue(st.Attribute("board")?.Value ?? "", out var stBoard) && stBoard.Firmware == "esp32";
+            <div class="build">
+                @if (isEsp32)
+                {
+                    <button disabled="@(Builds.Running || Model.Dirty || Model.Issues.Count > 0)" @onclick="() => StartBuild(stId)">Stationspaket bauen</button>
+                    @if (Builds.NodeId == stId)
+                    {
+                        @if (Builds.Running)
+                        {
+                            <span class="badge warn">baut …</span>
+                        }
+                        else if (Builds.Success == true)
+                        {
+                            <span class="badge ok">fertig @Builds.Finished?.ToString("HH:mm:ss")</span>
+                            <a href="/download/@stId" download>@(stId).pkg herunterladen</a>
+                            <span class="muted">→ Weboberfläche der Station: System → Station Package</span>
+                        }
+                        else if (Builds.Success == false)
+                        {
+                            <span class="badge err">fehlgeschlagen</span>
+                        }
+                    }
+                    else if (Model.Dirty)
+                    {
+                        <span class="muted">erst speichern</span>
+                    }
+                }
+                else
+                {
+                    <span class="muted">STM32-Altknoten: Code-Export über den Builder (GenerateModelFiles), kein Stationspaket</span>
+                }
+            </div>
+            @if (Builds.NodeId == stId && Builds.Log.Count > 0)
+            {
+                <details open="@(Builds.Running || Builds.Success == false)">
+                    <summary>Protokoll (@Builds.Log.Count Zeilen)</summary>
+                    <pre class="log">@string.Join("\n", Builds.Log.TakeLast(400))</pre>
+                </details>
+            }
             @if (st.Elements("extension").Any())
             {
                 <details>
@@ -103,6 +144,10 @@
         @if (selectedApp is XElement app && selectedStation is XElement station && Model.Schema.Types.TryGetValue(app.Name.LocalName, out var type))
         {
             <h3>@HouseModelService.Id(app)</h3>
+            <div class="rename">
+                <input placeholder="neuer Name" @bind="renameTo" />
+                <button @onclick="() => Rename(app)">Umbenennen</button>
+            </div>
             <div class="muted">&lt;@type.Element&gt; · Nummer @app.Attribute("number")?.Value (wird nie geändert)</div>
             @if (type.Doc != null)
             {
@@ -217,10 +262,26 @@
     protected override void OnInitialized()
     {
         Model.Changed += OnModelChanged;
+        Builds.Changed += OnModelChanged;
         selectedStation = Model.Stations.FirstOrDefault();
     }
 
+    private string renameTo = "";
+
     private void OnModelChanged() => _ = InvokeAsync(StateHasChanged);
+
+    private void StartBuild(string nodeId)
+    {
+        if (!Builds.Start(nodeId, out var reason)) message = reason;
+    }
+
+    private void Rename(XElement app) => Run(() =>
+    {
+        var oldId = HouseModelService.Id(app);
+        int refs = Model.RenameApp(app, renameTo);
+        message = $"{oldId} heißt jetzt {renameTo.Trim()}; {refs} Verweis(e) angepasst. Die Nummer bleibt.";
+        renameTo = "";
+    });
 
     private void Set(XElement app, string name, string? value) => Run(() => Model.SetAttribute(app, name, value));
 
@@ -245,5 +306,9 @@
         }
     }
 
-    public void Dispose() => Model.Changed -= OnModelChanged;
+    public void Dispose()
+    {
+        Model.Changed -= OnModelChanged;
+        Builds.Changed -= OnModelChanged;
+    }
 }

@@ -152,6 +152,41 @@ public sealed class HouseModelService
 		}
 	}
 
+	/// <summary>
+	/// Benennt eine App um und zieht alle Verweise anderer Apps (Ziele, Standby-Controller ...) mit.
+	/// Die Nummer -- die eigentliche ID auf dem CAN-Bus -- bleibt; Stationen werden nicht umbenannt
+	/// (ihr Name ist die NODE_ID der Geraete und ihrer Board-Archive).
+	/// </summary>
+	public int RenameApp(XElement app, string newId)
+	{
+		if (app.Name == "station") throw new InvalidOperationException("Stationen werden nicht umbenannt (NODE_ID der Geraete).");
+		newId = newId.Trim();
+		if (!System.Text.RegularExpressions.Regex.IsMatch(newId, "^[A-Z][A-Za-z0-9_]*$")) throw new ArgumentException("Name: Grossbuchstabe am Anfang, dann Buchstaben, Ziffern, _.");
+		string oldId = Id(app);
+		if (newId == oldId) return 0;
+		if (AllTargetNames.Contains(newId) || House.Elements("reserved").Any(r => Id(r) == newId)) throw new ArgumentException($"Name {newId} ist schon vergeben.");
+		int changed = 0;
+		lock (sync)
+		{
+			foreach (var other in AllApps)
+			{
+				if (!Schema.Types.TryGetValue(other.Name.LocalName, out var type)) continue;
+				foreach (var f in type.Fields.Where(f => f.Kind is FieldKind.AppRef or FieldKind.AppRefList))
+				{
+					var attr = other.Attribute(f.Name);
+					if (attr == null) continue;
+					var parts = attr.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+					if (!parts.Contains(oldId)) continue;
+					attr.Value = string.Join(' ', parts.Select(p => p == oldId ? newId : p));
+					changed++;
+				}
+			}
+			app.SetAttributeValue("id", newId);
+			Touch();
+		}
+		return changed;
+	}
+
 	/// <summary>Loescht eine App; ihre Nummer bleibt als &lt;reserved&gt; vergeben. Verweise anderer Apps verhindern das Loeschen.</summary>
 	public void DeleteApp(XElement app)
 	{

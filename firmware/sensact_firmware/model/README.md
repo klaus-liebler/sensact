@@ -52,7 +52,14 @@ sie verwenden `GenerateModelFilesForHostTests`.
 
 ## Auf die Station bringen
 
-Nach dem Speichern (Editor oder von Hand), mit dem Board der Station als aktivem Board:
+Im Editor: Knopf **Stationspaket bauen** bei der Station, danach das Paket herunterladen. Oder
+auf der Kommandozeile, nach dem Speichern, für eine beliebige Station:
+
+```
+dotnet run --project builder -- BuildPackageFor --nodeId SNSCT_L0_TECH_HS_1 --model Sattlerstrasse16
+```
+
+bzw. mit dem Board der Station als aktivem Board:
 
 ```
 dotnet run --project builder -- BuildPackage --model Sattlerstrasse16

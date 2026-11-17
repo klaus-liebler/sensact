@@ -118,3 +118,8 @@ th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--line
     border-top: 1px solid var(--warn);
 }
 #blazor-error-ui .dismiss { cursor: pointer; position: absolute; right: 12px; }
+
+.build { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 8px; }
+.log { max-height: 320px; overflow: auto; background: var(--bg); border: 1px solid var(--line); padding: 6px; font-size: 11px; white-space: pre-wrap; }
+.rename { display: flex; gap: 6px; margin-bottom: 8px; }
+.rename input { flex: 1; }

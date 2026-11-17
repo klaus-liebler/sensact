@@ -19,6 +19,13 @@ dotnet run --project editor_tests    # Selbsttest der Editor-Logik auf einer Kop
   ("= 1 h 30 min"); Helligkeiten als Prozent 0…100.
 - App hinzufügen (bekommt die nächste nie vergebene Nummer) und löschen (nur ohne Verweise; die
   Nummer bleibt als `<reserved>` vergeben).
+- App umbenennen: alle Verweise anderer Apps werden mitgezogen, die Nummer bleibt. Stationen
+  werden nicht umbenannt (ihr Name ist die NODE_ID der Geräte).
+- **Stationspaket bauen** (Knopf je ESP32-Station, nach dem Speichern): startet den Builder
+  (`BuildPackageFor --nodeId <Station> --model <Haus>`), zeigt das Protokoll live und bietet danach
+  `<Station>.pkg` zum Herunterladen an (`/download/<Station>`); hochladen über die Weboberfläche
+  der Station (System → Station Package). Voraussetzung: die Station war einmal per USB
+  angeschlossen (echtes Board im Board-Archiv). Das aktive Board des Builders bleibt unverändert.
 - Prüfung nach jeder Änderung mit denselben Regeln wie der Builder: XSD, Katalog
   (`HouseModelChecker`), Kommandos (`SourceCodeGenerator.CheckAndPrepare`). Gespeichert wird nur
   ein fehlerfreies Modell.
@@ -27,12 +34,9 @@ dotnet run --project editor_tests    # Selbsttest der Editor-Logik auf einer Kop
 
 ## Was (noch) nicht
 
-- Namen (`id`) und Nummern von Apps ändern – Nummern bewusst nie, Umbenennen mit Nachziehen
-  aller Verweise ist möglich, aber noch nicht gebaut.
+- Nummern von Apps ändern – bewusst nie.
 - Stationen und Erweiterungen anlegen/bearbeiten (bis dahin im XML).
-- Paket bauen und auf die Geräte laden aus dem Editor heraus (bis dahin:
-  `dotnet run --project builder -- BuildPackage --model <Haus>` und Upload über die
-  Weboberfläche, s. `model/README.md`).
+- Das Paket direkt auf das Gerät laden (Upload weiterhin über die Weboberfläche der Station).
 
 Aufbau: `Services/AppSchema.cs` (Formularbeschreibung aus dem XSD),
 `Services/HouseModelService.cs` (Laden, Ändern, Prüfen, Speichern),

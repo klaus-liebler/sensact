@@ -110,6 +110,19 @@ svc.SetAttribute(blindApp, "upTime", "PT2.5S");
 Check(svc.Issues.Any(i => i.Message.Contains("ganze Sekunden")), "Rollladen-Fahrzeit nur ganze Sekunden");
 svc.Reload();
 
+// 8) Umbenennen: Verweise werden mitgezogen, Nummer bleibt
+svc.Reload();
+var renamed = svc.AllApps.First(a => HouseModelService.Id(a) == "POWIT_X1_XX3_9");
+int renamedNumber = (int)renamed.Attribute("number")!;
+int changedRefs = svc.RenameApp(renamed, "POWIT_X1_XX3_LAMP");
+Check(changedRefs == 2, $"2 Verweise angepasst ({changedRefs})");
+Check((int)renamed.Attribute("number")! == renamedNumber, "Nummer bleibt beim Umbenennen");
+Check(svc.Issues.Count == 0, "nach Umbenennen fehlerfrei: " + string.Join(" | ", svc.Issues.Select(i => i.Message)));
+Check(svc.ReferencesTo("POWIT_X1_XX3_LAMP").Count == 2 && svc.ReferencesTo("POWIT_X1_XX3_9").Count == 0, "Verweise zeigen auf den neuen Namen");
+try { svc.RenameApp(renamed, "SOUND_X2_XX2_0"); Check(false, "vergebener Name abgelehnt"); } catch (ArgumentException) { Check(true, "vergebener Name abgelehnt"); }
+try { svc.RenameApp(svc.Stations.First(), "SNSCT_NEU"); Check(false, "Station nicht umbenennbar"); } catch (InvalidOperationException) { Check(true, "Station nicht umbenennbar"); }
+svc.Reload();
+
 Console.WriteLine(fails == 0 ? "ALLE TESTS OK" : $"{fails} FEHLGESCHLAGEN");
 return fails;
 
