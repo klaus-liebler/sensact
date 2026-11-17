@@ -1,38 +1,13 @@
-#include <algorithm> // std::max
 #include "milightcontroller.hh"
-#include <esp_timer.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/queue.h>
-#include <freertos/task.h>
 #include "cApplications.hh"
 #define TAG "MILIGHT"
 #include <sensact_logger.hh>
 
 namespace sensact::apps
 {
-	
-	cMilightController::cMilightController(eApplicationID id) : cApplication(id)
+	cMilightController::cMilightController(eApplicationID id, eApplicationID light, std::vector<eApplicationID> blinds, uint32_t lightOnMsecs)
+		: cApplication(id), light(light), blinds(std::move(blinds)), lightOnMsecs(lightOnMsecs)
 	{
-		milightQueue = xQueueCreate(10, sizeof(std::pair<uint8_t, uint8_t>));
-
-		this->keyCode2command[milight::keycodesFUT89::KON]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendONCommand(eApplicationID::PWM___LX_BACK_C1, sensact::time::H12_ms);
-		};
-		this->keyCode2command[milight::keycodesFUT89::KOFF]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendOFFCommand(eApplicationID::PWM___LX_BACK_C1, 0);
-		};
-		this->keyCode2command[milight::keycodesFUT89::K1_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_LX_BACK_J2, false);
-		};
-		this->keyCode2command[milight::keycodesFUT89::K1_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(eApplicationID::BLIND_LX_BACK_J2, false);
-		};
-		this->keyCode2command[milight::keycodesFUT89::K2_0]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendUPCommand(eApplicationID::BLIND_LX_BACK_J3, false);
-		};
-		this->keyCode2command[milight::keycodesFUT89::K2_1]= [](sensact::apps::iSensactContext *ctx){
-			ctx->SendDOWNCommand(sensact::eApplicationID::BLIND_LX_BACK_J3, false);
-		};
 	}
 
 	eAppType cMilightController::GetAppType()
@@ -45,66 +20,85 @@ namespace sensact::apps
 		return eAppCallResult::OK;
 	}
 
+	void cMilightController::ReceivedFromMilight(uint8_t cmd, uint8_t arg, int64_t nowMicros)
+	{
+		if (arg == previousArg && cmd == previousCmd && (nowMicros - lastForwardedMicros) < 500'000)
+		{
+			return; // Wiederholung derselben Taste
+		}
+		previousArg = arg;
+		previousCmd = cmd;
+		lastForwardedMicros = nowMicros;
+
+		const uint32_t h = head.load(std::memory_order_relaxed);
+		if (h - tail.load(std::memory_order_acquire) >= QUEUE_SIZE)
+		{
+			dropped.fetch_add(1, std::memory_order_relaxed);
+			return;
+		}
+		queue[h % QUEUE_SIZE] = Message{cmd, arg};
+		head.store(h + 1, std::memory_order_release);
+	}
+
+	void cMilightController::HandleKey(uint8_t key, iSensactContext *ctx)
+	{
+		using namespace milight::keycodesFUT89;
+		if (key == KON)
+		{
+			ctx->SendONCommand(light, lightOnMsecs);
+			return;
+		}
+		if (key == KOFF)
+		{
+			ctx->SendOFFCommand(light, 0);
+			return;
+		}
+		// Gruppe n (1..8): "_1"-Tasten = 1..8 -> runter, "_0"-Tasten = 10..17 -> hoch
+		if (key >= K1_1 && key <= K8_1 && (size_t)(key - K1_1) < blinds.size())
+		{
+			ctx->SendDOWNCommand(blinds[key - K1_1], false);
+		}
+		else if (key >= K1_0 && key <= K8_0 && (size_t)(key - K1_0) < blinds.size())
+		{
+			ctx->SendUPCommand(blinds[key - K1_0], false);
+		}
+	}
+
 	eAppCallResult cMilightController::Loop(iSensactContext *ctx)
 	{
-		std::pair<uint8_t, uint8_t> message;
-
-		while (xQueueReceive(milightQueue, &message, 0) == pdTRUE)
+		uint32_t t = tail.load(std::memory_order_relaxed);
+		while (t != head.load(std::memory_order_acquire))
 		{
-			uint8_t cmd = message.first;
-			uint8_t arg = message.second;
-			switch (cmd)
-            {
-            case milight::commandsFUT89::KEYS:{
-                if(arg>=milight::keycodesFUT89::MAX) continue;;
-                if(keyCode2command[arg]==nullptr) continue;;
-                (keyCode2command[arg])(ctx);
-                continue;
-            }
-            case milight::commandsFUT89::DIMMER:{
-                //arg von 0...100%
-                //ab 95% -->voll
-                uint16_t val{0};
-                if(arg>98){
-                    val=UINT16_MAX;
-                }else{
-                    val=arg*(UINT16_MAX/100.0);
-                }
-				ESP_LOGD(TAG, "ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___LX_BACK_C1, val)");
-				ctx->SendSET_VERTICAL_TARGETCommand(eApplicationID::PWM___LX_BACK_C1, val);
-                continue;
-            }
-
-            default:
-                ESP_LOGD(TAG, "Command %d has no associated handler", cmd);
-                continue;;
-            }
+			const Message m = queue[t % QUEUE_SIZE];
+			tail.store(++t, std::memory_order_release);
+			switch (m.cmd)
+			{
+			case milight::commandsFUT89::KEYS:
+				HandleKey(m.arg, ctx);
+				break;
+			case milight::commandsFUT89::DIMMER:
+			{
+				// arg 0..100 %; ab 99 % voll
+				const uint16_t val = m.arg > 98 ? UINT16_MAX : (uint16_t)(m.arg * (UINT16_MAX / 100.0));
+				ctx->SendSET_VERTICAL_TARGETCommand(light, val);
+				break;
+			}
+			default:
+				LOGD(TAG, "%s: command %d has no handler", N(), m.cmd);
+				break;
+			}
+		}
+		const uint32_t d = dropped.exchange(0, std::memory_order_relaxed);
+		if (d != 0)
+		{
+			LOGW(TAG, "%s: queue full, %u messages dropped", N(), (unsigned)d);
 		}
 		return eAppCallResult::OK;
 	}
 
-	eFillStatusResult cMilightController::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf){
-		buf[0]=buf[1]=buf[2]=buf[3]=0;
+	eFillStatusResult cMilightController::FillStatus(iSensactContext &ctx, std::array<uint16_t, 4> &buf)
+	{
+		buf[0] = buf[1] = buf[2] = buf[3] = 0;
 		return eFillStatusResult::NO_STATUS;
 	}
-
-	void cMilightController::ReceivedFromMilight(uint8_t cmd, uint8_t arg){
-		auto now= esp_timer_get_time();
-		if(arg == previousArg && cmd == previousCmd && (now - lastForwarded_us) < 500'000) {
-			ESP_LOGD(TAG, "CMD %3d ARG %3d (blocked)", cmd, arg);
-			return;
-		}
-		ESP_LOGI(TAG, "CMD %3d ARG %3d (forwarded)", cmd, arg);
-		previousArg=arg;
-		previousCmd=cmd;
-		lastForwarded_us=now;
-
-		std::pair<uint8_t, uint8_t> message = {cmd, arg};
-		
-		if (xQueueSend(milightQueue, &message, pdMS_TO_TICKS(10)) != pdPASS)
-		{
-			ESP_LOGW(TAG, "Queue ist voll, Nachricht verworfen!");
-		}
-	}
 }
-

@@ -60,7 +60,10 @@ namespace Klli.Sensact.Config
             AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_X1_XX1_42, "Fingerprint Seiteneingang", ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42, ApplicationId.POWIT_X1_XX1_42);
             AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_X1_XX1_42, "Fingerprint Seiteneingang", INTI+0, 1000);
 
-            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_X1_XX1_42, "Milight Controller");
+            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_X1_XX1_42, "Milight Controller", ApplicationId.PWM___X1_XX1_42,
+                new List<ApplicationId>{ApplicationId.BLIND_X1_XX1_42, ApplicationId.BLIND_X1_XX1_43});
+            AddBlindsTimer(NODE_TERRASSE, ApplicationId.BLTIM_X1_XX1_45, "Markisen-Timer", new HashSet<ApplicationId>{ApplicationId.BLIND_X1_XX1_42, ApplicationId.BLIND_X1_XX1_43},
+                52.0965, 7.6171, Dawn.CIVIL, 30, -15, 20);
             AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___X1_XX1_42, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTI+4, INTI+5}, MS_12H, 512, 65535);
             AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_42, "Markise Horizontal", INTI+0, INTI+1, RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);
             AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_X1_XX1_43, "Markise Vertikal", INTI+2, INTI+3,  RelayInterlockMode.R1_DOWN__R2_UP, 20, 15);

@@ -8,31 +8,55 @@ offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS 
 
 | # | Thema | Stand / Vorschlag |
 |---|---|---|
-| E5 | **Klingel-Lautstärke ab Werk.** Default-Zeitfenster Beginn = Ende = 00:00 heißt "nie laut" – die Klingel läuft mit `lowVolume` (25 %), bis jemand das Fenster einstellt und speichert. | Default z. B. 07:00–22:00? |
-| E6 | **`cOnOff` mit `initialState=ACTIVE` und Auto-Off** startet *aus* (bewusste Annahme im Code). | So lassen oder "an nach Boot, aus nach Auto-Off-Zeit"? |
-| E7 | **Taster beim Booten gedrückt/klemmt** → ein `TOGGLE` (Flanke gegen den Startwert "losgelassen"). | Startzustand in `Setup()` einlesen? |
-| E8 | **Knoten ohne ESP32-Board-Init**: `SNSCT_L3_TECH_HS_1`, `SNSCT_L1_KTCH_UP`, `SNSCT_L1_LVNG_UP` stehen im Hausmodell, haben aber kein `main/hal/<NODE_ID>/` und keinen Eintrag in `NodeIdBoardTypeCatalog.cs`. | Laufen diese noch mit der STM32-Firmware? Dann hier so vermerken. |
-| E10 | **Modularisierung/Editor: Hausmodell als eine XML-Datei oder eine pro Station** (+ Katalog). | Pro Station: kleinere Diffs; eine Datei: leichter zu überblicken. S. [concept-modular-firmware.md](concept-modular-firmware.md) |
-| E11 | **STM32-Altknoten (F103/F407)**: Quellcode der Altfirmware liegt nur als 7z-Archiv im Repo; Weg für die Konfiguration L1 (Code-Export, Empfehlung), L2 (datengetrieben) oder L3 (gemeinsame App-Logik)? | Archiv als normale Dateien einchecken? L1/L2/L3? S. Konzept, Abschnitt "STM32-Altknoten" |
-| E12 | **Modularisierung: Absicherung des Uploads** von Basis-Firmware und Konfigurationen. | Web-Login ausreichend, oder Signatur (Secure Boot ist nicht aktiv)? |
+| E13 | **Quellcode der STM32-Altfirmware** liegt nur als 7z-Archiv im Repo (`firmware/firmware_stm32.7z`, `firmwareCubeIDE.7z`): Änderungen sind nicht vergleichbar, der künftige Code-Export (L1) dort nicht testbar. | Vorschlag: einmalig als normale Dateien einchecken (z. B. `firmware/sensact_firmware_stm32/`), Archive danach entfernen. |
+| E14 | **CI**: Host-Tests laufen jetzt in `Pipeline`/`PipelineOffline` (T8), aber nicht automatisch bei jedem Push. | GitHub Actions bräuchte Checkouts mehrerer Repos (sensact, espidf-components, dotnet_libs …) mit .NET und GCC – lohnt sich das? |
 
 ## Offen (technisch)
 
 | # | Thema | Betroffen |
 |---|---|---|
-| T1 | **Firmware mit den App-Korrekturen vom 2026-11-16 ist gebaut (`SNSCT_L0_TECH_HS_1`, `idf.py build` erfolgreich), aber noch nicht geflasht und am Objekt erprobt.** Getrackte `sdkconfig` weicht von `sdkconfig.defaults` ab (z. B. FreeRTOS-Laufzeitstatistik aus) – bei Gelegenheit `sdkconfig` neu erzeugen und Unterschiede sichten. | Firmware |
-| T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (Fingerprint-Türzeiten): BestBinaryBuffers hat seit 2026-11-17 ein neues Format für polymorphe Felder (Byte-Längenpräfix), alte NVS-Einträge sind nicht mehr lesbar. Entscheidung: Verlust akzeptiert, keine Migration. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
-| T2 | **Keine Wanduhrzeit in `iSensactContext`.** `cSound` ruft `::time()` direkt auf (Tag/Nacht nicht testbar), `cBlindsTimer` kann ohne Uhrzeit nicht implementiert werden. Vorschlag: `virtual bool GetLocalTime(tm&)` o. ä. im Interface, implementiert in `cApplicationHost`. | `iSensactContext.hh`, `node_applicationhost.cc`, `sound.cc`, `blindstimer.cc` |
-| T3 | **`cBlindsTimer` unfertig** (Zeitberechnung fehlt; löst derzeit nie aus). Im Builder gibt es keine zugehörige Application-Klasse – die App ist im Modell nicht verwendbar. | `blindstimer.cc` |
-| T4 | **`cMilightController` hängt an FreeRTOS/`esp_timer` und an fest eincodierten App-IDs von Sattlerstrasse16** (`PWM___LX_BACK_C1`, `BLIND_LX_BACK_J2/J3`) – kompiliert mit keinem anderen Modell, nicht host-testbar. Ziele gehören ins Modell (Konstruktorparameter). | `milightcontroller.cc` |
-| T5 | **Header-Hygiene**: `using namespace std;` auf Dateiebene in `singlepwm.hh`, `rgbw.hh`; `TAG`-Makro in Headern definiert (`crgb.hh` aus `espidf-components/led` definiert `TAG "CRGB"` für jeden Includer, außerdem `pushbutton.hh`, `rotaryencoder.hh`, `fingerprint.hh`) → Makro-Neudefinitionen je nach Include-Reihenfolge. | apps, `espidf-components/led` |
-| T6 | **`sunsetsunrise.hh`**: Funktionsname `DaysSinceJan1_2020UTC` rechnet ab 1.1.2000; nutzt nicht standardisiertes `M_PI`. (Nicht-`inline`-Funktionen im Header wurden am 2026-11-16 behoben.) | `espidf-components/common` |
-| T7 | **Events werden nicht ausgewertet**: `cApplicationHost::OfferMessage` beantwortet Application-Events mit `NOT_YET_IMPLEMENTED`. | `node_applicationhost.cc` |
-| T8 | **Host-Tests nicht in der Pipeline, kein CI.** | Builder |
-| T10 | **OTA-Upload-Handler** (`espidf-component-webmanager/cpp/webmanager_base.hh`, `handle_ota_post`): `ESP_ERROR_CHECK(esp_ota_begin(...))` startet das Gerät bei einem Fehler neu; ein Empfangs-Timeout wird als fataler Fehler behandelt (der `HTTPD_SOCK_ERR_TIMEOUT`-Zweig ist unerreichbar, weil `recv_len <= 0` vorher greift); bei Abbruch fehlt `esp_ota_abort`; App-Rollback ist nicht aktiviert. Voraussetzung für das Modularisierungskonzept, s. [concept-modular-firmware.md](concept-modular-firmware.md). | Webmanager |
-| T9 | **Web-UI ohne Typprüfung lokal**: im `web-components-sensact`-Paket ist kein `typescript` installiert, `tsc` lief für die Änderungen vom 2026-11-16 nicht. | `npm-packages` |
+| T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Auffällig: das Image von `SNSCT_L0_TECH_HS_1` ist am 2026-11-17 von 1,31 auf 0,95 MB geschrumpft – es enthält jetzt (passend zu `WIFI_ENABLED=false` im Board-Archiv) nur die Ethernet-Variante des Webmanagers, keinen WLAN-Stack; warum frühere Builds mit derselben Konfiguration größer waren, ist ungeklärt. Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
+| T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
+| T13 | **Standort des Webmanager-Schedulers fest eincodiert** (Greven, 52.0965 N / 7.6171 E, `scheduler.hh`). Für den Rollladen-Timer kommt der Standort bereits aus dem Modell. | Webmanager |
+| T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-17 (2) – Antworten zu E5–E12, T2–T10 umgesetzt
+
+- E5: Klingel ab Werk laut von 07:00 bis 22:00.
+- E6: `cOnOff` mit `initialState=ACTIVE` und Auto-Off startet *aus* – bewusste Annahme, bleibt.
+- E7: Taster lesen ihren Startzustand in `Setup()`: ein beim Booten gedrückter oder klemmender
+  Taster löst nichts aus, bis er losgelassen wird (vorher TOGGLE bzw. Dauerfahrt beim
+  Rollladentaster); kein Doppelklick direkt nach dem Booten.
+- E8: `SNSCT_L3_TECH_HS_1`, `SNSCT_L1_KTCH_UP`, `SNSCT_L1_LVNG_UP` sind STM32-Hardware.
+- E10: Hausmodell des Editors als **eine** XML-Datei. E11: STM32-Altknoten über Code-Export (L1).
+  E12: Web-Login genügt als Absicherung der Uploads.
+- T2: `iSensactContext::GetUnixTime`/`GetLocalTime` (Wanduhr, `false` solange kein SNTP);
+  Tag/Nacht-Lautstärke der Klingel damit testbar, unbekannte Uhrzeit = laut.
+- T3: `cBlindsTimer` fertig: öffnet/schließt zur Morgen-/Abenddämmerung + Versatz + Zufall je
+  Rollladen und Tag, per `SET_VERTICAL_TARGET` aus dem Überfahrbereich; Ein/Aus bleibt über
+  Neustart erhalten; nichts ohne Uhr, keine nachgeholten Zeitpunkte. Im Builder:
+  `BlindsTimerApplication`, `ModelBuilder.AddBlindsTimer(...)` (Standort als Parameter).
+- T4: `cMilightController` ohne FreeRTOS/ESP-IDF (lock-freier Ringpuffer statt Queue,
+  Adapter zum Funkempfänger im Board-Init der Terrasse); Ziele (Licht, Rollläden je Tastengruppe,
+  Einschaltdauer) aus dem Modell; host-getestet.
+- T5: kein `using namespace std;` mehr in Headern; `TAG`-Makros in `pushbutton.hh`,
+  `rotaryencoder.hh`, `fingerprint.hh`, `led/crgb.hh`, `rgbled/crgb.hh` entfernt (das `#undef TAG`
+  am Ende löschte das `TAG` einbindender Dateien).
+- T6: `sunsetsunrise.hh` überarbeitet: `DaysSinceJan1_2000UTC`, `std::numbers::pi`, Konstanten
+  statt Makros, keine Debug-`printf`s mehr, neue Funktionen `SunriseAndSunsetOfDay` und
+  `NextSunriseAndSunset` (nächste *zukünftige* Ereignisse, `false` bei Polartag/-nacht), gegen
+  Referenzwerte für Greven getestet. Dabei gefunden: der Webmanager-Scheduler übergab die
+  Tageszahl statt der Unix-Zeit und Grad statt Bogenmaß – sonnenstandsabhängige Zeitpläne
+  rechneten mit einem Tag im Januar 1970; korrigiert.
+- T8: Builder-Schritt `RunHostTests`, Teil von `Pipeline` und `PipelineOffline`: ein roter Test
+  bricht den Build ab. (Automatisch bei jedem Push: s. E14.)
+- T9: `typescript` + `npm run typecheck` (auch `npm test`) in `web-components-sensact`; läuft
+  fehlerfrei.
+- T10: OTA-Upload-Handler: Fehler → HTTP-Fehlerantwort statt Neustart, Timeout-Wiederholung,
+  `esp_ota_abort` bei Abbruch, Images anderer Projekte werden abgelehnt; App-Rollback in
+  `sdkconfig` aktiviert (wirkt nach einmaligem USB-Flash des Bootloaders, s. T1).
 
 ### 2026-11-17 – Entscheidungen Modularisierung/Editor
 

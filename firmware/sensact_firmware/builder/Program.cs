@@ -237,6 +237,23 @@ internal static class Program
 		File.WriteAllText(destPath, content.Replace("//TEMPLATE_HERE", File.ReadAllText(incPath)));
 	}
 
+	// Host-Unit-Tests der Sensact-Apps (sensact/espidf-components/sensact-applicationmodel/host_test).
+	// Teil von Pipeline und PipelineOffline: ein roter Test bricht den Build ab, bevor gebaut und
+	// geflasht wird. Braucht CMake, Ninja und GCC im PATH (MSYS2 UCRT64), s. host_test/README.md --
+	// aus PowerShell/cmd starten, nicht aus Git-Bash.
+	[BuildStep]
+	public static void RunHostTests(IBuildContextEsp32 ctx)
+	{
+		var dir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!, "..", "..", "espidf-components", "sensact-applicationmodel", "host_test"));
+		var build = Path.Combine(dir, "build");
+		if (!File.Exists(Path.Combine(build, "CMakeCache.txt")))
+		{
+			ProcessRunner.RunInherit("cmake", ["-S", dir, "-B", build, "-G", "Ninja"], dir);
+		}
+		ProcessRunner.RunInherit("cmake", ["--build", build], dir);
+		ProcessRunner.RunInherit("ctest", ["--test-dir", build, "--output-on-failure"], dir);
+	}
+
 	[BuildStep]
 	public static void GenerateSensactFiles(IBuildContextEsp32 ctx)
 	{
@@ -298,6 +315,7 @@ internal static class Program
 	public static void Pipeline(IBuildContextEsp32 ctx)
 	{
 		BuildStepRunner.Invoke(ctx, PrepareContextWithRealHardware);
+		BuildStepRunner.Invoke(ctx, RunHostTests);
 		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
 		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
 		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
@@ -315,6 +333,7 @@ internal static class Program
 	public static void PipelineOffline(IBuildContextEsp32 ctx)
 	{
 		BuildStepRunner.Invoke(ctx, PrepareContextWithCommandLineArguments);
+		BuildStepRunner.Invoke(ctx, RunHostTests);
 		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
 		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
 		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);

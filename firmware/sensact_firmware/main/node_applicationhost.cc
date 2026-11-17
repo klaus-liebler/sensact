@@ -260,14 +260,14 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
 
     bool cApplicationHost::GetUnixTime(int64_t &unixSecs)
     {
-        time_t now = time(nullptr);
+        time_t now = ::time(nullptr); // ::, sonst Namespace sensact::time
         unixSecs = (int64_t)now;
         return now >= CLOCK_VALID_AFTER;
     }
 
     bool cApplicationHost::GetLocalTime(struct tm &localTime)
     {
-        time_t now = time(nullptr);
+        time_t now = ::time(nullptr); // ::, sonst Namespace sensact::time
         return now >= CLOCK_VALID_AFTER && localtime_r(&now, &localTime) != nullptr;
     }
 

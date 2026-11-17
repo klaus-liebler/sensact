@@ -73,13 +73,12 @@ FetchContent_MakeAvailable(googletest)
 # ---------------------------------------------------------------------------------------------
 # Die Apps selbst -- dieselben Quellen wie in ../CMakeLists.txt. Nicht dabei:
 #  - model_applications.cc: instanziiert die Apps eines konkreten Knotens, nicht Teil der Logik
-#  - apps/milightcontroller.cc: haengt direkt an FreeRTOS/esp_timer und an IDs des Hausmodells
-#    Sattlerstrasse16 (s. firmware/sensact_firmware/docs/known-issues.md, T4)
 # ---------------------------------------------------------------------------------------------
 add_library(sensact_apps STATIC
     "${APPMODEL_DIR}/apps/blind.cc"
     "${APPMODEL_DIR}/apps/blindstimer.cc"
     "${APPMODEL_DIR}/apps/lightbarrier.cc"
+    "${APPMODEL_DIR}/apps/milightcontroller.cc"
     "${APPMODEL_DIR}/apps/node.cc"
     "${APPMODEL_DIR}/apps/onoff.cc"
     "${APPMODEL_DIR}/apps/rgbw.cc"
@@ -98,9 +97,8 @@ target_include_directories(sensact_apps PUBLIC
     "${ESPIDF_COMPONENTS_DIR}/common/include"
     "${ESPIDF_COMPONENTS_DIR}/errorcodes/include"
     "${ESPIDF_COMPONENTS_DIR}/led")
-# _POSIX_THREAD_SAFE_FUNCTIONS: localtime_r unter MinGW; _USE_MATH_DEFINES: M_PI (nicht
-# standardisiert, von sunsetsunrise.hh benutzt) im strikten C++-Modus
-target_compile_definitions(sensact_apps PUBLIC _POSIX_THREAD_SAFE_FUNCTIONS _USE_MATH_DEFINES SENSACT_HOST_TEST)
+# _POSIX_THREAD_SAFE_FUNCTIONS: gmtime_r/localtime_r unter MinGW
+target_compile_definitions(sensact_apps PUBLIC _POSIX_THREAD_SAFE_FUNCTIONS SENSACT_HOST_TEST)
 if(MSVC)
     target_compile_options(sensact_apps PRIVATE /W3)
 else()

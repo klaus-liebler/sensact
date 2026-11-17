@@ -2,13 +2,12 @@
 #include <vector>
 #include <atomic>
 #include "cApplication.hh"
-using namespace std;
 namespace sensact::apps
 {
 	class cSinglePWM : public cApplication
 	{
 	private:
-		vector<InOutId> pwmOutputs;
+		std::vector<InOutId> pwmOutputs;
 		uint16_t minimalLevel;
 		uint16_t storedLevel;//Helligkeit der Lampe, als diese zuletzt eingeschaltet war (quasi als targetLevel das letzte Mal > 0 war
 		tms_t autoOffCfg; //die konfigurierte AutoOff-Zeit
@@ -44,7 +43,7 @@ namespace sensact::apps
 		eFillStatusResult FillStatus(iSensactContext &ctx, std::array<uint16_t, 4>& buf) override;
 		bool NeedsFastLoop() override;
 		
-		cSinglePWM(eApplicationID id, vector<InOutId> pwmOutputs, uint16_t minimalLevel, uint16_t initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
+		cSinglePWM(eApplicationID id, std::vector<InOutId> pwmOutputs, uint16_t minimalLevel, uint16_t initialLevel, tms_t autoOffMsecs, eApplicationID idOfStandbyController);
 		void OnOFFCommand(uint32_t autoReturnToOnMsecs, iSensactContext *ctx) override;
 		void OnSET_VERTICAL_TARGETCommand(uint16_t target, iSensactContext *ctx) override;
 		void OnSTEP_VERTICALCommand(int16_t step, iSensactContext *ctx) override;

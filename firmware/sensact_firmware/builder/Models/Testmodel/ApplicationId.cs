@@ -33,6 +33,7 @@ namespace Klli.Sensact.Model.Testmodel
         BLIND_X1_XX1_42,//Horizontale Markise
         BLIND_X1_XX1_43,//Vertikale Markise
         SOUND_X1_XX1_44,//Sound
+        BLTIM_X1_XX1_45,//Rollladen-Timer
         NO_APPLICATION=Sensact.Model.Common.Model.NO_APPLICATION_ID
     }
 }

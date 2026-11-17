@@ -16,7 +16,7 @@ Tests: [host_test/README.md](host_test/README.md) (Host-Unit-Tests mit GoogleTes
 
 - Jede App erbt von `cApplication` (`cApplication.hh`) und spricht die Außenwelt ausschließlich
   über `iSensactContext` an (Zeit, Ein-/Ausgänge, Kommandos senden, Sound, Parameter). Keine
-  App bindet ESP-IDF-Header ein (Ausnahme: `milightcontroller`, s. unten) – nur deshalb sind
+  App bindet ESP-IDF-Header ein – nur deshalb sind
   die Apps auf dem PC testbar. Bitte so lassen.
 - Kommandos kommen über CAN, von einer lokalen App oder aus der Web-UI. Der Payload wird vom
   generierten `parseCommand.inc` dekodiert und landet in `On<KOMMANDO>Command(...)`. Eine App
@@ -107,7 +107,8 @@ einmal pro Sekunde während der Fahrt.
 
 ### Taster – `pushbutton.hh`
 
-Gemeinsame Flankenerkennung (`cPushbutton`): kurz < 400 ms ≤ lang; "gehalten" feuert einmal
+Ein beim Booten bereits gedrückter oder klemmender Taster löst nichts aus, bis er losgelassen
+wird. Gemeinsame Flankenerkennung (`cPushbutton`): kurz < 400 ms ≤ lang; "gehalten" feuert einmal
 nach 400 ms; Doppelklick = zwei Loslass-Flanken innerhalb 600 ms.
 
 | App | kurz (beim Loslassen) | gehalten (nach 400 ms) | Loslassen nach lang | Doppelklick |
@@ -142,7 +143,7 @@ Status: `[0..3]` = R, G, B, W (0..255).
 | `SET_VERTICAL_TARGET(v)` | manuelle Lautstärke 0..65535 |
 | `ON` / `OFF` | Stummschaltung aus/an (stumm = mit Lautstärke 0 abspielen) |
 | `STOP` | Wiedergabe abbrechen |
-| `SET_PARAM(i, v)` | 1 Tag-Lautstärke, 2 Nacht-Lautstärke, 3 Beginn, 4 Ende des "lauten" Zeitfensters (Viertelstunden 0..95; Beginn > Ende = über Mitternacht; Beginn == Ende = nie laut) |
+| `SET_PARAM(i, v)` | 1 Tag-Lautstärke, 2 Nacht-Lautstärke, 3 Beginn, 4 Ende des "lauten" Zeitfensters (Viertelstunden 0..95; Beginn > Ende = über Mitternacht; Beginn == Ende = nie laut; ab Werk 07:00–22:00) |
 | `SAVE_PARAM` | die vier Parameter dauerhaft speichern (NVS) |
 
 Status: `[0]` spielt (0/1), `[1]` zuletzt gespielter Sound, `[2]` manuelle Lautstärke, `[3]` stumm.
@@ -156,5 +157,26 @@ Die Reihenfolge der Sounds ist Teil des Protokolls und in der Web-UI dupliziert.
 | `cSensactNode` (`node.cc`) | `PING(x)` → Event `PONG` mit `x` | keiner (`NO_STATUS`) |
 | `cFingerprint` (`fingerprint.hh`) | erkannter Finger mit Aktion `a` → `ON(1000)` an Ziel `a % 3` | keiner |
 | `cPump` (`pump.hh`) | Relais zyklisch `onInterval` an / `offInterval` aus, beginnt mit Aus-Phase | `[1]` an |
-| `cBlindsTimer` (`blindstimer.cc`) | **unfertig**: soll Rollläden zu Sonnenauf-/-untergang fahren; die Zeitberechnung fehlt, daher löst er derzeit nie aus. `ON`/`OFF` aktivieren/deaktivieren | `[1]` aktiv |
-| `cMilightController` (`milightcontroller.cc`) | Milight-Funkfernbedienung (FUT089) → Kommandos. Hängt direkt an FreeRTOS und an fest eincodierten App-IDs des Hausmodells Sattlerstrasse16; daher nicht in den Host-Tests | keiner |
+| `cMilightController` (`milightcontroller.cc`) | Milight-Funkfernbedienung (FUT089): `ON`/`OFF`/Dimmer-Rad → Lampe `light`, Tastengruppe n "0"/"1" → `UP`/`DOWN` an `blinds[n-1]` (Ziele aus dem Modell). Wiederholungen innerhalb 500 ms werden verworfen; Übergabe aus dem Funk-Task über einen lock-freien Ringpuffer | keiner |
+
+### `cBlindsTimer` – Rollläden nach Dämmerung – `blindstimer.cc`
+
+Modell: `AddBlindsTimer(node, id, beschreibung, rollläden, breiteGrad, längeGrad, dawn, openOffsetMinutes, closeOffsetMinutes, maxRandomMinutes)`.
+
+- Öffnet jeden Rollladen zur Morgendämmerung (`dawn`: Sonnenaufgang, bürgerliche/nautische/
+  astronomische Dämmerung) + `openOffsetMinutes` + Zufall 0..`maxRandomMinutes`, schließt zur
+  Abenddämmerung + `closeOffsetMinutes` + Zufall. Der Zufall ist je Rollladen und Tag verschieden
+  (Anwesenheitssimulation), aber reproduzierbar.
+- Gesendet wird `SET_VERTICAL_TARGET` aus dem Überfahrbereich von `cBlind` (65000 = sicher ganz
+  auf, 1000 = sicher ganz zu, jeweils mit Stopp).
+- `ON`/`OFF` schalten den Timer ein/aus; der Zustand bleibt über einen Neustart erhalten.
+- Ohne gestellte Uhr (SNTP) passiert nichts; verpasste Zeitpunkte (Knoten war aus, Uhr
+  vorgestellt) werden nicht nachgeholt.
+
+Status: `[1]` aktiv, `[2]`/`[3]` Minuten bis zum nächsten Öffnen/Schließen (0xFFFF = unbekannt).
+
+### Wanduhr
+
+`iSensactContext::GetUnixTime()`/`GetLocalTime()` liefern die per SNTP gestellte Uhrzeit (UTC
+bzw. Zeitzone des Knotens) und `false`, solange die Uhr nicht gestellt ist. `Now()` ist dagegen
+die Zeit seit dem Booten in ms. Apps rufen nie `::time()` selbst auf.

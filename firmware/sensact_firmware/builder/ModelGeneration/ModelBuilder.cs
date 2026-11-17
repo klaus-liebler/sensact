@@ -64,8 +64,17 @@ namespace Klli.Sensact.Common
             node.Applications.Add(new FingerprintApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription, Convert.ToUInt16(targetAppId1), Convert.ToUInt16(targetAppId2), Convert.ToUInt16(targetAppId3)));
 
         }
-        public void AddMilightControllerApplication(Node node, ApplicationIdType appId, string ApplicationDescription){
-            node.Applications.Add(new MilightControllerApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription));
+        /// <param name="blinds">Rolllaeden der Tastengruppen 1..8 der Fernbedienung (in dieser Reihenfolge)</param>
+        public void AddMilightControllerApplication(Node node, ApplicationIdType appId, string ApplicationDescription, ApplicationIdType light, IList<ApplicationIdType> blinds, uint lightOnMsecs = 12 * 60 * 60 * 1000){
+            node.Applications.Add(new MilightControllerApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription, Convert.ToUInt16(light), blinds.Select(x => Convert.ToUInt16(x)).ToList(), lightOnMsecs));
+        }
+
+        /// <summary>Rollladen-Timer: oeffnet zur Morgen-, schliesst zur Abenddaemmerung (s. cBlindsTimer).</summary>
+        public void AddBlindsTimer(Node node, ApplicationIdType appId, string ApplicationDescription, ISet<ApplicationIdType> blinds,
+            double latitudeDeg, double longitudeDeg, Dawn dawn = Dawn.CIVIL, int openOffsetMinutes = 0, int closeOffsetMinutes = 0, ushort maxRandomMinutes = 0)
+        {
+            node.Applications.Add(new BlindsTimerApplication(Convert.ToUInt16(appId), appId.ToString(), ApplicationDescription,
+                blinds.Select(x => Convert.ToUInt16(x)).ToHashSet(), latitudeDeg, longitudeDeg, dawn, openOffsetMinutes, closeOffsetMinutes, maxRandomMinutes));
         }
 
 

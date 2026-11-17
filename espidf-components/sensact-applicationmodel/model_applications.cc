@@ -2,6 +2,7 @@
 #include "cApplication.hh"
 #include "cApplications.hh"
 #include "apps/blind.hh"
+#include "apps/blindstimer.hh"
 #include "apps/fingerprint.hh"
 #include "apps/lightbarrier.hh"
 #include "apps/node.hh"

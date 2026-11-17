@@ -539,7 +539,8 @@ namespace Klli.Sensact.Config
             AddFingerprint(NODE_SIDEDOOR, ApplicationId.FINGR_L1_UTIL_1, "Fingerprint Seiteneingang", ApplicationId.POWIT_L1_UTIL_DOOR, ApplicationId.POWIT_L1_UTIL_DOOR, ApplicationId.POWIT_L1_UTIL_DOOR);
             AddPowIt(NODE_SIDEDOOR, ApplicationId.POWIT_L1_UTIL_DOOR, "Seiteneingang Öffner", INTERNAL+0, 1000);
 
-            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_LX_BACK_1, "Milight Controller");
+            AddMilightControllerApplication(NODE_TERRASSE, ApplicationId.REMOT_LX_BACK_1, "Milight Controller", ApplicationId.PWM___LX_BACK_C1,
+                new List<ApplicationId>{ApplicationId.BLIND_LX_BACK_J2, ApplicationId.BLIND_LX_BACK_J3}); // Tastengruppe 1 und 2
             AddPWMApplication(NODE_TERRASSE, ApplicationId.PWM___LX_BACK_C1, "Spots Terrassendach", ApplicationId.NO_APPLICATION, new HashSet<ushort>{INTERNAL+4}, T_12h__ms, 0, 65535);
             AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J2, "Markise Horizontal", INTERNAL+0, INTERNAL+1, RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);
             AddBlindApplication(NODE_TERRASSE, ApplicationId.BLIND_LX_BACK_J3, "Markise Vertikal", INTERNAL+2, INTERNAL+3,  RelayInterlockMode.R1_DOWN__R2_UP, 60, 60);

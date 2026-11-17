@@ -138,11 +138,12 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 | `GenerateCertificates` | Lazy: Board-Zertifikat (.NET-Kryptografie aus `FirmwareBuilder.Common`, signiert mit der Root-CA aus `CertsDir`, Parameter s. `Certificates.*` in `appsettings.json`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
 | `GenerateModelFiles --model <Name>` | Erzeugt das Hausmodell (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
 | `GenerateModelFilesForHostTests --out <Verzeichnis>` | Wie `GenerateModelFiles`, aber immer aus dem Testmodel, in ein beliebiges Verzeichnis und **ohne** die Enum-Quellen nach `best_binary_buffers_schema/` zu kopieren. Wird automatisch von den Host-Unit-Tests der Apps aufgerufen (s. "Tests" unten). |
+| `RunHostTests` | Baut und startet die Host-Unit-Tests der Apps (s. "Tests"); Teil von `Pipeline`/`PipelineOffline`. |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |
 | `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess). |
 | `FlashFirmware [--resetNVSPartition]` | Flasht (nur unverschlüsselter Pfad implementiert; ist der Flash-Encryption-Key im Board-Archiv als aktiviert markiert, bricht die Phase bewusst ab). `--resetNVSPartition` löscht zusätzlich die NVS-Partition (WLAN-/Usersettings vergessen). |
-| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `FlashFirmware`. |
+| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `RunHostTests` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `FlashFirmware`. |
 | `PipelineOffline --nodeId <NODE_ID> --model <Name>` | Wie `Pipeline`, aber mit `PrepareContextWithCommandLineArguments` statt echter Hardware und ohne `FlashFirmware` – für Builds ohne angeschlossenes Board. |
 
 ## Tests
@@ -150,9 +151,9 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 Die Sensact-Apps haben Host-Unit-Tests (GoogleTest, laufen auf dem PC, kein Board nötig):
 `espidf-components/sensact-applicationmodel/host_test`, Bedienung s. dortige
 [README.md](../../../espidf-components/sensact-applicationmodel/host_test/README.md).
-Kurz (aus PowerShell, nicht Git-Bash): `cmake -S . -B build -G Ninja`,
-`cmake --build build`, `ctest --test-dir build`. Nicht Teil von `Pipeline` – vor dem
-Flashen geänderter App-Logik bitte manuell ausführen.
+Sie laufen als Schritt `RunHostTests` automatisch in `Pipeline` und `PipelineOffline`
+(vor der Code-Generierung); ein roter Test bricht den Build ab. Einzeln:
+`dotnet run --project builder -- RunHostTests` – aus PowerShell/cmd, nicht aus Git-Bash.
 
 ## Neues Board anlegen / in Betrieb nehmen
 

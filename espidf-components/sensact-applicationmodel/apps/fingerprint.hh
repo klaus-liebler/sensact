@@ -1,6 +1,5 @@
 #pragma once
 #include "cApplication.hh"
-#define TAG "FINGR"
 #include <sensact_logger.hh>
 
 namespace sensact::apps
@@ -48,4 +47,3 @@ namespace sensact::apps
 		}
 	};
 }
-#undef TAG

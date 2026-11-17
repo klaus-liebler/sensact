@@ -2,7 +2,6 @@
 #include <algorithm>
 #include "cApplication.hh"
 #include "cApplications.hh"
-#define TAG "ROTENC"
 #include <sensact_logger.hh>
 
 namespace sensact::apps
@@ -21,6 +20,7 @@ namespace sensact::apps
 	class cRotaryEncoder2PWM: public cApplication
 	{
 	private:
+		static constexpr const char *ROTENC_TAG = "ROTENC";
 		eRotaryEncoder encoder;
 		eApplicationID target;
 		uint16_t targetStepsPerPhyicalStep;
@@ -39,7 +39,7 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override{
 			ctx->GetRotaryEncoderValue(encoder, lastRotaryValue, isPressedOld);
-			LOGD(TAG, "%s SETUP encoder=%u value=%u pressed=%s", N(), (uint16_t)encoder, lastRotaryValue, isPressedOld?"yes":"no");
+			LOGD(ROTENC_TAG, "%s SETUP encoder=%u value=%u pressed=%s", N(), (uint16_t)encoder, lastRotaryValue, isPressedOld?"yes":"no");
 			return eAppCallResult::OK;
 
 		}
@@ -51,13 +51,13 @@ namespace sensact::apps
 			tms_t now=ctx->Now();
 			if (!isPressedOld && isPressed)
 			{
-				LOGD(TAG, "%s SENDS TOGGLE to %s (press edge detected)", N(), NID(target));
+				LOGD(ROTENC_TAG, "%s SENDS TOGGLE to %s (press edge detected)", N(), NID(target));
 				ctx->SendTOGGLECommand(target);
 				this->lastEdge = now;
 			}
 			else if(isPressedOld && !isPressed)
 			{
-				LOGD(TAG, "%s is released", N());
+				LOGD(ROTENC_TAG, "%s is released", N());
 				this->lastEdge = now;
 
 			}
@@ -71,7 +71,7 @@ namespace sensact::apps
 				{
 					// in int16 begrenzen -- sonst kippt schnelles Drehen ins Vorzeichen der Gegenrichtung
 					const int16_t step = (int16_t)std::clamp<int32_t>((int32_t)rotaryChange * targetStepsPerPhyicalStep, INT16_MIN, INT16_MAX);
-					LOGD(TAG, "%s sends STEP_VERTICALCommand with rotaryChange %i", N(), rotaryChange);
+					LOGD(ROTENC_TAG, "%s sends STEP_VERTICALCommand with rotaryChange %i", N(), rotaryChange);
 					ctx->SendSTEP_VERTICALCommand(target, step);
 				}
 				lastRotary = now;
@@ -87,4 +87,3 @@ namespace sensact::apps
 		}
 	};
 }
-#undef TAG

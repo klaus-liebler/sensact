@@ -94,8 +94,8 @@ einem anderen Node gehostet wird). Alle App-Methoden hängen nur am Interface
   (verbindliche Referenz, auch für die Web-UI).
 - Host-Unit-Tests (GoogleTest, ohne ESP32):
   [sensact-applicationmodel/host_test/README.md](../../../espidf-components/sensact-applicationmodel/host_test/README.md).
-  Einzige Ausnahme von der ESP-IDF-Freiheit: `milightcontroller.cc` (FreeRTOS-Queue,
-  `esp_timer`, fest eincodierte App-IDs von Sattlerstrasse16).
+  Keine App bindet ESP-IDF ein; Hardware-nahe Anbindungen (z. B. der Milight-Funkempfänger)
+  liegen als Adapter im Board-Init (`main/hal/<NODE_ID>/board_init.hh`).
 
 ## Cross-Cutting
 

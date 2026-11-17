@@ -287,7 +287,7 @@ vergleichbar sind. Zwei Arten:
 </catalog>
 ```
 
-**Hausmodell** – Stationen, ihre Hardware und Apps:
+**Hausmodell** – Stationen, ihre Hardware und Apps, in **einer** Datei (entschieden):
 
 ```xml
 <house name="Sattlerstraße 16" schemaVersion="1">
@@ -330,17 +330,16 @@ Varianten:
 | L2 | **Datengetrieben auch auf STM32**: Konfiguration im Flash; der BestBinaryBuffers-Decoder liest sie ohne Kopie direkt aus dem Flash, die Fabrik legt die Apps in einen statischen Speicherbereich. | Für den F407 machbar, für den F103 mit 20 KB RAM eng; Update ohne Neukompilieren, aber nur per USB (kein OTA auf diesen Boards). Lohnt erst, wenn Konfigurationen dort häufig wechseln. |
 | L3 | **Gemeinsame App-Logik**: die ESP32-Apps (`sensact-applicationmodel`, nur von `iSensactContext` abhängig) auch auf STM32 übersetzen; die Altfirmware liefert nur den Kontext. | Langfristig sauber (eine App-Implementierung, eine Testsuite statt zwei auseinanderlaufender Kopien), aber erheblicher Umbau; `std::vector`/virtuelle Aufrufe auf dem F103 prüfen. |
 
-Empfehlung: **L1 sofort**, L3 als langfristige Option, wenn die doppelte App-Logik zu sehr
+Entschieden: **L1**; L3 bleibt langfristige Option, wenn die doppelte App-Logik zu sehr
 auseinanderläuft. In allen Varianten gilt: Altknoten und neue Knoten sprechen über CAN
 dieselben App-IDs und Kommandos; der Editor prüft, dass eine Station nur App-Typen und
 Kommandos verwendet, die ihre Firmware-Familie kennt.
 
-## Offene Fragen
+## Entscheidungen 2026-11-17 (zuvor offene Fragen)
 
-1. Absicherung des Uploads: genügt das Login des Webinterfaces, oder sollen Basis und
-   Konfiguration signiert sein (Secure Boot ist derzeit nicht aktiv)?
-2. Hausmodell als eine XML-Datei oder aufgeteilt (eine Datei pro Station + Katalog)? Eine pro
-   Station gibt kleinere Diffs und weniger Konflikte, eine einzige ist einfacher zu überblicken.
-3. STM32-Altfirmware: Quellcode aus den 7z-Archiven als normale Dateien ins Repo holen (damit
-   Änderungen vergleichbar und der Code-Export dort testbar wird)?
-4. STM32-Altknoten: L1 (Empfehlung), L2 oder L3?
+1. Absicherung des Uploads: das Login des Webinterfaces genügt, keine Signatur.
+2. Hausmodell als **eine** XML-Datei (plus Katalog).
+3. STM32-Altknoten: **L1** (Code-Export).
+
+Noch offen: den Quellcode der STM32-Altfirmware aus den 7z-Archiven als normale Dateien ins
+Repo holen (s. `known-issues.md`, E13).

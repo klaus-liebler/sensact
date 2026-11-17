@@ -33,3 +33,9 @@ CONFIG_MBEDTLS_DEFAULT_MEM_ALLOC=y
 CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=y
 CONFIG_FREERTOS_USE_TRACE_FACILITY=y
 CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS=y
+
+# OTA: neue Firmware startet "auf Probe" und bestaetigt sich per
+# CallMeAfterInitializationToMarkCurrentPartitionAsValid() (main.cc); sonst kehrt der Bootloader
+# beim naechsten Neustart zur alten zurueck. Bootloader-Option: wirkt erst nach einmaligem
+# USB-Flashen des Bootloaders.
+CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y

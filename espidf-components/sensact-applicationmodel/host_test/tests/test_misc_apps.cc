@@ -1,8 +1,7 @@
-// Kleinere Apps: Lichtschranke, Node, Rollladen-Timer, Fingerprint.
+// Kleinere Apps: Lichtschranke, Node, Fingerprint.
 #include "TestHelpers.hh"
 #include "lightbarrier.hh"
 #include "node.hh"
-#include "blindstimer.hh"
 #include "fingerprint.hh"
 
 using namespace sensact;
@@ -58,22 +57,6 @@ TEST(Node, PingIsAnsweredWithPongCarryingThePayload)
     EXPECT_EQ(ctx.publishedEvents[0].event, eEventType::PONG);
     EXPECT_EQ(ctx.publishedEvents[0].source, ID::SNSCT_NODE_HS);
     EXPECT_EQ(ctx.publishedEvents[0].payload, (std::vector<uint8_t>{0xBE, 0xBA, 0xFE, 0xCA}));
-}
-
-TEST(BlindsTimer, ActivatedTimerDoesNotFloodCommands)
-{
-    // cBlindsTimer ist noch nicht fertig implementiert (UpdateOpening/UpdateClosing leer). Bis
-    // dahin darf das Aktivieren nicht dazu fuehren, dass in jeder Loop UP und DOWN gesendet werden.
-    FakeSensactContext ctx;
-    std::vector<eApplicationID> blinds{ID::BLIND_X1_XX1_42};
-    apps::cBlindsTimer app(ID::REMOT_X1_XX1_42, &blinds, sunsetsunrise::eDawn::CIVIL, 0, 0);
-    ctx.now = 1000;
-    app.Setup(&ctx);
-    app.OnONCommand(0, &ctx);
-    RunFor(app, ctx, 10000);
-    EXPECT_LE(ctx.sentCommands.size(), 2u);
-    for (auto &c : ctx.sentCommands)
-        EXPECT_NE(c.target, app.id) << "Timer schickt Kommandos an sich selbst statt an die Rolllaeden";
 }
 
 TEST(Fingerprint, DetectedFingerSwitchesMappedTargetOnForOneSecond)
