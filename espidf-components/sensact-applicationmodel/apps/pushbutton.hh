@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#define TAG "PUSHB"
 #include <sensact_logger.hh>
 #include "cApplication.hh"
 
@@ -13,9 +12,12 @@ namespace sensact::apps
 
 		bool isPressedOld{false};
 		bool holdShortSent{false};
+		// beim Booten schon gedrueckt (oder klemmend): bis zum Loslassen keine Ereignisse
+		bool ignoreUntilReleased{false};
 
 		tms_t lastPress{0};
-		tms_t lastRelease{0};
+		tms_t lastRelease{INT64_MIN / 2}; // "lange her" -- kein Doppelklick direkt nach dem Booten
+		static constexpr const char *PUSHB_TAG = "PUSHB";
 
 	protected:
 		cPushbutton(InOutId const input) : input(input)
@@ -36,6 +38,22 @@ namespace sensact::apps
 		{
 			return isPressedOld;
 		}
+
+		// Startzustand einlesen: ein beim Booten bereits gedrueckter oder klemmender Taster darf
+		// kein Ereignis ausloesen (frueher: TOGGLE, beim Rollladen-Taster nach 400 ms sogar
+		// Dauerfahrt).
+		void ButtonSetup(iSensactContext *ctx)
+		{
+			u16 inputValue;
+			ctx->GetU16Input(input, inputValue);
+			this->isPressedOld = inputValue != 0;
+			this->ignoreUntilReleased = this->isPressedOld;
+			this->holdShortSent = this->isPressedOld;
+			if (this->isPressedOld)
+			{
+				LOGW(PUSHB_TAG, "input %u is active at startup -- ignored until released", (unsigned)input);
+			}
+		}
 		void ButtonLoop(iSensactContext *ctx)
 		{
 			u16 inputValue;
@@ -45,28 +63,32 @@ namespace sensact::apps
 			if (!isPressedOld && isPressed)
 			{
 				this->holdShortSent = false;
-				LOGI(TAG, "OnPressed");
+				LOGI(PUSHB_TAG, "OnPressed");
 				OnPressed(ctx);
 				this->lastPress = now;
+			}
+			else if (isPressedOld && !isPressed && ignoreUntilReleased)
+			{
+				this->ignoreUntilReleased = false;
 			}
 			else if (isPressedOld && !isPressed)
 			{
 				if (now - this->lastPress < sensact::magic::SHORT_PRESS)
 				{
-					LOGI(TAG, "OnReleasedShort");
+					LOGI(PUSHB_TAG, "OnReleasedShort");
 					OnReleasedShort(ctx);
 				}
 				else
 				{
-					LOGI(TAG, "OnReleasedLong");
+					LOGI(PUSHB_TAG, "OnReleasedLong");
 					OnReleasedLong(ctx);
 				}
-				LOGI(TAG, "OnReleased");
+				LOGI(PUSHB_TAG, "OnReleased");
 				OnReleased(ctx);
 
 				if (now - lastRelease < sensact::magic::DOUBLE_PRESS)
 				{
-					LOGI(TAG, "OnDoubleclick");
+					LOGI(PUSHB_TAG, "OnDoubleclick");
 					OnDoubleclick(ctx);
 				}
 
@@ -76,7 +98,7 @@ namespace sensact::apps
 			{
 				if (!this->holdShortSent && now - lastPress >= sensact::magic::SHORT_PRESS)
 				{
-					LOGI(TAG, "OnPressedShortAndHold");
+					LOGI(PUSHB_TAG, "OnPressedShortAndHold");
 					OnPressedShortAndHold(ctx);
 					this->holdShortSent = true;
 				}
@@ -112,6 +134,7 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override
 		{
+			this->ButtonSetup(ctx);
 			return eAppCallResult::OK;
 		}
 
@@ -152,6 +175,7 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override
 		{
+			this->ButtonSetup(ctx);
 			return eAppCallResult::OK;
 		}
 
@@ -214,6 +238,8 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override
 		{
+			up->ButtonSetup(ctx);
+			down->ButtonSetup(ctx);
 			return eAppCallResult::OK;
 		}
 
@@ -276,6 +302,8 @@ namespace sensact::apps
 
 		eAppCallResult Setup(iSensactContext *ctx) override
 		{
+			up->ButtonSetup(ctx);
+			down->ButtonSetup(ctx);
 			return eAppCallResult::OK;
 		}
 
@@ -292,4 +320,3 @@ namespace sensact::apps
 		}
 	};
 }
-#undef TAG

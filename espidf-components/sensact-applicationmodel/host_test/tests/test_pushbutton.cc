@@ -130,14 +130,41 @@ TEST_F(ButtonTest, Dual2PwmShortTogglesHoldDimsReleaseStops)
     EXPECT_EQ(CommandsTo(ctx, ID::PWM___X3_XX4_14), (std::vector<CMD>{CMD::TOGGLE, CMD::UP, CMD::STOP, CMD::DOWN, CMD::STOP}));
 }
 
-TEST_F(ButtonTest, InputHeldAtBootTriggersOneToggle_KnownIssueE7)
+TEST_F(ButtonTest, InputHeldAtBootTriggersNothing)
 {
-    // Ein beim Booten bereits gedrueckter (oder dauerhaft auf 1 klemmender) Eingang ...
+    // Beim Booten bereits gedrueckter (oder dauerhaft auf 1 klemmender) Eingang: keine Ereignisse,
+    // auch nicht beim Loslassen; danach funktioniert der Taster normal.
     apps::cPushbuttonSingle2Toggle app(ID::PUSHB_X1_XX1_3, IN_A, {ID::POWIT_X1_XX3_9});
     ctx.SetInput(IN_A, 1);
     ctx.now = 10000;
     app.Setup(&ctx);
-    RunFor(app, ctx, 1000);
-    // ... loest derzeit einmalig ein TOGGLE aus (bekanntes Verhalten, s. docs/known-issues.md E7)
-    EXPECT_EQ(ctx.sentCommands.size(), 1u);
+    RunFor(app, ctx, 3000);
+    EXPECT_TRUE(ctx.sentCommands.empty());
+    ctx.SetInput(IN_A, 0);
+    RunFor(app, ctx, 300);
+    EXPECT_TRUE(ctx.sentCommands.empty());
+    Press(app, IN_A, 100);
+    EXPECT_EQ(CommandsTo(ctx, ID::POWIT_X1_XX3_9), std::vector<CMD>{CMD::TOGGLE});
+}
+
+TEST_F(ButtonTest, StuckBlindButtonAtBootDoesNotStartContinuousRun)
+{
+    // Frueher: nach 400 ms "gehalten" -> UP(forced) = Dauerfahrt des Rollladens
+    apps::cPushbuttonDual2Blind app(ID::BLINDB_X2_XX1_7, IN_A, IN_B, ID::BLIND_X2_XX3_13);
+    ctx.SetInput(IN_A, 1);
+    ctx.now = 10000;
+    app.Setup(&ctx);
+    RunFor(app, ctx, 5000);
+    EXPECT_TRUE(ctx.sentCommands.empty());
+    Press(app, IN_B, 100); // die andere Taste ist unbeeintraechtigt
+    EXPECT_EQ(CommandsTo(ctx, ID::BLIND_X2_XX3_13), std::vector<CMD>{CMD::DOWN});
+}
+
+TEST_F(ButtonTest, NoDoubleClickRightAfterBoot)
+{
+    apps::cPushbuttonSingle2PwmSingle app(ID::PUSHB_X1_XX1_3, IN_A, ID::PWM___X3_XX4_14);
+    ctx.now = 100; // kurz nach dem Booten
+    app.Setup(&ctx);
+    Press(app, IN_A, 100);
+    EXPECT_EQ(CommandsTo(ctx, ID::PWM___X3_XX4_14), std::vector<CMD>{CMD::TOGGLE});
 }
