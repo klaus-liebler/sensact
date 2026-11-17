@@ -36,7 +36,7 @@ Diese Kopplungen müssen in jedem Fall gelöst werden, egal ob mit ELF-Loader od
 | Board-Init (HAL-Klasse, Busmaster, I2C-Bausteine) | `main/hal/<NODE_ID>/board_init.hh` per Include-Pfad einkompiliert | zur Laufzeit gewählt |
 | App-Instanzen | generierte `applicationInitializers.inc`/`glo2LocCmd.inc` als statische C++-Objekte | zur Laufzeit angelegt |
 | `eApplicationID` | Enum über *alle* Apps des Hauses, `CNT` dimensioniert Arrays (`statusBuffer`), Namenstabelle einkompiliert; dieselbe Enum steht im ws-Protokoll-Schema | App-ID als `uint16_t` + Namen aus der Konfiguration |
-| Web-UI | `sensactapps.ts` pro Knoten generiert, Bundle in die Firmware eingebettet | UI baut die App-Liste zur Laufzeit aus der Konfiguration |
+| Web-UI | `sensactapps.ts` pro Knoten generiert, Bundle in die Firmware eingebettet | weiterhin pro Station generiert, aber zusammen mit der Konfiguration hochgeladen (s. "Web-UI als Teil des Stationspakets"); eingebettet bleibt nur eine Wartungsseite |
 | Runtimeconfig | `NODE_ID`, Hostname, Passwort, `WIFI_ENABLED` … als `#define` (`runtimeconfig.hh`) | aus NVS bzw. der Konfiguration |
 | Board-Zertifikat/-Schlüssel | per `EMBED_TXTFILES` einkompiliert | einmalig ins NVS/eine Partition provisioniert |
 
@@ -85,7 +85,8 @@ Die Beschreibungen werden mit BestBinaryBuffers kodiert, mit Schema-Version und 
 Erzeugt werden sie vom Editor (s. Abschnitt "Editor"), bis dahin vom C#-Builder aus dem
 heutigen Hausmodell.
 Die Basis legt beim Booten per Fabrik (`CreateApp(type, params)`, `CreateBoard(desc)`) die
-Objekte an. Upload über die Website ins LittleFS, Prüfung, Neustart.
+Objekte an. Upload über die Website als **Stationspaket** (Konfiguration und dazu passende
+Web-UI, s. "Web-UI als Teil des Stationspakets"), Prüfung, Neustart.
 
 Vorteile gegenüber A:
 
@@ -97,7 +98,8 @@ Vorteile gegenüber A:
   keine Toolchain nötig.
 - Die Konfiguration ist im Builder **vor** dem Upload prüfbar, und die Fabrik und der Parser
   sind mit den vorhandenen Host-Tests testbar.
-- Dieselbe Beschreibung baut zur Laufzeit die Web-UI.
+- Die Web-UI der Station wird im selben Lauf wie die Konfiguration erzeugt und mit ihr
+  hochgeladen; beide passen dadurch immer zusammen.
 
 Grenze: Neue Treiber oder neue App-Typen erfordern weiterhin ein Basis-Update – das dann
 aber bequem per OTA. Stationsspezifische *Sonderlogik* (Code, den es nur auf einer Station
@@ -108,6 +110,41 @@ gibt) geht so nicht.
 B als Grundlage. Später, falls wirklich stationsspezifischer Code gebraucht wird, ein
 optionaler App-Typ `ELF_APP`, der ein `elf_loader`-Modul lädt, das genau eine `cApplication`
 über `iSensactContext` implementiert (sauberer, schmaler C++-Schnitt).
+
+## Web-UI als Teil des Stationspakets (entschieden 2026-11-17)
+
+Heute steckt die Web-UI (Vite-Bundle, komprimiert ca. 28 KB) per `EMBED_FILES` im
+Firmware-Image, und ihr stationsspezifischer Teil (`sensactapps.ts`, App-Liste mit Typen und
+Namen) wird vom Builder aus dem Hausmodell generiert. Mit der datengetriebenen Basis muss sie
+sich mit jeder neuen Konfiguration ändern können, ohne dass die Basis neu gebaut wird.
+
+Verworfen: Die Web-UI baut die App-Liste **zur Laufzeit** aus der Konfiguration. Das wäre eine
+zweite Implementierung der App-Abbildung in TypeScript neben dem Generator, die mit ihm
+auseinanderlaufen kann.
+
+Entschieden: Builder bzw. Editor erzeugen die Web-UI je Station wie heute und liefern sie
+**zusammen mit der Konfiguration** aus.
+
+- **Ein Paket, ein Upload**: Konfiguration (Hardware + Apps) und Web-UI-Bundle in einer Datei
+  (Stationspaket). Das Gerät übernimmt es nur vollständig – einen Zustand "neue Konfiguration,
+  alte Oberfläche" gibt es nicht.
+- **Eigener Flash-Bereich** für das Paket statt Einbettung ins Firmware-Image; der Webserver
+  liefert die Web-UI von dort. Schreiben in einen freien Bereich, Prüfsumme kontrollieren, erst
+  dann umschalten (A/B oder Schreiben-dann-Umschalten): ein abgebrochener Upload lässt das alte
+  Paket aktiv.
+- **Wartungsseite fest im Firmware-Image**: Upload von Paket und Basis, Versionen, Log. Sie
+  wird ausgeliefert, wenn kein gültiges Paket vorhanden ist (leer, beschädigt, unpassend) –
+  ein misslungener Upload kann das Gerät nicht unbedienbar machen. Gleichzeitig der
+  Sicherheitsmodus (Apps aus).
+- **Versionsprüfung**: Die Web-UI hängt nicht nur am Hausmodell, sondern auch an der Basis
+  (ws-Protokoll, Kommandos, Schema-Versionen). Das Paket trägt die Versionen, gegen die es
+  gebaut wurde; die Basis nimmt nur passende Pakete an.
+- **Browser-Refresh**: Nach erfolgreichem Upload sendet die Firmware über die bestehende
+  WebSocket-Verbindung "neu laden" an alle verbundenen Browser. Zusätzlich vergleicht die Seite
+  beim (Wieder-)Verbinden ihre Paketversion mit der des Geräts und lädt sich bei Abweichung neu
+  – das deckt Tabs ab, die beim Upload nicht verbunden waren.
+- Der Editor erzeugt das Paket für die neue Basis; für die heutigen Firmwares bleibt es beim
+  eingebetteten Bundle (Code-Export).
 
 ## Vorgeschlagene Etappen
 
@@ -124,8 +161,10 @@ optionaler App-Typ `ELF_APP`, der ein `elf_loader`-Modul lädt, das genau eine `
    erzeugt sie aus `NodeIdBoardTypeCatalog`/`board_init.hh`-Wissen; `main/hal/<NODE_ID>/` entfällt.
 4. **App-Konfiguration als Daten**: Format + App-Fabrik (inkl. Host-Tests), `cMilightController`
    bekommt seine Ziele als Parameter statt fest eincodierter IDs.
-5. **Web-UI**: Upload-Seite für beide Konfigurationen und die Basis, Anzeige der geladenen
-   Versionen, Sicherheitsmodus; App-Liste zur Laufzeit statt generiertem `sensactapps.ts`.
+5. **Web-UI**: Stationspaket (Konfiguration + Web-UI) als ein Upload, eigener Flash-Bereich
+   mit atomarem Wechsel, fest eingebettete Wartungsseite, Versionsprüfung gegen die Basis,
+   Browser-Refresh nach dem Upload; Anzeige der geladenen Versionen, Sicherheitsmodus.
+   `sensactapps.ts` bleibt generiert (s. "Web-UI als Teil des Stationspakets").
 6. **Editor** (s. unten) – kann parallel zu 2–5 entstehen, sobald die Schemas aus 0 stehen.
    Sinnvolle Reihenfolge innerhalb: Katalog-XML → Hausmodell-XML (einmaliger Import aus dem
    C#-Modell, erledigt 2026-11-17) → Code-Export für die bestehenden Firmwares (ESP32 und STM32, ersetzt
@@ -356,4 +395,6 @@ Kommandos verwendet, die ihre Firmware-Familie kennt.
 1. Absicherung des Uploads: das Login des Webinterfaces genügt, keine Signatur.
 2. Hausmodell als **eine** XML-Datei (plus Katalog).
 3. STM32-Altknoten: **L1** (Code-Export).
+4. Web-UI: wird mit der Konfiguration als Stationspaket hochgeladen, nicht zur Laufzeit
+   aufgebaut; Browser-Refresh nach dem Upload (s. "Web-UI als Teil des Stationspakets").
 
