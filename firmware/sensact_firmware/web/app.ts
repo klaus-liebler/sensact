@@ -1,7 +1,7 @@
 import { html } from "lit-html";
 import { AppController } from "@klaus-liebler/web-components"
 import type { IChatbot } from "@klaus-liebler/web-components"
-import { DefaultScreenController } from "@klaus-liebler/web-components/typescript/screen_controller/screen_controller"
+import { OverviewScreenController } from "@klaus-liebler/web-components/typescript/screen_controller/overview_controller"
 import { SystemController } from "@klaus-liebler/web-components/typescript/screen_controller/systeminfo_controller"
 import { WifimanagerController } from "@klaus-liebler/web-components/typescript/screen_controller/wifimanager_controller"
 import { JournalController } from "@klaus-liebler/web-components/typescript/screen_controller/journal_controller"
@@ -34,22 +34,33 @@ document.addEventListener("DOMContentLoaded", (_) => {
   //   });
   // }
 
-  app = new AppController("SensAct WebUI", CONST.WS_URL, easterEggFn, `:: Node ${CFG.SENSACT_NODE_NAME} :: SensactModel ${CFG.SENSACT_MODEL_NAME} created at  ${CFG.SENSACT_MODEL_CREATION_DT_STRING} `, chatbot);
+  app = new AppController("SensAct", CONST.WS_URL, easterEggFn, `Modell ${CFG.SENSACT_MODEL_NAME} vom ${CFG.SENSACT_MODEL_CREATION_DT_STRING}`, chatbot,
+    { hostLabel: CFG.SENSACT_NODE_NAME });
 
-  app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>&#127760;</span><span>Home</span>`, new DefaultScreenController(app)) 
-  app.AddScreenController("system", new RegExp("^/system$"), html`<span>🧰</span><span>System Settings</span>`, new SystemController(app))
-  if(CFG.WIFI_ENABLED)
-    app.AddScreenController("wifiman", new RegExp("^/wifiman$"), html`<span>📶</span><span>Wifi Manager</span>`, new WifimanagerController(app))
-  app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>🔬</span><span>Can Bus Monitor</span>`, new CanMonitorScreenController(app))
-  app.AddScreenController("nodemaster", new RegExp("^/nodemaster$"), html`<span>🧩</span><span>Node Master</span>`, new NodemasterController(app))
+  // Reihenfolge = Reihenfolge im Arbeitsbereich-Umschalter; der erste ist die Startseite
+  app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>Übersicht</span>`, new OverviewScreenController(app, () => app.Workspaces),
+    { icon: "dashboard", group: "Übersicht", description: "Alle Arbeitsbereiche" })
   const s = new SensactController(app);
   s.AddApps(SensactAppsBuild(s));
-  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>✽</span><span>SensAct</span>`, s)
-  app.AddScreenController("journal", new RegExp("^/journal$"), html`<span>📓</span><span>Journal</span>`, new JournalController(app))
+  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>SensAct</span>`, s,
+    { title: "Apps der Station", icon: "house", group: "Haus", description: "Licht, Rollläden, Szenen dieser Station bedienen" })
   // @ts-ignore
   if(CFG.NODE_ID=="SNSCT_NODE_SIDEDOOR")
-    app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>🔑</span><span>Fingerprint</span>`, new FingerprintScreenController(app))
- 
+    app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>Fingerprint</span>`, new FingerprintScreenController(app),
+      { title: "Fingerabdruck", icon: "key", group: "Haus", description: "Fingerabdrücke anlernen und verwalten" })
+  app.AddScreenController("nodemaster", new RegExp("^/nodemaster$"), html`<span>Node Master</span>`, new NodemasterController(app),
+    { title: "Ein-/Ausgänge", icon: "registers", group: "Diagnose", description: "Ein- und Ausgänge des Knotens direkt lesen und schalten" })
+  app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>Can Bus Monitor</span>`, new CanMonitorScreenController(app),
+    { title: "CAN-Monitor", icon: "can", group: "Diagnose", description: "Nachrichten auf dem CAN-Bus mitlesen" })
+  app.AddScreenController("journal", new RegExp("^/journal$"), html`<span>Journal</span>`, new JournalController(app),
+    { icon: "book", group: "Diagnose", description: "Ereignisse der Station" })
+  app.AddTerminal()
+  app.AddScreenController("system", new RegExp("^/system$"), html`<span>System</span>`, new SystemController(app),
+    { icon: "chip", group: "Gerät", description: "Firmware, Stationspaket, Dateien, Neustart" })
+  if(CFG.WIFI_ENABLED)
+    app.AddScreenController("wifiman", new RegExp("^/wifiman$"), html`<span>WLAN</span>`, new WifimanagerController(app),
+      { icon: "wifi", group: "Gerät", description: "WLAN-Netze suchen und verbinden" })
+
   app.Startup();
 });
 

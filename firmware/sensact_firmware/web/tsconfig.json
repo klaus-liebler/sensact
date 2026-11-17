@@ -2,6 +2,9 @@
     "compilerOptions": {
       "target": "ESNext",
       "useDefineForClassFields": true,
+      // Lit-Decorators (@state, @customElement) der Anwendungs-Shell @klaus-liebler/ui-shell; deren
+      // Quellen uebersetzt Vite mit der tsconfig des Pakets (useDefineForClassFields=false)
+      "experimentalDecorators": true,
       "module": "ESNext",
       "lib": ["ESNext", "DOM", "DOM.Iterable"],
       "skipLibCheck": true,

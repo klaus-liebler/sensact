@@ -15,9 +15,25 @@ Zurzeit keine.
 | T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Die früher ungeklärten Image-Größen (1,31 vs. 0,95 MB) waren ein Build-Fehler: CMake las `config.json` nur beim ersten Konfigurieren, ein Build für ein anderes Board übernahm Board-Init und NODE_ID des zuvor gebauten (behoben, s. Erledigt). Seit Schritt 2 enthält jede Firmware alle App-Typen (die Konfiguration entscheidet zur Laufzeit), daher 1,3–1,6 MB (≥ 18 % frei). Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
 | T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
 | T14 | **Stationspaket und datengetriebene Basis am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): per USB flashen (`Pipeline --model Sattlerstrasse16`, schreibt Paket und Web-UI gleich ins LittleFS). Erwartet: Log "Station configuration loaded: SNSCT_L0_TECH_HS_1, … apps", alle Taster/Lampen/Rollläden wie bisher, Web-UI mit allen Apps. Dann eine Modelländerung (`BuildPackage`) über System → Station Package hochladen: Gerät startet neu und arbeitet mit der neuen Konfiguration. Paket einer anderen Station/Basis wird abgelehnt; ohne Paket Sicherheitsmodus mit Wartungsseite. OTA und Datei-Endpunkte verlangen den Login. | Firmware/Webmanager |
+| T15 | **Neue Weboberfläche und Firmware-Log am Gerät ansehen** (mit T14): Arbeitsbereiche, Hell/Dunkel, Vollbild, Abmelden; Terminal zeigt die Startmeldungen (Puffer 48 Zeilen) und neue Zeilen live, `loglevel * debug` wirkt, die Glocke zählt Warnungen/Fehler. Ohne Gerät schon erprobt (Testserver, `npm run it`). | Web-UI/Webmanager |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-17 (6) – Weboberfläche: Anwendungs-Shell aus factory_in_a_box, Firmware-Log
+
+- Shell (Titelleiste, Arbeitsbereich-Umschalter mit Ribbon, Statusleiste, Hell/Dunkel, Vollbild) als
+  gemeinsames Paket `@klaus-liebler/ui-shell` nach `npm-packages` verschoben; factory_in_a_box nutzt es
+  von dort. `AppController` (web-components) baut sensact und labathome darauf auf: jeder ScreenController
+  ist ein Arbeitsbereich, Startseite mit Kacheln, Benutzer/Abmelden in der Titelleiste, Build und Modell in
+  der Statusleiste. Altes Grid-Layout und Google-Font entfernt.
+- Firmware-Log im Browser (opt-in): `FirmwareLogPlugin` im Webmanager, Namespace `firmwarelog`, in sensact
+  eingeschaltet; Arbeitsbereich Terminal mit Filtern, Export und Konsole. labathome hat den Namespace im
+  Protokoll, das Plugin aber nicht angemeldet.
+- Nebenbei: Dev-Proxy (`web/vite.config.mts`) verwarf Nachrichten, die der Browser vor dem Aufbau der
+  Verbindung nach oben schickte (Anfragen direkt nach dem Verbinden gingen verloren) – jetzt gepuffert.
+  Testserver: `ApplicationId` aus `@generated/sensact_applicationids` (seit Schritt 2 nicht mehr im
+  Protokoll), simuliert das Firmware-Log.
 
 ### 2026-11-17 (5) – Schritt 2: datengetriebene Basis
 

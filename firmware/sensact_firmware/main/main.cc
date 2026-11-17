@@ -52,6 +52,7 @@
 #include <runtimeconfig_cpp/runtimeconfig_defines.hh>
 #include <webmanager_plugins/systeminfo_plugin.hh>
 #include <webmanager_plugins/usersettings_plugin.hh>
+#include <webmanager_plugins/firmwarelog_plugin.hh>
 
 
 constexpr const char* NVS_PARTITION_NAME{NVS_DEFAULT_PART_NAME};
@@ -112,6 +113,9 @@ static const uint8_t s_usb_cfg_desc[] = {
 
 extern "C" void app_main(void)
 {
+    // Firmware-Log im Browser (Arbeitsbereich Terminal): so frueh wie moeglich, damit auch die
+    // Startmeldungen im Puffer landen; angemeldet wird es unten mit den anderen Plugins.
+    auto *firmwareLogPlugin = new FirmwareLogPlugin(48);
     //ESP_LOGI(TAG, "\n%s", cfg::BANNER);
     ESP_LOGI(TAG, "%s is booting up. Firmware build at %s on Git %s", cfg::NODE_ID, cfg::CREATION_DT_STR, cfg::GIT_SHORT_HASH);
 
@@ -150,6 +154,7 @@ extern "C" void app_main(void)
     
     std::vector<webmanager::iWebmanagerPlugin*> plugins;
     plugins.push_back(new SystemInfoPlugin(tempHandle));
+    plugins.push_back(firmwareLogPlugin);
     UsersettingsPlugin* usersettingsPlugin = new UsersettingsPlugin(NVS_PARTITION_NAME);
     plugins.push_back(usersettingsPlugin);
 

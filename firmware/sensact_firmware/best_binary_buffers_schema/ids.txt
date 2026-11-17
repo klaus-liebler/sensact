@@ -124,3 +124,9 @@ class sensactcfg.BlindsTimerApp 32
 class sensactcfg.AppName 33
 message sensactcfg.StationConfig 1
 namespace sensactcfg 16
+message firmwarelog.NotifyLogMessage 1
+message firmwarelog.RequestLogHistory 2
+message firmwarelog.ResponseLogHistory 3
+message firmwarelog.RequestSetLogLevel 4
+message firmwarelog.ResponseSetLogLevel 5
+namespace firmwarelog 17

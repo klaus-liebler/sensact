@@ -118,6 +118,27 @@ Paket- und Firmware-Upload funktionieren.
 - `journal_plugin.cc/hh` – Ringpuffer (16 Einträge) in `__NOINIT_ATTR`-RAM (überlebt
   Neustarts außer Kaltstart), exponiert über Websocket (`ns10journal`).
 
+- Firmware-Log im Browser: `FirmwareLogPlugin` des Webmanagers
+  (`espidf-component-webmanager/cpp/webmanager_plugins/firmwarelog_plugin.hh`, Namespace
+  `firmwarelog`), in `main.cc` als Erstes angelegt, damit auch die Startmeldungen gepuffert werden
+  (48 Zeilen). Hook auf `esp_log_set_vprintf`: jede Zeile geht unverändert an die UART und zerlegt in
+  einen Ringpuffer; eine eigene Task sendet erst, wenn der Browser die Historie angefordert hat.
+  In der Weboberfläche der Arbeitsbereich Terminal (s. u.).
+
+## Weboberfläche
+
+Rahmen ist die Anwendungs-Shell `@klaus-liebler/ui-shell` (Repo `npm-packages`, gemeinsam mit
+factory_in_a_box und labathome): Titelleiste (Verbindung, Glocke für Warnungen/Fehler im
+Firmware-Log, Hell/Dunkel, Vollbild, Benutzer/Abmelden), Arbeitsbereich-Umschalter mit Ribbon,
+Statusleiste (Verbindung, Zustand des Arbeitsbereichs, Build/Modell). `AppController`
+(`@klaus-liebler/web-components`) hängt jeden `ScreenController` als Arbeitsbereich ein
+(`AddScreenController(..., { title, icon, group, description })`, Reihenfolge = Umschalter, der erste ist
+die Startseite mit Kacheln aller Arbeitsbereiche, `OverviewScreenController`). Ein ScreenController
+erreicht über `WorkspaceElement` `setAppStatus`/`setAppRibbon` der Shell. `AddTerminal()` schaltet
+den Arbeitsbereich Terminal ein (Firmware-Log mit Filtern, Export, Konsole mit `help`, `loglevel`,
+`restart` …; Projekte können Befehle ergänzen). Ohne Gerät: `npm run it` in `web/` startet den
+Testserver (`testserver/`, simuliert u. a. das Firmware-Log) und den Dev-Server.
+
 ## Bekannt tote/veraltete Teile
 
 `main/__archive/` – nicht im Build referenziert (`.ccold`/`.hhold`-Endungen,

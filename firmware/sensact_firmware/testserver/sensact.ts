@@ -1,10 +1,10 @@
 
 import { ISender, NamespaceAndHandler } from "@klaus-liebler/websocket_file_testserver/utils"
 import { sensact } from "@generated/wsprotocol_ts/ws-protocol";
+// App-Nummern aus dem Hausmodell (GenerateSensactFiles), nicht mehr Teil des Protokolls
+import { ApplicationId } from "@generated/sensact_applicationids/applicationIds";
 
-const ApplicationId = sensact.ApplicationId;
 const Command = sensact.Command;
-type ApplicationId = sensact.ApplicationId;
 
 function sendStatus(sender: ISender, appId: ApplicationId, state: number[]) {
     sender.send(sensact.NotifyStatus.encode({ id: appId, status: { data: state } }));

@@ -7,6 +7,7 @@ import { FingerprintHandler } from "@klaus-liebler/websocket_file_testserver/fin
 import { SensactHandler } from "./sensact"
 import { CanmonitorHandler } from "./canmonitor"
 import { NodemasterHandler } from "./nodemaster"
+import { FirmwareLogHandler } from "./firmwarelog"
 import path from "node:path"
 
 utils.StartServers(path.join(process.env.USERPROFILE, "OneDrive - HSOS", "certificates"), [
@@ -16,5 +17,6 @@ utils.StartServers(path.join(process.env.USERPROFILE, "OneDrive - HSOS", "certif
     new SensactHandler(),
     new FingerprintHandler(),
     new CanmonitorHandler(),
-    new NodemasterHandler()
+    new NodemasterHandler(),
+    new FirmwareLogHandler()
 ])

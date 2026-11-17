@@ -121,6 +121,11 @@ const wsProxyPlugin = () => {
       
       wss.on('connection', async (clientWs: weso.WebSocket) => {
         console.log('Client WebSocket connected to proxy');
+        // Was der Browser schickt, bevor die Verbindung nach oben steht (Anmeldung + Verbindungsaufbau
+        // sind asynchron), puffern statt verwerfen -- die Web-UI fragt direkt nach dem Verbinden an.
+        const early: any[] = [];
+        const bufferEarly = (data: any) => early.push(data);
+        clientWs.on('message', bufferEarly);
 
         let sessionCookie: string;
         try {
@@ -149,7 +154,9 @@ const wsProxyPlugin = () => {
         upstreamWs.on('open', () => {
           console.log('Connected to upstream WebSocket server');
           
-          // Forward client -> upstream
+          // Forward client -> upstream (erst die gepufferten)
+          clientWs.off('message', bufferEarly);
+          for (const data of early.splice(0)) upstreamWs.send(data);
           clientWs.on('message', (data: any) => {
             if (upstreamWs.readyState === weso.WebSocket.OPEN) {
               upstreamWs.send(data);
@@ -215,7 +222,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 
   return {
     resolve: {
-      dedupe: ['flatbuffers', 'lit-html'],
+      dedupe: ['flatbuffers', 'lit-html', 'lit', '@lit/reactive-element'],
     },
     plugins: [
       isAnalyze && visualizer({
