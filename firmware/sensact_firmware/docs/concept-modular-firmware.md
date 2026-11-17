@@ -146,6 +146,28 @@ Entschieden: Builder bzw. Editor erzeugen die Web-UI je Station wie heute und li
 - Der Editor erzeugt das Paket für die neue Basis; für die heutigen Firmwares bleibt es beim
   eingebetteten Bundle (Code-Export).
 
+**Stand 2026-11-17 – Schritt 1 umgesetzt** (Paket mit Web-UI, Konfiguration noch einkompiliert):
+
+- Format: `espidf-component-webmanager/cpp/station_package.hh` (Kopf 128 Byte, Abschnitte je
+  48 Byte mit SHA-256; Abschnittsart 1 = Web-UI). Erzeugt von `builder/StationPackage.cs`.
+- Passung: `compatId` = SHA-256 über das generierte Hausmodell der Station und das
+  ws-Protokoll; in die Firmware als `STATION_COMPAT_ID` eingebaut. Ein Paket mit anderer
+  Kennung oder für eine andere Station wird abgelehnt; ein nach einem Firmware-Update nicht mehr
+  passendes Paket wird beim Start verworfen.
+- Gerät: `POST /package` (Login nötig) schreibt nach `/spiffs/package.tmp`, prüft Kopf und
+  Prüfsummen, kopiert die Web-UI nach `webui.tmp`, benennt dann um (`webui.br`, `station.pkg`).
+  `GET /webui/version` liefert die aktive Version (`builtin` oder Kennung); das Cookie `webui`
+  sagt der Seite, welche sie ist. Nach dem Upload trennt das Gerät die WebSocket-Verbindung,
+  die Seite verbindet sich neu, vergleicht die Version und lädt sich neu.
+- Wartungsseite/Rückfallebene ist vorerst die vollständige, in die Firmware eingebaute Web-UI
+  (passt immer zu ihrer Firmware). Eine eigene kleine Wartungsseite folgt mit Schritt 2, wenn
+  die eingebaute Oberfläche die Apps nicht mehr kennt.
+- Builder: `BuildForOta --model <Name>` legt Firmware und Paket für das aktive Board in
+  `deploy/<NODE_ID>/` ab.
+- Solange die Konfiguration einkompiliert ist, braucht eine Modelländerung eine neue Firmware
+  (OTA) und danach das dazu passende Paket; reine Änderungen an der Web-UI (Komponenten,
+  Darstellung) nur das Paket.
+
 ## Vorgeschlagene Etappen
 
 0. **Schemas** der Hardware- und App-Konfiguration in BestBinaryBuffers festlegen;

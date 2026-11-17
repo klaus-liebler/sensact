@@ -238,6 +238,11 @@ extern "C" void app_main(void)
     #error "Either define HTTP or HTTPS"
 #endif
     
+    // Stationspaket (Web-UI passend zu dieser Firmware, s. docs/concept-modular-firmware.md):
+    // Upload ueber POST /package, Ablage im LittleFS. Ohne gueltiges Paket gilt die eingebaute Web-UI.
+#ifdef __STATION_COMPAT_ID__
+    ESP_ERROR_CHECK(wm->EnableStationPackage(cfg::NODE_ID, cfg::STATION_COMPAT_ID, "/spiffs"));
+#endif
     wm->RegisterHTTPDHandlers(http_server);
     wm->CallMeAfterInitializationToMarkCurrentPartitionAsValid();
     

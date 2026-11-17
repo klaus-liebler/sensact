@@ -14,6 +14,7 @@ Zurzeit keine.
 |---|---|---|
 | T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Auffällig: das Image von `SNSCT_L0_TECH_HS_1` ist am 2026-11-17 von 1,31 auf 0,95 MB geschrumpft – es enthält jetzt (passend zu `WIFI_ENABLED=false` im Board-Archiv) nur die Ethernet-Variante des Webmanagers, keinen WLAN-Stack; warum frühere Builds mit derselben Konfiguration größer waren, ist ungeklärt. Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
 | T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
+| T14 | **Stationspaket am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): Firmware mit Paketunterstützung per USB flashen (`Pipeline`), dann `deploy/SNSCT_L0_TECH_HS_1/SNSCT_L0_TECH_HS_1.pkg` über System → Station Package hochladen. Erwartet: Meldung "Stationspaket aktiv", Seite lädt neu; nach Neustart weiter die Paket-Version; ein Paket einer anderen Station/Firmware wird abgelehnt. Außerdem prüfen: OTA und Datei-Endpunkte verlangen jetzt den Login. | Firmware/Webmanager |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
@@ -47,6 +48,14 @@ Zurzeit keine.
   (`minimalBrightness="0.781"` statt `minimalOnLevel="512"`). Umrechnung beim Import
   (`Units`), generierter Code unverändert. Lautstärke (`sound.initialVolume`) bleibt Rohwert,
   weil ihre Bedeutung vom Verstärker abhängt (TAS5805M: invertiert).
+- Stationspaket, Schritt 1 (s. Konzept, "Web-UI als Teil des Stationspakets"): Paketformat,
+  `POST /package`, Auslieferung der Web-UI aus dem Paket mit Rückfall auf die eingebaute,
+  Neuladen nach dem Upload, `BuildForOta`/`BuildStationPackage`. Gerät und Builder lesen das
+  Format nachweislich gleich (Host-Test gegen ein echtes Paket); am Gerät noch nicht erprobt (T14).
+- Sicherheitslücke geschlossen: `POST /ota` (Firmware-Update) und `/files/*` (Dateien lesen,
+  schreiben, löschen) prüften den Login nicht – jetzt 401 ohne gültige Session (bei abgeschaltetem
+  Login unverändert erlaubt). Betrifft auch labathome (gemeinsamer Webmanager); Skripte, die dort
+  ohne Login hochladen, brauchen jetzt ein Session-Cookie.
 
 ### 2026-11-17 (3) – E13, E14, T13, Türklingel-Ton
 

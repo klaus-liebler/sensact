@@ -142,6 +142,10 @@ internal static class Program
 			: true;
 		SetShared("WIFI_ENABLED", wifiEnabled);
 
+		// Kennung fuer das Stationspaket: die Firmware nimmt nur Pakete mit derselben Kennung an
+		// (s. StationPackage.ComputeCompatId).
+		defines["STATION_COMPAT_ID"] = StationPackage.Hex(StationPackage.ComputeCompatId(nodeId));
+
 		RuntimeConfigWriter.CreateCppConfigurationHeader(SensactBuildContext.GeneratedRuntimeConfigCppDir, defines);
 		RuntimeConfigWriter.CreateCMakeJsonConfigFile(SensactBuildContext.GeneratedCMakeDir, defines);
 		RuntimeConfigWriter.CreateTypeScriptRuntimeConfig(SensactBuildContext.GeneratedRuntimeConfigTsDir, clientDefines);
@@ -343,7 +347,73 @@ internal static class Program
 		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
 		BuildStepRunner.Invoke(ctx, BuildWebApp);
 		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, BuildStationPackage);
 		BuildStepRunner.Invoke(ctx, FlashFirmware);
+	}
+
+	// Fuer ein Update ueber die Weboberflaeche: baut fuer das AKTIVE Board (board_info.json, also das
+	// zuletzt per Pipeline/PrepareContextWithRealHardware vorbereitete, mit seinen echten Zertifikaten)
+	// Firmware und Stationspaket, ohne zu flashen, und legt beide in deploy/<NODE_ID>/ ab:
+	//   sensact_firmware.bin  -> Weboberflaeche, System, "Over-the-air Firmware Update"
+	//   <NODE_ID>.pkg         -> Weboberflaeche, System, "Stationspaket"
+	// Anders als PipelineOffline (synthetisches Board-Archiv, falsche Zertifikate) fuer echte Geraete geeignet.
+	// Beispiel: BuildForOta --model Sattlerstrasse16
+	[BuildStep]
+	public static void BuildForOta(IBuildContextEsp32 ctx)
+	{
+		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
+		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
+		var (mc, _) = LoadModel(modelName);
+		if (!mc.Model.Nodes.Any(n => n.NodeName == nodeId))
+		{
+			throw new InvalidOperationException(
+				$"Das aktive Board ist {nodeId}, das ist keine Station von {modelName}. Erst das richtige Board " +
+				"vorbereiten (einmal per USB: Pipeline bzw. PrepareContextWithRealHardware).");
+		}
+		Console.WriteLine($"Baue fuer das aktive Board {nodeId} ({ctx.BoardArchiveDir})");
+		BuildStepRunner.Invoke(ctx, RunHostTests);
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
+		BuildStepRunner.Invoke(ctx, GenerateCertificates);
+		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
+		BuildStepRunner.Invoke(ctx, BuildWebApp);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+	}
+
+	// Stationspaket (Web-UI) fuer das aktive Board aus dem letzten BuildWebApp; legt es zusammen mit
+	// der zuletzt gebauten Firmware in deploy/<NODE_ID>/ ab. Muss nach GenerateRuntimeConfig laufen
+	// (gleiche compatId wie die Firmware).
+	[BuildStep]
+	public static void BuildStationPackage(IBuildContextEsp32 ctx)
+	{
+		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
+		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
+		var webUi = Path.Combine(ctx.WebGeneratedDir, "index.compressed.br");
+		if (!File.Exists(webUi))
+		{
+			throw new InvalidOperationException($"{webUi} fehlt -- erst BuildWebApp.");
+		}
+		var compatId = StationPackage.ComputeCompatId(nodeId);
+		var deployDir = Path.Combine(firmwareRoot, "deploy", nodeId);
+		Directory.CreateDirectory(deployDir);
+		var pkgPath = Path.Combine(deployDir, nodeId + ".pkg");
+		var label = $"{nodeId} {DateTime.Now:yyyy-MM-dd HH:mm}";
+		StationPackage.Write(pkgPath, nodeId, compatId, File.ReadAllBytes(webUi), label);
+		Console.WriteLine($"Stationspaket -> {pkgPath} (compatId {StationPackage.Hex(compatId)[..16]}...)");
+
+		var firmwareBin = Path.Combine(firmwareRoot, "build", "sensact_firmware.bin");
+		if (File.Exists(firmwareBin))
+		{
+			File.Copy(firmwareBin, Path.Combine(deployDir, "sensact_firmware.bin"), overwrite: true);
+			Console.WriteLine($"Firmware      -> {Path.Combine(deployDir, "sensact_firmware.bin")}");
+		}
+		File.WriteAllText(Path.Combine(deployDir, "README.txt"),
+			$"Erzeugt {DateTime.Now:yyyy-MM-dd HH:mm:ss} fuer {nodeId}, compatId {StationPackage.Hex(compatId)}\n" +
+			"Reihenfolge beim Update ueber die Weboberflaeche (System):\n" +
+			"1. sensact_firmware.bin unter \"Over-the-air Firmware Update\" (nur noetig, wenn sich Hausmodell oder Firmware geaendert haben; Geraet startet neu)\n" +
+			$"2. {nodeId}.pkg unter \"Stationspaket\" (die Seite laedt sich danach neu)\n");
 	}
 
 	// Wie Pipeline, aber PrepareContextWithCommandLineArguments (--nodeId) statt
@@ -361,5 +431,6 @@ internal static class Program
 		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
 		BuildStepRunner.Invoke(ctx, BuildWebApp);
 		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, BuildStationPackage);
 	}
 }

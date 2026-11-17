@@ -137,12 +137,14 @@ Aufruf: `dotnet run --project builder -- <Phase> [Argumente]` (aus dem
 | `GenerateCertificates` | Lazy: Board-Zertifikat (.NET-Kryptografie aus `FirmwareBuilder.Common`, signiert mit der Root-CA aus `CertsDir`, Parameter s. `Certificates.*` in `appsettings.json`) + Flash-Encryption-Key, nur falls noch nicht vorhanden. |
 | `GenerateModelFiles --model <Name>` | Erzeugt aus `model/<Name>.xml` die Modell-Dateien (`.inc`-Dateien, ws-protocol-Enum-Quellen), s. Abschnitt oben. |
 | `GenerateModelFilesForHostTests --out <Verzeichnis>` | Wie `GenerateModelFiles`, aber immer aus dem Testmodel, in ein beliebiges Verzeichnis und **ohne** die Enum-Quellen nach `best_binary_buffers_schema/` zu kopieren. Wird automatisch von den Host-Unit-Tests der Apps aufgerufen (s. "Tests" unten). |
+| `BuildStationPackage` | Stationspaket aus der zuletzt gebauten Web-UI für das aktive Board: `deploy/<NODE_ID>/<NODE_ID>.pkg`, dazu eine Kopie von `build/sensact_firmware.bin` und eine `README.txt`. Teil von `Pipeline`, `PipelineOffline` und `BuildForOta`. |
+| `BuildForOta --model <Name>` | Für ein Update über die Weboberfläche: baut für das **aktive** (echte) Board Firmware und Stationspaket ohne zu flashen (Host-Tests → Generierung → Web-App → Firmware → Paket). Bricht ab, wenn das aktive Board keine Station des Modells ist. Anders als `PipelineOffline` mit den echten Zertifikaten des Boards. |
 | `RunHostTests` | Baut und startet die Host-Unit-Tests der Apps (s. "Tests"); Teil von `Pipeline`/`PipelineOffline`. |
 | `GenerateSensactFiles` | Baut `sensact_sendCommandImplementation`/`sensact_appsbuilder` aus Templates (`web/templates/*.template.ts`) + Hausmodell-`.inc`-Snippets. |
 | `BuildWebApp` | Vite-Build des `web/`-Projekts + Brotli-Kompression. |
 | `BuildFirmware` | `export.bat && idf.py build` (ein einziger verketteter Prozess). |
 | `FlashFirmware [--resetNVSPartition]` | Flasht (nur unverschlüsselter Pfad implementiert; ist der Flash-Encryption-Key im Board-Archiv als aktiviert markiert, bricht die Phase bewusst ab). `--resetNVSPartition` löscht zusätzlich die NVS-Partition (WLAN-/Usersettings vergessen). |
-| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `RunHostTests` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `FlashFirmware`. |
+| `Pipeline --model <Name> [--resetNVSPartition]` | Kompletter Zyklus für ein angeschlossenes Board: `PrepareContextWithRealHardware` → `RunHostTests` → `GenerateModelFiles` → `GenerateBestBinaryBufferFiles` → `GenerateRuntimeConfig` → `GenerateCertificates` → `GenerateSensactFiles` → `BuildWebApp` → `BuildFirmware` → `BuildStationPackage` → `FlashFirmware`. |
 | `PipelineOffline --nodeId <NODE_ID> --model <Name>` | Wie `Pipeline`, aber mit `PrepareContextWithCommandLineArguments` statt echter Hardware und ohne `FlashFirmware` – für Builds ohne angeschlossenes Board. |
 
 ## Tests
