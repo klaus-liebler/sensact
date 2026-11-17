@@ -35,8 +35,8 @@ Diese Kopplungen müssen in jedem Fall gelöst werden, egal ob mit ELF-Loader od
 |---|---|---|
 | Board-Init (HAL-Klasse, Busmaster, I2C-Bausteine) | `main/hal/<NODE_ID>/board_init.hh` per Include-Pfad einkompiliert (**seit Schritt 2:** je Board-Typ, Erweiterungs-Chips aus der Konfiguration) | zur Laufzeit gewählt |
 | App-Instanzen | generierte `applicationInitializers.inc`/`glo2LocCmd.inc` als statische C++-Objekte (**seit Schritt 2:** App-Fabrik aus der Stationskonfiguration) | zur Laufzeit angelegt |
-| `eApplicationID` | Enum über *alle* Apps des Hauses, `CNT` dimensioniert Arrays (`statusBuffer`), Namenstabelle einkompiliert; dieselbe Enum steht im ws-Protokoll-Schema | App-ID als `uint16_t` + Namen aus der Konfiguration |
-| Web-UI | `sensactapps.ts` pro Knoten generiert, Bundle in die Firmware eingebettet | weiterhin pro Station generiert, aber zusammen mit der Konfiguration hochgeladen (s. "Web-UI als Teil des Stationspakets"); eingebettet bleibt nur eine Wartungsseite |
+| `eApplicationID` | Enum über *alle* Apps des Hauses, `CNT` dimensioniert Arrays (`statusBuffer`), Namenstabelle einkompiliert; dieselbe Enum steht im ws-Protokoll-Schema (**seit Schritt 2:** nur noch `MASTER`/`NO_APPLICATION`, Namen und Anzahl aus der Konfiguration, ws-Protokoll mit `uint16_t`) | App-ID als `uint16_t` + Namen aus der Konfiguration |
+| Web-UI | `sensactapps.ts` pro Knoten generiert, Bundle in die Firmware eingebettet (**seit Schritt 2:** im Stationspaket, eingebettet nur die Wartungsseite) | weiterhin pro Station generiert, aber zusammen mit der Konfiguration hochgeladen (s. "Web-UI als Teil des Stationspakets"); eingebettet bleibt nur eine Wartungsseite |
 | Runtimeconfig | `NODE_ID`, Hostname, Passwort, `WIFI_ENABLED` … als `#define` (`runtimeconfig.hh`) | aus NVS bzw. der Konfiguration |
 | Board-Zertifikat/-Schlüssel | per `EMBED_TXTFILES` einkompiliert | einmalig ins NVS/eine Partition provisioniert |
 
@@ -113,7 +113,7 @@ optionaler App-Typ `ELF_APP`, der ein `elf_loader`-Modul lädt, das genau eine `
 
 ## Web-UI als Teil des Stationspakets (entschieden 2026-11-17)
 
-Heute steckt die Web-UI (Vite-Bundle, komprimiert ca. 28 KB) per `EMBED_FILES` im
+Bis Schritt 2 steckte die Web-UI (Vite-Bundle, komprimiert ca. 28 KB) per `EMBED_FILES` im
 Firmware-Image, und ihr stationsspezifischer Teil (`sensactapps.ts`, App-Liste mit Typen und
 Namen) wird vom Builder aus dem Hausmodell generiert. Mit der datengetriebenen Basis muss sie
 sich mit jeder neuen Konfiguration ändern können, ohne dass die Basis neu gebaut wird.
@@ -190,6 +190,10 @@ Entschieden: Builder bzw. Editor erzeugen die Web-UI je Station wie heute und li
   Hausmodell.
 
 ## Vorgeschlagene Etappen
+
+Stand 2026-11-17: 0 teilweise (Schemas ja, C#-Generator durch `BinaryEncoder` ersetzt), 1 erledigt,
+2 erledigt bis auf Runtimeconfig/Zertifikat aus NVS, 3–5 erledigt, 6 teilweise (Editor
+erste Version, Paket-Export noch über den Builder), 7 offen.
 
 0. **Schemas** der Hardware- und App-Konfiguration in BestBinaryBuffers festlegen;
    BestBinaryBuffers um einen C#-Generator erweitern (s. "Editor"; Listen in Klassen sind

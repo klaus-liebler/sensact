@@ -64,10 +64,15 @@ GPIO-Busmaster, …) mit der physischen Hardware verdrahtet sind, und welche
 `iHost`-Instanzen (`cApplicationHost`, `cGatewayHost`, `cIoHost`) für diesen Node
 aktiv sind. Details siehe [architecture.md](architecture.md#board-init).
 
-Existiert für die gewünschte `NODE_ID` noch kein solches Verzeichnis, muss es manuell
-neu angelegt werden (bestehendes `main/hal/<ähnliches-Board>/board_init.hh` als
-Vorlage nehmen). Zusätzlich muss `builder/NodeIdBoardTypeCatalog.cs` einen Eintrag
-für die neue `NODE_ID` bekommen (welche `hal_sensact*.hh`-Familie dahintersteckt).
+Für eine **neue Station** mit einem vorhandenen Board-Typ ist kein Code nötig: Station im
+Hausmodell anlegen (`<station id="<NODE_ID>" number="…" board="<BoardType>">` in
+`model/<Haus>.xml`, neue Stationen hinten anfügen), Board per USB vorbereiten und flashen
+(`Pipeline --model <Haus>`). Der Board-Typ der `NODE_ID` kommt aus dem XML
+(`builder/NodeIdBoardTypeCatalog.cs` liest ihn dort; nur `MONITORING` steht dort fest).
+
+Nur für einen **neuen Board-Typ** muss `main/hal/<BoardType>/board_init.hh` von Hand angelegt
+werden (bestehendes Verzeichnis eines ähnlichen Boards als Vorlage), zusammen mit dem
+`<board>`-Eintrag in `model/catalog.xml`.
 
 ## 3. Sensact-spezifisches `sensact.json`
 

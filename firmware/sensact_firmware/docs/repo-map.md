@@ -35,9 +35,11 @@ eigenem Remote.
   [build-process.md](build-process.md)), board-spezifische Secrets/Zertifikate
   unter `%USERPROFILE%\OneDrive - HSOS\esp32_boards\<mac-dir>\` und
   `%USERPROFILE%\OneDrive - HSOS\certificates\`.
-- Der Hausmodell-Codegenerator (welche Apps auf welchem Node, verdrahtet mit
-  welchen Pins, aus C#-Klassen mit IntelliSense-Unterstützung) ist Teil von
-  `builder/` selbst (Phase `GenerateModelFiles`).
+- Das Hausmodell (welche Apps auf welcher Station, verdrahtet mit welchen Ein-/Ausgängen)
+  steht als XML in `model/` und wird im Editor (`editor/`) oder von Hand gepflegt. Import,
+  Prüfungen und Codegenerierung liegen in der Bibliothek `modellib/`, die Builder und Editor
+  gemeinsam nutzen. Auf die Stationen kommt es als Stationspaket (`BuildPackage`), nicht
+  einkompiliert.
 - `sensact_firmware` hat keine Abhängigkeit auf das npm-Paket
   `@klaus-liebler/espidf-vite-secure-build-tools` (wird nur noch von anderen
   Projekten genutzt).

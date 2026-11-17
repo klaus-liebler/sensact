@@ -73,16 +73,19 @@ und wird über die Phase `GenerateModelFiles --model Sattlerstrasse16|Testmodel`
 übersetzt. Import und Codegenerierung (Bibliothek `modellib/`: `ModelGeneration/Xml/HouseXmlImporter.cs`,
 `ModelGeneration/Generator.cs`, `SourceCodeGenerator`, ...) nutzen Builder und Editor gemeinsam.
 
-Schreibt u.a. die `.inc`-Dateien, die `sensact-applicationmodel` direkt
-einbindet, nach `generated/sensact_model/` (Teil des projektlokalen
-`GeneratedRoot`, s. unten). Kopiert danach zusätzlich die beiden ws-protocol-
-Enum-Quellen (`generated/sensact_model/common/applicationIds.enums.cs` /
-`commandTypes.enums.cs`) nach `best_binary_buffers_schema/`
-(`sensact_applicationIds.enums.cs` / `sensact_commandTypes.enums.cs`) – dort
-git-getrackt, damit eine echte Modelländerung als normaler `git diff` sichtbar
-wird, statt still in einem gitignorten Verzeichnis zu verschwinden. Deshalb
-muss `GenerateModelFiles` vor `GenerateBestBinaryBufferFiles` laufen (`Pipeline`
-macht das in der richtigen Reihenfolge).
+Schreibt u.a. die `.inc`-Dateien nach `generated/sensact_model/` (Teil des projektlokalen
+`GeneratedRoot`, s. unten). Seit der datengetriebenen Basis (Schritt 2) bindet die
+ESP32-Firmware davon nur noch die **modellunabhängigen** Dateien unter `common/` ein
+(Kommandos, Events, Dispatch); welche Apps eine Station hat, kommt zur Laufzeit aus der
+Stationskonfiguration im Stationspaket (`BuildStationPackage`, s. Tabelle unten). Die
+stationsspezifischen Dateien (`<NODE_ID>/applicationInitializers.inc` usw.) erzeugt der
+Generator weiter – für die Host-Tests und die STM32-Altfirmware.
+
+Kopiert danach die Enum-Quelle der Kommandos (`generated/sensact_model/common/commandTypes.enums.cs`)
+nach `best_binary_buffers_schema/sensact_commandTypes.enums.cs` (git-getrackt). Die App-IDs
+gehören seit Schritt 2 nicht mehr zum ws-Protokoll (dort `uint16_t`); deshalb muss
+`GenerateModelFiles` vor `GenerateBestBinaryBufferFiles` laufen (`Pipeline` macht das in der
+richtigen Reihenfolge).
 
 ## Generierte Dateien: projektlokal
 
@@ -99,7 +102,10 @@ Alle von `builder` erzeugten Dateien liegen unter `sensact_firmware/generated/`
 | Sensact-Model | `generated/sensact_model/` | `GenerateModelFiles` (s.o.) |
 | `sendCommandImplementation` | `generated/sensact_sendCommandImplementation/` (eigenes npm-Paket) | `GenerateSensactFiles` |
 | `sensactapps` (digitaler Zwilling für Web-UI) | `generated/sensact_appsbuilder/` (eigenes npm-Paket) | `GenerateSensactFiles` |
-| Web-Bundle (komprimiert) | `generated/web/index.compressed.br` | `BuildWebApp`, eingebettet via `main/CMakeLists.txt` (`EMBED_FILES`) |
+| App-Nummern/-Namen für die Web-UI | `generated/sensact_applicationids/` (eigenes npm-Paket) | `GenerateSensactFiles` |
+| Web-Bundle (komprimiert) | `generated/web/index.compressed.br` | `BuildWebApp`; geht als Abschnitt 1 ins Stationspaket (`BuildStationPackage`), **nicht** mehr in die Firmware |
+| Wartungsseite (komprimiert) | `generated/maintenance/index.compressed.br` | `BuildFirmware` aus `main/maintenance/index.html`, eingebettet via `main/CMakeLists.txt` (`EMBED_FILES`) |
+| Stationspaket | `deploy/<NODE_ID>/<NODE_ID>.pkg`, Kopie in `littlefs_filesystem/station.pkg` | `BuildStationPackage` (Web-UI + Stationskonfiguration) |
 | Board-Zertifikat/-Key | `<BoardsDir>\<mac-dir>\certificates\` | `GenerateCertificates`, eingebettet via `main/CMakeLists.txt` (`EMBED_TXTFILES`) |
 
 Cross-Repo-Konsumenten (die npm-Pakete in `npm-packages/@klaus-liebler/*` sowie
