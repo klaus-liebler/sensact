@@ -12,9 +12,8 @@ offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS 
 | E6 | **`cOnOff` mit `initialState=ACTIVE` und Auto-Off** startet *aus* (bewusste Annahme im Code). | So lassen oder "an nach Boot, aus nach Auto-Off-Zeit"? |
 | E7 | **Taster beim Booten gedrückt/klemmt** → ein `TOGGLE` (Flanke gegen den Startwert "losgelassen"). | Startzustand in `Setup()` einlesen? |
 | E8 | **Knoten ohne ESP32-Board-Init**: `SNSCT_L3_TECH_HS_1`, `SNSCT_L1_KTCH_UP`, `SNSCT_L1_LVNG_UP` stehen im Hausmodell, haben aber kein `main/hal/<NODE_ID>/` und keinen Eintrag in `NodeIdBoardTypeCatalog.cs`. | Laufen diese noch mit der STM32-Firmware? Dann hier so vermerken. |
-| E9 | **Modularisierung (zurückgestellt): Listen innerhalb einer App** – BestBinaryBuffers erlaubt in Klassen keine variablen Listen (`cSinglePWM`-Ausgänge, Toggle-Ziele, RGBW-Farben). | Feste Kapazität, BestBinaryBuffers erweitern (Empfehlung) oder eigene Listenelemente? S. [concept-modular-firmware.md](concept-modular-firmware.md) |
-| E10 | **Modularisierung: Format der Hausmodell-Datei** des Editors. | Binär (BestBinaryBuffers) mit Text-Export für Git, oder Hausmodell als Text und nur die Stationsdateien binär? |
-| E11 | **Modularisierung: STM32-Stationen** (hängt mit E8 zusammen). | Alle Knoten auf ESP32, oder muss der Editor auch für STM32 exportieren? |
+| E10 | **Modularisierung/Editor: Hausmodell als eine XML-Datei oder eine pro Station** (+ Katalog). | Pro Station: kleinere Diffs; eine Datei: leichter zu überblicken. S. [concept-modular-firmware.md](concept-modular-firmware.md) |
+| E11 | **STM32-Altknoten (F103/F407)**: Quellcode der Altfirmware liegt nur als 7z-Archiv im Repo; Weg für die Konfiguration L1 (Code-Export, Empfehlung), L2 (datengetrieben) oder L3 (gemeinsame App-Logik)? | Archiv als normale Dateien einchecken? L1/L2/L3? S. Konzept, Abschnitt "STM32-Altknoten" |
 | E12 | **Modularisierung: Absicherung des Uploads** von Basis-Firmware und Konfigurationen. | Web-Login ausreichend, oder Signatur (Secure Boot ist nicht aktiv)? |
 
 ## Offen (technisch)
@@ -34,6 +33,14 @@ offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS 
 | T9 | **Web-UI ohne Typprüfung lokal**: im `web-components-sensact`-Paket ist kein `typescript` installiert, `tsc` lief für die Änderungen vom 2026-11-16 nicht. | `npm-packages` |
 
 ## Erledigt
+
+### 2026-11-17 – Entscheidungen Modularisierung/Editor
+
+- Editor: ASP.NET Core mit Blazor; alle Konfigurationsdaten (Hausmodell und Katalog der
+  Boards/Hardware-Features) als versionierbare XML-Dateien; BestBinaryBuffers nur als
+  Geräteformat. STM32-Altknoten (F103/F407) bleiben und werden berücksichtigt (s. E11).
+- E9: Listen innerhalb einer App → BestBinaryBuffers erweitert (Listen auch in Klassen,
+  BestBinaryBuffers `8aef43f`).
 
 ### 2026-11-16 (2) – Entscheidungen E1–E4 umgesetzt
 
