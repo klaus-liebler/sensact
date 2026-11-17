@@ -12,12 +12,37 @@ Zurzeit keine.
 
 | # | Thema | Betroffen |
 |---|---|---|
-| T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Auffällig: das Image von `SNSCT_L0_TECH_HS_1` ist am 2026-11-17 von 1,31 auf 0,95 MB geschrumpft – es enthält jetzt (passend zu `WIFI_ENABLED=false` im Board-Archiv) nur die Ethernet-Variante des Webmanagers, keinen WLAN-Stack; warum frühere Builds mit derselben Konfiguration größer waren, ist ungeklärt. Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
+| T1 | **Firmware mit den App-Korrekturen vom 2026-11-16/17 ist gebaut (`SNSCT_L0_TECH_HS_1`, `SNSCT_NODE_TERRASSE`, `SNSCT_NODE_SIDEDOOR`), aber noch nicht geflasht und am Objekt erprobt.** `sdkconfig` ist nicht eingecheckt (`.gitignore`), maßgeblich ist `sdkconfig.defaults`; die lokale `sdkconfig` ist älter als die Defaults – bei Gelegenheit löschen und neu erzeugen lassen. Für den OTA-Rollback (T10) muss der **Bootloader einmal per USB** geflasht werden. Die früher ungeklärten Image-Größen (1,31 vs. 0,95 MB) waren ein Build-Fehler: CMake las `config.json` nur beim ersten Konfigurieren, ein Build für ein anderes Board übernahm Board-Init und NODE_ID des zuvor gebauten (behoben, s. Erledigt). Seit Schritt 2 enthält jede Firmware alle App-Typen (die Konfiguration entscheidet zur Laufzeit), daher 1,3–1,6 MB (≥ 18 % frei). Am Gerät prüfen, dass Ethernet und Webinterface laufen. | Firmware |
 | T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
-| T14 | **Stationspaket am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): Firmware mit Paketunterstützung per USB flashen (`Pipeline`), dann `deploy/SNSCT_L0_TECH_HS_1/SNSCT_L0_TECH_HS_1.pkg` über System → Station Package hochladen. Erwartet: Meldung "Stationspaket aktiv", Seite lädt neu; nach Neustart weiter die Paket-Version; ein Paket einer anderen Station/Firmware wird abgelehnt. Außerdem prüfen: OTA und Datei-Endpunkte verlangen jetzt den Login. | Firmware/Webmanager |
+| T14 | **Stationspaket und datengetriebene Basis am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): per USB flashen (`Pipeline --model Sattlerstrasse16`, schreibt Paket und Web-UI gleich ins LittleFS). Erwartet: Log "Station configuration loaded: SNSCT_L0_TECH_HS_1, … apps", alle Taster/Lampen/Rollläden wie bisher, Web-UI mit allen Apps. Dann eine Modelländerung (`BuildPackage`) über System → Station Package hochladen: Gerät startet neu und arbeitet mit der neuen Konfiguration. Paket einer anderen Station/Basis wird abgelehnt; ohne Paket Sicherheitsmodus mit Wartungsseite. OTA und Datei-Endpunkte verlangen den Login. | Firmware/Webmanager |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-17 (5) – Schritt 2: datengetriebene Basis
+
+- Basis-Firmware stationsneutral: App-Fabrik (`sensact-applicationmodel/station_config.cc`) legt
+  die Apps zur Laufzeit aus der Stationskonfiguration an (Abschnitt 2 des Stationspakets, Schema
+  `best_binary_buffers_schema/sensactcfg.cs`), Register `cApplications` statt generierter Tabellen,
+  `eApplicationID` ohne Hausnamen, `eNodeID`/Knotenname aus der Konfiguration, Board-Init je
+  Board-Typ mit Erweiterungs-Chips aus der Konfiguration, Wartungsseite statt eingebetteter Web-UI,
+  Sicherheitsmodus ohne Konfiguration. Details: `docs/concept-modular-firmware.md` (Stand Schritt 2),
+  `docs/architecture.md` ("Stationskonfiguration").
+- BestBinaryBuffers: `Runtime.BinaryEncoder` (C#-Encoder auf dem geparsten Schema) und
+  `SchemaCompiler.Parse`; Rundlauf-Test C# == TS == C++ (byte-gleich).
+- Builder: `StationConfigWriter`, `BuildPackage` (nur Paket nach Modelländerung), `BuildForOta`
+  (Firmware + Paket), `CollectDeployFiles`; Basis-Kennung unabhängig vom Hausmodell.
+- ws-Protokoll: App-IDs als `uint16_t`; Web-UI-Namen aus `@generated/sensact_applicationids`
+  (npm-packages: sensact-base, web-components-sensact angepasst).
+- Host-Tests (161): Fabrik legt für alle ESP32-Stationen von Testmodel und Sattlerstrasse16 genau
+  die Apps des bisherigen Code-Generators an; beschädigte/fremde Konfiguration wird abgelehnt.
+- Behoben, beim Bauen aller Board-Typen gefunden: (1) CMake konfigurierte nach einem Board-Wechsel
+  nicht neu (`config.json` jetzt `CMAKE_CONFIGURE_DEPENDS`) – Builds für ein anderes Board enthielten
+  die Board-Init des vorher gebauten; erklärt die Größen aus T1. (2) `hal_sensactUp3.hh` kompilierte
+  nie (fehlende `PlayNotes`, `I2C_INTERNAL`). (3) Host-Test-CMake erzeugte die Testdaten bei
+  geänderten Builder-Quellen nicht neu. (4) `cApplication` ohne virtuellen Destruktor.
+- Offen: Runtimeconfig/Zertifikat aus NVS (Firmware weiterhin je Gerät gebaut, aber nicht mehr je
+  Hausmodell); `MONITORING` hat keine Stationskonfiguration und meldet sich mit `eNodeID::UNKNOWN`.
 
 ### 2026-11-17 (4) – XML-Hausmodell ist die Quelle der Wahrheit
 

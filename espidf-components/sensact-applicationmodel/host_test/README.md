@@ -38,7 +38,15 @@ bleiben unberührt. Ändern sich Generator oder Testmodel, konfiguriert CMake be
 Build automatisch neu. Ohne .NET-SDK kann man mit `-DSENSACT_MODEL_DIR=<Pfad>` ein vorab
 erzeugtes Verzeichnis angeben.
 
-Die Tests verwenden App-IDs des Testmodells (`ID::BLIND_X1_XX1_42`, …) nur als Namen.
+Die Tests verwenden App-IDs des Testmodells (`ID::BLIND_X1_XX1_42`, …) nur als Namen
+(`SENSACT_WITH_MODEL_APPLICATION_IDS`; die Firmware kennt nur `MASTER`/`NO_APPLICATION`).
+
+Zusätzlich erzeugt der Schritt den C++-Decoder (`wsprotocol_cpp/ws_protocol.hh`) und je
+ESP32-Station die Stationskonfiguration (`station_config/<NODE_ID>.bin`) – für das Testmodel und
+unter `Sattlerstrasse16/` für das echte Hausmodell samt dessen generiertem Code.
+`tests/test_station_config.cc` prüft damit, dass die App-Fabrik für jede dieser Stationen genau
+die Apps anlegt, die der Code-Generator erzeugt hätte, und dass beschädigte Daten abgelehnt
+werden.
 
 ## Aufbau
 

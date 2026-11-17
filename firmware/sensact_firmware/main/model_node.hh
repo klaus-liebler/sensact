@@ -4,10 +4,14 @@
 
 namespace sensact::model
 {
+    // Kennung dieser Station -- zur Laufzeit aus der Stationskonfiguration gesetzt (ApplyStationConfig),
+    // ohne Konfiguration: NODE_ID der Firmware und eNodeID::UNKNOWN.
     class node{
     public:
-        static const char* const NodeDescription;
-        static const sensact::eNodeID NodeID;
-        static const char* const NodeName;
+        static const char* NodeDescription;
+        static sensact::eNodeID NodeID;
+        static const char* NodeName;
+        // nach config::LoadStationConfig aufrufen
+        static void ApplyStationConfig();
     };
 }

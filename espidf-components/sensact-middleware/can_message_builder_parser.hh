@@ -153,7 +153,7 @@ namespace sensact
                 sprintf(charbuf+2*i, "%02x, ", m.Data[i+1]);
             }
             charbuf[2*payloadLen]='\0';
-            LOGI(TAG, "ApplicationCommand (old CAN-ID) to id 0x%02x (%s); command:0x%02x (%s); len:%d; payload: 0x%s", appId, appId<(uint16_t)eApplicationID::CNT?ApplicationNames[appId]:"?", commandId, commandId<sizeof(sensact::CommandNames)/sizeof(sensact::CommandNames[0])?CommandNames[commandId]:"?", payloadLen, charbuf);
+            LOGI(TAG, "ApplicationCommand (old CAN-ID) to id 0x%02x (%s); command:0x%02x (%s); len:%d; payload: 0x%s", appId, sensact::AppName(appId), commandId, commandId<sizeof(sensact::CommandNames)/sizeof(sensact::CommandNames[0])?CommandNames[commandId]:"?", payloadLen, charbuf);
 		}
 
 		uint8_t* GetPayloadStart(CANMessage &m) override{
@@ -298,7 +298,7 @@ namespace sensact
                 sprintf(&charbuf[2*i], "%02X, ", m.Data[i]);
             }
             charbuf[2*m.DataLen]='\0';
-            LOGI(TAG, "ApplicationCommand to id:%s; command:%d; len:%d; payload: 0x%s", sensact::ApplicationNames[appId], commandId, m.DataLen, charbuf);
+            LOGI(TAG, "ApplicationCommand to id:%s; command:%d; len:%d; payload: 0x%s", sensact::AppName(appId), commandId, m.DataLen, charbuf);
 		}
 
 		void TraceEventMessage(CANMessage &m){
@@ -311,7 +311,7 @@ namespace sensact
 				sprintf(&charbuf[2*i], "%02X, ", m.Data[i]);
 			}
             charbuf[2*m.DataLen]='\0';
-            LOGI(TAG, "ApplicationEvent from id:%s; command:%d; len:%d; payload: 0x%s", sensact::ApplicationNames[appId], eventId, m.DataLen, charbuf);
+            LOGI(TAG, "ApplicationEvent from id:%s; command:%d; len:%d; payload: 0x%s", sensact::AppName(appId), eventId, m.DataLen, charbuf);
 		}
 	};
 }

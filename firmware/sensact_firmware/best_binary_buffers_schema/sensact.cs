@@ -1,7 +1,8 @@
-// ws-protocol-Schema fuer den 'sensact'-Namespace (ehemals ns20sensact.fbs). ApplicationId/Command
-// werden von configware generiert (s. sensact_applicationIds.enums.cs/sensact_commandTypes.enums.cs,
-// configware/common/Generator.cs) -- selbes Schema-Namespace "sensact", deshalb hier unqualifiziert
-// referenzierbar. NotifyStatus war im Original Teil der 'Responses'-Union (nicht ausserhalb wie
+// ws-protocol-Schema fuer den 'sensact'-Namespace (ehemals ns20sensact.fbs). Command wird vom Builder
+// generiert (s. sensact_commandTypes.enums.cs) -- selbes Schema-Namespace "sensact", deshalb hier
+// unqualifiziert referenzierbar. App-IDs sind bewusst ushort statt eines generierten Enums: die
+// Basis-Firmware ist stationsneutral, die Nummern und Namen kommen aus der Stationskonfiguration
+// (s. sensactcfg.cs); Namen fuer die Web-UI aus der generierten sensactapps.ts. NotifyStatus war im Original Teil der 'Responses'-Union (nicht ausserhalb wie
 // canmonitor.NotifyCanMessage); als Push ist es aber ein 'Event' (keine Korrelation).
 using BestBinaryBuffers;
 
@@ -25,20 +26,20 @@ public struct StatusPayload
 [BinaryType]
 public struct ApplicationIdValue
 {
-	public ApplicationId Value;
+	public ushort Value;
 }
 
 [BinaryType]
 public struct ResponseStatusItem
 {
-	public ApplicationId Id;
+	public ushort Id;
 	public StatusPayload Status;
 }
 
 [BinaryMessage(MessageKind.Request)]
 public class RequestCommand
 {
-	public ApplicationId Id;
+	public ushort Id;
 	public Command Cmd;
 	public Payload Payload;
 }
@@ -62,7 +63,7 @@ public class RequestStatus
 [BinaryMessage(MessageKind.Event)]
 public class NotifyStatus
 {
-	public ApplicationId Id;
+	public ushort Id;
 	public StatusPayload Status;
 }
 

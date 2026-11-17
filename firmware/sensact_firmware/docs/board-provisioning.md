@@ -46,13 +46,16 @@ camelCase-Feldnamen:
 ## 2. Node-ID / Board-Rolle festlegen
 
 Nicht `board_info.json`, sondern das board-spezifische `sensact.json` (s. Abschnitt 3) legt per
-`node_id` fest, welches Unterverzeichnis unter `main/hal/<NODE_ID>/` zur Build-Zeit eingebunden
-wird (`main/CMakeLists.txt`: `INCLUDE_DIRS "hal/${NODE_ID}"`). `boardVersion` ist rein
+`node_id` die Station fest. Deren Board-Typ steht im Hausmodell (`model/<Haus>.xml`,
+`<station id="…" board="…">`) und bestimmt, welches Unterverzeichnis `main/hal/<BoardType>/` zur
+Build-Zeit eingebunden wird (`HAL_DIR` in `generated/cmake/config.json`, `main/CMakeLists.txt`:
+`INCLUDE_DIRS "hal/${HAL_DIR}"`). Apps und Erweiterungs-Chips kommen nicht aus dem Build, sondern
+aus dem Stationspaket (s. architecture.md, "Stationskonfiguration"). `boardVersion` ist rein
 beschreibend und beeinflusst die `NODE_ID` nicht. `board_name` (Anzeige, Default-Web-Passwort)
 lebt in `sensact.json`, s. Abschnitt 3 – sensact-spezifisch, nicht Teil des
 projektübergreifenden `board_info.json`-Vertrags.
 
-**`main/hal/<NODE_ID>/` wird von Hand gepflegt, es gibt keinen Generator dafür:**
+**`main/hal/<BoardType>/` wird von Hand gepflegt (je Board-Typ einmal, nicht je Station):**
 das Verzeichnis enthält genau eine Datei, `board_init.hh`, die eine Klasse
 `sensact::BoardInit : IBoardInit` (s. `main/hal/board_init_interface.hh`)
 definiert. Sie legt fest, welche `iHAL`-Implementierung (`hal_sensact*.hh`)
@@ -135,5 +138,5 @@ keinen Sinn und ist nicht Teil von `PipelineOffline`.
 
 ## Offene Punkte
 
-- Es gibt keinen automatisierten Weg, ein komplett neues `main/hal/<NODE_ID>/`-
+- Für einen neuen Board-TYP gibt es keinen automatisierten Weg, ein `main/hal/<BoardType>/`-
   Verzeichnis aus einer Vorlage zu erzeugen – das ist reine Handarbeit.

@@ -50,6 +50,8 @@ namespace sensact::hal::SensactUp3
     constexpr i2c_port_t I2C_INTERNAL_IDF{I2C_NUM_0};
     constexpr gpio_num_t I2C_INTERNAL_SCL{GPIO_NUM_10};
     constexpr gpio_num_t I2C_INTERNAL_SDA{GPIO_NUM_9};
+    // Index fuer GetI2CBus/I2CBusmaster (das Board hat genau einen I2C-Bus)
+    constexpr uint8_t I2C_INTERNAL{0};
 
     constexpr std::array<gpio_num_t, 3U> INTERRUPT_LINES{GPIO_NUM_NC, GPIO_NUM_NC,GPIO_NUM_NC,};
 
@@ -163,6 +165,12 @@ namespace sensact::hal::SensactUp3
         ErrorCode IsPlayingMP3(bool& isPlaying) override{
             isPlaying= mp3player->IsEmittingSamples();
             return ErrorCode::OK;
+        }
+
+        ErrorCode PlayNotes(const BUZZER::Note *note) override
+        {
+            (void)note;
+            return ErrorCode::FUNCTION_NOT_AVAILABLE; // kein Summer auf diesem Board
         }
 
         ErrorCode PlayRTTTL(uint8_t volume0_255, const uint8_t *buf, size_t len) override

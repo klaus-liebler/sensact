@@ -144,7 +144,10 @@ internal static class Program
 
 		// Kennung fuer das Stationspaket: die Firmware nimmt nur Pakete mit derselben Kennung an
 		// (s. StationPackage.ComputeCompatId).
-		defines["STATION_COMPAT_ID"] = StationPackage.Hex(StationPackage.ComputeCompatId(nodeId));
+		defines["STATION_COMPAT_ID"] = StationPackage.Hex(StationPackage.ComputeCompatId());
+		// Board-Initialisierung je Board-TYP (main/hal/<HAL_DIR>/board_init.hh); MONITORING ist keine
+		// Station eines Hauses und hat eine eigene.
+		defines["HAL_DIR"] = nodeId == "MONITORING" ? "MONITORING" : ctx.BoardTypeName;
 
 		RuntimeConfigWriter.CreateCppConfigurationHeader(SensactBuildContext.GeneratedRuntimeConfigCppDir, defines);
 		RuntimeConfigWriter.CreateCMakeJsonConfigFile(SensactBuildContext.GeneratedCMakeDir, defines);
@@ -213,6 +216,37 @@ internal static class Program
 		using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Warning));
 		var (mc, ids) = LoadModel("Testmodel");
 		GenerateModelInto(mc, ids, outDir, loggerFactory);
+
+		// Fuer die Tests der App-Fabrik: C++-Decoder (ws_protocol.hh) und je Station die
+		// Stationskonfiguration, mit derselben (nur gelesenen, nicht gespeicherten) ids.txt.
+		var schemaDirs = new[] { ctx.BestBinaryBuffersSchemaDir, ctx.WebmanagerBestBinaryBuffersSchemaDir };
+		var idMap = BestBinaryBuffers.IdMap.Load(Path.Combine(ctx.BestBinaryBuffersSchemaDir, "ids.txt"));
+		var schemaFiles = schemaDirs.SelectMany(d => Directory.GetFiles(d, "*.cs")).ToList();
+		var (cpp, _) = BestBinaryBuffers.SchemaCompiler.Generate(schemaFiles, idMap);
+		Directory.CreateDirectory(Path.Combine(outDir, "wsprotocol_cpp"));
+		File.WriteAllText(Path.Combine(outDir, "wsprotocol_cpp", "ws_protocol.hh"), cpp);
+		var schema = StationConfigWriter.ParseSchema(schemaDirs, idMap);
+		var catalog = LoadCatalog();
+		void WriteConfigs(string modelName, string dir)
+		{
+			var (freshMc, freshIds) = LoadModel(modelName);
+			var configDir = Path.Combine(dir, "station_config");
+			Directory.CreateDirectory(configDir);
+			foreach (var node in freshMc.Model.Nodes.OfType<Klli.Sensact.Model.Xml.XmlStation>()
+				.Where(s => catalog.Boards.TryGetValue(s.BoardType, out var b) && b.Firmware == "esp32"))
+			{
+				File.WriteAllBytes(Path.Combine(configDir, node.NodeName + ".bin"),
+					StationConfigWriter.Encode(schema, freshMc.Model, freshIds, catalog, node.NodeName));
+			}
+		}
+		WriteConfigs("Testmodel", outDir);
+		// Zusaetzlich das echte Hausmodell (unter <out>/Sattlerstrasse16): es nutzt App-Typen, die das
+		// Testmodel nicht hat -- die Fabrik-Tests vergleichen auch dessen ESP32-Stationen mit dem
+		// generierten Code.
+		var houseDir = Path.Combine(outDir, "Sattlerstrasse16");
+		var (houseMc, houseIds) = LoadModel("Sattlerstrasse16");
+		GenerateModelInto(houseMc, houseIds, houseDir, loggerFactory);
+		WriteConfigs("Sattlerstrasse16", houseDir);
 	}
 
 	private static void GenerateModelInto(ModelContainer mc, AppIdTable ids, string outDir, ILoggerFactory loggerFactory)
@@ -237,7 +271,7 @@ internal static class Program
 	{
 		GenerateModelInto(mc, ids, SensactBuildContext.SensactModelGeneratedDir, loggerFactory);
 
-		foreach (var enumFile in new[] { "applicationIds.enums.cs", "commandTypes.enums.cs" })
+		foreach (var enumFile in new[] { "commandTypes.enums.cs" }) // App-IDs bewusst nicht: die Basis ist stationsneutral (s. sensact.cs)
 		{
 			var source = Path.Combine(SensactBuildContext.SensactModelGeneratedDir, "common", enumFile);
 			var dest = Path.Combine(ctx.BestBinaryBuffersSchemaDir, $"sensact_{enumFile}");
@@ -283,6 +317,26 @@ internal static class Program
 	{
 		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
 
+		// App-Nummern und -Namen des Hausmodells fuer die Web-UI. Frueher Teil des ws-Protokolls; das ist
+		// seit der stationsneutralen Basis modellunabhaengig (App-IDs als ushort), die Namen braucht nur
+		// noch die (je Station gebaute, im Stationspaket ausgelieferte) Web-UI.
+		var idsProject = Path.Combine(SensactBuildContext.GeneratedRoot, "sensact_applicationids");
+		Directory.CreateDirectory(idsProject);
+		var idLines = File.ReadAllLines(Path.Combine(SensactBuildContext.SensactModelGeneratedDir, "common", "applicationIds.inc"))
+			.Select(l => l.Trim().TrimEnd(','))
+			.Where(l => l.Length > 0 && !l.StartsWith("CNT=", StringComparison.Ordinal));
+		File.WriteAllText(Path.Combine(idsProject, "applicationIds.ts"),
+			"// Generiert (GenerateSensactFiles) aus dem Hausmodell -- nicht bearbeiten.\n" +
+			"export enum ApplicationId {\n" + string.Concat(idLines.Select(l => $"\t{l.Replace("=", " = ")},\n")) + "}\n");
+		NpmProject.CreateAndInstallLazily(idsProject, new PackageJson
+		{
+			Name = "@generated/sensact_applicationids",
+			Description = "Generated during Build",
+			Author = "Generated",
+			License = "No License",
+			Dependencies = new Dictionary<string, string>(),
+		});
+
 		var sendCommandProject = Path.Combine(SensactBuildContext.GeneratedRoot, "sensact_sendCommandImplementation");
 		TemplateHere(
 			Path.Combine(SensactBuildContext.WebTemplatesDir, "sendCommandImplementation.template.ts"),
@@ -297,6 +351,7 @@ internal static class Program
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
+				["@generated/sensact_applicationids"] = "file:../sensact_applicationids",
 				["@klaus-liebler/sensact-base"] = SensactBuildContext.RelativeFileDependency(sendCommandProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
 			},
 		});
@@ -315,6 +370,7 @@ internal static class Program
 			Dependencies = new Dictionary<string, string>
 			{
 				["@generated/wsprotocol_ts"] = "file:../wsprotocol_ts",
+				["@generated/sensact_applicationids"] = "file:../sensact_applicationids",
 				["@klaus-liebler/sensact-base"] = SensactBuildContext.RelativeFileDependency(appsBuilderProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "sensact-base")),
 				["@klaus-liebler/web-components-sensact"] = SensactBuildContext.RelativeFileDependency(appsBuilderProject, Path.Combine(ctx.NpmPackagesDir, "@klaus-liebler", "web-components-sensact")),
 			},
@@ -330,7 +386,21 @@ internal static class Program
 		Path.Combine(ctx.WebGeneratedDir, "index.compressed.br"));
 
 	[BuildStep]
-	public static void BuildFirmware(IBuildContextEsp32 ctx) => Esp32FirmwareBuildService.Run(ctx);
+	public static void BuildFirmware(IBuildContextEsp32 ctx)
+	{
+		// Wartungsseite (main/maintenance/index.html) brotli-komprimiert einbetten -- die eigentliche Web-UI
+		// ist stationsspezifisch und kommt mit dem Stationspaket (s. main/CMakeLists.txt, EMBED_FILES)
+		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
+		var maintenanceDir = Path.Combine(SensactBuildContext.GeneratedRoot, "maintenance");
+		Directory.CreateDirectory(maintenanceDir);
+		var html = File.ReadAllBytes(Path.Combine(firmwareRoot, "main", "maintenance", "index.html"));
+		using (var output = File.Create(Path.Combine(maintenanceDir, "index.compressed.br")))
+		using (var brotli = new System.IO.Compression.BrotliStream(output, System.IO.Compression.CompressionLevel.SmallestSize))
+		{
+			brotli.Write(html);
+		}
+		Esp32FirmwareBuildService.Run(ctx);
+	}
 
 	[BuildStep]
 	public static void FlashFirmware(IBuildContextEsp32 ctx) => Esp32FlashService.Run(ctx);
@@ -346,20 +416,50 @@ internal static class Program
 		BuildStepRunner.Invoke(ctx, GenerateCertificates);
 		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
 		BuildStepRunner.Invoke(ctx, BuildWebApp);
-		BuildStepRunner.Invoke(ctx, BuildFirmware);
 		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, CollectDeployFiles);
 		BuildStepRunner.Invoke(ctx, FlashFirmware);
 	}
 
-	// Fuer ein Update ueber die Weboberflaeche: baut fuer das AKTIVE Board (board_info.json, also das
-	// zuletzt per Pipeline/PrepareContextWithRealHardware vorbereitete, mit seinen echten Zertifikaten)
-	// Firmware und Stationspaket, ohne zu flashen, und legt beide in deploy/<NODE_ID>/ ab:
-	//   sensact_firmware.bin  -> Weboberflaeche, System, "Over-the-air Firmware Update"
-	//   <NODE_ID>.pkg         -> Weboberflaeche, System, "Stationspaket"
-	// Anders als PipelineOffline (synthetisches Board-Archiv, falsche Zertifikate) fuer echte Geraete geeignet.
+	// Nach einer Aenderung am Hausmodell (Editor): nur das Stationspaket (Konfiguration + Web-UI) fuer
+	// das AKTIVE Board neu bauen, KEINE Firmware -- die Basis-Firmware ist stationsneutral. Ergebnis:
+	// deploy/<NODE_ID>/<NODE_ID>.pkg, hochladen ueber die Weboberflaeche (System, "Station Package").
+	// Beispiel: BuildPackage --model Sattlerstrasse16
+	[BuildStep]
+	public static void BuildPackage(IBuildContextEsp32 ctx)
+	{
+		RequireActiveBoardIsStation(ctx);
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
+		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
+		BuildStepRunner.Invoke(ctx, BuildWebApp);
+		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+	}
+
+	// Nach einer Aenderung an der Basis-Firmware (C++-Code, Schema): Firmware UND Paket fuer das
+	// AKTIVE Board (board_info.json -- das zuletzt per Pipeline/PrepareContextWithRealHardware
+	// vorbereitete, mit seinen echten Zertifikaten), ohne zu flashen, nach deploy/<NODE_ID>/.
+	// Anders als PipelineOffline (synthetisches Board-Archiv, falsche Zertifikate) fuer echte Geraete.
 	// Beispiel: BuildForOta --model Sattlerstrasse16
 	[BuildStep]
 	public static void BuildForOta(IBuildContextEsp32 ctx)
+	{
+		RequireActiveBoardIsStation(ctx);
+		BuildStepRunner.Invoke(ctx, RunHostTests);
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
+		BuildStepRunner.Invoke(ctx, GenerateCertificates);
+		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
+		BuildStepRunner.Invoke(ctx, BuildWebApp);
+		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, CollectDeployFiles);
+	}
+
+	private static void RequireActiveBoardIsStation(IBuildContextEsp32 ctx)
 	{
 		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
 		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
@@ -370,39 +470,60 @@ internal static class Program
 				$"Das aktive Board ist {nodeId}, das ist keine Station von {modelName}. Erst das richtige Board " +
 				"vorbereiten (einmal per USB: Pipeline bzw. PrepareContextWithRealHardware).");
 		}
-		Console.WriteLine($"Baue fuer das aktive Board {nodeId} ({ctx.BoardArchiveDir})");
-		BuildStepRunner.Invoke(ctx, RunHostTests);
-		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
-		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
-		BuildStepRunner.Invoke(ctx, GenerateRuntimeConfig);
-		BuildStepRunner.Invoke(ctx, GenerateCertificates);
-		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
-		BuildStepRunner.Invoke(ctx, BuildWebApp);
-		BuildStepRunner.Invoke(ctx, BuildFirmware);
-		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+		Console.WriteLine($"Aktives Board {nodeId} ({ctx.BoardArchiveDir})");
 	}
 
-	// Stationspaket (Web-UI) fuer das aktive Board aus dem letzten BuildWebApp; legt es zusammen mit
-	// der zuletzt gebauten Firmware in deploy/<NODE_ID>/ ab. Muss nach GenerateRuntimeConfig laufen
-	// (gleiche compatId wie die Firmware).
+	// Stationspaket fuer das aktive Board: Abschnitt 1 Web-UI (aus BuildWebApp), Abschnitt 2
+	// Stationskonfiguration (StationConfigWriter, aus model/<Modell>.xml). Nach deploy/<NODE_ID>/ und
+	// zusaetzlich ins LittleFS-Quellverzeichnis, damit ein USB-Flash (Pipeline) das Geraet gleich mit
+	// Konfiguration startet. Braucht --model.
 	[BuildStep]
 	public static void BuildStationPackage(IBuildContextEsp32 ctx)
 	{
 		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
+		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
 		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
 		var webUi = Path.Combine(ctx.WebGeneratedDir, "index.compressed.br");
 		if (!File.Exists(webUi))
 		{
 			throw new InvalidOperationException($"{webUi} fehlt -- erst BuildWebApp.");
 		}
-		var compatId = StationPackage.ComputeCompatId(nodeId);
+		if (nodeId == "MONITORING")
+		{
+			Console.WriteLine("MONITORING ist keine Station eines Hauses -- kein Stationspaket.");
+			return;
+		}
+
+		var (mc, ids) = LoadModel(modelName);
+		var schemaDirs = new[] { ctx.BestBinaryBuffersSchemaDir, ctx.WebmanagerBestBinaryBuffersSchemaDir };
+		var idMap = BestBinaryBuffers.IdMap.Load(Path.Combine(ctx.BestBinaryBuffersSchemaDir, "ids.txt"));
+		var config = StationConfigWriter.Encode(StationConfigWriter.ParseSchema(schemaDirs, idMap), mc.Model, ids, LoadCatalog(), nodeId);
+		var webUiBytes = File.ReadAllBytes(webUi);
+
+		var compatId = StationPackage.ComputeCompatId();
 		var deployDir = Path.Combine(firmwareRoot, "deploy", nodeId);
 		Directory.CreateDirectory(deployDir);
 		var pkgPath = Path.Combine(deployDir, nodeId + ".pkg");
 		var label = $"{nodeId} {DateTime.Now:yyyy-MM-dd HH:mm}";
-		StationPackage.Write(pkgPath, nodeId, compatId, File.ReadAllBytes(webUi), label);
-		Console.WriteLine($"Stationspaket -> {pkgPath} (compatId {StationPackage.Hex(compatId)[..16]}...)");
+		StationPackage.Write(pkgPath, nodeId, compatId,
+			[(StationPackage.SectionWebUiHtmlBr, webUiBytes), (StationPackage.SectionStationConfig, config)], label);
+		Console.WriteLine($"Stationspaket -> {pkgPath} (Konfiguration {config.Length} Byte, Web-UI {webUiBytes.Length} Byte, compatId {StationPackage.Hex(compatId)[..16]}...)");
 
+		// fuer den ersten USB-Flash: Paket und Web-UI ins LittleFS-Abbild (dort erwartet sie der Webmanager)
+		var littlefs = Path.Combine(firmwareRoot, "littlefs_filesystem");
+		Directory.CreateDirectory(littlefs);
+		File.Copy(pkgPath, Path.Combine(littlefs, "station.pkg"), overwrite: true);
+		File.WriteAllBytes(Path.Combine(littlefs, "webui.br"), webUiBytes);
+	}
+
+	// Kopiert die zuletzt gebaute Firmware nach deploy/<NODE_ID>/ und schreibt eine Anleitung dazu.
+	[BuildStep]
+	public static void CollectDeployFiles(IBuildContextEsp32 ctx)
+	{
+		var nodeId = SensactContextLoader.Load(ctx.BoardArchiveDir).NodeId;
+		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
+		var deployDir = Path.Combine(firmwareRoot, "deploy", nodeId);
+		Directory.CreateDirectory(deployDir);
 		var firmwareBin = Path.Combine(firmwareRoot, "build", "sensact_firmware.bin");
 		if (File.Exists(firmwareBin))
 		{
@@ -410,10 +531,11 @@ internal static class Program
 			Console.WriteLine($"Firmware      -> {Path.Combine(deployDir, "sensact_firmware.bin")}");
 		}
 		File.WriteAllText(Path.Combine(deployDir, "README.txt"),
-			$"Erzeugt {DateTime.Now:yyyy-MM-dd HH:mm:ss} fuer {nodeId}, compatId {StationPackage.Hex(compatId)}\n" +
-			"Reihenfolge beim Update ueber die Weboberflaeche (System):\n" +
-			"1. sensact_firmware.bin unter \"Over-the-air Firmware Update\" (nur noetig, wenn sich Hausmodell oder Firmware geaendert haben; Geraet startet neu)\n" +
-			$"2. {nodeId}.pkg unter \"Stationspaket\" (die Seite laedt sich danach neu)\n");
+			$"Erzeugt {DateTime.Now:yyyy-MM-dd HH:mm:ss} fuer {nodeId}, Basis-Kennung {StationPackage.Hex(StationPackage.ComputeCompatId())}\n" +
+			"Update ueber die Weboberflaeche (System):\n" +
+			$"- Nur das Hausmodell geaendert: {nodeId}.pkg unter \"Station Package\" (Geraet startet neu).\n" +
+			"- Basis-Firmware geaendert: zuerst sensact_firmware.bin unter \"Over-the-air Firmware Update\" (Geraet startet neu;\n" +
+			$"  ein Paket einer anderen Basis wird dabei verworfen -> Sicherheitsmodus), danach {nodeId}.pkg.\n");
 	}
 
 	// Wie Pipeline, aber PrepareContextWithCommandLineArguments (--nodeId) statt
@@ -430,7 +552,8 @@ internal static class Program
 		BuildStepRunner.Invoke(ctx, GenerateCertificates);
 		BuildStepRunner.Invoke(ctx, GenerateSensactFiles);
 		BuildStepRunner.Invoke(ctx, BuildWebApp);
-		BuildStepRunner.Invoke(ctx, BuildFirmware);
 		BuildStepRunner.Invoke(ctx, BuildStationPackage);
+		BuildStepRunner.Invoke(ctx, BuildFirmware);
+		BuildStepRunner.Invoke(ctx, CollectDeployFiles);
 	}
 }

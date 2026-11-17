@@ -1,10 +1,11 @@
 // Stationspaket (s. docs/concept-modular-firmware.md, "Web-UI als Teil des Stationspakets", und das
 // Gegenstueck auf dem Geraet: espidf-component-webmanager/cpp/station_package.hh).
 //
-// Schritt 1: Das Paket enthaelt die Web-UI der Station. Es passt zu genau den Firmwares, die aus
-// demselben generierten Hausmodell und ws-Protokoll gebaut wurden -- das stellt die compatId sicher,
-// die der Builder hier berechnet, in die Firmware einbaut (STATION_COMPAT_ID, s.
-// GenerateRuntimeConfig) und in jedes Paket schreibt.
+// Inhalt: Abschnitt 1 die Web-UI der Station, Abschnitt 2 die Stationskonfiguration (Busse, Apps;
+// StationConfigWriter). Die Basis-Firmware ist stationsneutral; das Paket passt zu jeder Basis mit
+// derselben compatId -- also mit denselben Kommandos, demselben ws-Protokoll und demselben
+// Konfigurationsschema. Das Hausmodell geht NICHT in die Kennung ein: eine Modellaenderung braucht
+// nur ein neues Paket, keine neue Firmware.
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,24 +15,29 @@ public static class StationPackage
 {
 	private static readonly byte[] Magic = "SNSCTPKG"u8.ToArray();
 	private const ushort FormatVersion = 1;
-	private const ushort SectionWebUiHtmlBr = 1;
+	public const ushort SectionWebUiHtmlBr = 1;
+	public const ushort SectionStationConfig = 2;
 	private const int HeaderSize = 128;
 	private const int SectionSize = 48;
 
-	/// <summary>
-	/// SHA-256 ueber alles, was Firmware und Web-UI gemeinsam aus Hausmodell und ws-Protokoll erzeugt
-	/// bekommen: generated/sensact_model/common, generated/sensact_model/&lt;NODE_ID&gt; (ohne die Dateien
-	/// mit Erzeugungszeitpunkt) und generated/wsprotocol_cpp. Gleiche Eingaben -> gleiche Kennung.
-	/// </summary>
-	public static byte[] ComputeCompatId(string nodeId)
+	// Dateien unter generated/sensact_model/common, die vom Hausmodell abhaengen (App-Nummern und
+	// -Namen, Knoten, App-Liste der Web-UI) -- die Basis-Firmware benutzt sie nicht.
+	private static readonly HashSet<string> ModelSpecificCommonFiles = new(StringComparer.OrdinalIgnoreCase)
 	{
-		var model = SensactBuildContext.SensactModelGeneratedDir;
-		var roots = new[]
-		{
-			Path.Combine(model, "common"),
-			Path.Combine(model, nodeId),
-			SensactBuildContext.GeneratedWsProtocolCppDir,
-		};
+		"applicationIds.inc", "applicationIds.fbs.inc", "applicationIds.enums.cs", "applicationNames.inc",
+		"nodeIds.inc", "sensactapps.ts.inc",
+	};
+
+	/// <summary>
+	/// SHA-256 ueber alles, was Basis-Firmware und Paket gemeinsam haben muessen: die
+	/// modellunabhaengigen generierten Dateien (Kommandos, Events, Dispatch) und den
+	/// BestBinaryBuffers-Code (ws-Protokoll, Konfigurationsschema). Gleiche Basis -> gleiche Kennung,
+	/// unabhaengig von Station und Hausmodell.
+	/// </summary>
+	public static byte[] ComputeCompatId()
+	{
+		var common = Path.Combine(SensactBuildContext.SensactModelGeneratedDir, "common");
+		var roots = new[] { common, SensactBuildContext.GeneratedWsProtocolCppDir };
 		using var sha = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
 		foreach (var root in roots)
 		{
@@ -40,13 +46,12 @@ public static class StationPackage
 				throw new InvalidOperationException($"{root} fehlt -- GenerateModelFiles und GenerateBestBinaryBufferFiles muessen vorher laufen.");
 			}
 			foreach (var file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
-				.Where(f => Path.GetFileName(f) is not ("nodeDescription.inc" or "node_descriptor.json"))
+				.Where(f => !(root == common && ModelSpecificCommonFiles.Contains(Path.GetFileName(f))))
 				.OrderBy(f => Path.GetRelativePath(root, f).Replace('\\', '/'), StringComparer.Ordinal))
 			{
 				sha.AppendData(Encoding.UTF8.GetBytes(Path.GetFileName(root) + "/" + Path.GetRelativePath(root, file).Replace('\\', '/') + "\0"));
 				// Zeilenenden normalisieren: dieselben Quellen sollen unabhaengig von Git-Einstellungen dieselbe Kennung geben
-				var text = File.ReadAllBytes(file);
-				sha.AppendData(NormalizeNewlines(text));
+				sha.AppendData(NormalizeNewlines(File.ReadAllBytes(file)));
 				sha.AppendData([0]);
 			}
 		}
@@ -66,34 +71,38 @@ public static class StationPackage
 
 	public static string Hex(byte[] bytes) => Convert.ToHexString(bytes).ToLowerInvariant();
 
-	/// <summary>Schreibt ein Paket mit der Web-UI (index.compressed.br) fuer eine Station.</summary>
-	public static void Write(string path, string nodeId, byte[] compatId, byte[] webUiBr, string label)
+	/// <summary>Schreibt ein Paket mit den angegebenen Abschnitten (Art, Inhalt) fuer eine Station.</summary>
+	public static void Write(string path, string nodeId, byte[] compatId, IReadOnlyList<(ushort Type, byte[] Data)> sections, string label)
 	{
 		var nodeBytes = Encoding.ASCII.GetBytes(nodeId);
 		if (nodeBytes.Length > 31) throw new ArgumentException($"NODE_ID {nodeId} laenger als 31 Zeichen.");
 		var labelBytes = Encoding.UTF8.GetBytes(label);
 		if (labelBytes.Length > 39) labelBytes = labelBytes[..39];
 
-		int headerSize = HeaderSize + SectionSize;
+		int headerSize = HeaderSize + SectionSize * sections.Count;
 		using var ms = new MemoryStream();
 		using var w = new BinaryWriter(ms); // little endian
 		w.Write(Magic);
 		w.Write(FormatVersion);
-		w.Write((ushort)1);                 // sectionCount
+		w.Write((ushort)sections.Count);
 		w.Write((uint)headerSize);
 		w.Write(Pad(nodeBytes, 32));
 		w.Write(compatId);
 		w.Write((ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds());
 		w.Write(Pad(labelBytes, 40));
-		// Abschnitt 1: Web-UI
-		w.Write(SectionWebUiHtmlBr);
-		w.Write((ushort)0);
-		w.Write((uint)headerSize);
-		w.Write((uint)webUiBr.Length);
-		w.Write((uint)0);
-		w.Write(SHA256.HashData(webUiBr));
+		uint offset = (uint)headerSize;
+		foreach (var (type, data) in sections)
+		{
+			w.Write(type);
+			w.Write((ushort)0);
+			w.Write(offset);
+			w.Write((uint)data.Length);
+			w.Write((uint)0);
+			w.Write(SHA256.HashData(data));
+			offset += (uint)data.Length;
+		}
 		if (ms.Length != headerSize) throw new InvalidOperationException("Paketkopf hat falsche Groesse.");
-		w.Write(webUiBr);
+		foreach (var (_, data) in sections) w.Write(data);
 		w.Flush();
 		Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 		File.WriteAllBytes(path, ms.ToArray());

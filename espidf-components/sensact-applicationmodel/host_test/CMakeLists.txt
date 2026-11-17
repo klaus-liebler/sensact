@@ -39,10 +39,16 @@ endforeach()
 if(SENSACT_MODEL_DIR STREQUAL "")
     set(_model_out "${CMAKE_BINARY_DIR}/sensact_model")
     find_program(DOTNET_EXECUTABLE dotnet REQUIRED)
+    get_filename_component(_fw_dir "${SENSACT_BUILDER_DIR}/.." ABSOLUTE)
     file(GLOB_RECURSE _builder_sources CONFIGURE_DEPENDS
-        "${SENSACT_BUILDER_DIR}/ModelGeneration/*.cs"
-        "${SENSACT_BUILDER_DIR}/Models/Testmodel/*.cs"
-        "${SENSACT_BUILDER_DIR}/Program.cs")
+        "${_fw_dir}/modellib/ModelGeneration/*.cs"
+        "${_fw_dir}/model/*.xml"
+        "${_fw_dir}/model/schema/*.xsd"
+        "${_fw_dir}/best_binary_buffers_schema/*.cs"
+        "${SENSACT_BUILDER_DIR}/*.cs")
+    # Bei jeder inhaltlichen Aenderung dieser Dateien neu konfigurieren (und damit neu erzeugen) --
+    # CONFIGURE_DEPENDS allein reagiert nur auf hinzugekommene/geloeschte Dateien.
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_builder_sources})
     message(STATUS "Erzeuge Modell-Dateien fuer Host-Tests -> ${_model_out}")
     execute_process(
         COMMAND "${DOTNET_EXECUTABLE}" run --project "${SENSACT_BUILDER_DIR}" -- GenerateModelFilesForHostTests --out "${_model_out}"
@@ -71,10 +77,11 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # ---------------------------------------------------------------------------------------------
-# Die Apps selbst -- dieselben Quellen wie in ../CMakeLists.txt. Nicht dabei:
-#  - model_applications.cc: instanziiert die Apps eines konkreten Knotens, nicht Teil der Logik
+# Die Apps selbst und die App-Fabrik -- dieselben Quellen wie in ../CMakeLists.txt.
 # ---------------------------------------------------------------------------------------------
 add_library(sensact_apps STATIC
+    "${APPMODEL_DIR}/cApplications.cc"
+    "${APPMODEL_DIR}/station_config.cc"
     "${APPMODEL_DIR}/apps/blind.cc"
     "${APPMODEL_DIR}/apps/blindstimer.cc"
     "${APPMODEL_DIR}/apps/lightbarrier.cc"
@@ -98,7 +105,10 @@ target_include_directories(sensact_apps PUBLIC
     "${ESPIDF_COMPONENTS_DIR}/errorcodes/include"
     "${ESPIDF_COMPONENTS_DIR}/led")
 # _POSIX_THREAD_SAFE_FUNCTIONS: gmtime_r/localtime_r unter MinGW
-target_compile_definitions(sensact_apps PUBLIC _POSIX_THREAD_SAFE_FUNCTIONS SENSACT_HOST_TEST)
+# SENSACT_WITH_MODEL_APPLICATION_IDS: die Tests sprechen Apps des Testmodells mit Namen an
+# (eApplicationID::PUSHB_...); die Firmware kennt nur die Sonderwerte (s. applicationmodel_enums_and_structs.hh)
+target_compile_definitions(sensact_apps PUBLIC _POSIX_THREAD_SAFE_FUNCTIONS SENSACT_HOST_TEST SENSACT_WITH_MODEL_APPLICATION_IDS
+    SENSACT_HOST_TEST_MODEL_DIR="${_model_out}")
 if(MSVC)
     target_compile_options(sensact_apps PRIVATE /W3)
 else()

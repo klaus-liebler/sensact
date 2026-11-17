@@ -50,11 +50,27 @@ Achtung: `GenerateModelFiles --model Testmodel` überschreibt die eingecheckten 
 bzw. wieder mit `--model Sattlerstrasse16` generieren). Für die Host-Tests ist das nicht nötig,
 sie verwenden `GenerateModelFilesForHostTests`.
 
+## Auf die Station bringen
+
+Nach dem Speichern (Editor oder von Hand), mit dem Board der Station als aktivem Board:
+
+```
+dotnet run --project builder -- BuildPackage --model Sattlerstrasse16
+```
+
+Das baut nur das Stationspaket (`deploy/<NODE_ID>/<NODE_ID>.pkg`, Konfiguration + Web-UI) –
+keine Firmware, die ist stationsneutral. Hochladen über die Weboberfläche (System →
+Station Package); die Station startet danach mit der neuen Konfiguration.
+
 ## Neuer App-Typ
 
 1. App in `sensact-applicationmodel` (C++) und `modellib/ModelGeneration/Applications/*Application.cs`
    (Codegenerierung) wie bisher; dort `SentCommands()` passend zu den `ctx->Send...Command()`-Aufrufen
    der C++-App ueberschreiben (prueft, dass die Ziele das Kommando verstehen).
+1a. Konfigurationsklasse in `best_binary_buffers_schema/sensactcfg.cs` (Felder in der Reihenfolge der
+   C++-Konstruktorparameter), Abbildung in `builder/StationConfigWriter.cs` (`Map`) und in der
+   App-Fabrik `sensact-applicationmodel/station_config.cc` (`Create`). Das ändert die Basis:
+   neue Firmware nötig (`BuildForOta`).
 2. Element und Typ in `schema/sensact-house.xsd` (Gruppe `Apps`).
 3. Abbildung Element → Objekt in `modellib/ModelGeneration/Xml/HouseXmlImporter.cs`. Der Editor
    übernimmt den neuen Typ automatisch aus dem XSD.

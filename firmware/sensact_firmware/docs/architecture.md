@@ -30,17 +30,19 @@ main.cc (app_main)
 
 ## Board-Init
 
-Definiert in `main/hal/board_init_interface.hh` (`IBoardInit`) und je
-`main/hal/<NODE_ID>/board_init.hh` (`sensact::BoardInit`). `app_main()` erzeugt
-genau eine Instanz von `sensact::BoardInit : IBoardInit`
-(header-only, board-spezifisch über denselben `hal/${NODE_ID}`-Include-Mechanismus
-wie die restliche HAL-Auswahl). `IBoardInit` definiert drei Methoden:
+Definiert in `main/hal/board_init_interface.hh` (`IBoardInit`) und je **Board-Typ**
+`main/hal/<BoardType>/board_init.hh` (`sensact::BoardInit`), z. B. `main/hal/SensactHsNano3/`.
+Welcher Board-Typ eine Station hat, steht im Hausmodell (`<station board="…">`); der Builder
+schreibt ihn als `HAL_DIR` in `generated/cmake/config.json`, `main/CMakeLists.txt` nimmt
+`hal/${HAL_DIR}` in den Include-Pfad. Ausnahme `MONITORING` (keine Station eines Hauses, eigenes
+Verzeichnis). `app_main()` erzeugt genau eine Instanz von `sensact::BoardInit : IBoardInit`.
+`IBoardInit` definiert drei Methoden:
 
 - `VbusSensePin()` – GPIO für die USB-VBUS-Erkennung (Default: nicht verdrahtet).
 - `CreateHalAndBusmasters(IInitializationContext&, std::vector<AbstractBusmaster*>&)`
-  – erzeugt den konkreten `iHAL*` (z.B. `SensactHsNano3::cHAL`) und die für dieses
-  Board passenden `AbstractBusmaster`-Instanzen (I2C-Peripherie wie PCA9555/PCA9685,
-  GPIO-Busmaster, …).
+  – erzeugt den konkreten `iHAL*` (z.B. `SensactHsNano3::cHAL`) und die Busmaster. Welche
+  PCA9555/PCA9685 an der Station hängen, kommt aus der Stationskonfiguration
+  (`CreateBusmastersFromStationConfig`, s. "Stationskonfiguration" unten).
 - `CreateHosts(IInitializationContext&, iHostContext*, std::vector<iHost*>&)`
   – erzeugt die für diesen Node aktiven `iHost`-Instanzen (typischerweise
   `cApplicationHost`) und trägt sie sowohl in `outHosts` als auch – falls sie
@@ -51,14 +53,11 @@ stellt: Temperatursensor-Handle, `aCANMessageBuilderParser*`, NVS-Partitionsname
 Hostname sowie den Plugin-Vektor (für zusätzliche board-eigene Webmanager-Plugins,
 z.B. Fingerprint/Journal).
 
-`main/hal/<NODE_ID>/` existiert für: `MONITORING`, `SNSCT_L0_TECH_HS_1`,
-`SNSCT_L3_WORK_HS`, `SNSCT_NODE_HS`, `SNSCT_NODE_SIDEDOOR`, `SNSCT_NODE_TERRASSE`,
-`SNSCT_NODE_UP`. Jedes dieser Verzeichnisse enthält ausschließlich `board_init.hh`
-(keine weiteren Dateien) und wird von Hand angelegt/gepflegt – es gibt keinen
-Generator dafür (s. [board-provisioning.md](board-provisioning.md)). Welcher
-physische Board-Typ (`hal_sensact*.hh`) hinter einer `NODE_ID` steht, ist zusätzlich
-in `builder/NodeIdBoardTypeCatalog.cs` hinterlegt (muss manuell synchron gehalten
-werden).
+`main/hal/<BoardType>/` existiert für die Board-Typen des Katalogs (`model/catalog.xml`):
+`SensactHsNano3`, `SensactUpHs`, `SensactUp3`, `SensactUpControl` (verbindet den
+Fingerabdruckleser mit der ersten Fingerprint-App der Konfiguration), `SensactOutdoor`
+(Milight-Empfänger → erste Milight-App), dazu `MONITORING`. Eine neue Station mit einem
+vorhandenen Board-Typ braucht keinen neuen Code.
 
 ## HAL-Board-Varianten (`main/hal/hal_sensact*.hh`)
 
@@ -75,19 +74,32 @@ MCPWM, Temperatursensor). Board-spezifische Ableitungen:
 | `hal_sensactUpHs.hh` | Up HS | 2 Drehencoder, Codec/MAX98357-Audio, USB-VBUS-Sense |
 
 Ein `BoardInit::CreateHalAndBusmasters()` instanziiert genau eine dieser HAL-Klassen
-und verdrahtet dazu passend die Busmaster/Peripherie (z.B. für `SensactHsNano3`:
-vier `PCA9555` + vier `PCA9685` über einen `I2CBusmaster` plus ein
-`DirectGPIOBusmaster`).
+und die Busmaster: `DirectGPIOBusmaster` (Bus 0) und – falls das Board einen I2C-Bus hat –
+einen `I2CBusmaster` mit den PCA9555/PCA9685 aus der Stationskonfiguration (z. B. für
+`SNSCT_L0_TECH_HS_1` vier `PCA9555` + vier `PCA9685`).
 
 ## Sensact-Apps
 
 Jede App erbt von `sensact::apps::cApplication`
 (`sensact-applicationmodel/cApplication.hh`): `Setup(iSensactContext*)`,
 `Loop(iSensactContext*)`, `FillStatus(iSensactContext&, array<uint16_t,4>&)`, plus
-generierte Command-Handler. Die Registry `cApplications::Glo2locCmd[]`/`Glo2locEvt[]`
-bildet `eApplicationID` auf konkrete Instanzen ab (oder `nullptr`, falls die App auf
-einem anderen Node gehostet wird). Alle App-Methoden hängen nur am Interface
+generierte Command-Handler. Alle App-Methoden hängen nur am Interface
 `iSensactContext`, nicht an ESP-IDF-Typen direkt.
+
+### Stationskonfiguration (datengetriebene Basis)
+
+Die Firmware ist **stationsneutral**: welche Apps eine Station hat und mit welchen Parametern,
+steht nicht im Code, sondern in der Stationskonfiguration (Abschnitt 2 des Stationspakets
+`/spiffs/station.pkg`, BestBinaryBuffers-Nachricht `sensactcfg::StationConfig`, Schema
+`best_binary_buffers_schema/sensactcfg.cs`). Beim Start liest `main.cc` sie
+(`station_package::ReadSection`, prüft Station, Basis-Kennung und Prüfsumme), die App-Fabrik
+`sensact::config::LoadStationConfig` (`sensact-applicationmodel/station_config.cc`) legt alle
+Apps an und trägt sie in `cApplications` ein: `Get(id)` (lokale App oder `nullptr`, wenn die App
+auf einer anderen Station läuft), `AppIdCount()`, `AppName(id)`, `FindFirst(eAppType)`.
+`eApplicationID` kennt in der Firmware nur `MASTER`/`NO_APPLICATION`, alle anderen Nummern sind
+Werte ohne Namen; die Namen kommen aus der Konfiguration. Ohne gültige Konfiguration läuft die
+Station im **Sicherheitsmodus**: keine Apps, eingebaute Wartungsseite (`main/maintenance/`),
+Paket- und Firmware-Upload funktionieren.
 
 - Kommandos und Statusbelegung jeder App:
   [sensact-applicationmodel/README.md](../../../espidf-components/sensact-applicationmodel/README.md)
@@ -95,7 +107,7 @@ einem anderen Node gehostet wird). Alle App-Methoden hängen nur am Interface
 - Host-Unit-Tests (GoogleTest, ohne ESP32):
   [sensact-applicationmodel/host_test/README.md](../../../espidf-components/sensact-applicationmodel/host_test/README.md).
   Keine App bindet ESP-IDF ein; Hardware-nahe Anbindungen (z. B. der Milight-Funkempfänger)
-  liegen als Adapter im Board-Init (`main/hal/<NODE_ID>/board_init.hh`).
+  liegen als Adapter im Board-Init (`main/hal/<BoardType>/board_init.hh`).
 
 ## Cross-Cutting
 

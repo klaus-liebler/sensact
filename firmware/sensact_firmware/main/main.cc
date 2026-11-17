@@ -46,6 +46,9 @@
 #include <busmaster.hh>
 #include <model_node.hh>
 #include <runtimeconfig_cpp/runtimeconfig.hh>
+#include <station_package.hh>
+#include <station_config.hh>
+#include "model_node.hh"
 #include <runtimeconfig_cpp/runtimeconfig_defines.hh>
 #include <webmanager_plugins/systeminfo_plugin.hh>
 #include <webmanager_plugins/usersettings_plugin.hh>
@@ -155,6 +158,32 @@ extern "C" void app_main(void)
         canMBP = new cCANMessageBuilderParserNew();
     } else{
         canMBP = new cCANMessageBuilderParserOld();
+    }
+
+    // Stationskonfiguration (Busse, Apps) aus dem Stationspaket im LittleFS -- datengetriebene Basis,
+    // s. docs/concept-modular-firmware.md. Ohne gueltige Konfiguration: Sicherheitsmodus (keine Apps,
+    // Webinterface/OTA/Paket-Upload funktionieren).
+    {
+        static std::vector<uint8_t> stationConfigData; // bleibt bestehen: Namen der Apps zeigen hinein
+        bool found = false;
+        auto r = webmanager::station_package::ReadSection("/spiffs/station.pkg", cfg::NODE_ID, cfg::STATION_COMPAT_ID,
+                                                           webmanager::station_package::SectionType::STATION_CONFIG, stationConfigData, found);
+        std::string error;
+        if (r != webmanager::station_package::CheckResult::OK || !found)
+        {
+            ESP_LOGW(TAG, "No usable station package (%s) -- SAFE MODE without apps. Upload a station package via the web interface.",
+                     r != webmanager::station_package::CheckResult::OK ? webmanager::station_package::ToString(r) : "package has no station configuration");
+        }
+        else if (!sensact::config::LoadStationConfig(stationConfigData.data(), stationConfigData.size(), error))
+        {
+            ESP_LOGE(TAG, "Station configuration rejected: %s -- SAFE MODE without apps", error.c_str());
+        }
+        else
+        {
+            sensact::model::node::ApplyStationConfig();
+            ESP_LOGI(TAG, "Station configuration loaded: %s, %u apps (house \"%s\", created %s)", sensact::config::Station.nodeName.c_str(),
+                     (unsigned)sensact::apps::cApplications::Local().size(), sensact::config::Station.houseName.c_str(), sensact::config::Station.created.c_str());
+        }
     }
 
     IInitializationContext initCtx{tempHandle, canMBP, NVS_PARTITION_NAME, cfg::HOSTNAME, &plugins, usersettingsPlugin};

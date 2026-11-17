@@ -1,4 +1,6 @@
 #pragma once
+// Board-Initialisierung fuer den Board-Typ SensactUpControl (model/catalog.xml): Tuersteuerung mit
+// Fingerabdruckleser. Der Leser wird mit der ersten Fingerprint-App der Stationskonfiguration verbunden.
 #include "../board_init_interface.hh"
 #include "../hal_sensactUpControl.hh"
 #include <r503pro_manager.hh>
@@ -29,9 +31,15 @@ public:
     {
         auto* h = new sensact::hal::SensactUpControl::cHAL(ctx.TempHandle);
         this->hal = h;
-        outBusmasters.push_back(new DirectGPIOBusmaster("GPIO", h));
-
-        auto* fingerprintApp = (sensact::apps::cFingerprint*)sensact::apps::cApplications::Glo2locCmd[(int)sensact::eApplicationID::FINGR_L1_UTIL_1];
+        CreateBusmastersFromStationConfig(h, 0, {GPIO_NUM_NC, GPIO_NUM_NC, GPIO_NUM_NC}, outBusmasters, false);
+        // static_cast genuegt: FindFirst liefert nur Apps mit GetAppType() == FINGR, das ist ausschliesslich cFingerprint
+        auto* fingerprintApp = static_cast<sensact::apps::cFingerprint*>(sensact::apps::cApplications::FindFirst(sensact::eAppType::FINGR));
+        if (fingerprintApp == nullptr)
+        {
+            ESP_LOGW("BoardInit", "No fingerprint app in the station configuration -- fingerprint reader not started");
+            ctx.Plugins->push_back(webmanager::JournalPlugin::GetSingleton());
+            return h;
+        }
 
         nvs_handle_t nvsFingerName2FingerIndex;
         nvs_handle_t nvsFingerIndex2SchedulerName;

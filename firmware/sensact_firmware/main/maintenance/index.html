@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<!--
+  Wartungsseite der Basis-Firmware (s. docs/concept-modular-firmware.md, "Web-UI als Teil des
+  Stationspakets"). Fest in die Firmware eingebaut und ausgeliefert, solange kein gueltiges
+  Stationspaket vorhanden ist -- dann laeuft die Station im Sicherheitsmodus ohne Apps. Bewusst
+  klein und ohne Abhaengigkeiten: Stationspaket und Firmware hochladen, Neustart.
+  Der Builder komprimiert sie nach generated/maintenance/index.compressed.br.
+-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sensact – Wartung</title>
+  <style>
+    :root { --fg: #1d2330; --muted: #6b7280; --line: #dde1e7; --accent: #2563eb; --warn: #b45309; --err: #b91c1c; --ok: #15803d; }
+    @media (prefers-color-scheme: dark) { :root { --fg: #e5e7eb; --muted: #9ca3af; --line: #374151; } body { background: #111827; } }
+    body { font-family: system-ui, "Segoe UI", sans-serif; color: var(--fg); max-width: 640px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .banner { border: 1px solid var(--warn); color: var(--warn); border-radius: 6px; padding: 8px 12px; margin: 12px 0; }
+    section { border: 1px solid var(--line); border-radius: 6px; padding: 12px; margin: 12px 0; }
+    h2 { font-size: 15px; margin: 0 0 8px; }
+    p { margin: 4px 0; }
+    .muted { color: var(--muted); font-size: 13px; }
+    button { padding: 6px 14px; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 4px; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    progress { width: 100%; }
+    .ok { color: var(--ok); } .err { color: var(--err); }
+  </style>
+</head>
+<body>
+  <h1>Sensact – Wartung</h1>
+  <p class="muted">Basis-Firmware ohne Stationspaket</p>
+  <div class="banner">Sicherheitsmodus: Diese Station hat keine (passende) Stationskonfiguration. Es laufen keine Apps,
+    Relais und Ausgänge bleiben aus. Bitte das Stationspaket dieser Station hochladen.</div>
+
+  <section>
+    <h2>1. Stationspaket hochladen</h2>
+    <p class="muted"><code>deploy/&lt;NODE_ID&gt;/&lt;NODE_ID&gt;.pkg</code> aus dem Builder (<code>BuildPackage</code> bzw. <code>BuildForOta</code>).
+      Die Station prüft, ob das Paket zu ihr und zu dieser Firmware passt, und startet danach neu.</p>
+    <div class="row"><input type="file" id="pkg" accept=".pkg"><button id="pkgBtn">Hochladen</button></div>
+    <progress id="pkgProg" value="0" max="100" hidden></progress>
+    <p id="pkgMsg"></p>
+  </section>
+
+  <section>
+    <h2>2. Firmware aktualisieren (optional)</h2>
+    <p class="muted"><code>sensact_firmware.bin</code>. Nach dem Upload startet die Station neu. Danach ggf. das zur
+      neuen Firmware passende Stationspaket hochladen.</p>
+    <div class="row"><input type="file" id="fw" accept=".bin"><button id="fwBtn">Hochladen</button></div>
+    <progress id="fwProg" value="0" max="100" hidden></progress>
+    <p id="fwMsg"></p>
+  </section>
+
+  <script>
+    function upload(url, fileInput, button, progress, msg, doneText) {
+      const file = document.getElementById(fileInput).files[0];
+      const out = document.getElementById(msg);
+      if (!file) { out.className = "err"; out.textContent = "Keine Datei ausgewählt."; return; }
+      const btn = document.getElementById(button), prog = document.getElementById(progress);
+      btn.disabled = true; prog.hidden = false; prog.value = 0; out.className = ""; out.textContent = "Wird hochgeladen …";
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = e => { if (e.lengthComputable) prog.value = 100 * e.loaded / e.total; };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          out.className = "ok"; out.textContent = xhr.responseText + " – " + doneText;
+          setTimeout(() => location.reload(), 12000);
+        } else {
+          btn.disabled = false; out.className = "err";
+          out.textContent = xhr.status === 401 ? "Nicht angemeldet – Seite neu laden und anmelden." : "Abgelehnt: " + xhr.responseText;
+        }
+      };
+      xhr.onerror = () => { btn.disabled = false; out.className = "err"; out.textContent = "Verbindung abgebrochen."; };
+      xhr.open("POST", url);
+      xhr.send(file);
+    }
+    document.getElementById("pkgBtn").onclick = () => upload("/package", "pkg", "pkgBtn", "pkgProg", "pkgMsg", "die Seite lädt in einigen Sekunden neu.");
+    document.getElementById("fwBtn").onclick = () => upload("/ota", "fw", "fwBtn", "fwProg", "die Station startet neu, die Seite lädt in einigen Sekunden neu.");
+  </script>
+</body>
+</html>

@@ -1,4 +1,7 @@
 #pragma once
+// Board-Initialisierung fuer den Board-Typ SensactOutdoor (model/catalog.xml): vier Relais,
+// LED-Leistungsausgang, Milight-Funkempfaenger. Der Empfaenger wird mit der ersten
+// Milight-App der Stationskonfiguration verbunden.
 #include "../board_init_interface.hh"
 #include "../hal_sensactOutdoor.hh"
 #include <apps/milightcontroller.hh>
@@ -32,7 +35,7 @@ public:
     {
         auto* h = new sensact::hal::SensactOutdoor::cHAL(ctx.TempHandle);
         this->hal = h;
-        outBusmasters.push_back(new DirectGPIOBusmaster("GPIO", h));
+        CreateBusmastersFromStationConfig(h, 0, {GPIO_NUM_NC, GPIO_NUM_NC, GPIO_NUM_NC}, outBusmasters, false);
         return h;
     }
 
@@ -43,7 +46,13 @@ public:
         ctx.Plugins->push_back(applicationHost);
 
         using namespace sensact::hal::SensactOutdoor;
-        auto* milightControllerApp = static_cast<sensact::apps::cMilightController*>(sensact::apps::cApplications::Glo2locCmd[(int)sensact::eApplicationID::REMOT_LX_BACK_1]);
+        // static_cast genuegt: nur cMilightController meldet GetAppType() == REMOT
+        auto* milightControllerApp = static_cast<sensact::apps::cMilightController*>(sensact::apps::cApplications::FindFirst(sensact::eAppType::REMOT));
+        if (milightControllerApp == nullptr)
+        {
+            ESP_LOGI("BoardInit", "No milight app in the station configuration -- milight receiver not started");
+            return;
+        }
 
         const uint8_t CONFIG_REGISTER_DEFAULT_VALUE_FOR_MILIGHT{0b00110000}; // mask TX_DS, mask MAX_RT, disable CRC, CRC data len=1
         auto* nrf24 = new Nrf24Receiver(CONFIG_REGISTER_DEFAULT_VALUE_FOR_MILIGHT, P::NRF_CE, P::NRF_IRQ);

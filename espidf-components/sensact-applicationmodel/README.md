@@ -3,8 +3,11 @@
 Eine *App* ist die kleinste adressierbare Einheit des Systems (Taster, Rollladen, Dimmer, …),
 eindeutig über ihre `eApplicationID`. Welche App auf welchem Knoten läuft und wie sie verdrahtet
 ist, beschreibt das Hausmodell
-(`firmware/sensact_firmware/model/Sattlerstrasse16.xml`, s. dortige README); daraus werden die `.inc`-Dateien erzeugt, die
-dieses Verzeichnis einbindet (s. `firmware/sensact_firmware/docs/build-process.md`).
+(`firmware/sensact_firmware/model/Sattlerstrasse16.xml`, s. dortige README). Die Firmware legt die
+Apps einer Station **zur Laufzeit** an: `station_config.cc` liest die Stationskonfiguration
+(Abschnitt 2 des Stationspakets, Schema `best_binary_buffers_schema/sensactcfg.cs`) und trägt die
+Apps in `cApplications` ein (`Get(id)`, `AppName(id)`, `FindFirst(type)`). Aus dem generierten
+Verzeichnis kommen nur noch modellunabhängige Dateien (Kommandos, Events, Dispatch).
 
 Diese Seite ist die **verbindliche Beschreibung von Kommandos und Statusmeldungen** der Apps.
 Wer eine App ändert oder eine Bedienoberfläche dafür baut (`npm-packages/@klaus-liebler/web-components-sensact/sensactapps_base.ts`),

@@ -76,10 +76,14 @@ namespace sensact::test
 namespace sensact
 {
     inline void PrintTo(eCommandType c, std::ostream *os) { *os << CommandNames[(uint16_t)c]; }
+    // Namen des Testmodells (die Firmware holt Namen zur Laufzeit aus der Stationskonfiguration)
+    inline const char *const TestmodelAppNames[]{
+#include <common/applicationNames.inc>
+    };
     inline void PrintTo(eApplicationID a, std::ostream *os)
     {
         if ((uint16_t)a < (uint16_t)eApplicationID::CNT)
-            *os << ApplicationNames[(uint16_t)a];
+            *os << TestmodelAppNames[(uint16_t)a];
         else
             *os << "AppId(" << (uint16_t)a << ")";
     }

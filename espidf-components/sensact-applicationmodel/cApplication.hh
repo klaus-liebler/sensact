@@ -17,6 +17,9 @@ namespace sensact::apps
         cApplication(eApplicationID id) : id(id)
         {
         }
+        // Apps werden zur Laufzeit von der Fabrik angelegt (s. station_config.hh) und ueber den
+        // Basiszeiger wieder freigegeben.
+        virtual ~cApplication() = default;
         virtual eAppType GetAppType() = 0; //Vorteil davon, dass das als Methode und nicht als Eigenschaft des Objektes gespreichert wird: kein RAM-Verbrauch
         virtual eAppCallResult Setup(iSensactContext* ctx) = 0;
         virtual eAppCallResult Loop(iSensactContext* ctx) = 0;

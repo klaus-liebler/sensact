@@ -12,6 +12,8 @@ namespace Klli.Sensact.Model.Xml;
 public sealed class XmlStation(ushort nodeId, string nodeName, string boardType) : Node(nodeId, nodeName)
 {
 	public string BoardType { get; } = boardType;
+	/// <summary>Verbaute Erweiterungs-Chips (Reihenfolge = Chip-Index je Typ und Bus)</summary>
+	public IReadOnlyList<ExtensionInstance> Extensions { get; init; } = [];
 }
 
 /// <summary>
@@ -76,10 +78,10 @@ public sealed class HouseXmlImporter
 		foreach (var s in house.Elements("station"))
 		{
 			string board = (string)s.Attribute("board")!;
-			var station = new XmlStation((ushort)(int)s.Attribute("number")!, (string)s.Attribute("id")!, board);
 			var extensions = s.Elements("extension").Select(e => new ExtensionInstance(
 				(string)e.Attribute("name")!, (string)e.Attribute("type")!, (string)e.Attribute("bus")!,
 				byte.Parse(((string)e.Attribute("address")!)[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture))).ToList();
+			var station = new XmlStation((ushort)(int)s.Attribute("number")!, (string)s.Attribute("id")!, board) { Extensions = extensions };
 			var io = new IoAddressing(catalog, board, extensions);
 			foreach (var a in s.Elements().Where(e => e.Name != "setting" && e.Name != "extension"))
 			{

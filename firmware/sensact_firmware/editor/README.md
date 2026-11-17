@@ -30,8 +30,9 @@ dotnet run --project editor_tests    # Selbsttest der Editor-Logik auf einer Kop
 - Namen (`id`) und Nummern von Apps ändern – Nummern bewusst nie, Umbenennen mit Nachziehen
   aller Verweise ist möglich, aber noch nicht gebaut.
 - Stationen und Erweiterungen anlegen/bearbeiten (bis dahin im XML).
-- Code-Export/Upload auf die Geräte aus dem Editor heraus (bis dahin Builder:
-  `GenerateModelFiles` usw.).
+- Paket bauen und auf die Geräte laden aus dem Editor heraus (bis dahin:
+  `dotnet run --project builder -- BuildPackage --model <Haus>` und Upload über die
+  Weboberfläche, s. `model/README.md`).
 
 Aufbau: `Services/AppSchema.cs` (Formularbeschreibung aus dem XSD),
 `Services/HouseModelService.cs` (Laden, Ändern, Prüfen, Speichern),

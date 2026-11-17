@@ -29,7 +29,7 @@ void cApplicationHost::OnTimeUpdate(webmanager::iWebmanagerCallback *callback){
 
 webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestCommand::Payload& req){
     const uint16_t reqId = (uint16_t)req.id;
-    const char* reqName = reqId < (uint16_t)eApplicationID::CNT ? sensact::ApplicationNames[reqId] : "INVALID_APP_ID";
+    const char* reqName = reqId < sensact::apps::cApplications::AppIdCount() ? sensact::AppName(reqId) : "INVALID_APP_ID";
     ESP_LOGI(TAG, "WEB CMD target=%s(%u) cmd=%u payloadLen=%u", reqName, reqId, (uint16_t)req.cmd, (uint16_t)req.payload.len);
     CommandMessage message{
         (sensact::eApplicationID)reqId,
@@ -43,13 +43,15 @@ webmanager::eMessageReceiverResult cApplicationHost::handleRequestCommand(WsProt
 }
 
 webmanager::eMessageReceiverResult cApplicationHost::handleRequestStatus(WsProtocol::Responder& reply, const WsProtocol::sensact::RequestStatus::Payload& req){
-    static uint8_t states_scratch[(size_t)eApplicationID::CNT * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE];
+    // hoechstens so viele Eintraege, wie ResponseStatus aufnehmen kann ([BinaryMaxItemCount(128)] in sensact.cs)
+    static constexpr size_t MAX_STATES = 128;
+    static uint8_t states_scratch[MAX_STATES * WsProtocol::sensact::ResponseStatusStates_ELEMENT_SIZE];
     size_t count = 0;
-    for(size_t i=0;i<req.idsCount && count < (size_t)eApplicationID::CNT; i++){
+    for(size_t i=0;i<req.idsCount && count < MAX_STATES; i++){
         WsProtocol::sensact::ApplicationIdValue idVal{};
         if (!WsProtocol::sensact::DecodeRequestStatusIdsElementAt(req.idsData, i, idVal)) continue;
         uint16_t id = (uint16_t)idVal.value;
-        if (id >= (uint16_t)eApplicationID::CNT) continue;
+        if (id >= this->statusBuffer.size()) continue;
         auto &state = this->statusBuffer[id];
         WsProtocol::sensact::ResponseStatusItem item{};
         item.id = idVal.value;
@@ -119,7 +121,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         
         if(this->webmanager_callback!=nullptr){
             WsProtocol::sensact::NotifyStatus::Payload notify{};
-            notify.id = static_cast<WsProtocol::sensact::ApplicationId>(sourceApp);
+            notify.id = (uint16_t)sourceApp;
             for (size_t k=0;k<4;k++) notify.status.data[k] = payload[k];
             uint8_t buf[32];
             size_t len = WsProtocol::sensact::NotifyStatus::Encode(notify, buf, sizeof(buf));
@@ -139,14 +141,14 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         {
             return;
         }
-        if ((uint16_t)destinationApp >= (uint16_t)eApplicationID::CNT)
+        if ((uint16_t)destinationApp >= sensact::apps::cApplications::AppIdCount())
         {
             LOGE(TAG, "Trying to send to an invalid application id %i", (uint16_t)destinationApp);
             return;
         }
 
-        sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[(uint16_t)destinationApp];
-        ESP_LOGI(TAG, "CMD DISPATCH target=%s(%u) cmd=%u local=%s payloadLen=%u", sensact::ApplicationNames[(uint16_t)destinationApp], (uint16_t)destinationApp, (uint16_t)commmandType, app != nullptr ? "true" : "false", payloadLength);
+        sensact::apps::cApplication *const app = sensact::apps::cApplications::Get(destinationApp);
+        ESP_LOGI(TAG, "CMD DISPATCH target=%s(%u) cmd=%u local=%s payloadLen=%u", sensact::AppName((uint16_t)destinationApp), (uint16_t)destinationApp, (uint16_t)commmandType, app != nullptr ? "true" : "false", payloadLength);
         if (app != nullptr)
         {
             // only in this case, the message can be processed local; no need to send it to the CAN bus
@@ -166,7 +168,7 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
         {
             return;
         }
-        if ((uint16_t)sourceApp >= (uint16_t)eApplicationID::CNT)
+        if ((uint16_t)sourceApp >= sensact::apps::cApplications::AppIdCount())
         {
             LOGE(TAG, "Trying to send to an invalid application id %i", (uint16_t)sourceApp);
             return;
@@ -318,21 +320,22 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
 
     ErrorCode cApplicationHost::Setup(iHostContext &ctx)
     {
-        // TODO maybe, start at "1" here, because "0" was the global master application in early stages of this project
-        for (uint16_t appId = 0; appId < (uint16_t)eApplicationID::CNT; appId++)
+        // Groesse aus der Stationskonfiguration (cApplications); ohne Konfiguration keine Apps (Sicherheitsmodus)
+        this->statusBuffer.assign(sensact::apps::cApplications::AppIdCount(), std::array<uint16_t, 4>{});
+        for (uint16_t appId = 0; appId < sensact::apps::cApplications::AppIdCount(); appId++)
         {
             this->statusBuffer[appId].fill(0xFFFF); //for all apps, even for the nonlocal.  fill with 0xFFFF, so that we can see, if the app has provided a status or not
-            sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::cApplications::Get(appId);
             if (!app) continue;
             this->localAppIds.push_back(appId);
             sensact::eAppCallResult appResult = app->Setup(this);
             if ((uint8_t)appResult < (uint8_t)eAppCallResult::GENERIC_ERROR)
             {
-                LOGI(TAG, "%s App successfully configured", sensact::ApplicationNames[appId]);
+                LOGI(TAG, "%s App successfully configured", sensact::AppName(appId));
             }
             else
             {
-                LOGE(TAG, "%s Error while configure app: %s", sensact::ApplicationNames[appId], eAppCallResultStr[(int)appResult]);
+                LOGE(TAG, "%s Error while configure app: %s", sensact::AppName(appId), eAppCallResultStr[(int)appResult]);
             }
             //Too many messages! statusBuffer = new uint8_t[8]; // only for one single Application
             //statusBuffer[0] = (uint8_t)appResult;
@@ -373,13 +376,13 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
             if (sensact::config::TRACE_COMMANDS)
                 canMBP->TraceCommandMessage(m);
             canMBP->ParseApplicationCommandMessageId(m, appId, commandType);
-            if (appId >= (uint16_t)eApplicationID::CNT)
+            if (appId >= sensact::apps::cApplications::AppIdCount())
             {
                 LOGE(TAG, "Received ApplicationCommand. Unknown target applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            ESP_LOGI(TAG, "CAN CMD target=%s(%u) cmd=%u", sensact::ApplicationNames[appId], appId, commandType);
-            app = sensact::apps::cApplications::Glo2locCmd[appId];
+            ESP_LOGI(TAG, "CAN CMD target=%s(%u) cmd=%u", sensact::AppName(appId), appId, commandType);
+            app = sensact::apps::cApplications::Get(appId);
             if (app != nullptr)
             {
                 this->OnApplicationCommand(app, (eCommandType)commandType, canMBP->GetPayloadStart(m), canMBP->GetPayloadLen(m));
@@ -390,12 +393,12 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
             if (sensact::config::TRACE_EVENTS)
                 canMBP->TraceEventMessage(m);
             canMBP->ParseApplicationEventMessageId(m, appId, eventId);
-            if (appId >= (uint16_t)eApplicationID::CNT)
+            if (appId >= sensact::apps::cApplications::AppIdCount())
             {
                 LOGE(TAG, "Received ApplicationEvent. Unknown source applicationID %i", appId);
                 return ErrorCode::INVALID_APPLICATION_ID;
             }
-            app = sensact::apps::cApplications::Glo2locEvt[appId];
+            app = nullptr; // Events werden (noch) nicht ausgewertet, s. known-issues T7
             if (app != nullptr)
             {
                 LOGE(TAG, "Received ApplicationEvent, but this is not yet implemented");
@@ -428,15 +431,15 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                 continue;
             }
             u16 appId = this->localAppIds[i];
-            sensact::apps::cApplication *const app = sensact::apps::cApplications::Glo2locCmd[appId];
+            sensact::apps::cApplication *const app = sensact::apps::cApplications::Get(appId);
             eAppCallResult appResult = app->Loop(this);
             this->appNeedsFastLoop[i] = app->NeedsFastLoop();
             if ((uint8_t)appResult >=(uint8_t)eAppCallResult::GENERIC_ERROR)
             {
-                ESP_LOGW(TAG, "%s: Error %s happened during loop ->Publish!", sensact::ApplicationNames[appId], eAppCallResultStr[(int)appResult]);
+                ESP_LOGW(TAG, "%s: Error %s happened during loop ->Publish!", sensact::AppName(appId), eAppCallResultStr[(int)appResult]);
                 auto fillStatusResult=app->FillStatus(*this, this->statusBuffer[appId]);
                 if((uint8_t)fillStatusResult>=(uint8_t)eFillStatusResult::GENERIC_ERROR){
-                    LOGW(TAG, "%s: Raised FillStatusResult %s", sensact::ApplicationNames[appId], eFillStatusResultStr[(int)fillStatusResult]);
+                    LOGW(TAG, "%s: Raised FillStatusResult %s", sensact::AppName(appId), eFillStatusResultStr[(int)fillStatusResult]);
                 }else if(fillStatusResult!=eFillStatusResult::NO_STATUS){
                     PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::ERROR_ON_CYCLIC, this->statusBuffer[appId]);
                 }
@@ -447,10 +450,10 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                 // Something interesting happened. Report everybody!
                 auto fillStatusResult=app->FillStatus(*this, this->statusBuffer[appId]);
                 if((uint8_t)fillStatusResult>=(uint8_t)eFillStatusResult::GENERIC_ERROR){
-                    LOGW(TAG, "%s raised FillStatusResult %s while publishing because of %s.", sensact::ApplicationNames[appId], eFillStatusResultStr[(int)fillStatusResult], eAppCallResultStr[(int)appResult]);
+                    LOGW(TAG, "%s raised FillStatusResult %s while publishing because of %s.", sensact::AppName(appId), eFillStatusResultStr[(int)fillStatusResult], eAppCallResultStr[(int)appResult]);
                 }else if(fillStatusResult!=eFillStatusResult::NO_STATUS){
-                    ESP_LOGI(TAG, "%s: Something insteresting happened, namely (%s) -> Publish!", sensact::ApplicationNames[appId], eAppCallResultStr[(int)appResult]);
-                    ESP_LOGI(TAG, "%s: status=[%u,%u,%u,%u]", sensact::ApplicationNames[appId], (uint32_t)this->statusBuffer[appId][0], (uint32_t)this->statusBuffer[appId][1], (uint32_t)this->statusBuffer[appId][2], (uint32_t)this->statusBuffer[appId][3]);
+                    ESP_LOGI(TAG, "%s: Something insteresting happened, namely (%s) -> Publish!", sensact::AppName(appId), eAppCallResultStr[(int)appResult]);
+                    ESP_LOGI(TAG, "%s: status=[%u,%u,%u,%u]", sensact::AppName(appId), (uint32_t)this->statusBuffer[appId][0], (uint32_t)this->statusBuffer[appId][1], (uint32_t)this->statusBuffer[appId][2], (uint32_t)this->statusBuffer[appId][3]);
                     PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::CHANGED, this->statusBuffer[appId]);
                 }
                 
@@ -460,9 +463,9 @@ ErrorCode cApplicationHost::OnApplicationCommand(sensact::apps::cApplication *ap
                 //This app is the one that is asked for pulish the next regular status
                 auto fillStatusResult=app->FillStatus(*this, this->statusBuffer[appId]);
                 if((uint8_t)fillStatusResult>=(uint8_t)eFillStatusResult::GENERIC_ERROR){
-                    LOGW(TAG, "%s raised FillStatusResult %s while pulishing regular status.", sensact::ApplicationNames[appId], eFillStatusResultStr[(int)fillStatusResult]);
+                    LOGW(TAG, "%s raised FillStatusResult %s while pulishing regular status.", sensact::AppName(appId), eFillStatusResultStr[(int)fillStatusResult]);
                 }else if(fillStatusResult!=eFillStatusResult::NO_STATUS){
-                    LOGD(TAG, "%s is asked to publish the next regular status with success", sensact::ApplicationNames[appId]);
+                    LOGD(TAG, "%s is asked to publish the next regular status with success", sensact::AppName(appId));
                     PublishApplicationStatus((eApplicationID)appId, eApplicationStatus::REGULAR_STATUS, this->statusBuffer[appId]);
                 }
                 FindNextStatusApp();

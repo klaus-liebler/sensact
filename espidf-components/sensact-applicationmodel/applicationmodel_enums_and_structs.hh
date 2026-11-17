@@ -3,16 +3,25 @@
 
 namespace sensact
 {
+    // App-Nummer. Die Basis-Firmware ist stationsneutral: welche Apps es gibt, steht in der
+    // Stationskonfiguration (s. cApplications, station_config.cc) -- das Enum kennt deshalb nur die
+    // festen Sonderwerte; alle anderen Nummern sind gueltige Werte ohne eigenen Namen.
+    // Mit SENSACT_WITH_MODEL_APPLICATION_IDS (nur Host-Tests) enthaelt es zusaetzlich die Namen des
+    // Testmodells aus dem generierten applicationIds.inc.
     enum class eApplicationID : uint16_t
     {
+#ifdef SENSACT_WITH_MODEL_APPLICATION_IDS
 #include <common/applicationIds.inc>
+#else
+        MASTER = 0,
+        NO_APPLICATION = 0xFFFF, // Ziel "keine App": es wird keine Nachricht versendet
+#endif
         EXTERNAL_SOURCE = 0xFFFE, // Wenn diese AppId als Quelle angegeben wird, dann kommt die Nachricht irgendwie "von außen"
-        //NO_APPLICATION = 0xFFFF,          // Wenn diese Ziel-AppId angegeben wird, soll keine Nachricht versendet werden -->diese ID kommt schon über das INC-file rein
     };
 
-    const char * const ApplicationNames[]{
-#include <common/applicationNames.inc>
-    };
+    // Name einer App (aus der Stationskonfiguration), "?" fuer unbekannte Nummern. Definiert in cApplications.cc.
+    const char *AppName(uint16_t id);
+    inline const char *AppName(eApplicationID id) { return AppName((uint16_t)id); }
 
     enum class eApplicationStatus : uint8_t
     {
@@ -61,9 +70,10 @@ namespace sensact
   #include "applicationmodel_applicationTypes.inc"
     };
 #undef _
+    // Knotennummer (Position der Station im Hausmodell), zur Laufzeit aus der Stationskonfiguration
     enum class eNodeID : uint16_t
     {
-#include <common/nodeIds.inc>
+        UNKNOWN = 0xFFFF,
     };
 
     enum class eCommandType : uint16_t

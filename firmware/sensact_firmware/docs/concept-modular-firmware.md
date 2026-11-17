@@ -33,8 +33,8 @@ Diese Kopplungen müssen in jedem Fall gelöst werden, egal ob mit ELF-Loader od
 
 | Kopplung | Heute | Nötig |
 |---|---|---|
-| Board-Init (HAL-Klasse, Busmaster, I2C-Bausteine) | `main/hal/<NODE_ID>/board_init.hh` per Include-Pfad einkompiliert | zur Laufzeit gewählt |
-| App-Instanzen | generierte `applicationInitializers.inc`/`glo2LocCmd.inc` als statische C++-Objekte | zur Laufzeit angelegt |
+| Board-Init (HAL-Klasse, Busmaster, I2C-Bausteine) | `main/hal/<NODE_ID>/board_init.hh` per Include-Pfad einkompiliert (**seit Schritt 2:** je Board-Typ, Erweiterungs-Chips aus der Konfiguration) | zur Laufzeit gewählt |
+| App-Instanzen | generierte `applicationInitializers.inc`/`glo2LocCmd.inc` als statische C++-Objekte (**seit Schritt 2:** App-Fabrik aus der Stationskonfiguration) | zur Laufzeit angelegt |
 | `eApplicationID` | Enum über *alle* Apps des Hauses, `CNT` dimensioniert Arrays (`statusBuffer`), Namenstabelle einkompiliert; dieselbe Enum steht im ws-Protokoll-Schema | App-ID als `uint16_t` + Namen aus der Konfiguration |
 | Web-UI | `sensactapps.ts` pro Knoten generiert, Bundle in die Firmware eingebettet | weiterhin pro Station generiert, aber zusammen mit der Konfiguration hochgeladen (s. "Web-UI als Teil des Stationspakets"); eingebettet bleibt nur eine Wartungsseite |
 | Runtimeconfig | `NODE_ID`, Hostname, Passwort, `WIFI_ENABLED` … als `#define` (`runtimeconfig.hh`) | aus NVS bzw. der Konfiguration |
@@ -159,14 +159,35 @@ Entschieden: Builder bzw. Editor erzeugen die Web-UI je Station wie heute und li
   `GET /webui/version` liefert die aktive Version (`builtin` oder Kennung); das Cookie `webui`
   sagt der Seite, welche sie ist. Nach dem Upload trennt das Gerät die WebSocket-Verbindung,
   die Seite verbindet sich neu, vergleicht die Version und lädt sich neu.
-- Wartungsseite/Rückfallebene ist vorerst die vollständige, in die Firmware eingebaute Web-UI
-  (passt immer zu ihrer Firmware). Eine eigene kleine Wartungsseite folgt mit Schritt 2, wenn
-  die eingebaute Oberfläche die Apps nicht mehr kennt.
 - Builder: `BuildForOta --model <Name>` legt Firmware und Paket für das aktive Board in
   `deploy/<NODE_ID>/` ab.
-- Solange die Konfiguration einkompiliert ist, braucht eine Modelländerung eine neue Firmware
-  (OTA) und danach das dazu passende Paket; reine Änderungen an der Web-UI (Komponenten,
-  Darstellung) nur das Paket.
+
+**Stand 2026-11-17 – Schritt 2 umgesetzt (datengetriebene Basis, Etappen 2–5):**
+
+- Die Basis-Firmware ist stationsneutral. Apps und Erweiterungs-Chips kommen aus der
+  Stationskonfiguration (Abschnitt 2 des Pakets, `best_binary_buffers_schema/sensactcfg.cs`),
+  geschrieben vom Builder (`StationConfigWriter`, kodiert mit dem neuen
+  `BestBinaryBuffers.Runtime.BinaryEncoder`), gelesen von der App-Fabrik
+  (`sensact-applicationmodel/station_config.cc`) beim Start. Host-Tests vergleichen für alle
+  ESP32-Stationen von Testmodel und Sattlerstrasse16, dass die Fabrik genau die Apps anlegt, die
+  der bisherige Code-Generator erzeugt hätte (gleiche Nummern, Namen, Typen).
+- `compatId` hängt nur noch an der Basis (modellunabhängige generierte Dateien:
+  Kommandos/Events/Dispatch; BestBinaryBuffers-Code: ws-Protokoll und Konfigurationsschema),
+  nicht mehr am Hausmodell. **Eine Modelländerung braucht nur ein neues Paket**
+  (`BuildPackage --model <Name>`), keine neue Firmware; nachgewiesen: Modell geändert →
+  neues Paket, gleiche Kennung, Firmware nicht neu gebaut.
+- Nach dem Upload eines Pakets mit Konfiguration startet das Gerät neu (Apps werden beim Start
+  angelegt).
+- ws-Protokoll mit App-IDs als `uint16_t`; Namen für die Web-UI als generiertes TypeScript-Enum
+  (`@generated/sensact_applicationids`), nicht mehr im Protokoll.
+- Board-Initialisierung je Board-Typ (`main/hal/<BoardType>/`), nicht mehr je Station.
+- Fest eingebettet ist nur noch die Wartungsseite (`main/maintenance/index.html`):
+  Sicherheitsmodus ohne Apps, Paket- und Firmware-Upload.
+- Erster USB-Flash: `BuildStationPackage` legt Paket und Web-UI auch ins LittleFS-Abbild, die
+  Station startet also gleich mit Konfiguration.
+- Noch nicht umgesetzt aus Etappe 2: Runtimeconfig und Board-Zertifikat aus NVS. Die Firmware
+  wird deshalb weiterhin je Gerät gebaut (NODE_ID, Hostname, Zertifikat), aber nicht mehr je
+  Hausmodell.
 
 ## Vorgeschlagene Etappen
 
@@ -396,8 +417,8 @@ F103 (sensactUp, 20 KB RAM). Deren Quellcode ist eine eigene Codebasis
 (PlatformIO/STM32Cube, eigene App-Implementierungen in `lib/core` bzw. `modules/core`), liegt
 seit 2026-11-17 als normale Dateien im Repo (`firmware/sensact_firmware_stm32/` – PlatformIO,
 `firmware/firmwareCubeIDE/` – ältere STM32CubeIDE-Projekte). Sie bindet
-das Hausmodell bereits heute genauso ein wie die ESP32-Firmware: über generierte
-`applicationInitializers.inc`/`glo2LocPointers.inc`.
+das Hausmodell über generierte `applicationInitializers.inc`/`glo2LocPointers.inc` ein (die
+ESP32-Firmware bis Schritt 2 genauso; der Generator erzeugt diese Dateien weiterhin).
 
 Varianten:
 

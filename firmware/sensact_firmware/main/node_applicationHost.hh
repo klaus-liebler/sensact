@@ -37,7 +37,7 @@ namespace sensact
 
         QueueHandle_t webCommandQueue{nullptr};
         webmanager::iWebmanagerCallback *webmanager_callback{nullptr};
-        std::array<std::array<uint16_t, 4>, (size_t)sensact::eApplicationID::CNT> statusBuffer;
+        std::vector<std::array<uint16_t, 4>> statusBuffer; // je App-Nummer des Hauses, Groesse aus der Stationskonfiguration (Setup)
 
         void FindNextStatusApp();
         ErrorCode PublishApplicationStatus(eApplicationID sourceApp, eApplicationStatus statusType, std::array<uint16_t,4> &payload);

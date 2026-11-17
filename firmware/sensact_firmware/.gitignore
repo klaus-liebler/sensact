@@ -18,6 +18,8 @@ CMakeCache.txt
 # eines pauschal ignorierten Verzeichnisses grundsaetzlich nicht auswertet (s. gitignore(5)) --
 # /generated/usersettings/ muss aber getrackt werden (s. dort).
 /generated/cmake/
+/generated/maintenance/
+/generated/sensact_applicationids/
 /generated/runtimeconfig_cpp/
 /generated/runtimeconfig_ts/
 /generated/sensact_appsbuilder/
@@ -38,3 +40,7 @@ CMakeCache.txt
 /editor_tests/bin/
 /editor_tests/obj/
 /deploy/
+
+# vom Builder (BuildStationPackage) fuer den ersten USB-Flash ins LittleFS-Abbild gelegt
+/littlefs_filesystem/station.pkg
+/littlefs_filesystem/webui.br
