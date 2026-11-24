@@ -109,4 +109,4 @@ sequenceDiagram
   `fingerprint` u. a.
 - Ein Kommando aus dem Browser nimmt denselben Weg wie eines von einer lokalen App: Läuft die Ziel-App
   auf einer anderen Station, geht es auf den CAN-Bus. So lässt sich von jeder ESP32-Station aus jede App
-  im Haus schalten („Only Local Apps“ aus).
+  im Haus schalten („Nur diese Station“ aus).

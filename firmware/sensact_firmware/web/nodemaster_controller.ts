@@ -32,12 +32,12 @@ export class NodemasterController extends ScreenController {
     public Template = () => html`
         <section ${ref(this.modeSection)}></section>
         <div class="buttons">
-            <button class="withsvg" @click=${() => this.requestInputs()}>⟳ Refresh Inputs</button>
-            <button class="withsvg" @click=${() => this.requestOutputs()}>⟳ Refresh Outputs</button>
+            <button class="withsvg" @click=${() => this.requestInputs()}>⟳ Eingänge aktualisieren</button>
+            <button class="withsvg" @click=${() => this.requestOutputs()}>⟳ Ausgänge aktualisieren</button>
         </div>
-        <h1>Inputs</h1>
+        <h1>Eingänge</h1>
         <section ${ref(this.inputSection)}></section>
-        <h2>Outputs</h2>
+        <h1>Ausgänge</h1>
         <section ${ref(this.outputSection)}></section>
     `;
 
@@ -63,33 +63,33 @@ export class NodemasterController extends ScreenController {
         };
     };
 
-    public InputTableTemplate = () => html`${this.inputRanges.map(({start, end, name}) => html`
+    public InputTableTemplate = () => html`<div class="io-ranges">${this.inputRanges.map(({start, end, name}) => html`<div class="io-range">
             <h3>${name}</h3>
             <table class="autowidth">
-                <thead><tr><th>Index</th><th>Value</th><th>Action</th></tr></thead>
+                <thead><tr><th>Index</th><th>Wert</th><th>Aktion</th></tr></thead>
                 <tbody>
-                    ${Array.from({length: end - start}, (_, i) => start + i).map(idx => html`<tr><td>${idx}</td><td class=${classMap(this.getInputRowClass(idx))}>${this.inputValues[idx] ?? '-'}</td><td><button @click=${() => this.updateInput(idx)}>Update</button></td></tr>`)}
+                    ${Array.from({length: end - start}, (_, i) => start + i).map(idx => html`<tr><td>${idx}</td><td class=${classMap(this.getInputRowClass(idx))}>${this.inputValues[idx] ?? '-'}</td><td><button @click=${() => this.updateInput(idx)}>Lesen</button></td></tr>`)}
                 </tbody>
             </table>
-        `)}
+        </div>`)}</div>
     `;
 
-public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, name}) => html`
+public OutputTableTemplate = () => html`<div class="io-ranges">${this.outputRanges.map(({start, end, name}) => html`<div class="io-range">
             <h3>${name}</h3>
             <table class="autowidth">
-                <thead><tr><th>Index</th><th>Value</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Index</th><th>Wert</th><th>Aktionen</th></tr></thead>
                 <tbody>
                     ${Array.from({length: end - start}, (_, i) => start + i).map(idx => {
                         const disabled = this.manualMode !== true;
-                        return html`<tr><td>${idx}</td><td>${this.outputValues[idx] ?? '-'}</td><td><button ?disabled=${disabled} @click=${() => this.updateOutput(idx, 0)}>Set 0</button><button ?disabled=${disabled} style="margin-left: 5px;" @click=${() => this.updateOutput(idx, 1)}>Set 1</button><button ?disabled=${disabled} style="margin-left: 15px;" @click=${(e: Event) => {
+                        return html`<tr><td>${idx}</td><td>${this.outputValues[idx] ?? '-'}</td><td><button ?disabled=${disabled} @click=${() => this.updateOutput(idx, 0)}>Aus</button><button ?disabled=${disabled} style="margin-left: 5px;" @click=${() => this.updateOutput(idx, 1)} title="Wert 1">Ein</button><button ?disabled=${disabled} style="margin-left: 15px;" @click=${(e: Event) => {
                             const input = (e.target as HTMLElement).parentElement?.querySelector('input[type="number"]') as HTMLInputElement;
                             const value = input ? Number(input.value) : 0;
                             this.updateOutput(idx, value);
-                        }}>Set</button><input ?disabled=${disabled} type="number" min="0" max="65535" value="0" style="width:60px;"/></td></tr>`;
+                        }} title="Wert aus dem Feld daneben setzen (0..65535)">Setzen</button><input ?disabled=${disabled} type="number" min="0" max="65535" value="0" style="width:60px;"/></td></tr>`;
                     })}
                 </tbody>
             </table>
-        `)}
+        </div>`)}</div>
     `;
 
 
@@ -102,7 +102,7 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
                 this.inputRanges = ri.ranges.map((range, i) => ({
                     start: range.start,
                     end: range.end,
-                    name: range.name || `Range ${i}`
+                    name: range.name || `Bereich ${i}`
                 }));
                 this.currentRangeIndex = 0;
                 this.currentOffsetInRange = 0;
@@ -117,7 +117,7 @@ public OutputTableTemplate = () => html`${this.outputRanges.map(({start, end, na
                 this.outputRanges = ro.ranges.map((range, i) => ({
                     start: range.start,
                     end: range.end,
-                    name: range.name || `Range ${i}`
+                    name: range.name || `Bereich ${i}`
                 }));
                 console.info(`Received output ranges: ${JSON.stringify(this.outputRanges)}`);
                 if (this.outputSection.value) {

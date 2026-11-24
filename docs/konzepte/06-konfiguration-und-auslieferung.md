@@ -45,7 +45,7 @@ Stationspaket. Es gibt keinen Zustand „neue Konfiguration, alte Oberfläche“
 
 ```mermaid
 sequenceDiagram
-    participant B as Browser (System → Station Package)
+    participant B as Browser (System → Stationspaket)
     participant S as Station
     B->>S: POST /package (Login nötig)
     S->>S: in package.tmp schreiben

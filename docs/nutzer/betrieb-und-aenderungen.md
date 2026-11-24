@@ -66,8 +66,8 @@ flowchart LR
    dotnet run --project builder -- BuildPackageFor --nodeId SNSCT_L0_TECH_HS_1 --model Sattlerstrasse16
    ```
 
-5. **Hochladen** – Weboberfläche der Station → **System** → *Station Package* → Datei wählen →
-   *Upload Station Package*. Die Station prüft das Paket, startet neu und arbeitet mit der neuen
+5. **Hochladen** – Weboberfläche der Station → **System** → *Stationspaket* → Datei auswählen →
+   *Stationspaket hochladen*. Die Station prüft das Paket, startet neu und arbeitet mit der neuen
    Konfiguration; die Seite lädt sich selbst neu.
 
    ![Stationspaket hochladen](../bilder/web-system-paket.png)
@@ -109,7 +109,7 @@ Nötig, wenn sich der Code geändert hat (Fehlerbehebung, neuer App-Typ, neues K
    dotnet run --project builder -- BuildForOta --model Sattlerstrasse16
    ```
    Ergebnis in `deploy/SNSCT_L0_TECH_HS_1/`: `sensact_firmware.bin`, `SNSCT_L0_TECH_HS_1.pkg`, `README.txt`.
-3. Weboberfläche → **System** → *Over-the-air Firmware Update*: Firmware hochladen, Neustart abwarten.
+3. Weboberfläche → **System** → *Firmware-Update*: Datei auswählen → *Firmware-Update starten*, Neustart abwarten.
 4. Passt das bisherige Paket nicht mehr zur neuen Firmware, zeigt die Station die **Wartungsseite**
    (Sicherheitsmodus, Geräte außer Betrieb). Dort das neue Paket hochladen.
 

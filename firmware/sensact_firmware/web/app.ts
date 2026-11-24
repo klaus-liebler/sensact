@@ -42,15 +42,15 @@ document.addEventListener("DOMContentLoaded", (_) => {
     { icon: "dashboard", group: "Übersicht", description: "Alle Arbeitsbereiche" })
   const s = new SensactController(app);
   s.AddApps(SensactAppsBuild(s));
-  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>SensAct</span>`, s,
+  app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>Apps der Station</span>`, s,
     { title: "Apps der Station", icon: "house", group: "Haus", description: "Licht, Rollläden, Szenen dieser Station bedienen" })
   // @ts-ignore
   if(CFG.NODE_ID=="SNSCT_NODE_SIDEDOOR")
-    app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>Fingerprint</span>`, new FingerprintScreenController(app),
+    app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>Fingerabdruck</span>`, new FingerprintScreenController(app),
       { title: "Fingerabdruck", icon: "key", group: "Haus", description: "Fingerabdrücke anlernen und verwalten" })
-  app.AddScreenController("nodemaster", new RegExp("^/nodemaster$"), html`<span>Node Master</span>`, new NodemasterController(app),
+  app.AddScreenController("nodemaster", new RegExp("^/nodemaster$"), html`<span>Ein-/Ausgänge</span>`, new NodemasterController(app),
     { title: "Ein-/Ausgänge", icon: "registers", group: "Diagnose", description: "Ein- und Ausgänge des Knotens direkt lesen und schalten" })
-  app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>Can Bus Monitor</span>`, new CanMonitorScreenController(app),
+  app.AddScreenController("canmon", new RegExp("^/canmon$"), html`<span>CAN-Monitor</span>`, new CanMonitorScreenController(app),
     { title: "CAN-Monitor", icon: "can", group: "Diagnose", description: "Nachrichten auf dem CAN-Bus mitlesen" })
   app.AddScreenController("journal", new RegExp("^/journal$"), html`<span>Journal</span>`, new JournalController(app),
     { icon: "book", group: "Diagnose", description: "Ereignisse der Station" })

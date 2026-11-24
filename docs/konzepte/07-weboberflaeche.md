@@ -60,9 +60,10 @@ Konfiguration gemeinsam im Paket reisen, passen sie immer zusammen.
 
 ![Apps eines Raums: Rollläden und Lampen](../bilder/web-apps-raum.png)
 
-Gruppiert wird nach Technik (Typ-Präfix des Namens) oder nach Raum (Ebene und Raum aus dem Namen), mit
-Filtern für die Ebenen K (Keller), E (Erdgeschoss), O (Obergeschoss), D (Dachgeschoss), A (außen).
-„Only Local Apps“ zeigt nur die Apps dieser Station; ausgeschaltet lassen sich alle Apps des Hauses
+Gruppiert wird nach Technik (Typ-Präfix des Namens, angezeigt als „Dimmer“, „Rollläden und Markisen“ …) oder
+nach Raum (Raum und Ebene aus dem Namen, angezeigt als „Wohnen · EG“); die Klartexte stehen in
+`sensact-base/application_id_utils.ts`. Filter für die Ebenen K (Keller), E (Erdgeschoss), O (Obergeschoss),
+D (Dachgeschoss), A (außen). „Nur diese Station“ zeigt nur die Apps dieser Station; ausgeschaltet lassen sich alle Apps des Hauses
 schalten (die Kommandos gehen dann über CAN).
 
 ## Wartungsseite

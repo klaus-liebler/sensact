@@ -27,13 +27,13 @@ Abmelden über das Symbol ganz rechts in der Titelleiste.
 
 ![Apps eines Raums](../bilder/web-apps-raum.png)
 
-- Die Geräte erscheinen in aufklappbaren Gruppen. **Sort Rooms** gruppiert nach Räumen
-  (z. B. `LVNG_L1` = Wohnen, Erdgeschoss), **Sort Tech** nach Art (Rollläden, Lampen, Dimmer …).
-- Die Buchstaben filtern nach Etage: **X** alle, **K** Keller, **E** Erdgeschoss, **O** Obergeschoss,
+- Die Geräte erscheinen in aufklappbaren Gruppen. **Nach Räumen** gruppiert nach Räumen
+  (z. B. „Wohnen · EG“), **Nach Technik** nach Art (Rollläden und Markisen, Schaltausgänge, Dimmer …).
+- Die Knöpfe daneben filtern nach Etage: **Alle**, **K** Keller, **E** Erdgeschoss, **O** Obergeschoss,
   **D** Dachgeschoss, **A** außen.
-- **Only Local Apps** (blau = an) zeigt nur die Geräte, die an *dieser* Station angeschlossen sind. Aus
+- **Nur diese Station** (blau = an) zeigt nur die Geräte, die an *dieser* Station angeschlossen sind. Aus
   geschaltet erscheinen alle Geräte des Hauses; auch die lassen sich schalten.
-- **Fetch Values from Server** holt den aktuellen Zustand der Gruppe; Änderungen erscheinen sonst von
+- **Aktualisieren** holt den aktuellen Zustand der Gruppe; Änderungen erscheinen sonst von
   selbst.
 
 Bedienelemente:
@@ -41,8 +41,8 @@ Bedienelemente:
 | Gerät | Bedienung |
 |---|---|
 | Rollladen | ▲ auf, ■ Stopp, ▼ ab (wie ein kurzer Tastendruck); Balken und Prozentzahl zeigen, wie weit er geschlossen ist (100 % = ganz zu, 0 % = ganz offen) |
-| Lampe | **On Off** schaltet um |
-| Dimmer | **On Off** schaltet um, der Schieberegler stellt die Helligkeit |
+| Lampe | **Ein/Aus** schaltet um |
+| Dimmer | **Ein/Aus** schaltet um, der Schieberegler stellt die Helligkeit |
 
 ![Dimmer und Rollladen im Bad](../bilder/web-apps-dimmer.png)
 
@@ -76,15 +76,15 @@ D/V Details), Herkunft und Text. Fehler sind rot, Warnungen gelb hinterlegt.
 ### System
 
 Kennwerte der Station (Uhrzeit, Laufzeit, freier Speicher, Firmware-Partitionen) und unter
-**Dangerous Zone**:
+**Achtung: Eingriffe in die Station**:
 
 ![Stationspaket und Firmware-Update](../bilder/web-system-paket.png)
 
-- **Station Package:** neues Stationspaket hochladen (Datei wählen → *Upload Station Package*). Die Station
+- **Stationspaket:** neues Stationspaket hochladen (Datei auswählen → *Stationspaket hochladen*). Die Station
   prüft das Paket, startet neu und die Seite lädt sich danach selbst neu.
-- **Over-the-air Firmware Update:** neue Firmware hochladen. Die Station startet danach neu; die Seite
+- **Firmware-Update:** neue Firmware hochladen (Datei auswählen → *Firmware-Update starten*). Die Station startet danach neu; die Seite
   nach etwa einer Minute neu laden.
-- **Restart:** Neustart.
+- **Neustart:** Station neu starten.
 
 Diese Funktionen sind für den Betreuer gedacht; die Abläufe stehen in
 [Betrieb und Änderungen](betrieb-und-aenderungen.md).
