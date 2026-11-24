@@ -5,6 +5,8 @@
   benannte Pins aus der jeweiligen main/hal/hal_sensact*.hh (Get/SetU16Output).
   STM32-Altboards: Busse wie die Konstanten INTERNAL/BUS0(BB)/BUS1(RB)/BUS2 der Altfirmware;
   die Bedeutung der lokalen Indizes legt die Altfirmware fest.
+  STM32F103 (firmware/sensact_firmware_f103): Pins aus der Leiterplatte, lokaler Index wie in der
+  Altfirmware 16 x Port + Pin (A = 0, B = 1, C = 2) - die Nummern im Hausmodell bleiben gueltig.
 -->
 <catalog schemaVersion="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/sensact-catalog.xsd">
 
@@ -90,12 +92,30 @@
     <feature kind="ethernet" />
   </board>
 
-  <board type="SensactUp02" mcu="STM32F103" firmware="stm32-legacy" ramKiB="20">
-    <description>Unterputz-Knoten der Altfirmware</description>
-    <bus index="0" name="INTERNAL" kind="legacy" />
-    <bus index="1" name="BB" kind="legacy" />
-    <bus index="2" name="RB" kind="legacy" />
-    <bus index="3" name="BUS2" kind="legacy" />
+  <board type="SensactUp02" mcu="STM32F103" firmware="stm32f103" ramKiB="20">
+    <description>Unterputz-Knoten sensactUp Rev 0.2 (2015, STM32F103CBT6); Pins: firmware/sensact_firmware_f103/src/board/sensactup02.hpp</description>
+    <bus index="0" name="INTERNAL" kind="gpio">
+      <pin name="IO1" index="16" direction="input" description="PB0, Stecker O1 Pin 9 (aktiv low)" />
+      <pin name="IO2" index="17" direction="input" description="PB1, O1.10" />
+      <pin name="IO3" index="6" direction="input" description="PA6, O1.11" />
+      <pin name="IO4" index="7" direction="input" description="PA7, O1.12" />
+      <pin name="IO5" index="4" direction="input" description="PA4, O1.13" />
+      <pin name="IO6" index="5" direction="input" description="PA5, O1.14" />
+      <pin name="IO7" index="2" direction="input" description="PA2, O1.15" />
+      <pin name="IO8" index="3" direction="input" description="PA3, O1.16" />
+      <pin name="ROT1_PUSH" index="31" direction="input" description="PB15, Taster des Drehgebers E1" />
+      <pin name="ROT2_PUSH" index="19" direction="input" description="PB3, Taster am Stecker P19" />
+      <pin name="OPTO1" index="30" direction="input" description="PB14, Optokoppler U4, Stecker P17" />
+      <pin name="O1" index="24" direction="output" description="PB8 TIM4_CH3 (PWM) ueber TPL7407L, Stecker O1 Pin 1" />
+      <pin name="O2" index="45" direction="output" description="PC13 (an/aus) ueber TPL7407L, O1.2" />
+      <pin name="O3" index="23" direction="output" description="PB7 TIM4_CH2 (PWM), O1.3" />
+      <pin name="O4" index="46" direction="output" description="PC14 (an/aus), O1.4" />
+      <pin name="O5" index="22" direction="output" description="PB6 TIM4_CH1 (PWM), O1.5" />
+      <pin name="O6" index="47" direction="output" description="PC15 (an/aus), O1.6" />
+      <pin name="O7" index="25" direction="output" description="PB9 TIM4_CH4 (PWM), O1.7" />
+      <pin name="OPTO2" index="29" direction="output" description="PB13, Optokoppler U7, Stecker P18" />
+    </bus>
+    <bus index="1" name="BB" kind="i2c" />
     <feature kind="can" />
     <feature kind="rotaryEncoder" count="2" />
   </board>

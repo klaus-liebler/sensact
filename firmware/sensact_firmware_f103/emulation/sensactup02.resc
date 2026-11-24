@@ -1,0 +1,17 @@
+:name: sensactUp rev 0.2
+:description: Sensact-Station (SNSCT_L1_LVNG_UP / KTCH) auf dem STM32F103, Konsole USART1. $bin = ELF.
+
+$name?="sensactup02"
+$bin?=@build/lvng/sensact_f103.elf
+
+using sysbus
+include $ORIGIN/PCA9685.cs
+mach create $name
+machine LoadPlatformDescription $ORIGIN/sensactup02.repl
+
+macro reset
+"""
+    sysbus LoadELF $bin
+    cpu VectorTableOffset 0x08000000
+"""
+runMacro $reset

@@ -2,13 +2,9 @@
 #include <type_traits>
 #include <wsprotocol_cpp/ws_protocol.hh>
 #include <sensact_commons.hh>
-#include <sunsetsunrise.hh>
 #include "cApplications.hh"
 #include "apps/blind.hh"
-#include "apps/blindstimer.hh"
-#include "apps/fingerprint.hh"
 #include "apps/lightbarrier.hh"
-#include "apps/milightcontroller.hh"
 #include "apps/node.hh"
 #include "apps/onoff.hh"
 #include "apps/pump.hh"
@@ -16,7 +12,24 @@
 #include "apps/rgbw.hh"
 #include "apps/rotaryencoder.hh"
 #include "apps/singlepwm.hh"
+
+// App-Typen, die eine kleine Firmware weglassen kann (STM32F103: kein Audio, kein Fingerprint, kein
+// Milight-Empfaenger, keine Gleitkomma-Sonnenstandsrechnung in 128 KB Flash). Ohne Schalter sind alle
+// dabei (ESP32, Host-Tests). Eine Konfiguration mit einem weggelassenen Typ wird abgelehnt
+// ("app type not supported by this firmware"), die Station startet dann ohne Apps.
+#ifndef SENSACT_WITHOUT_SOUND
 #include "apps/sound.hh"
+#endif
+#ifndef SENSACT_WITHOUT_FINGERPRINT
+#include "apps/fingerprint.hh"
+#endif
+#ifndef SENSACT_WITHOUT_MILIGHT
+#include "apps/milightcontroller.hh"
+#endif
+#ifndef SENSACT_WITHOUT_BLINDSTIMER
+#include <sunsetsunrise.hh>
+#include "apps/blindstimer.hh"
+#endif
 
 namespace sensact::apps
 {
@@ -52,6 +65,7 @@ namespace sensact::config
         return result;
     }
 
+#ifndef SENSACT_WITHOUT_BLINDSTIMER
     static sunsetsunrise::eDawn ToDawn(cfg::Dawn d)
     {
         switch (d)
@@ -61,6 +75,14 @@ namespace sensact::config
         case cfg::Dawn::ASTRONOMIC: return sunsetsunrise::eDawn::ASTRONOMIC;
         default: return sunsetsunrise::eDawn::CIVIL;
         }
+    }
+#endif
+
+    // Ein App-Typ, den diese Firmware weggelassen hat (SENSACT_WITHOUT_...)
+    [[maybe_unused]] static apps::cApplication *NotInThisFirmware(std::string &error)
+    {
+        error = "app type not supported by this firmware";
+        return nullptr;
     }
 
     // Legt die App zu einem Konfigurationselement an (nullptr bei unbekanntem/ungueltigem Element)
@@ -87,7 +109,11 @@ namespace sensact::config
         else if constexpr (std::is_same_v<T, cfg::RgbwApp::Payload>)
             return new cRgbw(Id(a.id), a.outputR, a.outputG, a.outputB, a.outputW, a.autoOffMs, Id(a.standbyController), WELL_KNOWN_COLORS);
         else if constexpr (std::is_same_v<T, cfg::SoundApp::Payload>)
+#ifndef SENSACT_WITHOUT_SOUND
             return new cSound(Id(a.id), a.initialVolume, a.defaultSignalOnToggle);
+#else
+            return NotInThisFirmware(error);
+#endif
         else if constexpr (std::is_same_v<T, cfg::PumpApp::Payload>)
             return new cPump(Id(a.id), a.output, a.onIntervalMs, a.offIntervalMs);
         else if constexpr (std::is_same_v<T, cfg::ToggleButtonApp::Payload>)
@@ -110,12 +136,24 @@ namespace sensact::config
         else if constexpr (std::is_same_v<T, cfg::LightbarrierApp::Payload>)
             return new cLightbarrier(Id(a.id), a.input, a.activeHigh, Id(a.brightnessSensor), Id(a.target));
         else if constexpr (std::is_same_v<T, cfg::FingerprintApp::Payload>)
+#ifndef SENSACT_WITHOUT_FINGERPRINT
             return new cFingerprint(Id(a.id), Id(a.target1), Id(a.target2), Id(a.target3));
+#else
+            return NotInThisFirmware(error);
+#endif
         else if constexpr (std::is_same_v<T, cfg::MilightControllerApp::Payload>)
+#ifndef SENSACT_WITHOUT_MILIGHT
             return new cMilightController(Id(a.id), Id(a.light), AppIds(a.blindsData, a.blindsCount, cfg::DecodeMilightControllerAppBlindsElementAt), a.lightOnMs);
+#else
+            return NotInThisFirmware(error);
+#endif
         else if constexpr (std::is_same_v<T, cfg::BlindsTimerApp::Payload>)
+#ifndef SENSACT_WITHOUT_BLINDSTIMER
             return new cBlindsTimer(Id(a.id), AppIds(a.blindsData, a.blindsCount, cfg::DecodeBlindsTimerAppBlindsElementAt),
                                     a.latitudeMicroDeg / 1e6, a.longitudeMicroDeg / 1e6, ToDawn(a.dawn), a.openOffsetMin, a.closeOffsetMin, a.maxRandomMin);
+#else
+            return NotInThisFirmware(error);
+#endif
         else
         {
             error = "unsupported app type in configuration";

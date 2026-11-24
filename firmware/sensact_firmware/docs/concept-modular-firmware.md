@@ -432,8 +432,14 @@ Varianten:
 | L2 | **Datengetrieben auch auf STM32**: Konfiguration im Flash; der BestBinaryBuffers-Decoder liest sie ohne Kopie direkt aus dem Flash, die Fabrik legt die Apps in einen statischen Speicherbereich. | Für den F407 machbar, für den F103 mit 20 KB RAM eng; Update ohne Neukompilieren, aber nur per USB (kein OTA auf diesen Boards). Lohnt erst, wenn Konfigurationen dort häufig wechseln. |
 | L3 | **Gemeinsame App-Logik**: die ESP32-Apps (`sensact-applicationmodel`, nur von `iSensactContext` abhängig) auch auf STM32 übersetzen; die Altfirmware liefert nur den Kontext. | Langfristig sauber (eine App-Implementierung, eine Testsuite statt zwei auseinanderlaufender Kopien), aber erheblicher Umbau; `std::vector`/virtuelle Aufrufe auf dem F103 prüfen. |
 
-Entschieden: **L1**; L3 bleibt langfristige Option, wenn die doppelte App-Logik zu sehr
-auseinanderläuft. In allen Varianten gilt: Altknoten und neue Knoten sprechen über CAN
+Entschieden (2026-11-17): **L1**; L3 bleibt langfristige Option, wenn die doppelte App-Logik zu sehr
+auseinanderläuft.
+
+**Stand 2026-11-24:** für die F103-Stationen (`SensactUp02`: LVNG, KTCH) umgesetzt als **L3 mit
+einkompilierter Konfiguration**: neue Firmware [`firmware/sensact_firmware_f103`](../../sensact_firmware_f103/README.md)
+auf rtoos mit den Apps der ESP32-Basis; die Stationskonfiguration (BestBinaryBuffers, wie im
+Stationspaket) erzeugt der Builder (`GenerateStm32F103Files`) und wird einkompiliert - ein Upload
+fehlt mangels Netz. Katalog-Firmware-Familie `stm32f103`. Der F407 (`SensactHs08`) bleibt bei L1. In allen Varianten gilt: Altknoten und neue Knoten sprechen über CAN
 dieselben App-IDs und Kommandos; der Editor prüft, dass eine Station nur App-Typen und
 Kommandos verwendet, die ihre Firmware-Familie kennt.
 

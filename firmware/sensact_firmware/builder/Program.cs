@@ -194,6 +194,39 @@ internal static class Program
 		return Klli.Sensact.Model.Xml.Catalog.Load(catalogPath);
 	}
 
+	// STM32F103-Stationen (Katalog-Firmware "stm32f103", firmware/sensact_firmware_f103 auf rtoos):
+	// dieselben Apps wie die ESP32-Basis, die Stationskonfiguration aber einkompiliert (kein Upload,
+	// nur CAN). Erzeugt die modellunabhaengigen .inc-Dateien und den BestBinaryBuffers-Decoder (wie
+	// fuer die ESP32-Firmware, nach generated/) und die Stationskonfiguration nach
+	// ../sensact_firmware_f103/generated/<NODE_ID>/station_config.bin. Danach:
+	//   cmake --preset lvng && cmake --build --preset lvng     (in firmware/sensact_firmware_f103)
+	// Beispiel: GenerateStm32F103Files --model Sattlerstrasse16 --nodeId SNSCT_L1_LVNG_UP
+	[BuildStep]
+	public static void GenerateStm32F103Files(IBuildContextEsp32 ctx)
+	{
+		var modelName = Cli.GetRequiredArgValue(ctx.Args, "--model");
+		var nodeId = Cli.GetRequiredArgValue(ctx.Args, "--nodeId");
+		var catalog = LoadCatalog();
+		var (mc, ids) = LoadModel(modelName);
+		var station = mc.Model.Nodes.OfType<Klli.Sensact.Model.Xml.XmlStation>().FirstOrDefault(s => s.NodeName == nodeId)
+			?? throw new InvalidOperationException($"Station {nodeId} gibt es im Hausmodell {modelName} nicht.");
+		if (!catalog.Boards.TryGetValue(station.BoardType, out var board) || board.Firmware != "stm32f103")
+		{
+			throw new InvalidOperationException($"Station {nodeId} (Board {station.BoardType}) ist keine STM32F103-Station.");
+		}
+		BuildStepRunner.Invoke(ctx, GenerateModelFiles);
+		BuildStepRunner.Invoke(ctx, GenerateBestBinaryBufferFiles);
+
+		var schemaDirs = new[] { ctx.BestBinaryBuffersSchemaDir, ctx.WebmanagerBestBinaryBuffersSchemaDir };
+		var idMap = BestBinaryBuffers.IdMap.Load(Path.Combine(ctx.BestBinaryBuffersSchemaDir, "ids.txt"));
+		var config = StationConfigWriter.Encode(StationConfigWriter.ParseSchema(schemaDirs, idMap), mc.Model, ids, catalog, nodeId);
+		var firmwareRoot = Path.GetDirectoryName(SensactBuildContext.GeneratedRoot)!;
+		var outDir = Path.GetFullPath(Path.Combine(firmwareRoot, "..", "sensact_firmware_f103", "generated", nodeId));
+		Directory.CreateDirectory(outDir);
+		File.WriteAllBytes(Path.Combine(outDir, "station_config.bin"), config);
+		Console.WriteLine($"Stationskonfiguration {nodeId} ({config.Length} Byte) -> {outDir}");
+	}
+
 	[BuildStep]
 	public static void GenerateModelFiles(IBuildContextEsp32 ctx)
 	{

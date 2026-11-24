@@ -1,0 +1,37 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "${sourceDir}/../../../rtoos/cmake/arm-none-eabi.cmake",
+      "cacheVariables": {
+        "RTOS_GCC_ROOT": "C:/opt/msys64/ucrt64",
+        "RTOS_CHIP": "stm32f103",
+        "RTOS_CONTRACT_SEMANTIC": "quick_enforce",
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      },
+      "environment": {
+        "PATH": "C:/opt/msys64/ucrt64/bin;$penv{PATH}"
+      }
+    },
+    {
+      "name": "lvng",
+      "displayName": "SNSCT_L1_LVNG_UP (Wohnzimmer, sensactUp rev 0.2)",
+      "inherits": "base",
+      "cacheVariables": { "SENSACT_NODE": "SNSCT_L1_LVNG_UP" }
+    },
+    {
+      "name": "ktch",
+      "displayName": "SNSCT_L1_KTCH_UP (Kueche, sensactUp rev 0.2)",
+      "inherits": "base",
+      "cacheVariables": { "SENSACT_NODE": "SNSCT_L1_KTCH_UP" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "lvng", "configurePreset": "lvng" },
+    { "name": "ktch", "configurePreset": "ktch" }
+  ]
+}

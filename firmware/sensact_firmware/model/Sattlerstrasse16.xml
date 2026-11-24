@@ -163,6 +163,7 @@
     <dimButton id="PUSHB_LS_STRS_B43" number="328" input="BB.53" target="PWM___LS_STRS_W4" />
   </station>
   <station id="SNSCT_L1_KTCH_UP" number="6" board="SensactUp02">
+    <extension name="PCA0" type="PCA9685" bus="BB" address="0x40" />
     <rotaryEncoder id="ROTAR_L1_KTCH_B21" number="78" encoder="ROTENC0" target="PWM___L1_KTCH_S1" />
     <toggleButton id="PUSHB_L1_KTCH_B22" number="79" input="INTERNAL.19" targets="POWIT_L1_KTCH_C1" />
     <dimButton id="PUSHB_L1_KTCH_B23" number="80" input="INTERNAL.16" target="PWM___L1_KTCH_W1" />
@@ -174,6 +175,8 @@
     <singlePwm id="PWM___L1_KTCH_W1" number="97" description="Wandlampen" outputs="BB.5" minimalBrightness="23.047" autoOff="PT6H" standbyController="STDBY_L0_TECH_48V" />
   </station>
   <station id="SNSCT_L1_LVNG_UP" number="5" board="SensactUp02">
+    <extension name="PCA0" type="PCA9685" bus="BB" address="0x40" />
+    <extension name="PCA1" type="PCA9685" bus="BB" address="0x41" />
     <blindButtons id="PUSHB_L1_LVNG_B31" number="112" inputUp="INTERNAL.16" inputDown="INTERNAL.17" target="BLIND_L1_LVNG_J1" />
     <blindButtons id="PUSHB_L1_LVNG_B33" number="114" inputUp="INTERNAL.6" inputDown="INTERNAL.7" target="BLIND_L1_LVNG_J2" />
     <blindButtons id="PUSHB_L1_LVNG_B35" number="116" inputUp="INTERNAL.4" inputDown="INTERNAL.5" target="BLIND_L1_LVNG_J3" />

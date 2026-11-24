@@ -47,6 +47,9 @@
       <xs:enumeration value="esp32" />
       <!-- STM32-Altfirmware (firmware/sensact_firmware_stm32), Code-Export (Variante L1) -->
       <xs:enumeration value="stm32-legacy" />
+      <!-- STM32F103 auf rtoos (firmware/sensact_firmware_f103): die Apps der ESP32-Basis, die
+           Stationskonfiguration (BestBinaryBuffers) einkompiliert -->
+      <xs:enumeration value="stm32f103" />
     </xs:restriction>
   </xs:simpleType>
 

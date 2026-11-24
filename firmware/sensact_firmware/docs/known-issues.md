@@ -16,9 +16,28 @@ Zurzeit keine.
 | T12 | **Beim nächsten Flashen von `SNSCT_NODE_SIDEDOOR` und `SNSCT_NODE_UP` gehen die gespeicherten Scheduler-Zeitpläne verloren** (BestBinaryBuffers-Formatänderung, Verlust akzeptiert). Nichts manuell löschen: die Firmware erkennt nicht lesbare Einträge beim Start, loggt sie und löscht sie aus dem NVS. Zeitpläne danach im Web-Interface neu anlegen. | Firmware SIDEDOOR/UP |
 | T14 | **Stationspaket und datengetriebene Basis am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): per USB flashen (`Pipeline --model Sattlerstrasse16`, schreibt Paket und Web-UI gleich ins LittleFS). Erwartet: Log "Station configuration loaded: SNSCT_L0_TECH_HS_1, … apps", alle Taster/Lampen/Rollläden wie bisher, Web-UI mit allen Apps. Dann eine Modelländerung (`BuildPackage`) über System → Station Package hochladen: Gerät startet neu und arbeitet mit der neuen Konfiguration. Paket einer anderen Station/Basis wird abgelehnt; ohne Paket Sicherheitsmodus mit Wartungsseite. OTA und Datei-Endpunkte verlangen den Login. | Firmware/Webmanager |
 | T15 | **Neue Weboberfläche und Firmware-Log am Gerät ansehen** (mit T14): Arbeitsbereiche, Hell/Dunkel, Vollbild, Abmelden; Terminal zeigt die Startmeldungen (Puffer 48 Zeilen) und neue Zeilen live, `loglevel * debug` wirkt, die Glocke zählt Warnungen/Fehler. Ohne Gerät schon erprobt (Testserver, `npm run it`). | Web-UI/Webmanager |
+| T16 | **Neue F103-Firmware am Gerät erproben** (`firmware/sensact_firmware_f103`, rtoos; zuerst `SNSCT_L1_LVNG_UP`): per SWD (Reset-Modus, weil die Altfirmware SWD abgeschaltet hatte) oder seriell über P4 flashen. Prüfen: Taster IO1–IO8, Drehgeber (Richtung, Rastung), Lampen über PCA9685 0x40/0x41, Kommandos zu und von den ESP32-Stationen über CAN, Verhalten bei abgezogenem/gestörtem I2C-Kabel (Konsole: Zähler `recover`, `reinits`). Siliziumrevision auf dem Chip ablesen (ES096 2.2.9: Z/B nicht unterstützt). Im Emulator (Renode) schon erprobt, s. README dort. | F103-Stationen |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-24 – STM32F103-Stationen auf rtoos mit den Apps der ESP32-Basis
+
+- Platine von `SNSCT_L1_LVNG_UP` (und `SNSCT_L1_KTCH_UP`) bestimmt: sensactUp **Rev 0.2** aus dem
+  Initial-Commit (`pcb/sensactUp`, 2015; der heutige Ordner `pcb/sensactUp` ist eine andere Platine
+  mit STM32F072), STM32F103CBT6, 12-MHz-Oszillator. Pinbelegung aus der Leiterplatte, gegen die
+  Altfirmware geprüft. Fehler der Altfirmware: SWD abgeschaltet, HSE im Quarz- statt Bypass-Modus,
+  5-V-Freigabe Open-Drain ohne Pull-up (schwebend), DCF77 auf PC4 (gibt es auf dem LQFP48 nicht).
+- Entscheidung: **rtoos** statt der Altfirmware (Variante L3 aus `concept-modular-firmware.md`, mit
+  einkompilierter Stationskonfiguration statt Code-Export). In rtoos neu: Cortex-M3-Port und
+  Chip-Port `stm32f103` mit Errata ES096, Selbsttest in QEMU und Renode (rtoos `471a85e`).
+- Neue Firmware `firmware/sensact_firmware_f103`: die Apps der ESP32-Basis, Stationskonfiguration
+  aus dem Builder (`GenerateStm32F103Files --model … --nodeId …`), PCA9685 in einem eigenen Thread
+  mit Bus-Recovery (lange Kabel). Katalog: `SensactUp02` hat jetzt die Firmware-Familie `stm32f103`,
+  Bus `INTERNAL` mit benannten Pins (Nummern unverändert), Bus `BB` als I2C; die Stationen deklarieren
+  ihre PCA9685 (`PCA0` 0x40, LVNG zusätzlich `PCA1` 0x41, wie in der Altfirmware).
+- `station_config.cc`: App-Typen per `SENSACT_WITHOUT_SOUND/FINGERPRINT/MILIGHT/BLINDSTIMER`
+  abwählbar (ESP32 und Host-Tests unverändert: alle dabei; 161 Host-Tests grün).
 
 ### 2026-11-17 (6) – Weboberfläche: Anwendungs-Shell aus factory_in_a_box, Firmware-Log
 

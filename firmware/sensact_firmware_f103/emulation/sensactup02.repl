@@ -1,0 +1,33 @@
+// sensactUp Rev 0.2 (STM32F103CB) fuer Renode: die rtoos-Plattform des Chips (Nachbar-Repository
+// rtoos) mit dem Takt der Platine (12-MHz-Oszillator x 6 = 72 MHz, Timer 72 MHz) und dem bxCAN
+// (Renodes STMCAN, dieselbe IP) und die beiden PCA9685 der Wohnzimmer-Station am I2C2 (eigenes
+// Modell PCA9685.cs, Abfrage: sysbus.i2c2.pca0 Dump).
+using "../../../../rtoos/emulation/renode/stm32f103.repl"
+
+cpu:
+    PerformanceInMips: 72
+
+nvic:
+    systickFrequency: 72000000
+
+dwt:
+    frequency: 72000000
+
+tim1:
+    frequency: 72000000
+
+tim2:
+    frequency: 72000000
+
+tim3:
+    frequency: 72000000
+
+tim4:
+    frequency: 72000000
+
+can1: CAN.STMCAN @ sysbus <0x40006400, +0x400>
+    [0-3] -> nvic@[19-22]
+
+pca0: Miscellaneous.PCA9685 @ i2c2 0x40
+
+pca1: Miscellaneous.PCA9685 @ i2c2 0x41
