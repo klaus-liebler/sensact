@@ -34,5 +34,6 @@
         SET_PWM, //uint32 bitmask über die zu setzenden Kanäle, uint16 für den Wwert
         DEMO,
         SAVE_PARAM, //persistiert die zuletzt per SET_PARAM gesetzten Werte (kein Payload)
+        IDENTIFY, //an die Knoten-App: die Station zeigt sich (u32 Dauer in ms, 0 = 10 s). Nur hinten anfuegen: die Nummern stehen auf dem CAN-Bus
     }
 }

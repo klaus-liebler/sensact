@@ -118,6 +118,8 @@
     <bus index="1" name="BB" kind="i2c" />
     <feature kind="can" />
     <feature kind="rotaryEncoder" count="2" />
+    <!-- WS2812-Kette D4..D8: 0 = LED am Knopf (Rueckmeldung der Firmware), 1..4 = Ecken (hinter der Abdeckung) -->
+    <feature kind="rgbLed" count="5" />
   </board>
 
   <!-- ============================================================ Erweiterungen -->

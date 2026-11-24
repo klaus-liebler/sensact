@@ -131,8 +131,17 @@ namespace sensact::test
             auto it = inputs.find(id);
             value = it == inputs.end() ? 0 : it->second;
         }
-        void SetRGBLed(uint8_t, CRGB) override {}
-        void UnColorizeAllRGBLed() override {}
+        void SetRGBLed(uint8_t index, CRGB color) override { rgbLeds[index] = (uint32_t(color.r) << 16) | (uint32_t(color.g) << 8) | color.b; }
+        void UnColorizeAllRGBLed() override { rgbLeds.clear(); }
+        void Identify(tms_t durationMs) override { identifyCalls.push_back(durationMs); }
+        /// Farbe einer RGB-LED als 0xRRGGBB (0: aus oder nie gesetzt).
+        uint32_t RgbLed(uint8_t index) const
+        {
+            auto it = rgbLeds.find(index);
+            return it == rgbLeds.end() ? 0 : it->second;
+        }
+        std::map<uint8_t, uint32_t> rgbLeds;
+        std::vector<tms_t> identifyCalls;
         void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t &value, bool &isPressed) override
         {
             auto &v = rotaryEncoders[re];

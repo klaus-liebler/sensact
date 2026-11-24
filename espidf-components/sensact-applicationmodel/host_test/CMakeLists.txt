@@ -89,6 +89,7 @@ add_library(sensact_apps STATIC
     "${APPMODEL_DIR}/apps/node.cc"
     "${APPMODEL_DIR}/apps/onoff.cc"
     "${APPMODEL_DIR}/apps/rgbw.cc"
+    "${APPMODEL_DIR}/apps/rgbindicator.cc"
     "${APPMODEL_DIR}/apps/singlepwm.cc"
     "${APPMODEL_DIR}/apps/sound.cc"
     "${ESPIDF_COMPONENTS_DIR}/common/common.cc"

@@ -99,6 +99,8 @@ public static class StationConfigWriter
 		RgbwApplication a => C("RgbwApp", ("Id", a.ApplicationId), ("OutputR", a.OutputRessourceR), ("OutputG", a.OutputRessourceG),
 			("OutputB", a.OutputRessourceB), ("OutputW", a.OutputRessourceW), ("AutoOffMs", a.AutoOffIntervalMsecs), ("StandbyController", a.IdOfStandbyController)),
 		SoundApplication a => C("SoundApp", ("Id", a.ApplicationId), ("InitialVolume", a.DefaultVolume), ("DefaultSignalOnToggle", a.defaultSignalOnToggle)),
+		RgbIndicatorApplication a => C("RgbIndicatorApp", ("Id", a.ApplicationId), ("Leds", a.Leds.ToArray()), ("Color", a.Color),
+			("ToggleSignal", a.ToggleSignal), ("AutoOffMs", a.AutoOffMsecs)),
 		PumpApplication a => C("PumpApp", ("Id", a.ApplicationId), ("Output", a.OutputRessource), ("OnIntervalMs", a.OnIntervalMsecs), ("OffIntervalMs", a.OffIntervalMsecs)),
 		PushButtonSingle2ToggleApplication a => C("ToggleButtonApp", ("Id", a.ApplicationId), ("Input", a.InputResource), ("Targets", a.TargetApplicationIds.ToArray())),
 		PushButtonSingle2PwmSingleApplication a => C("DimButtonApp", ("Id", a.ApplicationId), ("Input", a.InputResource), ("Target", a.TargetApplicationId)),

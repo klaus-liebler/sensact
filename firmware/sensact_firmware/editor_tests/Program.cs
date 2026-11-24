@@ -35,7 +35,8 @@ svc.Save();
 Check(File.ReadAllText(path) == original, "Speichern ohne inhaltliche Aenderung ist byte-gleich");
 
 // 2) Schema-Typen
-Check(svc.Schema.Types.Count == 18, $"18 App-Typen aus dem XSD (gefunden {svc.Schema.Types.Count})");
+Check(svc.Schema.Types.Count == 19, $"19 App-Typen aus dem XSD (gefunden {svc.Schema.Types.Count})");
+Check(svc.Schema.Types.ContainsKey("rgbIndicator"), "Signal-App rgbIndicator im Schema");
 var blind = svc.Schema.Types["blind"];
 Check(blind.Fields.Select(f => f.Name).SequenceEqual(["id", "number", "description", "relay1", "relay2", "relayMode", "upTime", "downTime"]), "Feldreihenfolge blind");
 Check(blind.Fields.First(f => f.Name == "relayMode").Choices.Count == 6, "relayMode als Auswahl mit 6 Werten");

@@ -128,6 +128,9 @@ public sealed class HouseXmlImporter
 			"rgbw" => new RgbwApplication(id, name, desc, Out("outputR"), Out("outputG"), Out("outputB"), Out("outputW"),
 				Ms("autoOff", 0), Ref("standbyController")),
 			"sound" => new SoundApplication(id, name, desc, U16("initialVolume", ushort.MaxValue), U16("defaultSignalOnToggle", 0)),
+			"rgbIndicator" => new RgbIndicatorApplication(id, name, desc,
+				S("leds").Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(byte.Parse).ToList(),
+				Units.ColorToRgb((string?)a.Attribute("color") ?? "#FFB060"), U16("toggleSignal", 0), Ms("autoOff", 0)),
 			"pump" => new PumpApplication(id, name, desc, Out("output"), Ms("onInterval", 0), Ms("offInterval", 0)),
 			"toggleButton" => new PushButtonSingle2ToggleApplication(id, name, In("input"), new HashSet<ushort>(Refs("targets"))),
 			"dimButton" => new PushButtonSingle2PwmSingleApplication(id, name, In("input"), Ref("target")),
@@ -176,6 +179,16 @@ public static class Units
 		decimal p = decimal.Parse(percent, CultureInfo.InvariantCulture);
 		if (p < 0 || p > 100) throw new FormatException($"Prozentwert {percent} ausserhalb 0..100.");
 		return (ushort)Math.Round(p * 655.35m, MidpointRounding.AwayFromZero);
+	}
+
+	/// <summary>"#RRGGBB" -> 0xRRGGBB</summary>
+	public static uint ColorToRgb(string color)
+	{
+		if (color.Length != 7 || color[0] != '#' || !uint.TryParse(color.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var rgb))
+		{
+			throw new FormatException($"Farbe {color}: erwartet #RRGGBB.");
+		}
+		return rgb;
 	}
 
 	/// <summary>Kuerzeste Prozentangabe (hoechstens drei Nachkommastellen), die exakt wieder diesen u16-Wert ergibt.</summary>

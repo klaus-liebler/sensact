@@ -56,6 +56,7 @@ rtos_add_firmware(sensact_f103
         ${APPMODEL_DIR}/apps/node.cc
         ${APPMODEL_DIR}/apps/onoff.cc
         ${APPMODEL_DIR}/apps/rgbw.cc
+        ${APPMODEL_DIR}/apps/rgbindicator.cc
         ${APPMODEL_DIR}/apps/singlepwm.cc
         ${ESPIDF_COMPONENTS_DIR}/common/common.cc
     LIBRARIES rtos_stm32f103)

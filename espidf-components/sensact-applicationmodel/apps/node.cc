@@ -1,4 +1,6 @@
 #include "node.hh"
+#include <sensact_logger.hh>
+#include "cApplications.hh"
 
 #define TAG "SNSCT"
 
@@ -22,6 +24,14 @@ namespace sensact::apps
 	void cSensactNode::OnPINGCommand(uint32_t payload, iSensactContext *ctx)
 	{
 		ctx->PublishPONGEvent(this->id, (uint8_t *)&payload, 4);
+	}
+
+	// IDENTIFY: die Station zeigt sich (Dauer 0 = 10 s, hoechstens 60 s)
+	void cSensactNode::OnIDENTIFYCommand(uint32_t durationMs, iSensactContext *ctx)
+	{
+		const tms_t d = durationMs == 0 ? 10'000 : (durationMs > 60'000 ? 60'000 : durationMs);
+		LOGI(TAG, "%s: IDENTIFY for %u ms", N(), (unsigned)d);
+		ctx->Identify(d);
 	}
 
 	eAppCallResult cSensactNode::Loop(iSensactContext *ctx)

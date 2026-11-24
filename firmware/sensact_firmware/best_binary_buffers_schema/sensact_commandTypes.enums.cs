@@ -38,4 +38,5 @@ public enum Command : byte
 	SET_PWM = 29,
 	DEMO = 30,
 	SAVE_PARAM = 31,
+	IDENTIFY = 32,
 }

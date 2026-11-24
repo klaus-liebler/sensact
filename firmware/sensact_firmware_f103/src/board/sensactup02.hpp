@@ -12,7 +12,9 @@
 #include <cstdint>
 
 #include "rtos/port/stm32f1/bxcan.hpp"
+#include "rtos/devices/ws2812.hpp"
 #include "rtos/port/stm32f1/clocks.hpp"
+#include "rtos/port/stm32f1/dma.hpp"
 #include "rtos/port/stm32f1/gpio.hpp"
 #include "rtos/port/stm32f1/i2c.hpp"
 #include "rtos/port/stm32f1/iwdg.hpp"
@@ -80,8 +82,10 @@ inline constexpr std::array outputs{
 };
 
 inline constexpr Pin led{GpioPort::B, 12};          // D10, aktiv low
-inline constexpr Pin supply_5v{GpioPort::A, 15};    // SHDN des 5-V-Wandlers U1 (nur WS2812), high = an
-inline constexpr Pin ws2812{GpioPort::A, 8};        // WS2812-Kette D4..D8 (TIM1_CH1), noch ungenutzt
+inline constexpr Pin supply_5v{GpioPort::A, 15};    // SHDN des Wandlers U1 (nur WS2812: 4,35 V nach R2/R3), high = an
+inline constexpr Pin ws2812{GpioPort::A, 8};        // WS2812-Kette D4..D8 (TIM1_CH1)
+/// WS2812-Kette: 0 = D4 neben dem Knopf, 1..4 = D5..D8 in den Ecken (hinter der Abdeckung, diffus).
+inline constexpr std::size_t rgb_led_count = 5;
 inline constexpr Pin rot1_push = inputs[8].pin, rot2_push = inputs[9].pin;
 inline constexpr Pin i2c_scl{GpioPort::B, 10}, i2c_sda{GpioPort::B, 11};
 
@@ -103,8 +107,10 @@ inline constexpr std::array pins{
     f1::gpio::alternate({GpioPort::B, 9}, Signal::TIM4_CH4, Speed::Low),
     f1::gpio::output({GpioPort::C, 13}), f1::gpio::output({GpioPort::C, 14}), f1::gpio::output({GpioPort::C, 15}),
     f1::gpio::output({GpioPort::B, 13}, true),
-    // Status-LED aus, 5-V-Versorgung der WS2812 aus (push-pull: SHDN darf nicht schweben), Datenleitung low
-    f1::gpio::output(led, true), f1::gpio::output(supply_5v, false), f1::gpio::output(ws2812, false),
+    // Status-LED aus, Versorgung der WS2812 aus (push-pull: SHDN darf nicht schweben), Daten von TIM1_CH1
+    // (CCR 0: low). TIM1_CH2 bleibt aus (ES096 2.3.10: stoert sonst USART1_TX auf PA9)
+    f1::gpio::output(led, true), f1::gpio::output(supply_5v, false),
+    f1::gpio::alternate(ws2812, Signal::TIM1_CH1, Speed::Medium),
     // Drehgeber E1 (TIM2, externe 1k-Pull-ups) und P19 (TIM3 partial remap)
     f1::gpio::peripheral_input({GpioPort::A, 0}, Signal::TIM2_CH1),
     f1::gpio::peripheral_input({GpioPort::A, 1}, Signal::TIM2_CH2),
@@ -136,6 +142,13 @@ using Pwm = f1::Timer<f1::TimerId::Tim4, {.kernel_hz = clocks.timer1_hz(), .tick
 using Rotary1 = f1::Timer<f1::TimerId::Tim2, {.kernel_hz = clocks.timer1_hz(), .tick_hz = clocks.timer1_hz()}>;
 using Rotary2 = f1::Timer<f1::TimerId::Tim3, {.kernel_hz = clocks.timer1_hz(), .tick_hz = clocks.timer1_hz()}>;
 using Watchdog = f1::Iwdg<{.pclk1_hz = clocks.pclk1_hz(), .timeout_ms = 2'000}>;
+/// WS2812: eine TIM1-Periode je Bit (800 kHz = 90 Takte), der naechste Vergleichswert per DMA beim
+/// Update-Ereignis (DMA1 Kanal 5)
+using LedTimer = f1::Timer<f1::TimerId::Tim1, {.kernel_hz = clocks.timer2_hz(), .update_hz = 800'000}>;
+using LedDma = f1::DmaChannel<{.request = f1::DmaRequest::Tim1Up, .direction = f1::DmaDirection::MemoryToPeripheral,
+                               .memory_bytes = 2, .peripheral_bytes = 2, .priority = 2}>;
+inline constexpr rtos::devices::Ws2812Timing ws2812_timing = rtos::devices::ws2812_timing(clocks.timer2_hz());
+static_assert(ws2812_timing.period_ticks == LedTimer::period_ticks);
 
 extern Console console;
 
@@ -149,6 +162,13 @@ void set_led(bool on) noexcept;
 bool read_input(std::uint16_t index, bool& active) noexcept;
 /// Ausgang des Busses 0: 0 aus, 0xFFFF voll an, dazwischen PWM (bei Digital-Ausgaengen: an ab 1).
 bool write_output(std::uint16_t index, std::uint16_t value) noexcept;
+
+/// WS2812-Versorgung (U1) an/aus.
+void set_led_supply(bool on) noexcept;
+/// Farben (0xRRGGBB, Index 0 = D4) an die Kette senden; false, wenn die letzte Uebertragung noch laeuft.
+bool show_rgb(const std::array<std::uint32_t, rgb_led_count>& frame) noexcept;
+/// Zuletzt gesendete Farben (fuer den Emulator-Test lesbar).
+extern std::array<std::uint32_t, rgb_led_count> rgb_frame;
 
 /// Drehgeber 0/1: Rastungen (Zaehler / 2, modulo 2^16) und Taster.
 void read_rotary(unsigned encoder, std::uint16_t& detents, bool& pressed) noexcept;

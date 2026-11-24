@@ -22,6 +22,7 @@ public static class HouseModelChecker
 		["rotaryEncoder"] = "rotaryEncoder",
 		["fingerprint"] = "fingerprint",
 		["milightController"] = "milight",
+		["rgbIndicator"] = "rgbLed",
 	};
 
 	/// <summary>Ein-/Ausgaenge, die mehrfach verwendet werden duerfen</summary>
@@ -77,6 +78,7 @@ public static class HouseModelChecker
 			// ---- Apps
 			var io = new IoAddressing(catalog, boardType, extensions);
 			var used = new Dictionary<(IoDirection, ushort), string>();
+			var usedLeds = new HashSet<byte>();
 			foreach (var a in s.Elements().Where(x => x.Name != "setting" && x.Name != "extension"))
 			{
 				string appId = (string)a.Attribute("id")!;
@@ -142,6 +144,24 @@ public static class HouseModelChecker
 				{
 					int index = ((string)a.Attribute("encoder")!) == "ROTENC1" ? 1 : 0;
 					if (index >= count) Err(a, $"{appId}: {boardType} hat nur {count} Drehgeber.");
+				}
+				if (kind == "rgbIndicator" && board.Features.TryGetValue("rgbLed", out int leds))
+				{
+					foreach (var token in ((string?)a.Attribute("leds") ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries))
+					{
+						if (!byte.TryParse(token, out var led) || led >= leds)
+						{
+							Err(a, $"{appId}: LED {token} gibt es nicht ({boardType} hat {leds} RGB-LEDs, 0..{leds - 1}).");
+						}
+						else if (!usedLeds.Add(led))
+						{
+							Err(a, $"{appId}: LED {led} gehoert schon einer anderen Signal-App dieser Station.");
+						}
+					}
+					if (a.Attribute("color") is XAttribute color)
+					{
+						try { Units.ColorToRgb(color.Value); } catch (FormatException ex) { Err(color, $"{appId}: {ex.Message}"); }
+					}
 				}
 				if (kind == "blindsTimer" && !hasLocation && (a.Attribute("latitudeDeg") == null || a.Attribute("longitudeDeg") == null))
 				{

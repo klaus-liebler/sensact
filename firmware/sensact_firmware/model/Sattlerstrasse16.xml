@@ -37,7 +37,7 @@
     <onOff id="POWIT_LX_BACK_W2" number="184" description="Wandlicht mitte" output="OUT3.4" autoOff="PT6H" />
     <onOff id="POWIT_LX_BACK_W3" number="185" description="Wandlicht Wohnen" output="OUT3.3" autoOff="PT6H" />
     <blind id="BLIND_LX_BACK_J1" number="178" description="Markise nicht genutzt" relay1="OUT1.9" relay2="OUT2.3" relayMode="R1_POWER__R2_DOWN" upTime="PT1M" downTime="PT1M" />
-    <toggleButton id="PUSHB_LX_FRON_B1" number="188" input="IN3.14" targets="SOUND_L0_TECH_AUDIO" />
+    <toggleButton id="PUSHB_LX_FRON_B1" number="188" input="IN3.14" targets="SOUND_L0_TECH_AUDIO SIGNL_L1_LVNG_CORNERS SIGNL_L1_KTCH_CORNERS" />
     <lightbarrier id="LIBAR_LX_FRON_B2" number="189" description="Bewegungsmelder" input="IN3.15" activeHigh="false" />
     <onOff id="POWIT_LX_FRON_W1" number="190" description="Außenleuchte" output="OUT3.9" autoOff="PT2M" />
     <toggleButton id="PUSHB_LX_GARA_B11" number="191" input="IN0.2" targets="POWIT_LX_GARA_C1" />
@@ -173,6 +173,7 @@
     <singlePwm id="PWM___L1_KTCH_S1" number="94" description="Spots" outputs="BB.0 BB.1 BB.2 BB.3" minimalBrightness="0.781" standbyController="STDBY_L0_TECH_48V" />
     <singlePwm id="PWM___L1_KTCH_S2" number="95" description="Einzelspot Spüle" outputs="BB.4" minimalBrightness="0.781" standbyController="STDBY_L0_TECH_48V" />
     <singlePwm id="PWM___L1_KTCH_W1" number="97" description="Wandlampen" outputs="BB.5" minimalBrightness="23.047" autoOff="PT6H" standbyController="STDBY_L0_TECH_48V" />
+    <rgbIndicator id="SIGNL_L1_KTCH_CORNERS" number="364" description="Eck-LEDs (Signal, Orientierungslicht)" leds="1 2 3 4" toggleSignal="1" />
   </station>
   <station id="SNSCT_L1_LVNG_UP" number="5" board="SensactUp02">
     <extension name="PCA0" type="PCA9685" bus="BB" address="0x40" />
@@ -193,6 +194,7 @@
     <singlePwm id="PWM___LS_STRS_W1" number="332" description="Wand L0-L1" outputs="BB.19" minimalBrightness="0.781" autoOff="PT6H" standbyController="STDBY_L2_CORR_24V" />
     <singlePwm id="PWM___LS_STRS_W3" number="334" description="Wand L1-L2" outputs="BB.20" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
     <singlePwm id="PWM___LS_STRS_W5" number="336" description="Wand L2-L3" outputs="BB.21" minimalBrightness="0.781" autoOff="PT2M" standbyController="STDBY_L2_CORR_24V" />
+    <rgbIndicator id="SIGNL_L1_LVNG_CORNERS" number="363" description="Eck-LEDs (Signal, Orientierungslicht)" leds="1 2 3 4" toggleSignal="1" />
   </station>
   <station id="SNSCT_L3_WORK_HS" number="7" board="SensactUpHs">
     <extension name="OUT0" type="PCA9685" bus="SensactBus" address="0x41" />

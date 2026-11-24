@@ -23,6 +23,7 @@
 #include "firmware.hpp"
 #include "heap.hpp"
 #include "pca9685_bank.hpp"
+#include "rgb_leds.hpp"
 #include "rtos/sync/spsc_ring.hpp"
 #include "station_config.hh"
 
@@ -70,6 +71,13 @@ void pump_can_tx() noexcept {
 sensact::f103::Pca9685Bank<board::I2c, Kernel::Lock> pca;
 std::atomic<std::uint32_t> io_heartbeat{0};
 std::atomic<bool> pca_configured{false};  // der App-Thread hat die Chips der Station angemeldet
+
+// ---- WS2812 (nur App-Thread) ----------------------------------------------------------------------
+struct LedOutput {
+    static void set_supply(bool on) noexcept { board::set_led_supply(on); }
+    static bool show(const std::array<std::uint32_t, board::rgb_led_count>& f) noexcept { return board::show_rgb(f); }
+};
+sensact::f103::RgbLeds<board::rgb_led_count, LedOutput> leds;
 
 // ---- Ein-/Ausgaenge der Apps ------------------------------------------------------------------------
 class BoardIo final : public sensact::iHostIo {
@@ -119,6 +127,20 @@ public:
         ++can_tx_count;
         pump_can_tx();
         return true;
+    }
+
+    void SetRgbLed(std::uint8_t index, std::uint32_t rgb) override { leds.SetApp(index, rgb); }
+    void ClearRgbLeds() override { leds.ClearApps(); }
+    void Identify(tms_t durationMs) override {
+        LOGI(TAG, "IDENTIFY for %lu ms", (unsigned long)durationMs);
+        leds.Identify(static_cast<std::uint32_t>(durationMs), kernel.now());
+    }
+    void CommandFeedback(Feedback kind, std::uint16_t level) override {
+        switch (kind) {
+            case Feedback::LocalDimmer: leds.FeedbackLevel(level, kernel.now()); break;
+            case Feedback::Local: leds.FeedbackFlash(decltype(leds)::green, kernel.now()); break;
+            case Feedback::Remote: leds.FeedbackFlash(decltype(leds)::blue, kernel.now()); break;
+        }
     }
 };
 
@@ -227,6 +249,15 @@ void app_thread(void*) {
         }
         pump_can_tx();
         update_led(t);
+        // Fehleranzeige am Knopf: ein PCA9685 antwortet nicht oder CAN ist gestoert (nach 3 s Anlauf)
+        bool fault = false;
+        if (configured && t > 3'000) {
+            const auto cs = Can::status();
+            fault = !can_up || cs.bus_off || cs.error_passive;
+            for (std::size_t i = 0; i < pca.count(); ++i) fault = fault || !pca.ready(i);
+        }
+        leds.SetFault(fault);
+        leds.Update(t);
         if (static_cast<std::int32_t>(t - next_diag) >= 0) {
             next_diag += 60'000;
             log_diagnostics();

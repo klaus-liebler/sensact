@@ -67,6 +67,14 @@ Pin-Datenbank von rtoos lehnt dort jeden Pin ab, der das Signal nicht hat.
 | PA8, PA15 | WS2812-Kette, 5-V-Versorgung (SHDN von U1) | noch ungenutzt; 5 V aus (push-pull) |
 | PD0 | 12-MHz-Oszillator (HSE-Bypass) → 72 MHz | |
 
+**WS2812** (TIM1_CH1 + DMA1 Kanal 5, Versorgung U1 nur bei Licht, aus 2 s nach dem letzten):
+- **D4 am Knopf – Rückmeldung** der Firmware: nach Taster/Drehgeber die Helligkeit eines lokalen
+  Dimmers (warmweiß, 2,5 s, ausblendend), grün = anderes lokales Ziel, blau = Kommando über CAN;
+  zweimal kurz rot alle 5 s = ein PCA9685 antwortet nicht oder CAN gestört.
+- **Ecken D5–D8 – Signal-App** `rgbIndicator` aus dem Hausmodell (`SIGNL_L1_LVNG_CORNERS`): Dauerlicht
+  (Orientierungslicht) und Muster (Türklingel, Alarm, …), von jeder Station über CAN schaltbar.
+- **Alle – IDENTIFY** (Kommando an die Knoten-App): blau blinkend, um eine Station zu finden.
+
 Status-LED: kurz an jede Sekunde = normal; 5 Hz = keine gültige Konfiguration; lang an = CAN gestört
 (error passive/bus off) oder 12-MHz-Oszillator ausgefallen.
 
@@ -89,7 +97,7 @@ Status-LED: kurz an jede Sekunde = normal; 5 Hz = keine gültige Konfiguration; 
 - **CAN:** altes CAN-ID-Schema mit 29-bit-IDs wie die ESP32-Stationen (`USE_NEW_CAN_ID = false`):
   Kommandos an fremde Apps gehen auf den Bus, Kommandos an lokale Apps direkt an die App. In
   diesem Schema gibt es keine Status- und Event-Nachrichten.
-- **Nicht unterstützt:** RGB-LEDs (WS2812), Ton, Uhrzeit (zeitgesteuerte Apps laufen auf ESP32-Stationen),
+- **Nicht unterstützt:** Ton, Uhrzeit (zeitgesteuerte Apps laufen auf ESP32-Stationen),
   gespeicherte App-Parameter, PCA9555-Eingänge am Bus.
 
 ## Emulator
@@ -104,7 +112,12 @@ python -I emulation/run.py build/lvng/sensact_f103.elf --seconds 15 \
    --at "11:sysbus.i2c2.pca0 Dump"
 ```
 
-Damit erprobt: Laden der Stationskonfiguration (17 Apps), ein Tastendruck IO7 schaltet den Dimmer
+Mit `--at "T:sysbus.canInjector Send 0x0000016B \"0F\""` speist ein zweiter Knoten am CAN-Hub
+([CanInjector.cs](emulation/CanInjector.cs)) Kommandos ein (ID = App-Nummer, erstes Byte das Kommando),
+`sysbus.canInjector Received` zeigt, was die Station gesendet hat; `--at "T:dump board::rgb_frame 5"`
+liest die zuletzt an die WS2812 gesendeten Farben. TIM1 und DMA1 sind die eigenen Modelle aus rtoos.
+
+Damit erprobt: Laden der Stationskonfiguration (18 Apps), ein Tastendruck IO7 schaltet den Dimmer
 W1 ein, und PCA0 Kanal 12 steht danach auf voll an (MODE1 0x20, MODE2 0x10, PRE_SCALE 14). Kommandos an
 fremde Apps (Rollladen J1, Steckdose C1) und Heartbeats gehen auf den CAN-Bus. Renode kennt keine
 Pull-ups: Eingänge vor dem Start auf high setzen (`--setup`), sonst gelten alle Taster als gedrückt.
@@ -117,5 +130,5 @@ Pull-ups: Eingänge vor dem Start auf high setzen (`--setup`), sonst gelten alle
 - **Siliziumrevision des Chips:** Revision Z/B (ab 2008) verträgt laut ES096 2.2.9 Code neuerer
   Compiler nicht. Bei einer Platine von 2015 ist das unwahrscheinlich; die Kennung auf dem Gehäuse
   prüfen (Y, X, 1, 2, 3 sind in Ordnung).
-- WS2812-Statusanzeige (TIM1_CH1 mit DMA), PCA9555-Eingänge, Status-/Event-Nachrichten mit dem
-  neuen CAN-ID-Schema.
+- PCA9555-Eingänge, Status-/Event-Nachrichten mit dem neuen CAN-ID-Schema; Übertragung der
+  Konfiguration über CAN (Konzept: `docs/concept-modular-firmware.md`, "STM32F103: Konfiguration über CAN").

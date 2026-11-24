@@ -108,10 +108,22 @@ void cApplicationHost::SendApplicationCommandToMessageBus(eApplicationID destina
         LOGI(TAG, "CMD %s -> %s (local)", (unsigned)command < sizeof(CommandNames) / sizeof(CommandNames[0]) ? CommandNames[(unsigned)command] : "?",
              AppName(destinationApp));
         (void)OnApplicationCommand(app, command, payload, payloadLength);  // lokal: nicht ueber den Bus
+        if (IsOperatorCommand(command)) {
+            if (app->GetAppType() == eAppType::PWM) {
+                std::array<uint16_t, 4> s{};
+                app->FillStatus(*this, s);  // cSinglePWM: [0] an, [3] Zielhelligkeit
+                io.CommandFeedback(iHostIo::Feedback::LocalDimmer, s[0] != 0 ? s[3] : 0);
+            } else {
+                io.CommandFeedback(iHostIo::Feedback::Local, 0);
+            }
+        }
         return;
     }
     LOGI(TAG, "CMD %s -> %s (CAN)", (unsigned)command < sizeof(CommandNames) / sizeof(CommandNames[0]) ? CommandNames[(unsigned)command] : "?",
          AppName(destinationApp));
+    if (IsOperatorCommand(command)) {
+        io.CommandFeedback(iHostIo::Feedback::Remote, 0);
+    }
     CANMessage m;
     if (canMBP.BuildApplicationCommandMessage((u16)destinationApp, (u8)command, payload, payloadLength, m) == ErrorCode::OK) {
         if (!io.SendCan(m)) {
@@ -152,15 +164,28 @@ bool cApplicationHost::GetLocalTime(struct tm& localTime) {
 }
 
 void cApplicationHost::SetRGBLed(uint8_t index, CRGB color) {
-    (void)index;
-    (void)color;
-    if (!rgbWarned) {
-        LOGW(TAG, "RGB LEDs are not supported yet");
-        rgbWarned = true;
-    }
+    io.SetRgbLed(index, (uint32_t(color.r) << 16) | (uint32_t(color.g) << 8) | color.b);
 }
 
-void cApplicationHost::UnColorizeAllRGBLed() {}
+void cApplicationHost::UnColorizeAllRGBLed() { io.ClearRgbLeds(); }
+
+bool cApplicationHost::IsOperatorCommand(eCommandType c) {
+    switch (c) {
+        case eCommandType::TOGGLE:
+        case eCommandType::TOGGLE_SPECIAL:
+        case eCommandType::ON:
+        case eCommandType::OFF:
+        case eCommandType::UP:
+        case eCommandType::DOWN:
+        case eCommandType::STOP:
+        case eCommandType::START:
+        case eCommandType::STEP_VERTICAL:
+        case eCommandType::SET_VERTICAL_TARGET:
+            return true;
+        default:
+            return false;
+    }
+}
 
 void cApplicationHost::PlayMP3(uint8_t volume0_255, const uint8_t* buf, size_t len) {
     (void)volume0_255;

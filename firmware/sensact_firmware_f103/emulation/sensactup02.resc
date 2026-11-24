@@ -5,9 +5,16 @@ $name?="sensactup02"
 $bin?=@build/lvng/sensact_f103.elf
 
 using sysbus
+include $ORIGIN/../../../../rtoos/emulation/renode/STM32H5_TIM.cs
+include $ORIGIN/../../../../rtoos/emulation/renode/STM32F1_DMA.cs
 include $ORIGIN/PCA9685.cs
+include $ORIGIN/CanInjector.cs
 mach create $name
 machine LoadPlatformDescription $ORIGIN/sensactup02.repl
+machine LoadPlatformDescriptionFromString "canInjector: CAN.CanInjector @ sysbus <0x50000000, +0x10>"
+emulation CreateCANHub "canHub"
+connector Connect sysbus.can1 canHub
+connector Connect sysbus.canInjector canHub
 
 macro reset
 """

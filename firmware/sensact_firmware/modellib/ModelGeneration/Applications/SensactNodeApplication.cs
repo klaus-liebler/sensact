@@ -35,6 +35,12 @@ namespace Klli.Sensact.Model.Common.Applications
         }
 
         [SensactCommandMethod]
+        public override void OnIDENTIFYCommand(uint durationMs)
+        {
+            base.OnIDENTIFYCommand(durationMs);
+        }
+
+        [SensactCommandMethod]
         public override void OnPINGCommand(uint payload)
         {
 

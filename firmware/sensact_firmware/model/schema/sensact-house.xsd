@@ -197,6 +197,7 @@
       <xs:element name="singlePwm" type="SinglePwm" />
       <xs:element name="rgbw" type="Rgbw" />
       <xs:element name="sound" type="Sound" />
+      <xs:element name="rgbIndicator" type="RgbIndicator" />
       <xs:element name="pump" type="Pump" />
       <xs:element name="toggleButton" type="ToggleButton" />
       <xs:element name="dimButton" type="DimButton" />
@@ -296,6 +297,33 @@
       <xs:extension base="App">
         <xs:attribute name="initialVolume" type="Level" default="65535" />
         <xs:attribute name="defaultSignalOnToggle" type="xs:unsignedShort" default="0" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Signal-/Orientierungslicht aus RGB-LEDs der Station (cRgbIndicator); braucht Board-Feature
+       "rgbLed". Kommandos: ON/OFF/TOGGLE, SET_RGBW, SET_VERTICAL_TARGET (Helligkeit), SET_SIGNAL
+       (1 Tuerklingel, 2 Alarm, 3 Hinweis, 4 OK, 5 Fehler). -->
+  <xs:complexType name="RgbIndicator">
+    <xs:complexContent>
+      <xs:extension base="App">
+        <!-- Indizes der LEDs, z. B. "1 2 3 4" (sensactUp: 0 = LED am Knopf, 1..4 = Ecken) -->
+        <xs:attribute name="leds" use="required">
+          <xs:simpleType>
+            <xs:list itemType="xs:unsignedByte" />
+          </xs:simpleType>
+        </xs:attribute>
+        <!-- Farbe des Dauerlichts -->
+        <xs:attribute name="color" default="#FFB060">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="#[0-9A-Fa-f]{6}" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <!-- Was TOGGLE tut: 0 Dauerlicht an/aus, sonst dieses Signalmuster (Tuerklingel am Taster: 1) -->
+        <xs:attribute name="toggleSignal" type="xs:unsignedShort" default="0" />
+        <xs:attribute name="autoOff" type="Duration" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

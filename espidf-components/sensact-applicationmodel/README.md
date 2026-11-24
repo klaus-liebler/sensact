@@ -137,6 +137,27 @@ ignoriert. Status: `[1]` Zählerstand.
 Ein nicht angeschlossener W-Kanal ist `magic::OUTPUT_NULL`.
 Status: `[0..3]` = R, G, B, W (0..255).
 
+### `cRgbIndicator` – Signal-/Orientierungslicht aus RGB-LEDs – `rgbindicator.cc`
+
+Modell: `<rgbIndicator leds="1 2 3 4" color="#FFB060" toggleSignal="0" autoOff="..."/>` (Board-Feature
+`rgbLed`; sensactUp: 0 = LED am Knopf, 1..4 = Ecken). Schreibt über `SetRGBLed` in die LEDs `leds`.
+
+| Kommando | Wirkung |
+|---|---|
+| `ON(ms)` | Dauerlicht in `color` und der eingestellten Helligkeit; aus nach `ms`, sonst nach `autoOff`, sonst nie |
+| `OFF` | aus, ein laufendes Muster endet |
+| `TOGGLE` | `toggleSignal` = 0: Dauerlicht an/aus; sonst dieses Muster (Türklingel am Taster: 1) |
+| `SET_RGBW(r,g,b,w)` | Farbe (Weiß mischt sich in alle Kanäle) und an; alles 0 = aus |
+| `SET_VERTICAL_TARGET(level)` | Helligkeit 0..65535 und an; 0 = aus (Orientierungslicht) |
+| `SET_SIGNAL(n)` | Muster über dem Dauerlicht: 1 Türklingel (weiß, 3 × 200 ms), 2 Alarm (rot 2 Hz, bis `OFF`, höchstens 60 s), 3 Hinweis (blau, 3 × an- und abschwellend), 4 OK (grün 1 s), 5 Fehler (rot 1 s); 0 beendet; danach wieder das Dauerlicht |
+
+Status: `[0]` 1 = Dauerlicht an, `[1]` Helligkeit, `[2]` laufendes Muster, `[3]` Farbe als RGB565.
+
+### Knoten-App `cSensactNode` – `node.cc`
+
+`PING(x)` → Event `PONG(x)`. `IDENTIFY(ms)` (0 = 10 s, höchstens 60 s): die Station zeigt sich über
+`iSensactContext::Identify` (F103: alle WS2812 blinken blau; Default: nichts).
+
 ### `cSound` – Klingel/Signalgeber – `sound.cc`
 
 | Kommando | Wirkung |

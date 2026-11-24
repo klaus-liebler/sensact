@@ -3,8 +3,11 @@
 namespace board {
 
 Console console;
+std::array<std::uint32_t, rgb_led_count> rgb_frame{};
 
 namespace {
+
+std::array<std::uint16_t, rtos::devices::ws2812_slots(rgb_led_count)> rgb_slots{};
 
 /// Drehgeber: Zaehlerstand seit dem Start in Zaehlschritten (TIMx_CNT zaehlt 16 bit, hier ohne Ueberlauf
 /// fortgefuehrt). Eine Rastung = 2 Zaehlschritte (Encoder-Modus TI1, wie die Altfirmware).
@@ -49,11 +52,29 @@ bool init() noexcept {
     rotary[0].last_cnt = static_cast<std::uint16_t>(Rotary1::counter());
     rotary[1].last_cnt = static_cast<std::uint16_t>(Rotary2::counter());
 
+    // WS2812: TIM1 laeuft dauernd mit 800 kHz, CCR1 = 0 (Leitung low), DMA erst mit show_rgb()
+    LedTimer::init();
+    LedTimer::configure_pwm<1>();
+    LedTimer::set_compare<1>(0);
+    LedDma::init();
+    LedTimer::enable_update_dma();
+    LedTimer::start();
+
     I2c::init();
     return hse;
 }
 
 void set_led(bool on) noexcept { f1::gpio::write(led, !on); }
+
+void set_led_supply(bool on) noexcept { f1::gpio::write(supply_5v, on); }
+
+bool show_rgb(const std::array<std::uint32_t, rgb_led_count>& frame) noexcept {
+    if (LedDma::busy()) return false;
+    rtos::devices::ws2812_encode(frame, rgb_slots, ws2812_timing);
+    if (!LedDma::start(LedTimer::compare_address<1>(), rgb_slots.data(), rgb_slots.size())) return false;
+    rgb_frame = frame;
+    return true;
+}
 
 bool read_input(std::uint16_t index, bool& active) noexcept {
     for (const Input& i : inputs) {

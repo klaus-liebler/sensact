@@ -31,6 +31,15 @@ def free_port() -> int:
         return s.getsockname()[1]
 
 
+def symbol_address(elf: Path, symbol: str) -> int:
+    nm = subprocess.run(["arm-none-eabi-nm", "-C", str(elf)], capture_output=True, text=True, check=True).stdout
+    for line in nm.splitlines():
+        parts = line.split(" ", 2)
+        if len(parts) == 3 and parts[2] == symbol:
+            return int(parts[0], 16)
+    raise SystemExit(f"Symbol {symbol} nicht in {elf}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("elf", type=Path)
@@ -39,6 +48,7 @@ def main() -> int:
     ap.add_argument("--setup", action="append", default=[], help="Monitorbefehl vor dem Start")
     ap.add_argument("--at", action="append", default=[], help="SEKUNDEN:Monitorbefehl waehrend des Laufs")
     ap.add_argument("--renode", type=Path, default=Path("C:/opt/renode/renode.exe"))
+    ap.add_argument("--renode-log", type=Path, help="Ausgabe von Renode (Log, Fehler) in diese Datei")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -51,9 +61,20 @@ def main() -> int:
         *args.setup,
         "start",
     ])
-    timed = sorted((float(a.split(":", 1)[0]), a.split(":", 1)[1]) for a in args.at)
+    timed = []
+    for a in args.at:
+        t, cmd = float(a.split(":", 1)[0]), a.split(":", 1)[1]
+        if cmd.startswith("dump "):
+            # "dump SYMBOL N": N 32-bit-Woerter der Variablen SYMBOL (C++-Name, arm-none-eabi-nm -C)
+            _, symbol, count = cmd.split(" ", 2)
+            address = symbol_address(args.elf, symbol)
+            timed += [(t + 0.01 * i, f"sysbus ReadDoubleWord 0x{address + 4 * i:08X}") for i in range(int(count))]
+        else:
+            timed.append((t, cmd))
+    timed.sort(key=lambda x: x[0])
+    log = open(args.renode_log, "wb") if args.renode_log else subprocess.DEVNULL
     proc = subprocess.Popen([str(args.renode), "--disable-gui", "--plain", "--port", str(monitor_port), "-e", commands],
-                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                            stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
     try:
         deadline = time.monotonic() + 60
         while True:

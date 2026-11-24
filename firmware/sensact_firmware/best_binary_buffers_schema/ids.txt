@@ -130,3 +130,4 @@ message firmwarelog.ResponseLogHistory 3
 message firmwarelog.RequestSetLogLevel 4
 message firmwarelog.ResponseSetLogLevel 5
 namespace firmwarelog 17
+class sensactcfg.RgbIndicatorApp 34

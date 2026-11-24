@@ -10,6 +10,7 @@
 #include "apps/pump.hh"
 #include "apps/pushbutton.hh"
 #include "apps/rgbw.hh"
+#include "apps/rgbindicator.hh"
 #include "apps/rotaryencoder.hh"
 #include "apps/singlepwm.hh"
 
@@ -108,6 +109,16 @@ namespace sensact::config
         }
         else if constexpr (std::is_same_v<T, cfg::RgbwApp::Payload>)
             return new cRgbw(Id(a.id), a.outputR, a.outputG, a.outputB, a.outputW, a.autoOffMs, Id(a.standbyController), WELL_KNOWN_COLORS);
+        else if constexpr (std::is_same_v<T, cfg::RgbIndicatorApp::Payload>)
+        {
+            std::vector<uint8_t> leds;
+            for (size_t i = 0; i < a.ledsCount; i++)
+            {
+                uint8_t v{};
+                if (cfg::DecodeRgbIndicatorAppLedsElementAt(a.ledsData, i, v)) leds.push_back(v);
+            }
+            return new cRgbIndicator(Id(a.id), std::move(leds), a.color, a.toggleSignal, a.autoOffMs);
+        }
         else if constexpr (std::is_same_v<T, cfg::SoundApp::Payload>)
 #ifndef SENSACT_WITHOUT_SOUND
             return new cSound(Id(a.id), a.initialVolume, a.defaultSignalOnToggle);

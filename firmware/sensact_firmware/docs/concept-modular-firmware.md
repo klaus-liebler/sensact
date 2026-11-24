@@ -443,6 +443,47 @@ fehlt mangels Netz. Katalog-Firmware-Familie `stm32f103`. Der F407 (`SensactHs08
 dieselben App-IDs und Kommandos; der Editor prüft, dass eine Station nur App-Typen und
 Kommandos verwendet, die ihre Firmware-Familie kennt.
 
+## STM32F103: Konfiguration über CAN (Konzept, 2026-11-24)
+
+Die F103-Firmware hat seit 2026-11-24 die Apps und das Konfigurationsformat der ESP32-Basis,
+kompiliert die Stationskonfiguration aber noch ein: ein Image je Station, jede Modelländerung heißt
+neu flashen. Ziel ist dasselbe Prinzip wie beim ESP32 (stationsneutrale Basis, Konfiguration getrennt
+übertragbar), nur ohne Netz.
+
+1. **Ein Image für alle sensactUp-Stationen.** Die Firmware kennt nur die Platine; welche Station
+   sie ist, steht in der Konfiguration.
+2. **Speicher: zwei Slots im Flash.** Die letzten 8 KB (1-KB-Seiten) als Slot A/B à 4 KB
+   (`rtos_add_firmware(... FLASH_DATA_START 0x0801E000)`). Kopf je Slot: Format, Kompatibilitätskennung
+   (wie `STATION_COMPAT_ID`), Laufnummer, Länge, CRC32 - der Kopf wird **zuletzt** geschrieben, ein
+   abgebrochener Transfer hinterlässt nie einen gültigen halben Slot. Beim Start gilt der gültige Slot mit
+   der höchsten Laufnummer; lehnt `LoadStationConfig` ihn ab, der andere; ohne gültigen Slot
+   Sicherheitsmodus (keine Apps, LED 5 Hz, über CAN erreichbar). Der Decoder liest direkt aus dem Flash
+   (die App-Namen zeigen schon heute in die Daten).
+3. **Kompakte Konfiguration.** Heute sind 8 KB der Konfiguration fast nur die Namen aller ~370 Apps des
+   Hauses. Der Builder erzeugt für den F103 eine Variante mit den Namen der lokalen Apps und ihrer Ziele
+   (LVNG: < 1 KB).
+4. **Übertragung über CAN, eine ESP32-Station als Gateway** (Weboberfläche mit Login, gleicher Bus).
+   Nachrichten: die vorhandenen `NodeCommand`/`NodeCommandAcknowledge` (`WRITE_SCRATCH`,
+   `COPY_SCRATCH_TO_FLASH`, `RESET`; gleiche IDs im alten und neuen CAN-ID-Schema). Ablauf: BEGIN (Länge,
+   CRC, Kennung) - der F103 löscht den freien Slot *vorher* (der F1 hält die CPU beim Löschen an,
+   CAN-Frames dürfen dabei nicht verloren gehen) - DATA (7 Byte je Frame, Sequenznummer, Quittung nach
+   je 16 Frames: der bxCAN-FIFO ist 3 tief) - END (CRC prüfen, Kopf schreiben, quittieren, Neustart).
+   1 KB in etwa 0,3 s, 8 KB in etwa 2 s bei 125 kbit/s; kein RAM-Puffer (direkt in den Flash).
+5. **Adressierung.** Konfigurierte Knoten über ihre Stationsnummer; ein leerer meldet beim Start seine
+   96-bit-UID (`NODE_STARTED`), das Gateway zeigt "unkonfigurierter F103, UID ..." - zuordnen,
+   übertragen. Zum Finden blinkt ein Knoten auf `IDENTIFY` (seit 2026-11-24 in der F103-Firmware: alle
+   WS2812 blau).
+6. **Bedienung.** Der Editor baut auch für `stm32f103`-Stationen ein Paket (nur Abschnitt 2); hochgeladen
+   wird es über die Weboberfläche einer ESP32-Station (Arbeitsbereich "CAN-Stationen": Liste, Paket,
+   Fortschritt), geschützt wie das eigene Stationspaket (E12). Dafür bekommt `node_gatewayhost.hh` seine
+   Aufgabe.
+7. **Später:** Firmware-Update über denselben Kanal mit einem kleinen Bootloader (erste 8-16 KB; die
+   Altfirmware hatte `sensactIAP`).
+
+Etappen: F1 stationsneutrales Image + Slots + Sicherheitsmodus (mit USB-CAN-Adapter oder im Emulator
+testbar), F2 kompakte Konfiguration im Builder, F3 Übertragungsprotokoll auf dem F103 (Host-Test des
+Zustandsautomaten, Renode mit CAN-Hub), F4 Gateway in der ESP32-Basis + Web-UI, F5 Editor.
+
 ## Entscheidungen 2026-11-17 (zuvor offene Fragen)
 
 1. Absicherung des Uploads: das Login des Webinterfaces genügt, keine Signatur.

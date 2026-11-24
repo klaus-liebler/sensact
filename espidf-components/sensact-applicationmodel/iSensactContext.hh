@@ -29,6 +29,9 @@ namespace sensact::apps
         // der Aufrufer fuellt params vorher mit seinen Konstruktor-Defaults, die Implementierung
         // ueberschreibt nur die Slots, die tatsaechlich in NVS gefunden wurden (damit ein noch nie
         // gespeicherter Wert nicht beim ersten Boot auf 0 faellt).
+        // Station finden: die Station zeigt sich (RGB-LEDs blinken, Status-LED, ...) fuer durationMs.
+        // Ausgeloest von IDENTIFY an die Knoten-App. Default: nichts (eine Station ohne Anzeige).
+        virtual void Identify(tms_t durationMs) { (void)durationMs; }
         virtual void LoadPersistedParams(eApplicationID appId, std::array<uint16_t, 4> &params) = 0;
         virtual void SavePersistedParams(eApplicationID appId, const std::array<uint16_t, 4> &params) = 0;
         // Deklarationen für alle Funktionen, mit denen sich eine Command-Nachricht bauen lässt

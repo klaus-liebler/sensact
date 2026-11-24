@@ -127,6 +127,20 @@ public class SoundApp : IApp
 	public ushort DefaultSignalOnToggle;
 }
 
+/// Signal-/Orientierungslicht aus RGB-LEDs der Station (cRgbIndicator)
+[BinaryType]
+public class RgbIndicatorApp : IApp
+{
+	public ushort Id;
+	/// Indizes der LEDs (SetRGBLed)
+	[BinaryMaxItemCount(16)] public byte[] Leds;
+	/// Farbe des Dauerlichts, 0xRRGGBB
+	public uint Color;
+	/// TOGGLE: 0 Dauerlicht an/aus, sonst dieses Signalmuster
+	public ushort ToggleSignal;
+	public uint AutoOffMs;
+}
+
 [BinaryType]
 public class PumpApp : IApp
 {

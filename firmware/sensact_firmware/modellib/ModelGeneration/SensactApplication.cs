@@ -349,6 +349,11 @@ namespace Klli.Sensact.Model.Common
         [SensactCommandMethod]
         public virtual void OnPINGCommand(uint payload) { }
         /// <summary>
+        /// Die Station zeigt sich (RGB-LEDs, Status-LED) fuer durationMs (0 = 10 s); geht an die Knoten-App
+        /// </summary>
+        [SensactCommandMethod]
+        public virtual void OnIDENTIFYCommand(uint durationMs) { }
+        /// <summary>
         /// Advises the sensact application to "play" a demo of its capabilities
         /// </summary>
         /// <param name="demostep"></param>

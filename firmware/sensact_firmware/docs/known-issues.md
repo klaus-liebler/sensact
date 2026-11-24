@@ -17,9 +17,26 @@ Zurzeit keine.
 | T14 | **Stationspaket und datengetriebene Basis am Gerät erproben** (`SNSCT_L0_TECH_HS_1`): per USB flashen (`Pipeline --model Sattlerstrasse16`, schreibt Paket und Web-UI gleich ins LittleFS). Erwartet: Log "Station configuration loaded: SNSCT_L0_TECH_HS_1, … apps", alle Taster/Lampen/Rollläden wie bisher, Web-UI mit allen Apps. Dann eine Modelländerung (`BuildPackage`) über System → Station Package hochladen: Gerät startet neu und arbeitet mit der neuen Konfiguration. Paket einer anderen Station/Basis wird abgelehnt; ohne Paket Sicherheitsmodus mit Wartungsseite. OTA und Datei-Endpunkte verlangen den Login. | Firmware/Webmanager |
 | T15 | **Neue Weboberfläche und Firmware-Log am Gerät ansehen** (mit T14): Arbeitsbereiche, Hell/Dunkel, Vollbild, Abmelden; Terminal zeigt die Startmeldungen (Puffer 48 Zeilen) und neue Zeilen live, `loglevel * debug` wirkt, die Glocke zählt Warnungen/Fehler. Ohne Gerät schon erprobt (Testserver, `npm run it`). | Web-UI/Webmanager |
 | T16 | **Neue F103-Firmware am Gerät erproben** (`firmware/sensact_firmware_f103`, rtoos; zuerst `SNSCT_L1_LVNG_UP`): per SWD (Reset-Modus, weil die Altfirmware SWD abgeschaltet hatte) oder seriell über P4 flashen. Prüfen: Taster IO1–IO8, Drehgeber (Richtung, Rastung), Lampen über PCA9685 0x40/0x41, Kommandos zu und von den ESP32-Stationen über CAN, Verhalten bei abgezogenem/gestörtem I2C-Kabel (Konsole: Zähler `recover`, `reinits`). Siliziumrevision auf dem Chip ablesen (ES096 2.2.9: Z/B nicht unterstützt). Im Emulator (Renode) schon erprobt, s. README dort. | F103-Stationen |
+| T17 | **WS2812/IDENTIFY ausrollen:** Neuer App-Typ `rgbIndicator`, neues Kommando `IDENTIFY` und das erweiterte Konfigurationsschema ändern die Kompatibilitätskennung der Stationspakete: die ESP32-Stationen brauchen die **neue Basis-Firmware und neue Pakete** (sonst lehnen sie die Pakete ab). Erst dann sendet der Klingeltaster `PUSHB_LX_FRON_B1` (auf `SNSCT_L0_TECH_HS_1`) das Türklingelmuster auch an Wohnzimmer und Küche. ESP32-Build mit den neuen Quellen noch nicht ausgeführt (Host-Tests grün). Am F103: Sichtbarkeit von D4 und den Ecken durch die Abdeckung, Helligkeit der Rückmeldung am Knopf beurteilen. | ESP32-Stationen, F103 |
 | T7 | **Events werden nicht ausgewertet** (`cApplicationHost::OfferMessage` → `NOT_YET_IMPLEMENTED`) – bewusst, "for future use". | `node_applicationhost.cc` |
 
 ## Erledigt
+
+### 2026-11-24 (2) – WS2812 der sensactUp-Stationen, IDENTIFY, rtoos zusammengeführt
+
+- **A – Rückmeldung am Knopf (D4)** in der F103-Firmware: nach Taster/Drehgeber die Helligkeit eines
+  lokalen Dimmers (warmweiß, 2,5 s), grün für ein anderes lokales Ziel, blau für ein Kommando über CAN;
+  zweimal kurz rot alle 5 s, solange ein PCA9685 nicht antwortet oder CAN gestört ist.
+- **B – Signal-App `rgbIndicator`** (gemeinsame Apps, Modell, Builder, Schema, Host-Tests): Dauerlicht
+  (Farbe, Helligkeit) und Muster (Türklingel, Alarm, Hinweis, OK, Fehler). Wohnzimmer und Küche haben
+  je eine für die vier Ecken (`SIGNL_L1_LVNG_CORNERS` 363, `SIGNL_L1_KTCH_CORNERS` 364,
+  `toggleSignal="1"`); der Klingeltaster `PUSHB_LX_FRON_B1` schaltet sie mit (s. T17).
+- **C – `IDENTIFY(ms)`** an die Knoten-App (Kommando 32, hinten angefügt): alle WS2812 blinken blau.
+- WS2812 über TIM1_CH1 + DMA1 Kanal 5 (rtoos: neuer F1-DMA-Treiber); Versorgung U1 nur, solange etwas
+  leuchtet. Emulator (Renode, eigenes F1-DMA-Modell in rtoos, CAN-Hub mit `CanInjector.cs`): IDENTIFY,
+  Türklingel, Orientierungslicht, Rückmeldung und CAN-Verkehr erprobt.
+- rtoos: die lokale EtherCAT/Security-Linie aus dem Submodul von factory_in_a_box mit dem F103-Port
+  zusammengeführt (`27bb6d0`), factory_in_a_box zeigt auf den neuen Stand.
 
 ### 2026-11-24 – STM32F103-Stationen auf rtoos mit den Apps der ESP32-Basis
 

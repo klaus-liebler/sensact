@@ -29,6 +29,15 @@ public:
     virtual void GetRotaryEncoderValue(eRotaryEncoder re, std::uint16_t& value, bool& pressed) = 0;
     /// Nachricht auf den CAN-Bus (ohne Warten; false: Sendepuffer voll).
     virtual bool SendCan(const CANMessage& m) = 0;
+    /// RGB-LEDs der Station (Apps), 0xRRGGBB.
+    virtual void SetRgbLed(uint8_t index, uint32_t rgb) = 0;
+    virtual void ClearRgbLeds() = 0;
+    /// IDENTIFY: die Station zeigt sich.
+    virtual void Identify(tms_t durationMs) = 0;
+    /// Rueckmeldung nach einem Bedienkommando: an einen lokalen Dimmer (level: Zielhelligkeit, 0 = aus),
+    /// an ein anderes lokales Ziel oder ueber CAN.
+    enum class Feedback : uint8_t { LocalDimmer, Local, Remote };
+    virtual void CommandFeedback(Feedback kind, uint16_t level) = 0;
 };
 
 class cApplicationHost : public apps::iSensactContext {
@@ -52,6 +61,7 @@ public:
     void GetU16Input(InOutId id, u16& value) override { io.GetInput(id, value); }
     void SetRGBLed(uint8_t index, CRGB color) override;
     void UnColorizeAllRGBLed() override;
+    void Identify(tms_t durationMs) override { io.Identify(durationMs); }
     void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t& value, bool& isPressed) override {
         io.GetRotaryEncoderValue(re, value, isPressed);
     }
@@ -73,6 +83,9 @@ private:
     ErrorCode OnApplicationCommand(apps::cApplication* app, eCommandType command, const uint8_t* const payload,
                                    uint8_t payloadLength);
     void PublishStatus(eApplicationID app, eApplicationStatus statusType, const std::array<uint16_t, 4>& status);
+    /// Ein Kommando, das ein Mensch ausgeloest hat (Taster, Drehgeber) - nur dafuer gibt es Rueckmeldung,
+    /// nicht fuer Heartbeats an Standby-Netzteile.
+    static bool IsOperatorCommand(eCommandType c);
 
     iHostIo& io;
     cCANMessageBuilderParserOld canOld;
@@ -82,7 +95,7 @@ private:
     std::vector<bool> appNeedsFastLoop;
     std::size_t currentLoopBucket{0};
     tms_t nowForCurrentLoop{0};
-    bool rgbWarned{false}, soundWarned{false};
+    bool soundWarned{false};
 };
 
 }  // namespace sensact
