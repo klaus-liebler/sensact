@@ -264,7 +264,7 @@ namespace Klli.Sensact.Config
             this.WriteCommonFile("applicationIds.fbs", sb_flatc);
 
             // Ws-protocol-Nachfolger fuer applicationIds.fbs (s. sensact_firmware/docs/plan_v2/
-            // 02-builder-migration-csharp.md, Abschnitt "Flatbuffers wird durch ws-protocol
+            // 02-builder-migration-csharp.md in der Git-Historie bis 5114fa3, Abschnitt "Flatbuffers wird durch ws-protocol
             // ersetzt") -- eigenstaendige BestBinaryBuffers-Schema-Datei (C# selbst als Schema-
             // Definition-Sprache, s. C:\repos\dotnet_libs\best_binary_buffers\README.md) statt
             // Flatbuffers-Enum-Text. Laeuft VORLAEUFIG parallel zum bisherigen .fbs-Output (s.o.), bis

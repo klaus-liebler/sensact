@@ -1,6 +1,12 @@
 # Konzept: Basis-Firmware + Stations-Hardware-Konfiguration + Applikations-Konfiguration
 
-Stand 2026-11-17. **Status: zurückgestellt (Umsetzung später).** Entschieden:
+Entscheidungsprotokoll, begonnen 2026-11-17. **Status 2026-11-24: Etappen 1–5 umgesetzt** (Stationspaket,
+datengetriebene ESP32-Basis, Editor; offen: Runtimeconfig/Zertifikat aus NVS, Paket-Export direkt aus dem
+Editor), F103-Stationen auf den gemeinsamen Apps (L3), deren Konfiguration über CAN als Konzept. Die
+zusammenfassende Beschreibung des heutigen Stands steht in den Fachkonzepten
+([Konfiguration und Auslieferung](../../../docs/konzepte/06-konfiguration-und-auslieferung.md),
+[Stationen und Firmware](../../../docs/konzepte/05-stationen-und-firmware.md)); dieses Dokument hält die
+Varianten und Begründungen fest. Entschieden:
 
 - Weg B (datengetrieben); Gerätedateien in BestBinaryBuffers (nicht JSON).
 - BestBinaryBuffers wird erweitert, damit Listen auch innerhalb einer App-Konfiguration

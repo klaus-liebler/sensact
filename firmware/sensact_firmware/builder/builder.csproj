@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    C#-Build-Orchestrator (s. docs/plan_v2/02-builder-migration-csharp.md), Nachfolger des
+    C#-Build-Orchestrator (Migrationsplan: docs/plan_v2/02-builder-migration-csharp.md in der Git-Historie bis 5114fa3), Nachfolger des
     frueheren Node/TypeScript-Orchestrators (gulpfile.ts, archiviert/geloescht). Lebte uebergangsweise
     als builder_cs/ NEBEN dem alten builder/, bis Paritaet erreicht war (s. "Entschieden" im Plan);
     seitdem alter builder/ geloescht und dieses Verzeichnis zu builder/ umbenannt. Architektur/

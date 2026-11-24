@@ -17,6 +17,8 @@ eigenem Remote.
 | `klaus-liebler/espidf-components` | `C:\repos\espidf-components` | Allgemeine ESP-IDF-Komponenten, die auch andere Projekte nutzen: `common` (Typen, Byte-Parser, `sunsetsunrise.hh`), `errorcodes`, `led` (`crgb.hh`), I2C-Treiber (PCA9555/PCA9685 …), `ethernet`, `tas580x`, `nrf24`, `milight`, `hoymiles` u.a. – **ohne dieses Repo bauen weder die Firmware noch die Host-Tests** |
 | `klaus-liebler/espidf-component-webmanager` | `C:\repos\espidf-component-webmanager` | Wifimanager + genereller Web-/OTA-/Login-Server (`cpp/webmanager.hh`), BestBinaryBuffers-Schemas (`best_binary_buffers_schema/`) für Wifimanager/Systeminfo/Scheduler/Journal/Fingerprint u.a. |
 | `klaus-liebler/npm-packages` | `C:\repos\npm-packages` | Alle `@klaus-liebler/*`-npm-Pakete: Build-Tools (`espidf-vite-secure-build-tools`), Web-UI-Bausteine (`web-components`, `web-components-sensact` – **hier liegt auch das Wifimanager-Frontend**), Test-Server-Helfer (`websocket_file_testserver`), gemeinsame Utilities (`commons`, `sensact-base`, `usersettings_codegeneration`) |
+| `klaus-liebler/rtoos` | `C:\repos\rtoos` | C++26-Echtzeitbetriebssystem mit Chip-Port `stm32f103`; Grundlage der F103-Firmware (`firmware/sensact_firmware_f103`, eingebunden über den Nachbarpfad) |
+| `klaus-liebler/best_binary_buffers` | `C:\repos\dotnet_libs\best_binary_buffers` | Serialisierung (Schema als C#-Code → C++/TS/C#), für ws-Protokoll und Stationskonfiguration |
 | `klaus-liebler/factory_in_a_box` | `C:\repos\factory_in_a_box\firmware_factory_control_unit` | STM32-Firmware mit eigenem C#-Builder (`builder/`); teilt sich mit sensact die gemeinsame Bibliothek `dotnet_libs/firmware_builder_common` |
 
 ## Wie die Repos beim Build zusammenspielen

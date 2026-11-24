@@ -1,5 +1,8 @@
 # Architektur
 
+Code-Sicht der ESP32-Basis-Firmware. Das Gesamtbild (Stationen, Apps, CAN, Stationspaket, F103-Stationen)
+steht in den [Fachkonzepten](../../../docs/README.md#fachkonzepte).
+
 ## Grobe Schichten
 
 ```

@@ -1,8 +1,9 @@
 # Offene Punkte und Entscheidungsfragen
 
 Lebende Liste. Neue Funde hier eintragen; Erledigtes mit Datum nach unten unter "Erledigt"
-verschieben. (Der frühere Backlog `plan_v2/04-architektur-review.md` ist archiviert; dort noch
-offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS – gelten weiter.)
+verschieben. (Der frühere Backlog `plan_v2/04-architektur-review.md` steht nur noch in der Git-Historie
+bis 5114fa3; dort noch offene Punkte – `main/__archive/`, absolute Pfade, HAL-Duplikate, Login/HTTPS –
+gelten weiter.)
 
 ## Entscheidung nötig
 

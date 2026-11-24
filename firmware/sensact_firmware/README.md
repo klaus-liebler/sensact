@@ -1,40 +1,41 @@
 # sensact_firmware – Entwicklerdokumentation
 
-Einstiegspunkt für alles, was zum Verständnis und zur Weiterentwicklung dieses
-Projekts gebraucht wird.
+Einstieg für alle, die am Code arbeiten: ESP32-Basis-Firmware, Builder, Editor, Hausmodell.
+Was sensact fachlich ist und wie es aufgebaut ist, steht in der
+**[Gesamtdokumentation](../../docs/README.md)** (Fachkonzepte und Nutzerdokumentation) – dort anfangen,
+wer das System noch nicht kennt.
 
-- [docs/repo-map.md](docs/repo-map.md) – Aus welchen Repos das Gesamtsystem besteht und
-  wie sie zusammenhängen
-- [docs/build-process.md](docs/build-process.md) – Wie ein Build/Flash-Durchlauf abläuft
-- [docs/board-provisioning.md](docs/board-provisioning.md) – Wie ein neues Board angelegt
-  und in Betrieb genommen wird
-- [docs/architecture.md](docs/architecture.md) – Node-/HAL-/App-Architektur der Firmware
+## Kurzfassung
+
+`sensact_firmware` ist die ESP-IDF-Firmware der ESP32-S3-Stationen und das Werkzeug drumherum:
+
+- `main/` – Basis-Firmware (stationsneutral: Apps und Erweiterungen kommen aus dem Stationspaket)
+- `builder/` – C#-Builder: Generierung, Web-Build, Stationspaket, Firmware, Flashen
+- `editor/` – Blazor-Editor für das Hausmodell
+- `modellib/` – Import, Prüfung und Codegenerierung des Hausmodells (von Builder und Editor genutzt)
+- `model/` – XML-Hausmodell, Katalog, XSDs
+- `best_binary_buffers_schema/` – Schemas für ws-Protokoll und Stationskonfiguration
+- `web/` – Weboberfläche (Vite), `testserver/` – Station-Simulation für die Oberfläche
+
+Die Apps selbst liegen in `../../espidf-components/sensact-applicationmodel`, die Firmware der
+STM32F103-Stationen in [`../sensact_firmware_f103`](../sensact_firmware_f103/README.md).
+
+Erstes Flashen per USB: `dotnet run --project builder -- Pipeline --model <Name>`; danach nach
+Modelländerungen nur `BuildPackage --model <Name>` und das Paket über die Weboberfläche hochladen. Vorher
+die einmaligen Vorbereitungen in [docs/build-process.md](docs/build-process.md) erledigen.
+
+## Dokumente
+
+- [docs/repo-map.md](docs/repo-map.md) – aus welchen Repos das Gesamtsystem besteht und wie sie zusammenhängen
+- [docs/build-process.md](docs/build-process.md) – Voraussetzungen, Builder-Phasen, generierte Dateien, Troubleshooting
+- [docs/board-provisioning.md](docs/board-provisioning.md) – neues Board anlegen und in Betrieb nehmen
+- [docs/architecture.md](docs/architecture.md) – Node-/HAL-/App-Architektur der ESP32-Firmware im Code
 - [Sensact-Apps: Kommandos & Status](../../espidf-components/sensact-applicationmodel/README.md)
   – verbindliche Referenz aller Apps (auch für die Web-UI)
 - [Host-Unit-Tests der Apps](../../espidf-components/sensact-applicationmodel/host_test/README.md)
   – GoogleTest auf dem PC, kein Board nötig
-- [model/README.md](model/README.md) – XML-Hausmodell: bearbeiten, Regeln, auf die Station bringen
+- [model/README.md](model/README.md) – XML-Hausmodell: bearbeiten, Regeln, neuer App-Typ
 - [editor/README.md](editor/README.md) – Editor für das Hausmodell
-- [docs/concept-modular-firmware.md](docs/concept-modular-firmware.md) – Konzept und Stand der
-  datengetriebenen Basis-Firmware (Stationspaket, Konfiguration, Editor)
-- [docs/known-issues.md](docs/known-issues.md) – offene Punkte, Entscheidungsfragen und
-  Erledigtes
-- [docs/plan_v2/00-overview.md](docs/plan_v2/00-overview.md) – Archiviertes
-  Planungsdokument einer früheren Überarbeitungsphase, falls historischer Kontext
-  gebraucht wird
-
-## Kurzfassung für Eilige
-
-`sensact_firmware` ist die ESP-IDF-Firmware für die "sensact"-Hausautomatisierungs-
-Boards (Rollladen, Relais, Dimmer, Fingerprint-Türsteuerung u.a.). Sie ist Teil des
-größeren `sensact`-Repos, bindet aber mehrere eigenständige Repos ein (Wifimanager,
-Web-UI-Bausteine, Build-Tools) – siehe [docs/repo-map.md](docs/repo-map.md) für Details,
-bevor du an mehreren Stellen gleichzeitig etwas änderst.
-
-Die Firmware ist stationsneutral: welche Apps eine Station hat, kommt aus dem
-Stationspaket, das der Builder aus dem XML-Hausmodell (`model/`) erzeugt. Erstes Flashen per
-USB: `dotnet run --project builder -- Pipeline --model <Name>`; danach nach
-Modelländerungen nur `BuildPackage --model <Name>` und das Paket über die Weboberfläche
-hochladen. Details in [docs/build-process.md](docs/build-process.md),
-insbesondere die einmaligen manuellen Vorbereitungen dort, bevor der erste Build auf
-einer neuen Maschine läuft.
+- [docs/concept-modular-firmware.md](docs/concept-modular-firmware.md) – Entscheidungsprotokoll zur
+  datengetriebenen Basis (Varianten, Begründungen, Etappen, F103-Konfiguration über CAN)
+- [docs/known-issues.md](docs/known-issues.md) – offene Punkte, Entscheidungsfragen und Erledigtes

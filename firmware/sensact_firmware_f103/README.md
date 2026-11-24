@@ -64,7 +64,7 @@ Pin-Datenbank von rtoos lehnt dort jeden Pin ab, der das Signal nicht hat.
 | PA11/PA12 | CAN → SN65HVD230, 125 kbit/s | |
 | PA9/PA10 | USART1 (P4) | |
 | PB12 | Status-LED, aktiv low | |
-| PA8, PA15 | WS2812-Kette, 5-V-Versorgung (SHDN von U1) | noch ungenutzt; 5 V aus (push-pull) |
+| PA8, PA15 | WS2812-Kette (TIM1_CH1 + DMA), Versorgung U1 (SHDN) | Feature `rgbLed` (5 LEDs), s. u. |
 | PD0 | 12-MHz-Oszillator (HSE-Bypass) → 72 MHz | |
 
 **WS2812** (TIM1_CH1 + DMA1 Kanal 5, Versorgung U1 nur bei Licht, aus 2 s nach dem letzten):
