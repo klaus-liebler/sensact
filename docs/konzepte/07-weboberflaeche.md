@@ -66,6 +66,35 @@ nach Raum (Raum und Ebene aus dem Namen, angezeigt als „Wohnen · EG“); die 
 D (Dachgeschoss), A (außen). „Nur diese Station“ zeigt nur die Apps dieser Station; ausgeschaltet lassen sich alle Apps des Hauses
 schalten (die Kommandos gehen dann über CAN).
 
+## Mobile Bedienung (`/mobil`)
+
+Für das Telefon gibt es unter `/mobil` eine zweite Oberfläche ohne Anwendungs-Shell
+(`firmware/sensact_firmware/web/mobile/`). Sie steckt im selben Bundle (die Station liefert für jeden Pfad
+dieselbe Seite aus); `app.ts` startet bei diesem Pfad statt der Shell nur das Element `<sensact-mobile>`.
+Datenquelle ist dieselbe erzeugte App-Liste wie bei „Apps der Station“: daraus werden Dimmer
+(`SinglePwmApplication`), Schaltausgänge `POWIT_*` (`OnOffApplication`) und Rollläden `BLIND_*` genommen und
+über Ebene und Raum im App-Namen nach Stockwerk und Raum geordnet. Gesendet wird über die erzeugten
+`Send*Command`-Funktionen, Zustände kommen per `RequestStatus`/`NotifyStatus` wie gehabt.
+
+Gestaltungsentscheidungen:
+
+- **Stockwerkswechsel per Ein-Finger-Wischen** (natives CSS-Scroll-Snap) plus Stockwerksleiste unten.
+  Mehrfinger-Gesten wurden verworfen: Zwei Finger lösen im mobilen Browser Pinch-Zoom aus, iOS-Safari
+  reserviert Mehrfinger-Gesten teils für sich, sie sind schwer zu entdecken und einhändig kaum zu machen.
+  Scroll-Snap übernimmt Richtungserkennung (waagrecht = Stockwerk, senkrecht = Seite scrollen) und
+  Schwung vom Browser selbst und ist damit robuster als eine eigene Gestenerkennung.
+- **Dimmer = ein runder Knopf**: Antippen schaltet (`TOGGLE`); nach kurzem Halten (280 ms) gehört der
+  Finger dem Knopf, ein Schieber erscheint, und Hoch-/Runterziehen sendet `SET_VERTICAL_TARGET`
+  (höchstens alle 120 ms, Endwert beim Loslassen). Die Haltezeit ist nötig, weil sonst jede senkrechte
+  Bewegung auf einem Knopf dimmen würde und die Seite nicht mehr scrollbar wäre. Der Wert ändert sich
+  relativ zur Startposition (kein Sprung beim Aufsetzen), 220 px Fingerweg = 0…100 %.
+- Rollläden: dieselbe Geste auf dem Rollladensymbol stellt eine Teilöffnung ein
+  (`SET_VERTICAL_TARGET` 16384…49151, an den Enden der Überfahrbereich).
+- Shadow DOM, damit die globalen Stile der Shell (im selben Bundle) nicht hineinwirken.
+
+Ohne Station und Builder lässt sich die Oberfläche nicht starten (sie braucht die erzeugten Pakete);
+mit `npm run it` (Testserver) unter `https://localhost:5173/mobil`.
+
 ## Wartungsseite
 
 Fest in der Firmware steckt nur eine kleine Wartungsseite. Sie wird ausgeliefert, solange kein gültiges

@@ -18,7 +18,9 @@
   "license": "ISC",
   "dependencies": {
     "@generated/runtimeconfig_ts": "file:../generated/runtimeconfig_ts",
+    "@generated/sensact_applicationids": "file:../generated/sensact_applicationids",
     "@generated/sensact_appsbuilder": "file:../generated/sensact_appsbuilder",
+    "@generated/sensact_sendCommandImplementation": "file:../generated/sensact_sendCommandImplementation",
     "@generated/wsprotocol_ts": "file:../generated/wsprotocol_ts",
     "@klaus-liebler/sensact-base": "file:../../../../npm-packages/@klaus-liebler/sensact-base",
     "@klaus-liebler/ui-shell": "file:../../../../npm-packages/@klaus-liebler/ui-shell",

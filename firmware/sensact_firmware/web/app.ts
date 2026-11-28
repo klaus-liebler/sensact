@@ -12,9 +12,16 @@ import SensactAppsBuild from "@generated/sensact_appsbuilder/sensactapps"
 import * as CFG from "@generated/runtimeconfig_ts"
 import * as CONST from "@klaus-liebler/web-components/typescript/utils/constants";
 import { NodemasterController } from "./nodemaster_controller";
+import { IsMobilePath, StartMobileApp } from "./mobile/mobile_app";
+import { MobileLinkController } from "./mobile/mobile_link_controller";
 
 let app: AppController;
 document.addEventListener("DOMContentLoaded", (_) => {
+  // Mobile Bedienung (/mobil): eigene Seite ohne Anwendungs-Shell, s. mobile/mobile_app.ts
+  if (IsMobilePath(window.location.pathname)) {
+    StartMobileApp();
+    return;
+  }
   // Optional: Chatbot mit Google API Key aktivieren
   // Wenn Sie einen Google API Key haben und Google Generative AI nutzen möchten, aktivieren Sie das:
   let chatbot: IChatbot | null = null;
@@ -44,6 +51,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
   s.AddApps(SensactAppsBuild(s));
   app.AddScreenController("sensact", new RegExp("^/sensact$"), html`<span>Apps der Station</span>`, s,
     { title: "Apps der Station", icon: "house", group: "Haus", description: "Licht, Rollläden, Szenen dieser Station bedienen" })
+  app.AddScreenController("mobil-info", new RegExp("^/mobil-info$"), html`<span>Mobile Bedienung</span>`, new MobileLinkController(app),
+    { title: "Mobile Bedienung", icon: "light", group: "Haus", description: "Licht und Rollläden des ganzen Hauses auf dem Telefon" })
   // @ts-ignore
   if(CFG.NODE_ID=="SNSCT_NODE_SIDEDOOR")
     app.AddScreenController("finger", new RegExp("^/finger$"), html`<span>Fingerabdruck</span>`, new FingerprintScreenController(app),
