@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
   // }
 
   app = new AppController("SensAct", CONST.WS_URL, easterEggFn, `Modell ${CFG.SENSACT_MODEL_NAME} vom ${CFG.SENSACT_MODEL_CREATION_DT_STRING}`, chatbot,
-    { hostLabel: CFG.SENSACT_NODE_NAME });
+    { hostLabel: CFG.SENSACT_NODE_NAME, look: "hmi" });
 
   // Reihenfolge = Reihenfolge im Arbeitsbereich-Umschalter; der erste ist die Startseite
   app.AddScreenController("dashboard", new RegExp("^/$"), html`<span>Übersicht</span>`, new OverviewScreenController(app, () => app.Workspaces),

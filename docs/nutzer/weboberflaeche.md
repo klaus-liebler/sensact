@@ -18,7 +18,8 @@ Abmelden über das Symbol ganz rechts in der Titelleiste.
 ![Startseite](../bilder/web-startseite.png)
 
 - **Titelleiste:** Name der Station, Verbindungsanzeige („verbunden“), Glocke mit der Zahl neuer
-  Warnungen und Fehler, Hell/Dunkel, Vollbild, angemeldeter Benutzer.
+  Warnungen und Fehler, Vollbild, angemeldeter Benutzer. Die Oberfläche ist immer dunkel
+  (Leitwarten-Look), eine Hell/Dunkel-Umschaltung gibt es deshalb nicht.
 - **Kacheln:** die Arbeitsbereiche dieser Station, gruppiert in *Haus*, *Diagnose* und *Gerät*. Ein Klick
   öffnet den Bereich; oben links wechselt man zwischen den Bereichen, „Übersicht“ führt zurück.
 - **Statusleiste** unten: Verbindung, Firmware-Version und Stand des Hausmodells.
@@ -31,7 +32,7 @@ Abmelden über das Symbol ganz rechts in der Titelleiste.
   (z. B. „Wohnen · EG“), **Nach Technik** nach Art (Rollläden und Markisen, Schaltausgänge, Dimmer …).
 - Die Knöpfe daneben filtern nach Etage: **Alle**, **K** Keller, **E** Erdgeschoss, **O** Obergeschoss,
   **D** Dachgeschoss, **A** außen.
-- **Nur diese Station** (blau = an) zeigt nur die Geräte, die an *dieser* Station angeschlossen sind. Aus
+- **Nur diese Station** (leuchtet cyan = an) zeigt nur die Geräte, die an *dieser* Station angeschlossen sind. Aus
   geschaltet erscheinen alle Geräte des Hauses; auch die lassen sich schalten.
 - **Aktualisieren** holt den aktuellen Zustand der Gruppe; Änderungen erscheinen sonst von
   selbst.

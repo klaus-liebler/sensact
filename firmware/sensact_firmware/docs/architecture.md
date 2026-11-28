@@ -132,8 +132,11 @@ Paket- und Firmware-Upload funktionieren.
 
 Rahmen ist die Anwendungs-Shell `@klaus-liebler/ui-shell` (Repo `npm-packages`, gemeinsam mit
 factory_in_a_box und labathome): Titelleiste (Verbindung, Glocke für Warnungen/Fehler im
-Firmware-Log, Hell/Dunkel, Vollbild, Benutzer/Abmelden), Arbeitsbereich-Umschalter mit Ribbon,
-Statusleiste (Verbindung, Zustand des Arbeitsbereichs, Build/Modell). `AppController`
+Firmware-Log, Vollbild, Benutzer/Abmelden), Arbeitsbereich-Umschalter mit Ribbon,
+Statusleiste (Verbindung, Zustand des Arbeitsbereichs, Build/Modell). sensact nutzt das dunkle
+HMI-Erscheinungsbild der Shell (`look: "hmi"` in `web/app.ts`, Stile in `ui-shell/src/ui/look-hmi.css`
+und `web-components/style/look-hmi.css`); ohne die Option erscheint der klassische helle Look mit
+Hell/Dunkel-Umschalter. `AppController`
 (`@klaus-liebler/web-components`) hängt jeden `ScreenController` als Arbeitsbereich ein
 (`AddScreenController(..., { title, icon, group, description })`, Reihenfolge = Umschalter, der erste ist
 die Startseite mit Kacheln aller Arbeitsbereiche, `OverviewScreenController`). Ein ScreenController
