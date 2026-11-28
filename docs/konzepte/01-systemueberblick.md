@@ -98,15 +98,15 @@ flowchart LR
     BU --> F1
     PKG -- "Upload im Browser" --> ST
     FW -- "USB einmalig, danach OTA" --> ST
-    F1 -- "SWD / seriell" --> UP
+    F1 -- "über CAN (Bootloader)" --> UP
 ```
 
 - **Hausmodell ändern** (Taster umbelegen, Zeit ändern, App ergänzen): Editor → Stationspaket bauen →
   im Browser hochladen. Keine neue Firmware.
 - **Basis-Firmware ändern** (neuer App-Typ, Fehlerbehebung): Firmware bauen, per OTA hochladen, dazu
   passende Pakete.
-- **F103-Stationen**: Konfiguration steckt im Firmware-Image; jede Änderung heißt neu bauen und flashen
-  (Übertragung über CAN ist als Konzept beschrieben).
+- **F103-Stationen**: Firmware und Konfiguration sind ein Paket; jede Änderung heißt neu bauen und das
+  Paket über den CAN-Bus flashen (Bootloader auf der Station).
 
 Mehr in [Konfiguration und Auslieferung](06-konfiguration-und-auslieferung.md).
 

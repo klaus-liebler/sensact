@@ -1,0 +1,24 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "bootloader",
+      "displayName": "CAN-Bootloader sensactUp rev 0.2 (STM32F103CB)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/../build/bootloader",
+      "toolchainFile": "${sourceDir}/../../../../rtoos/cmake/arm-none-eabi.cmake",
+      "cacheVariables": {
+        "RTOS_GCC_ROOT": "C:/opt/msys64/ucrt64",
+        "RTOS_CHIP": "stm32f103",
+        "RTOS_CONTRACT_SEMANTIC": "quick_enforce",
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      },
+      "environment": {
+        "PATH": "C:/opt/msys64/ucrt64/bin;$penv{PATH}"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "bootloader", "configurePreset": "bootloader" }
+  ]
+}

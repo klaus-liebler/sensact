@@ -224,7 +224,10 @@ internal static class Program
 		var outDir = Path.GetFullPath(Path.Combine(firmwareRoot, "..", "sensact_firmware_f103", "generated", nodeId));
 		Directory.CreateDirectory(outDir);
 		File.WriteAllBytes(Path.Combine(outDir, "station_config.bin"), config);
-		Console.WriteLine($"Stationskonfiguration {nodeId} ({config.Length} Byte) -> {outDir}");
+		// Nummer der Station (= der Knoten-App): kommt in den Image-Kopf, der Bootloader meldet sich
+		// darunter am CAN-Bus (sensact_firmware_f103/boot/boot_protocol.hpp)
+		File.WriteAllText(Path.Combine(outDir, "station_number.txt"), station.NodeId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		Console.WriteLine($"Stationskonfiguration {nodeId} (Station {station.NodeId}, {config.Length} Byte) -> {outDir}");
 	}
 
 	[BuildStep]

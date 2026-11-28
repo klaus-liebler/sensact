@@ -141,3 +141,14 @@ TEST(SensactNode, IdentifyAsksTheStationToShowItself)
     EXPECT_EQ(ctx.identifyCalls[1], 5'000);
     EXPECT_EQ(ctx.identifyCalls[2], 60'000) << "hoechstens 60 s";
 }
+
+TEST(SensactNode, ResetAndStartIapRestartTheStation)
+{
+    FakeSensactContext ctx;
+    apps::cSensactNode node(ID::POWIT_X1_XX3_9);
+    node.OnRESETCommand(&ctx);
+    node.OnSTART_IAPCommand(&ctx);
+    ASSERT_EQ(ctx.rebootCalls.size(), 2u);
+    EXPECT_FALSE(ctx.rebootCalls[0]) << "RESET: normaler Neustart";
+    EXPECT_TRUE(ctx.rebootCalls[1]) << "START_IAP: in den Bootloader";
+}

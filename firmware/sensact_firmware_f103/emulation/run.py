@@ -8,6 +8,12 @@
 --setup: Renode-Monitorbefehle vor dem Start (z. B. Eingaenge auf high: Renode kennt keine Pull-ups),
 --at T:BEFEHL: ein Monitorbefehl T Sekunden (Wanduhr) nach dem Start - Taster druecken/loslassen.
 
+Mit --bootloader build/bootloader/sensact_f103_boot.elf laeuft der CAN-Bootloader vorweg (die Firmware
+ab 0x0800'4000, ihr ELF mit versiegeltem Kopf aus dem Build): er wartet 1 s und startet sie dann.
+
+  python -I emulation/run.py build/lvng/sensact_f103.elf --bootloader build/bootloader/sensact_f103_boot.elf \
+     --setup "sysbus.gpioPortA OnGPIO 2 true" --expect "sensact bootloader" --expect "starting firmware" --expect "sealed"
+
 Mit --expect endet der Lauf, sobald jede erwartete Zeile erschienen ist (Exit-Code 0), sonst nach
 --seconds mit Exit-Code 1. Renode: C:/opt/renode (wie bei rtoos, s. dessen emulation/run.py).
 """
@@ -47,6 +53,7 @@ def main() -> int:
     ap.add_argument("--expect", action="append", default=[], help="Text, der in der Konsole erscheinen muss")
     ap.add_argument("--setup", action="append", default=[], help="Monitorbefehl vor dem Start")
     ap.add_argument("--at", action="append", default=[], help="SEKUNDEN:Monitorbefehl waehrend des Laufs")
+    ap.add_argument("--bootloader", type=Path, help="ELF des CAN-Bootloaders: er startet vor der Firmware")
     ap.add_argument("--renode", type=Path, default=Path("C:/opt/renode/renode.exe"))
     ap.add_argument("--renode-log", type=Path, help="Ausgabe von Renode (Log, Fehler) in diese Datei")
     args = ap.parse_args()
@@ -55,7 +62,8 @@ def main() -> int:
     port, monitor_port = free_port(), free_port()
     commands = "; ".join([
         f"$bin=@{args.elf.resolve().as_posix()}",
-        f"include @{(HERE / 'sensactup02.resc').as_posix()}",
+        *([f"$boot=@{args.bootloader.resolve().as_posix()}"] if args.bootloader else []),
+        f"include @{(HERE / ('sensactup02_boot.resc' if args.bootloader else 'sensactup02.resc')).as_posix()}",
         f'emulation CreateServerSocketTerminal {port} "console" false',
         "connector Connect sysbus.usart1 console",
         *args.setup,

@@ -16,6 +16,8 @@ public:
 	cSensactNode(const eApplicationID id);
 	void OnPINGCommand(uint32_t payload, iSensactContext *ctx) override;
 	void OnIDENTIFYCommand(uint32_t durationMs, iSensactContext *ctx) override;
+	void OnRESETCommand(iSensactContext *ctx) override;
+	void OnSTART_IAPCommand(iSensactContext *ctx) override;
 };
 
 }

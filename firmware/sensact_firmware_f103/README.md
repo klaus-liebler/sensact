@@ -12,7 +12,7 @@ Altfirmware von 2019 (`../firmwareCubeIDE/modules`, `SENSACTUP02`).
   eine Implementierung mit einer Testsuite. Weggelassen werden nur Sound, Milight, Fingerprint und
   Jalousie-Timer (`SENSACT_WITHOUT_...`).
 - **Konfiguration:** die Stationskonfiguration (BestBinaryBuffers) aus dem XML-Hausmodell,
-  einkompiliert. Kein Upload, weil die Station nur am CAN hängt.
+  einkompiliert: Firmware und Modell sind ein Paket, das ein CAN-Bootloader entgegennimmt (s. Flashen).
 
 ## Bauen
 
@@ -27,7 +27,8 @@ cd ../sensact_firmware_f103
 cmake --preset lvng && cmake --build --preset lvng          # -> build/lvng/sensact_f103.elf / .bin
 ```
 
-Für die Küche: `--nodeId SNSCT_L1_KTCH_UP` und Preset `ktch`. Nach jeder Änderung am Hausmodell
+Für die Küche: `--nodeId SNSCT_L1_KTCH_UP` und Preset `ktch`. Der Builder schreibt neben
+`station_config.bin` die Stationsnummer (`station_number.txt`) für den Image-Kopf. Nach jeder Änderung am Hausmodell
 den Builder-Schritt erneut ausführen; CMake baut dann neu.
 
 Stand 2026-11-24 (LVNG): Flash 53,7 KB von 128 KB, davon 8 KB Stationskonfiguration. RAM 14,9 KB
@@ -35,12 +36,51 @@ von 20 KB: Stacks 3 + 1 KB, Init-Heap 8 KB, davon 5,3 KB belegt.
 
 ## Flashen
 
-- **SWD** (Stecker P1: SWDIO, GND, SWCLK; ohne NRST, also „connect under reset“ mit Taster SW2) mit
-  ST-Link und STM32CubeProgrammer: `STM32_Programmer_CLI -c port=SWD mode=UR -w build/lvng/sensact_f103.bin 0x08000000 -v -rst`.
-  SWD bleibt jetzt eingeschaltet. Die Altfirmware schaltete es ab (`SWJ_DISABLE`), deshalb ist beim
-  ersten Mal der Reset-Modus nötig.
-- **Seriell** über den Bootloader am Stecker P4 (TX PA9, RX PA10, BOOT0, NRST, 3,3 V): BOOT0 high,
-  Reset, dann z. B. `STM32_Programmer_CLI -c port=COMx -w ...bin 0x08000000`.
+Firmware und Stationskonfiguration (Hausmodell) sind **ein Paket**: `build/<preset>/sensact_f103.bin`.
+Es liegt ab 0x0800'4000 hinter dem **CAN-Bootloader** (erste 16 KB) und kommt über den CAN-Bus auf die
+Station. Ein Update nur des Hausmodells gibt es nicht. Protokoll und Speicheraufteilung:
+[boot/boot_protocol.hpp](boot/boot_protocol.hpp).
+
+```
+cmake --preset lvng && cmake --build --preset lvng        # Paket, vom Build versiegelt (Laenge, CRC32)
+python -I tools/sensact_f103_flash.py info build/lvng/sensact_f103.bin
+python -I tools/sensact_f103_flash.py flash build/lvng/sensact_f103.bin --interface gs_usb   # USB-CAN-Adapter
+```
+
+`flash` schickt `START_IAP` an die Knoten-App (Station 5 = LVNG, 6 = KTCH): die Firmware setzt ein Flag
+im Backup-Register BKP_DR1 und startet neu, der Bootloader wartet dann 10 s statt 1 s. Das Werkzeug hält
+ihn mit QUERY fest, löscht nur die nötigen Seiten, überträgt 7 Byte je Frame mit Quittung nach je 16
+Frames (54 KB in etwa 15 s), prüft CRC und Image-Kopf und startet die Firmware. Hat die Station das Paket
+schon (gleiche CRC), startet es sie nur (`--force` überträgt trotzdem). Ein Paket für eine andere
+Station lehnt der Bootloader ab, bevor er etwas löscht. Weitere Befehle: `query --station 5`,
+`reboot --station 5 [--bootloader]`. CAN-Adapter über python-can (`pip install python-can`):
+`--interface gs_usb` (candleLight), `slcan --channel COM5`, `pcan --channel PCAN_USBBUS1`, ...
+
+**Bootloader** ([bootloader/](bootloader/main.cpp), rtoos-Treiber ohne Kernel, ~5,5 KB):
+
+- nach jedem Reset: Firmware prüfen (Kopf, Vektoren, CRC32), HELLO senden, **1 s** auf ein Kommando
+  warten (**10 s** nach `START_IAP`), jedes Kommando an die Station verlängert auf 10 s; dann Peripherie
+  und Takt zurück in den Reset-Zustand und in die Firmware springen. Die Reset-Flags bleiben stehen.
+- ohne gültige Firmware (leer, abgebrochenes Update) bleibt er, bis eine übertragen ist, und meldet
+  sich als Station 255: `flash ... --station 255`. Status-LED: 2,5 Hz im Fenster, 10 Hz ohne Firmware.
+- Firmware hängt (meldet sich nicht auf `START_IAP`): `flash ... --wait 120` starten und die Station aus-
+  und einschalten – das 1-s-Fenster nach dem Reset reicht.
+- `RESET` an die Knoten-App startet die Station einfach neu.
+
+**Erstmals** (oder für den Bootloader selbst) per **SWD** (Stecker P1: SWDIO, GND, SWCLK; ohne NRST,
+also „connect under reset“ mit Taster SW2) mit ST-Link und STM32CubeProgrammer:
+
+```
+cd bootloader && cmake --preset bootloader && cmake --build --preset bootloader && cd ..
+STM32_Programmer_CLI -c port=SWD mode=UR -e all -w build/bootloader/sensact_f103_boot.bin 0x08000000 -w build/lvng/sensact_f103.bin 0x08004000 -v -rst
+```
+
+SWD bleibt eingeschaltet. Die Altfirmware schaltete es ab (`SWJ_DISABLE`), deshalb ist beim ersten Mal
+der Reset-Modus nötig. Seriell über den ROM-Bootloader am Stecker P4 (TX PA9, RX PA10, BOOT0, NRST,
+3,3 V) geht weiterhin: BOOT0 high, Reset, dieselben zwei Dateien an dieselben Adressen.
+
+Tests des Protokolls (Automat, CRC, Werkzeug gegen den Automaten; ohne Hardware, normaler PC-Compiler):
+`cmake -S host_test -B build/host_test -G Ninja && cmake --build build/host_test && ctest --test-dir build/host_test`.
 
 Konsole: USART1 an P4, 115200 Baud. Sie zeigt Start, Stationsname, angelegte Apps, Kommandos
 (lokal/CAN) und jede Minute die Fehlerzähler von CAN, I2C und PCA9685.
@@ -112,6 +152,12 @@ python -I emulation/run.py build/lvng/sensact_f103.elf --seconds 15 \
    --at "11:sysbus.i2c2.pca0 Dump"
 ```
 
+Ohne `--bootloader` startet die Firmware direkt (VTOR 0x08004000); mit
+`--bootloader build/bootloader/sensact_f103_boot.elf` läuft der Bootloader vorweg
+([sensactup02_boot.resc](emulation/sensactup02_boot.resc)), wartet 1 s und startet sie
+(`--expect "starting firmware"`). Backup-Register und Flash-Controller des F1 hat das Modell nicht: das
+10-s-Fenster und das Flashen selbst prüfen die Host-Tests (`host_test/`).
+
 Mit `--at "T:sysbus.canInjector Send 0x0000016B \"0F\""` speist ein zweiter Knoten am CAN-Hub
 ([CanInjector.cs](emulation/CanInjector.cs)) Kommandos ein (ID = App-Nummer, erstes Byte das Kommando),
 `sysbus.canInjector Received` zeigt, was die Station gesendet hat; `--at "T:dump board::rgb_frame 5"`
@@ -130,5 +176,6 @@ Pull-ups: Eingänge vor dem Start auf high setzen (`--setup`), sonst gelten alle
 - **Siliziumrevision des Chips:** Revision Z/B (ab 2008) verträgt laut ES096 2.2.9 Code neuerer
   Compiler nicht. Bei einer Platine von 2015 ist das unwahrscheinlich; die Kennung auf dem Gehäuse
   prüfen (Y, X, 1, 2, 3 sind in Ordnung).
-- PCA9555-Eingänge, Status-/Event-Nachrichten mit dem neuen CAN-ID-Schema; Übertragung der
-  Konfiguration über CAN (Konzept: `docs/concept-modular-firmware.md`, "STM32F103: Konfiguration über CAN").
+- **Bootloader am Gerät erproben** (known-issues T18); Upload des Pakets über die Weboberfläche einer
+  ESP32-Station als Gateway.
+- PCA9555-Eingänge, Status-/Event-Nachrichten mit dem neuen CAN-ID-Schema.
