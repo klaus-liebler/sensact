@@ -16,9 +16,10 @@ emulation CreateCANHub "canHub"
 connector Connect sysbus.can1 canHub
 connector Connect sysbus.canInjector canHub
 
+# die Firmware liegt hinter dem CAN-Bootloader ab 0x08004000; ohne ihn (sensactup02_boot.resc) direkt starten
 macro reset
 """
     sysbus LoadELF $bin
-    cpu VectorTableOffset 0x08000000
+    cpu VectorTableOffset 0x08004000
 """
 runMacro $reset

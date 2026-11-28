@@ -34,6 +34,8 @@ public:
     virtual void ClearRgbLeds() = 0;
     /// IDENTIFY: die Station zeigt sich.
     virtual void Identify(tms_t durationMs) = 0;
+    /// RESET / START_IAP an die Knoten-App: Neustart, mit toBootloader in den Bootloader (10 s Fenster).
+    virtual void Reboot(bool toBootloader) = 0;
     /// Rueckmeldung nach einem Bedienkommando: an einen lokalen Dimmer (level: Zielhelligkeit, 0 = aus),
     /// an ein anderes lokales Ziel oder ueber CAN.
     enum class Feedback : uint8_t { LocalDimmer, Local, Remote };
@@ -62,6 +64,7 @@ public:
     void SetRGBLed(uint8_t index, CRGB color) override;
     void UnColorizeAllRGBLed() override;
     void Identify(tms_t durationMs) override { io.Identify(durationMs); }
+    void Reboot(bool toBootloader) override { io.Reboot(toBootloader); }
     void GetRotaryEncoderValue(eRotaryEncoder re, uint16_t& value, bool& isPressed) override {
         io.GetRotaryEncoderValue(re, value, isPressed);
     }

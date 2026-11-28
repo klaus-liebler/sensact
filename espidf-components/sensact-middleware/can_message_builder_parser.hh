@@ -120,13 +120,22 @@ namespace sensact
 
 		// Das alte CAN-ID-Schema wird von den noch im Feld aktiven Alt-Geraeten ausschliesslich zum
 		// Senden von ApplicationCommand-Nachrichten genutzt (s. BuildApplicationCommandMessage oben --
-		// kein anderes Build...Message ist in dieser Klasse ueberhaupt implementiert). Deshalb hier fest
-		// ApplicationCommand liefern, statt eine Maskierung/Zuordnung fuer Nachrichtentypen nachzubauen,
-		// die im Feld nie vorkommen (z.B. Heartbeats laufen als commandType innerhalb einer
-		// ApplicationCommand-Nachricht, s. cOnOff::OnHEARTBEATCommand, nicht als eigener CAN-Nachrichtentyp).
+		// kein anderes Build...Message ist in dieser Klasse ueberhaupt implementiert; Heartbeats laufen
+		// als commandType innerhalb einer ApplicationCommand-Nachricht, s. cOnOff::OnHEARTBEATCommand).
+		// Typ-Bits 0 sind deshalb ein ApplicationCommand. Alles andere ist keins: NodeCommand und
+		// NodeCommandAcknowledge (gleiche Werte in beiden Schemata) spricht der CAN-Bootloader der
+		// F103-Stationen (firmware/sensact_firmware_f103/boot/boot_protocol.hpp) -- frueher wurden solche
+		// Frames als Kommando an App (ID & 0x3FF) gelesen. Die uebrigen Typen kommen im alten Schema
+		// nicht vor und werden ignoriert (Payload).
 		ErrorCode ParseCanMessageType(CANMessage& m, eCanMessageType& type) override
 		{
-			type = eCanMessageType::ApplicationCommand;
+			switch ((eCanMessageTypeOld)(m.Id & MessageTypeMask))
+			{
+			case eCanMessageTypeOld::ApplicationCommand: type = eCanMessageType::ApplicationCommand; break;
+			case eCanMessageTypeOld::NodeCommand: type = eCanMessageType::NodeCommand; break;
+			case eCanMessageTypeOld::NodeCommandAcknowledge: type = eCanMessageType::NodeCommandAcknowledge; break;
+			default: type = eCanMessageType::Payload; break;
+			}
 			return ErrorCode::OK;
 		}
 

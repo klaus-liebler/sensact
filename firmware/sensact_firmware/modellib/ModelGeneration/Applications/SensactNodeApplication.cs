@@ -46,8 +46,16 @@ namespace Klli.Sensact.Model.Common.Applications
 
         }
 
+        /// <summary>Neustart in den Bootloader (F103: 10 s Fenster fuer ein Firmware-Update ueber CAN)</summary>
         [SensactCommandMethod]
         public override void OnSTART_IAPCommand()
+        {
+
+        }
+
+        /// <summary>Neustart der Station</summary>
+        [SensactCommandMethod]
+        public override void OnRESETCommand()
         {
 
         }

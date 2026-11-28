@@ -157,6 +157,8 @@ Status: `[0]` 1 = Dauerlicht an, `[1]` Helligkeit, `[2]` laufendes Muster, `[3]`
 
 `PING(x)` → Event `PONG(x)`. `IDENTIFY(ms)` (0 = 10 s, höchstens 60 s): die Station zeigt sich über
 `iSensactContext::Identify` (F103: alle WS2812 blinken blau; Default: nichts).
+`RESET`: Neustart der Station, `START_IAP`: Neustart in den Bootloader (`iSensactContext::Reboot`; F103:
+der CAN-Bootloader wartet dann 10 s statt 1 s auf ein Firmware-Update; Default: nichts).
 
 ### `cSound` – Klingel/Signalgeber – `sound.cc`
 

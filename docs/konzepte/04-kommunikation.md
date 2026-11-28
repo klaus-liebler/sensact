@@ -71,8 +71,9 @@ sind volle 8 Byte Parameter.
 | `CommandAcknowledge` | 0x05 | Quittung eines App-Kommandos |
 | `ApplicationStatus` | 0x06 | Status einer App |
 
-Damit würden Status und Events hausweit sichtbar, und die `NodeCommand`s tragen die geplante
-[Übertragung der Konfiguration an STM32F103-Stationen](06-konfiguration-und-auslieferung.md#stm32f103-heute-und-geplant).
+Damit würden Status und Events hausweit sichtbar. `NodeCommand` und `NodeCommandAcknowledge` (0x02/0x03,
+in beiden Schemata gleich) nutzt schon heute der
+[CAN-Bootloader der STM32F103-Stationen](06-konfiguration-und-auslieferung.md#stm32f103-firmware-und-modell-als-ein-paket-über-can).
 Umgestellt werden kann nur das ganze Haus auf einmal (oder mit einer Übergangsphase, in der Kommandos in
 beiden Schemata verstanden werden).
 

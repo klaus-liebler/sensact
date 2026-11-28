@@ -1,0 +1,13 @@
+:name: sensactUp rev 0.2 mit CAN-Bootloader
+:description: wie sensactup02.resc, dazu der Bootloader bei 0x08000000 ($boot); die Firmware ($bin) liegt ab 0x08004000.
+
+$boot?=@../build/bootloader/sensact_f103_boot.elf
+include $ORIGIN/sensactup02.resc
+
+macro reset
+"""
+    sysbus LoadELF $bin
+    sysbus LoadELF $boot
+    cpu VectorTableOffset 0x08000000
+"""
+runMacro $reset

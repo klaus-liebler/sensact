@@ -7,6 +7,8 @@
 //                       gestoerter Bus verzoegert nie den App-Takt.
 // Interrupts: CAN-Empfang (FIFO 0 -> Ring, weckt den App-Thread), Konsole USART1.
 // Watchdog (IWDG, 2..4 s): nur der App-Thread bedient ihn, und nur, solange auch der IO-Thread lebt.
+// Flash ab 0x0800'4000 hinter dem CAN-Bootloader (boot/boot_protocol.hpp); RESET/START_IAP an die
+// Knoten-App starten die Station neu (START_IAP: der Bootloader wartet dann 10 s auf ein Update).
 #include <array>
 #include <atomic>
 #include <cstddef>
@@ -19,6 +21,8 @@
 
 #include "app_host.hpp"
 #include "board/sensactup02.hpp"
+#include "boot_hw_f1.hpp"
+#include "boot_protocol.hpp"
 #include "cApplications.hh"
 #include "firmware.hpp"
 #include "heap.hpp"
@@ -32,6 +36,21 @@
 
 firmware::Kernel kernel;
 RTOS_CM3_BIND_KERNEL(kernel)
+
+// ---- Image-Kopf fuer den Bootloader (bei 0x0800'4100; Laenge und CRC traegt der Build nach) -----
+static_assert(SENSACT_NODE_NUMBER > 0 && SENSACT_NODE_NUMBER < sensact::boot::node_unconfigured);
+static_assert(sizeof(SENSACT_NODE_NAME) <= sizeof(sensact::boot::AppHeader::name));
+[[gnu::section(".app_header"), gnu::used]] constinit const sensact::boot::AppHeader app_header{
+    .magic = sensact::boot::app_magic,
+    .version = sensact::boot::header_version,
+    .board = sensact::boot::board_sensactup02,
+    .node = SENSACT_NODE_NUMBER,
+    .reserved = 0,
+    .image_size = 0,
+    .image_crc = 0,
+    .build_time = 0,
+    .name = SENSACT_NODE_NAME,
+};
 
 namespace {
 
@@ -129,6 +148,15 @@ public:
         return true;
     }
 
+    void Reboot(bool toBootloader) override {
+        LOGI(TAG, "restart%s in 200 ms", toBootloader ? " into the bootloader" : "");
+        reboot_to_bootloader = toBootloader;
+        reboot_at = kernel.now() + 200;  // Log und CAN-Sendepuffer leeren
+        reboot_pending = true;
+    }
+    bool reboot_pending = false, reboot_to_bootloader = false;
+    std::uint32_t reboot_at = 0;
+
     void SetRgbLed(std::uint8_t index, std::uint32_t rgb) override { leds.SetApp(index, rgb); }
     void ClearRgbLeds() override { leds.ClearApps(); }
     void Identify(tms_t durationMs) override {
@@ -183,6 +211,10 @@ void configure_station() noexcept {
     }
     const auto& st = sensact::config::Station;
     LOGI(TAG, "station %s of %s (configuration %s)", st.nodeName.c_str(), st.houseName.c_str(), st.created.c_str());
+    if (static_cast<unsigned>(st.nodeAppId) != app_header.node) {
+        LOGE(TAG, "configuration is for station %u, the image header says %u (bootloader address)",
+             static_cast<unsigned>(st.nodeAppId), static_cast<unsigned>(app_header.node));
+    }
     for (const auto& bus : st.buses) {
         if (bus.index == 1 && bus.isI2c) {
             for (const std::uint8_t a : bus.pca9685) {
@@ -262,6 +294,11 @@ void app_thread(void*) {
             next_diag += 60'000;
             log_diagnostics();
         }
+        if (board_io.reboot_pending && static_cast<std::int32_t>(t - board_io.reboot_at) >= 0) {
+            // Log und CAN-Sendepuffer hatten 200 ms; nicht laenger warten als der Watchdog erlaubt
+            for (int i = 0; i < 50 && !(board::console.tx_idle() && Can::tx_idle()); ++i) kernel.sleep(2);
+            sensact::boot::hw::restart(board_io.reboot_to_bootloader);
+        }
     }
 }
 
@@ -283,7 +320,8 @@ int main() {
     const std::uint32_t reset_flags = board::f1::rcc::take_reset_flags();
     const bool hse = board::init();
     board::Watchdog::start();
-    LOGI(TAG, "sensact F103 (sensactUp rev 0.2, rtoos) - reset flags 0x%02lX%s", (unsigned long)(reset_flags >> 24),
+    LOGI(TAG, "sensact F103 (sensactUp rev 0.2, rtoos) %s, station %u - reset flags 0x%02lX%s", app_header.name,
+         static_cast<unsigned>(app_header.node), (unsigned long)(reset_flags >> 24),
          (reset_flags & board::f1::rcc::csr_iwdgrstf) != 0 ? " WATCHDOG" : "");
     if (!hse) {
         LOGE(TAG, "12 MHz oscillator (HSE) did not start: running on HSI, no CAN");

@@ -134,6 +134,8 @@ namespace sensact::test
         void SetRGBLed(uint8_t index, CRGB color) override { rgbLeds[index] = (uint32_t(color.r) << 16) | (uint32_t(color.g) << 8) | color.b; }
         void UnColorizeAllRGBLed() override { rgbLeds.clear(); }
         void Identify(tms_t durationMs) override { identifyCalls.push_back(durationMs); }
+        void Reboot(bool toBootloader) override { rebootCalls.push_back(toBootloader); }
+        std::vector<bool> rebootCalls;
         /// Farbe einer RGB-LED als 0xRRGGBB (0: aus oder nie gesetzt).
         uint32_t RgbLed(uint8_t index) const
         {

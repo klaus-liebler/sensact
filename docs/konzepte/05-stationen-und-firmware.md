@@ -7,7 +7,7 @@ Der Katalog ordnet jedem Board-Typ eine Firmware-Familie zu:
 | Familie | Boards | Stationen im Haus | Konfiguration | Update |
 |---|---|---|---|---|
 | `esp32` – **Basis-Firmware** | SensactHsNano3, SensactUpHs, SensactUp3, SensactUpControl, SensactOutdoor (ESP32-S3) | TECH_HS_1, L3_WORK_HS, SIDEDOOR, TERRASSE | **Stationspaket**, im Browser hochgeladen | OTA im Browser |
-| `stm32f103` – **rtoos-Firmware** | SensactUp02 (sensactUp Rev 0.2, STM32F103CB, 128 KB Flash, 20 KB RAM) | L1_LVNG_UP, L1_KTCH_UP | einkompiliert (Format wie im Stationspaket) | SWD oder seriell |
+| `stm32f103` – **rtoos-Firmware** | SensactUp02 (sensactUp Rev 0.2, STM32F103CB, 128 KB Flash, 20 KB RAM) | L1_LVNG_UP, L1_KTCH_UP | einkompiliert (Format wie im Stationspaket) | über CAN (Bootloader; einmalig SWD) |
 | `stm32-legacy` – Altfirmware | SensactHs08 (STM32F407) | L3_TECH_HS_1 | generierter C++-Code | ST-Link |
 
 Gemeinsam ist allen: dieselben App-Nummern, dieselben Kommandos, derselbe CAN-Bus. Die ESP32- und die
@@ -116,7 +116,10 @@ Wichtige Eigenschaften:
 - **Kein Heap im Betrieb:** Apps legen ihre Objekte beim Start in einem festen Bereich an, der danach
   versiegelt wird.
 - **Konfiguration einkompiliert:** dieselbe Stationskonfiguration wie im ESP32-Paket, vom Builder als
-  Datei erzeugt (`GenerateStm32F103Files`).
+  Datei erzeugt (`GenerateStm32F103Files`). Firmware und Konfiguration sind **ein Paket**.
+- **CAN-Bootloader** (erste 16 KB): nach jedem Reset 1 s Fenster für ein Update, nach `START_IAP` an die
+  Knoten-App 10 s; das Paket kommt über den CAN-Bus, s.
+  [Konfiguration und Auslieferung](06-konfiguration-und-auslieferung.md#stm32f103-firmware-und-modell-als-ein-paket-über-can).
 
 ### Licht als Rückmeldung (WS2812)
 

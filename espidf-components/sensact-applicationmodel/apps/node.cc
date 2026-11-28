@@ -34,6 +34,20 @@ namespace sensact::apps
 		ctx->Identify(d);
 	}
 
+	// RESET: Neustart der Station
+	void cSensactNode::OnRESETCommand(iSensactContext *ctx)
+	{
+		LOGI(TAG, "%s: RESET - restarting", N());
+		ctx->Reboot(false);
+	}
+
+	// START_IAP: Neustart in den Bootloader (Firmware-Update ueber CAN, s. sensact_firmware_f103/boot)
+	void cSensactNode::OnSTART_IAPCommand(iSensactContext *ctx)
+	{
+		LOGI(TAG, "%s: START_IAP - restarting into the bootloader", N());
+		ctx->Reboot(true);
+	}
+
 	eAppCallResult cSensactNode::Loop(iSensactContext *ctx)
 	{
 

@@ -32,6 +32,10 @@ namespace sensact::apps
         // Station finden: die Station zeigt sich (RGB-LEDs blinken, Status-LED, ...) fuer durationMs.
         // Ausgeloest von IDENTIFY an die Knoten-App. Default: nichts (eine Station ohne Anzeige).
         virtual void Identify(tms_t durationMs) { (void)durationMs; }
+        // Station neu starten (RESET an die Knoten-App) bzw. in den Bootloader (START_IAP: die
+        // F103-Stationen warten dann 10 s statt 1 s auf ein Firmware-Update ueber CAN). Kehrt zurueck:
+        // der Neustart folgt nach dem laufenden Takt. Default: nichts (Station ohne diese Funktion).
+        virtual void Reboot(bool toBootloader) { (void)toBootloader; }
         virtual void LoadPersistedParams(eApplicationID appId, std::array<uint16_t, 4> &params) = 0;
         virtual void SavePersistedParams(eApplicationID appId, const std::array<uint16_t, 4> &params) = 0;
         // Deklarationen für alle Funktionen, mit denen sich eine Command-Nachricht bauen lässt
