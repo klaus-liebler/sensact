@@ -46,6 +46,26 @@ Bedienelemente:
 
 ![Dimmer und Rollladen im Bad](../bilder/web-apps-dimmer.png)
 
+## Mobile Bedienung auf dem Telefon – `/mobil`
+
+<img src="../bilder/web-mobil.png" alt="Mobile Bedienung, Erdgeschoss" width="300">
+
+Unter `https://<station>/mobil` (oder in der Oberfläche **Haus → Mobile Bedienung**) gibt es eine eigene,
+dunkle Seite fürs Telefon mit allen Lampen und Rollläden des Hauses, nach Stockwerken und Räumen. Tipp:
+im Browser „Zum Startbildschirm hinzufügen“, dann startet sie wie eine App.
+
+| Was | Wie |
+|---|---|
+| Stockwerk wechseln | waagrecht wischen, oder unten in der Stockwerksleiste antippen (auch ‹ › oben) |
+| Lampe ein/aus | Knopf kurz antippen |
+| Dimmen | Knopf gedrückt halten (gut ¼ s, kurzes Vibrieren), dann mit dem Finger hoch/runter ziehen; ein Schieber mit Prozentanzeige erscheint nur, solange man hält. Ganz nach unten = aus |
+| Rollladen | ▲ ■ ▼ wie am Taster; das Rollladensymbol antippen fährt in die andere Richtung (bzw. stoppt), gedrückt halten und ziehen stellt die Öffnung in Prozent ein |
+| Alle Lampen eines Raums aus | **Alle aus** an der Raumkarte |
+
+Der Ring um einen Dimmer zeigt die Helligkeit. Gestrichelt = die Station kennt den Zustand (noch) nicht.
+Hinweis: Ist man nicht angemeldet, landet man nach dem Login auf der Startseite – dann `/mobil` erneut
+aufrufen (die Anmeldung bleibt danach lange erhalten).
+
 ## Diagnose
 
 ### Terminal
